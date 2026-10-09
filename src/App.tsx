@@ -70,7 +70,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f4f9] text-slate-800 flex flex-col font-sans select-none antialiased">
+    <div className="min-h-screen bg-[#040a1c] text-white flex flex-col font-sans select-none antialiased">
       
       {/* Top Application Navbar */}
       <TopNavbar
@@ -96,12 +96,12 @@ export default function App() {
         {sidebarOpen && (
           <div 
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-900/50 z-30 lg:hidden backdrop-blur-2xs"
+            className="fixed inset-0 bg-slate-950/70 z-30 lg:hidden backdrop-blur-xs"
           />
         )}
 
         {/* Main Dashboard Scrollable Stage Area */}
-        <main className="flex-1 flex flex-col min-w-0 bg-[#f0f4f9] overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <main className="flex-1 flex flex-col min-w-0 bg-[#040a1c] overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
           
           {/* 1. Royal Blue Hero Header Banner with Live Clock Widget */}
           <HeroBanner activeSim={activeSim} />

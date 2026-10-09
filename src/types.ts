@@ -10,6 +10,8 @@ export interface SimulationItem {
   thumbnail?: string;
   iconName: string;
   accentColor: string;
+  gradient?: string;
+  glowColor?: string;
   topics: string[];
   features: string[];
   gradeLevel: string;
