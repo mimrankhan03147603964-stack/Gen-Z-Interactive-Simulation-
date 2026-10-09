@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Electricity & Circuits Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.container { max-width:1400px; margin:0 auto; padding:18px 20px 24px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; background:#0f2440; border-radius:14px; padding:8px 12px; justify-content:center; }
+.tab-btn { padding:12px 24px; border:none; border-radius:40px; font-size:1.02rem; font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer; transition:all .25s; flex:1 0 auto; }
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45); }
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:22px 24px 26px; margin-bottom:20px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.85rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:1rem; color:#a8c4e0; margin-bottom:18px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab { padding:8px 16px; border:none; border-radius:30px; font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active{display:block}
+.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.8rem; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; } .grid-item p{font-size:.92rem;color:#b8d4f0}
+.sim-box { background:#06121f; border-radius:18px; padding:18px 16px 16px; margin-top:8px; border:1px solid #1e3a5c; position:relative; }
+.sim-controls { display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; justify-content:center; margin-bottom:14px; background:#0a1a2e; padding:12px 18px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:8px; font-weight:600; color:#90b8e0; font-size:.9rem; }
+.sim-controls input[type=range]{width:125px;accent-color:#ff9800;cursor:pointer}
+.sim-controls select,.sim-controls button { padding:8px 16px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem; }
+.sim-controls button { background:#1976d2; color:#fff; }
+.sim-controls button:hover{transform:scale(1.05);filter:brightness(1.2)}
+.sim-controls button.danger { background:#c62828; }
+.sim-controls button.success { background:#2e7d32; }
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout{text-align:center;font-size:1.35rem;font-weight:700;color:#ffd54f;margin:14px 0 6px}
+.sim-readout small{display:block;font-size:.9rem;color:#7a9cc0;font-weight:400}
+.sim-info{background:#0a1a2e;padding:11px 16px;border-radius:36px;margin-top:12px;text-align:center;font-size:.92rem;color:#a8c8e8;border:1px solid #1a3550}
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:12px 16px; margin-top:12px; font-size:.9rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+
+/* ---- FULLSCREEN BUTTON ---- */
+.fs-btn {
+  display:block;
+  margin:0 auto 14px;
+  padding:11px 26px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(135deg,#7b1fa2,#9c27b0);
+  color:#fff;
+  font-weight:800;
+  font-size:.95rem;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(156,39,176,.5);
+  transition:.25s;
+  letter-spacing:.5px;
+}
+.fs-btn:hover { transform:scale(1.05); filter:brightness(1.15); }
+.fs-btn .icon { margin-right:8px; }
+
+/* ---- FULLSCREEN MODE ---- */
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen,
+.sim-box:-moz-full-screen,
+.sim-box:-ms-fullscreen {
+  width:100vw; height:100vh;
+  border-radius:0; border:none;
+  padding:8px 12px 10px;
+  display:flex; flex-direction:column;
+  background:#06121f;
+  overflow:hidden;
+}
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn { display:none; }
+.sim-box:fullscreen .sim-info,
+.sim-box:-webkit-full-screen .sim-info { display:none; }
+.sim-box:fullscreen .teacher-note,
+.sim-box:-webkit-full-screen .teacher-note { display:none; }
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  flex-shrink:0;
+  margin-bottom:6px;
+  padding:8px 14px;
+  border-radius:20px;
+  gap:8px 14px;
+}
+.sim-box:fullscreen .sim-readout,
+.sim-box:-webkit-full-screen .sim-readout {
+  flex-shrink:0; margin:4px 0; font-size:1rem;
+}
+.sim-box:fullscreen canvas,
+.sim-box:-webkit-full-screen canvas {
+  flex:1 1 auto;
+  width:100%;
+  height:auto;
+  max-height:calc(100vh - 150px);
+  object-fit:contain;
+  border-radius:8px;
+}
+.fs-extra-controls {
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:6px;
+  padding:8px 12px;
+  background:#0a1a2e;
+  border-radius:20px;
+  border:1px solid #1e3a5c;
+  flex-shrink:0;
+}
+.sim-box:fullscreen .fs-extra-controls,
+.sim-box:-webkit-full-screen .fs-extra-controls { display:flex; }
+.fs-extra-controls button {
+  padding:8px 16px;
+  border-radius:24px;
+  border:none;
+  font-weight:800;
+  font-size:.85rem;
+  cursor:pointer;
+  transition:.2s;
+  color:#fff;
+}
+.fs-extra-controls button:hover { transform:scale(1.06); filter:brightness(1.2); }
+.fs-extra-controls .fs-switch-on { background:linear-gradient(135deg,#2e7d32,#43a047); }
+.fs-extra-controls .fs-switch-off { background:linear-gradient(135deg,#c62828,#e53935); }
+.fs-extra-controls .fs-flow { background:linear-gradient(135deg,#1976d2,#42a5f5); }
+.fs-extra-controls .fs-reset { background:linear-gradient(135deg,#ef6c00,#f57c00); }
+.fs-extra-controls .fs-exit { background:linear-gradient(135deg,#6a1b9a,#8e24aa); }
+
+@media(max-width:800px){.tab-btn{font-size:.85rem;padding:10px 12px}.card{padding:14px}}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="tabs" id="topicTabs">
+<button class="tab-btn active" data-topic="electricity"><span class="icon">⚡</span> Electricity & Circuits</button>
+</div>
+
+<!-- ================= ELECTRICITY ================= -->
+<div class="topic active" id="topic-electricity"><div class="card">
+<h2>⚡ Electricity <small>circuits, bulbs, switches & batteries</small></h2>
+<div class="desc">Build a real circuit with a battery, a switch, wires, and a bulb. Choose series or parallel. Watch electrons flow and the bulb glow.</div>
+
+<div class="section-tabs" data-topic="electricity">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="types">Types</button>
+<button class="section-tab active" data-section="sim">Simulation</button>
+</div>
+
+<!-- DEFINITION -->
+<div class="panel" id="electricity-def"><h3>📖 Definition</h3>
+<p><strong>Electricity</strong> is the flow of electric charge (electrons) through a conductor. A <strong>circuit</strong> is a closed loop that lets electrons flow from the battery, through the wires, and back.</p>
+<ul>
+<li><strong>Battery:</strong> Pushes electrons (voltage).</li>
+<li><strong>Wire:</strong> Path for electrons (copper).</li>
+<li><strong>Switch:</strong> Opens or closes the circuit.</li>
+<li><strong>Bulb:</strong> Glows when electrons pass through it.</li>
+</ul>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Just like water flows in a pipe only when the tap is open, electrons flow only when the circuit is <em>closed</em> (switch ON).</div>
+</div>
+
+<!-- EXPLANATION -->
+<div class="panel" id="electricity-exp"><h3>💡 Explanation</h3>
+<p>Electrons need a complete path. If the switch is open, the path is broken and no current flows — the bulb stays off. Close the switch → electrons flow → bulb glows.</p>
+<ul>
+<li><strong>Voltage (V):</strong> The push from the battery. Unit = volt.</li>
+<li><strong>Current (I):</strong> The flow of electrons. Unit = ampere (A).</li>
+<li><strong>Resistance (R):</strong> Opposition to flow. Unit = ohm (Ω).</li>
+<li><strong>Ohm's Law:</strong> V = I × R.</li>
+</ul>
+</div>
+
+<!-- TYPES -->
+<div class="panel" id="electricity-types"><h3>🧩 Types of Circuits</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Series Circuit</h4><p>One single path. If one bulb breaks, all go off. Same current through all.</p></div>
+<div class="grid-item"><h4>Parallel Circuit</h4><p>Multiple paths. If one bulb breaks, others still glow. Same voltage across all.</p></div>
+<div class="grid-item"><h4>Open Circuit</h4><p>Switch OFF — path is broken. No current flows.</p></div>
+<div class="grid-item"><h4>Closed Circuit</h4><p>Switch ON — complete loop. Current flows freely.</p></div>
+<div class="grid-item"><h4>Short Circuit</h4><p>Wire bypasses the bulb — dangerous, no glow.</p></div>
+<div class="grid-item"><h4>Battery</h4><p>Provides voltage. More cells = more push.</p></div>
+</div>
+</div>
+
+<!-- SIMULATION -->
+<div class="panel active" id="electricity-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box" id="simBox">
+
+<button class="fs-btn" id="fullscreenBtn"><span class="icon">⛶</span> Fullscreen Simulation</button>
+
+<div class="sim-controls">
+<label>Circuit:
+<select id="circuitType">
+<option value="simple">Simple Circuit (1 bulb)</option>
+<option value="series">Series (2 bulbs)</option>
+<option value="parallel">Parallel (2 bulbs)</option>
+</select></label>
+
+<label>Cells:
+<select id="cellCount">
+<option value="1">1 Cell (1.5 V)</option>
+<option value="2" selected>2 Cells (3.0 V)</option>
+<option value="3">3 Cells (4.5 V)</option>
+<option value="4">4 Cells (6.0 V)</option>
+</select></label>
+
+<label>Resistance: <input type="range" id="resistanceRange" min="1" max="20" value="6"></label>
+
+<button id="switchBtn" class="danger">🔌 Switch: OFF</button>
+<button id="flowBtn" class="success">⚡ Show Electrons</button>
+<button id="resetElecBtn">⟳ Reset</button>
+</div>
+
+<!-- Extra fullscreen control bar -->
+<div class="fs-extra-controls" id="fsExtraControls">
+  <button class="fs-switch-off" id="fsSwitchBtn">🔌 Switch OFF</button>
+  <button class="fs-flow" id="fsFlowBtn">⚡ Hide Electrons</button>
+  <button class="fs-reset" id="fsResetBtn">⟳ Reset</button>
+  <button class="fs-exit" id="fsExitBtn">✕ Exit Fullscreen</button>
+</div>
+
+<div class="sim-readout" id="elecReadout">CIRCUIT OPEN <small>Switch is OFF — no current flows</small></div>
+
+<canvas id="elecCanvas" width="1100" height="520"></canvas>
+
+<div class="sim-info" id="elecInfo">Battery pushes electrons. Wires carry them. Switch controls flow. Bulb glows when current passes.</div>
+
+<div class="teacher-note"><strong>Real-Life:</strong> A torch light is a simple circuit. Home lights use parallel circuits so one bulb can turn off without affecting others. Flip the switch and watch the electrons move!</div>
+</div>
+</div>
+
+</div></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---- SECTION TABS ---- */
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+/* ---- FULLSCREEN ---- */
+const simBox = document.getElementById('simBox');
+const fsBtn = document.getElementById('fullscreenBtn');
+
+function enterFullscreen(el){
+ if(el.requestFullscreen) return el.requestFullscreen();
+ if(el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+ if(el.mozRequestFullScreen) return el.mozRequestFullScreen();
+ if(el.msRequestFullscreen) return el.msRequestFullscreen();
+}
+function exitFullscreen(){
+ if(document.exitFullscreen) return document.exitFullscreen();
+ if(document.webkitExitFullscreen) return document.webkitExitFullscreen();
+ if(document.mozCancelFullScreen) return document.mozCancelFullScreen();
+ if(document.msExitFullscreen) return document.msExitFullscreen();
+}
+function isFullscreen(){
+ return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+}
+
+fsBtn.addEventListener('click', ()=>{
+ if(!isFullscreen()){
+  enterFullscreen(simBox).catch(()=>{});
+ } else {
+  exitFullscreen().catch(()=>{});
+ }
+});
+
+['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>{
+ document.addEventListener(evt, ()=>{
+  if(isFullscreen()){
+   fsBtn.innerHTML = '<span class="icon">✕</span> Exit Fullscreen';
+   document.getElementById('fsSwitchBtn').textContent = switchOn ? '🔌 Switch ON' : '🔌 Switch OFF';
+   document.getElementById('fsFlowBtn').textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+   setTimeout(()=>{ resizeCanvas(); }, 200);
+  } else {
+   fsBtn.innerHTML = '<span class="icon">⛶</span> Fullscreen Simulation';
+   setTimeout(()=>{ resizeCanvas(); }, 200);
+  }
+ });
+});
+
+/* ---- CANVAS RESIZE FOR FULLSCREEN ---- */
+function resizeCanvas(){
+ const ec = document.getElementById('elecCanvas');
+ if(!ec) return;
+ if(isFullscreen()){
+  const box = simBox;
+  const controlsH = box.querySelector('.sim-controls')?.offsetHeight || 0;
+  const extraH = box.querySelector('.fs-extra-controls')?.offsetHeight || 0;
+  const readoutH = box.querySelector('.sim-readout')?.offsetHeight || 0;
+  const availH = window.innerHeight - controlsH - extraH - readoutH - 50;
+  const availW = window.innerWidth - 30;
+  const ratio = 1100/520;
+  let newW = availW;
+  let newH = newW / ratio;
+  if(newH > availH){ newH = availH; newW = newH * ratio; }
+  ec.style.width = newW + 'px';
+  ec.style.height = newH + 'px';
+  ec.style.maxHeight = availH + 'px';
+ } else {
+  ec.style.width = '100%';
+  ec.style.height = 'auto';
+  ec.style.maxHeight = '';
+ }
+}
+window.addEventListener('resize', resizeCanvas);
+
+/* =========================================================
+   ELECTRICITY SIMULATION
+   ========================================================= */
+const ec=document.getElementById('elecCanvas');
+const ectx=ec.getContext('2d');
+let elecTime=0;
+let switchOn=false;
+let showFlow=true;
+let electrons=[];
+let bulbFlicker=0;
+
+function getVoltage(){
+ const cells=+document.getElementById('cellCount').value;
+ return cells*1.5;
+}
+function getResistance(){
+ return +document.getElementById('resistanceRange').value;
+}
+function getCurrent(){
+ const V=getVoltage(),R=getResistance();
+ return V/R;
+}
+
+function drawBattery(ctx,x,y,cells,vertical){
+ const cellW=60,cellH=100;
+ if(vertical){
+  for(let i=0;i<cells;i++){
+   const oy=y + i*(cellH+14);
+   const g=ctx.createLinearGradient(x-cellW/2,oy,x+cellW/2,oy);
+   g.addColorStop(0,'#1a1a1a');g.addColorStop(.2,'#444');g.addColorStop(.5,'#222');g.addColorStop(.8,'#444');g.addColorStop(1,'#1a1a1a');
+   ctx.fillStyle=g;
+   ctx.beginPath();ctx.roundRect(x-cellW/2,oy,cellW,cellH,10);ctx.fill();
+   ctx.fillStyle='#c9a227';
+   ctx.beginPath();ctx.roundRect(x-12,oy-14,24,16,4);ctx.fill();
+   ctx.fillStyle='#8b6f1c';ctx.fillRect(x-12,oy-2,24,4);
+   ctx.fillStyle='#999';
+   ctx.beginPath();ctx.roundRect(x-18,oy+cellH-2,36,8,3);ctx.fill();
+   ctx.fillStyle='#fff';ctx.font='bold 24px sans-serif';ctx.textAlign='center';
+   ctx.fillText('+',x,oy+cellH/2+8);
+   ctx.fillStyle='#ffd54f';ctx.font='bold 15px sans-serif';
+   ctx.fillText('1.5V',x,oy+cellH-14);
+   ctx.fillStyle='#ffc107';
+   ctx.fillRect(x-cellW/2+4,oy+8,cellW-8,5);
+   ctx.textAlign='left';
+  }
+ }
+}
+
+function drawSwitch(ctx,x,y,on,label){
+ const w=130,h=60;
+ ctx.fillStyle='#0a0a0a';
+ ctx.beginPath();ctx.roundRect(x-14,y-14,w+28,h+28,12);ctx.fill();
+ ctx.strokeStyle='#555';ctx.lineWidth=3;ctx.stroke();
+ ctx.fillStyle='#c9a227';
+ ctx.beginPath();ctx.arc(x,y+h/2,10,0,7);ctx.fill();
+ ctx.beginPath();ctx.arc(x+w,y+h/2,10,0,7);ctx.fill();
+ ctx.strokeStyle=on?'#4caf50':'#e53935';
+ ctx.lineWidth=10;ctx.lineCap='round';
+ ctx.shadowColor=on?'#4caf50':'#e53935';ctx.shadowBlur=18;
+ ctx.beginPath();
+ ctx.moveTo(x,y+h/2);
+ if(on){ctx.lineTo(x+w,y+h/2);}
+ else{ctx.lineTo(x+w-12,y-18);}
+ ctx.stroke();
+ ctx.shadowBlur=0;ctx.lineCap='butt';
+ ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';
+ ctx.fillText(label,x+w/2,y-26);
+ ctx.fillStyle=on?'#4caf50':'#e53935';
+ ctx.font='bold 14px sans-serif';
+ ctx.fillText(on?'ON':'OFF',x+w/2,y+h+22);
+ ctx.textAlign='left';
+}
+
+function drawBulb(ctx,x,y,intensity){
+ const r=46;
+ if(intensity>0.05){
+  const g=ctx.createRadialGradient(x,y,8,x,y,r*5);
+  g.addColorStop(0,`rgba(255,255,180,${0.95*intensity})`);
+  g.addColorStop(0.2,`rgba(255,240,120,${0.7*intensity})`);
+  g.addColorStop(0.5,`rgba(255,200,60,${0.3*intensity})`);
+  g.addColorStop(1,'rgba(255,180,0,0)');
+  ctx.fillStyle=g;
+  ctx.beginPath();ctx.arc(x,y,r*5,0,7);ctx.fill();
+ }
+ const baseY = y + r - 4;
+ ctx.fillStyle='#b0b0b0';
+ ctx.beginPath();ctx.roundRect(x-20,baseY,40,14,3);ctx.fill();
+ ctx.fillStyle='#888';
+ ctx.beginPath();ctx.roundRect(x-22,baseY+14,44,10,3);ctx.fill();
+ ctx.fillStyle='#666';
+ ctx.beginPath();ctx.roundRect(x-20,baseY+24,40,12,4);ctx.fill();
+
+ const glassGrad=ctx.createRadialGradient(x-14,y-18,4,x,y,r);
+ if(intensity>0.05){
+  glassGrad.addColorStop(0,`rgba(255,255,240,${0.9+0.1*intensity})`);
+  glassGrad.addColorStop(0.4,`rgba(255,245,170,${0.75+0.25*intensity})`);
+  glassGrad.addColorStop(0.8,`rgba(255,210,80,${0.7+0.3*intensity})`);
+  glassGrad.addColorStop(1,`rgba(230,180,50,0.95)`);
+ } else {
+  glassGrad.addColorStop(0,'rgba(200,220,240,0.5)');
+  glassGrad.addColorStop(0.5,'rgba(150,180,210,0.4)');
+  glassGrad.addColorStop(1,'rgba(90,130,170,0.55)');
+ }
+ ctx.fillStyle=glassGrad;
+ ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+ ctx.strokeStyle=intensity>0.05?'#fff8c0':'#7a9cc0';
+ ctx.lineWidth=3;ctx.stroke();
+
+ ctx.strokeStyle=intensity>0.05?'#fff35a':'#5a6a80';
+ ctx.lineWidth=3;
+ ctx.shadowColor='#fff35a';
+ ctx.shadowBlur=intensity>0.05?25*intensity:0;
+ ctx.beginPath();
+ ctx.moveTo(x-12,y+r-14);ctx.lineTo(x-12,y-8);
+ ctx.moveTo(x+12,y+r-14);ctx.lineTo(x+12,y-8);
+ ctx.moveTo(x-12,y-8);ctx.lineTo(x-6,y+8);ctx.lineTo(x,y-10);ctx.lineTo(x+6,y+8);ctx.lineTo(x+12,y-8);
+ ctx.stroke();
+ ctx.shadowBlur=0;
+ ctx.fillStyle=intensity>0.05?'#fff35a':'#a8c8e8';
+ ctx.font='bold 16px sans-serif';ctx.textAlign='center';
+ ctx.fillText(intensity>0.05?'BULB (ON)':'BULB (OFF)',x,y-r-14);
+ ctx.textAlign='left';
+}
+
+function elecLoop(){
+ const w=ec.width,h=ec.height;
+ ectx.clearRect(0,0,w,h);
+
+ const bg=ectx.createRadialGradient(w/2,h/2,100,w/2,h/2,700);
+ bg.addColorStop(0,'#0a1f33');bg.addColorStop(1,'#040c16');
+ ectx.fillStyle=bg;ectx.fillRect(0,0,w,h);
+
+ ectx.strokeStyle='rgba(255,255,255,.035)';ectx.lineWidth=1;
+ for(let x=0;x<w;x+=50){ectx.beginPath();ectx.moveTo(x,0);ectx.lineTo(x,h);ectx.stroke();}
+ for(let y=0;y<h;y+=50){ectx.beginPath();ectx.moveTo(0,y);ectx.lineTo(w,y);ectx.stroke();}
+
+ const mode=document.getElementById('circuitType').value;
+ const cells=+document.getElementById('cellCount').value;
+ const R=getResistance();
+ const V=getVoltage();
+ const I=getCurrent();
+
+ const intensity=switchOn? Math.min(1, I/3.5) : 0;
+ bulbFlicker = 0.9 + 0.1*Math.sin(elecTime*0.6);
+
+ let pathPoints=null;
+
+ if(mode==='simple'){
+  const batteryX=120, batteryY=380;
+  const switchX=470, switchY=380;
+  const bulbX=820, bulbY=210;
+  const railY=210;
+  const bottomY=440;
+  const leftX=120;
+  const rightX=980;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,railY);
+  ectx.lineTo(bulbX-60,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(bulbX+60,railY);
+  ectx.lineTo(rightX,railY);
+  ectx.lineTo(rightX,bottomY);
+  ectx.lineTo(switchX+130,bottomY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(switchX,bottomY);
+  ectx.lineTo(leftX,bottomY);
+  ectx.lineTo(leftX,batteryY+45);
+  ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:railY},{x:bulbX-60,y:railY},
+   {x:bulbX+60,y:railY},{x:rightX,y:railY},{x:rightX,y:bottomY},
+   {x:switchX+130,y:bottomY},{x:switchX,y:bottomY},{x:leftX,y:bottomY},
+   {x:leftX,y:batteryY+45},{x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  drawSwitch(ectx,switchX,switchY,switchOn,'SWITCH');
+  drawBulb(ectx,bulbX,bulbY,intensity*bulbFlicker);
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('SWITCH',switchX+10,switchY-40);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('Current I = '+I.toFixed(2)+' A',540,60);
+   ectx.fillStyle='#ffd54f';
+   ectx.fillText('Voltage V = '+V.toFixed(1)+' V',540,90);
+   ectx.fillStyle='#ff8f66';
+   ectx.fillText('Resistance R = '+R+' Ω',540,120);
+  }
+ }
+ else if(mode==='series'){
+  const leftX=120;
+  const railY=170;
+  const bottomY=460;
+  const rightX=980;
+  const batteryY=400;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,railY);
+  ectx.lineTo(360,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(520,railY);
+  ectx.lineTo(680,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(840,railY);
+  ectx.lineTo(rightX,railY);
+  ectx.lineTo(rightX,bottomY);
+  ectx.lineTo(600,bottomY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(480,bottomY);
+  ectx.lineTo(leftX,bottomY);
+  ectx.lineTo(leftX,batteryY+45);
+  ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:railY},{x:360,y:railY},
+   {x:520,y:railY},{x:680,y:railY},{x:840,y:railY},
+   {x:rightX,y:railY},{x:rightX,y:bottomY},{x:600,y:bottomY},
+   {x:480,y:bottomY},{x:leftX,y:bottomY},{x:leftX,y:batteryY+45},
+   {x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  const iPerBulb = switchOn ? Math.min(1, I/5) : 0;
+  drawBulb(ectx,440,railY+50,iPerBulb*bulbFlicker);
+  drawBulb(ectx,760,railY+50,iPerBulb*bulbFlicker);
+  drawSwitch(ectx,480,bottomY,switchOn,'SWITCH');
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('SERIES CIRCUIT — one path, same current',340,50);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('I = '+I.toFixed(2)+' A (same in both bulbs)',360,90);
+  }
+ }
+ else {
+  const leftX=120;
+  const topY=150;
+  const midY=330;
+  const bottomY=480;
+  const rightX=980;
+  const batteryY=410;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,topY);
+  ectx.lineTo(rightX,topY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(450,topY);ectx.lineTo(450,midY);ectx.stroke();
+  ectx.beginPath();
+  ectx.moveTo(800,topY);ectx.lineTo(800,midY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(350,midY);ectx.lineTo(900,midY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(350,midY);ectx.lineTo(300,midY);ectx.lineTo(300,bottomY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(300,bottomY);ectx.lineTo(180,bottomY);ectx.stroke();
+  ectx.beginPath();
+  ectx.moveTo(120,bottomY);ectx.lineTo(leftX,bottomY);ectx.lineTo(leftX,batteryY+45);ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:topY},{x:450,y:topY},
+   {x:450,y:midY},{x:800,y:midY},{x:800,y:topY},{x:rightX,y:topY},
+   {x:rightX,y:topY},{x:800,y:topY},{x:800,y:midY},{x:450,y:midY},
+   {x:450,y:topY},{x:leftX,y:topY},{x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  const iPerBulb = switchOn ? Math.min(1, I/4) : 0;
+  drawBulb(ectx,450,midY-70,iPerBulb*bulbFlicker);
+  drawBulb(ectx,800,midY-70,iPerBulb*bulbFlicker);
+
+  drawSwitch(ectx,180,bottomY-30,switchOn,'SWITCH');
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('PARALLEL CIRCUIT — two paths, same voltage',340,50);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('V = '+V.toFixed(1)+' V across each bulb',360,90);
+   ectx.fillText('I = '+I.toFixed(2)+' A total',360,118);
+  }
+ }
+
+ if(switchOn && showFlow && pathPoints){
+  let totalLen=0;
+  const segs=[];
+  for(let i=0;i<pathPoints.length-1;i++){
+   const a=pathPoints[i],b=pathPoints[i+1];
+   const d=Math.hypot(b.x-a.x,b.y-a.y);
+   segs.push({a,b,d});
+   totalLen+=d;
+  }
+  if(electrons.length===0 || electrons[0].pathLen!==totalLen){
+   electrons=[];
+   const count=70;
+   for(let i=0;i<count;i++){
+    electrons.push({t:i/count,speed:0.9+Math.random()*0.3,off:(Math.random()-0.5)*10,size:4+Math.random()*2,pathLen:totalLen});
+   }
+  }
+  electrons.forEach(e=>{
+   e.t += 0.004*e.speed*(0.5+I);
+   if(e.t>1)e.t-=1;
+   let dist=e.t*totalLen;
+   for(const s of segs){
+    if(dist<=s.d){
+     const k=dist/s.d;
+     const x=s.a.x+(s.b.x-s.a.x)*k;
+     const y=s.a.y+(s.b.y-s.a.y)*k;
+     const dx=s.b.x-s.a.x,dy=s.b.y-s.a.y;
+     const len=Math.hypot(dx,dy)||1;
+     const px=-dy/len,py=dx/len;
+     const fx=x+px*e.off,fy=y+py*e.off;
+     ectx.fillStyle='#7effff';
+     ectx.shadowColor='#00e5ff';ectx.shadowBlur=20;
+     ectx.beginPath();ectx.arc(fx,fy,e.size,0,7);ectx.fill();
+     ectx.shadowBlur=0;
+     ectx.fillStyle='rgba(255,255,255,.95)';
+     ectx.beginPath();ectx.arc(fx-e.size*.3,fy-e.size*.3,e.size*.45,0,7);ectx.fill();
+     ectx.fillStyle='#003';
+     ectx.font='bold 9px sans-serif';ectx.textAlign='center';
+     ectx.fillText('−',fx,fy+3);
+     ectx.textAlign='left';
+     break;
+    }
+    dist-=s.d;
+   }
+  });
+ }
+
+ elecTime++;
+ requestAnimationFrame(elecLoop);
+}
+
+function toggleSwitch(){
+ switchOn=!switchOn;
+ const btn=document.getElementById('switchBtn');
+ btn.textContent = switchOn ? '🔌 Switch: ON' : '🔌 Switch: OFF';
+ btn.classList.toggle('danger',!switchOn);
+ btn.classList.toggle('success',switchOn);
+ const fsBtn2=document.getElementById('fsSwitchBtn');
+ if(fsBtn2){
+  fsBtn2.textContent = switchOn ? '🔌 Switch ON' : '🔌 Switch OFF';
+  fsBtn2.className = switchOn ? 'fs-switch-on' : 'fs-switch-off';
+ }
+ if(switchOn){
+  document.getElementById('elecReadout').innerHTML='CIRCUIT CLOSED <small>Switch is ON — current is flowing</small>';
+  document.getElementById('elecInfo').textContent='Electrons are flowing! The bulb glows brighter with more voltage or less resistance.';
+ } else {
+  document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+  document.getElementById('elecInfo').textContent='Switch is open. Electrons cannot flow. The bulb is off.';
+ }
+}
+document.getElementById('switchBtn').addEventListener('click',toggleSwitch);
+document.getElementById('fsSwitchBtn').addEventListener('click',toggleSwitch);
+
+function toggleFlow(){
+ showFlow=!showFlow;
+ const btn=document.getElementById('flowBtn');
+ btn.textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+ btn.classList.toggle('success',!showFlow);
+ const fsBtn2=document.getElementById('fsFlowBtn');
+ if(fsBtn2){
+  fsBtn2.textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+ }
+}
+document.getElementById('flowBtn').addEventListener('click',toggleFlow);
+document.getElementById('fsFlowBtn').addEventListener('click',toggleFlow);
+
+function resetElec(){
+ switchOn=false;
+ showFlow=true;
+ electrons=[];
+ const sw=document.getElementById('switchBtn');
+ sw.textContent='🔌 Switch: OFF';
+ sw.classList.add('danger');
+ sw.classList.remove('success');
+ const fl=document.getElementById('flowBtn');
+ fl.textContent='⚡ Show Electrons';
+ fl.classList.add('success');
+ const fsSw=document.getElementById('fsSwitchBtn');
+ if(fsSw){fsSw.textContent='🔌 Switch OFF';fsSw.className='fs-switch-off';}
+ const fsFl=document.getElementById('fsFlowBtn');
+ if(fsFl){fsFl.textContent='⚡ Hide Electrons';}
+ document.getElementById('cellCount').value='2';
+ document.getElementById('resistanceRange').value=6;
+ document.getElementById('circuitType').value='simple';
+ document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+ document.getElementById('elecInfo').textContent='Battery pushes electrons. Wires carry them. Switch controls flow. Bulb glows when current passes.';
+}
+document.getElementById('resetElecBtn').addEventListener('click',resetElec);
+document.getElementById('fsResetBtn').addEventListener('click',resetElec);
+document.getElementById('fsExitBtn').addEventListener('click',()=>{ exitFullscreen().catch(()=>{}); });
+
+['cellCount','resistanceRange','circuitType'].forEach(id=>{
+ document.getElementById(id).addEventListener('change',updateElecReadout);
+ document.getElementById(id).addEventListener('input',updateElecReadout);
+});
+function updateElecReadout(){
+ const V=getVoltage(),R=getResistance(),I=getCurrent();
+ if(switchOn){
+  document.getElementById('elecReadout').innerHTML='CURRENT = '+I.toFixed(2)+' A <small>Voltage '+V.toFixed(1)+' V · Resistance '+R+' Ω</small>';
+ } else {
+  document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+ }
+}
+
+function initElec(){
+ elecLoop();
+ updateElecReadout();
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+ initElec();
+} else {
+ window.addEventListener('DOMContentLoaded',initElec);
+ window.addEventListener('load',initElec);
+}
+})();
+</script>
+</body>
+</html>

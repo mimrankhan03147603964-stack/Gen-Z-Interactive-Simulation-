@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Breathing Process</title>
+<style>
+:root{--bg:#050a1e;--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--red:#ff4d67;--grn:#22d3a0;--amb:#ffc247;--vio:#9b7bff}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:17px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.bub{position:fixed;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 30% 30%,#fff5,#5b8cff22 60%,transparent 70%);animation:fl linear infinite;z-index:0}
+@keyframes fl{from{transform:translateY(105vh)}to{transform:translateY(-30vh)}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 17px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#ff7a93,#ff3b5c);color:#fff;box-shadow:0 5px 0 #8f0c22,0 10px 26px #ff3b5c66}
+.pg{display:none;animation:in .5s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(18px) rotateX(8deg)}}
+h2{font-family:Georgia,serif;font-size:28px;margin-bottom:14px;text-align:center}
+.card{background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009,inset 0 1px 0 #ffffff22;transition:transform .15s;transform-style:preserve-3d}
+.def{font-size:20px;border-left:7px solid var(--blue)}.def b{color:#7fd0ff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.stat{text-align:center;font-weight:700;font-size:18px}.stat i{display:block;font:900 40px/1.2 Georgia,serif;font-style:normal}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two h3{font-size:22px;margin-bottom:8px}.in h3{color:var(--blue)}.out h3{color:var(--red)}
+.in{border-top:6px solid var(--blue)}.out{border-top:6px solid var(--red)}
+ol{padding-left:22px}li{margin:6px 0}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px}
+.term{background:#0b1436;border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:16px}.term b{display:block;color:var(--amb)}
+.sim{background:radial-gradient(circle at 50% 0,#14286e,#050a1e 70%);border:1px solid var(--line);border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 24px Georgia,serif;min-height:36px}
+svg{width:100%;height:auto;max-height:68vh;display:block}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 16px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-in{background:var(--blue)}.b-out{background:var(--red);color:#fff}.b-auto{background:var(--grn)}.b-play{background:var(--amb)}.b-hold{background:#cfd9ff}.b-set{background:#3d509a;color:#fff}.b-fs{background:linear-gradient(90deg,var(--vio),#ff7eb6);color:#fff}
+.tg{background:#1c2b63;color:#d4e0ff;border:2px solid #3a4f9a}.tg.on{background:var(--vio);color:#fff;border-color:#cbbcff;box-shadow:0 0 18px #9b7bffaa}
+.lab rect{fill:#0a1230e6;stroke:#6f8fd8;stroke-width:1}.lab text{fill:#eaf0ff;font:600 13px "Segoe UI",Arial,sans-serif}.lab line{stroke:#8fb3e8;stroke-width:1.2}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#14286e,#050a1e 70%)}
+.sim:fullscreen svg{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:18px}.sim:fullscreen #st{font-size:30px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Definition</button><button class="tab" data-pg="e">💡 Explanation</button><button class="tab on" data-pg="s">🎮 Simulation</button></nav>
+
+<section class="pg tilt" id="d"><h2>Definition</h2>
+<div class="card def tilt"><b>Breathing</b> is the process of taking air into the lungs (<b>inhalation</b>) and pushing it out again (<b>exhalation</b>). It brings fresh <b>oxygen (O₂)</b> into the body and takes waste <b>carbon dioxide (CO₂)</b> out of the body.</div>
+<div class="stats">
+<div class="card stat tilt" style="color:#2ea8ff"><i>O₂</i>Oxygen goes IN when we inhale</div>
+<div class="card stat tilt" style="color:#ff4d67"><i>CO₂</i>Carbon dioxide goes OUT when we exhale</div>
+<div class="card stat tilt" style="color:#ffc247"><i>12 - 20</i>Breaths every minute</div></div></section>
+
+<section class="pg" id="e"><h2>Explanation</h2>
+<div class="two">
+<div class="card in tilt"><h3>Inhalation (breathing in)</h3><ol>
+<li>The <b>diaphragm</b>, a muscle under the lungs, <b>contracts</b> and moves down.</li>
+<li>The chest gets bigger, so the <b>lungs expand</b>.</li>
+<li>Air pressure inside drops, so <b>fresh air (oxygen) enters</b> through the nose or mouth.</li>
+<li>Air goes down the trachea to the alveoli, where oxygen passes into the blood.</li></ol></div>
+<div class="card out tilt"><h3>Exhalation (breathing out)</h3><ol>
+<li>The diaphragm <b>relaxes</b> and moves up.</li>
+<li>The chest gets smaller, so the <b>lungs compress</b>.</li>
+<li>Air pressure inside rises, so <b>used air exits</b>.</li>
+<li>Carbon dioxide from the blood leaves the alveoli and goes out through the nose or mouth.</li></ol></div></div>
+<div class="terms">
+<div class="term"><b>Nose / Mouth</b>Air enters and leaves here.</div>
+<div class="term"><b>Pharynx / Larynx</b>Throat and voice box.</div>
+<div class="term"><b>Trachea</b>The windpipe to the lungs.</div>
+<div class="term"><b>Bronchus (R) / (L)</b>Two tubes, one into each lung.</div>
+<div class="term"><b>Bronchioles</b>Small branching tubes in the lungs.</div>
+<div class="term"><b>Alveoli</b>Tiny air sacs where O₂ and CO₂ swap places.</div>
+<div class="term"><b>Lungs</b>Two soft organs that hold air.</div>
+<div class="term"><b>Diaphragm</b>The main breathing muscle.</div></div></section>
+
+<section class="pg on tilt" id="s"><h2>Simulation</h2>
+<div class="sim" id="sim">
+<div id="st"></div>
+<svg viewBox="0 0 1180 930" preserveAspectRatio="xMidYMid meet" id="svg">
+<defs>
+<radialGradient id="lg" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffe0e8"/><stop offset=".5" stop-color="#ff9bb5"/><stop offset="1" stop-color="#d94870"/></radialGradient>
+<pattern id="ring" width="24" height="12" patternUnits="userSpaceOnUse"><rect width="24" height="12" fill="#66c2ff"/><rect y="9" width="24" height="3" fill="#2b6fb0"/></pattern>
+<g id="alv" fill="none"><circle cx="-130" cy="397" r="12"/><circle cx="-142" cy="410" r="9"/><circle cx="-78" cy="405" r="10"/><circle cx="-64" cy="416" r="8"/><circle cx="-96" cy="446" r="12"/><circle cx="-109" cy="455" r="9"/><circle cx="-38" cy="436" r="11"/><circle cx="-50" cy="448" r="8"/></g>
+<g id="lungShape">
+<path d="M-18 285 C-65 268 -138 292 -164 372 C-182 440 -160 478 -108 476 C-55 474 -20 452 -18 400 Z" fill="url(#lg)" stroke="#ffb3c6" stroke-width="2"/>
+<ellipse cx="-118" cy="345" rx="14" ry="52" fill="#fff" opacity=".28" transform="rotate(22 -118 345)"/>
+<path d="M-48 322 L-95 352 L-128 395 M-95 352 L-78 402 L-96 442 M-65 338 L-28 384 L-38 432" stroke="#b5e3ff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<g fill="#ff7f9f" stroke="#ffd6e0" stroke-width="1.5"><circle cx="-130" cy="397" r="10"/><circle cx="-142" cy="410" r="7"/><circle cx="-78" cy="405" r="8"/><circle cx="-64" cy="416" r="6"/><circle cx="-96" cy="446" r="10"/><circle cx="-109" cy="455" r="7"/><circle cx="-38" cy="436" r="9"/><circle cx="-50" cy="448" r="6"/></g>
+</g></defs>
+<text x="590" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#f4f7ff" style="filter:drop-shadow(0 4px 6px #000)">THE BREATHING PROCESS</text>
+<text x="350" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#7fd0ff" id="hIn">INHALATION</text>
+<text x="830" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#ff8b9c" id="hOut">EXHALATION</text>
+<g id="mech"></g>
+<g id="pIn"></g><g id="pOut"></g>
+</svg>
+<div class="ctl">
+<div class="row"><span>Breathe</span>
+<button class="btn b-play" id="bPlay">⏸ Pause</button><button class="btn b-in" id="bIn">↓ Inhale</button><button class="btn b-hold" id="bHold">✋ Hold</button><button class="btn b-out" id="bOut">↑ Exhale</button><button class="btn b-auto" id="bAuto">⟳ Auto breathe</button><button class="btn b-set" id="bReset">⏮ Reset</button></div>
+<div class="row"><span>Speed</span>
+<button class="btn b-set" id="bSlow">− Slower</button><button class="btn b-set" id="bFast">+ Faster</button><button class="btn b-auto" data-t="5">😌 Resting</button><button class="btn b-play" data-t="2">🏃 Exercise</button><button class="btn b-in" data-t="8">🧘 Deep breath</button></div>
+<div class="row"><span>Show</span>
+<button class="btn tg on" data-k="lab">🏷 Labels</button><button class="btn tg on" data-k="ar">➜ Air arrows</button><button class="btn tg on" data-k="pt">● O₂ / CO₂ dots</button><button class="btn tg on" data-k="mech">📋 Mechanism</button><button class="btn b-fs" id="bFs">⛶ Full screen</button></div>
+</div></div></section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+for(let i=0;i<14;i++){const b=document.createElement("div");b.className="bub";const s=30+Math.random()*90;b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}vw;animation-duration:${18+Math.random()*24}s;animation-delay:-${Math.random()*30}s`;document.body.appendChild(b)}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));t.classList.add("on");$(t.dataset.pg).classList.add("on");window.scrollTo(0,0)});
+document.querySelectorAll(".tilt").forEach(c=>{c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`});c.addEventListener("mouseleave",()=>c.style.transform="")});
+
+const lab=(t,x,y,tx,ty)=>{const w=t.length*6.9+16;return `<g class="lab"><line x1="${tx}" y1="${ty}" x2="${x}" y2="${y}"/><rect x="${x-w/2}" y="${y-11}" width="${w}" height="22" rx="7"/><text x="${x}" y="${y+4.5}" text-anchor="middle">${t}</text></g>`};
+const LB=[["Pharynx / Larynx",100,108,18,108],["Trachea",64,232,12,232],["Bronchus (R)",-140,288,-50,322],["Bronchus (L)",140,288,50,322],["Bronchioles",-172,368,-95,352],["Alveoli",-178,452,-130,398],["Lungs",150,440,100,420]];
+function panel(k){const inn=k==="in",c=inn?"#2ea8ff":"#ff4d67",w=inn?210:290;
+ const arr=inn?`<path d="M-38 128 V182 M38 128 V182" stroke-width="9" stroke-linecap="round"/><path d="M-52 180 L-38 204 L-24 180Z M24 180 L38 204 L52 180Z" stroke="none"/>`:`<path d="M-38 204 V150 M38 204 V150" stroke-width="9" stroke-linecap="round"/><path d="M-52 152 L-38 128 L-24 152Z M24 152 L38 128 L52 152Z" stroke="none"/>`;
+ const t1=inn?"Fresh Air":"Used Air",t2=inn?"Oxygen (O₂)":"Carbon Dioxide (CO₂)";
+ return `<g transform="translate(${inn?350:830},150) scale(1.25)" id="${k}G">
+ <ellipse cx="0" cy="330" rx="230" ry="270" fill="${c}" opacity=".07"/>
+ <g id="${k}Cb"><rect x="${-w/2}" y="-34" width="${w}" height="30" rx="15" fill="${c}" style="filter:drop-shadow(0 0 10px ${c})"/><text x="0" y="-13" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">${inn?"⬇ Oxygen (O₂) goes IN":"Carbon dioxide (CO₂) goes OUT ⬆"}</text></g>
+ <circle cx="0" cy="52" r="36" fill="#0c1a48" stroke="#6f8fd8" stroke-width="2"/><path d="M0 58 L10 74 L-10 74Z" fill="#7fb2ff"/><text x="0" y="46" text-anchor="middle" fill="#eaf0ff" font-size="11.5" font-weight="700">Nose / Mouth</text>
+ <rect x="-12" y="118" width="24" height="152" rx="10" fill="url(#ring)"/><rect x="-18" y="92" width="36" height="34" rx="14" fill="#ff9db0"/>
+ <path d="M0 265 L-48 322 M0 265 L48 322" stroke="#66c2ff" stroke-width="14" stroke-linecap="round" fill="none"/>
+ <g id="${k}L" style="filter:drop-shadow(0 8px 14px #ff3f7a99)"><use href="#lungShape"/><use href="#alv" class="${k}a" stroke="${c}" stroke-width="4"/></g>
+ <g id="${k}R" style="filter:drop-shadow(0 8px 14px #ff3f7a99)"><g transform="scale(-1,1)"><use href="#lungShape"/><use href="#alv" class="${k}a" stroke="${c}" stroke-width="4"/></g></g>
+ <path id="${k}D" fill="none" stroke="#8fd8ff" stroke-width="9" stroke-linecap="round" style="filter:drop-shadow(0 0 8px #5cc8ff)"/>
+ <g id="${k}Ar" fill="${c}" stroke="${c}" style="filter:drop-shadow(0 0 8px ${c})">${arr}<text x="-56" y="150" text-anchor="end" font-size="20" font-weight="800" stroke="none">${t1}</text><text x="-56" y="169" text-anchor="end" font-size="12.5" font-weight="700" stroke="none">${t2}</text></g>
+ <g id="${k}Pt"></g>
+ <g id="${k}Lb">${LB.map(l=>lab(...l)).join("")}<g class="lab" id="${k}Dl"><line x1="0" y1="-22" x2="0" y2="-11"/><rect x="-40" y="-11" width="80" height="22" rx="7"/><text x="0" y="4.5" text-anchor="middle">Diaphragm</text></g></g></g>`}
+$("pIn").innerHTML=panel("in");$("pOut").innerHTML=panel("out");
+$("mech").innerHTML=[["mI",12,"#2ea8ff",["(Diaphragm Contracts)","(Lungs Expand)","(Air Enters)"]],["mO",968,"#ff4d67",["(Diaphragm Relaxes)","(Lungs Compress)","(Air Exits)"]]].map(([id,x,c,l])=>`<g id="${id}"><rect x="${x}" y="140" width="200" height="150" rx="14" fill="#0a1232" stroke="${c}" stroke-width="2"/><text x="${x+100}" y="172" text-anchor="middle" fill="#fff" font-size="21">Mechanism:</text>${l.map((t,i)=>`<text x="${x+100}" y="${206+i*32}" text-anchor="middle" fill="#dbe6ff" font-size="15">${t}</text>`).join("")}</g>`).join("");
+
+const H=[[0,-34],[0,40],[0,120],[0,262],[-48,322],[-95,352]],EA=[[-128,395]],EB=[[-78,402],[-96,442]];
+const mir=r=>r.map(p=>[-p[0],p[1]]);
+const routes=[[...H,...EA],[...H,...EB],mir([...H,...EA]),mir([...H,...EB])].map(r=>{let L=[0];for(let i=1;i<r.length;i++)L.push(L[i-1]+Math.hypot(r[i][0]-r[i-1][0],r[i][1]-r[i-1][1]));return{p:r,L}});
+function pos(R,s){const d=s*R.L[R.L.length-1];let i=1;while(i<R.L.length-1&&R.L[i]<d)i++;const t=(d-R.L[i-1])/(R.L[i]-R.L[i-1]||1),a=R.p[i-1],b=R.p[i];return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]}
+function mkP(k){const inn=k==="in",g=$(k+"Pt");return [...Array(16)].map((_,i)=>{const e=document.createElementNS(NS,"g");e.innerHTML=`<circle r="${inn?10:12}" fill="${inn?"#2ea8ff":"#ff4d67"}" stroke="#fff" stroke-width="1.5"/><text y="3.5" text-anchor="middle" fill="#fff" font-size="${inn?9:8}" font-weight="800">${inn?"O₂":"CO₂"}</text>`;g.appendChild(e);return{e,R:routes[i%4],s:i/16}})}
+const PP={in:mkP("in"),out:mkP("out")};
+
+const S={v:0,t:0,T:4,mode:"auto",target:0,paused:false,flow:0,ph:"in",cnt:0,lp:"in"},D={in:0,out:0};
+function setT(T){const f=S.t/S.T;S.T=clamp(T,1.5,12);S.t=f*S.T}
+function auto(){if(S.mode!=="auto"){const a=Math.acos(clamp(1-2*S.v,-1,1))/(2*Math.PI)*S.T;S.t=S.target>=S.v?a:S.T-a}S.mode="auto";S.paused=false;upd()}
+function man(t){S.mode="manual";S.target=t;S.paused=false;upd()}
+function upd(){$("bPlay").textContent=S.paused?"▶ Play":"⏸ Pause"}
+function step(dt){let nv;
+ if(S.mode==="auto"){S.t=(S.t+dt)%S.T;nv=.5-.5*Math.cos(2*Math.PI*S.t/S.T);S.ph=S.t<S.T/2?"in":"out"}
+ else{const s=dt/(S.T/2);nv=S.v+clamp(S.target-S.v,-s,s);const d=nv-S.v;S.ph=d>1e-4?"in":d<-1e-4?"out":"hold"}
+ if(S.lp==="in"&&S.ph==="out")S.cnt++;S.lp=S.ph;S.flow=(nv-S.v)/dt;S.v=nv}
+function panelDraw(k,v,act,dt,dir){
+ const sx=1+.17*v,sy=1+.2*v;
+ $(k+"L").setAttribute("transform",`translate(-18 270) scale(${sx} ${sy}) translate(18 -270)`);
+ $(k+"R").setAttribute("transform",`translate(18 270) scale(${sx} ${sy}) translate(-18 -270)`);
+ const ctrl=450+110*v,ap=272.5+ctrl/2;
+ $(k+"D").setAttribute("d",`M-190 545 Q0 ${ctrl} 190 545`);$(k+"Dl").setAttribute("transform",`translate(0,${ap+30})`);
+ $(k+"G").style.opacity=.5+.5*act;
+ $(k+"Ar").style.opacity=.15+.85*act;$(k+"Cb").style.opacity=.3+.7*act;
+ const pulse=.35+.65*Math.abs(Math.sin(performance.now()/260));
+ document.querySelectorAll("."+k+"a").forEach(e=>e.style.opacity=act*pulse);
+ PP[k].forEach(p=>{p.s=(p.s+dir*act*Math.abs(S.flow)*.55*dt+1)%1;const[x,y]=pos(p.R,p.s);p.e.setAttribute("transform",`translate(${x},${y})`);p.e.style.opacity=act*clamp(Math.min(p.s,1-p.s)*10,0,1)})}
+let last=performance.now();
+function frame(ts){const dt=clamp((ts-last)/1000,.001,.05);last=ts;if(!S.paused)step(dt);
+ const f=S.paused?0:S.flow,aI=clamp(f/.3,0,1),aO=clamp(-f/.3,0,1);
+ const tI=S.ph==="out"?1:S.v,tO=S.ph==="in"?0:S.v,k=Math.min(1,dt*7);
+ D.in+=(tI-D.in)*k;D.out+=(tO-D.out)*k;
+ panelDraw("in",D.in,aI,dt,1);panelDraw("out",D.out,aO,dt,-1);
+ $("mI").style.opacity=.4+.6*aI;$("mO").style.opacity=.4+.6*aO;
+ $("hIn").style.opacity=.45+.55*aI;$("hOut").style.opacity=.45+.55*aO;
+ const ph=S.paused?"p":S.ph,st=$("st");
+ st.innerHTML=ph==="in"?'<span style="color:#2ea8ff">Inhaling: Oxygen (O₂) goes IN</span>':ph==="out"?'<span style="color:#ff4d67">Exhaling: Carbon dioxide (CO₂) goes OUT</span>':ph==="p"?'<span style="color:#ffc247">Paused</span>':'<span style="color:#ffc247">Holding breath</span>';
+ st.innerHTML+=` <small style="font:600 15px Segoe UI;color:#a3b4e0"> · breaths: ${S.cnt} · ${Math.round(60/S.T)} per minute</small>`;
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+
+$("bPlay").onclick=()=>{S.paused=!S.paused;upd()};
+$("bIn").onclick=()=>man(1);$("bOut").onclick=()=>man(0);$("bHold").onclick=()=>man(S.v);$("bAuto").onclick=auto;
+$("bReset").onclick=()=>{Object.assign(S,{v:0,t:0,T:4,mode:"auto",paused:false,flow:0,cnt:0,ph:"in",lp:"in"});D.in=D.out=0;upd()};
+$("bSlow").onclick=()=>setT(S.T+1);$("bFast").onclick=()=>setT(S.T-.5);
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{setT(+b.dataset.t);auto()});
+const map={lab:()=>[$("inLb"),$("outLb")],ar:()=>[$("inAr"),$("outAr"),$("inCb"),$("outCb")],pt:()=>[$("inPt"),$("outPt")],mech:()=>[$("mech")]};
+document.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{b.classList.toggle("on");map[b.dataset.k]().forEach(e=>e.setAttribute("display",b.classList.contains("on")?"inline":"none"))});
+const fs=()=>{
+  try {
+    if(document.fullscreenElement) {
+      if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+    } else if($("sim") && $("sim").requestFullscreen) {
+      $("sim").requestFullscreen().catch(()=>{});
+    }
+  } catch(err){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{$("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";});
+document.addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k===" "){e.preventDefault();S.paused=!S.paused;upd()}else if(k==="i")man(1);else if(k==="e")man(0);else if(k==="a")auto();else if(k==="f")fs()});
+</script></body></html>

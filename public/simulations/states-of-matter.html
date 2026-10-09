@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>States of Matter Simulation</title>
+<style>
+  :root{
+    --bg1:#eef6ff; --bg2:#fbfdff; --card:#ffffff;
+    --ink:#0a2540; --ink2:#2c4a6e; --muted:#6d84a3;
+    --line:#dbe7f5; --line2:#eaf2fb;
+    --blue:#2563eb; --blue-l:#dbeafe;
+    --cyan:#0891b2; --cyan-l:#cffafe;
+    --violet:#7c3aed; --violet-l:#ede9fe;
+    --pink:#db2777; --pink-l:#fce7f3;
+    --amber:#f59e0b; --amber-l:#fef3c7;
+    --green:#059669; --green-l:#d1fae5;
+    --red:#dc2626;
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --sh-sm:0 4px 14px rgba(37,99,235,.08);
+    --sh:0 16px 40px rgba(37,99,235,.12);
+    --sh-lg:0 28px 70px rgba(37,99,235,.18);
+    --font:"Inter","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:var(--font); color:var(--ink);
+    background:
+      radial-gradient(900px 620px at 5% -10%, rgba(8,145,178,.15), transparent 60%),
+      radial-gradient(900px 620px at 95% 0%, rgba(124,58,237,.13), transparent 60%),
+      linear-gradient(180deg,var(--bg1),var(--bg2) 55%,#ffffff);
+    min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+  .app{width:min(1280px,calc(100% - 28px));margin:16px auto 32px}
+
+  .tabs{
+    display:flex;gap:8px;margin:12px 0 18px;padding:8px;
+    background:#ffffff;border:1px solid var(--line);border-radius:999px;
+    box-shadow:var(--sh-sm);overflow-x:auto;scrollbar-width:none;
+  }
+  .tab{
+    flex:1;min-width:140px;border:0;cursor:pointer;font:inherit;font-weight:800;
+    font-size:14px;color:var(--muted);background:transparent;
+    padding:12px 18px;border-radius:999px;transition:all .25s;white-space:nowrap;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .tab:hover{color:var(--ink);background:var(--blue-l)}
+  .tab.active{color:#fff;background:linear-gradient(135deg,#06b6d4,#2563eb 60%,#7c3aed);
+    box-shadow:0 10px 24px rgba(37,99,235,.35);}
+
+  .panel{display:none}
+  .panel.active{display:block;animation:rise .4s cubic-bezier(.2,.8,.2,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh);}
+
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+  .hero-main{
+    position:relative;overflow:hidden;padding:36px 32px;border-radius:var(--r-lg);
+    background:linear-gradient(135deg,#22d3ee 0%,#3b82f6 45%,#8b5cf6 100%);
+    box-shadow:var(--sh-lg);color:#fff;
+  }
+  .hero-main h2{font-size:clamp(28px,4.5vw,48px);line-height:1.05;font-weight:900;margin-bottom:14px;}
+  .hero-main p{max-width:560px;font-size:16px;line-height:1.7;color:#eff6ff}
+
+  .side{padding:28px 26px;display:flex;flex-direction:column;justify-content:center}
+  .side h3{font-size:24px;margin-bottom:14px;color:var(--ink)}
+  .side p{color:var(--ink2);line-height:1.75;font-size:15px}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .mcard{padding:26px 22px;border-radius:var(--r-lg);}
+  .mcard h4{font-size:22px;margin-bottom:6px;color:var(--ink);}
+  .mcard .def{display:inline-block;font-size:12px;font-weight:800;color:var(--acc);margin-bottom:12px;padding:4px 10px;border-radius:999px;background:var(--acc-soft);}
+  .mcard p{color:var(--ink2);font-size:14px;line-height:1.7}
+  .solid  {--acc:#0d9488;--acc-soft:#ccfbf1}
+  .liquid {--acc:#2563eb;--acc-soft:#dbeafe}
+  .gas    {--acc:#db2777;--acc-soft:#fce7f3}
+
+  .sim{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px}
+  .stage-card{padding:14px}
+  .stage-box{position:relative;border-radius:var(--r-md);overflow:hidden;
+    background:linear-gradient(180deg,#f0f9ff,#e0f2fe);border:1px solid var(--line);}
+  canvas{display:block;width:100%;height:580px;touch-action:pan-y}
+  .badge{position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:999px;font-size:12px;font-weight:800;
+    text-transform:uppercase;background:rgba(255,255,255,.95);border:1px solid var(--line);}
+
+  .controls{padding:20px;display:flex;flex-direction:column;gap:14px}
+  .controls h3{font-size:17px;display:flex;align-items:center;gap:8px;color:var(--ink);}
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px;
+    border-radius:16px;background:#f1f5f9;border:1px solid var(--line);}
+  .seg button{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:800;
+    padding:10px 4px;border-radius:10px;color:var(--muted);background:transparent;}
+  .seg button.active{color:#fff;background:linear-gradient(135deg,#06b6d4,#2563eb);}
+
+  .tempbox{padding:16px;border-radius:16px;background:#f8fbff;border:1px solid var(--line);}
+  .tempbox .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .tempbox .row strong{font-size:22px;font-weight:900;color:var(--blue)}
+  input[type=range]{-webkit-appearance:none;width:100%;height:10px;border-radius:99px;outline:none;
+    background:linear-gradient(90deg,#3b82f6,#06b6d4,#a78bfa,#fb7185);cursor:pointer;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.5);}
+
+  .readouts{display:grid;gap:8px}
+  .ro{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-radius:12px;background:#f8fbff;border:1px solid var(--line);font-size:13px;}
+  .ro span{color:var(--muted);font-weight:800}
+
+  .fs-btn{
+    position:absolute;top:16px;right:16px;z-index:30;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;
+    border:0;border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:800;font-size:12.5px;
+  }
+
+  @media (max-width:960px){
+    .hero{grid-template-columns:1fr}
+    .sim{grid-template-columns:1fr}
+    .grid3{grid-template-columns:1fr}
+    canvas{height:460px}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <nav class="tabs">
+    <button class="tab" data-tab="definition">Definition</button>
+    <button class="tab" data-tab="explanation">Explanation</button>
+    <button class="tab active" data-tab="simulation">Simulation</button>
+  </nav>
+
+  <section id="definition" class="panel">
+    <div class="hero">
+      <div class="hero-main">
+        <h2>States of Matter</h2>
+        <p>Everything in the universe is composed of matter. Observe how particles change kinetic behavior, spacing, and cohesion across solid, liquid, and gas phases.</p>
+      </div>
+      <div class="card side">
+        <h3>What is Matter?</h3>
+        <p>Matter is anything that possesses mass and occupies physical space. In everyday thermodynamic conditions, it manifests as <b>solid</b>, <b>liquid</b>, or <b>gas</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="explanation" class="panel">
+    <div class="grid3">
+      <article class="card mcard solid">
+        <h4>Solid</h4>
+        <div class="def">Fixed shape • Fixed volume</div>
+        <p>Particles are tightly bound in an ordered lattice. Kinetic thermal motion is restricted to high-frequency in-place vibrations.</p>
+      </article>
+
+      <article class="card mcard liquid">
+        <h4>Liquid</h4>
+        <div class="def">Variable shape • Fixed volume</div>
+        <p>Particles remain in close proximity while freely sliding past each other, allowing fluid flow and surface adaptation.</p>
+      </article>
+
+      <article class="card mcard gas">
+        <h4>Gas</h4>
+        <div class="def">Variable shape • Variable volume</div>
+        <p>Particles move at high velocities across wide intermolecular distances, rapidly diffusing to occupy the entire volume.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="simulation" class="panel active">
+    <div class="sim" id="simContainer">
+      <div class="card stage-card">
+        <div class="stage-box">
+          <canvas id="stage"></canvas>
+          <div class="badge" id="badge">
+            <span id="badgeText">Solid</span>
+          </div>
+          <button class="fs-btn" id="fsBtn">Full Screen</button>
+        </div>
+      </div>
+
+      <aside class="card controls">
+        <h3>Controls</h3>
+
+        <div class="seg" id="seg">
+          <button class="active" data-state="solid">Solid</button>
+          <button data-state="liquid">Liquid</button>
+          <button data-state="gas">Gas</button>
+        </div>
+
+        <div class="tempbox">
+          <div class="row">
+            <span>Temperature</span>
+            <strong id="tempOut">−10 °C</strong>
+          </div>
+          <input id="temp" type="range" min="-50" max="150" step="1" value="-10">
+        </div>
+
+        <div class="readouts">
+          <div class="ro"><span>State</span><b id="stateOut">Solid (Ice)</b></div>
+          <div class="ro"><span>Particle energy</span><b id="energyOut">Low</b></div>
+          <div class="ro"><span>Arrangement</span><b id="arrOut">Tight lattice</b></div>
+        </div>
+
+        <p id="hint" style="font-size:13px;color:#2c4a6e;line-height:1.6;background:#f0f9ff;padding:12px;border-radius:12px;">
+          Ice particles vibrate in a rigid crystal lattice.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    tabs.forEach(b=>b.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='simulation') requestAnimationFrame(resizeCanvas);
+  });
+});
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+const slider = document.getElementById('temp');
+const tempOut = document.getElementById('tempOut');
+const stateOut = document.getElementById('stateOut');
+const energyOut = document.getElementById('energyOut');
+const arrOut = document.getElementById('arrOut');
+const badgeText = document.getElementById('badgeText');
+const segBtns = document.querySelectorAll('#seg button');
+
+const TEMP_MIN=-50, TEMP_MAX=150, MELT=0, BOIL=100;
+let W=800,H=580,DPR=1;
+let currentTemp=-10, targetTemp=-10;
+let state='solid';
+let time=0;
+
+let beaker={x:0,y:0,w:0,h:0};
+let burner={x:0,y:0,w:0,h:0};
+
+function computeGeom(){
+  const bx = W*0.06;
+  const by = H*0.08;
+  const bw = W*0.52;
+  const bh = H*0.62;
+  beaker={x:bx,y:by,w:bw,h:bh};
+  burner={x:bx+bw*0.2,y:by+bh+10,w:bw*0.6,h:H-(by+bh)-14};
+}
+
+let molecules=[];
+function buildMolecules(){
+  molecules=[];
+  const rows = 6, cols = 8;
+  const startX = beaker.x + (beaker.w - cols*22)/2;
+  const startY = beaker.y + beaker.h - rows*22 - 15;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      molecules.push({
+        baseX: startX + c*22,
+        baseY: startY + r*22,
+        x: startX + c*22,
+        y: startY + r*22,
+        vx: (Math.random()-.5)*2.5,
+        vy: (Math.random()-.5)*2.5,
+        r: 7
+      });
+    }
+  }
+}
+
+function resizeCanvas(){
+  const rect=canvas.getBoundingClientRect();
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=Math.max(320,rect.width);
+  H=Math.max(280,rect.height);
+  canvas.width=Math.round(W*DPR);
+  canvas.height=Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  computeGeom();
+  buildMolecules();
+}
+
+function updateStateUI(s){
+  state = s;
+  const labels = {
+    solid: { name: 'SOLID (ICE)', energy: 'Low (Vibrating only)', arr: 'Rigid Crystal Lattice', hint: 'Ice particles are locked into an ordered crystalline lattice and vibrate in place.' },
+    liquid: { name: 'LIQUID (WATER)', energy: 'Moderate (Fluid motion)', arr: 'Random close contact', hint: 'Water molecules slide over and around each other, taking the shape of the beaker.' },
+    gas: { name: 'GAS (STEAM)', energy: 'High (Rapid dispersal)', arr: 'Widely separated', hint: 'Steam particles fly freely at high speeds in all directions, bouncing off beaker walls.' }
+  };
+  const info = labels[s];
+  stateOut.textContent = info.name;
+  energyOut.textContent = info.energy;
+  arrOut.textContent = info.arr;
+  document.getElementById('hint').textContent = info.hint;
+  badgeText.textContent = s.toUpperCase();
+  segBtns.forEach(b=>b.classList.toggle('active', b.dataset.state===s));
+}
+
+function loop(now){
+  time += 0.05;
+
+  if(Math.abs(targetTemp-currentTemp)>0.25){
+    currentTemp += (targetTemp-currentTemp)*0.15;
+    slider.value = Math.round(currentTemp);
+    tempOut.textContent = Math.round(currentTemp) + ' °C';
+  }
+
+  const st = currentTemp<MELT?'solid':currentTemp<BOIL?'liquid':'gas';
+  if(st!==state){
+    updateStateUI(st);
+  }
+
+  ctx.fillStyle='#f0f9ff';
+  ctx.fillRect(0,0,W,H);
+
+  // Beaker glass
+  ctx.strokeStyle='#2563eb';
+  ctx.lineWidth=4;
+  ctx.strokeRect(beaker.x,beaker.y,beaker.w,beaker.h);
+
+  // Beaker lip
+  ctx.fillStyle='#2563eb';
+  ctx.fillRect(beaker.x-8,beaker.y-4,beaker.w+16,8);
+
+  // Burner flame
+  const flameH = state==='solid'?12:state==='liquid'?28:52;
+  const flameGrad = ctx.createRadialGradient(burner.x+burner.w/2, burner.y+20, 4, burner.x+burner.w/2, burner.y+20, flameH);
+  flameGrad.addColorStop(0, '#ffffff');
+  flameGrad.addColorStop(0.3, '#ffeb3b');
+  flameGrad.addColorStop(0.7, '#ff5722');
+  flameGrad.addColorStop(1, 'rgba(255,87,34,0)');
+  ctx.fillStyle=flameGrad;
+  ctx.beginPath();
+  ctx.arc(burner.x+burner.w/2, burner.y+20, flameH, 0, Math.PI*2);
+  ctx.fill();
+
+  // Burner stand
+  ctx.fillStyle='#64748b';
+  ctx.fillRect(burner.x, burner.y+28, burner.w, 14);
+
+  // Molecules animation
+  const vibAmp = Math.max(0.5, (currentTemp - TEMP_MIN)*0.03);
+  molecules.forEach(m=>{
+    if(state==='solid'){
+      // Locked into rigid crystalline lattice with thermal vibration
+      m.x = m.baseX + (Math.random()-.5)*vibAmp;
+      m.y = m.baseY + (Math.random()-.5)*vibAmp;
+    } else if(state==='liquid'){
+      // Free sliding fluid motion at bottom half of beaker
+      m.x += m.vx * 1.3;
+      m.y += m.vy * 1.3;
+      if(m.x < beaker.x+12 || m.x > beaker.x+beaker.w-12) m.vx *= -1;
+      if(m.y < beaker.y+beaker.h*0.38 || m.y > beaker.y+beaker.h-12) m.vy *= -1;
+    } else {
+      // High speed gas bouncing off all walls
+      const gasSpeed = 2.8 + (currentTemp-BOIL)*0.04;
+      m.x += m.vx * gasSpeed;
+      m.y += m.vy * gasSpeed;
+      if(m.x < beaker.x+12 || m.x > beaker.x+beaker.w-12) m.vx *= -1;
+      if(m.y < beaker.y+12 || m.y > beaker.y+beaker.h-12) m.vy *= -1;
+    }
+
+    const col = state==='solid' ? '#0d9488' : state==='liquid' ? '#2563eb' : '#db2777';
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.r, 0, Math.PI*2);
+    ctx.fill();
+
+    // Specular highlight on molecule sphere
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath();
+    ctx.arc(m.x - 2, m.y - 2, m.r*0.35, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // Thermometer
+  const tx = beaker.x+beaker.w+40, ty = beaker.y+10, tw = 28, th = beaker.h-20;
+  ctx.fillStyle='#f8fafc';
+  ctx.fillRect(tx,ty,tw,th);
+  ctx.strokeStyle='#94a3b8';
+  ctx.lineWidth=2;
+  ctx.strokeRect(tx,ty,tw,th);
+
+  // Mercury bulb
+  const bulbR = 18;
+  const bulbCY = ty + th + bulbR - 4;
+  ctx.fillStyle='#ef4444';
+  ctx.beginPath();
+  ctx.arc(tx + tw/2, bulbCY, bulbR, 0, Math.PI*2);
+  ctx.fill();
+
+  const frac = Math.max(0, Math.min(1, (currentTemp-TEMP_MIN)/(TEMP_MAX-TEMP_MIN)));
+  ctx.fillStyle='#ef4444';
+  ctx.fillRect(tx+6, ty+th - th*frac, tw-12, th*frac);
+
+  requestAnimationFrame(loop);
+}
+
+slider.addEventListener('input',()=>{
+  targetTemp = currentTemp = Number(slider.value);
+  tempOut.textContent = Math.round(currentTemp) + ' °C';
+  const st = currentTemp<MELT?'solid':currentTemp<BOIL?'liquid':'gas';
+  updateStateUI(st);
+});
+
+segBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const s=btn.dataset.state;
+    const tempTargets = { solid: -25, liquid: 45, gas: 125 };
+    targetTemp = currentTemp = tempTargets[s];
+    slider.value = currentTemp;
+    tempOut.textContent = currentTemp + ' °C';
+    updateStateUI(s);
+  });
+});
+
+document.getElementById('fsBtn').addEventListener('click',()=>{
+  const el = document.getElementById('simContainer');
+  if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
+  else { document.exitFullscreen().catch(()=>{}); }
+});
+
+function initStates(){
+  resizeCanvas();
+  updateStateUI('solid');
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resizeCanvas);
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+  initStates();
+} else {
+  window.addEventListener('DOMContentLoaded', initStates);
+  window.addEventListener('load', initStates);
+}
+</script>
+</body>
+</html>

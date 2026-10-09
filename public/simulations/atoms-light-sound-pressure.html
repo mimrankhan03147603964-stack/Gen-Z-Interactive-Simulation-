@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Science Lab · Atoms, Light, Sound & Pressure</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow-x:hidden; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:#0a1628; color:#e8f4ff; min-height:100vh;
+  display:flex; flex-direction:column;
+}
+.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
+
+.tabs {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
+  background:#0f2440; border-radius:14px; padding:8px 12px;
+}
+.tab-btn {
+  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .25s; flex:1 0 auto;
+}
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active {
+  background:linear-gradient(135deg,#ff8f00,#ff6f00);
+  color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45);
+}
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+
+.card {
+  background:linear-gradient(160deg,#122a44,#0a1e34);
+  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
+  box-shadow:0 14px 40px rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.05);
+}
+.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc {
+  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
+  border-left:5px solid #ffc107; padding-left:14px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.6;
+}
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab {
+  padding:8px 16px; border:none; border-radius:30px;
+  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
+  cursor:pointer; transition:.2s;
+}
+.section-tab:hover { background:#234468; color:#fff; }
+.section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
+.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before {
+  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
+  border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900;
+  text-align:center; line-height:20px; font-size:.8rem;
+}
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; }
+.grid-item p { font-size:.92rem; color:#b8d4f0; }
+
+.sim-box {
+  background:#06121f; border-radius:18px; padding:18px 16px 16px;
+  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+}
+.sim-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; margin-bottom:14px;
+  background:#0a1a2e; padding:12px 18px; border-radius:36px;
+  border:1px solid #1e3a5c;
+}
+.sim-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.9rem;
+}
+.sim-controls input[type=range] { width:125px; accent-color:#ff9800; cursor:pointer; }
+.sim-controls select,.sim-controls button {
+  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+}
+.sim-controls button { background:#1976d2; color:#fff; }
+.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#ffd54f; margin:14px 0 6px; }
+.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
+.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
+.teacher-note {
+  background:linear-gradient(135deg,#0d2018,#0a1a14);
+  border-left:5px solid #4caf50; border-radius:0 14px 14px 0;
+  padding:12px 16px; margin-top:12px; font-size:.9rem;
+  color:#b8e6c8; line-height:1.7;
+}
+.teacher-note strong { color:#66bb6a; }
+
+/* ============ TRUE FULLSCREEN OVERLAY ============ */
+.fs-overlay {
+  position:fixed; inset:0; background:#040e1a; z-index:99999;
+  display:none; flex-direction:column; padding:10px 16px 12px;
+  overflow:hidden;
+}
+.fs-overlay.active { display:flex; }
+.fs-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+}
+.fs-topbar h2 {
+  font-size:1.45rem; font-weight:800; color:#ffd54f;
+  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.fs-close-btn {
+  padding:9px 24px; border-radius:30px; border:none;
+  background:linear-gradient(135deg,#ff5252,#d32f2f);
+  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
+  flex-shrink:0;
+}
+.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
+.fs-canvas-area {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  min-height:0; padding:6px 0;
+}
+.fs-canvas-area canvas {
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
+}
+.fs-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; padding:10px 16px;
+  background:#0a1a2e; border-radius:40px;
+  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
+}
+.fs-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.92rem;
+}
+.fs-controls input[type=range] { width:140px; accent-color:#ff9800; cursor:pointer; }
+.fs-controls select,.fs-controls button {
+  padding:8px 18px; border-radius:30px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+}
+.fs-controls button { background:#1976d2; color:#fff; }
+.fs-readout {
+  text-align:center; font-size:1.25rem; font-weight:700;
+  color:#ffd54f; margin:6px 0 2px; flex-shrink:0;
+}
+.fs-readout small { display:block; font-size:.88rem; color:#7a9cc0; font-weight:400; }
+.fs-note {
+  text-align:center; font-size:.88rem; color:#a8c8e8;
+  padding:2px 0 2px; flex-shrink:0;
+}
+
+@media(max-width:900px){
+  .tab-btn{font-size:.9rem;padding:10px 14px}
+  .card{padding:16px}
+  .fs-topbar h2{font-size:1.1rem}
+  .fs-controls label{font-size:.82rem}
+  .fs-controls input[type=range]{width:110px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="tabs" id="topicTabs">
+    <button class="tab-btn active" data-topic="atoms"><span class="icon">⚛️</span> Atoms & Molecules</button>
+    <button class="tab-btn" data-topic="light"><span class="icon">💡</span> Light</button>
+    <button class="tab-btn" data-topic="sound"><span class="icon">🔊</span> Sound</button>
+    <button class="tab-btn" data-topic="pressure"><span class="icon">🔄</span> Pressure</button>
+  </div>
+
+  <!-- ================= ATOMS ================= -->
+  <div class="topic active" id="topic-atoms"><div class="card">
+    <h2>⚛️ Atoms & Molecules <small>building blocks of matter</small></h2>
+    <div class="desc">Watch atoms vibrate, slide, and fly. Bond them into molecules. Heat or cool them to change state.</div>
+    <div class="section-tabs" data-topic="atoms">
+      <button class="section-tab" data-section="def">Definition</button>
+      <button class="section-tab" data-section="exp">Explanation</button>
+      <button class="section-tab" data-section="types">Types</button>
+      <button class="section-tab active" data-section="sim">Simulation</button>
+    </div>
+    <div class="panel" id="atoms-def"><h3>📖 Definition</h3>
+      <p><strong>Atoms</strong> are the smallest particles of a chemical element. <strong>Molecules</strong> are groups of two or more atoms held together by chemical bonds.</p>
+      <div class="teacher-note"><strong>Teacher's Note:</strong> Cut chalk in half again and again — you reach an atom. Two hydrogen + one oxygen = water molecule (H₂O).</div>
+    </div>
+    <div class="panel" id="atoms-exp"><h3>💡 Explanation</h3>
+      <p>Everything is made of atoms. The state of matter depends on how tightly atoms are packed and how much they move.</p>
+      <ul>
+        <li><strong>Solid:</strong> atoms vibrate in fixed positions.</li>
+        <li><strong>Liquid:</strong> atoms slide past each other.</li>
+        <li><strong>Gas:</strong> atoms move freely and fill space.</li>
+      </ul>
+    </div>
+    <div class="panel" id="atoms-types"><h3>🧩 Types of Matter</h3>
+      <div class="grid-3">
+        <div class="grid-item"><h4>Elements</h4><p>One type of atom. Examples: Oxygen (O), Gold (Au).</p></div>
+        <div class="grid-item"><h4>Compounds</h4><p>Different atoms bonded. Examples: Water (H₂O), Salt (NaCl).</p></div>
+        <div class="grid-item"><h4>Mixtures</h4><p>Mixed but not joined. Examples: Air, salad.</p></div>
+      </div>
+    </div>
+    <div class="panel active" id="atoms-sim"><h3>🎮 Interactive Simulation</h3>
+      <div class="sim-box" id="atomsSimBox">
+        <div class="sim-controls" id="atomsControls">
+          <label>State:
+            <select id="atomState">
+              <option value="solid">Solid (Ice)</option>
+              <option value="liquid" selected>Liquid (Water)</option>
+              <option value="gas">Gas (Steam)</option>
+            </select>
+          </label>
+          <button id="atomBondBtn">➕ Bond Atoms</button>
+          <button id="atomHeatBtn">🔥 Heat</button>
+          <button id="atomCoolBtn">❄️ Cool</button>
+          <button id="atomResetBtn">⟳ Reset</button>
+          <button id="atomFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+        </div>
+        <div class="sim-readout" id="atomReadout">LIQUID <small>Atoms slide past each other</small></div>
+        <canvas id="atomCanvas" width="1100" height="480"></canvas>
+        <div class="sim-info" id="atomInfo">Atoms are drawn as glowing spheres with element labels. Bonds are yellow lines.</div>
+        <div class="teacher-note"><strong>Real-Life:</strong> Ice = solid (molecules vibrate in place). Water = liquid (molecules slide). Steam = gas (molecules fly).</div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- ================= LIGHT ================= -->
+  <div class="topic" id="topic-light"><div class="card">
+    <h2>💡 Light <small>reflection, refraction & spectrum</small></h2>
+    <div class="desc">A real laser beam, a mirror, a glass block, and a prism — all drawn clearly with labels.</div>
+    <div class="section-tabs" data-topic="light">
+      <button class="section-tab" data-section="def">Definition</button>
+      <button class="section-tab" data-section="exp">Explanation</button>
+      <button class="section-tab" data-section="types">Properties</button>
+      <button class="section-tab active" data-section="sim">Simulation</button>
+    </div>
+    <div class="panel" id="light-def"><h3>📖 Definition</h3>
+      <p><strong>Light</strong> is electromagnetic radiation visible to the human eye. It travels in straight lines.</p>
+    </div>
+    <div class="panel" id="light-exp"><h3>💡 Explanation</h3>
+      <p>Light can be <strong>reflected</strong> (bounced), <strong>refracted</strong> (bent), and <strong>dispersed</strong> (split into colours).</p>
+      <ul>
+        <li><strong>Reflection:</strong> Angle in = Angle out. Mirrors use this.</li>
+        <li><strong>Refraction:</strong> Light bends entering glass or water.</li>
+        <li><strong>Spectrum:</strong> White light splits into 7 colours.</li>
+      </ul>
+    </div>
+    <div class="panel" id="light-types"><h3>🌈 Key Properties</h3>
+      <div class="grid-3">
+        <div class="grid-item"><h4>Reflection</h4><p>Mirror bounces light back at same angle.</p></div>
+        <div class="grid-item"><h4>Refraction</h4><p>Light bends when entering glass.</p></div>
+        <div class="grid-item"><h4>Spectrum</h4><p>Prism splits white light into ROYGBIV.</p></div>
+      </div>
+    </div>
+    <div class="panel active" id="light-sim"><h3>🎮 Interactive Simulation</h3>
+      <div class="sim-box" id="lightSimBox">
+        <div class="sim-controls" id="lightControls">
+          <label>Phenomenon:
+            <select id="lightMode">
+              <option value="reflect">Reflection (Mirror)</option>
+              <option value="refract">Refraction (Glass Block)</option>
+              <option value="spectrum">Spectrum (Prism)</option>
+            </select>
+          </label>
+          <button id="lightAnimBtn">⏸ Pause</button>
+          <button id="lightAngleBtn">📐 Change Angle</button>
+          <button id="lightAutoBtn">🔄 Auto-Sweep ON</button>
+          <button id="lightFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+        </div>
+        <div class="sim-readout" id="lightReadout">REFLECTION <small>Angle in = Angle out</small></div>
+        <canvas id="lightCanvas" width="1100" height="480"></canvas>
+        <div class="sim-info" id="lightInfo">Yellow beam = incoming. Orange beam = reflected. Blue dashed = normal.</div>
+        <div class="teacher-note"><strong>Real-Life:</strong> Mirror (reflection), pencil in water (refraction), rainbow (spectrum).</div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- ================= SOUND ================= -->
+  <div class="topic" id="topic-sound"><div class="card">
+    <h2>🔊 Sound <small>vibrations, pitch & loudness</small></h2>
+    <div class="desc">A speaker cone vibrates and pushes air particles. Change frequency and amplitude.</div>
+    <div class="section-tabs" data-topic="sound">
+      <button class="section-tab" data-section="def">Definition</button>
+      <button class="section-tab" data-section="exp">Explanation</button>
+      <button class="section-tab" data-section="types">Features</button>
+      <button class="section-tab active" data-section="sim">Simulation</button>
+    </div>
+    <div class="panel" id="sound-def"><h3>📖 Definition</h3>
+      <p><strong>Sound</strong> is a vibration that travels as a mechanical wave through a medium. It cannot travel in a vacuum.</p>
+    </div>
+    <div class="panel" id="sound-exp"><h3>💡 Explanation</h3>
+      <p>Vibrating objects create pressure waves. <strong>Frequency</strong> = pitch. <strong>Amplitude</strong> = loudness.</p>
+      <ul>
+        <li><strong>Pitch:</strong> High frequency = high pitch.</li>
+        <li><strong>Loudness:</strong> Large amplitude = loud sound.</li>
+        <li><strong>Speed:</strong> Fastest in solids, slowest in gases.</li>
+      </ul>
+    </div>
+    <div class="panel" id="sound-types"><h3>🎚️ Key Features</h3>
+      <div class="grid-3">
+        <div class="grid-item"><h4>Pitch</h4><p>Frequency determines pitch.</p></div>
+        <div class="grid-item"><h4>Loudness</h4><p>Amplitude determines loudness.</p></div>
+        <div class="grid-item"><h4>Speed</h4><p>Fastest in solids, slowest in gases.</p></div>
+      </div>
+    </div>
+    <div class="panel active" id="sound-sim"><h3>🎮 Interactive Simulation</h3>
+      <div class="sim-box" id="soundSimBox">
+        <div class="sim-controls" id="soundControls">
+          <label>Frequency: <input type="range" id="freqRange" min="1" max="20" value="8"></label>
+          <label>Amplitude: <input type="range" id="ampRange" min="1" max="20" value="10"></label>
+          <button id="soundPresetLow">Low Pitch</button>
+          <button id="soundPresetHigh">High Pitch</button>
+          <button id="soundPresetSoft">Soft</button>
+          <button id="soundPresetLoud">Loud</button>
+          <button id="soundPlayBtn">🔊 Play Tone</button>
+          <button id="soundFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+        </div>
+        <div class="sim-readout" id="soundReadout">SOUND WAVE <small>Frequency: 8 · Amplitude: 10</small></div>
+        <canvas id="soundCanvas" width="1100" height="480"></canvas>
+        <div class="sim-info" id="soundInfo">Speaker cone vibrates. Air particles push and pull, creating the wave.</div>
+        <div class="teacher-note"><strong>Real-Life:</strong> Man's deep voice (low pitch), woman's high voice (high pitch). Whisper (soft), shout (loud).</div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- ================= PRESSURE ================= -->
+  <div class="topic" id="topic-pressure"><div class="card">
+    <h2>🔄 Pressure <small>force per unit area</small></h2>
+    <div class="desc">A piston presses down on a surface. Change force and area to see pressure change.</div>
+    <div class="section-tabs" data-topic="pressure">
+      <button class="section-tab" data-section="def">Definition</button>
+      <button class="section-tab" data-section="exp">Explanation</button>
+      <button class="section-tab" data-section="types">Concepts</button>
+      <button class="section-tab active" data-section="sim">Simulation</button>
+    </div>
+    <div class="panel" id="pressure-def"><h3>📖 Definition</h3>
+      <p><strong>Pressure</strong> is force applied perpendicular to a surface per unit area. Measured in pascals (Pa).</p>
+    </div>
+    <div class="panel" id="pressure-exp"><h3>💡 Explanation</h3>
+      <p>Pressure = Force ÷ Area. Smaller area = more pressure.</p>
+      <ul>
+        <li><strong>Force & Area:</strong> More force or less area = more pressure.</li>
+        <li><strong>Atmospheric:</strong> Weight of air, ~101 kPa at sea level.</li>
+        <li><strong>Liquid:</strong> Pressure increases with depth.</li>
+      </ul>
+    </div>
+    <div class="panel" id="pressure-types"><h3>📊 Key Concepts</h3>
+      <div class="grid-3">
+        <div class="grid-item"><h4>Force & Area</h4><p>More force or less area = more pressure.</p></div>
+        <div class="grid-item"><h4>Atmospheric</h4><p>Weight of air, ~101 kPa.</p></div>
+        <div class="grid-item"><h4>Liquid</h4><p>Pressure increases with depth.</p></div>
+      </div>
+    </div>
+    <div class="panel active" id="pressure-sim"><h3>🎮 Interactive Simulation</h3>
+      <div class="sim-box" id="pressureSimBox">
+        <div class="sim-controls" id="pressureControls">
+          <label>Force (N): <input type="range" id="forceRange" min="1" max="20" value="10"></label>
+          <label>Area (cm²): <input type="range" id="areaRange" min="1" max="20" value="8"></label>
+          <button id="pressureHigh">High Pressure</button>
+          <button id="pressureLow">Low Pressure</button>
+          <button id="pressureReset">⟳ Reset</button>
+          <button id="pressureFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+        </div>
+        <div class="sim-readout" id="pressureReadout">PRESSURE = 1.25 Pa <small>Force 10 · Area 8</small></div>
+        <canvas id="pressureCanvas" width="1100" height="480"></canvas>
+        <div class="sim-info" id="pressureInfo">Piston presses down. Smaller area = higher pressure. Particles move faster with more force.</div>
+        <div class="teacher-note"><strong>Real-Life:</strong> Sharp needle (high pressure), tractor tyre (low pressure).</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ TRUE FULLSCREEN OVERLAY ============ -->
+<div class="fs-overlay" id="fsOverlay">
+  <div class="fs-topbar">
+    <h2 id="fsTitle">Simulation</h2>
+    <button class="fs-close-btn" id="fsCloseBtn">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsCanvasArea"></div>
+  <div class="fs-controls" id="fsControls"></div>
+  <div class="fs-readout" id="fsReadout"></div>
+  <div class="fs-note" id="fsNote"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- TABS ---------- */
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={atoms:document.getElementById('topic-atoms'),light:document.getElementById('topic-light'),sound:document.getElementById('topic-sound'),pressure:document.getElementById('topic-pressure')};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+  topicTabs.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const topic=this.dataset.topic;Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+}));
+document.querySelectorAll('.section-tabs').forEach(group=>{
+  const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+  btns.forEach(btn=>btn.addEventListener('click',function(){
+    btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+    const section=this.dataset.section,parent=this.closest('.card');
+    parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+  }));
+});
+
+/* ================================================================
+   TRUE FULLSCREEN MANAGER (Chrome optimized)
+   ================================================================ */
+const fsOverlay=document.getElementById('fsOverlay');
+const fsTitle=document.getElementById('fsTitle');
+const fsCanvasArea=document.getElementById('fsCanvasArea');
+const fsControls=document.getElementById('fsControls');
+const fsReadout=document.getElementById('fsReadout');
+const fsNote=document.getElementById('fsNote');
+const fsCloseBtn=document.getElementById('fsCloseBtn');
+
+let activeFS=null;
+
+function openFullscreen(topic){
+  if(activeFS) return;
+  const simBox=document.getElementById(topic+'SimBox');
+  if(!simBox) return;
+  const canvas=simBox.querySelector('canvas');
+  const controls=simBox.querySelector('.sim-controls');
+  const readout=simBox.querySelector('.sim-readout');
+  const info=simBox.querySelector('.sim-info');
+
+  const titles={atoms:'⚛️ Atoms & Molecules',light:'💡 Light',sound:'🔊 Sound',pressure:'🔄 Pressure'};
+  fsTitle.textContent=titles[topic]||'Simulation';
+
+  activeFS={ topic, canvas, controls, readout, info, originalParent:simBox };
+
+  fsCanvasArea.innerHTML='';
+  fsCanvasArea.appendChild(canvas);
+
+  fsControls.innerHTML='';
+  const cloned=controls.cloneNode(true);
+  const fsBtn=cloned.querySelector('button[id$="FullscreenBtn"]');
+  if(fsBtn) fsBtn.remove();
+  cloned.querySelectorAll('[id]').forEach(el=>{ el.dataset.fsId=el.id; el.removeAttribute('id'); });
+  fsControls.appendChild(cloned);
+
+  bindClonedControls(topic, cloned, controls);
+
+  fsReadout.innerHTML=readout?readout.innerHTML:'';
+  fsNote.textContent=info?info.textContent:'';
+
+  fsOverlay.classList.add('active');
+
+  const el=fsOverlay;
+  if(el.requestFullscreen){
+    el.requestFullscreen().catch(err=>{ console.warn('Fullscreen request failed:', err); });
+  } else if(el.webkitRequestFullscreen){
+    el.webkitRequestFullscreen();
+  }
+
+  startReadoutUpdater(topic);
+}
+
+function closeFullscreen(){
+  if(!activeFS) return;
+  const { topic, canvas, controls, readout, info, originalParent } = activeFS;
+
+  stopReadoutUpdater();
+
+  originalParent.insertBefore(canvas, readout);
+
+  fsControls.innerHTML='';
+  fsOverlay.classList.remove('active');
+
+  if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+
+  activeFS=null;
+}
+
+fsCloseBtn.addEventListener('click',closeFullscreen);
+
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement && activeFS) closeFullscreen();
+});
+document.addEventListener('webkitfullscreenchange',()=>{
+  if(!document.webkitFullscreenElement && activeFS) closeFullscreen();
+});
+
+function bindClonedControls(topic, cloned, original){
+  cloned.querySelectorAll('[data-fs-id]').forEach(el=>{
+    const origId=el.dataset.fsId;
+    const orig=original.querySelector('#'+origId);
+    if(!orig) return;
+    if(el.tagName==='INPUT' && el.type==='range') el.value=orig.value;
+    if(el.tagName==='SELECT') el.value=orig.value;
+    const evtMap={atomState:'change',lightMode:'change',freqRange:'input',ampRange:'input',forceRange:'input',areaRange:'input'};
+    const evt=evtMap[origId]||'click';
+    el.addEventListener(evt,function(e){
+      if(orig.tagName==='INPUT' && orig.type==='range') orig.value=el.value;
+      if(orig.tagName==='SELECT') orig.value=el.value;
+      orig.dispatchEvent(new Event(evt,{bubbles:true}));
+      if(origId==='lightAnimBtn') el.textContent=orig.textContent;
+      if(origId==='lightAutoBtn') el.textContent=orig.textContent;
+    });
+  });
+}
+
+let readoutRAF=null;
+function startReadoutUpdater(topic){
+  const simBox=document.getElementById(topic+'SimBox');
+  const readout=simBox.querySelector('.sim-readout');
+  const info=simBox.querySelector('.sim-info');
+  function tick(){
+    if(!activeFS || activeFS.topic!==topic){ readoutRAF=null; return; }
+    if(readout) fsReadout.innerHTML=readout.innerHTML;
+    if(info) fsNote.textContent=info.textContent;
+    fsControls.querySelectorAll('[data-fs-id]').forEach(el=>{
+      const origId=el.dataset.fsId;
+      const orig=simBox.querySelector('#'+origId);
+      if(!orig) return;
+      if(el.tagName==='INPUT' && el.type==='range' && el.value!==orig.value) el.value=orig.value;
+      if(el.tagName==='SELECT' && el.value!==orig.value) el.value=orig.value;
+    });
+    readoutRAF=requestAnimationFrame(tick);
+  }
+  tick();
+}
+function stopReadoutUpdater(){
+  if(readoutRAF){ cancelAnimationFrame(readoutRAF); readoutRAF=null; }
+}
+
+document.getElementById('atomFullscreenBtn').addEventListener('click',()=>openFullscreen('atoms'));
+document.getElementById('lightFullscreenBtn').addEventListener('click',()=>openFullscreen('light'));
+document.getElementById('soundFullscreenBtn').addEventListener('click',()=>openFullscreen('sound'));
+document.getElementById('pressureFullscreenBtn').addEventListener('click',()=>openFullscreen('pressure'));
+
+/* ================================================================
+   ATOMS SIMULATION
+   ================================================================ */
+let atomCtx,atomParts=[],atomBonds=[],atomTime=0,atomState='liquid',atomHeat=1;
+const ELEMENT_COLORS={'H':'#ffffff','O':'#ff5252','C':'#444444','N':'#448aff','Na':'#ab47bc','Cl':'#76ff03'};
+
+function makeAtoms(state){
+  atomParts=[];atomBonds=[];
+  const count=state==='solid'?48:state==='liquid'?56:40;
+  for(let i=0;i<count;i++){
+    let x,y,vx=0,vy=0;
+    if(state==='solid'){const col=i%8,row=Math.floor(i/8);x=90+col*115;y=80+row*60;vx=(Math.random()-.5)*.3;vy=(Math.random()-.5)*.3;}
+    else{x=60+Math.random()*980;y=60+Math.random()*360;vx=(Math.random()-.5)*(state==='gas'?5:2.2);vy=(Math.random()-.5)*(state==='gas'?5:2.2);}
+    const elemKeys=Object.keys(ELEMENT_COLORS);
+    const elem=elemKeys[Math.floor(Math.random()*elemKeys.length)];
+    atomParts.push({x,y,vx,vy,r:state==='solid'?20:state==='liquid'?18:15,color:ELEMENT_COLORS[elem],elem,baseX:state==='solid'?x:null,baseY:state==='solid'?y:null});
+  }
+  if(state!=='gas') for(let i=0;i<Math.min(count,18);i++){let j=(i+3)%Math.min(count,18);if(i!==j)atomBonds.push([i,j]);}
+  atomState=state;
+}
+function updateAtomUI(state){
+  const labels={solid:['SOLID (ICE)','Atoms vibrate in fixed positions'],liquid:['LIQUID (WATER)','Atoms slide past each other'],gas:['GAS (STEAM)','Atoms fly freely and fill space']};
+  const ro=document.getElementById('atomReadout'); if(ro) ro.innerHTML=labels[state][0]+' <small>'+labels[state][1]+'</small>';
+  const inf=document.getElementById('atomInfo'); if(inf) inf.textContent=labels[state][1]+'. Click Bond Atoms to form molecules.';
+}
+function atomLoop(){
+  const c=document.getElementById('atomCanvas'); if(!atomCtx) return;
+  const w=c.width,h=c.height; atomCtx.clearRect(0,0,w,h);
+  const g=atomCtx.createRadialGradient(w/2,h/2,100,w/2,h/2,600);
+  g.addColorStop(0,'#0a1f33'); g.addColorStop(1,'#05101c');
+  atomCtx.fillStyle=g; atomCtx.fillRect(0,0,w,h);
+  const solid=atomState==='solid',gas=atomState==='gas';
+  for(const p of atomParts){
+    if(solid){p.x=p.baseX+Math.sin(atomTime*1.8*atomHeat+p.y*.1)*2*atomHeat;p.y=p.baseY+Math.cos(atomTime*1.6*atomHeat+p.x*.1)*2*atomHeat;}
+    else{
+      p.x+=p.vx*(gas?2.8:1.2)*atomHeat; p.y+=p.vy*(gas?2.8:1.2)*atomHeat;
+      if(p.x<30||p.x>w-30)p.vx*=-1; if(p.y<30||p.y>h-30)p.vy*=-1;
+      p.x=Math.max(30,Math.min(w-30,p.x)); p.y=Math.max(30,Math.min(h-30,p.y));
+      p.vx+=(Math.random()-.5)*.2; p.vy+=(Math.random()-.5)*.2;
+      const mv=gas?6:2.5,sp=Math.hypot(p.vx,p.vy);
+      if(sp>mv){p.vx=p.vx/sp*mv;p.vy=p.vy/sp*mv;}
+    }
+  }
+  for(const [i,j] of atomBonds){
+    if(i<atomParts.length&&j<atomParts.length){
+      const a=atomParts[i],b=atomParts[j],dist=Math.hypot(a.x-b.x,a.y-b.y);
+      if(dist<110){
+        atomCtx.strokeStyle=`rgba(255,220,100,${.7*(1-dist/110)})`;
+        atomCtx.lineWidth=4; atomCtx.shadowColor='#ffcc66'; atomCtx.shadowBlur=12;
+        atomCtx.beginPath(); atomCtx.moveTo(a.x,a.y); atomCtx.lineTo(b.x,b.y); atomCtx.stroke();
+        atomCtx.shadowBlur=0;
+      }
+    }
+  }
+  for(const p of atomParts){
+    atomCtx.fillStyle=p.color; atomCtx.shadowColor=p.color; atomCtx.shadowBlur=25;
+    atomCtx.beginPath(); atomCtx.arc(p.x,p.y,p.r,0,7); atomCtx.fill();
+    atomCtx.shadowBlur=0;
+    atomCtx.fillStyle='rgba(255,255,255,.4)';
+    atomCtx.beginPath(); atomCtx.arc(p.x-p.r*.35,p.y-p.r*.35,p.r*.35,0,7); atomCtx.fill();
+    atomCtx.strokeStyle='rgba(255,255,255,.5)'; atomCtx.lineWidth=1.5;
+    atomCtx.beginPath(); atomCtx.arc(p.x,p.y,p.r,0,7); atomCtx.stroke();
+    atomCtx.fillStyle=p.elem==='H'?'#000':'#fff';
+    atomCtx.font='bold 11px sans-serif'; atomCtx.textAlign='center';
+    atomCtx.fillText(p.elem,p.x,p.y+4); atomCtx.textAlign='left';
+  }
+  atomCtx.fillStyle='rgba(255,255,255,.8)'; atomCtx.font='bold 18px sans-serif';
+  atomCtx.fillText('Atoms: '+atomParts.length+'   Bonds: '+atomBonds.length,20,40);
+  atomTime+=.04; requestAnimationFrame(atomLoop);
+}
+document.getElementById('atomState').addEventListener('change',e=>{makeAtoms(e.target.value);updateAtomUI(e.target.value);atomHeat=1;});
+document.getElementById('atomBondBtn').addEventListener('click',()=>{
+  if(atomParts.length<4)return;
+  let a=Math.floor(Math.random()*atomParts.length),b=Math.floor(Math.random()*atomParts.length);
+  while(b===a)b=Math.floor(Math.random()*atomParts.length);
+  if(!atomBonds.some(x=>(x[0]===a&&x[1]===b)||(x[0]===b&&x[1]===a)))atomBonds.push([a,b]);
+  const inf=document.getElementById('atomInfo'); if(inf) inf.textContent='🧬 New bond formed! Total bonds: '+atomBonds.length;
+});
+document.getElementById('atomHeatBtn').addEventListener('click',()=>{atomHeat=2;const inf=document.getElementById('atomInfo');if(inf)inf.textContent='🔥 Heating: atoms move faster!';setTimeout(()=>{atomHeat=1},3000);});
+document.getElementById('atomCoolBtn').addEventListener('click',()=>{atomHeat=0.4;const inf=document.getElementById('atomInfo');if(inf)inf.textContent='❄️ Cooling: atoms move slower!';setTimeout(()=>{atomHeat=1},3000);});
+document.getElementById('atomResetBtn').addEventListener('click',()=>{const s=document.getElementById('atomState').value;makeAtoms(s);updateAtomUI(s);atomHeat=1;});
+
+/* ================================================================
+   LIGHT SIMULATION
+   ================================================================ */
+let lightCtx,lightAngle=0,lightManualOffset=0,lightPaused=false,lightAuto=true;
+
+function drawLight(){
+  const c=document.getElementById('lightCanvas'); if(!c) return;
+  lightCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  lightCtx.clearRect(0,0,w,h);
+  lightCtx.fillStyle='#040e1a'; lightCtx.fillRect(0,0,w,h);
+  lightCtx.strokeStyle='rgba(255,255,255,.04)'; lightCtx.lineWidth=1;
+  for(let x=0;x<w;x+=60){lightCtx.beginPath();lightCtx.moveTo(x,0);lightCtx.lineTo(x,h);lightCtx.stroke();}
+  for(let y=0;y<h;y+=60){lightCtx.beginPath();lightCtx.moveTo(0,y);lightCtx.lineTo(w,y);lightCtx.stroke();}
+
+  const mode=document.getElementById('lightMode').value;
+  const labels={
+    reflect:['REFLECTION','Angle of incidence = Angle of reflection','Mirror on the right. Yellow beam hits it, orange beam bounces off.'],
+    refract:['REFRACTION','Light bends when entering glass','Glass block in the middle. Beam bends towards normal inside, then out.'],
+    spectrum:['SPECTRUM','White light splits into 7 colours','Prism in the middle. White beam enters, rainbow comes out.']
+  };
+  const ro=document.getElementById('lightReadout'); if(ro) ro.innerHTML=labels[mode][0]+' <small>'+labels[mode][1]+'</small>';
+  const inf=document.getElementById('lightInfo'); if(inf) inf.textContent=labels[mode][2];
+
+  const sweep=lightAuto?Math.sin(lightAngle)*10:0;
+  const finalAngle=30+sweep+lightManualOffset;
+  const ang=finalAngle*Math.PI/180;
+
+  if(mode==='reflect'){
+    const mx=700;
+    lightCtx.fillStyle='#b0d4f0'; lightCtx.fillRect(mx-14,80,28,h-160);
+    lightCtx.strokeStyle='#2a4a6a'; lightCtx.lineWidth=3; lightCtx.strokeRect(mx-14,80,28,h-160);
+    lightCtx.strokeStyle='#5a8ab0'; lightCtx.lineWidth=2;
+    for(let i=0;i<10;i++){lightCtx.beginPath();lightCtx.moveTo(mx-14,100+i*40);lightCtx.lineTo(mx+14,90+i*40);lightCtx.stroke();}
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('MIRROR',mx-50,60);
+    lightCtx.strokeStyle='rgba(100,200,255,.7)'; lightCtx.lineWidth=2; lightCtx.setLineDash([8,8]);
+    lightCtx.beginPath(); lightCtx.moveTo(mx,h/2); lightCtx.lineTo(mx,60); lightCtx.stroke();
+    lightCtx.beginPath(); lightCtx.moveTo(mx,h/2); lightCtx.lineTo(mx,h-60); lightCtx.stroke(); lightCtx.setLineDash([]);
+    const startX=100,startY=h/2+Math.tan(ang)*(mx-startX);
+    lightCtx.strokeStyle='#ffdd44'; lightCtx.lineWidth=6; lightCtx.shadowColor='#ffdd44'; lightCtx.shadowBlur=25;
+    lightCtx.beginPath(); lightCtx.moveTo(startX,h/2); lightCtx.lineTo(mx,startY); lightCtx.stroke();
+    lightCtx.strokeStyle='#ff9800'; lightCtx.shadowColor='#ff9800';
+    lightCtx.beginPath(); lightCtx.moveTo(mx,startY); lightCtx.lineTo(w-100,h/2); lightCtx.stroke(); lightCtx.shadowBlur=0;
+    lightCtx.fillStyle='#c0392b'; lightCtx.fillRect(startX-70,h/2-16,70,32);
+    lightCtx.strokeStyle='#7a1e18'; lightCtx.lineWidth=2; lightCtx.strokeRect(startX-70,h/2-16,70,32);
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('LASER',startX-62,h/2+5);
+    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 16px sans-serif'; lightCtx.fillText('INCOMING',startX+20,h/2-30);
+    lightCtx.fillStyle='#ff9800'; lightCtx.fillText('REFLECTED',mx+40,startY-15);
+    lightCtx.fillStyle='#66ddff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('NORMAL',mx+16,90);
+    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 22px sans-serif'; lightCtx.fillText('θ₁ = θ₂  ('+finalAngle.toFixed(0)+'°)',mx-100,h/2+60);
+  }
+  else if(mode==='refract'){
+    const gx=430,gy=120,gw=300,gh=260;
+    lightCtx.fillStyle='rgba(120,200,255,.22)'; lightCtx.fillRect(gx,gy,gw,gh);
+    lightCtx.strokeStyle='#66c8ff'; lightCtx.lineWidth=3; lightCtx.strokeRect(gx,gy,gw,gh);
+    lightCtx.fillStyle='#a0dfff'; lightCtx.font='bold 24px sans-serif'; lightCtx.fillText('GLASS BLOCK',gx+55,gy+140);
+    lightCtx.strokeStyle='rgba(100,200,255,.6)'; lightCtx.setLineDash([6,6]); lightCtx.lineWidth=2;
+    lightCtx.beginPath(); lightCtx.moveTo(gx+gw/2,gy-30); lightCtx.lineTo(gx+gw/2,gy+gh+30); lightCtx.stroke(); lightCtx.setLineDash([]);
+    const sx=100,sy=h/2+70,ex=gx+gw/2,ey=gy+50;
+    lightCtx.strokeStyle='#ffdd44'; lightCtx.lineWidth=6; lightCtx.shadowColor='#ffdd44'; lightCtx.shadowBlur=25;
+    lightCtx.beginPath(); lightCtx.moveTo(sx,sy); lightCtx.lineTo(ex,ey); lightCtx.stroke();
+    const ix=gx+gw/2,iy=gy+gh-30;
+    lightCtx.strokeStyle='#ffe066'; lightCtx.shadowColor='#ffe066';
+    lightCtx.beginPath(); lightCtx.moveTo(ex,ey); lightCtx.lineTo(ix,iy); lightCtx.stroke();
+    lightCtx.strokeStyle='#ff9800'; lightCtx.shadowColor='#ff9800';
+    lightCtx.beginPath(); lightCtx.moveTo(ix,iy); lightCtx.lineTo(w-80,h/2+50); lightCtx.stroke(); lightCtx.shadowBlur=0;
+    lightCtx.fillStyle='#c0392b'; lightCtx.fillRect(sx-70,sy-16,70,32);
+    lightCtx.strokeStyle='#7a1e18'; lightCtx.lineWidth=2; lightCtx.strokeRect(sx-70,sy-16,70,32);
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('LASER',sx-62,sy+5);
+    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 16px sans-serif'; lightCtx.fillText('INCOMING',sx+20,sy-30);
+    lightCtx.fillStyle='#ffe066'; lightCtx.fillText('INSIDE GLASS',gx+gw/2+20,gy+170);
+    lightCtx.fillStyle='#ff9800'; lightCtx.fillText('EMERGENT',w-200,h/2+30);
+    lightCtx.fillStyle='#66ddff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('NORMAL',gx+gw/2+10,gy-35);
+    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('Angle: '+finalAngle.toFixed(0)+'°',gx+gw/2-50,gy+gh+70);
+  }
+  else{
+    const px=470,py=140,ps=120;
+    lightCtx.fillStyle='rgba(200,230,255,.2)'; lightCtx.strokeStyle='#ffffff'; lightCtx.lineWidth=4;
+    lightCtx.beginPath(); lightCtx.moveTo(px,py); lightCtx.lineTo(px+ps,py+2*ps); lightCtx.lineTo(px-ps,py+2*ps); lightCtx.closePath();
+    lightCtx.fill(); lightCtx.stroke();
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 24px sans-serif'; lightCtx.fillText('PRISM',px-40,py+180);
+    const beamY=240+(finalAngle-30)*0.5;
+    lightCtx.strokeStyle='#ffffff'; lightCtx.lineWidth=8; lightCtx.shadowColor='#fff'; lightCtx.shadowBlur=25;
+    lightCtx.beginPath(); lightCtx.moveTo(80,beamY); lightCtx.lineTo(px-15,beamY); lightCtx.stroke(); lightCtx.shadowBlur=0;
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 18px sans-serif'; lightCtx.fillText('WHITE LIGHT',80,beamY-25);
+    const spread=1+(finalAngle-30)*0.03;
+    const cs=[['#ff0000',-32],['#ff8800',-24],['#ffff00',-14],['#00ff00',-2],['#0088ff',12],['#4400ff',22],['#8800ff',32]];
+    cs.forEach(([col,dy])=>{
+      lightCtx.strokeStyle=col; lightCtx.lineWidth=6; lightCtx.shadowColor=col; lightCtx.shadowBlur=25;
+      lightCtx.beginPath(); lightCtx.moveTo(px+15,py+2*ps-40); lightCtx.lineTo(w-60,beamY+dy*4*spread); lightCtx.stroke(); lightCtx.shadowBlur=0;
+    });
+    lightCtx.fillStyle='#fff'; lightCtx.font='bold 22px sans-serif'; lightCtx.fillText('SPECTRUM (ROYGBIV)',w-420,80);
+    const sw=['#ff0000','#ff8800','#ffff00','#00ff00','#0088ff','#4400ff','#8800ff'];
+    sw.forEach((col,i)=>{lightCtx.fillStyle=col;lightCtx.fillRect(w-420+i*30,100,24,18);});
+    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('Angle: '+finalAngle.toFixed(0)+'°',px-50,py+2*ps+50);
+  }
+}
+function lightLoop(){
+  if(!lightPaused && lightAuto) lightAngle+=0.04;
+  drawLight();
+  requestAnimationFrame(lightLoop);
+}
+document.getElementById('lightMode').addEventListener('change',drawLight);
+document.getElementById('lightAnimBtn').addEventListener('click',function(){lightPaused=!lightPaused;this.textContent=lightPaused?'▶ Play':'⏸ Pause';});
+document.getElementById('lightAngleBtn').addEventListener('click',()=>{lightManualOffset+=10;if(lightManualOffset>40)lightManualOffset=-40;drawLight();});
+document.getElementById('lightAutoBtn').addEventListener('click',function(){lightAuto=!lightAuto;this.textContent=lightAuto?'🔄 Auto-Sweep ON':'🔄 Auto-Sweep OFF';});
+
+/* ================================================================
+   SOUND SIMULATION
+   ================================================================ */
+let soundCtx,audioCtx=null,oscillator=null,gainNode=null,soundParticles=[],sTime=0;
+
+function initSoundParticles(){soundParticles=[];for(let i=0;i<120;i++)soundParticles.push({x:220+i*7,y:80+Math.random()*320,baseX:220+i*7,phase:Math.random()*6.28});}
+function soundLoop(){
+  const c=document.getElementById('soundCanvas'); if(!soundCtx||!c) return;
+  const w=c.width,h=c.height; soundCtx.clearRect(0,0,w,h);
+  soundCtx.fillStyle='#040e1a'; soundCtx.fillRect(0,0,w,h);
+  soundCtx.strokeStyle='rgba(255,255,255,.04)';
+  for(let x=0;x<w;x+=50){soundCtx.beginPath();soundCtx.moveTo(x,0);soundCtx.lineTo(x,h);soundCtx.stroke();}
+  for(let y=0;y<h;y+=50){soundCtx.beginPath();soundCtx.moveTo(0,y);soundCtx.lineTo(w,y);soundCtx.stroke();}
+  const f=+document.getElementById('freqRange').value;
+  const a=+document.getElementById('ampRange').value;
+  const disp=Math.sin(sTime*f*.15)*a*1.5;
+  const sx=50,sy=h/2-90,sw=150,sh=180;
+  soundCtx.fillStyle='#2a4a6a'; soundCtx.fillRect(sx,sy,sw,sh);
+  soundCtx.fillStyle='#1a3a5a'; soundCtx.fillRect(sx+15,sy+15,sw-30,sh-30);
+  const coneR=45+disp;
+  soundCtx.fillStyle='#0a1a2e'; soundCtx.beginPath(); soundCtx.arc(sx+sw/2,sy+sh/2,coneR,0,7); soundCtx.fill();
+  soundCtx.strokeStyle='#66c8ff'; soundCtx.lineWidth=4; soundCtx.shadowColor='#66c8ff'; soundCtx.shadowBlur=18;
+  soundCtx.beginPath(); soundCtx.arc(sx+sw/2,sy+sh/2,coneR,0,7); soundCtx.stroke(); soundCtx.shadowBlur=0;
+  soundCtx.fillStyle='#fff'; soundCtx.font='bold 18px sans-serif'; soundCtx.fillText('SPEAKER',sx+30,sy-10);
+  soundParticles.forEach((p,i)=>{
+    const wave=Math.sin(sTime*f*.15-i*.15)*a*2;
+    const nx=p.baseX+wave;
+    const intensity=Math.min(1,Math.abs(wave)/25);
+    const col=`rgba(${100+155*intensity},${200-50*intensity},255,${.5+.5*intensity})`;
+    soundCtx.fillStyle=col; soundCtx.shadowColor=col; soundCtx.shadowBlur=8;
+    soundCtx.beginPath(); soundCtx.arc(nx,p.y,4+intensity*3,0,7); soundCtx.fill(); soundCtx.shadowBlur=0;
+  });
+  soundCtx.strokeStyle='#66ffaa'; soundCtx.lineWidth=4; soundCtx.shadowColor='#66ffaa'; soundCtx.shadowBlur=22;
+  soundCtx.beginPath();
+  for(let i=0;i<=600;i++){const x=i*(w/600),y=h/2+Math.sin(i*.05*f)*a*1.8;i?soundCtx.lineTo(x,y):soundCtx.moveTo(x,y);}
+  soundCtx.stroke(); soundCtx.shadowBlur=0;
+  soundCtx.fillStyle='rgba(255,255,255,.85)'; soundCtx.font='bold 18px sans-serif';
+  soundCtx.fillText('Frequency: '+f+'   Amplitude: '+a,20,30);
+  sTime+=1; requestAnimationFrame(soundLoop);
+}
+document.getElementById('freqRange').addEventListener('input',()=>{const ro=document.getElementById('soundReadout');if(ro)ro.innerHTML='SOUND WAVE <small>Frequency: '+document.getElementById('freqRange').value+' · Amplitude: '+document.getElementById('ampRange').value+'</small>';});
+document.getElementById('ampRange').addEventListener('input',()=>{const ro=document.getElementById('soundReadout');if(ro)ro.innerHTML='SOUND WAVE <small>Frequency: '+document.getElementById('freqRange').value+' · Amplitude: '+document.getElementById('ampRange').value+'</small>';});
+document.getElementById('soundPresetLow').addEventListener('click',()=>{document.getElementById('freqRange').value=2;document.getElementById('freqRange').dispatchEvent(new Event('input'));});
+document.getElementById('soundPresetHigh').addEventListener('click',()=>{document.getElementById('freqRange').value=18;document.getElementById('freqRange').dispatchEvent(new Event('input'));});
+document.getElementById('soundPresetSoft').addEventListener('click',()=>{document.getElementById('ampRange').value=3;document.getElementById('ampRange').dispatchEvent(new Event('input'));});
+document.getElementById('soundPresetLoud').addEventListener('click',()=>{document.getElementById('ampRange').value=18;document.getElementById('ampRange').dispatchEvent(new Event('input'));});
+document.getElementById('soundPlayBtn').addEventListener('click',()=>{
+  const f=+document.getElementById('freqRange').value,a=+document.getElementById('ampRange').value;
+  if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  if(oscillator){oscillator.stop();oscillator=null;}
+  oscillator=audioCtx.createOscillator(); gainNode=audioCtx.createGain();
+  oscillator.type='sine'; oscillator.frequency.value=200+f*40; gainNode.gain.value=a/40;
+  oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+  oscillator.start(); oscillator.stop(audioCtx.currentTime+1.5);
+});
+
+/* ================================================================
+   PRESSURE SIMULATION
+   ================================================================ */
+let pressCtx,pressParticles=[];
+function initPressureParticles(){pressParticles=[];for(let i=0;i<90;i++)pressParticles.push({x:280+Math.random()*560,y:220+Math.random()*200,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2,r:4+Math.random()*4});}
+function pressLoop(){
+  const c=document.getElementById('pressureCanvas'); if(!pressCtx||!c) return;
+  const w=c.width,h=c.height; pressCtx.clearRect(0,0,w,h);
+  pressCtx.fillStyle='#040e1a'; pressCtx.fillRect(0,0,w,h);
+  const f=+document.getElementById('forceRange').value,a=+document.getElementById('areaRange').value;
+  const cx=220,cy=100,cw=660,ch=320;
+  pressCtx.fillStyle='rgba(255,255,255,.03)'; pressCtx.fillRect(cx,cy,cw,ch);
+  pressCtx.strokeStyle='#1e3a5c'; pressCtx.lineWidth=2; pressCtx.strokeRect(cx,cy,cw,ch);
+  const pistonY=cy+30+(20-f)*6;
+  pressCtx.fillStyle='#2a4a6a'; pressCtx.fillRect(cx,pistonY,cw,28);
+  pressCtx.fillStyle='#1a3a5a'; pressCtx.fillRect(cx,pistonY+5,cw,18);
+  pressCtx.strokeStyle='#66c8ff'; pressCtx.lineWidth=2; pressCtx.strokeRect(cx,pistonY,cw,28);
+  pressCtx.fillStyle='#fff'; pressCtx.font='bold 16px sans-serif'; pressCtx.fillText('⬇ PISTON',cx+20,pistonY-12);
+  pressCtx.fillStyle='#ffdd44'; pressCtx.fillText('Force: '+f+' N',cx+220,pistonY-12);
+  pressParticles.forEach(p=>{
+    const speed=(f*.15+.5);
+    p.x+=p.vx*speed*.3; p.y+=p.vy*speed*.3;
+    if(p.x<cx+15||p.x>cx+cw-15)p.vx*=-1;
+    if(p.y<pistonY+32||p.y>cy+ch-15)p.vy*=-1;
+    p.x=Math.max(cx+15,Math.min(cx+cw-15,p.x)); p.y=Math.max(pistonY+32,Math.min(cy+ch-15,p.y));
+    const sp=Math.hypot(p.vx,p.vy);
+    const intensity=Math.min(1,sp/2.5);
+    const col=`rgba(${100+155*intensity},${180-80*intensity},255,${.6+.4*intensity})`;
+    pressCtx.fillStyle=col; pressCtx.shadowColor=col; pressCtx.shadowBlur=10;
+    pressCtx.beginPath(); pressCtx.arc(p.x,p.y,p.r,0,7); pressCtx.fill(); pressCtx.shadowBlur=0;
+  });
+  const aw=60+a*24,ax=cx+(cw-aw)/2;
+  pressCtx.fillStyle='rgba(255,200,100,.25)'; pressCtx.fillRect(ax,cy+ch-16,aw,10);
+  pressCtx.strokeStyle='#ff9800'; pressCtx.lineWidth=3; pressCtx.setLineDash([6,4]); pressCtx.strokeRect(ax,cy+ch-16,aw,10); pressCtx.setLineDash([]);
+  pressCtx.fillStyle='#ffb74d'; pressCtx.font='bold 16px sans-serif'; pressCtx.fillText('Contact Area: '+a+' cm²',ax,cy+ch+35);
+  pressCtx.fillStyle='#ffd54f'; pressCtx.font='bold 26px sans-serif'; pressCtx.fillText('Pressure = '+(f/a).toFixed(2)+' Pa',cx+20,cy+ch+80);
+  pressCtx.fillStyle='#fff'; pressCtx.font='bold 18px sans-serif'; pressCtx.fillText('PISTON PRESSES DOWN →',cx+20,cy-30);
+  requestAnimationFrame(pressLoop);
+}
+document.getElementById('forceRange').addEventListener('input',()=>{const ro=document.getElementById('pressureReadout');if(ro)ro.innerHTML='PRESSURE = '+(document.getElementById('forceRange').value/document.getElementById('areaRange').value).toFixed(2)+' Pa <small>Force '+document.getElementById('forceRange').value+' · Area '+document.getElementById('areaRange').value+'</small>';});
+document.getElementById('areaRange').addEventListener('input',()=>{const ro=document.getElementById('pressureReadout');if(ro)ro.innerHTML='PRESSURE = '+(document.getElementById('forceRange').value/document.getElementById('areaRange').value).toFixed(2)+' Pa <small>Force '+document.getElementById('forceRange').value+' · Area '+document.getElementById('areaRange').value+'</small>';});
+document.getElementById('pressureHigh').addEventListener('click',()=>{document.getElementById('forceRange').value=18;document.getElementById('areaRange').value=3;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
+document.getElementById('pressureLow').addEventListener('click',()=>{document.getElementById('forceRange').value=3;document.getElementById('areaRange').value=18;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
+document.getElementById('pressureReset').addEventListener('click',()=>{document.getElementById('forceRange').value=10;document.getElementById('areaRange').value=8;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
+
+/* ---------- LOAD ---------- */
+function initAllLabs(){
+  const ac=document.getElementById('atomCanvas'); if(ac){atomCtx=ac.getContext('2d');makeAtoms('liquid');updateAtomUI('liquid');atomLoop();}
+  const lc=document.getElementById('lightCanvas'); if(lc){lightCtx=lc.getContext('2d');lightLoop();}
+  const sc=document.getElementById('soundCanvas'); if(sc){soundCtx=sc.getContext('2d');initSoundParticles();soundLoop();}
+  const pc=document.getElementById('pressureCanvas'); if(pc){pressCtx=pc.getContext('2d');initPressureParticles();pressLoop();}
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+  initAllLabs();
+} else {
+  window.addEventListener('DOMContentLoaded',initAllLabs);
+  window.addEventListener('load',initAllLabs);
+}
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Machines — 6 Mechanical Tools</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;color:#e8eeff;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 10% 0%, rgba(56,89,180,.55), transparent 60%),
+      radial-gradient(1000px 700px at 90% 10%, rgba(120,60,180,.45), transparent 60%),
+      radial-gradient(900px 900px at 50% 110%, rgba(180,90,40,.35), transparent 60%),
+      linear-gradient(160deg,#070b18 0%,#0d1226 50%,#120a1e 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  .app{max-width:1500px;margin:0 auto;padding:16px 16px 24px}
+
+  .topic-hero{text-align:center;padding:10px 10px 20px}
+  .topic-hero h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;
+    background:linear-gradient(100deg,#38bdf8,#a78bfa,#f472b6,#fbbf24);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .topic-hero p{margin-top:8px;color:#a5b4d4;font-size:1.05rem;font-weight:600}
+
+  .tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+  .tab{
+    border:2px solid rgba(150,180,255,.35);
+    background:linear-gradient(180deg,#1a2246 0%,#0f1633 100%);
+    color:#c7d2fe;padding:13px 28px;border-radius:999px;
+    font-size:1rem;font-family:inherit;cursor:pointer;transition:.25s;font-weight:800;
+  }
+  .tab.active{
+    background:linear-gradient(135deg,#2563eb,#7c3aed,#db2777);
+    border-color:#a5b4fc;color:#fff;
+  }
+
+  .panel{display:none;animation:fade .4s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .card{
+    background:linear-gradient(160deg,#111a35 0%,#0a1025 100%);
+    border:2px solid rgba(120,150,220,.25);
+    border-radius:22px;padding:26px;margin-bottom:20px;
+  }
+  .card h2{
+    font-size:1.55rem;color:#a78bfa;margin-bottom:16px;font-weight:900;
+    padding-bottom:12px;border-bottom:3px dashed rgba(167,139,250,.3);
+  }
+  .card p,.card li{line-height:2;font-size:1.02rem;color:#c7d2e6}
+  .card ul{padding-left:26px}
+  .card li{margin-bottom:6px}
+
+  .machine-def{margin-top:18px;padding:20px 22px;border-radius:18px;border:3px solid;}
+  .machine-def h3{font-size:1.3rem;margin:0 0 12px 0 !important;padding-bottom:8px;border-bottom:2px solid;}
+  .formula-box{
+    display:inline-block;margin:10px 0;padding:11px 22px;
+    background:rgba(0,0,0,.5);border:2px solid;border-radius:12px;
+    font-family:'Courier New',monospace;font-weight:900;font-size:1.1rem;
+  }
+  .m1{border-color:#38bdf8;color:#38bdf8}
+  .m1 h3{color:#7dd3fc;border-bottom-color:rgba(56,189,248,.4)}
+  .m1 .formula-box{border-color:#38bdf8;color:#7dd3fc}
+  .m2{border-color:#fbbf24;color:#fbbf24}
+  .m2 h3{color:#fcd34d;border-bottom-color:rgba(251,191,36,.4)}
+  .m2 .formula-box{border-color:#fbbf24;color:#fcd34d}
+  .m3{border-color:#34d399;color:#34d399}
+  .m3 h3{color:#6ee7b7;border-bottom-color:rgba(52,211,153,.4)}
+  .m3 .formula-box{border-color:#34d399;color:#6ee7b7}
+  .m4{border-color:#f472b6;color:#f472b6}
+  .m4 h3{color:#f9a8d4;border-bottom-color:rgba(244,114,182,.4)}
+  .m4 .formula-box{border-color:#f472b6;color:#f9a8d4}
+  .m5{border-color:#a78bfa;color:#a78bfa}
+  .m5 h3{color:#c4b5fd;border-bottom-color:rgba(167,139,250,.4)}
+  .m5 .formula-box{border-color:#a78bfa;color:#c4b5fd}
+  .m6{border-color:#fb923c;color:#fb923c}
+  .m6 h3{color:#fdba74;border-bottom-color:rgba(251,146,60,.4)}
+  .m6 .formula-box{border-color:#fb923c;color:#fdba74}
+
+  .machine-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+  .machine-tab{
+    padding:16px 18px;border-radius:18px;border:3px solid rgba(120,150,220,.3);
+    background:linear-gradient(180deg,#131c3a 0%,#0a1025 100%);
+    color:#e8eeff;font-family:inherit;cursor:pointer;transition:.28s;text-align:left;
+  }
+  .machine-tab.active{border-color:#38bdf8;background:linear-gradient(135deg,#0c4a6e,#0369a1);}
+
+  .sim-stage{display:none}
+  .sim-stage.active{display:block}
+
+  .stage-heading{
+    text-align:center;padding:14px 18px;margin-bottom:14px;border-radius:16px;
+    background:linear-gradient(180deg,#131c3a 0%,#0a1025 100%);
+    border:2px solid rgba(120,150,220,.3);
+  }
+  .stage-heading h3{font-size:1.35rem;font-weight:900;margin-bottom:4px}
+  .stage-heading p{font-size:.95rem;color:#a5b4d4}
+
+  .canvas-holder{
+    position:relative;width:100%;height:74vh;min-height:560px;
+    border-radius:20px;overflow:hidden;
+    border:3px solid #38bdf8;
+    background:#050912;touch-action:none;
+  }
+  canvas{display:block;width:100%;height:100%;touch-action:none}
+
+  .hud{
+    position:absolute;top:14px;left:14px;
+    background:rgba(10,16,38,.92);
+    border:2px solid rgba(120,180,255,.5);border-radius:14px;padding:12px 18px;
+    font-size:.9rem;color:#e8eeff;line-height:1.8;
+    pointer-events:none;max-width:360px;font-weight:700;
+  }
+  .hud b{color:#a78bfa}
+  .status-in{color:#4ade80}
+
+  .fs-btn{
+    position:absolute;top:14px;right:14px;
+    background:linear-gradient(180deg,#fbbf24 0%,#d97706 100%);
+    border:2px solid #fff3;color:#fff;padding:10px 18px;border-radius:12px;cursor:pointer;
+    font-size:.9rem;font-weight:900;z-index:10;
+  }
+
+  .canvas-holder:fullscreen,
+  .canvas-holder:-webkit-full-screen{
+    width:100vw !important;height:100vh !important;
+    max-width:100vw !important;max-height:100vh !important;
+    border-radius:0 !important;border:none !important;
+  }
+
+  .controls{
+    margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;
+    background:linear-gradient(180deg,#131c3a 0%,#0a1025 100%);
+    border:2px solid rgba(120,150,220,.3);border-radius:20px;padding:16px;
+  }
+  .ctrl-item{
+    display:flex;flex-direction:column;gap:6px;
+    background:linear-gradient(180deg,#1a2246 0%,#0f1633 100%);
+    border:2px solid rgba(120,150,220,.25);border-radius:14px;padding:11px 13px;
+  }
+  .ctrl-item label{font-size:.72rem;color:#a5b4d4;text-transform:uppercase;font-weight:900}
+  .cbtn{
+    border:2px solid rgba(120,150,220,.35);background:linear-gradient(180deg,#1a2246 0%,#0f1633 100%);
+    color:#e8eeff;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:.92rem;font-weight:800;
+  }
+  .cbtn.on{background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%);border-color:#60a5fa;color:#fff}
+  .slider-row{display:flex;align-items:center;gap:10px}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;height:10px;border-radius:999px;outline:none;
+    background:linear-gradient(90deg,#22d3ee,#a78bfa);cursor:pointer;flex:1;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:none;box-shadow:0 0 0 3px #60a5fa;cursor:pointer;
+  }
+  .slider-val{color:#fbbf24;font-weight:900;font-size:.9rem;min-width:52px;text-align:right}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topic-hero">
+    <h2>Simple Machines — 6 Mechanical Tools</h2>
+    <p>Learn how humans multiply force with Levers, Pulleys, Ramps, Wedges, Screws &amp; Wheels</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab" data-tab="p-def">Definitions</button>
+    <button class="tab active" data-tab="p-sim">Live Simulations</button>
+  </nav>
+
+  <!-- ============ DEFINITIONS TAB ============ -->
+  <section id="p-def" class="panel">
+    <div class="card">
+      <h2>Definitions — What is a Simple Machine?</h2>
+      <p>A <b>Simple Machine</b> is a basic mechanical device that makes work easier by changing the direction or magnitude of a force.</p>
+
+      <div class="machine-def m1">
+        <h3>1. Lever — A bar turning on a fulcrum</h3>
+        <p>A rigid bar that rotates about a fixed fulcrum. Formula: MA = Effort Arm ÷ Load Arm.</p>
+        <div class="formula-box">MA = Effort Arm ÷ Load Arm</div>
+      </div>
+      <div class="machine-def m2">
+        <h3>2. Pulley — Wheel with a grooved rope</h3>
+        <p>A grooved wheel carrying a rope. Formula: MA = Number of supporting rope sections.</p>
+        <div class="formula-box">MA = Number of Supporting Ropes</div>
+      </div>
+      <div class="machine-def m3">
+        <h3>3. Inclined Plane — Slanted surface</h3>
+        <p>A ramp that trades distance for force. Formula: MA = Length ÷ Height.</p>
+        <div class="formula-box">MA = Ramp Length ÷ Height</div>
+      </div>
+      <div class="machine-def m4">
+        <h3>4. Wedge — Dual inclined plane</h3>
+        <p>Two joined ramps that convert downward drive into lateral splitting force.</p>
+        <div class="formula-box">MA = Length ÷ Width</div>
+      </div>
+      <div class="machine-def m5">
+        <h3>5. Screw — Spiral ramp around cylinder</h3>
+        <p>Converts rotational torque into linear thrust with immense mechanical advantage.</p>
+        <div class="formula-box">MA = 2πr ÷ Pitch</div>
+      </div>
+      <div class="machine-def m6">
+        <h3>6. Wheel &amp; Axle — Continuous rotary lever</h3>
+        <p>Larger wheel turns smaller shaft, multiplying applied hand torque.</p>
+        <div class="formula-box">MA = Wheel Radius ÷ Axle Radius</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIMULATIONS TAB ============ -->
+  <section id="p-sim" class="panel active">
+    <div class="card">
+      <h2>Live Simulations — Interactive Sandbox</h2>
+
+      <div class="machine-tabs">
+        <button class="machine-tab active" data-sim="sim1">1. Lever</button>
+        <button class="machine-tab" data-sim="sim2">2. Pulley</button>
+        <button class="machine-tab" data-sim="sim3">3. Inclined Plane</button>
+        <button class="machine-tab" data-sim="sim4">4. Wedge</button>
+        <button class="machine-tab" data-sim="sim5">5. Screw</button>
+        <button class="machine-tab" data-sim="sim6">6. Wheel &amp; Axle</button>
+      </div>
+
+      <!-- SIM 1: LEVER -->
+      <div class="sim-stage active" id="sim1">
+        <div class="stage-heading">
+          <h3>⚖️ Lever Simulation — Class 1 Beam</h3>
+          <p>Slide the fulcrum or change loads to balance the turning moments.</p>
+        </div>
+        <div class="canvas-holder" id="holder1">
+          <canvas id="canvas1"></canvas>
+          <button class="fs-btn" data-fs="holder1">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Machine:</b> Lever<br>
+            <b>Effort:</b> <span id="hud1E">50 N</span><br>
+            <b>Load:</b> <span id="hud1L">100 N</span><br>
+            <b>MA:</b> <span id="hud1MA" class="status-in">2.00</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Effort (N)</label><div class="slider-row"><input type="range" id="s1E" min="10" max="200" step="5" value="50"><span class="slider-val" id="v1E">50 N</span></div></div>
+          <div class="ctrl-item"><label>Load (N)</label><div class="slider-row"><input type="range" id="s1L" min="10" max="300" step="5" value="100"><span class="slider-val" id="v1L">100 N</span></div></div>
+          <div class="ctrl-item"><label>Fulcrum Pos</label><div class="slider-row"><input type="range" id="s1F" min="0.2" max="0.8" step="0.02" value="0.5"><span class="slider-val" id="v1F">0.50</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIM 2: PULLEY -->
+      <div class="sim-stage" id="sim2">
+        <div class="stage-heading">
+          <h3>🎡 Pulley System Simulation</h3>
+          <p>Each added pulley distributes the gravitational tension of the load.</p>
+        </div>
+        <div class="canvas-holder" id="holder2">
+          <canvas id="canvas2"></canvas>
+          <button class="fs-btn" data-fs="holder2">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Pulleys:</b> <span id="hud2N">2</span><br>
+            <b>Load:</b> <span id="hud2L">200 N</span><br>
+            <b>Effort Needed:</b> <span id="hud2E" class="status-in">100 N</span><br>
+            <b>MA:</b> <span id="hud2MA" class="status-in">2.00</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Pulleys</label><div class="slider-row"><input type="range" id="s2N" min="1" max="5" step="1" value="2"><span class="slider-val" id="v2N">2</span></div></div>
+          <div class="ctrl-item"><label>Load (N)</label><div class="slider-row"><input type="range" id="s2L" min="50" max="500" step="10" value="200"><span class="slider-val" id="v2L">200 N</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIM 3: INCLINED PLANE -->
+      <div class="sim-stage" id="sim3">
+        <div class="stage-heading">
+          <h3>🛝 Inclined Plane Simulation</h3>
+          <p>Pushing along the slope reduces the required upward lifting force.</p>
+        </div>
+        <div class="canvas-holder" id="holder3">
+          <canvas id="canvas3"></canvas>
+          <button class="fs-btn" data-fs="holder3">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Ramp Angle:</b> <span id="hud3A">24°</span><br>
+            <b>Load:</b> <span id="hud3L">300 N</span><br>
+            <b>Effort:</b> <span id="hud3E" class="status-in">122 N</span><br>
+            <b>MA:</b> <span id="hud3MA" class="status-in">2.46</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Angle (°)</label><div class="slider-row"><input type="range" id="s3A" min="10" max="60" step="1" value="24"><span class="slider-val" id="v3A">24°</span></div></div>
+          <div class="ctrl-item"><label>Load (N)</label><div class="slider-row"><input type="range" id="s3L" min="100" max="600" step="10" value="300"><span class="slider-val" id="v3L">300 N</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIM 4: WEDGE -->
+      <div class="sim-stage" id="sim4">
+        <div class="stage-heading">
+          <h3>🪓 Wedge Simulation</h3>
+          <p>Downward drive converts into lateral perpendicular cleavage forces.</p>
+        </div>
+        <div class="canvas-holder" id="holder4">
+          <canvas id="canvas4"></canvas>
+          <button class="fs-btn" data-fs="holder4">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Applied Force:</b> <span id="hud4F">100 N</span><br>
+            <b>Wedge Width:</b> <span id="hud4W">4 cm</span><br>
+            <b>MA:</b> <span id="hud4MA" class="status-in">5.00</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Force (N)</label><div class="slider-row"><input type="range" id="s4F" min="20" max="300" step="10" value="100"><span class="slider-val" id="v4F">100 N</span></div></div>
+          <div class="ctrl-item"><label>Width (cm)</label><div class="slider-row"><input type="range" id="s4W" min="1" max="10" step="0.5" value="4"><span class="slider-val" id="v4W">4 cm</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIM 5: SCREW -->
+      <div class="sim-stage" id="sim5">
+        <div class="stage-heading">
+          <h3>🔩 Screw Simulation</h3>
+          <p>A spiral incline delivers exceptional mechanical advantage.</p>
+        </div>
+        <div class="canvas-holder" id="holder5">
+          <canvas id="canvas5"></canvas>
+          <button class="fs-btn" data-fs="holder5">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Radius:</b> <span id="hud5R">2.0 cm</span><br>
+            <b>Pitch:</b> <span id="hud5P">0.4 cm</span><br>
+            <b>MA:</b> <span id="hud5MA" class="status-in">31.4</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Radius (cm)</label><div class="slider-row"><input type="range" id="s5R" min="0.5" max="4" step="0.1" value="2"><span class="slider-val" id="v5R">2.0 cm</span></div></div>
+          <div class="ctrl-item"><label>Pitch (cm)</label><div class="slider-row"><input type="range" id="s5P" min="0.1" max="1.5" step="0.1" value="0.4"><span class="slider-val" id="v5P">0.4 cm</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIM 6: WHEEL & AXLE -->
+      <div class="sim-stage" id="sim6">
+        <div class="stage-heading">
+          <h3>🎡 Wheel &amp; Axle Simulation</h3>
+          <p>Large circumference effort produces scaled rotational torque on the axle.</p>
+        </div>
+        <div class="canvas-holder" id="holder6">
+          <canvas id="canvas6"></canvas>
+          <button class="fs-btn" data-fs="holder6">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Wheel R:</b> <span id="hud6R">18 cm</span><br>
+            <b>Axle r:</b> <span id="hud6r">3 cm</span><br>
+            <b>MA:</b> <span id="hud6MA" class="status-in">6.00</span>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-item"><label>Wheel R (cm)</label><div class="slider-row"><input type="range" id="s6R" min="8" max="25" step="1" value="18"><span class="slider-val" id="v6R">18 cm</span></div></div>
+          <div class="ctrl-item"><label>Axle r (cm)</label><div class="slider-row"><input type="range" id="s6r" min="1" max="8" step="0.5" value="3"><span class="slider-val" id="v6r">3.0 cm</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const TAU = Math.PI * 2;
+
+function fitCanvas(canvas, holder){
+  const rect = holder.getBoundingClientRect();
+  const W = Math.max(rect.width, 1);
+  const H = Math.max(rect.height, 1);
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { ctx, W, H };
+}
+
+function drawDarkScene(ctx, W, H, accent){
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#050814');
+  bg.addColorStop(0.5, '#080d20');
+  bg.addColorStop(1, '#040710');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+  return H * 0.82;
+}
+
+/* SIM 1 */
+const canvas1 = document.getElementById('canvas1');
+const holder1 = document.getElementById('holder1');
+let ctx1, W1=0, H1=0, effort1=50, load1=100, fulc1=0.5;
+
+function resize1(){ const r = fitCanvas(canvas1, holder1); ctx1 = r.ctx; W1 = r.W; H1 = r.H; }
+window.addEventListener('resize', resize1);
+
+function loop1(){
+  requestAnimationFrame(loop1);
+  if(!ctx1 || W1<2) return;
+  const groundY = drawDarkScene(ctx1, W1, H1, '#38bdf8');
+  const beamY = groundY - 140;
+  const beamW = Math.min(W1 * 0.72, 800);
+  const cx = W1/2;
+  const fulcX = cx - beamW/2 + beamW * fulc1;
+
+  ctx1.fillStyle = '#64748b';
+  ctx1.fillRect(cx - beamW/2, beamY - 10, beamW, 20);
+
+  ctx1.fillStyle = '#fbbf24';
+  ctx1.beginPath();
+  ctx1.moveTo(fulcX, beamY); ctx1.lineTo(fulcX - 30, groundY); ctx1.lineTo(fulcX + 30, groundY);
+  ctx1.closePath(); ctx1.fill();
+
+  ctx1.fillStyle = '#ef4444';
+  ctx1.fillRect(cx - beamW/2 + 20, beamY - 50, 45, 40);
+  ctx1.fillStyle = '#fff';
+  ctx1.font = 'bold 14px sans-serif';
+  ctx1.fillText(load1 + ' N', cx - beamW/2 + 25, beamY - 25);
+
+  const effArm = beamW * (1 - fulc1);
+  const loadArm = beamW * fulc1;
+  const ma = effArm / loadArm;
+  document.getElementById('hud1E').textContent = effort1 + ' N';
+  document.getElementById('hud1L').textContent = load1 + ' N';
+  document.getElementById('hud1MA').textContent = ma.toFixed(2);
+}
+
+/* SIM 2 */
+const canvas2 = document.getElementById('canvas2');
+const holder2 = document.getElementById('holder2');
+let ctx2, W2=0, H2=0, pulleys2=2, load2=200;
+
+function resize2(){ const r = fitCanvas(canvas2, holder2); ctx2 = r.ctx; W2 = r.W; H2 = r.H; }
+window.addEventListener('resize', resize2);
+
+function loop2(){
+  requestAnimationFrame(loop2);
+  if(!ctx2 || W2<2) return;
+  const groundY = drawDarkScene(ctx2, W2, H2, '#fbbf24');
+  const cx = W2/2;
+
+  ctx2.fillStyle = '#fbbf24';
+  for(let i=0; i<pulleys2; i++){
+    ctx2.beginPath();
+    ctx2.arc(cx - 50 + i * (100 / Math.max(pulleys2-1, 1)), 120, 20, 0, TAU);
+    ctx2.fill();
+  }
+  ctx2.fillStyle = '#3b82f6';
+  ctx2.fillRect(cx - 50, groundY - 140, 100, 60);
+  ctx2.fillStyle = '#fff';
+  ctx2.font = 'bold 16px sans-serif';
+  ctx2.fillText(load2 + ' N', cx - 25, groundY - 105);
+
+  document.getElementById('hud2N').textContent = pulleys2;
+  document.getElementById('hud2L').textContent = load2 + ' N';
+  document.getElementById('hud2E').textContent = (load2 / pulleys2).toFixed(1) + ' N';
+  document.getElementById('hud2MA').textContent = pulleys2.toFixed(2);
+}
+
+/* SIM 3 */
+const canvas3 = document.getElementById('canvas3');
+const holder3 = document.getElementById('holder3');
+let ctx3, W3=0, H3=0, angle3=24, load3=300;
+
+function resize3(){ const r = fitCanvas(canvas3, holder3); ctx3 = r.ctx; W3 = r.W; H3 = r.H; }
+window.addEventListener('resize', resize3);
+
+function loop3(){
+  requestAnimationFrame(loop3);
+  if(!ctx3 || W3<2) return;
+  const groundY = drawDarkScene(ctx3, W3, H3, '#34d399');
+  const rampH = 220;
+  const rad = angle3 * Math.PI / 180;
+  const rampW = rampH / Math.tan(rad);
+  const baseX = W3 * 0.15;
+
+  ctx3.fillStyle = '#b45309';
+  ctx3.beginPath();
+  ctx3.moveTo(baseX, groundY); ctx3.lineTo(baseX + rampW, groundY); ctx3.lineTo(baseX + rampW, groundY - rampH);
+  ctx3.closePath(); ctx3.fill();
+
+  const ma = 1 / Math.sin(rad);
+  document.getElementById('hud3A').textContent = angle3 + '°';
+  document.getElementById('hud3L').textContent = load3 + ' N';
+  document.getElementById('hud3E').textContent = (load3 * Math.sin(rad)).toFixed(1) + ' N';
+  document.getElementById('hud3MA').textContent = ma.toFixed(2);
+}
+
+/* SIM 4 */
+const canvas4 = document.getElementById('canvas4');
+const holder4 = document.getElementById('holder4');
+let ctx4, W4=0, H4=0, force4=100, wedgeW4=4;
+function resize4(){ const r = fitCanvas(canvas4, holder4); ctx4 = r.ctx; W4 = r.W; H4 = r.H; }
+window.addEventListener('resize', resize4);
+function loop4(){
+  requestAnimationFrame(loop4);
+  if(!ctx4 || W4<2) return;
+  const groundY = drawDarkScene(ctx4, W4, H4, '#f472b6');
+  const cx = W4/2;
+  ctx4.fillStyle = '#cbd5e1';
+  ctx4.beginPath();
+  ctx4.moveTo(cx - wedgeW4 * 10, groundY - 260); ctx4.lineTo(cx + wedgeW4 * 10, groundY - 260); ctx4.lineTo(cx, groundY - 80);
+  ctx4.closePath(); ctx4.fill();
+  const ma = 20 / wedgeW4;
+  document.getElementById('hud4F').textContent = force4 + ' N';
+  document.getElementById('hud4W').textContent = wedgeW4 + ' cm';
+  document.getElementById('hud4MA').textContent = ma.toFixed(2);
+}
+
+/* SIM 5 */
+const canvas5 = document.getElementById('canvas5');
+const holder5 = document.getElementById('holder5');
+let ctx5, W5=0, H5=0, radius5=2, pitch5=0.4;
+function resize5(){ const r = fitCanvas(canvas5, holder5); ctx5 = r.ctx; W5 = r.W; H5 = r.H; }
+window.addEventListener('resize', resize5);
+function loop5(){
+  requestAnimationFrame(loop5);
+  if(!ctx5 || W5<2) return;
+  const groundY = drawDarkScene(ctx5, W5, H5, '#a78bfa');
+  const cx = W5/2;
+  ctx5.fillStyle = '#64748b';
+  ctx5.fillRect(cx - radius5 * 10, groundY - 280, radius5 * 20, 200);
+  const ma = (2 * Math.PI * radius5) / pitch5;
+  document.getElementById('hud5R').textContent = radius5.toFixed(1) + ' cm';
+  document.getElementById('hud5P').textContent = pitch5.toFixed(1) + ' cm';
+  document.getElementById('hud5MA').textContent = ma.toFixed(1);
+}
+
+/* SIM 6 */
+const canvas6 = document.getElementById('canvas6');
+const holder6 = document.getElementById('holder6');
+let ctx6, W6=0, H6=0, wheelR6=18, axleR6=3;
+function resize6(){ const r = fitCanvas(canvas6, holder6); ctx6 = r.ctx; W6 = r.W; H6 = r.H; }
+window.addEventListener('resize', resize6);
+function loop6(){
+  requestAnimationFrame(loop6);
+  if(!ctx6 || W6<2) return;
+  const groundY = drawDarkScene(ctx6, W6, H6, '#fb923c');
+  const cx = W6/2;
+  ctx6.strokeStyle = '#fb923c'; ctx6.lineWidth = 14;
+  ctx6.beginPath(); ctx6.arc(cx, groundY - 180, wheelR6 * 8, 0, TAU); ctx6.stroke();
+  ctx6.fillStyle = '#64748b';
+  ctx6.beginPath(); ctx6.arc(cx, groundY - 180, axleR6 * 8, 0, TAU); ctx6.fill();
+  const ma = wheelR6 / axleR6;
+  document.getElementById('hud6R').textContent = wheelR6 + ' cm';
+  document.getElementById('hud6r').textContent = axleR6 + ' cm';
+  document.getElementById('hud6MA').textContent = ma.toFixed(2);
+}
+
+resize1(); resize2(); resize3(); resize4(); resize5(); resize6();
+requestAnimationFrame(loop1); requestAnimationFrame(loop2); requestAnimationFrame(loop3);
+requestAnimationFrame(loop4); requestAnimationFrame(loop5); requestAnimationFrame(loop6);
+
+document.getElementById('s1E').addEventListener('input', function(){ effort1 = +this.value; document.getElementById('v1E').textContent = effort1 + ' N'; });
+document.getElementById('s1L').addEventListener('input', function(){ load1 = +this.value; document.getElementById('v1L').textContent = load1 + ' N'; });
+document.getElementById('s1F').addEventListener('input', function(){ fulc1 = +this.value; document.getElementById('v1F').textContent = fulc1.toFixed(2); });
+
+document.getElementById('s2N').addEventListener('input', function(){ pulleys2 = +this.value; document.getElementById('v2N').textContent = pulleys2; });
+document.getElementById('s2L').addEventListener('input', function(){ load2 = +this.value; document.getElementById('v2L').textContent = load2 + ' N'; });
+
+document.getElementById('s3A').addEventListener('input', function(){ angle3 = +this.value; document.getElementById('v3A').textContent = angle3 + '°'; });
+document.getElementById('s3L').addEventListener('input', function(){ load3 = +this.value; document.getElementById('v3L').textContent = load3 + ' N'; });
+
+document.getElementById('s4F').addEventListener('input', function(){ force4 = +this.value; document.getElementById('v4F').textContent = force4 + ' N'; });
+document.getElementById('s4W').addEventListener('input', function(){ wedgeW4 = +this.value; document.getElementById('v4W').textContent = wedgeW4 + ' cm'; });
+
+document.getElementById('s5R').addEventListener('input', function(){ radius5 = +this.value; document.getElementById('v5R').textContent = radius5.toFixed(1) + ' cm'; });
+document.getElementById('s5P').addEventListener('input', function(){ pitch5 = +this.value; document.getElementById('v5P').textContent = pitch5.toFixed(1) + ' cm'; });
+
+document.getElementById('s6R').addEventListener('input', function(){ wheelR6 = +this.value; document.getElementById('v6R').textContent = wheelR6 + ' cm'; });
+document.getElementById('s6r').addEventListener('input', function(){ axleR6 = +this.value; document.getElementById('v6r').textContent = axleR6 + ' cm'; });
+
+document.querySelectorAll('.fs-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.fs);
+    if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
+    else { document.exitFullscreen().catch(()=>{}); }
+  });
+});
+
+document.querySelectorAll('.machine-tab').forEach((tab, idx) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.machine-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sim-stage').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.sim).classList.add('active');
+    setTimeout(() => { resize1(); resize2(); resize3(); resize4(); resize5(); resize6(); }, 60);
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab === 'p-sim'){
+      setTimeout(() => { resize1(); resize2(); resize3(); resize4(); resize5(); resize6(); }, 60);
+    }
+  });
+});
+})();
+</script>
+</body>
+</html>

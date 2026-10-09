@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Photosynthesis in a Flowering Plant</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:22px 24px 26px; margin-bottom:20px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.8rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.88rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:.98rem; color:#a8c4e0; margin-bottom:16px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 12px; }
+.section-tab { padding:9px 18px; border:none; border-radius:30px; font-weight:700; font-size:.86rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active{display:block}
+.panel h3 { font-size:1.4rem; font-weight:700; color:#ffd54f; margin-bottom:10px; }
+.panel p,.panel li { font-size:.98rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:6px 0 6px 30px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:6px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.78rem; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:12px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.1rem; color:#ffb74d; margin-bottom:4px; } .grid-item p{font-size:.9rem;color:#b8d4f0}
+.sim-box { background:#06121f; border-radius:18px; padding:18px 14px 14px; margin-top:8px; border:1px solid #1e3a5c; }
+.sim-controls { display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; justify-content:center; margin-bottom:14px; background:#0a1a2e; padding:12px 18px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:8px; font-weight:600; color:#90b8e0; font-size:.9rem; }
+.sim-controls input[type=range]{width:120px;accent-color:#ff9800;cursor:pointer}
+.sim-controls select,.sim-controls button { padding:8px 16px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem; }
+.sim-controls button { background:#1976d2; color:#fff; }
+.sim-controls button:hover{transform:scale(1.05);filter:brightness(1.2)}
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout{text-align:center;font-size:1.3rem;font-weight:700;color:#ffd54f;margin:12px 0 6px}
+.sim-readout small{display:block;font-size:.9rem;color:#7a9cc0;font-weight:400}
+.sim-info{background:#0a1a2e;padding:11px 16px;border-radius:36px;margin-top:12px;text-align:center;font-size:.92rem;color:#a8c8e8;border:1px solid #1a3550}
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:12px 16px; margin-top:12px; font-size:.9rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+<h2>🌹 Photosynthesis <small>how flowering plants make food</small></h2>
+<div class="desc">Watch a real rose plant absorb sunlight, water, and CO₂ — and release oxygen and glucose. The full process, animated.</div>
+<div class="section-tabs" data-topic="ps">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="types">Key Facts</button>
+<button class="section-tab active" data-section="sim">Simulation</button>
+</div>
+<div class="panel" id="ps-def"><h3>📖 Definition</h3>
+<p><strong>Photosynthesis</strong> is the biological process by which green plants utilize solar energy, water, and carbon dioxide to synthesize glucose and release oxygen.</p>
+</div>
+<div class="panel" id="ps-exp"><h3>💡 Explanation</h3>
+<p>Chlorophyll in leaf cells captures solar photon energy. Roots draw water and dissolved minerals through the xylem. Atmospheric CO₂ enters via leaf stomata. The plant produces glucose for cellular energy and releases O₂.</p>
+<p style="margin-top:12px;font-weight:700;color:#ffd54f;">6CO₂ + 6H₂O + Solar Energy → C₆H₁₂O₆ (Glucose) + 6O₂</p>
+</div>
+<div class="panel" id="ps-types"><h3>🌱 Key Facts</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Where?</h4><p>Inside chloroplasts within leaf mesophyll cells.</p></div>
+<div class="grid-item"><h4>Chlorophyll</h4><p>Light-capturing pigment molecules.</p></div>
+<div class="grid-item"><h4>Stomata</h4><p>Pores regulating gas diffusion (CO₂ in, O₂ out).</p></div>
+<div class="grid-item"><h4>Xylem</h4><p>Vascular tissue conducting water from roots upward.</p></div>
+</div>
+</div>
+<div class="panel active" id="ps-sim"><h3>🎮 Interactive Simulation – Flowering Plant</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Sunlight:
+<select id="psSun">
+<option value="0.4">Dim</option>
+<option value="1" selected>Normal</option>
+<option value="1.8">Bright</option>
+</select></label>
+<label>Water: <input type="range" id="psWater" min="0" max="100" value="75"></label>
+<label>CO₂: <input type="range" id="psCO2" min="0" max="100" value="75"></label>
+<button id="psLabelsBtn">🏷️ Labels ON</button>
+<button id="psResetBtn">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="psReadout">PHOTOSYNTHESIS <small>O₂ released: 0  |  Glucose made: 0</small></div>
+<canvas id="psCanvas" width="1400" height="720"></canvas>
+<div class="sim-info" id="psInfo">Watch sunlight reach the leaves, water rise through the xylem, CO₂ enter the stomata, and O₂ + glucose come out.</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+let psCtx, psFrame=0, psSun=1, psWater=75, psCO2=75, psShowLabels=true;
+let o2Bubbles=[], co2Particles=[], waterDroplets=[], glucoseDots=[];
+
+const W=1400, H=720;
+const groundY = 520;
+const plantX = 400;
+const stemTopY = 100;
+
+const leafSpots = [
+  { y: groundY-170, side:'left',  size:1.05 },
+  { y: groundY-170, side:'right', size:1.05 },
+  { y: groundY-270, side:'left',  size:1.10 },
+  { y: groundY-270, side:'right', size:1.10 },
+  { y: groundY-360, side:'left',  size:1.00 },
+  { y: groundY-360, side:'right', size:1.00 }
+];
+
+function initPhotosynthesis(){
+ o2Bubbles=[];co2Particles=[];waterDroplets=[];glucoseDots=[];
+ for(let i=0;i<22;i++) spawnCO2();
+ for(let i=0;i<30;i++){
+  waterDroplets.push({
+   x: plantX-180+Math.random()*360,
+   y: groundY+40+Math.random()*150,
+   r: 2.5+Math.random()*2
+  });
+ }
+}
+
+function spawnCO2(){
+ const zone = Math.random();
+ let x,y;
+ if(zone < 0.35){ x = 20 + Math.random()*100; y = 100 + Math.random()*380; }
+ else if(zone < 0.7){ x = 850 + Math.random()*250; y = 400 + Math.random()*180; }
+ else { x = 120 + Math.random()*350; y = 30 + Math.random()*80; }
+ co2Particles.push({
+  x, y,
+  vx: 0.4 + Math.random()*0.5,
+  vy: 0.15 + Math.random()*0.25,
+  life: 0
+ });
+}
+
+function psLoop(){
+ const c=document.getElementById('psCanvas');if(!psCtx)return;
+ psCtx.clearRect(0,0,W,H);
+ psFrame++;
+
+ const wind = Math.sin(psFrame*0.02);
+
+ const sky=psCtx.createLinearGradient(0,0,0,groundY);
+ sky.addColorStop(0,'#8fc8ea');
+ sky.addColorStop(0.55,'#b8ddf0');
+ sky.addColorStop(1,'#dff0fb');
+ psCtx.fillStyle=sky;psCtx.fillRect(0,0,W,groundY);
+
+ const sunX=1150, sunY=100, sunR=48;
+ const sunGlow=psCtx.createRadialGradient(sunX,sunY,5,sunX,sunY,sunR*3.5);
+ sunGlow.addColorStop(0,'rgba(255,250,180,1)');
+ sunGlow.addColorStop(0.25,'rgba(255,235,59,.7)');
+ sunGlow.addColorStop(0.6,'rgba(255,200,0,.3)');
+ sunGlow.addColorStop(1,'rgba(255,180,0,0)');
+ psCtx.fillStyle=sunGlow;
+ psCtx.beginPath();psCtx.arc(sunX,sunY,sunR*3.5,0,7);psCtx.fill();
+ psCtx.fillStyle='#fffde7';
+ psCtx.beginPath();psCtx.arc(sunX,sunY,sunR,0,7);psCtx.fill();
+
+ const beamTargetX = plantX + 20;
+ const beamTargetY = stemTopY + 80;
+ const beamAlpha = 0.28 * psSun;
+ const beamGrad = psCtx.createLinearGradient(sunX,sunY,beamTargetX,beamTargetY);
+ beamGrad.addColorStop(0,`rgba(255,245,150,${beamAlpha})`);
+ beamGrad.addColorStop(1,`rgba(255,235,100,0)`);
+ psCtx.fillStyle=beamGrad;
+ psCtx.beginPath();
+ psCtx.moveTo(sunX-70,sunY+50);
+ psCtx.lineTo(sunX+30,sunY+80);
+ psCtx.lineTo(beamTargetX+60,beamTargetY+40);
+ psCtx.lineTo(beamTargetX-60,beamTargetY-40);
+ psCtx.closePath();
+ psCtx.fill();
+
+ const soil=psCtx.createLinearGradient(0,groundY,0,H);
+ soil.addColorStop(0,'#4a3520');
+ soil.addColorStop(1,'#1a0e05');
+ psCtx.fillStyle=soil;
+ psCtx.fillRect(0,groundY,W,H-groundY);
+
+ psCtx.strokeStyle='#6b4a2a';psCtx.lineWidth=12;psCtx.lineCap='round';
+ psCtx.beginPath();
+ psCtx.moveTo(plantX,groundY);
+ psCtx.bezierCurveTo(plantX-10,groundY+60,plantX+10,groundY+130,plantX,groundY+200);
+ psCtx.stroke();
+
+ const stemSway = wind * 3;
+ psCtx.strokeStyle='#2e5d1e';psCtx.lineWidth=16;psCtx.lineCap='round';
+ psCtx.beginPath();
+ psCtx.moveTo(plantX,groundY);
+ psCtx.quadraticCurveTo(plantX+stemSway*0.5, (groundY+stemTopY)/2, plantX+stemSway, stemTopY);
+ psCtx.stroke();
+
+ function drawLeaflet(cx, cy, size, angle, side){
+  psCtx.save();
+  psCtx.translate(cx,cy);
+  psCtx.rotate(angle);
+  if(side==='right') psCtx.scale(-1,1);
+  psCtx.scale(size,size);
+  const L = 55, W = 30;
+  psCtx.beginPath();
+  psCtx.moveTo(0,0);
+  psCtx.bezierCurveTo(-L*0.2,-W, -L*0.7,-W*1.05, -L,0);
+  psCtx.bezierCurveTo(-L*0.7, W*1.05, -L*0.2, W, 0,0);
+  psCtx.closePath();
+  psCtx.fillStyle='#4e9a3a';
+  psCtx.fill();
+  psCtx.restore();
+ }
+
+ leafSpots.forEach(ls=>{
+  const xAtY = plantX + stemSway * ((groundY-ls.y)/(groundY-stemTopY));
+  const sideSign = ls.side==='left'? -1 : 1;
+  const petioleEndX = xAtY + sideSign*70;
+  drawLeaflet(petioleEndX, ls.y, ls.size, sideSign*-0.15, ls.side);
+ });
+
+ // Detailed flowering rose blossom
+ const flowerX = plantX + stemSway;
+ const flowerY = stemTopY;
+
+ // Calyx green sepals
+ psCtx.fillStyle = '#2e7d32';
+ for(let p=0; p<5; p++){
+   const sa = p * (Math.PI*2/5) + 0.4;
+   psCtx.beginPath();
+   psCtx.ellipse(flowerX + Math.cos(sa)*16, flowerY + 12 + Math.sin(sa)*8, 14, 6, sa, 0, 7);
+   psCtx.fill();
+ }
+
+ // Layered crimson rose petals
+ const petalLayers = [
+   { count: 7, r: 28, col: '#99001a' },
+   { count: 6, r: 22, col: '#c8102e' },
+   { count: 5, r: 16, col: '#e52d42' },
+   { count: 4, r: 10, col: '#ff4d67' }
+ ];
+ petalLayers.forEach((layer, li) => {
+   psCtx.fillStyle = layer.col;
+   for(let k=0; k<layer.count; k++){
+     const angle = k * (Math.PI*2/layer.count) + (li*0.5) + wind*0.05;
+     const px = flowerX + Math.cos(angle)*layer.r*0.6;
+     const py = flowerY + Math.sin(angle)*layer.r*0.6;
+     psCtx.beginPath();
+     psCtx.ellipse(px, py, layer.r*0.75, layer.r*0.55, angle, 0, 7);
+     psCtx.fill();
+   }
+ });
+
+ // Center golden stamens
+ psCtx.fillStyle = '#ffd54f';
+ psCtx.beginPath();
+ psCtx.arc(flowerX, flowerY, 7, 0, 7);
+ psCtx.fill();
+
+ // HIGH-RESOLUTION ACTIVE CHLOROPLAST ZOOM CALLOUT
+ const zoomX = 960, zoomY = 310, zoomR = 135;
+
+ // Callout connector line to leaf
+ psCtx.strokeStyle = 'rgba(76,175,80,0.6)';
+ psCtx.lineWidth = 2;
+ psCtx.setLineDash([4,4]);
+ psCtx.beginPath();
+ psCtx.moveTo(plantX + 70, groundY-270);
+ psCtx.lineTo(zoomX - zoomR, zoomY);
+ psCtx.stroke();
+ psCtx.setLineDash([]);
+
+ // Outer glow & double membrane
+ psCtx.fillStyle = 'rgba(232,245,233,0.95)';
+ psCtx.beginPath(); psCtx.arc(zoomX, zoomY, zoomR, 0, 7); psCtx.fill();
+
+ psCtx.strokeStyle = '#1b5e20'; psCtx.lineWidth = 5;
+ psCtx.beginPath(); psCtx.arc(zoomX, zoomY, zoomR, 0, 7); psCtx.stroke();
+
+ psCtx.strokeStyle = '#4caf50'; psCtx.lineWidth = 2;
+ psCtx.beginPath(); psCtx.arc(zoomX, zoomY, zoomR-6, 0, 7); psCtx.stroke();
+
+ // Chloroplast Stroma Matrix
+ const stromaGrad = psCtx.createRadialGradient(zoomX-30, zoomY-30, 20, zoomX, zoomY, zoomR);
+ stromaGrad.addColorStop(0, 'rgba(165,214,167,0.7)');
+ stromaGrad.addColorStop(1, 'rgba(102,187,106,0.5)');
+ psCtx.fillStyle = stromaGrad;
+ psCtx.beginPath(); psCtx.arc(zoomX, zoomY, zoomR-8, 0, 7); psCtx.fill();
+
+ // Thylakoid Grana Stacks (Green stacked discs)
+ const grana = [
+   { x: zoomX-55, y: zoomY-30, discs: 5 },
+   { x: zoomX,    y: zoomY-45, discs: 6 },
+   { x: zoomX+55, y: zoomY-25, discs: 5 },
+   { x: zoomX-30, y: zoomY+35, discs: 5 },
+   { x: zoomX+35, y: zoomY+40, discs: 5 }
+ ];
+
+ // Interconnecting Stroma Lamellae bridges
+ psCtx.strokeStyle = '#2e7d32';
+ psCtx.lineWidth = 3;
+ psCtx.beginPath();
+ psCtx.moveTo(zoomX-55, zoomY-30); psCtx.lineTo(zoomX, zoomY-45);
+ psCtx.lineTo(zoomX+55, zoomY-25);
+ psCtx.moveTo(zoomX-30, zoomY+35); psCtx.lineTo(zoomX+35, zoomY+40);
+ psCtx.stroke();
+
+ // Draw stacked thylakoid discs
+ grana.forEach(g => {
+   for(let d=0; d<g.discs; d++){
+     const dy = g.y + (d - g.discs/2)*8;
+     psCtx.fillStyle = '#1b5e20';
+     psCtx.beginPath();
+     psCtx.ellipse(g.x, dy, 20, 5, 0, 0, 7);
+     psCtx.fill();
+     psCtx.strokeStyle = '#81c784';
+     psCtx.lineWidth = 1;
+     psCtx.stroke();
+   }
+ });
+
+ // Callout header
+ psCtx.font = 'bold 13px sans-serif';
+ psCtx.fillStyle = '#1b5e20';
+ psCtx.fillText('MICROSCOPIC CHLOROPLAST', zoomX-85, zoomY-zoomR+24);
+ psCtx.font = '11px sans-serif';
+ psCtx.fillStyle = '#2e7d32';
+ psCtx.fillText('Grana (Thylakoids) + Stroma', zoomX-68, zoomY-zoomR+38);
+
+ const waterFlow = psWater/100;
+ for(let i=0;i<20;i++){
+  const t = ((psFrame*0.006*waterFlow + i*0.05) % 1);
+  const wy = groundY+200 - t*620;
+  if(wy > stemTopY+30 && wy < groundY+200){
+   const sx = plantX + stemSway*((groundY-wy)/(groundY-stemTopY));
+   psCtx.fillStyle='rgba(80,180,255,0.9)';
+   psCtx.beginPath();psCtx.arc(sx,wy,4,0,7);psCtx.fill();
+  }
+ }
+
+ const releaseRate = psSun * (psWater/100) * (psCO2/100);
+ if(psFrame%8===0 && o2Bubbles.length<50 && releaseRate>0.15){
+  const leaf = leafSpots[Math.floor(Math.random()*leafSpots.length)];
+  const sideSign = leaf.side==='left'? -1 : 1;
+  o2Bubbles.push({
+   x: plantX + sideSign*130,
+   y: leaf.y,
+   vy: -1.5,
+   r: 7
+  });
+ }
+ o2Bubbles.forEach((b,i)=>{
+  b.y += b.vy;
+  psCtx.fillStyle='#b3ecff';
+  psCtx.beginPath();psCtx.arc(b.x,b.y,b.r,0,7);psCtx.fill();
+  psCtx.strokeStyle='#0288d1';psCtx.lineWidth=1.5;psCtx.stroke();
+  psCtx.fillStyle='#01579b';
+  psCtx.font='bold 11px sans-serif';
+  psCtx.fillText('O₂',b.x-7,b.y+4);
+  if(b.y < -20) o2Bubbles.splice(i,1);
+ });
+
+ if(psShowLabels){
+  psCtx.font='bold 16px sans-serif';
+  psCtx.fillStyle='#fff';
+  psCtx.fillText('☀️ SUNLIGHT', sunX-150, sunY+20);
+  psCtx.fillText('💧 XYLEM (Water In)', plantX+40, groundY-120);
+  psCtx.fillText('🌱 CHLOROPLAST (In leaf cells)', zoomX-100, zoomY-zoomR+30);
+  psCtx.fillText('💨 O₂ (Oxygen Released)', zoomX+60, zoomY-40);
+ }
+
+ document.getElementById('psReadout').innerHTML='PHOTOSYNTHESIS <small>O₂ released: '+o2Bubbles.length+'  |  Glucose synthesis rate: '+Math.round(releaseRate*100)+'%</small>';
+ requestAnimationFrame(psLoop);
+}
+
+document.getElementById('psSun').addEventListener('change',e=>{psSun=+e.target.value;});
+document.getElementById('psWater').addEventListener('input',e=>{psWater=+e.target.value;});
+document.getElementById('psCO2').addEventListener('input',e=>{psCO2=+e.target.value;});
+document.getElementById('psLabelsBtn').addEventListener('click',function(){
+ psShowLabels=!psShowLabels;
+ this.textContent=psShowLabels?'🏷️ Labels ON':'🏷️ Labels OFF';
+});
+document.getElementById('psResetBtn').addEventListener('click',()=>{
+ initPhotosynthesis();
+ document.getElementById('psWater').value=75;
+ document.getElementById('psCO2').value=75;
+ document.getElementById('psSun').value=1;
+ psSun=1;psWater=75;psCO2=75;
+});
+
+function initPhotosynthesisLab(){
+ const pc=document.getElementById('psCanvas');
+ if(pc){
+  psCtx=pc.getContext('2d');
+  initPhotosynthesis();
+  psLoop();
+ }
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+ initPhotosynthesisLab();
+} else {
+ window.addEventListener('DOMContentLoaded',initPhotosynthesisLab);
+ window.addEventListener('load',initPhotosynthesisLab);
+}
+})();
+</script>
+</body>
+</html>

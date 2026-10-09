@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newton's 3 Laws of Motion</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    background:linear-gradient(160deg,#1e2440 0%,#252048 50%,#1e2440 100%);
+    color:#f1f5f9;
+    min-height:100vh;
+    line-height:1.75;
+    font-size:16px;
+  }
+  .app{max-width:1300px;margin:0 auto;padding:16px 16px 24px}
+
+  .hero{text-align:center;margin-bottom:20px}
+  .hero h2{
+    font-size:2rem;font-weight:800;
+    background:linear-gradient(100deg,#60a5fa,#a78bfa,#f472b6);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero p{color:#cbd5e1;font-size:1rem;margin-top:4px;font-weight:500}
+
+  .tabs{
+    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    margin-bottom:24px;
+  }
+  .tab{
+    padding:12px 28px;border-radius:12px;border:2px solid #475569;
+    background:#2a3152;color:#e2e8f0;font-size:1rem;font-weight:700;
+    cursor:pointer;font-family:inherit;transition:all .2s;
+  }
+  .tab:hover{border-color:#a78bfa;color:#c4b5fd;background:#332c5c}
+  .tab.active{
+    background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+    color:#fff;border-color:transparent;
+    box-shadow:0 4px 16px rgba(139,92,246,.5);
+  }
+
+  .panel{display:none}
+  .panel.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .card{
+    background:#2a3152;border-radius:16px;padding:26px;
+    box-shadow:0 4px 20px rgba(0,0,0,.35);
+    margin-bottom:20px;border:1px solid #475569;
+  }
+  .card h2{
+    font-size:1.5rem;font-weight:800;color:#60a5fa;
+    margin-bottom:18px;padding-bottom:12px;
+    border-bottom:2px solid #475569;
+  }
+  .card h3{
+    font-size:1.2rem;font-weight:800;color:#c4b5fd;
+    margin:22px 0 12px;
+  }
+  .card p{color:#e2e8f0;font-size:1.02rem;margin-bottom:12px;line-height:1.85}
+  .card ul{padding-left:22px;margin-bottom:12px}
+  .card li{color:#e2e8f0;margin-bottom:8px;font-size:1rem;line-height:1.8}
+  .card b{color:#fbbf24;font-weight:800}
+
+  .hl{color:#60a5fa;font-weight:800}
+  .hl2{color:#fbbf24;font-weight:800}
+  .hl3{color:#f472b6;font-weight:800}
+
+  .law-block{
+    border-radius:14px;padding:20px 22px;margin-top:18px;
+    border:2px solid;background:#1e2440;
+  }
+  .law-block.law1{border-color:#3b82f6;background:linear-gradient(135deg,#1e2440,#1e2a55)}
+  .law-block.law2{border-color:#f59e0b;background:linear-gradient(135deg,#1e2440,#3a2a10)}
+  .law-block.law3{border-color:#ec4899;background:linear-gradient(135deg,#1e2440,#3a1030)}
+
+  .law-block h3{
+    display:flex;align-items:center;gap:12px;
+    font-size:1.15rem;font-weight:800;margin:0 0 14px;
+    padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.18);
+  }
+  .law-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;
+    color:#fff;font-weight:800;font-size:1rem;flex-shrink:0;
+  }
+  .law1 .law-num{background:#3b82f6}
+  .law2 .law-num{background:#f59e0b}
+  .law3 .law-num{background:#ec4899}
+  .law1 h3{color:#93c5fd}
+  .law2 h3{color:#fcd34d}
+  .law3 h3{color:#f9a8d4}
+
+  .formula-box{
+    display:inline-block;padding:10px 20px;margin:10px 0;
+    background:#141a30;border:2px solid #475569;border-radius:10px;
+    font-family:'Courier New',monospace;font-weight:800;font-size:1.05rem;
+  }
+  .law1 .formula-box{border-color:#3b82f6;color:#93c5fd}
+  .law2 .formula-box{border-color:#f59e0b;color:#fcd34d}
+  .law3 .formula-box{border-color:#ec4899;color:#f9a8d4}
+
+  .example-box{
+    margin-top:14px;padding:16px 18px;border-radius:10px;
+    background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);
+  }
+  .example-box b{display:block;margin-bottom:8px;font-size:1rem}
+  .law1 .example-box b{color:#93c5fd}
+  .law2 .example-box b{color:#fcd34d}
+  .law3 .example-box b{color:#f9a8d4}
+  .example-box ul{padding-left:20px;margin-bottom:0}
+  .example-box li{font-size:.98rem;line-height:1.75;margin-bottom:6px;color:#e2e8f0}
+
+  .grid2{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:14px;margin-top:14px;
+  }
+  .mini{
+    background:#1e2440;border:1px solid #475569;border-radius:12px;
+    padding:16px;border-left:4px solid #8b5cf6;
+  }
+  .mini b{display:block;color:#93c5fd;font-size:1rem;margin-bottom:6px;font-weight:800}
+  .mini span{font-size:.95rem;color:#cbd5e1;line-height:1.7}
+
+  .law-tabs{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:12px;margin-bottom:20px;
+  }
+  .law-tab{
+    padding:16px;border-radius:14px;border:2px solid #475569;
+    background:#1e2440;cursor:pointer;text-align:left;
+    font-family:inherit;transition:all .2s;
+    color:#e2e8f0;
+  }
+  .law-tab:hover{border-color:#a78bfa;transform:translateY(-2px);background:#2a3152}
+  .law-tab.active{border-color:#8b5cf6;background:#332c5c;}
+
+  .law-tab .badge{
+    display:inline-block;padding:4px 14px;border-radius:20px;
+    font-size:.72rem;font-weight:800;color:#fff;margin-bottom:10px;
+  }
+  .law-tab.law1 .badge{background:#3b82f6}
+  .law-tab.law2 .badge{background:#f59e0b}
+  .law-tab.law3 .badge{background:#ec4899}
+
+  .law-tab .title{display:block;font-size:1.05rem;font-weight:800;color:#f1f5f9;margin-bottom:6px}
+  .law-tab .sub{display:block;font-size:.88rem;color:#94a3b8;line-height:1.6}
+
+  .sim-stage{display:none}
+  .sim-stage.active{display:block}
+
+  .stage-heading{
+    text-align:center;padding:16px;margin-bottom:14px;
+    background:#1e2440;border-radius:12px;border:1px solid #475569;
+  }
+  .stage-heading h3{font-size:1.25rem;font-weight:800;margin-bottom:6px}
+  .stage-heading p{font-size:.95rem;color:#94a3b8}
+  .stage-heading.law1 h3{color:#60a5fa}
+  .stage-heading.law2 h3{color:#fbbf24}
+  .stage-heading.law3 h3{color:#f472b6}
+
+  .canvas-wrap{
+    position:relative;width:100%;height:520px;
+    border-radius:12px;overflow:hidden;
+    border:2px solid #475569;
+    background:#87ceeb;
+  }
+  canvas{display:block;width:100%;height:100%}
+
+  .hud{
+    position:absolute;top:12px;left:12px;
+    background:rgba(15,20,40,.94);
+    border:2px solid #60a5fa;border-radius:10px;
+    padding:12px 18px;font-size:.95rem;
+    pointer-events:none;line-height:1.9;color:#f1f5f9;
+    font-weight:600;z-index:5;
+  }
+  .hud b{color:#c4b5fd;font-weight:800}
+
+  .live-box{
+    position:absolute;bottom:90px;left:12px;right:12px;
+    background:rgba(15,20,40,.96);
+    border:2px solid #fbbf24;border-radius:10px;
+    padding:12px 18px;font-size:.9rem;
+    color:#fcd34d;font-weight:700;
+    pointer-events:none;min-height:48px;
+    display:flex;align-items:center;gap:10px;line-height:1.5;z-index:5;
+  }
+
+  .fs-btn{
+    position:absolute;top:12px;right:12px;
+    background:#1e40af;color:#fff;border:2px solid #60a5fa;
+    padding:10px 18px;border-radius:8px;cursor:pointer;
+    font-family:inherit;font-size:.9rem;font-weight:800;z-index:10;
+  }
+  .fs-btn:hover{background:#2563eb}
+
+  .canvas-wrap:fullscreen,
+  .canvas-wrap:-webkit-full-screen{
+    width:100vw !important;height:100vh !important;
+    border-radius:0 !important;border:none !important;
+  }
+  .fs-bar{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+    display:none;gap:8px;flex-wrap:wrap;justify-content:center;
+    background:rgba(15,20,40,.96);border:2px solid #475569;border-radius:14px;
+    padding:12px 16px;z-index:20;max-width:96vw;
+  }
+  .canvas-wrap:fullscreen .fs-bar,
+  .canvas-wrap:-webkit-full-screen .fs-bar{display:flex}
+
+  .fs-bar button{
+    padding:10px 16px;border-radius:8px;border:2px solid;
+    font-family:inherit;font-size:.9rem;font-weight:800;cursor:pointer;
+  }
+
+  .btn-blue{background:#1e40af;color:#fff;border-color:#3b82f6}
+  .btn-green{background:#065f46;color:#fff;border-color:#10b981}
+  .btn-red{background:#991b1b;color:#fff;border-color:#ef4444}
+  .btn-purple{background:#5b21b6;color:#fff;border-color:#8b5cf6}
+  .btn-orange{background:#9a3412;color:#fff;border-color:#f97316}
+  .btn-cyan{background:#155e75;color:#fff;border-color:#06b6d4}
+  .btn-pink{background:#9d174d;color:#fff;border-color:#ec4899}
+  .btn-yellow{background:#854d0e;color:#fff;border-color:#eab308}
+  .btn-gray{background:#334155;color:#fff;border-color:#64748b}
+
+  .controls{
+    margin-top:14px;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;
+    background:#1e2440;border-radius:12px;padding:14px;border:1px solid #475569;
+  }
+  .ctrl-item{
+    display:flex;flex-direction:column;gap:6px;
+    background:#2a3152;border-radius:8px;padding:10px;border:1px solid #475569;
+  }
+  .ctrl-item label{font-size:.75rem;color:#cbd5e1;font-weight:800;text-transform:uppercase}
+  .ctrl-item .cbtn{padding:10px 12px;border-radius:8px;border:2px solid;font-family:inherit;font-size:.92rem;font-weight:800;cursor:pointer;}
+  .slider-row{display:flex;align-items:center;gap:8px}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:#475569;outline:none;flex:1;cursor:pointer;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#60a5fa;cursor:pointer;border:2px solid #fff;}
+  .slider-val{color:#60a5fa;font-weight:800;font-size:.9rem;min-width:56px;text-align:right}
+
+  .sim-desc{
+    margin-top:16px;padding:18px 22px;border-radius:12px;
+    background:#1e2440;border:1px solid #475569;
+  }
+  .sim-desc h3{color:#60a5fa;font-size:1.12rem;margin-bottom:10px;font-weight:800}
+  .sim-desc p{font-size:1rem;color:#e2e8f0;margin-bottom:6px}
+  .sim-desc .formula{display:inline-block;margin-top:10px;padding:10px 18px;background:#141a30;border:2px solid #60a5fa;border-radius:8px;color:#93c5fd;font-weight:800;font-family:'Courier New',monospace;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <h2>Newton's 3 Laws of Motion</h2>
+    <p>Learn how objects move, stop, and push back — with real life examples</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab" data-tab="p-def">Definition</button>
+    <button class="tab" data-tab="p-exp">Explanation</button>
+    <button class="tab active" data-tab="p-sim">Live Simulations</button>
+  </nav>
+
+  <!-- ===== DEFINITION ===== -->
+  <section id="p-def" class="panel">
+    <div class="card">
+      <h2>Definition — Easy English</h2>
+      <p>In 1687, <span class="hl2">Sir Isaac Newton</span> formulated <b>three fundamental laws</b> that describe how objects move and interact.</p>
+
+      <div class="law-block law1">
+        <h3><span class="law-num">1</span> Newton's First Law — Law of Inertia</h3>
+        <p>An object stays at rest, or continues to move at a constant speed in a straight line, unless an external force acts on it.</p>
+        <div class="formula-box">No Net Force → Constant Velocity</div>
+      </div>
+
+      <div class="law-block law2">
+        <h3><span class="law-num">2</span> Newton's Second Law — F = m × a</h3>
+        <p>The acceleration of an object is directly proportional to the net force applied, and inversely proportional to its mass.</p>
+        <div class="formula-box">F = m × a   →   a = F ÷ m</div>
+      </div>
+
+      <div class="law-block law3">
+        <h3><span class="law-num">3</span> Newton's Third Law — Action and Reaction</h3>
+        <p>For every action, there is an equal and opposite reaction. Forces always occur in matched pairs.</p>
+        <div class="formula-box">Action Force = − Reaction Force</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPLANATION ===== -->
+  <section id="p-exp" class="panel">
+    <div class="card">
+      <h2>Explanation — Principles & Real Life</h2>
+      <h3>1. Inertia in Action</h3>
+      <p>When a car suddenly stops, your body continues forward due to inertia — which is why seatbelts save lives.</p>
+      <h3>2. Mass & Force Scaling</h3>
+      <p>Pushing an empty supermarket trolley requires far less force than a loaded one to reach the same acceleration.</p>
+      <h3>3. Rockets & Swimming</h3>
+      <p>Rockets expel gas downward; the gas exerts an equal and opposite reaction pushing the rocket upward into space.</p>
+    </div>
+  </section>
+
+  <!-- ===== SIMULATIONS ===== -->
+  <section id="p-sim" class="panel active">
+    <div class="card">
+      <h2>Live Simulations — Try All Three Laws</h2>
+
+      <div class="law-tabs">
+        <button class="law-tab law1 active" data-sim="sim1" type="button">
+          <span class="badge">LAW 1</span>
+          <span class="title">First Law (Inertia)</span>
+          <span class="sub">Things stay still or keep moving until a force acts.</span>
+        </button>
+        <button class="law-tab law2" data-sim="sim2" type="button">
+          <span class="badge">LAW 2</span>
+          <span class="title">Second Law (F = ma)</span>
+          <span class="sub">Force equals mass times acceleration.</span>
+        </button>
+        <button class="law-tab law3" data-sim="sim3" type="button">
+          <span class="badge">LAW 3</span>
+          <span class="title">Third Law (Action / Reaction)</span>
+          <span class="sub">Every push has an equal opposite push.</span>
+        </button>
+      </div>
+
+      <!-- SIM 1 -->
+      <div class="sim-stage active" id="sim1">
+        <div class="stage-heading law1">
+          <h3>Newton's First Law — Football on Grass</h3>
+          <p>Watch how friction acts as an external force to slow down the moving ball.</p>
+        </div>
+
+        <div class="canvas-wrap" id="holder1">
+          <canvas id="canvas1"></canvas>
+          <button class="fs-btn" data-fs="holder1" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Law:</b> First (Inertia)<br>
+            <b>Force:</b> <span id="hud1Force">Not yet</span><br>
+            <b>Speed:</b> <span id="hud1Speed">0.00 m/s</span><br>
+            <b>Friction:</b> <span id="hud1Fric">ON</span>
+          </div>
+          <div class="live-box" id="live1">Ready. Press "Push Football" to start.</div>
+
+          <div class="fs-bar">
+            <button class="btn-blue" id="fs1Play" type="button">⏸ Pause</button>
+            <button class="btn-green" id="fs1Push" type="button">⚽ Push Football</button>
+            <button class="btn-red" id="fs1PushBig" type="button">💥 Big Kick</button>
+            <button class="btn-orange" id="fs1Fric" type="button">🔥 Friction ON</button>
+            <button class="btn-pink" id="fs1Reset" type="button">🔄 Reset</button>
+            <button class="btn-yellow" id="fs1Exit" type="button">✕ Exit Full</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn btn-blue on" id="btn1Play" type="button">⏸ Pause</button></div>
+          <div class="ctrl-item"><label>Push Ball</label><button class="cbtn btn-green" id="btn1Push" type="button">⚽ Push Football</button></div>
+          <div class="ctrl-item"><label>Big Kick</label><button class="cbtn btn-red" id="btn1PushBig" type="button">💥 Big Kick</button></div>
+          <div class="ctrl-item"><label>Friction</label><button class="cbtn btn-orange on" id="btn1Fric" type="button">🔥 Friction ON</button></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn btn-pink" id="btn1Reset" type="button">🔄 Reset Ball</button></div>
+        </div>
+      </div>
+
+      <!-- SIM 2 -->
+      <div class="sim-stage" id="sim2">
+        <div class="stage-heading law2">
+          <h3>Newton's Second Law — F = m × a</h3>
+          <p>More force increases acceleration; more mass reduces acceleration.</p>
+        </div>
+
+        <div class="canvas-wrap" id="holder2">
+          <canvas id="canvas2"></canvas>
+          <button class="fs-btn" data-fs="holder2" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Law:</b> Second (F = m × a)<br>
+            <b>Force:</b> <span id="hud2Force">50 N</span><br>
+            <b>Mass:</b> <span id="hud2Mass">10 kg</span><br>
+            <b>Acceleration:</b> <span id="hud2Acc">5.00 m/s²</span>
+          </div>
+          <div class="live-box" id="live2">Adjust Force and Mass sliders to see acceleration change.</div>
+
+          <div class="fs-bar">
+            <button class="btn-blue" id="fs2Play" type="button">⏸ Pause</button>
+            <button class="btn-green" id="fs2Light" type="button">🪶 Light Cart</button>
+            <button class="btn-red" id="fs2Heavy" type="button">🏋 Heavy Cart</button>
+            <button class="btn-yellow" id="fs2Reset" type="button">🔄 Reset</button>
+            <button class="btn-gray" id="fs2Exit" type="button">✕ Exit Full</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn btn-blue on" id="btn2Play" type="button">⏸ Pause</button></div>
+          <div class="ctrl-item"><label>Force (N)</label><div class="slider-row"><input type="range" id="slider2Force" min="10" max="200" step="5" value="50"><span class="slider-val" id="val2Force">50 N</span></div></div>
+          <div class="ctrl-item"><label>Mass (kg)</label><div class="slider-row"><input type="range" id="slider2Mass" min="1" max="50" step="1" value="10"><span class="slider-val" id="val2Mass">10 kg</span></div></div>
+          <div class="ctrl-item"><label>Light Cart</label><button class="cbtn btn-green" id="btn2Light" type="button">🪶 2 kg Cart</button></div>
+          <div class="ctrl-item"><label>Heavy Cart</label><button class="cbtn btn-red" id="btn2Heavy" type="button">🏋 40 kg Cart</button></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn btn-pink" id="btn2Reset" type="button">🔄 Reset Cart</button></div>
+        </div>
+      </div>
+
+      <!-- SIM 3 -->
+      <div class="sim-stage" id="sim3">
+        <div class="stage-heading law3">
+          <h3>Newton's Third Law — Rocket Launch</h3>
+          <p>Gas pushed downward creates an equal upward reaction lifting the rocket.</p>
+        </div>
+
+        <div class="canvas-wrap" id="holder3">
+          <canvas id="canvas3"></canvas>
+          <button class="fs-btn" data-fs="holder3" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Law:</b> Third (Action &amp; Reaction)<br>
+            <b>Action:</b> <span id="hud3Action">Ready</span><br>
+            <b>Reaction:</b> <span id="hud3React">Ready</span>
+          </div>
+          <div class="live-box" id="live3">Ready. Press "Launch Rocket" to see the Third Law.</div>
+
+          <div class="fs-bar">
+            <button class="btn-blue" id="fs3Play" type="button">⏸ Pause</button>
+            <button class="btn-green" id="fs3Push" type="button">🚀 Launch</button>
+            <button class="btn-pink" id="fs3Reset" type="button">🔄 Reset</button>
+            <button class="btn-yellow" id="fs3Exit" type="button">✕ Exit Full</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn btn-blue on" id="btn3Play" type="button">⏸ Pause</button></div>
+          <div class="ctrl-item"><label>Launch</label><button class="cbtn btn-green" id="btn3Push" type="button">🚀 Launch Rocket</button></div>
+          <div class="ctrl-item"><label>Force (N)</label><div class="slider-row"><input type="range" id="slider3Force" min="10" max="100" step="5" value="50"><span class="slider-val" id="val3Force">50 N</span></div></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn btn-pink" id="btn3Reset" type="button">🔄 Reset Rocket</button></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const TAU = Math.PI * 2;
+
+function fitCanvas(canvas, holder){
+  const rect = holder.getBoundingClientRect();
+  const W = Math.max(rect.width, 1);
+  const H = Math.max(rect.height, 1);
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { ctx, W, H };
+}
+
+function drawScene(ctx, W, H){
+  const groundY = H * 0.72;
+  const sky = ctx.createLinearGradient(0, 0, 0, groundY);
+  sky.addColorStop(0, '#1e3a8a');
+  sky.addColorStop(0.55, '#3b82f6');
+  sky.addColorStop(1, '#93c5fd');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, groundY);
+
+  const grass = ctx.createLinearGradient(0, groundY, 0, H);
+  grass.addColorStop(0, '#86efac');
+  grass.addColorStop(0.5, '#4ade80');
+  grass.addColorStop(1, '#15803d');
+  ctx.fillStyle = grass;
+  ctx.fillRect(0, groundY, W, H - groundY);
+
+  ctx.strokeStyle = 'rgba(21,101,52,.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(W, groundY);
+  ctx.stroke();
+
+  return groundY;
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color, width){
+  const dx = x2 - x1, dy = y2 - y1;
+  const ang = Math.atan2(dy, dx);
+  const len = Math.hypot(dx, dy);
+  if(len < 2) return;
+  ctx.strokeStyle = color; ctx.fillStyle = color;
+  ctx.lineWidth = width; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  const headLen = Math.min(22, len * 0.4);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(ang - 0.4), y2 - headLen * Math.sin(ang - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(ang + 0.4), y2 - headLen * Math.sin(ang + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+function drawFootball(ctx, x, y, r, rot){
+  ctx.beginPath();
+  ctx.ellipse(x + 3, y + r*1.10, r*1.15, r*0.22, 0, 0, TAU);
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.fill();
+
+  const g = ctx.createRadialGradient(x - r*0.38, y - r*0.42, r*0.08, x + r*0.15, y + r*0.20, r*1.15);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(0.5, '#f5f5f5');
+  g.addColorStop(1, '#787878');
+  ctx.beginPath(); ctx.arc(x, y, r, 0, TAU);
+  ctx.fillStyle = g; ctx.fill();
+
+  ctx.save();
+  ctx.beginPath(); ctx.arc(x, y, r*0.99, 0, TAU); ctx.clip();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.fillStyle = '#111';
+  ctx.beginPath(); ctx.arc(0, 0, r*0.35, 0, TAU); ctx.fill();
+  ctx.restore();
+}
+
+function drawCart(ctx, x, y, w, h, mass){
+  ctx.beginPath();
+  ctx.ellipse(x, y + h/2 + 20, w*0.7, 8, 0, 0, TAU);
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.fill();
+
+  ctx.fillStyle = '#b8865a';
+  ctx.fillRect(x - w/2, y - h/2, w, h);
+  ctx.strokeStyle = '#5a3818';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x - w/2, y - h/2, w, h);
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(mass + ' kg', x, y + 5);
+
+  ctx.fillStyle = '#222';
+  ctx.beginPath(); ctx.arc(x - w/3, y + h/2 + 8, 12, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + w/3, y + h/2 + 8, 12, 0, TAU); ctx.fill();
+}
+
+function drawRocket(ctx, x, y, flame){
+  ctx.save();
+  ctx.translate(x, y);
+
+  if(flame > 0){
+    ctx.fillStyle = '#ff6600';
+    ctx.beginPath();
+    ctx.moveTo(-12, 45);
+    ctx.lineTo(12, 45);
+    ctx.lineTo(0, 45 + 50 * flame);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(-15, -10, 30, 55);
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.moveTo(0, -35); ctx.lineTo(-15, -10); ctx.lineTo(15, -10);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+/* ===== SIM 1 ===== */
+const canvas1 = document.getElementById('canvas1');
+const holder1 = document.getElementById('holder1');
+let ctx1, W1 = 0, H1 = 0;
+let playing1 = true, friction1 = true;
+let ball1 = { x: 200, v: 0, r: 30, rot: 0 };
+
+function resize1(){
+  const r = fitCanvas(canvas1, holder1);
+  ctx1 = r.ctx; W1 = r.W; H1 = r.H;
+  ball1.x = W1 * 0.25;
+}
+window.addEventListener('resize', resize1);
+document.addEventListener('fullscreenchange', () => setTimeout(resize1, 100));
+
+let last1 = performance.now();
+function loop1(now){
+  requestAnimationFrame(loop1);
+  const dt = Math.min((now - last1)/1000, 0.05);
+  last1 = now;
+  if(W1 < 2) return;
+
+  const groundY = drawScene(ctx1, W1, H1);
+  const floorY = groundY - ball1.r;
+
+  if(playing1){
+    ball1.x += ball1.v * dt * 60;
+    ball1.rot += ball1.v * dt * 4;
+    if(friction1 && Math.abs(ball1.v) > 0.001){
+      ball1.v *= 0.985;
+      if(Math.abs(ball1.v) < 0.05) ball1.v = 0;
+    }
+    if(ball1.x < ball1.r + 15){ ball1.x = ball1.r + 15; ball1.v = Math.abs(ball1.v) * 0.85; }
+    if(ball1.x > W1 - ball1.r - 15){ ball1.x = W1 - ball1.r - 15; ball1.v = -Math.abs(ball1.v) * 0.85; }
+  }
+
+  drawFootball(ctx1, ball1.x, floorY, ball1.r, ball1.rot);
+
+  document.getElementById('hud1Force').textContent = Math.abs(ball1.v) > 0.01 ? 'Applied' : 'Not yet';
+  document.getElementById('hud1Speed').textContent = ball1.v.toFixed(2) + ' m/s';
+  document.getElementById('hud1Fric').textContent = friction1 ? 'ON (Slows down)' : 'OFF (Moves forever)';
+}
+
+/* ===== SIM 2 ===== */
+const canvas2 = document.getElementById('canvas2');
+const holder2 = document.getElementById('holder2');
+let ctx2, W2 = 0, H2 = 0;
+let playing2 = true, cart2 = { x: 0, v: 0 };
+let force2 = 50, mass2 = 10;
+
+function resize2(){
+  const r = fitCanvas(canvas2, holder2);
+  ctx2 = r.ctx; W2 = r.W; H2 = r.H;
+  cart2.x = W2 * 0.25;
+}
+window.addEventListener('resize', resize2);
+
+let last2 = performance.now();
+function loop2(now){
+  requestAnimationFrame(loop2);
+  const dt = Math.min((now - last2)/1000, 0.05);
+  last2 = now;
+  if(W2 < 2) return;
+
+  const groundY = drawScene(ctx2, W2, H2);
+  const acc = force2 / mass2;
+  if(playing2){
+    cart2.v += acc * dt * 0.25;
+    cart2.x += cart2.v * dt * 60;
+    if(cart2.x > W2 - 80){ cart2.x = 80; cart2.v = 0; }
+  }
+  const cartW = 100 + mass2;
+  const cartH = 60;
+  const cartY = groundY - cartH/2 - 14;
+
+  drawCart(ctx2, cart2.x, cartY, cartW, cartH, mass2);
+  drawArrow(ctx2, cart2.x - cartW/2 - 10, cartY, cart2.x - cartW/2 - 10 - Math.min(force2*0.8, 140), cartY, '#fbbf24', 6);
+
+  document.getElementById('hud2Force').textContent = force2 + ' N';
+  document.getElementById('hud2Mass').textContent = mass2 + ' kg';
+  document.getElementById('hud2Acc').textContent = acc.toFixed(2) + ' m/s²';
+}
+
+/* ===== SIM 3 ===== */
+const canvas3 = document.getElementById('canvas3');
+const holder3 = document.getElementById('holder3');
+let ctx3, W3 = 0, H3 = 0;
+let playing3 = true, force3 = 50;
+let rocket3 = { y: 0, v: 0, flame: 0 };
+
+function resize3(){
+  const r = fitCanvas(canvas3, holder3);
+  ctx3 = r.ctx; W3 = r.W; H3 = r.H;
+  rocket3.y = H3 * 0.72 - 60;
+}
+window.addEventListener('resize', resize3);
+
+let last3 = performance.now();
+function loop3(now){
+  requestAnimationFrame(loop3);
+  const dt = Math.min((now - last3)/1000, 0.05);
+  last3 = now;
+  if(W3 < 2) return;
+
+  const groundY = drawScene(ctx3, W3, H3);
+  const padY = groundY - 6;
+  const rx = W3/2;
+
+  if(playing3){
+    if(rocket3.flame > 0){
+      rocket3.v += 0.12 * (force3 / 50);
+      rocket3.y -= rocket3.v * dt * 60;
+      rocket3.flame -= dt * 0.3;
+      if(rocket3.y < 50){ rocket3.y = 50; rocket3.v = 0; rocket3.flame = 0; }
+    } else {
+      if(rocket3.y < padY - 60){
+        rocket3.y += (padY - 60 - rocket3.y) * 0.01;
+      }
+    }
+  }
+
+  drawRocket(ctx3, rx, rocket3.y, Math.max(rocket3.flame, 0));
+
+  if(rocket3.flame > 0){
+    drawArrow(ctx3, rx - 60, rocket3.y + 40, rx - 60, rocket3.y + 110, '#fbbf24', 5);
+    drawArrow(ctx3, rx + 60, rocket3.y - 20, rx + 60, rocket3.y - 90, '#34d399', 5);
+  }
+
+  document.getElementById('hud3Action').textContent = rocket3.flame > 0 ? (force3 + ' N (Gas Down)') : 'Ready';
+  document.getElementById('hud3React').textContent = rocket3.flame > 0 ? (force3 + ' N (Rocket Up)') : 'Ready';
+}
+
+resize1(); resize2(); resize3();
+requestAnimationFrame(loop1);
+requestAnimationFrame(loop2);
+requestAnimationFrame(loop3);
+
+/* CONTROLS */
+document.getElementById('btn1Play').addEventListener('click', () => { playing1 = !playing1; });
+document.getElementById('fs1Play').addEventListener('click', () => { playing1 = !playing1; });
+document.getElementById('btn1Push').addEventListener('click', () => { ball1.v = Math.max(ball1.v + 6, 6); });
+document.getElementById('fs1Push').addEventListener('click', () => { ball1.v = Math.max(ball1.v + 6, 6); });
+document.getElementById('btn1PushBig').addEventListener('click', () => { ball1.v = Math.max(ball1.v + 14, 14); });
+document.getElementById('fs1PushBig').addEventListener('click', () => { ball1.v = Math.max(ball1.v + 14, 14); });
+document.getElementById('btn1Fric').addEventListener('click', function(){ friction1 = !friction1; this.textContent = friction1 ? '🔥 Friction ON' : '❄ Friction OFF'; });
+document.getElementById('fs1Fric').addEventListener('click', function(){ friction1 = !friction1; this.textContent = friction1 ? '🔥 Friction ON' : '❄ Friction OFF'; });
+document.getElementById('btn1Reset').addEventListener('click', () => { ball1.x = W1 * 0.25; ball1.v = 0; });
+document.getElementById('fs1Reset').addEventListener('click', () => { ball1.x = W1 * 0.25; ball1.v = 0; });
+
+document.getElementById('btn2Play').addEventListener('click', () => { playing2 = !playing2; });
+document.getElementById('fs2Play').addEventListener('click', () => { playing2 = !playing2; });
+document.getElementById('slider2Force').addEventListener('input', function(){ force2 = parseFloat(this.value); document.getElementById('val2Force').textContent = force2 + ' N'; });
+document.getElementById('slider2Mass').addEventListener('input', function(){ mass2 = parseFloat(this.value); document.getElementById('val2Mass').textContent = mass2 + ' kg'; });
+document.getElementById('btn2Light').addEventListener('click', () => { mass2 = 2; document.getElementById('slider2Mass').value = 2; document.getElementById('val2Mass').textContent = '2 kg'; });
+document.getElementById('btn2Heavy').addEventListener('click', () => { mass2 = 40; document.getElementById('slider2Mass').value = 40; document.getElementById('val2Mass').textContent = '40 kg'; });
+document.getElementById('btn2Reset').addEventListener('click', () => { cart2.x = W2 * 0.25; cart2.v = 0; });
+document.getElementById('fs2Reset').addEventListener('click', () => { cart2.x = W2 * 0.25; cart2.v = 0; });
+document.getElementById('fs2Light')?.addEventListener('click', () => { mass2 = 2; document.getElementById('slider2Mass').value = 2; document.getElementById('val2Mass').textContent = '2 kg'; });
+document.getElementById('fs2Heavy')?.addEventListener('click', () => { mass2 = 40; document.getElementById('slider2Mass').value = 40; document.getElementById('val2Mass').textContent = '40 kg'; });
+
+document.getElementById('btn3Play').addEventListener('click', () => { playing3 = !playing3; });
+document.getElementById('fs3Play').addEventListener('click', () => { playing3 = !playing3; });
+document.getElementById('btn3Push').addEventListener('click', () => { rocket3.flame = 1.4; rocket3.v = 0; });
+document.getElementById('fs3Push').addEventListener('click', () => { rocket3.flame = 1.4; rocket3.v = 0; });
+document.getElementById('slider3Force').addEventListener('input', function(){ force3 = parseFloat(this.value); document.getElementById('val3Force').textContent = force3 + ' N'; });
+document.getElementById('btn3Reset').addEventListener('click', () => { rocket3.y = H3 * 0.72 - 60; rocket3.v = 0; rocket3.flame = 0; });
+document.getElementById('fs3Reset').addEventListener('click', () => { rocket3.y = H3 * 0.72 - 60; rocket3.v = 0; rocket3.flame = 0; });
+
+const exitAllFs = () => { if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); };
+document.getElementById('fs1Exit')?.addEventListener('click', exitAllFs);
+document.getElementById('fs2Exit')?.addEventListener('click', exitAllFs);
+document.getElementById('fs3Exit')?.addEventListener('click', exitAllFs);
+
+document.querySelectorAll('.fs-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.fs);
+    if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
+    else { document.exitFullscreen().catch(()=>{}); }
+  });
+});
+
+document.querySelectorAll('.law-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.law-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sim-stage').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.sim).classList.add('active');
+    setTimeout(() => { resize1(); resize2(); resize3(); }, 80);
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab === 'p-sim'){
+      setTimeout(() => { resize1(); resize2(); resize3(); }, 80);
+    }
+  });
+});
+
+})();
+</script>
+</body>
+</html>

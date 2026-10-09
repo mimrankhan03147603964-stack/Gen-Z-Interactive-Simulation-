@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Heat Transfer & Temperature Lab</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#eef7ff;color:#17324d}
+.container{max-width:1200px;margin:18px auto;padding:0 16px}
+.card{background:white;border-radius:20px;box-shadow:0 10px 28px #9ab8d744;overflow:hidden;margin-bottom:24px}
+.head{padding:20px;color:white;display:flex;gap:15px;align-items:center}
+.head h2{margin:0;font-size:25px}
+.head p{margin:3px 0}
+.heat{background:linear-gradient(135deg,#ff3d54,#ff8a00)}
+.temp{background:linear-gradient(135deg,#0878df,#673de6)}
+.icon{font-size:40px}
+.body{padding:22px}
+.note{padding:13px 16px;background:#f0f8ff;border-left:5px solid #1687f5;border-radius:9px;margin-bottom:15px}
+.buttons{display:flex;gap:10px;flex-wrap:wrap}
+.buttons button,.quick button{border:0;border-radius:25px;padding:12px 18px;color:white;font-weight:bold;cursor:pointer;transition:.2s}
+.buttons button:hover,.quick button:hover{transform:translateY(-2px);opacity:.9}
+.def{background:#ef476f}.exp{background:#f59e0b}.types{background:#10b981}.simbtn{background:#1687f5}
+.content,.simulation{display:none;margin-top:15px;padding:20px;background:#f8fbff;border:1px solid #d6e8f7;border-radius:14px}
+.show{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.mini{background:white;padding:15px;border-radius:12px;border-top:4px solid #1687f5}
+.mini h4{margin:0 0 6px}
+.lab{background:#071a30;color:white;border-radius:16px;padding:20px;text-align:center;position:relative}
+.lab h3{color:#65c9ff;font-size:23px}
+.readout{font-size:27px;font-weight:900;margin:12px}
+.readout small{display:block;font-size:15px;color:#a8ddff}
+.range{width:min(650px,100%);accent-color:#ff8a00;margin:12px 0 20px}
+.quick{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.quick button{background:#214565;border:1px solid #68bfff}
+canvas{width:100%;max-width:820px;background:#0c2945;border-radius:12px;border:2px solid #46779d;margin-top:12px;display:block;margin-left:auto;margin-right:auto}
+select{padding:11px 14px;border-radius:9px;font-weight:bold;font-size:15px}
+.info{background:#123451;padding:12px;border-radius:9px;color:#dff3ff;margin-top:12px;font-size:14px;line-height:1.5}
+
+/* ===== FULLSCREEN BUTTON ===== */
+.fs-btn{position:absolute;top:12px;right:12px;background:#ff8a00;color:white;border:0;border-radius:10px;padding:10px 16px;font-weight:bold;cursor:pointer;font-size:14px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.fs-btn:hover{background:#ff6600}
+
+/* ===== FULLSCREEN MODE ===== */
+.lab:fullscreen{background:#071a30;padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.lab:fullscreen canvas{max-width:95vw;max-height:70vh;width:auto;height:auto}
+.lab:fullscreen .readout{font-size:32px}
+.lab:fullscreen h3{font-size:26px}
+.lab:fullscreen .quick button,.lab:fullscreen select{font-size:15px;padding:12px 20px}
+
+@media(max-width:600px){.body{padding:15px}.head{padding:16px}.head h2{font-size:21px}.fs-btn{top:8px;right:8px;padding:8px 12px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<main class="container">
+<!-- ================= HEAT TRANSFER ================= -->
+<section class="card">
+<div class="head heat"><div class="icon">🔥</div><div><h2>1. Heat Transfer</h2><p>Conduction, Convection &amp; Radiation — See How Heat Moves</p></div></div>
+<div class="body">
+<div class="note">Click one button at a time. The simulation shows heat movement with clear, colourful examples.</div>
+<div class="buttons">
+<button class="def" onclick="showOnly('heat','def')">📖 Definition</button>
+<button class="exp" onclick="showOnly('heat','exp')">💡 Explanation</button>
+<button class="types" onclick="showOnly('heat','types')">🔬 3 Methods</button>
+<button class="simbtn" onclick="showOnly('heat','sim')">▶️ Simulation</button>
+</div>
+<div id="heat-def" class="content"><h3>Simple Definition</h3><p><b>Heat transfer</b> is the movement of thermal energy from a hotter object or area to a colder one.</p></div>
+<div id="heat-exp" class="content"><h3>Simple Explanation</h3><p>Heat naturally moves from <b>hot → cold</b>. It can move through direct contact, moving fluids, or electromagnetic waves.</p></div>
+<div id="heat-types" class="content"><h3>Three Methods of Heat Transfer</h3><div class="grid">
+<div class="mini"><h4>🔩 Conduction</h4><p>Heat moves through direct contact. Example: a metal spoon becomes hot in hot tea.</p></div>
+<div class="mini"><h4>🍲 Convection</h4><p>Heat moves by the movement of a liquid or gas. Example: warm air rises.</p></div>
+<div class="mini"><h4>☀️ Radiation</h4><p>Heat travels as waves. Example: heat from the Sun reaches Earth.</p></div>
+</div></div>
+<div id="heat-sim" class="simulation">
+<div class="lab" id="heatLab">
+<button class="fs-btn" onclick="toggleFullscreen('heatLab')">⛶ FULLSCREEN</button>
+<h3>🌡️ SEE HEAT MOVING</h3>
+<p>Choose a method. <b style="color:#ff6b6b">RED/ORANGE = HOT</b>, <b style="color:#4dabf7">BLUE = COLD</b>. Watch the direction of heat transfer.</p>
+<select id="heatMethod" onchange="setHeatMethod(this.value)">
+<option value="conduction">🔩 Conduction — Metal Rod on Flame</option>
+<option value="convection">🍲 Convection — Water in a Pot</option>
+<option value="radiation">☀️ Radiation — Sun to Earth</option>
+</select>
+<div class="readout" id="heatReadout"><span id="heatTitle">CONDUCTION — METAL ROD</span><small id="heatSub">Heat moves from the hot end → cold end</small></div>
+<canvas id="heatCanvas" width="820" height="440"></canvas>
+<div class="quick">
+<button onclick="setHeatMethod('conduction')">🔩 CONDUCTION</button>
+<button onclick="setHeatMethod('convection')">🍲 CONVECTION</button>
+<button onclick="setHeatMethod('radiation')">☀️ RADIATION</button>
+</div>
+<div class="info" id="heatInfo">A metal rod is heated by the flame on the left. The particles there vibrate fast and pass energy to the next particles, so heat travels along the metal to the cold end.</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ================= TEMPERATURE ================= -->
+<section class="card">
+<div class="head temp"><div class="icon">🌡️</div><div><h2>2. Temperature</h2><p>Hot, Cold, Celsius Scale &amp; Particle Movement</p></div></div>
+<div class="body">
+<div class="note">Move the temperature slider. The thermometer, the water state and the particle movement change together.</div>
+<div class="buttons">
+<button class="def" onclick="showOnly('temp','def')">📖 Definition</button>
+<button class="exp" onclick="showOnly('temp','exp')">💡 Explanation</button>
+<button class="types" onclick="showOnly('temp','types')">🌡️ Temperature Scale</button>
+<button class="simbtn" onclick="showOnly('temp','sim')">▶️ Simulation</button>
+</div>
+<div id="temp-def" class="content"><h3>Simple Definition</h3><p><b>Temperature</b> tells us how hot or cold something is. It is commonly measured in degrees Celsius (°C).</p></div>
+<div id="temp-exp" class="content"><h3>Simple Explanation</h3><p>Temperature is related to the average motion of particles. When particles move faster, the temperature is generally higher. When they move more slowly, the temperature is lower.</p></div>
+<div id="temp-types" class="content"><h3>Celsius Temperature Scale</h3><div class="grid">
+<div class="mini"><h4>❄️ Below 0°C</h4><p>Water is normally solid (ice).</p></div>
+<div class="mini"><h4>🧊 0°C</h4><p>Water reaches its freezing point.</p></div>
+<div class="mini"><h4>🏠 Room Temperature</h4><p>About 20–25°C is comfortable indoor temperature.</p></div>
+<div class="mini"><h4>💨 100°C</h4><p>Water reaches its boiling point at standard pressure.</p></div>
+</div></div>
+<div id="temp-sim" class="simulation">
+<div class="lab" id="tempLab">
+<button class="fs-btn" onclick="toggleFullscreen('tempLab')">⛶ FULLSCREEN</button>
+<h3>🌡️ TEMPERATURE LAB</h3>
+<p>Move the slider or use the buttons. Watch the thermometer, the beaker and the particles change together.</p>
+<div class="readout" id="tempReadout"><span id="tempValue">25°C</span><small id="tempState">LIQUID WATER</small></div>
+<input id="tempRange" class="range" type="range" min="-20" max="120" value="25" oninput="updateTemp(this.value)">
+<div class="quick"><button onclick="setTemp(-10)">❄️ ICE −10°C</button><button onclick="setTemp(25)">💧 ROOM 25°C</button><button onclick="setTemp(60)">♨️ HOT 60°C</button><button onclick="setTemp(110)">💨 STEAM 110°C</button></div>
+<canvas id="tempCanvas" width="820" height="440"></canvas>
+<div class="info" id="tempInfo">At 25°C: water is liquid. The particles stay close but move around each other.</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<script>
+function roundRect(ctx,x,y,w,h,r){
+  if(r>w/2)r=w/2; if(r>h/2)r=h/2;
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function showOnly(s,i){
+  document.querySelectorAll('[id^="'+s+'-"]').forEach(function(x){x.classList.remove('show');});
+  var e=document.getElementById(s+'-'+i);
+  if(e){e.classList.add('show');e.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  if(s==='heat'&&i==='sim')startHeat();
+  if(s==='temp'&&i==='sim')startTemp();
+}
+
+function toggleFullscreen(id){
+  var el=document.getElementById(id);
+  if(!document.fullscreenElement){
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } else {
+    if(document.exitFullscreen) document.exitFullscreen();
+  }
+}
+
+var heatMode='conduction', heatCtx=null, heatRunning=false, t=0, stars=null;
+
+function setHeatMethod(v){
+  heatMode=v;
+  var sel=document.getElementById('heatMethod');
+  if(sel) sel.value=v;
+
+  var titles={
+    conduction:['CONDUCTION — METAL ROD','Heat moves from the hot end → cold end'],
+    convection:['CONVECTION — WATER IN A POT','Hot water rises ↑ • Cool water sinks ↓'],
+    radiation:['RADIATION — SUN TO EARTH','Heat travels through space as waves']
+  };
+  document.getElementById('heatTitle').textContent=titles[v][0];
+  document.getElementById('heatSub').textContent=titles[v][1];
+
+  document.getElementById('heatInfo').textContent =
+    v==='conduction'
+      ? '🔩 CONDUCTION: A metal rod is heated by the flame on the left. The particles there vibrate very fast and pass energy to the next particles, so heat travels along the metal to the cold end.'
+      : v==='convection'
+      ? '🍲 CONVECTION: Water at the bottom of the pot gets hot, becomes lighter and rises up. Cooler water at the top sinks down. This moving loop of liquid is called a convection current.'
+      : '☀️ RADIATION: The Sun sends heat as invisible infrared waves. These waves travel through empty space, so no material is needed for radiation. That is how the Sun warms the Earth.';
+}
+
+function startHeat(){
+  var cv=document.getElementById('heatCanvas');
+  if(!cv) return;
+  heatCtx=cv.getContext('2d');
+  setHeatMethod(heatMode);
+  if(!heatRunning){heatRunning=true;requestAnimationFrame(heatLoop);}
+}
+
+function heatLoop(){
+  var c=document.getElementById('heatCanvas');
+  if(!heatCtx||!c){requestAnimationFrame(heatLoop);return;}
+  heatCtx.clearRect(0,0,c.width,c.height);
+  if(heatMode==='conduction')      drawConduction(c);
+  else if(heatMode==='convection') drawConvection(c);
+  else                             drawRadiation(c);
+  t+=0.035;
+  requestAnimationFrame(heatLoop);
+}
+
+function drawConduction(c){
+  var ctx=heatCtx,W=c.width,H=c.height;
+
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a2f4a'); bg.addColorStop(1,'#0a1828');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  ctx.font='bold 22px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('🔩 CONDUCTION — Heat Travels Through a Metal Rod', W/2, 38);
+  ctx.textAlign='left';
+
+  var tb=ctx.createLinearGradient(0,360,0,H);
+  tb.addColorStop(0,'#8a5f3a'); tb.addColorStop(1,'#3a2717');
+  ctx.fillStyle=tb; ctx.fillRect(0,360,W,80);
+  ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(0,360,W,5);
+
+  var baseX=110, baseY=300, baseW=110, baseH=60;
+
+  var baseg=ctx.createLinearGradient(0,baseY,0,baseY+baseH);
+  baseg.addColorStop(0,'#7b8896'); baseg.addColorStop(1,'#39424d');
+  ctx.fillStyle=baseg;
+  roundRect(ctx,baseX,baseY,baseW,baseH,10); ctx.fill();
+
+  ctx.fillStyle='#9aa7b4';
+  roundRect(ctx,baseX+10,baseY-14,baseW-20,16,8); ctx.fill();
+
+  ctx.font='bold 15px Segoe UI';
+  ctx.fillStyle='#ffcc66';
+  ctx.textAlign='center';
+  ctx.fillText('🔥 BURNER', baseX+baseW/2, baseY+baseH+22);
+  ctx.textAlign='left';
+
+  for(var i=0;i<6;i++){
+    var fx=baseX+20+i*14;
+    var fh=85+Math.sin(t*7+i*1.2)*18;
+    var fg=ctx.createLinearGradient(0,baseY-14,0,baseY-14-fh);
+    fg.addColorStop(0,'#ff2a00');
+    fg.addColorStop(.5,'#ff9d00');
+    fg.addColorStop(1,'rgba(255,245,150,.95)');
+    ctx.fillStyle=fg;
+    ctx.beginPath();
+    ctx.moveTo(fx-12,baseY-14);
+    ctx.quadraticCurveTo(fx-15,baseY-14-fh*.6,fx,baseY-14-fh);
+    ctx.quadraticCurveTo(fx+15,baseY-14-fh*.6,fx+12,baseY-14);
+    ctx.closePath(); ctx.fill();
+  }
+
+  var fglow=ctx.createRadialGradient(baseX+55,250,20,baseX+55,250,150);
+  fglow.addColorStop(0,'rgba(255,140,0,.50)');
+  fglow.addColorStop(1,'rgba(255,60,0,0)');
+  ctx.fillStyle=fglow;
+  ctx.beginPath(); ctx.arc(baseX+55,250,150,0,7); ctx.fill();
+
+  var rodX=90, rodY=180, rodW=660, rodH=50;
+
+  ctx.fillStyle='rgba(0,0,0,.35)';
+  roundRect(ctx,rodX+5,rodY+7,rodW,rodH,24); ctx.fill();
+
+  var mg=ctx.createLinearGradient(0,rodY,0,rodY+rodH);
+  mg.addColorStop(0,'#ffffff');
+  mg.addColorStop(.20,'#d8e2ec');
+  mg.addColorStop(.45,'#a8b8c8');
+  mg.addColorStop(.70,'#7888a0');
+  mg.addColorStop(1,'#485870');
+  ctx.fillStyle=mg;
+  roundRect(ctx,rodX,rodY,rodW,rodH,24); ctx.fill();
+
+  ctx.save();
+  roundRect(ctx,rodX,rodY,rodW,rodH,24); ctx.clip();
+
+  var hg=ctx.createLinearGradient(rodX,0,rodX+rodW,0);
+  hg.addColorStop(0,'rgba(255,60,0,.92)');
+  hg.addColorStop(.25,'rgba(255,140,0,.65)');
+  hg.addColorStop(.55,'rgba(255,190,70,.28)');
+  hg.addColorStop(1,'rgba(70,170,255,.45)');
+  ctx.fillStyle=hg; ctx.fillRect(rodX,rodY,rodW,rodH);
+
+  for(var p=0;p<30;p++){
+    var ratio=p/29;
+    var px=rodX+14+p*22;
+    var amp=(1-ratio)*8+1;
+    var py=rodY+rodH/2+Math.sin(t*9+p*1.7)*amp;
+    var pxx=px+Math.cos(t*8+p)*amp*0.7;
+    ctx.fillStyle = ratio<0.4 ? '#fff2b0' : (ratio<0.7 ? '#ffd08a' : '#bfe6ff');
+    ctx.beginPath(); ctx.arc(pxx,py,ratio<0.5?5:4,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  for(var k=0;k<8;k++){
+    var pp=((t*0.35+k/8)%1);
+    var cx=rodX+20+pp*(rodW-40);
+    var alpha=(1-pp)*0.9;
+    ctx.fillStyle='rgba(255,205,80,'+alpha+')';
+    ctx.beginPath();
+    ctx.moveTo(cx,rodY+6);
+    ctx.lineTo(cx+18,rodY+rodH/2);
+    ctx.lineTo(cx,rodY+rodH-6);
+    ctx.lineTo(cx+7,rodY+rodH/2);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+
+  ctx.strokeStyle='rgba(255,255,255,.4)'; ctx.lineWidth=2;
+  roundRect(ctx,rodX,rodY,rodW,rodH,24); ctx.stroke();
+
+  ctx.font='bold 20px Segoe UI';
+  ctx.fillStyle='#ff6b6b';
+  ctx.fillText('🔥 HOT END', rodX+20, rodY-18);
+
+  ctx.font='bold 20px Segoe UI';
+  ctx.fillStyle='#4dabf7';
+  ctx.textAlign='right';
+  ctx.fillText('❄️ COLD END', rodX+rodW-20, rodY-18);
+  ctx.textAlign='left';
+
+  ctx.font='bold 16px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('⚙️ METAL ROD', W/2, rodY+rodH/2+6);
+  ctx.textAlign='left';
+
+  ctx.font='bold 20px Segoe UI';
+  ctx.fillStyle='#ffe08a';
+  ctx.textAlign='center';
+  ctx.fillText('HEAT ENERGY TRAVELS  →  →  →', W/2, rodY+rodH+45);
+  ctx.textAlign='left';
+
+  ctx.font='bold 13px Segoe UI';
+  ctx.fillStyle='#ff6b6b';
+  ctx.fillText('● Fast vibrating particles (HOT)', 30, H-25);
+  ctx.fillStyle='#4dabf7';
+  ctx.fillText('● Slow vibrating particles (COLD)', W-260, H-25);
+}
+
+function drawConvection(c){
+  var ctx=heatCtx,W=c.width,H=c.height;
+
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a2f4a'); bg.addColorStop(1,'#0a1828');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  ctx.font='bold 22px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('🍲 CONVECTION — Water in a Pot', W/2, 38);
+  ctx.textAlign='left';
+
+  var st=ctx.createLinearGradient(0,360,0,H);
+  st.addColorStop(0,'#39434f'); st.addColorStop(1,'#1b2229');
+  ctx.fillStyle=st; ctx.fillRect(0,360,W,80);
+  ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(0,360,W,5);
+
+  var bx=290, bw=240, by=345;
+
+  ctx.fillStyle='#20272e';
+  roundRect(ctx,bx,by-12,bw,14,7); ctx.fill();
+
+  for(var i=0;i<12;i++){
+    var fx=bx+14+i*18;
+    var fh=55+Math.sin(t*7+i*1.1)*15;
+    var fg=ctx.createLinearGradient(0,by-12,0,by-12-fh);
+    fg.addColorStop(0,'#ff2a00');
+    fg.addColorStop(.45,'#ff9a00');
+    fg.addColorStop(1,'rgba(255,245,150,.95)');
+    ctx.fillStyle=fg;
+    ctx.beginPath();
+    ctx.moveTo(fx-10,by-12);
+    ctx.quadraticCurveTo(fx-13,by-12-fh*.6,fx,by-12-fh);
+    ctx.quadraticCurveTo(fx+13,by-12-fh*.6,fx+10,by-12);
+    ctx.closePath(); ctx.fill();
+  }
+
+  var fglow=ctx.createRadialGradient(W/2,280,20,W/2,280,180);
+  fglow.addColorStop(0,'rgba(255,140,0,.45)');
+  fglow.addColorStop(1,'rgba(255,60,0,0)');
+  ctx.fillStyle=fglow;
+  ctx.beginPath(); ctx.arc(W/2,280,180,0,7); ctx.fill();
+
+  ctx.font='bold 15px Segoe UI';
+  ctx.fillStyle='#ffcc66';
+  ctx.textAlign='center';
+  ctx.fillText('🔥 BURNER', W/2, H-25);
+  ctx.textAlign='left';
+
+  var px0=250, px1=570, pTop=110, pBot=300;
+
+  ctx.save();
+  roundRect(ctx,px0,pTop,px1-px0,pBot-pTop,16); ctx.clip();
+
+  var wTop=135;
+  ctx.beginPath();
+  ctx.moveTo(px0,wTop);
+  for(var x=px0;x<=px1;x+=8){ ctx.lineTo(x,wTop+Math.sin(x/40+t*3)*4); }
+  ctx.lineTo(px1,pBot); ctx.lineTo(px0,pBot); ctx.closePath();
+  var wg=ctx.createLinearGradient(0,wTop,0,pBot);
+  wg.addColorStop(0,'rgba(80,175,235,.85)');
+  wg.addColorStop(1,'rgba(18,80,145,.95)');
+  ctx.fillStyle=wg; ctx.fill();
+
+  var cy=225, rx=70, ry=55;
+  var cells=[{cx:340,d:1},{cx:480,d:-1}];
+  cells.forEach(function(cell,ci){
+    for(var i=0;i<22;i++){
+      var a=i/22*Math.PI*2 + t*1.3 + ci*0.3;
+      var x=cell.cx + cell.d*rx*Math.cos(a);
+      var y=cy - ry*Math.sin(a);
+      var f=(y-(cy-ry))/(2*ry);
+      var hue=200-f*185;
+      ctx.fillStyle='hsl('+hue+',95%,62%)';
+      ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+    var ay=cy-ry, dirn=(cell.d===1?-1:1);
+    ctx.fillStyle='rgba(255,255,255,.95)';
+    ctx.beginPath();
+    ctx.moveTo(cell.cx+dirn*12, ay-10);
+    ctx.lineTo(cell.cx+dirn*12, ay+10);
+    ctx.lineTo(cell.cx+dirn*28, ay);
+    ctx.closePath(); ctx.fill();
+  });
+
+  ctx.restore();
+
+  ctx.strokeStyle='rgba(190,230,255,.7)'; ctx.lineWidth=5;
+  roundRect(ctx,px0,pTop,px1-px0,pBot-pTop,16); ctx.stroke();
+
+  ctx.fillStyle='#c9d6e2';
+  roundRect(ctx,px0-14,pTop-18,px1-px0+28,22,11); ctx.fill();
+  ctx.fillStyle='#8b9bab';
+  roundRect(ctx,px0-14,pTop-18,px1-px0+28,8,4); ctx.fill();
+
+  ctx.strokeStyle='#b9c6d4'; ctx.lineWidth=10; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(px0-10,150); ctx.lineTo(px0-45,165); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(px1+10,150); ctx.lineTo(px1+45,165); ctx.stroke();
+
+  ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=6;
+  ctx.beginPath(); ctx.moveTo(px0+28,pTop+30); ctx.lineTo(px0+28,pBot-30); ctx.stroke();
+
+  for(var s=0;s<10;s++){
+    var sp=((t*0.22+s/10)%1);
+    var sy=pTop-16-sp*90;
+    var sx=px0+40+s*30+Math.sin(sp*6+s)*14;
+    var sr=14+sp*22;
+    ctx.fillStyle='rgba(255,255,255,'+(0.35*(1-sp))+')';
+    ctx.beginPath(); ctx.arc(sx,sy,sr,0,7); ctx.fill();
+  }
+
+  ctx.font='bold 16px Segoe UI';
+  ctx.fillStyle='#ffb37a';
+  ctx.textAlign='center';
+  ctx.fillText('↑ HOT WATER RISES ↑', W/2, pTop-30);
+  ctx.fillStyle='#9fd8ff';
+  ctx.fillText('↓ COOL WATER SINKS ↓', W/2, pBot+28);
+
+  ctx.font='bold 15px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.fillText('🍲 POT WITH WATER', W/2, pBot+55);
+  ctx.textAlign='left';
+
+  ctx.font='bold 14px Segoe UI';
+  ctx.fillStyle='#ffd08a';
+  ctx.fillText('🔄 CONVECTION CURRENT', 30, H-50);
+}
+
+function drawRadiation(c){
+  var ctx=heatCtx,W=c.width,H=c.height;
+
+  ctx.fillStyle='#050b18'; ctx.fillRect(0,0,W,H);
+  if(!stars){
+    stars=[];
+    for(var i=0;i<110;i++){
+      stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.5,p:Math.random()*6.28});
+    }
+  }
+  stars.forEach(function(s){
+    ctx.globalAlpha=0.35+0.65*Math.abs(Math.sin(t*2+s.p));
+    ctx.fillStyle='#dff1ff';
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,7); ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  ctx.font='bold 22px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('☀️ RADIATION — Heat Travels from Sun to Earth', W/2, 38);
+  ctx.textAlign='left';
+
+  var sx=140, sy=220;
+
+  var glow=ctx.createRadialGradient(sx,sy,30,sx,sy,190);
+  glow.addColorStop(0,'rgba(255,225,90,.95)');
+  glow.addColorStop(.25,'rgba(255,165,25,.60)');
+  glow.addColorStop(.6,'rgba(255,95,0,.22)');
+  glow.addColorStop(1,'rgba(255,60,0,0)');
+  ctx.fillStyle=glow;
+  ctx.beginPath(); ctx.arc(sx,sy,190,0,7); ctx.fill();
+
+  var sg=ctx.createRadialGradient(sx-30,sy-30,10,sx,sy,95);
+  sg.addColorStop(0,'#fff9c9');
+  sg.addColorStop(.5,'#ffcc33');
+  sg.addColorStop(1,'#ff7a00');
+  ctx.fillStyle=sg;
+  ctx.beginPath(); ctx.arc(sx,sy,92,0,7); ctx.fill();
+
+  for(var i=0;i<32;i++){
+    var a=i/32*Math.PI*2;
+    var r1=95, r2=108+Math.sin(t*3+i)*14;
+    ctx.strokeStyle='rgba(255,195,60,.8)';
+    ctx.lineWidth=5;
+    ctx.beginPath();
+    ctx.moveTo(sx+Math.cos(a)*r1, sy+Math.sin(a)*r1);
+    ctx.lineTo(sx+Math.cos(a)*r2, sy+Math.sin(a)*r2);
+    ctx.stroke();
+  }
+
+  ctx.font='bold 26px Segoe UI';
+  ctx.fillStyle='#fff3b0';
+  ctx.textAlign='center';
+  ctx.fillText('☀️ SUN', sx, sy+135);
+  ctx.textAlign='left';
+
+  var ex=670, ey=220, er=80;
+
+  var eglow=ctx.createRadialGradient(ex,ey,er,ex,ey,er+60);
+  eglow.addColorStop(0,'rgba(100,200,255,.35)');
+  eglow.addColorStop(1,'rgba(100,200,255,0)');
+  ctx.fillStyle=eglow;
+  ctx.beginPath(); ctx.arc(ex,ey,er+60,0,7); ctx.fill();
+
+  var eg=ctx.createRadialGradient(ex-25,ey-25,10,ex,ey,er);
+  eg.addColorStop(0,'#8fdcff');
+  eg.addColorStop(.55,'#1f7fd0');
+  eg.addColorStop(1,'#0b3f78');
+  ctx.fillStyle=eg;
+  ctx.beginPath(); ctx.arc(ex,ey,er,0,7); ctx.fill();
+
+  ctx.fillStyle='#39b56a';
+  ctx.beginPath(); ctx.ellipse(ex-30,ey-22,30,20,0.4,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex+22,ey+20,25,16,-0.3,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex+8,ey-45,14,10,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex-45,ey+30,12,9,0.5,0,7); ctx.fill();
+
+  ctx.strokeStyle='rgba(120,200,255,.65)';
+  ctx.lineWidth=7;
+  ctx.beginPath(); ctx.arc(ex,ey,er+10,0,7); ctx.stroke();
+
+  ctx.font='bold 26px Segoe UI';
+  ctx.fillStyle='#bfe7ff';
+  ctx.textAlign='center';
+  ctx.fillText('🌍 EARTH', ex, ey+er+45);
+  ctx.textAlign='left';
+
+  ctx.lineWidth=5;
+  var rows=[140,190,240,290];
+  rows.forEach(function(y0){
+    var wg=ctx.createLinearGradient(255,0,585,0);
+    wg.addColorStop(0,'rgba(255,225,70,.98)');
+    wg.addColorStop(.5,'rgba(255,140,40,.9)');
+    wg.addColorStop(1,'rgba(130,205,255,.9)');
+    ctx.strokeStyle=wg;
+    ctx.beginPath();
+    for(var x=255;x<=585;x+=6){
+      var yy=y0+Math.sin((x/34)-t*4)*12;
+      if(x===255) ctx.moveTo(x,yy); else ctx.lineTo(x,yy);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle='rgba(255,170,60,.98)';
+    ctx.beginPath();
+    ctx.moveTo(568,y0-12);
+    ctx.lineTo(568,y0+12);
+    ctx.lineTo(590,y0);
+    ctx.closePath(); ctx.fill();
+  });
+
+  ctx.font='bold 20px Segoe UI';
+  ctx.fillStyle='#ffd27a';
+  ctx.textAlign='center';
+  ctx.fillText('⚡ INFRARED RADIATION WAVES ⚡', W/2, 75);
+
+  ctx.font='bold 16px Segoe UI';
+  ctx.fillStyle='#9fd8ff';
+  ctx.fillText('🌌 No medium needed — waves travel through empty space 🌌', W/2, H-40);
+  ctx.textAlign='left';
+
+  ctx.font='bold 14px Segoe UI';
+  ctx.fillStyle='#ffcc66';
+  ctx.fillText('🔴 = Thermal Energy', 30, H-20);
+}
+
+var tempCtx=null, tempRunning=false, tempValue=25, parts=[], tt=0;
+var T_MIN=-20, T_MAX=120;
+
+function phase(v){
+  return v<0 ? 'SOLID ICE' : (v<100 ? 'LIQUID WATER' : 'WATER VAPOUR / STEAM');
+}
+
+function setTemp(v){
+  document.getElementById('tempRange').value=v;
+  updateTemp(v);
+}
+
+function updateTemp(v){
+  tempValue=Number(v);
+  document.getElementById('tempValue').textContent=tempValue+'°C';
+  document.getElementById('tempState').textContent=phase(tempValue);
+  document.getElementById('tempInfo').textContent =
+    tempValue<0
+      ? '❄️ Below 0°C: water is SOLID ICE. The particles are locked in fixed positions and only vibrate on the spot.'
+      : tempValue<100
+      ? '💧 At '+tempValue+'°C: water is a LIQUID. The particles stay close together but slide and move around each other.'
+      : '💨 At '+tempValue+'°C: water BOILS and turns into STEAM. The particles move very fast and spread far apart.';
+  makeParts();
+}
+
+function startTemp(){
+  var cv=document.getElementById('tempCanvas');
+  if(!cv) return;
+  tempCtx=cv.getContext('2d');
+  updateTemp(document.getElementById('tempRange').value);
+  if(!tempRunning){tempRunning=true;requestAnimationFrame(tempLoop);}
+}
+
+function makeParts(){
+  parts=[];
+  var p=phase(tempValue);
+  if(p==='SOLID ICE'){
+    for(var r=0;r<5;r++){
+      for(var col=0;col<9;col++){
+        var x=310+col*44, y=235+r*32;
+        parts.push({x:x,y:y,bx:x,by:y});
+      }
+    }
+  } else if(p==='LIQUID WATER'){
+    for(var i=0;i<50;i++){
+      parts.push({
+        x:295+Math.random()*400,
+        y:200+Math.random()*140,
+        vx:(Math.random()-.5)*2.6,
+        vy:(Math.random()-.5)*2.6
+      });
+    }
+  } else {
+    for(var j=0;j<36;j++){
+      parts.push({
+        x:295+Math.random()*400,
+        y:110+Math.random()*230,
+        vx:(Math.random()-.5)*6,
+        vy:(Math.random()-.5)*6
+      });
+    }
+  }
+}
+
+function stepParticles(){
+  var p=phase(tempValue);
+  if(p==='SOLID ICE'){
+    parts.forEach(function(a){
+      a.x=a.bx+(Math.random()-.5)*2.6;
+      a.y=a.by+(Math.random()-.5)*2.6;
+    });
+  } else {
+    var gas=(p!=='LIQUID WATER');
+    var xMin=280, xMax=690;
+    var yMin=gas?115:200;
+    var yMax=gas?350:355;
+    parts.forEach(function(a){
+      a.x+=a.vx; a.y+=a.vy;
+      if(a.x<xMin){a.x=xMin;a.vx*=-1;}
+      if(a.x>xMax){a.x=xMax;a.vx*=-1;}
+      if(a.y<yMin){a.y=yMin;a.vy*=-1;}
+      if(a.y>yMax){a.y=yMax;a.vy*=-1;}
+    });
+  }
+}
+
+function tempLoop(){
+  var c=document.getElementById('tempCanvas');
+  if(!tempCtx||!c){requestAnimationFrame(tempLoop);return;}
+  tempCtx.clearRect(0,0,c.width,c.height);
+  stepParticles();
+  drawTempScene(c);
+  tt+=0.04;
+  requestAnimationFrame(tempLoop);
+}
+
+function drawTempScene(c){
+  var ctx=tempCtx,W=c.width,H=c.height;
+
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0d2740'); bg.addColorStop(1,'#061524');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  ctx.font='bold 22px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('🌡️ TEMPERATURE LAB — Watch Water Change State', W/2, 38);
+  ctx.textAlign='left';
+
+  drawHotPlate(ctx);
+  drawBeaker(ctx);
+  if(tempValue>=100) drawSteam(ctx);
+  drawThermometer(ctx);
+}
+
+function drawHotPlate(ctx){
+  var x0=240,x1=740,y0=370,y1=410;
+  var lvl=Math.max(0,Math.min(1,(tempValue-20)/100));
+  var cool=Math.max(0,Math.min(1,(10-tempValue)/30));
+
+  if(lvl>0.02){
+    var gg=ctx.createRadialGradient((x0+x1)/2,y0,10,(x0+x1)/2,y0,160+lvl*100);
+    gg.addColorStop(0,'rgba(255,110,20,'+(0.45*lvl)+')');
+    gg.addColorStop(1,'rgba(255,60,0,0)');
+    ctx.fillStyle=gg;
+    ctx.beginPath(); ctx.ellipse((x0+x1)/2,y0,160+lvl*100,68,0,0,7); ctx.fill();
+  } else if(cool>0.02){
+    var cg=ctx.createRadialGradient((x0+x1)/2,y0,10,(x0+x1)/2,y0,160);
+    cg.addColorStop(0,'rgba(70,180,255,'+(0.40*cool)+')');
+    cg.addColorStop(1,'rgba(70,180,255,0)');
+    ctx.fillStyle=cg;
+    ctx.beginPath(); ctx.ellipse((x0+x1)/2,y0,160,65,0,0,7); ctx.fill();
+  }
+
+  var pg=ctx.createLinearGradient(0,y0,0,y1);
+  pg.addColorStop(0,'#3b4652'); pg.addColorStop(1,'#1b2229');
+  ctx.fillStyle=pg;
+  roundRect(ctx,x0,y0,x1-x0,y1-y0,14); ctx.fill();
+
+  var col;
+  if(lvl>0.02){
+    col='rgba(255,'+Math.round(190-130*lvl)+',40,'+(0.5+0.5*lvl)+')';
+  } else if(cool>0.02){
+    col='rgba(80,190,255,'+(0.5+0.5*cool)+')';
+  } else {
+    col='#39424d';
+  }
+  ctx.fillStyle=col;
+  for(var i=0;i<3;i++){
+    roundRect(ctx,x0+30,y0+12+i*10,x1-x0-60,6,3); ctx.fill();
+  }
+
+  ctx.font='bold 15px Segoe UI';
+  ctx.fillStyle='#ffcc66';
+  ctx.textAlign='center';
+  ctx.fillText('🔥 HOT PLATE', (x0+x1)/2, y1+25);
+  ctx.textAlign='left';
+}
+
+function drawBeaker(ctx){
+  var x0=260,x1=720,top=95,bot=365;
+  var p=phase(tempValue);
+
+  ctx.save();
+  roundRect(ctx,x0,top,x1-x0,bot-top,16); ctx.clip();
+
+  ctx.fillStyle='rgba(150,200,255,.07)';
+  ctx.fillRect(x0,top,x1-x0,bot-top);
+
+  if(p==='SOLID ICE'){
+    var ig=ctx.createLinearGradient(0,200,0,bot);
+    ig.addColorStop(0,'rgba(220,246,255,.92)');
+    ig.addColorStop(1,'rgba(118,192,244,.95)');
+    ctx.fillStyle=ig;
+    roundRect(ctx,x0+16,205,x1-x0-32,bot-215,14); ctx.fill();
+
+    ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=2;
+    for(var r=0;r<2;r++){
+      for(var col=0;col<4;col++){
+        var cx0=x0+40+col*110, cy0=225+r*65;
+        roundRect(ctx,cx0,cy0,95,52,10); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,.35)';
+        roundRect(ctx,cx0+10,cy0+8,32,12,6); ctx.fill();
+      }
+    }
+  } else if(p==='LIQUID WATER'){
+    var wTop=180;
+    ctx.beginPath();
+    ctx.moveTo(x0,wTop);
+    for(var x=x0;x<=x1;x+=8){ ctx.lineTo(x,wTop+Math.sin(x/45+tt*2)*4); }
+    ctx.lineTo(x1,bot); ctx.lineTo(x0,bot); ctx.closePath();
+    var wg=ctx.createLinearGradient(0,wTop,0,bot);
+    wg.addColorStop(0,'rgba(95,190,240,.88)');
+    wg.addColorStop(1,'rgba(15,80,150,.96)');
+    ctx.fillStyle=wg; ctx.fill();
+  } else {
+    var vTop=320;
+    ctx.beginPath();
+    ctx.moveTo(x0,vTop);
+    for(var xx=x0;xx<=x1;xx+=8){ ctx.lineTo(xx,vTop+Math.sin(xx/35+tt*5)*6); }
+    ctx.lineTo(x1,bot); ctx.lineTo(x0,bot); ctx.closePath();
+    var vg=ctx.createLinearGradient(0,vTop,0,bot);
+    vg.addColorStop(0,'rgba(255,155,110,.9)');
+    vg.addColorStop(1,'rgba(200,60,40,.96)');
+    ctx.fillStyle=vg; ctx.fill();
+
+    for(var b=0;b<18;b++){
+      var bp=((tt*0.5+b*0.13)%1);
+      var bx=x0+80+((b*97)%(x1-x0-160));
+      var by=bot-bp*160;
+      ctx.strokeStyle='rgba(255,255,255,.75)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(bx,by,5+bp*3,0,7); ctx.stroke();
+    }
+  }
+
+  var pcol = p==='SOLID ICE' ? '#7fd8ff' : (p==='LIQUID WATER' ? '#4fe0b0' : '#ff9a6b');
+  parts.forEach(function(a){
+    ctx.fillStyle=pcol;
+    ctx.beginPath(); ctx.arc(a.x,a.y,9,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=1.5; ctx.stroke();
+  });
+
+  ctx.restore();
+
+  ctx.strokeStyle='rgba(190,230,255,.65)'; ctx.lineWidth=5;
+  roundRect(ctx,x0,top,x1-x0,bot-top,16); ctx.stroke();
+
+  ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=6;
+  ctx.beginPath(); ctx.moveTo(x0+26,top+32); ctx.lineTo(x0+26,bot-45); ctx.stroke();
+
+  ctx.fillStyle='rgba(210,240,255,.6)';
+  roundRect(ctx,x0-12,top-16,x1-x0+24,20,10); ctx.fill();
+
+  ctx.font='bold 15px Segoe UI';
+  ctx.fillStyle='#bfe7ff';
+  ctx.textAlign='center';
+  ctx.fillText('🧪 BEAKER WITH WATER', (x0+x1)/2, top-28);
+  ctx.textAlign='left';
+
+  ctx.font='bold 16px Segoe UI';
+  var stateColor = p==='SOLID ICE' ? '#7fd8ff' : (p==='LIQUID WATER' ? '#4fe0b0' : '#ff9a6b');
+  ctx.fillStyle=stateColor;
+  ctx.textAlign='center';
+  ctx.fillText('STATE: '+p, (x0+x1)/2, bot+28);
+  ctx.textAlign='left';
+}
+
+function drawSteam(ctx){
+  for(var i=0;i<10;i++){
+    var p=((tt*0.18+i/10)%1);
+    var y=100-p*100;
+    var x=310+i*45+Math.sin(p*7+i)*20;
+    var r=14+p*24;
+    ctx.fillStyle='rgba(255,255,255,'+(0.38*(1-p))+')';
+    ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill();
+  }
+  ctx.font='bold 16px Segoe UI';
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText('💨 STEAM RISING', 510, 75);
+  ctx.textAlign='left';
+}
+
+function drawThermometer(ctx){
+  var cx=110, tubeTop=70, tubeBot=355, bulbY=380, bulbR=26;
+  function yOf(v){ return tubeBot-(v-T_MIN)/(T_MAX-T_MIN)*(tubeBot-tubeTop); }
+
+  ctx.font='bold 12px Segoe UI';
+  ctx.textAlign='right';
+  for(var v=T_MIN;v<=T_MAX;v+=10){
+    var y=yOf(v);
+    var major=(v%20===0);
+    ctx.strokeStyle='rgba(190,225,255,.6)';
+    ctx.lineWidth=major?2:1;
+    ctx.beginPath();
+    ctx.moveTo(cx-22,y);
+    ctx.lineTo(cx-22-(major?14:8),y);
+    ctx.stroke();
+    if(major){
+      ctx.fillStyle='#a9d6f5';
+      ctx.fillText(v+'°', cx-40, y+4);
+    }
+  }
+  ctx.textAlign='left';
+
+  ctx.fillStyle='#0c1a28';
+  roundRect(ctx,cx-16,tubeTop,32,tubeBot-tubeTop+14,16); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,bulbY,bulbR,0,7); ctx.fill();
+
+  var frac=(tempValue-T_MIN)/(T_MAX-T_MIN);
+  var hue=210-frac*210;
+  var col='hsl('+hue+',90%,55%)';
+  var my=yOf(tempValue);
+  ctx.fillStyle=col;
+  roundRect(ctx,cx-8,my,16,tubeBot-my+24,8); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,bulbY,bulbR-7,0,7); ctx.fill();
+
+  ctx.strokeStyle='rgba(200,235,255,.55)'; ctx.lineWidth=3;
+  roundRect(ctx,cx-16,tubeTop,32,tubeBot-tubeTop+14,16); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,bulbY,bulbR,0,7); ctx.stroke();
+
+  ctx.strokeStyle='rgba(255,255,255,.4)'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(cx-10,tubeTop+20); ctx.lineTo(cx-10,tubeBot-26); ctx.stroke();
+
+  ctx.fillStyle='#a9d6f5';
+  ctx.font='bold 14px Segoe UI';
+  ctx.textAlign='center';
+  ctx.fillText('🌡️ THERMOMETER', cx, tubeTop-18);
+  ctx.textAlign='left';
+
+  ctx.fillStyle='#ffd08a';
+  ctx.font='bold 16px Segoe UI';
+  ctx.fillText('°C', cx+26, tubeTop+10);
+}
+function initHeatAll(){
+  showOnly('heat', 'sim');
+  showOnly('temp', 'sim');
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+  initHeatAll();
+} else {
+  window.addEventListener('DOMContentLoaded', initHeatAll);
+  window.addEventListener('load', initHeatAll);
+}
+</script>
+</body>
+</html>

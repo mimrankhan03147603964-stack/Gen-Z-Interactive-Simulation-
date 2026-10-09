@@ -1,0 +1,6 @@
+{
+  "name": "Gen Z EdTech Interactive Simulation",
+  "description": "Modern, sleek web layout and simulation embed hub for next-generation STEM learning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
