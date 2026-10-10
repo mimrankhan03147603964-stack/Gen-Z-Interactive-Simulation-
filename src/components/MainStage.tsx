@@ -46,18 +46,14 @@ export const MainStage: React.FC<MainStageProps> = ({
   };
 
   const handleNativeFullscreen = () => {
-    if (stageContainerRef.current) {
+    if (onLaunchFullscreenModal) {
+      onLaunchFullscreenModal(activeSim);
+    } else if (stageContainerRef.current) {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
       } else {
-        stageContainerRef.current.requestFullscreen().catch(() => {
-          if (onLaunchFullscreenModal) {
-            onLaunchFullscreenModal(activeSim);
-          }
-        });
+        stageContainerRef.current.requestFullscreen().catch(() => {});
       }
-    } else if (onLaunchFullscreenModal) {
-      onLaunchFullscreenModal(activeSim);
     }
   };
 
