@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Earth Rotation & Revolution Simulation</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#050c18; color:#f0f6fc; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-blue { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+.badge-emerald { background:#065f46; color:#ecfdf5; border:1px solid #34d399; }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0c1a30 0%, #040913 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.7); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#020610; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#0284c7; color:#fff; box-shadow:0 4px 12px rgba(2,132,199,0.35); }
+.btn-primary:hover { background:#0369a1; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#0284c7; width:110px; cursor:pointer; }
+
+.seasons-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+@media (max-width: 640px) { .seasons-row { grid-template-columns:repeat(2,1fr); } }
+.season-btn { background:#0d1e38; border:1.5px solid #1e3a5f; border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.season-btn:hover { border-color:#38bdf8; background:#13284a; }
+.season-btn.active { border-color:#38bdf8; background:#0369a1; color:#fff; box-shadow:0 4px 16px rgba(56,189,248,0.3); }
+.season-btn .s-name { font-weight:800; font-size:0.86rem; display:block; }
+.season-btn .s-date { font-size:0.75rem; color:#94a3b8; margin-top:2px; }
+.season-btn.active .s-date { color:#e0f2fe; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#38bdf8; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#38bdf8; font-family:monospace; }
+
+.legend-list { display:flex; flex-direction:column; gap:8px; font-size:0.84rem; }
+.legend-item { display:flex; align-items:center; gap:10px; }
+.legend-dot { width:12px; height:12px; border-radius:50%; shrink:0; }
+
+.tabs-nav { display:flex; gap:6px; margin-bottom:12px; background:#050c18; padding:4px; border-radius:10px; border:1px solid #1e3a5f; }
+.tab-link { flex:1; padding:7px; border:none; background:transparent; color:#94a3b8; font-weight:700; font-size:0.8rem; border-radius:8px; cursor:pointer; text-align:center; }
+.tab-link.active { background:#0284c7; color:#fff; }
+.tab-pane { display:none; font-size:0.86rem; line-height:1.6; color:#cbd5e1; }
+.tab-pane.active { display:block; }
+.tab-pane p { margin-bottom:8px; }
+.tab-pane strong { color:#38bdf8; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; cursor:pointer; z-index:10; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>🌍 Earth Rotation & Revolution Simulation</h1>
+      <p>Axial Tilt (23.5°), Diurnal Cycle, Orbital Ellipse, Solstices & Seasonal Dynamics</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-blue">Physics & Astronomy</span>
+      <span class="badge badge-emerald">365.25 Day Calendar</span>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <div class="sim-stage">
+      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
+      <div class="canvas-wrapper">
+        <canvas id="orbitCanvas" width="960" height="540"></canvas>
+      </div>
+
+      <div class="seasons-row">
+        <div class="season-btn active" data-day="80">
+          <span class="s-name">🌸 Vernal Equinox</span>
+          <span class="s-date">March 21 (Equal Day/Night)</span>
+        </div>
+        <div class="season-btn" data-day="172">
+          <span class="s-name">☀️ Summer Solstice</span>
+          <span class="s-date">June 21 (Longest N Day)</span>
+        </div>
+        <div class="season-btn" data-day="266">
+          <span class="s-name">🍂 Autumnal Equinox</span>
+          <span class="s-date">Sept 23 (Equal Day/Night)</span>
+        </div>
+        <div class="season-btn" data-day="355">
+          <span class="s-name">❄️ Winter Solstice</span>
+          <span class="s-date">Dec 21 (Shortest N Day)</span>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
+          <button class="ctrl-btn btn-secondary" id="btnReset">↺ Reset</button>
+        </div>
+
+        <div class="slider-group">
+          <label>Rev Speed:</label>
+          <input type="range" id="speedSlider" min="0.1" max="4" step="0.1" value="1">
+          <span id="speedVal">1.0x</span>
+        </div>
+
+        <div class="slider-group">
+          <label>Tilt Angle:</label>
+          <input type="range" id="tiltSlider" min="0" max="45" step="0.5" value="23.5">
+          <span id="tiltVal">23.5°</span>
+        </div>
+
+        <div class="ctrl-group">
+          <label class="slider-group">
+            <input type="checkbox" id="chkOrbitRays" checked> Solar Rays
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="card">
+        <h3>📊 Real-time Orbital HUD</h3>
+        <div class="metrics-list">
+          <div class="metric-row">
+            <span class="m-label">Orbital Day:</span>
+            <span class="m-val" id="hudDay">Day 80 / 365</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Current Date:</span>
+            <span class="m-val" id="hudDate">March 21</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Sun Distance:</span>
+            <span class="m-val" id="hudDistance">149.6 M km</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">N Hemisphere:</span>
+            <span class="m-val" style="color:#34d399;" id="hudNorth">Spring (Equal)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">S Hemisphere:</span>
+            <span class="m-val" style="color:#fbbf24;" id="hudSouth">Autumn (Equal)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Axial Precession:</span>
+            <span class="m-val" id="hudTilt">23.5° Fixed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tabs-nav">
+          <button class="tab-link active" data-tab="tab-mech">Mechanics</button>
+          <button class="tab-link" data-tab="tab-seasons">Seasons</button>
+          <button class="tab-link" data-tab="tab-facts">Key Facts</button>
+        </div>
+
+        <div class="tab-pane active" id="tab-mech">
+          <p><strong>Rotation (24 Hours):</strong> Earth spins eastward on its axis once every 23 hours 56 minutes, creating diurnal day and night cycles.</p>
+          <p><strong>Revolution (365.25 Days):</strong> Earth orbits the Sun in a slightly elliptical orbit at an average orbital speed of <strong>29.78 km/s</strong> (107,200 km/h).</p>
+          <p><strong>Axial Tilt (23.44°):</strong> Earth's rotational axis points constantly towards Polaris (North Star) throughout the entire orbit.</p>
+        </div>
+
+        <div class="tab-pane" id="tab-seasons">
+          <p><strong>Why do we have seasons?</strong> Seasons are <em>not</em> caused by distance from the Sun! They are caused entirely by Earth's <strong>axial tilt</strong>.</p>
+          <p>When the Northern Hemisphere leans towards the Sun in June, sunlight strikes at a direct 90° angle, producing longer days and Summer.</p>
+          <p>Six months later in December, the Northern Hemisphere leans away, spreading solar rays over a wider surface area with fewer daylight hours.</p>
+        </div>
+
+        <div class="tab-pane" id="tab-facts">
+          <p>• <strong>Perihelion:</strong> Nearest to Sun (147.1 M km) occurs in early January during Northern Winter!</p>
+          <p>• <strong>Aphelion:</strong> Furthest from Sun (152.1 M km) occurs in early July.</p>
+          <p>• <strong>Midnight Sun:</strong> Regions above 66.5° N experience 24 hours of daylight around the June Solstice.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🗺️ Visual Legend</h3>
+        <div class="legend-list">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#fbbf24; box-shadow:0 0 8px #f59e0b;"></span>
+            <span>Sun (Central G-type Main Sequence)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#38bdf8;"></span>
+            <span>Earth (Blue Marble with Continents)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#f43f5e;"></span>
+            <span>Rotational Axis (23.5° North/South)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#334155; border:1px solid #64748b;"></span>
+            <span>Night Hemisphere (Terminator Shadow)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('orbitCanvas');
+const ctx = canvas.getContext('2d');
+
+let isRunning = true;
+let speedFactor = 1.0;
+let tiltAngleDeg = 23.5;
+let showRays = true;
+let currentDay = 80; // Start at Vernal Equinox
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const daysInMonths = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+function getFormattedDate(day) {
+  let d = Math.floor(day) % 365;
+  if (d <= 0) d = 1;
+  let monthIndex = 0;
+  let temp = d;
+  for (let i = 0; i < 12; i++) {
+    if (temp <= daysInMonths[i]) {
+      monthIndex = i;
+      break;
+    }
+    temp -= daysInMonths[i];
+  }
+  return `${months[monthIndex]} ${temp}`;
+}
+
+// Stars background
+const stars = [];
+for (let i = 0; i < 180; i++) {
+  stars.push({
+    x: Math.random() * 960,
+    y: Math.random() * 540,
+    r: Math.random() * 1.5 + 0.5,
+    alpha: Math.random() * 0.7 + 0.3
+  });
+}
+
+function updateHUD() {
+  document.getElementById('hudDay').textContent = `Day ${Math.floor(currentDay)} / 365`;
+  document.getElementById('hudDate').textContent = getFormattedDate(currentDay);
+
+  // Distance calculation based on eccentricity (e = 0.0167)
+  const theta = (currentDay / 365.25) * 2 * Math.PI;
+  const dist = 149.6 * (1 - 0.0167 * Math.cos(theta));
+  document.getElementById('hudDistance').textContent = `${dist.toFixed(1)} M km`;
+
+  // Northern & Southern seasons
+  const d = Math.floor(currentDay) % 365;
+  const nh = document.getElementById('hudNorth');
+  const sh = document.getElementById('hudSouth');
+
+  if (d >= 80 && d < 172) {
+    nh.textContent = 'Spring'; nh.style.color = '#34d399';
+    sh.textContent = 'Autumn'; sh.style.color = '#fbbf24';
+  } else if (d >= 172 && d < 266) {
+    nh.textContent = 'Summer (Long days)'; nh.style.color = '#f59e0b';
+    sh.textContent = 'Winter (Short days)'; sh.style.color = '#60a5fa';
+  } else if (d >= 266 && d < 355) {
+    nh.textContent = 'Autumn'; nh.style.color = '#fbbf24';
+    sh.textContent = 'Spring'; sh.style.color = '#34d399';
+  } else {
+    nh.textContent = 'Winter (Short days)'; nh.style.color = '#60a5fa';
+    sh.textContent = 'Summer (Long days)'; sh.style.color = '#f59e0b';
+  }
+}
+
+function drawScene() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 1. Draw Starfield
+  for (let s of stars) {
+    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const rx = 360; // Orbital semi-major axis
+  const ry = 190; // Orbital semi-minor axis (perspective tilt)
+
+  // 2. Draw Orbit Track
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = '#1e3a5f';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 3. Draw Solstice / Equinox Markers on Orbit
+  const markers = [
+    { day: 80, name: 'Vernal Equinox (Mar 21)', color: '#34d399' },
+    { day: 172, name: 'Summer Solstice (Jun 21)', color: '#f59e0b' },
+    { day: 266, name: 'Autumnal Equinox (Sep 23)', color: '#fbbf24' },
+    { day: 355, name: 'Winter Solstice (Dec 21)', color: '#60a5fa' }
+  ];
+
+  for (let m of markers) {
+    const mAngle = ((m.day - 80) / 365.25) * 2 * Math.PI;
+    const mx = cx + rx * Math.cos(mAngle);
+    const my = cy + ry * Math.sin(mAngle);
+
+    ctx.beginPath();
+    ctx.arc(mx, my, 4, 0, Math.PI * 2);
+    ctx.fillStyle = m.color;
+    ctx.fill();
+
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(m.name.split(' ')[0], mx, my + (my > cy ? 16 : -10));
+  }
+
+  // 4. Draw Sun at Center with Radiant Corona
+  const sunRad = 36;
+  const sunGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, sunRad * 2.2);
+  sunGrad.addColorStop(0, '#ffffff');
+  sunGrad.addColorStop(0.3, '#fef08a');
+  sunGrad.addColorStop(0.7, '#f59e0b');
+  sunGrad.addColorStop(1, 'rgba(234, 88, 12, 0)');
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad * 2.2, 0, Math.PI * 2);
+  ctx.fillStyle = sunGrad;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad, 0, Math.PI * 2);
+  ctx.fillStyle = '#f59e0b';
+  ctx.shadowColor = '#fbbf24';
+  ctx.shadowBlur = 24;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Sun Core Detail
+  ctx.fillStyle = '#fef08a';
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad * 0.75, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 5. Calculate Earth Position
+  const orbitAngle = ((currentDay - 80) / 365.25) * 2 * Math.PI;
+  const ex = cx + rx * Math.cos(orbitAngle);
+  const ey = cy + ry * Math.sin(orbitAngle);
+
+  // 6. Draw Solar Light Rays towards Earth
+  if (showRays) {
+    ctx.strokeStyle = 'rgba(253, 224, 71, 0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // 7. Draw Earth
+  const earthRadius = 24;
+  const tiltRad = (tiltAngleDeg * Math.PI) / 180;
+
+  // Draw Axial Rod passing through Earth (Fixed pointing up-right relative to space)
+  const rodLen = 42;
+  const tiltX = Math.sin(tiltRad) * rodLen;
+  const tiltY = -Math.cos(tiltRad) * rodLen;
+
+  ctx.strokeStyle = '#f43f5e';
+  ctx.lineWidth = 3.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(ex - tiltX, ey - tiltY);
+  ctx.lineTo(ex + tiltX, ey + tiltY);
+  ctx.stroke();
+
+  // Axis Pole Labels
+  ctx.font = 'bold 10px monospace';
+  ctx.fillStyle = '#f43f5e';
+  ctx.textAlign = 'center';
+  ctx.fillText('N', ex + tiltX + Math.sign(tiltX) * 8, ey + tiltY - 4);
+  ctx.fillText('S', ex - tiltX - Math.sign(tiltX) * 8, ey - tiltY + 12);
+
+  // Earth Sphere
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(ex, ey, earthRadius, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Ocean Base
+  ctx.fillStyle = '#0284c7';
+  ctx.fillRect(ex - earthRadius, ey - earthRadius, earthRadius * 2, earthRadius * 2);
+
+  // Continents Pattern (rotating with currentDay * 15)
+  const rotAngle = (currentDay * 20) % 360;
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(tiltRad); // Tilted with axis
+
+  ctx.fillStyle = '#22c55e';
+  // Continents mock shapes
+  const shift = (rotAngle / 180) * earthRadius;
+  ctx.beginPath();
+  ctx.ellipse(((shift) % 48) - 24, -4, 12, 10, 0.4, 0, Math.PI * 2);
+  ctx.ellipse(((shift + 24) % 48) - 24, 6, 14, 8, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Polar Ice Caps
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(-earthRadius, -earthRadius, earthRadius * 2, 5);
+  ctx.fillRect(-earthRadius, earthRadius - 5, earthRadius * 2, 5);
+
+  ctx.restore();
+
+  // Day / Night Shadow Overlay
+  // Angle of light from Sun to Earth
+  const lightAngle = Math.atan2(ey - cy, ex - cx);
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(lightAngle + Math.PI / 2);
+
+  // Shadow half
+  ctx.fillStyle = 'rgba(3, 7, 18, 0.85)';
+  ctx.beginPath();
+  ctx.rect(-earthRadius, 0, earthRadius * 2, earthRadius);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.restore(); // Restore clip
+
+  // Atmosphere Outer Glow
+  ctx.beginPath();
+  ctx.arc(ex, ey, earthRadius + 2, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 8. Equator Line indicator
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(tiltRad + Math.PI / 2);
+  ctx.strokeStyle = '#fbbf24';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(-earthRadius, 0);
+  ctx.lineTo(earthRadius, 0);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Earth Label
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Earth', ex, ey + earthRadius + 16);
+}
+
+function animate() {
+  if (isRunning) {
+    currentDay = (currentDay + 0.25 * speedFactor) % 365.25;
+    updateHUD();
+  }
+  drawScene();
+  requestAnimationFrame(animate);
+}
+
+// Event Listeners
+document.getElementById('btnPlayPause').addEventListener('click', (e) => {
+  isRunning = !isRunning;
+  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  currentDay = 80;
+  speedFactor = 1.0;
+  tiltAngleDeg = 23.5;
+  document.getElementById('speedSlider').value = 1;
+  document.getElementById('speedVal').textContent = '1.0x';
+  document.getElementById('tiltSlider').value = 23.5;
+  document.getElementById('tiltVal').textContent = '23.5°';
+  updateHUD();
+});
+
+document.getElementById('speedSlider').addEventListener('input', (e) => {
+  speedFactor = parseFloat(e.target.value);
+  document.getElementById('speedVal').textContent = `${speedFactor.toFixed(1)}x`;
+});
+
+document.getElementById('tiltSlider').addEventListener('input', (e) => {
+  tiltAngleDeg = parseFloat(e.target.value);
+  document.getElementById('tiltVal').textContent = `${tiltAngleDeg.toFixed(1)}°`;
+  document.getElementById('hudTilt').textContent = `${tiltAngleDeg.toFixed(1)}°`;
+});
+
+document.getElementById('chkOrbitRays').addEventListener('change', (e) => {
+  showRays = e.target.checked;
+});
+
+// Season Shortcut Buttons
+document.querySelectorAll('.season-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDay = parseFloat(btn.getAttribute('data-day'));
+    updateHUD();
+  });
+});
+
+// Tab Navigation
+document.querySelectorAll('.tab-link').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+  });
+});
+
+// Fullscreen
+document.getElementById('btnFullscreen').addEventListener('click', () => {
+  const elem = document.querySelector('.sim-stage');
+  if (!document.fullscreenElement) {
+    elem.requestFullscreen().catch(err => alert(err.message));
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+updateHUD();
+animate();
+</script>
+</body>
+</html>

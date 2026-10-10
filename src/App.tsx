@@ -81,6 +81,7 @@ export default function App() {
       {/* Top Application Navbar */}
       <TopNavbar
         activeSim={activeSim}
+        totalSimulations={SIMULATIONS_LIST.length}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         onResetLab={handleResetLab}
         onFullscreen={() => setFullscreenModalSim(activeSim)}
@@ -88,7 +89,7 @@ export default function App() {
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
       />
 
-      {/* Main Layout Area: Left Sidebar (01-14) + Content Canvas */}
+      {/* Main Layout Area: Left Sidebar + Content Canvas */}
       <div className="flex-1 flex overflow-hidden relative">
         
         {/* Responsive Vertical Left Sidebar */}

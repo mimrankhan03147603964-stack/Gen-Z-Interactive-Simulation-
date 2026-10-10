@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solar & Lunar Eclipse Simulator</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#060a14; color:#f1f5f9; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#fb923c; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-orange { background:#9a3412; color:#fff7ed; border:1px solid #fb923c; }
+.badge-blue { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+
+/* Mode Switcher Tabs */
+.mode-tabs { display:flex; gap:10px; margin-bottom:18px; background:#0f172a; padding:6px; border-radius:14px; border:1px solid #1e293b; }
+.mode-btn { flex:1; padding:12px 20px; border:none; border-radius:10px; font-weight:800; font-size:0.95rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; color:#94a3b8; background:transparent; }
+.mode-btn.active { background:linear-gradient(135deg, #ea580c 0%, #c2410c 100%); color:#fff; box-shadow:0 6px 20px rgba(234,88,12,0.4); }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0d1527 0%, #030712 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.8); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#02050e; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#ea580c; color:#fff; box-shadow:0 4px 12px rgba(234,88,12,0.35); }
+.btn-primary:hover { background:#c2410c; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#ea580c; width:120px; cursor:pointer; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#fb923c; font-family:monospace; }
+
+.sky-view-box { text-align:center; padding:12px; background:#050c18; border-radius:12px; border:1px solid #1e3a5f; }
+#skyCanvas { margin:0 auto; border-radius:50%; border:2px solid #ea580c; background:#000; display:block; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; cursor:pointer; z-index:10; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>☀️ Solar & 🌕 Lunar Eclipse Simulator</h1>
+      <p>Ray-traced Umbra, Penumbra & Antumbra shadow cones, Earth observer sky view, and 5.14° orbital inclination</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-orange">Celestial Optics</span>
+      <span class="badge badge-blue">Syzygy Alignment</span>
+    </div>
+  </header>
+
+  <nav class="mode-tabs">
+    <button class="mode-btn active" id="btnModeSolar">
+      ☀️ Solar Eclipse (Sun ➔ Moon ➔ Earth)
+    </button>
+    <button class="mode-btn" id="btnModeLunar">
+      🌕 Lunar Eclipse (Sun ➔ Earth ➔ Moon)
+    </button>
+  </nav>
+
+  <div class="main-grid">
+    <div class="sim-stage">
+      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
+
+      <div class="canvas-wrapper">
+        <canvas id="spaceCanvas" width="960" height="540"></canvas>
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
+          <button class="ctrl-btn btn-secondary" id="btnCenterEclipse">🎯 Center Eclipse</button>
+        </div>
+
+        <div class="slider-group">
+          <label>Orbital Alignment:</label>
+          <input type="range" id="sliderAlign" min="-100" max="100" step="1" value="0">
+          <span id="valAlign">0%</span>
+        </div>
+
+        <div class="slider-group">
+          <label>5° Tilt Offset:</label>
+          <input type="range" id="sliderTilt" min="0" max="5.14" step="0.1" value="0">
+          <span id="valTilt">0.0° (Node)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="card">
+        <h3>🔭 Earth Observer Sky View</h3>
+        <div class="sky-view-box">
+          <canvas id="skyCanvas" width="160" height="160"></canvas>
+          <p id="skyLabel" style="margin-top:8px; font-size:0.85rem; font-weight:700; color:#fb923c;">Total Solar Eclipse (Corona Visible)</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 Eclipse Telemetry</h3>
+        <div class="metrics-list">
+          <div class="metric-row">
+            <span class="m-label">Eclipse Type:</span>
+            <span class="m-val" id="hudEclipseType" style="color:#f97316;">Total Solar</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Shadow Zone:</span>
+            <span class="m-val" id="hudShadowZone">Umbra (100% Dark)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Obscuration:</span>
+            <span class="m-val" id="hudObscuration">100.0%</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Node Crossing:</span>
+            <span class="m-val" id="hudNode">Exact Alignment</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📖 Ray Optics & Key Concepts</h3>
+        <div style="font-size:0.86rem; line-height:1.6; color:#cbd5e1;">
+          <p>• <strong>Umbra:</strong> The inner darkest cone of the shadow where sunlight is completely blocked.</p>
+          <p>• <strong>Penumbra:</strong> The outer partial shadow where only a portion of the solar disk is obscured.</p>
+          <p>• <strong>Blood Moon:</strong> During a lunar eclipse, Earth's atmosphere bends red wavelengths into the shadow via Rayleigh scattering, casting a coppery red glow onto the Moon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const spaceCanvas = document.getElementById('spaceCanvas');
+const sCtx = spaceCanvas.getContext('2d');
+const skyCanvas = document.getElementById('skyCanvas');
+const kCtx = skyCanvas.getContext('2d');
+
+let mode = 'solar'; // 'solar' or 'lunar'
+let isRunning = true;
+let alignOffset = 0; // -100 to 100
+let orbitTiltDeg = 0; // 0 to 5.14
+let animStep = 0;
+
+// Starfield
+const stars = [];
+for (let i = 0; i < 150; i++) {
+  stars.push({ x: Math.random() * 960, y: Math.random() * 540, r: Math.random() * 1.5 + 0.5 });
+}
+
+function updateHUD() {
+  const absOffset = Math.abs(alignOffset) + (orbitTiltDeg * 15);
+  let type = '';
+  let shadow = '';
+  let obsc = Math.max(0, 100 - absOffset * 1.6).toFixed(1) + '%';
+
+  if (mode === 'solar') {
+    if (absOffset < 8) {
+      type = 'Total Solar Eclipse';
+      shadow = 'Umbra Core (100%)';
+      document.getElementById('skyLabel').textContent = 'Total Eclipse: Solar Corona';
+    } else if (absOffset < 45) {
+      type = 'Partial Solar Eclipse';
+      shadow = 'Penumbra';
+      document.getElementById('skyLabel').textContent = 'Partial Eclipse (Crescent Sun)';
+    } else {
+      type = 'No Eclipse (Passes North/South)';
+      shadow = 'None (Direct Sun)';
+      obsc = '0.0%';
+      document.getElementById('skyLabel').textContent = 'Normal Daytime Sun';
+    }
+  } else {
+    if (absOffset < 15) {
+      type = 'Total Lunar Eclipse';
+      shadow = 'Blood Moon Umbra';
+      document.getElementById('skyLabel').textContent = 'Blood Moon (Rayleigh Refraction)';
+    } else if (absOffset < 50) {
+      type = 'Partial Lunar Eclipse';
+      shadow = 'Penumbra into Umbra';
+      document.getElementById('skyLabel').textContent = 'Partial Lunar Bite';
+    } else {
+      type = 'Normal Full Moon';
+      shadow = 'None';
+      obsc = '0.0%';
+      document.getElementById('skyLabel').textContent = 'Fully Illuminated Moon';
+    }
+  }
+
+  document.getElementById('hudEclipseType').textContent = type;
+  document.getElementById('hudShadowZone').textContent = shadow;
+  document.getElementById('hudObscuration').textContent = obsc;
+  document.getElementById('hudNode').textContent = orbitTiltDeg < 0.5 ? 'Exact Node Alignment' : 'Tilted ➔ Missed Alignment';
+}
+
+function drawSpaceScene() {
+  sCtx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+  const w = spaceCanvas.width;
+  const h = spaceCanvas.height;
+
+  // Starfield
+  sCtx.fillStyle = '#ffffff';
+  for (let s of stars) {
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sCtx.fill();
+  }
+
+  const cy = h / 2;
+  const sunX = 100;
+  const sunR = 60;
+
+  // Draw Sun
+  const sunGrad = sCtx.createRadialGradient(sunX, cy, 10, sunX, cy, sunR * 1.8);
+  sunGrad.addColorStop(0, '#ffffff');
+  sunGrad.addColorStop(0.4, '#fde047');
+  sunGrad.addColorStop(0.8, '#ea580c');
+  sunGrad.addColorStop(1, 'transparent');
+  sCtx.fillStyle = sunGrad;
+  sCtx.beginPath();
+  sCtx.arc(sunX, cy, sunR * 1.8, 0, Math.PI * 2);
+  sCtx.fill();
+
+  sCtx.fillStyle = '#f59e0b';
+  sCtx.beginPath();
+  sCtx.arc(sunX, cy, sunR, 0, Math.PI * 2);
+  sCtx.fill();
+
+  // Celestial bodies configuration based on mode
+  if (mode === 'solar') {
+    // Sun -> Moon (center) -> Earth (right)
+    const moonX = 520;
+    const moonY = cy + alignOffset * 1.2 + orbitTiltDeg * 14;
+    const moonR = 16;
+
+    const earthX = 800;
+    const earthY = cy;
+    const earthR = 36;
+
+    // Draw Shadow Ray Cones from Sun edges past Moon to Earth
+    // Umbra (dark cone)
+    sCtx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    sCtx.beginPath();
+    sCtx.moveTo(moonX, moonY - moonR);
+    sCtx.lineTo(earthX, moonY - moonR * 0.3);
+    sCtx.lineTo(earthX, moonY + moonR * 0.3);
+    sCtx.lineTo(moonX, moonY + moonR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Penumbra (lighter cone)
+    sCtx.fillStyle = 'rgba(30, 41, 59, 0.4)';
+    sCtx.beginPath();
+    sCtx.moveTo(moonX, moonY - moonR);
+    sCtx.lineTo(earthX, moonY - moonR * 3.5);
+    sCtx.lineTo(earthX, moonY + moonR * 3.5);
+    sCtx.lineTo(moonX, moonY + moonR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Light ray lines
+    sCtx.strokeStyle = 'rgba(253, 224, 71, 0.3)';
+    sCtx.lineWidth = 1.5;
+    sCtx.beginPath();
+    sCtx.moveTo(sunX, cy - sunR);
+    sCtx.lineTo(earthX, moonY - moonR * 3.5);
+    sCtx.moveTo(sunX, cy + sunR);
+    sCtx.lineTo(earthX, moonY + moonR * 3.5);
+    sCtx.stroke();
+
+    // Draw Moon
+    sCtx.fillStyle = '#cbd5e1';
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+    sCtx.fill();
+    // Night side facing earth
+    sCtx.fillStyle = '#0f172a';
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, -Math.PI / 2, Math.PI / 2, false);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 12px sans-serif';
+    sCtx.fillText('Moon', moonX - 16, moonY + 28);
+
+    // Draw Earth
+    sCtx.fillStyle = '#0284c7';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+    sCtx.fill();
+    sCtx.fillStyle = '#22c55e';
+    sCtx.beginPath();
+    sCtx.ellipse(earthX - 4, earthY - 4, 14, 10, 0.3, 0, Math.PI * 2);
+    sCtx.fill();
+
+    // Umbra Shadow Spot hitting Earth surface
+    if (Math.abs(moonY - earthY) < 30) {
+      sCtx.fillStyle = '#020617';
+      sCtx.beginPath();
+      sCtx.ellipse(earthX - earthR + 3, moonY, 6, 8, 0, 0, Math.PI * 2);
+      sCtx.fill();
+      sCtx.strokeStyle = '#ef4444';
+      sCtx.lineWidth = 2;
+      sCtx.stroke();
+    }
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 13px sans-serif';
+    sCtx.fillText('Earth', earthX - 16, earthY + earthR + 20);
+
+  } else {
+    // Lunar Eclipse: Sun -> Earth (center) -> Moon (right)
+    const earthX = 480;
+    const earthY = cy;
+    const earthR = 36;
+
+    const moonX = 820;
+    const moonY = cy + alignOffset * 1.2 + orbitTiltDeg * 14;
+    const moonR = 16;
+
+    // Earth Shadow Umbra Cone past Earth
+    sCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    sCtx.beginPath();
+    sCtx.moveTo(earthX, earthY - earthR);
+    sCtx.lineTo(moonX + 60, cy - earthR * 0.4);
+    sCtx.lineTo(moonX + 60, cy + earthR * 0.4);
+    sCtx.lineTo(earthX, earthY + earthR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Penumbra
+    sCtx.fillStyle = 'rgba(30, 41, 59, 0.45)';
+    sCtx.beginPath();
+    sCtx.moveTo(earthX, earthY - earthR);
+    sCtx.lineTo(moonX + 60, cy - earthR * 2.5);
+    sCtx.lineTo(moonX + 60, cy + earthR * 2.5);
+    sCtx.lineTo(earthX, earthY + earthR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Draw Earth
+    sCtx.fillStyle = '#0284c7';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+    sCtx.fill();
+    sCtx.fillStyle = '#22c55e';
+    sCtx.beginPath();
+    sCtx.ellipse(earthX - 4, earthY - 4, 14, 10, 0.3, 0, Math.PI * 2);
+    sCtx.fill();
+    // Night half
+    sCtx.fillStyle = 'rgba(2, 6, 23, 0.7)';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, -Math.PI / 2, Math.PI / 2, false);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 13px sans-serif';
+    sCtx.fillText('Earth', earthX - 16, earthY + earthR + 20);
+
+    // Draw Moon
+    const inUmbra = Math.abs(moonY - cy) < 22;
+    if (inUmbra) {
+      sCtx.fillStyle = '#b91c1c'; // Blood Moon red!
+    } else {
+      sCtx.fillStyle = '#cbd5e1';
+    }
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 12px sans-serif';
+    sCtx.fillText('Moon', moonX - 16, moonY + 28);
+  }
+}
+
+function drawSkyView() {
+  kCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+  const cx = 80;
+  const cy = 80;
+  const r = 50;
+
+  const absOffset = Math.abs(alignOffset) + (orbitTiltDeg * 15);
+
+  if (mode === 'solar') {
+    // Solar Eclipse Sky View
+    if (absOffset < 8) {
+      // Totality! Black disk with radiant white solar corona
+      kCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      kCtx.lineWidth = 14;
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+      kCtx.stroke();
+
+      kCtx.fillStyle = '#020617';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Diamond ring sparkle
+      kCtx.fillStyle = '#ffffff';
+      kCtx.beginPath();
+      kCtx.arc(cx + r, cy - 8, 5, 0, Math.PI * 2);
+      kCtx.fill();
+    } else {
+      // Partial or Full Sun
+      kCtx.fillStyle = '#f59e0b';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Moon bite offset
+      const biteX = cx + (alignOffset * 0.8);
+      kCtx.fillStyle = '#020617';
+      kCtx.beginPath();
+      kCtx.arc(biteX, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+    }
+  } else {
+    // Lunar Eclipse Sky View
+    if (absOffset < 15) {
+      // Blood Moon! Copper red
+      kCtx.fillStyle = '#b91c1c';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+      // Subtle rim glow
+      kCtx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+      kCtx.lineWidth = 3;
+      kCtx.stroke();
+    } else {
+      // Moon disk
+      kCtx.fillStyle = '#e2e8f0';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Earth shadow bite
+      if (absOffset < 50) {
+        kCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        kCtx.beginPath();
+        kCtx.arc(cx + (alignOffset * 0.9), cy, r * 1.5, 0, Math.PI * 2);
+        kCtx.fill();
+      }
+    }
+  }
+}
+
+function loop() {
+  if (isRunning) {
+    animStep += 0.02;
+    alignOffset = Math.sin(animStep) * 60;
+    document.getElementById('sliderAlign').value = alignOffset;
+    document.getElementById('valAlign').textContent = `${Math.round(alignOffset)}%`;
+  }
+  updateHUD();
+  drawSpaceScene();
+  drawSkyView();
+  requestAnimationFrame(loop);
+}
+
+// Mode Buttons
+document.getElementById('btnModeSolar').addEventListener('click', (e) => {
+  mode = 'solar';
+  document.getElementById('btnModeSolar').classList.add('active');
+  document.getElementById('btnModeLunar').classList.remove('active');
+});
+
+document.getElementById('btnModeLunar').addEventListener('click', (e) => {
+  mode = 'lunar';
+  document.getElementById('btnModeLunar').classList.add('active');
+  document.getElementById('btnModeSolar').classList.remove('active');
+});
+
+document.getElementById('btnPlayPause').addEventListener('click', (e) => {
+  isRunning = !isRunning;
+  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnCenterEclipse').addEventListener('click', () => {
+  alignOffset = 0;
+  orbitTiltDeg = 0;
+  isRunning = false;
+  document.getElementById('btnPlayPause').textContent = '▶ Play';
+  document.getElementById('sliderAlign').value = 0;
+  document.getElementById('valAlign').textContent = '0%';
+  document.getElementById('sliderTilt').value = 0;
+  document.getElementById('valTilt').textContent = '0.0° (Node)';
+});
+
+document.getElementById('sliderAlign').addEventListener('input', (e) => {
+  alignOffset = parseFloat(e.target.value);
+  document.getElementById('valAlign').textContent = `${Math.round(alignOffset)}%`;
+  isRunning = false;
+  document.getElementById('btnPlayPause').textContent = '▶ Play';
+});
+
+document.getElementById('sliderTilt').addEventListener('input', (e) => {
+  orbitTiltDeg = parseFloat(e.target.value);
+  document.getElementById('valTilt').textContent = `${orbitTiltDeg.toFixed(1)}°`;
+});
+
+// Fullscreen
+document.getElementById('btnFullscreen').addEventListener('click', () => {
+  const stage = document.querySelector('.sim-stage');
+  if (!document.fullscreenElement) {
+    stage.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+loop();
+</script>
+</body>
+</html>

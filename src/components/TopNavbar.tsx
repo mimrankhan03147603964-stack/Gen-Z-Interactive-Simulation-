@@ -5,6 +5,7 @@ import { getSimTheme } from '../data/simTheme';
 
 interface TopNavbarProps {
   activeSim: SimulationItem;
+  totalSimulations?: number;
   onToggleSidebar: () => void;
   onResetLab: () => void;
   onFullscreen: () => void;
@@ -14,6 +15,7 @@ interface TopNavbarProps {
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSim,
+  totalSimulations = 20,
   onToggleSidebar,
   isDarkMode = false,
   onToggleTheme
@@ -42,7 +44,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             borderStyle: 'solid',
             color: isDarkMode ? '#38bdf8' : '#0f172a'
           }}
-          title="Toggle Navigation Menu (01 - 14)"
+          title={`Toggle Navigation Menu (01 - ${String(totalSimulations).padStart(2, '0')})`}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -77,7 +79,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               className="text-[10px] sm:text-[11px] font-black tracking-tight"
               style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
             >
-              Interactive STEM Digital Laboratory Portal &bull; 14 Verified Simulators
+              Interactive STEM Digital Laboratory Portal &bull; {totalSimulations} Verified Simulators
             </div>
           </div>
         </div>
@@ -105,7 +107,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <span className="truncate max-w-[170px]">{activeSim.title}</span>
         </div>
 
-        {/* 14 Labs Counter Pill - Vibrant Amber */}
+        {/* Labs Counter Pill - Vibrant Amber */}
         <div 
           className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black shadow-2xs"
           style={{
@@ -117,7 +119,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           }}
         >
           <Layers className="w-3.5 h-3.5 text-amber-600" />
-          <span>14 Labs</span>
+          <span>{totalSimulations} Labs</span>
         </div>
 
         {/* 4K Ultra Indicator - Vibrant Emerald */}

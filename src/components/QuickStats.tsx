@@ -48,7 +48,7 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
             className="text-[11px] font-black mt-1 flex items-center gap-1"
             style={{ color: isDarkMode ? '#93c5fd' : '#1d4ed8' }}
           >
-            <span>All 14 active &amp; ready</span>
+            <span>All {totalSimulations} active &amp; ready</span>
             <ArrowRight className="w-3.5 h-3.5 font-black" />
           </div>
         </div>

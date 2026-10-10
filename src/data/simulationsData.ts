@@ -210,6 +210,96 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Hydrological Cycle Stages', 'Earth 24-Hour Axial Rotation', 'Day / Night Terminator Line', 'Atmosphere & City Lights'],
     features: ['Step-by-Step Water Stages', 'Earth Rotation Controller', 'City Lights & Atmosphere Toggles', 'Local Time Clock HUD'],
     gradeLevel: 'Elementary & Middle'
+  },
+  {
+    id: 'sim-earth-rotation-revolution',
+    slug: 'earth-rotation-revolution',
+    indexNumber: '15',
+    title: 'Earth Rotation & Revolution Simulator',
+    subject: 'Astronomy & Geophysics',
+    category: 'Earth & Space',
+    iconName: 'Globe',
+    accentColor: '#0284c7', // Sky Blue
+    description: 'Comprehensive 3D model of Earth orbiting the Sun demonstrating the 23.5° axial tilt, equinoxes, solstices, day/night cycles, and the real mechanics of changing seasons.',
+    fileUrl: '/simulations/earth-rotation-revolution.html',
+    topics: ['23.5° Axial Tilt Mechanics', 'Solstices & Equinoxes', 'Diurnal Earth Rotation', 'Seasonal Sunlight Insolation'],
+    features: ['3D Orbital Perspective', 'Season Jump Buttons', 'Solar Ray Tracers', 'Real-time Distance HUD'],
+    gradeLevel: 'Middle & Secondary'
+  },
+  {
+    id: 'sim-plate-tectonics-moon-phases',
+    slug: 'plate-tectonics-moon-phases',
+    indexNumber: '16',
+    title: 'Plate Tectonics & Moon Phases Lab',
+    subject: 'Earth Geology & Lunar Astronomy',
+    category: 'Earth & Space',
+    iconName: 'Moon',
+    accentColor: '#7c3aed', // Purple
+    description: 'Dual interactive laboratory exploring convergent, divergent, and transform tectonic plate boundaries with earthquake simulation alongside an 8-phase synodic lunar orbit visualizer.',
+    fileUrl: '/simulations/plate-tectonics-moon-phases.html',
+    topics: ['Subduction & Mountain Building', 'Mid-Ocean Seafloor Spreading', 'Transform Fault Earthquakes', '8 Synodic Lunar Phases & Tides'],
+    features: ['Fault Seismic Trigger', 'Mantle Convection Currents', 'Earth Telescope Sky View', 'Interactive Phase Selector'],
+    gradeLevel: 'Middle & Secondary'
+  },
+  {
+    id: 'sim-pakistan-map',
+    slug: 'pakistan-map',
+    indexNumber: '17',
+    title: 'Interactive Map of Pakistan: Geography & Provinces',
+    subject: 'Physical & Political Geography',
+    category: 'Earth & Space',
+    iconName: 'Map',
+    accentColor: '#16a34a', // Emerald Green
+    description: 'High-detail vector map of Pakistan covering all provinces (Punjab, Sindh, KP, Balochistan, GB, AJK, Islamabad), Indus River basin, K2 mountain ranges, and demographic indicators.',
+    fileUrl: '/simulations/pakistan-map.html',
+    topics: ['Provinces & Federal Territories', 'Indus River Drainage Basin', 'Karakoram & Himalayan Peaks', 'Ports & Trade Corridors (CPEC)'],
+    features: ['Interactive Province Inspector', 'Animated River Flow Layer', 'Mountain Peaks & City Toggles', 'Interactive Geography Quiz'],
+    gradeLevel: 'All Grade Levels'
+  },
+  {
+    id: 'sim-solar-lunar-eclipse',
+    slug: 'solar-and-lunar-eclipse',
+    indexNumber: '18',
+    title: 'Solar & Lunar Eclipse Simulator',
+    subject: 'Celestial Mechanics & Ray Optics',
+    category: 'Earth & Space',
+    iconName: 'CircleDot',
+    accentColor: '#ea580c', // Orange
+    description: 'Ray-traced syzygy alignment model demonstrating Umbra and Penumbra shadow cones, Total/Partial Solar Eclipses with Corona, Blood Moon Lunar Eclipses, and 5° orbital inclination.',
+    fileUrl: '/simulations/solar-and-lunar-eclipse.html',
+    topics: ['Umbra & Penumbra Shadow Geometry', 'Solar Corona & Diamond Ring', 'Rayleigh Scattering Blood Moon', '5.14° Lunar Orbital Inclination'],
+    features: ['Solar & Lunar Dual Mode', 'Earth Observer Sky Telescope', 'Alignment & Node Sliders', 'Shadow Obscuration HUD'],
+    gradeLevel: 'Middle & High School'
+  },
+  {
+    id: 'sim-planetary-motion-keplers-laws',
+    slug: 'planetary-motion-keplers-laws',
+    indexNumber: '19',
+    title: 'Solar System & Planetary Motion (Kepler\'s Laws)',
+    subject: 'Astrophysics & Classical Mechanics',
+    category: 'Physics & Motion',
+    iconName: 'Orbit',
+    accentColor: '#4f46e5', // Indigo
+    description: 'Interactive laboratory demonstrating Kepler\'s 3 Laws of Planetary Motion: Elliptical orbits with dual foci, equal areas swept in equal time intervals, and harmonic law (T² = a³).',
+    fileUrl: '/simulations/planetary-motion-keplers-laws.html',
+    topics: ['1st Law: Ellipses & Eccentricity', '2nd Law: Equal Area Sweeps', '3rd Law: Harmonies (T² ∝ a³)', 'Gravitational Velocity Vectors'],
+    features: ['Dynamic Area Sweeping', 'Live Velocity Vector Arrow', 'Eccentricity Range Slider', 'Planetary Harmonics Table'],
+    gradeLevel: 'Secondary & High School'
+  },
+  {
+    id: 'sim-solar-system-orbits',
+    slug: 'solar-system-orbits',
+    indexNumber: '20',
+    title: '3D Solar System & Planetary Orbits',
+    subject: 'Planetary Science & Astronomy',
+    category: 'Earth & Space',
+    iconName: 'Telescope',
+    accentColor: '#0891b2', // Teal/Cyan
+    description: 'Complete multi-planet orbital model of our Solar System featuring Mercury, Venus, Earth, Mars, Asteroid Belt, Jupiter, Saturn with rings, Uranus, and Neptune with accurate relative speeds.',
+    fileUrl: '/simulations/solar-system-orbits.html',
+    topics: ['8 Major Planets & Orbits', 'Keplerian Velocity Ratios', 'Asteroid Belt Dynamics', 'Planetary Atmosphere & Moons'],
+    features: ['Focus Zoom on Any Planet', 'Time Warp Speed Slider', 'High-Res Planet Previews', 'Orbital Trails & Asteroid Field'],
+    gradeLevel: 'All Grade Levels'
   }
 ];
 
@@ -220,3 +310,4 @@ export const CATEGORIES = [
   'Biology & Life',
   'Earth & Space'
 ] as const;
+

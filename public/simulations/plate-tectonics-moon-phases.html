@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plate Tectonics & Moon Phases (Interactive Lab)</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#070d18; color:#f1f5f9; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#c084fc; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-purple { background:#6b21a8; color:#faf5ff; border:1px solid #c084fc; }
+.badge-blue { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+
+/* Main Dual Lab Switcher Tabs */
+.lab-nav { display:flex; gap:10px; margin-bottom:18px; background:#0f172a; padding:6px; border-radius:14px; border:1px solid #1e293b; }
+.lab-btn { flex:1; padding:12px 20px; border:none; border-radius:10px; font-weight:800; font-size:0.95rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; color:#94a3b8; background:transparent; }
+.lab-btn.active { background:linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color:#fff; box-shadow:0 6px 20px rgba(124,58,237,0.4); }
+
+.lab-section { display:none; }
+.lab-section.active { display:block; }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #111827 0%, #030712 100%); border-radius:20px; border:2px solid #374151; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.7); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #374151; background:#030712; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#0b1329; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#7c3aed; color:#fff; box-shadow:0 4px 12px rgba(124,58,237,0.35); }
+.btn-primary:hover { background:#6d28d9; transform:translateY(-1px); }
+.btn-danger { background:#dc2626; color:#fff; box-shadow:0 4px 12px rgba(220,38,38,0.35); }
+.btn-danger:hover { background:#b91c1c; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#7c3aed; width:110px; cursor:pointer; }
+
+.boundary-selector { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+.boundary-btn { background:#0f172a; border:1.5px solid #334155; border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.2s; color:#94a3b8; }
+.boundary-btn:hover { border-color:#c084fc; background:#1e1b4b; color:#fff; }
+.boundary-btn.active { border-color:#c084fc; background:#581c87; color:#fff; box-shadow:0 4px 16px rgba(192,132,252,0.3); }
+.boundary-btn .b-name { font-weight:800; font-size:0.88rem; display:block; }
+.boundary-btn .b-desc { font-size:0.75rem; margin-top:2px; }
+
+/* Moon Phases Selector Grid */
+.phases-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+@media (max-width: 640px) { .phases-grid { grid-template-columns:repeat(2,1fr); } }
+.phase-btn { background:#0f172a; border:1.5px solid #334155; border-radius:10px; padding:8px 6px; text-align:center; cursor:pointer; font-size:0.8rem; font-weight:700; color:#cbd5e1; }
+.phase-btn:hover { border-color:#38bdf8; color:#fff; }
+.phase-btn.active { background:#0284c7; border-color:#38bdf8; color:#fff; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#0b1329; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#c084fc; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#c084fc; font-family:monospace; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; cursor:pointer; z-index:10; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>🌋 Plate Tectonics & 🌙 Moon Phases Lab</h1>
+      <p>Interactive Earth & Lunar Dynamics: Plate Boundaries, Volcanism, Earthquakes, and 8 Lunar Phases</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-purple">Geophysics & Crust</span>
+      <span class="badge badge-blue">Synodic Lunar Cycle</span>
+    </div>
+  </header>
+
+  <nav class="lab-nav">
+    <button class="lab-btn active" id="btnTabPlates">
+      🌋 Lab 1: Plate Tectonics & Faults
+    </button>
+    <button class="lab-btn" id="btnTabMoon">
+      🌙 Lab 2: Moon Phases & Orbit
+    </button>
+  </nav>
+
+  <!-- ================= SECTION 1: PLATE TECTONICS ================= -->
+  <section class="lab-section active" id="secPlates">
+    <div class="main-grid">
+      <div class="sim-stage">
+        <button class="fullscreen-btn" id="btnFsPlates">⛶ Fullscreen</button>
+        <div class="canvas-wrapper">
+          <canvas id="plateCanvas" width="960" height="540"></canvas>
+        </div>
+
+        <div class="boundary-selector">
+          <div class="boundary-btn active" data-type="convergent">
+            <span class="b-name">Convergent (Subduction)</span>
+            <span class="b-desc">Plates collide &rarr; Trenches, Volcanoes</span>
+          </div>
+          <div class="boundary-btn" data-type="divergent">
+            <span class="b-name">Divergent (Spreading)</span>
+            <span class="b-desc">Plates separate &rarr; Magma Ridge</span>
+          </div>
+          <div class="boundary-btn" data-type="transform">
+            <span class="b-name">Transform (Strike-Slip)</span>
+            <span class="b-desc">Plates slide past &rarr; Earthquakes</span>
+          </div>
+        </div>
+
+        <div class="controls-bar">
+          <div class="ctrl-group">
+            <button class="ctrl-btn btn-primary" id="btnPlatesPlay">⏸ Pause</button>
+            <button class="ctrl-btn btn-danger" id="btnTriggerQuake">⚡ Trigger Quake</button>
+          </div>
+
+          <div class="slider-group">
+            <label>Drift Velocity:</label>
+            <input type="range" id="driftSpeed" min="0.2" max="3" step="0.2" value="1">
+            <span id="driftSpeedVal">5 cm/yr</span>
+          </div>
+
+          <div class="slider-group">
+            <label>Magma Heat:</label>
+            <input type="range" id="magmaHeat" min="800" max="1500" step="50" value="1200">
+            <span id="magmaHeatVal">1200°C</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="card">
+          <h3>📊 Geodynamic HUD</h3>
+          <div class="metrics-list">
+            <div class="metric-row">
+              <span class="m-label">Boundary Type:</span>
+              <span class="m-val" id="hudBoundaryName">Convergent</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Tectonic Stress:</span>
+              <span class="m-val" id="hudStress" style="color:#ef4444;">14.2 MPa</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Subduction Depth:</span>
+              <span class="m-val" id="hudDepth">160 km</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Seismic Risk:</span>
+              <span class="m-val" id="hudSeismic" style="color:#f59e0b;">Magnitude 7.8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🌋 Geological Details</h3>
+          <div id="plateInfoText" style="font-size:0.88rem; line-height:1.6; color:#cbd5e1;">
+            <p><strong>Subduction Zone:</strong> Dense oceanic lithosphere plunges beneath lighter continental crust. As it sinks into the hot asthenosphere, volatiles cause flux melting, creating volcanic mountain chains and deep trenches.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 2: MOON PHASES ================= -->
+  <section class="lab-section" id="secMoon">
+    <div class="main-grid">
+      <div class="sim-stage">
+        <button class="fullscreen-btn" id="btnFsMoon">⛶ Fullscreen</button>
+        <div class="canvas-wrapper">
+          <canvas id="moonCanvas" width="960" height="540"></canvas>
+        </div>
+
+        <div class="phases-grid">
+          <button class="phase-btn active" data-day="0">🌑 New Moon</button>
+          <button class="phase-btn" data-day="3.7">🌒 Waxing Crescent</button>
+          <button class="phase-btn" data-day="7.4">🌓 First Quarter</button>
+          <button class="phase-btn" data-day="11.1">🌔 Waxing Gibbous</button>
+          <button class="phase-btn" data-day="14.8">🌕 Full Moon</button>
+          <button class="phase-btn" data-day="18.5">🌖 Waning Gibbous</button>
+          <button class="phase-btn" data-day="22.1">🌗 Third Quarter</button>
+          <button class="phase-btn" data-day="25.8">🌘 Waning Crescent</button>
+        </div>
+
+        <div class="controls-bar">
+          <div class="ctrl-group">
+            <button class="ctrl-btn btn-primary" id="btnMoonPlay">⏸ Pause Orbit</button>
+          </div>
+
+          <div class="slider-group">
+            <label>Synodic Month:</label>
+            <input type="range" id="moonDaySlider" min="0" max="29.5" step="0.2" value="0">
+            <span id="moonDayVal">Day 0.0</span>
+          </div>
+
+          <div class="slider-group">
+            <label>Orbit Speed:</label>
+            <input type="range" id="moonSpeed" min="0.2" max="3" step="0.2" value="1">
+            <span id="moonSpeedVal">1.0x</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="card">
+          <h3>🌙 Lunar Telemetry</h3>
+          <div class="metrics-list">
+            <div class="metric-row">
+              <span class="m-label">Lunar Phase:</span>
+              <span class="m-val" id="hudMoonPhaseName" style="color:#38bdf8;">New Moon</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Illumination:</span>
+              <span class="m-val" id="hudIllum">0%</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Lunar Age:</span>
+              <span class="m-val" id="hudAge">0.0 Days</span>
+            </div>
+            <div class="metric-row">
+              <span class="m-label">Ocean Tide:</span>
+              <span class="m-val" id="hudTide" style="color:#34d399;">Spring Tide (High)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🔭 Earth View Telescope</h3>
+          <div style="text-align:center; padding:12px; background:#050c18; border-radius:12px; border:1px solid #1e3a5f;">
+            <canvas id="telescopeCanvas" width="160" height="160" style="margin:0 auto; border-radius:50%; border:2px solid #38bdf8;"></canvas>
+            <p style="margin-top:8px; font-size:0.82rem; font-weight:700; color:#94a3b8;">Telescope Sky View from Earth</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// Tab Switching
+const btnTabPlates = document.getElementById('btnTabPlates');
+const btnTabMoon = document.getElementById('btnTabMoon');
+const secPlates = document.getElementById('secPlates');
+const secMoon = document.getElementById('secMoon');
+
+btnTabPlates.addEventListener('click', () => {
+  btnTabPlates.classList.add('active');
+  btnTabMoon.classList.remove('active');
+  secPlates.classList.add('active');
+  secMoon.classList.remove('active');
+});
+
+btnTabMoon.addEventListener('click', () => {
+  btnTabMoon.classList.add('active');
+  btnTabPlates.classList.remove('active');
+  secMoon.classList.add('active');
+  secPlates.classList.remove('active');
+});
+
+// ================= PLATE TECTONICS SIMULATION =================
+const pCanvas = document.getElementById('plateCanvas');
+const pCtx = pCanvas.getContext('2d');
+
+let plateBoundary = 'convergent';
+let pRunning = true;
+let pTime = 0;
+let driftSpeed = 1;
+let magmaTemp = 1200;
+let quakeWave = 0;
+
+const pInfoMap = {
+  convergent: '<p><strong>Convergent (Subduction):</strong> Denser oceanic crust plunges beneath continental crust into the mantle. Magma ascends to form volcanoes like the Andes and Pacific Ring of Fire.</p>',
+  divergent: '<p><strong>Divergent (Mid-Ocean Ridge):</strong> Tectonic plates pull apart. Upwelling basaltic magma solidifies along the seafloor, generating new oceanic crust (e.g. Mid-Atlantic Ridge).</p>',
+  transform: '<p><strong>Transform Fault:</strong> Plates slide horizontally past one another along strike-slip faults. Frictional locking builds massive stress until sudden rupture releases catastrophic earthquakes (e.g. San Andreas Fault).</p>'
+};
+
+document.querySelectorAll('.boundary-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.boundary-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    plateBoundary = btn.getAttribute('data-type');
+    document.getElementById('hudBoundaryName').textContent = btn.querySelector('.b-name').textContent.split(' ')[0];
+    document.getElementById('plateInfoText').innerHTML = pInfoMap[plateBoundary];
+  });
+});
+
+document.getElementById('btnPlatesPlay').addEventListener('click', (e) => {
+  pRunning = !pRunning;
+  e.target.textContent = pRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnTriggerQuake').addEventListener('click', () => {
+  quakeWave = 40;
+});
+
+document.getElementById('driftSpeed').addEventListener('input', (e) => {
+  driftSpeed = parseFloat(e.target.value);
+  document.getElementById('driftSpeedVal').textContent = `${(driftSpeed * 5).toFixed(0)} cm/yr`;
+});
+
+document.getElementById('magmaHeat').addEventListener('input', (e) => {
+  magmaTemp = parseInt(e.target.value);
+  document.getElementById('magmaHeatVal').textContent = `${magmaTemp}°C`;
+});
+
+function drawPlates() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  const w = pCanvas.width;
+  const h = pCanvas.height;
+
+  // Sky / Atmosphere
+  pCtx.fillStyle = '#081325';
+  pCtx.fillRect(0, 0, w, 180);
+
+  // Mantle / Asthenosphere Base
+  const magmaGrad = pCtx.createLinearGradient(0, 240, 0, h);
+  magmaGrad.addColorStop(0, '#ea580c');
+  magmaGrad.addColorStop(0.5, '#991b1b');
+  magmaGrad.addColorStop(1, '#450a0a');
+  pCtx.fillStyle = magmaGrad;
+  pCtx.fillRect(0, 200, w, h - 200);
+
+  // Mantle Convection Currents (animated circular flow)
+  pCtx.strokeStyle = 'rgba(254, 215, 170, 0.35)';
+  pCtx.lineWidth = 3;
+  pCtx.setLineDash([8, 8]);
+  pCtx.lineDashOffset = -pTime * 2 * driftSpeed;
+
+  pCtx.beginPath();
+  pCtx.arc(w * 0.3, 380, 80, 0, Math.PI * 2);
+  pCtx.arc(w * 0.7, 380, 80, 0, Math.PI * 2);
+  pCtx.stroke();
+  pCtx.setLineDash([]);
+
+  // Draw Specific Boundary Mechanics
+  if (plateBoundary === 'convergent') {
+    // Oceanic Plate (left) subducting under Continental Plate (right)
+    const subductShift = (pTime * driftSpeed) % 40;
+
+    // Oceanic Plate
+    pCtx.fillStyle = '#1e293b';
+    pCtx.beginPath();
+    pCtx.moveTo(0, 180);
+    pCtx.lineTo(w * 0.45, 180);
+    pCtx.lineTo(w * 0.65, 420);
+    pCtx.lineTo(w * 0.55, 450);
+    pCtx.lineTo(w * 0.35, 230);
+    pCtx.lineTo(0, 230);
+    pCtx.closePath();
+    pCtx.fill();
+
+    // Ocean Water over oceanic plate
+    pCtx.fillStyle = 'rgba(2, 132, 199, 0.45)';
+    pCtx.fillRect(0, 150, w * 0.42, 30);
+
+    // Continental Plate & Mountain Range
+    pCtx.fillStyle = '#475569';
+    pCtx.beginPath();
+    pCtx.moveTo(w * 0.42, 180);
+    pCtx.lineTo(w * 0.55, 100); // Mountain 1
+    pCtx.lineTo(w * 0.68, 80);  // Volcano Peak
+    pCtx.lineTo(w * 0.78, 110); // Mountain 2
+    pCtx.lineTo(w, 140);
+    pCtx.lineTo(w, 280);
+    pCtx.lineTo(w * 0.68, 280);
+    pCtx.closePath();
+    pCtx.fill();
+
+    // Active Volcanic Eruption & Magma Plume
+    pCtx.fillStyle = '#f97316';
+    pCtx.beginPath();
+    pCtx.moveTo(w * 0.68, 280);
+    pCtx.quadraticCurveTo(w * 0.64, 180, w * 0.68, 80);
+    pCtx.lineTo(w * 0.70, 80);
+    pCtx.quadraticCurveTo(w * 0.72, 180, w * 0.72, 280);
+    pCtx.fill();
+
+    // Eruption Smoke & Sparks
+    pCtx.fillStyle = '#fbbf24';
+    pCtx.beginPath();
+    pCtx.arc(w * 0.69 + Math.sin(pTime * 0.1) * 8, 50, 16, 0, Math.PI * 2);
+    pCtx.fill();
+    pCtx.fillStyle = 'rgba(248, 113, 113, 0.6)';
+    pCtx.beginPath();
+    pCtx.arc(w * 0.70 + Math.cos(pTime * 0.1) * 12, 30, 24, 0, Math.PI * 2);
+    pCtx.fill();
+
+    // Directional Arrows
+    pCtx.fillStyle = '#38bdf8';
+    pCtx.font = 'bold 16px sans-serif';
+    pCtx.fillText('Oceanic Crust ➔', 80, 210);
+    pCtx.fillStyle = '#fbbf24';
+    pCtx.fillText('⬅ Continental Crust', w * 0.75, 160);
+
+  } else if (plateBoundary === 'divergent') {
+    // Two plates pulling apart at center with rising magma
+    pCtx.fillStyle = '#334155';
+    // Left plate
+    pCtx.fillRect(0, 170, w * 0.45, 80);
+    // Right plate
+    pCtx.fillRect(w * 0.55, 170, w * 0.45, 80);
+
+    // Oceanic Water filling trench
+    pCtx.fillStyle = 'rgba(2, 132, 199, 0.5)';
+    pCtx.fillRect(0, 120, w, 50);
+
+    // Magma upwelling at center rift
+    const riftGrad = pCtx.createLinearGradient(w * 0.5, 350, w * 0.5, 160);
+    riftGrad.addColorStop(0, '#ef4444');
+    riftGrad.addColorStop(1, '#fde047');
+    pCtx.fillStyle = riftGrad;
+    pCtx.beginPath();
+    pCtx.moveTo(w * 0.45, 170);
+    pCtx.lineTo(w * 0.50, 145);
+    pCtx.lineTo(w * 0.55, 170);
+    pCtx.lineTo(w * 0.53, 350);
+    pCtx.lineTo(w * 0.47, 350);
+    pCtx.closePath();
+    pCtx.fill();
+
+    // Directional Arrows
+    pCtx.fillStyle = '#fbbf24';
+    pCtx.font = 'bold 16px sans-serif';
+    pCtx.fillText('⬅ Seafloor Spreading', 100, 215);
+    pCtx.fillText('Seafloor Spreading ➔', w * 0.65, 215);
+
+  } else {
+    // Transform Strike-Slip fault
+    pCtx.fillStyle = '#475569';
+    pCtx.fillRect(0, 160, w * 0.5, 100);
+    pCtx.fillStyle = '#334155';
+    pCtx.fillRect(w * 0.5, 160, w * 0.5, 100);
+
+    // Fault line
+    pCtx.strokeStyle = '#ef4444';
+    pCtx.lineWidth = 4;
+    pCtx.beginPath();
+    pCtx.moveTo(w * 0.5, 130);
+    pCtx.lineTo(w * 0.5, 300);
+    pCtx.stroke();
+
+    // Arrows
+    pCtx.fillStyle = '#fbbf24';
+    pCtx.font = 'bold 16px sans-serif';
+    pCtx.fillText('Plate A (Moving North ⬆)', w * 0.15, 210);
+    pCtx.fillText('Plate B (Moving South ⬇)', w * 0.62, 210);
+  }
+
+  // Quake Shockwave Ripple
+  if (quakeWave > 0) {
+    pCtx.strokeStyle = `rgba(239, 68, 68, ${quakeWave / 40})`;
+    pCtx.lineWidth = 5;
+    pCtx.beginPath();
+    pCtx.arc(w * 0.5, 200, (40 - quakeWave) * 12, 0, Math.PI * 2);
+    pCtx.stroke();
+    quakeWave -= 0.8;
+  }
+}
+
+// ================= MOON PHASES SIMULATION =================
+const mCanvas = document.getElementById('moonCanvas');
+const mCtx = mCanvas.getContext('2d');
+const tCanvas = document.getElementById('telescopeCanvas');
+const tCtx = tCanvas.getContext('2d');
+
+let mRunning = true;
+let moonDay = 0;
+let moonSpeedFactor = 1.0;
+
+const moonPhases = [
+  { name: 'New Moon', day: 0, illum: 0, tide: 'Spring Tide (High)' },
+  { name: 'Waxing Crescent', day: 3.7, illum: 25, tide: 'Normal Tide' },
+  { name: 'First Quarter', day: 7.4, illum: 50, tide: 'Neap Tide (Low)' },
+  { name: 'Waxing Gibbous', day: 11.1, illum: 75, tide: 'Normal Tide' },
+  { name: 'Full Moon', day: 14.8, illum: 100, tide: 'Spring Tide (High)' },
+  { name: 'Waning Gibbous', day: 18.5, illum: 75, tide: 'Normal Tide' },
+  { name: 'Third Quarter', day: 22.1, illum: 50, tide: 'Neap Tide (Low)' },
+  { name: 'Waning Crescent', day: 25.8, illum: 25, tide: 'Normal Tide' }
+];
+
+document.querySelectorAll('.phase-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    moonDay = parseFloat(btn.getAttribute('data-day'));
+    document.getElementById('moonDaySlider').value = moonDay;
+  });
+});
+
+document.getElementById('btnMoonPlay').addEventListener('click', (e) => {
+  mRunning = !mRunning;
+  e.target.textContent = mRunning ? '⏸ Pause Orbit' : '▶ Play Orbit';
+});
+
+document.getElementById('moonDaySlider').addEventListener('input', (e) => {
+  moonDay = parseFloat(e.target.value);
+});
+
+document.getElementById('moonSpeed').addEventListener('input', (e) => {
+  moonSpeedFactor = parseFloat(e.target.value);
+  document.getElementById('moonSpeedVal').textContent = `${moonSpeedFactor.toFixed(1)}x`;
+});
+
+function drawMoonScene() {
+  mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+  const cx = mCanvas.width / 2;
+  const cy = mCanvas.height / 2;
+  const orbitRadius = 180;
+
+  // Orbit Path
+  mCtx.strokeStyle = '#1e3a5f';
+  mCtx.lineWidth = 2;
+  mCtx.setLineDash([6, 6]);
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+  mCtx.stroke();
+  mCtx.setLineDash([]);
+
+  // Central Earth
+  mCtx.fillStyle = '#0284c7';
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 38, 0, Math.PI * 2);
+  mCtx.fill();
+  mCtx.fillStyle = '#22c55e';
+  mCtx.beginPath();
+  mCtx.ellipse(cx - 6, cy - 8, 16, 12, 0.4, 0, Math.PI * 2);
+  mCtx.ellipse(cx + 8, cy + 12, 14, 10, -0.2, 0, Math.PI * 2);
+  mCtx.fill();
+
+  // Sunlight direction (from the right)
+  mCtx.fillStyle = 'rgba(253, 224, 71, 0.15)';
+  mCtx.fillRect(cx + orbitRadius + 50, 0, 300, mCanvas.height);
+
+  mCtx.fillStyle = '#fde047';
+  mCtx.font = 'bold 16px sans-serif';
+  mCtx.fillText('☀️ Sunlight Rays ➔', cx + orbitRadius + 60, 60);
+
+  // Earth Day/Night Terminator
+  mCtx.fillStyle = 'rgba(2, 6, 23, 0.7)';
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 38, Math.PI * 0.5, Math.PI * 1.5);
+  mCtx.fill();
+
+  // Moon Position in Space
+  const angle = (moonDay / 29.53) * Math.PI * 2;
+  const mx = cx + orbitRadius * Math.cos(angle);
+  const my = cy + orbitRadius * Math.sin(angle);
+
+  // Moon in Space (Always half-lit facing right towards sunlight!)
+  const moonR = 18;
+  mCtx.fillStyle = '#0f172a';
+  mCtx.beginPath();
+  mCtx.arc(mx, my, moonR, 0, Math.PI * 2);
+  mCtx.fill();
+
+  // Lit half facing right
+  mCtx.fillStyle = '#f1f5f9';
+  mCtx.beginPath();
+  mCtx.arc(mx, my, moonR, -Math.PI / 2, Math.PI / 2);
+  mCtx.fill();
+
+  // Line of Sight from Earth to Moon
+  mCtx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+  mCtx.lineWidth = 1.5;
+  mCtx.setLineDash([4, 4]);
+  mCtx.beginPath();
+  mCtx.moveTo(cx, cy);
+  mCtx.lineTo(mx, my);
+  mCtx.stroke();
+  mCtx.setLineDash([]);
+
+  // Draw Telescope View
+  drawTelescopeView(angle);
+
+  // Update HUD
+  const normDay = moonDay % 29.53;
+  let activePhase = moonPhases[0];
+  for (let p of moonPhases) {
+    if (Math.abs(normDay - p.day) < 2.2) {
+      activePhase = p;
+      break;
+    }
+  }
+
+  const illumPct = Math.round((1 - Math.cos(angle)) / 2 * 100);
+  document.getElementById('hudMoonPhaseName').textContent = activePhase.name;
+  document.getElementById('hudIllum').textContent = `${illumPct}%`;
+  document.getElementById('hudAge').textContent = `${normDay.toFixed(1)} Days`;
+  document.getElementById('hudTide').textContent = activePhase.tide;
+  document.getElementById('moonDayVal').textContent = `Day ${normDay.toFixed(1)}`;
+}
+
+function drawTelescopeView(angle) {
+  tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+  const tr = 70;
+  const tcx = 80;
+  const tcy = 80;
+
+  // Dark background of Moon disk
+  tCtx.fillStyle = '#0f172a';
+  tCtx.beginPath();
+  tCtx.arc(tcx, tcy, tr, 0, Math.PI * 2);
+  tCtx.fill();
+
+  // Illuminated portion based on phase angle
+  tCtx.fillStyle = '#f8fafc';
+  tCtx.beginPath();
+  // Phase rendering
+  const k = -Math.cos(angle); // -1 (new) to +1 (full)
+  if (k >= 0) {
+    tCtx.arc(tcx, tcy, tr, -Math.PI / 2, Math.PI / 2, false);
+    tCtx.ellipse(tcx, tcy, tr * k, tr, 0, Math.PI / 2, -Math.PI / 2, false);
+  } else {
+    tCtx.arc(tcx, tcy, tr, -Math.PI / 2, Math.PI / 2, false);
+    tCtx.ellipse(tcx, tcy, tr * (-k), tr, 0, Math.PI / 2, -Math.PI / 2, true);
+  }
+  tCtx.fill();
+}
+
+function mainLoop() {
+  if (pRunning) {
+    pTime += 0.5;
+  }
+  drawPlates();
+
+  if (mRunning) {
+    moonDay = (moonDay + 0.04 * moonSpeedFactor) % 29.53;
+    document.getElementById('moonDaySlider').value = moonDay;
+  }
+  drawMoonScene();
+
+  requestAnimationFrame(mainLoop);
+}
+
+// Fullscreen buttons
+document.getElementById('btnFsPlates').addEventListener('click', () => {
+  secPlates.querySelector('.sim-stage').requestFullscreen().catch(() => {});
+});
+document.getElementById('btnFsMoon').addEventListener('click', () => {
+  secMoon.querySelector('.sim-stage').requestFullscreen().catch(() => {});
+});
+
+mainLoop();
+</script>
+</body>
+</html>

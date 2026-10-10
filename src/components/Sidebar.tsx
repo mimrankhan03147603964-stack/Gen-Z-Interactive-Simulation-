@@ -16,6 +16,11 @@ import {
   Cog, 
   Layers, 
   Globe,
+  Moon,
+  Map,
+  CircleDot,
+  Orbit,
+  Telescope,
   Search,
   PanelLeftClose
 } from 'lucide-react';
@@ -29,7 +34,7 @@ interface SidebarProps {
   isDarkMode?: boolean;
 }
 
-// 3D Vibrant colorful icon mapper for all 14 simulation modules with 100% opacity & crisp rendering
+// 3D Vibrant colorful icon mapper for all simulation modules with 100% opacity & crisp rendering
 const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
   const iconProps = { 
     className: "w-5 h-5 transition-transform group-hover:scale-110 opacity-100",
@@ -50,6 +55,11 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Cog': return <Cog {...iconProps} />;
     case 'Layers': return <Layers {...iconProps} />;
     case 'Globe': return <Globe {...iconProps} />;
+    case 'Moon': return <Moon {...iconProps} />;
+    case 'Map': return <Map {...iconProps} />;
+    case 'CircleDot': return <CircleDot {...iconProps} />;
+    case 'Orbit': return <Orbit {...iconProps} />;
+    case 'Telescope': return <Telescope {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
@@ -116,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className="px-1.5 py-0.2 rounded text-[9px] font-black shadow-xs"
                 style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
               >
-                14 LABS
+                {simulations.length} LABS
               </span>
             </p>
           </div>
@@ -149,7 +159,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
           <input
             type="text"
-            placeholder="Search simulations (01 - 14)..."
+            placeholder={`Search simulations (01 - ${String(simulations.length).padStart(2, '0')})...`}
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border focus:outline-none font-bold transition-all shadow-inner"
@@ -303,7 +313,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="font-mono font-black"
           style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
         >
-          14 STEM Labs
+          {simulations.length} STEM Labs
         </span>
         <span 
           className="font-black flex items-center gap-1.5"
