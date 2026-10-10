@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { SimulationItem } from '../types.ts';
+import { SimulationItem } from '../types';
 import { 
   Maximize2, 
   RotateCcw, 
@@ -9,7 +9,8 @@ import {
   Zap, 
   Layers,
   Sparkles,
-  Sliders
+  Sliders,
+  Monitor
 } from 'lucide-react';
 
 interface MainStageProps {
@@ -61,38 +62,40 @@ export const MainStage: React.FC<MainStageProps> = ({
   return (
     <div 
       ref={stageContainerRef}
-      className="w-full bg-white rounded-2xl border border-slate-200/90 shadow-md overflow-hidden flex flex-col transition-all"
+      className="w-full bg-gradient-to-b from-[#0a1838] via-[#061026] to-[#040a1c] rounded-2xl border border-blue-500/35 shadow-2xl overflow-hidden flex flex-col transition-all"
     >
-      {/* Stage Header Bar */}
-      <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white">
+      {/* 3D Stage Cockpit Header Bar */}
+      <div className="p-4 sm:p-5 border-b border-blue-500/25 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#071329]/95">
         
         {/* Left: Active Simulation Name & Meta */}
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2.5 py-0.5 rounded-md bg-blue-100 text-blue-800 font-mono font-bold text-xs">
+            <span className="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-mono font-black text-xs shadow-md border border-cyan-300/40">
               LAB {activeSim.indexNumber}
             </span>
-            <h2 className="text-base sm:text-lg font-black text-slate-900">
+            <h2 className="text-base sm:text-lg font-black text-white drop-shadow-sm">
               {activeSim.title}
             </h2>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#0d214a] text-cyan-300 border border-blue-400/30">
               {activeSim.category}
             </span>
           </div>
-          <p className="text-xs text-slate-500 font-medium mt-1">
-            {activeSim.subject} &bull; {activeSim.gradeLevel} &bull; Single-click direct sandbox execution
+          <p className="text-xs text-cyan-200/80 font-medium mt-1">
+            {activeSim.subject} &bull; {activeSim.gradeLevel} &bull; <span className="text-emerald-400 font-bold">4K 3D Interactive Execution</span>
           </p>
         </div>
 
-        {/* Right: Stage Control Buttons */}
+        {/* Right: Stage Control 3D Buttons */}
         <div className="flex items-center gap-2 flex-wrap shrink-0">
           
-          {/* Aspect Ratio Switcher */}
-          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-lg p-0.5 text-xs text-slate-600">
+          {/* 3D Aspect Ratio Switcher */}
+          <div className="flex items-center bg-[#07132e] border border-blue-500/40 rounded-xl p-0.5 text-xs text-slate-300 shadow-inner">
             <button
               onClick={() => setAspectRatio('16:9')}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer font-bold ${
-                aspectRatio === '16:9' ? 'bg-white text-blue-700 shadow-2xs' : 'hover:text-slate-900'
+              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-bold ${
+                aspectRatio === '16:9' 
+                  ? 'btn-3d bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' 
+                  : 'hover:text-white'
               }`}
               title="16:9 Screen Fit"
             >
@@ -100,8 +103,10 @@ export const MainStage: React.FC<MainStageProps> = ({
             </button>
             <button
               onClick={() => setAspectRatio('4:3')}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer font-bold ${
-                aspectRatio === '4:3' ? 'bg-white text-blue-700 shadow-2xs' : 'hover:text-slate-900'
+              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-bold ${
+                aspectRatio === '4:3' 
+                  ? 'btn-3d bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' 
+                  : 'hover:text-white'
               }`}
               title="4:3 Screen Fit"
             >
@@ -109,8 +114,10 @@ export const MainStage: React.FC<MainStageProps> = ({
             </button>
             <button
               onClick={() => setAspectRatio('full')}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer font-bold ${
-                aspectRatio === 'full' ? 'bg-white text-blue-700 shadow-2xs' : 'hover:text-slate-900'
+              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-bold ${
+                aspectRatio === 'full' 
+                  ? 'btn-3d bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' 
+                  : 'hover:text-white'
               }`}
               title="Full Height View"
             >
@@ -118,32 +125,32 @@ export const MainStage: React.FC<MainStageProps> = ({
             </button>
           </div>
 
-          {/* Reset Button */}
+          {/* 3D Emerald Reset Button */}
           <button
             onClick={handleReload}
-            className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+            className="btn-3d px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-400/40 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
             title="Reset simulation parameters"
           >
             <RotateCcw className={`w-3.5 h-3.5 ${isReloading ? 'animate-spin' : ''}`} />
             <span>Reset</span>
           </button>
 
-          {/* Standalone Window Tab Button */}
+          {/* 3D Indigo New Tab Button */}
           <a
             href={activeSim.fileUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+            className="btn-3d px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white border border-indigo-400/40 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
             title="Open simulation in new browser tab"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+            <ExternalLink className="w-3.5 h-3.5 text-cyan-200" />
             <span className="hidden sm:inline">New Tab</span>
           </a>
 
-          {/* Fullscreen Button */}
+          {/* 3D Rose Fullscreen Button */}
           <button
             onClick={handleNativeFullscreen}
-            className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+            className="btn-3d px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-rose-950/60 border border-rose-400/40 transition-all cursor-pointer"
             title="Open Fullscreen Stage"
           >
             <Maximize2 className="w-3.5 h-3.5" />
@@ -156,7 +163,7 @@ export const MainStage: React.FC<MainStageProps> = ({
 
       {/* Live Simulation Iframe Canvas Container */}
       <div 
-        className={`w-full bg-[#050a1e] relative transition-all overflow-hidden ${
+        className={`w-full bg-[#040817] relative transition-all overflow-hidden ${
           aspectRatio === '16:9'
             ? 'aspect-[16/9] min-h-[500px] max-h-[820px]'
             : aspectRatio === '4:3'
@@ -165,8 +172,8 @@ export const MainStage: React.FC<MainStageProps> = ({
         }`}
       >
         {isReloading && (
-          <div className="absolute inset-0 z-20 bg-slate-950/85 backdrop-blur-xs flex items-center justify-center">
-            <div className="flex items-center gap-3 text-cyan-400 text-sm font-semibold">
+          <div className="absolute inset-0 z-20 bg-slate-950/90 backdrop-blur-xs flex items-center justify-center">
+            <div className="flex items-center gap-3 text-cyan-400 text-sm font-bold">
               <RotateCcw className="w-5 h-5 animate-spin" />
               <span>Reloading simulation canvas...</span>
             </div>
@@ -185,24 +192,24 @@ export const MainStage: React.FC<MainStageProps> = ({
         />
       </div>
 
-      {/* Stage Bottom Details Drawer */}
-      <div className="p-5 bg-slate-50 border-t border-slate-200/90 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* 3D Stage Bottom Curriculum & Features Drawer */}
+      <div className="p-5 sm:p-6 bg-[#071329] border-t border-blue-500/25 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Learning Focus & Topic Badges */}
         <div className="lg:col-span-7">
-          <div className="flex items-center gap-2 text-xs font-extrabold text-blue-700 uppercase tracking-wider mb-1.5">
-            <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+          <div className="flex items-center gap-2 text-xs font-black text-cyan-400 uppercase tracking-wider mb-2">
+            <BookOpen className="w-4 h-4 text-cyan-400" />
             <span>Curriculum &amp; Pedagogical Objective</span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
+          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-3 font-medium">
             {activeSim.description}
           </p>
           
-          <div className="flex flex-wrap items-center gap-1.5">
-            {activeSim.topics.map((t, idx) => (
+          <div className="flex flex-wrap items-center gap-2">
+            {activeSim.topics.map((t: string, idx: number) => (
               <span 
                 key={idx}
-                className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
+                className="px-3 py-1 rounded-lg bg-[#0d1e44] border border-blue-400/30 text-xs font-bold text-cyan-200 shadow-sm"
               >
                 {t}
               </span>
@@ -211,15 +218,15 @@ export const MainStage: React.FC<MainStageProps> = ({
         </div>
 
         {/* Right: Controls & Features */}
-        <div className="lg:col-span-5 lg:border-l lg:border-slate-200 lg:pl-6">
-          <div className="text-xs font-extrabold text-indigo-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+        <div className="lg:col-span-5 lg:border-l lg:border-blue-500/20 lg:pl-6">
+          <div className="text-xs font-black text-purple-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <Zap className="w-4 h-4 text-purple-400" />
             <span>Interactive Controls Available</span>
           </div>
-          <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-            {activeSim.features.map((f, idx) => (
+          <ul className="space-y-2 text-xs text-slate-200 font-medium">
+            {activeSim.features.map((f: string, idx: number) => (
               <li key={idx} className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{f}</span>
               </li>
             ))}

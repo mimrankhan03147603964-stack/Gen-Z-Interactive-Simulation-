@@ -5,6 +5,44 @@
     --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+
+    /* Guaranteed RGB/HEX fallback palette for legacy laptop browsers (e.g. Chrome on Win7) */
+    --color-slate-50: #f8fafc;
+    --color-slate-100: #f1f5f9;
+    --color-slate-200: #e2e8f0;
+    --color-slate-300: #cbd5e1;
+    --color-slate-400: #94a3b8;
+    --color-slate-500: #64748b;
+    --color-slate-600: #475569;
+    --color-slate-700: #334155;
+    --color-slate-800: #1e293b;
+    --color-slate-900: #0f172a;
+    --color-slate-950: #020617;
+
+    --color-blue-400: #60a5fa;
+    --color-blue-500: #3b82f6;
+    --color-blue-600: #2563eb;
+    --color-blue-700: #1d4ed8;
+
+    --color-cyan-300: #67e8f9;
+    --color-cyan-400: #22d3ee;
+    --color-cyan-500: #06b6d4;
+
+    --color-emerald-400: #34d399;
+    --color-emerald-500: #10b981;
+    --color-emerald-600: #059669;
+
+    --color-amber-400: #fbbf24;
+    --color-amber-500: #f59e0b;
+    --color-amber-600: #d97706;
+
+    --color-purple-400: #c084fc;
+    --color-purple-500: #a855f7;
+    --color-purple-600: #9333ea;
+
+    --color-rose-400: #fb7185;
+    --color-rose-500: #f43f5e;
+    --color-rose-600: #e11d48;
   }
 
   * {
@@ -12,19 +50,17 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    box-sizing: border-box;
   }
 
   body {
     font-family: var(--font-body);
-    background-color: #040a1c;
+    background-color: #030816;
     color: #f8fafc;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -32,20 +68,78 @@
   }
 }
 
-/* Custom scrollbars */
+/* ==========================================================
+   3D DEPTH, GLOSS & METALLIC LIGHTING SYSTEM (4K ENHANCED)
+   ========================================================== */
+
+/* Universal 3D Button Dynamics */
+.btn-3d {
+  position: relative;
+  transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4), 0 6px 14px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+.btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.42), 0 10px 20px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+.btn-3d:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 3D Glass Cards */
+.card-3d {
+  position: relative;
+  background: linear-gradient(145deg, #0e1d42 0%, #07122b 100%);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -2px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
+}
+.card-3d:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 18px 36px -6px rgba(0, 0, 0, 0.8), 0 0 20px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+  transition: all 0.2s ease;
+}
+
+/* 3D Colorful Icon Tiles */
+.icon-tile-3d {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.45), inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+.icon-tile-3d:hover {
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+/* 3D Neon Badges */
+.badge-3d {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 800;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #e2e8f0;
+  background: #040918;
 }
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
+  background: #1e3a8a;
   border-radius: 9999px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #2563eb;
 }
 
 @keyframes ticker {
@@ -56,5 +150,5 @@
 .animate-ticker {
   display: inline-block;
   white-space: nowrap;
-  animation: ticker 30s linear infinite;
+  animation: ticker 32s linear infinite;
 }

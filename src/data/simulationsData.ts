@@ -1,4 +1,4 @@
-import { SimulationItem } from '../types.ts';
+import { SimulationItem } from '../types';
 
 export const SIMULATIONS_LIST: SimulationItem[] = [
   {

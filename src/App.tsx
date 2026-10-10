@@ -7,7 +7,7 @@ import { MainStage } from './components/MainStage.tsx';
 import { SimulationViewerModal } from './components/SimulationViewerModal.tsx';
 import { Footer } from './components/Footer.tsx';
 import { SIMULATIONS_LIST } from './data/simulationsData.ts';
-import { SimulationItem } from './types.ts';
+import { SimulationItem } from './types';
 
 export default function App() {
   const [activeSim, setActiveSim] = useState<SimulationItem>(SIMULATIONS_LIST[0]);
