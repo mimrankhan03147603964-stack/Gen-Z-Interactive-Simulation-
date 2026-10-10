@@ -6,7 +6,7 @@
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    /* Guaranteed RGB/HEX fallback palette for legacy laptop browsers (e.g. Chrome on Win7) */
+    /* Guaranteed RGB/HEX solid palette */
     --color-slate-50: #f8fafc;
     --color-slate-100: #f1f5f9;
     --color-slate-200: #e2e8f0;
@@ -51,6 +51,9 @@
     -ms-user-select: none;
     user-select: none;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -61,74 +64,90 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    opacity: 1;
+  }
+
+  /* Ensure all interactive & content elements render with 100% opacity without washed-out haze */
+  p, span, h1, h2, h3, h4, h5, h6, button, a, input, div {
+    opacity: 1;
+  }
+
+  svg {
+    opacity: 1 !important;
+    shape-rendering: geometricPrecision;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    letter-spacing: -0.015em;
   }
 }
 
 /* ==========================================================
-   3D DEPTH, GLOSS & COLORFUL 4K SYSTEM (LAPTOP & DESKTOP)
+   3D CRISP & HIGH CONTRAST SYSTEM (LAPTOP & DESKTOP)
    ========================================================== */
 
-/* Universal 3D Button Dynamics with tactile press */
+/* Universal 3D Button Dynamics with tactile press & crisp border */
 .btn-3d {
   position: relative;
   transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25), 0 6px 14px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.22), 0 5px 10px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  opacity: 1 !important;
 }
 .btn-3d:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.28), 0 10px 20px rgba(0, 0, 0, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 .btn-3d:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.25);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* 3D Elevated Cards - Bright Clean Light Mode */
+/* 3D Elevated Cards - Bright Clean Light Mode with Sharp 1.5px Borders */
 .card-3d-light {
   position: relative;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06), inset 0 1px 0 #ffffff;
   border-radius: 1rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
 }
 .card-3d-light:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.12), 0 6px 12px -2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
-  transform: translateY(-3px);
+  border-color: #94a3b8;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.09), inset 0 1px 0 #ffffff;
+  transform: translateY(-2px);
 }
 
 /* 3D Elevated Cards - Dark Mode */
 .card-3d-dark {
   position: relative;
   background: linear-gradient(145deg, #111e3b 0%, #09132b 100%);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1.5px solid #1e3a8a;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
   transition: all 0.2s ease;
+  opacity: 1;
 }
 .card-3d-dark:hover {
-  border-color: rgba(96, 165, 250, 0.55);
-  box-shadow: 0 18px 36px -6px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transform: translateY(-3px);
+  border-color: #3b82f6;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
-/* 3D Colorful Icon Tiles with Glossy Emboss */
+/* 3D Colorful Icon Tiles with Glossy Emboss & 100% Opacity */
 .icon-tile-3d {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.25);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 1 !important;
 }
 .icon-tile-3d:hover {
-  transform: scale(1.1) rotate(3deg);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  transform: scale(1.08) rotate(2deg);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.75);
 }
 
 /* 3D Neon & Glossy Badges */
@@ -137,7 +156,8 @@
   align-items: center;
   font-weight: 800;
   border-radius: 9999px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  opacity: 1 !important;
 }
 
 /* Custom Scrollbars */
@@ -149,12 +169,12 @@
   background: #e2e8f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3b82f6;
+  background: #2563eb;
   border-radius: 9999px;
   border: 2px solid #e2e8f0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: #1d4ed8;
 }
 
 @keyframes ticker {

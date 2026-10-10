@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Atom, Layers, Sparkles, Sun, Moon } from 'lucide-react';
+import { Menu, Atom, Layers, Sparkles } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { getSimTheme } from '../data/simTheme';
 
@@ -22,10 +22,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header 
-      className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-30 transition-colors"
+      className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-30 transition-colors opacity-100"
       style={{
         backgroundColor: isDarkMode ? '#060f24' : '#ffffff',
-        borderBottom: isDarkMode ? '1px solid #1e3a8a' : '1px solid #e2e8f0',
+        borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
@@ -37,10 +37,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           className="btn-3d p-2 rounded-xl transition-all cursor-pointer shadow-xs"
           style={{
             backgroundColor: isDarkMode ? '#0c1b3d' : '#f1f5f9',
-            borderColor: isDarkMode ? '#3b82f6' : '#cbd5e1',
-            borderWidth: '1px',
+            borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
+            borderWidth: '1.5px',
             borderStyle: 'solid',
-            color: isDarkMode ? '#38bdf8' : '#1e293b'
+            color: isDarkMode ? '#38bdf8' : '#0f172a'
           }}
           title="Toggle Navigation Menu (01 - 14)"
         >
@@ -56,7 +56,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               borderColor: '#60a5fa',
               borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5)'
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4), inset 0 1px 1px #ffffff'
             }}
           >
             <Atom className="w-5 h-5 sm:w-6 sm:h-6 animate-spin-slow text-white" />
@@ -74,7 +74,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               </span>
             </div>
             <div 
-              className="text-[10px] sm:text-[11px] font-bold tracking-tight"
+              className="text-[10px] sm:text-[11px] font-black tracking-tight"
               style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
             >
               Interactive STEM Digital Laboratory Portal &bull; 14 Verified Simulators
@@ -88,17 +88,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         
         {/* Active Simulation Pill */}
         <div 
-          className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs"
+          className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs"
           style={{
             backgroundColor: activeTheme.badgeBg,
             color: activeTheme.badgeText,
             borderColor: activeTheme.badgeBorder,
-            borderWidth: '1px',
+            borderWidth: '1.5px',
             borderStyle: 'solid'
           }}
         >
           <span 
-            className="w-2.5 h-2.5 rounded-full animate-pulse shadow-xs" 
+            className="w-2.5 h-2.5 rounded-full shadow-xs" 
             style={{ backgroundColor: activeTheme.bgSolid }}
           />
           <span className="font-mono font-black">[{activeSim.indexNumber}]</span>
@@ -107,31 +107,31 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* 14 Labs Counter Pill - Vibrant Amber */}
         <div 
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold shadow-2xs"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black shadow-2xs"
           style={{
             backgroundColor: '#fef3c7',
-            color: '#92400e',
-            borderColor: '#fcd34d',
-            borderWidth: '1px',
+            color: '#78350f',
+            borderColor: '#f59e0b',
+            borderWidth: '1.5px',
             borderStyle: 'solid'
           }}
         >
-          <Layers className="w-3.5 h-3.5" style={{ color: '#d97706' }} />
+          <Layers className="w-3.5 h-3.5 text-amber-600" />
           <span>14 Labs</span>
         </div>
 
         {/* 4K Ultra Indicator - Vibrant Emerald */}
         <div 
-          className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-bold shadow-2xs"
+          className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-black shadow-2xs"
           style={{
             backgroundColor: '#d1fae5',
-            color: '#065f46',
-            borderColor: '#6ee7b7',
-            borderWidth: '1px',
+            color: '#064e3b',
+            borderColor: '#34d399',
+            borderWidth: '1.5px',
             borderStyle: 'solid'
           }}
         >
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#059669' }} />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
           <span>4K Ultra</span>
         </div>
 
@@ -139,41 +139,33 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         {onToggleTheme && (
           <button
             onClick={onToggleTheme}
-            className="btn-3d px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="btn-3d px-3 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-xs"
             style={
               isDarkMode
                 ? {
                     backgroundColor: '#f59e0b',
                     color: '#0f172a',
-                    borderColor: '#fbbf24',
-                    borderWidth: '1px',
+                    borderColor: '#fde047',
+                    borderWidth: '1.5px',
                     borderStyle: 'solid'
                   }
                 : {
                     backgroundColor: '#f1f5f9',
-                    color: '#1e293b',
-                    borderColor: '#cbd5e1',
-                    borderWidth: '1px',
+                    color: '#0f172a',
+                    borderColor: '#94a3b8',
+                    borderWidth: '1.5px',
                     borderStyle: 'solid'
                   }
             }
             title={isDarkMode ? "Switch to Bright Light Display" : "Switch to Dark Display"}
           >
-            {isDarkMode ? (
-              <>
-                <Sun className="w-3.5 h-3.5" style={{ color: '#0f172a' }} />
-                <span>Day Mode</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5" style={{ color: '#4338ca' }} />
-                <span>Night Mode</span>
-              </>
-            )}
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: isDarkMode ? '#0f172a' : '#2563eb' }} />
+            <span>{isDarkMode ? 'Bright' : 'Dark'}</span>
           </button>
         )}
 
       </div>
+
     </header>
   );
 };

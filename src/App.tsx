@@ -71,7 +71,7 @@ export default function App() {
 
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased transition-colors duration-200"
+      className="min-h-screen flex flex-col font-sans select-none antialiased transition-colors duration-200 opacity-100"
       style={{
         backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9',
         color: isDarkMode ? '#ffffff' : '#0f172a'
@@ -105,13 +105,13 @@ export default function App() {
         {sidebarOpen && (
           <div 
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-950/60 z-30 lg:hidden backdrop-blur-xs"
+            className="fixed inset-0 bg-slate-950/70 z-30 lg:hidden"
           />
         )}
 
         {/* Main Dashboard Scrollable Stage Area */}
         <main 
-          className="flex-1 flex flex-col min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-200"
+          className="flex-1 flex flex-col min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-200 opacity-100"
           style={{
             backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9'
           }}
