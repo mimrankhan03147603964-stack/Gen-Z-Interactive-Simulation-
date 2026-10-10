@@ -230,15 +230,15 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     id: 'sim-plate-tectonics-moon-phases',
     slug: 'plate-tectonics-moon-phases',
     indexNumber: '16',
-    title: 'Plate Tectonics & Moon Phases Lab',
-    subject: 'Earth Geology & Lunar Astronomy',
+    title: 'Moon Phases & Lunar Orbit Simulator',
+    subject: 'Lunar Astronomy & Celestial Mechanics',
     category: 'Earth & Space',
     iconName: 'Moon',
     accentColor: '#7c3aed', // Purple
-    description: 'Dual interactive laboratory exploring convergent, divergent, and transform tectonic plate boundaries with earthquake simulation alongside an 8-phase synodic lunar orbit visualizer.',
+    description: 'Interactive lunar astronomy simulator featuring an 8-phase synodic lunar orbit visualizer, synchronous orbital mechanics, spring/neap tides, and direct Earth observer sky view.',
     fileUrl: '/simulations/plate-tectonics-moon-phases.html',
-    topics: ['Subduction & Mountain Building', 'Mid-Ocean Seafloor Spreading', 'Transform Fault Earthquakes', '8 Synodic Lunar Phases & Tides'],
-    features: ['Fault Seismic Trigger', 'Mantle Convection Currents', 'Earth Telescope Sky View', 'Interactive Phase Selector'],
+    topics: ['8 Synodic Lunar Phases', '29.5-Day Synodic Month', 'Earth Observer Sky View', 'Spring & Neap Tides'],
+    features: ['Synodic Month Day Slider', '8 Phase Jump Selectors', 'Real-time Illumination Telemetry', 'True Fullscreen Mode'],
     gradeLevel: 'Middle & Secondary'
   },
   {

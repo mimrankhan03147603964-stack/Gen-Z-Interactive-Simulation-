@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { SimulationItem } from '../types';
-import { X, RotateCcw, ExternalLink, Sparkles } from 'lucide-react';
+import { X, RotateCcw, ExternalLink, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
 
 interface SimulationViewerModalProps {
   sim: SimulationItem | null;
@@ -14,7 +14,26 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   if (!sim) return null;
 
   const [isReloading, setIsReloading] = useState(false);
+  const [isNativeFs, setIsNativeFs] = useState(!!document.fullscreenElement);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsNativeFs(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFsChange);
+    };
+  }, []);
+
+  const handleToggleBrowserFs = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
 
   const handleReload = () => {
     setIsReloading(true);
@@ -129,6 +148,34 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
             <ExternalLink className="w-3.5 h-3.5 text-white" />
             <span className="hidden sm:inline">New Tab</span>
           </a>
+
+          {/* 3D Fullscreen Toggle Button */}
+          <button
+            onClick={handleToggleBrowserFs}
+            className="btn-3d px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-black shadow-md"
+            style={{
+              backgroundColor: '#e11d48',
+              backgroundImage: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)',
+              borderColor: '#fb7185',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              color: '#ffffff',
+              boxShadow: '0 4px 10px rgba(225, 29, 72, 0.35)'
+            }}
+            title={isNativeFs ? "Exit Browser Fullscreen" : "Enter True Browser Fullscreen"}
+          >
+            {isNativeFs ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5 text-white" />
+                <span className="hidden sm:inline">Exit Full</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-white" />
+                <span className="hidden sm:inline">Fullscreen</span>
+              </>
+            )}
+          </button>
 
           {/* 3D Close Modal Button */}
           <button

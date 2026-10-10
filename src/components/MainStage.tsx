@@ -351,10 +351,9 @@ export const MainStage: React.FC<MainStageProps> = ({
 
         {/* Right: Key Interactive Features */}
         <div 
-          className="lg:col-span-5 lg:border-l pl-0 lg:pl-6"
+          className="lg:col-span-5 pl-0 lg:pl-6"
           style={{
-            borderLeftColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-            borderLeftWidth: '1.5px'
+            borderLeft: `1.5px solid ${isDarkMode ? '#1e3a8a' : '#cbd5e1'}`
           }}
         >
           <div 

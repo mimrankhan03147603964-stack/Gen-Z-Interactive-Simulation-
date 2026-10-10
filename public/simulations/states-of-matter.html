@@ -116,6 +116,16 @@
     .grid3{grid-template-columns:1fr}
     canvas{height:460px}
   }
+
+  :fullscreen, :-webkit-full-screen {
+    overflow-y: auto !important;
+    background: #030712 !important;
+  }
+  #simContainer:fullscreen, #simContainer:-webkit-full-screen {
+    background: #030712 !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+  }
 </style>
 </head>
 <body>
@@ -416,9 +426,15 @@ segBtns.forEach(btn=>{
 });
 
 document.getElementById('fsBtn').addEventListener('click',()=>{
-  const el = document.getElementById('simContainer');
+  const el = document.getElementById('simContainer') || document.documentElement;
   if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
   else { document.exitFullscreen().catch(()=>{}); }
+});
+
+document.addEventListener('fullscreenchange',()=>{
+  const isFs = !!document.fullscreenElement;
+  const btn = document.getElementById('fsBtn');
+  if(btn) btn.textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
 });
 
 function initStates(){

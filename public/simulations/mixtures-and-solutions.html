@@ -221,6 +221,17 @@
     }
     .fullscreen-btn:hover { transform: scale(1.05); }
 
+    :fullscreen, :-webkit-full-screen {
+      overflow-y: auto !important;
+      background: #0a1628 !important;
+    }
+    .sim-box:fullscreen, .sim-box:-webkit-full-screen {
+      border-radius: 0 !important;
+      padding: 24px 20px 40px !important;
+      overflow-y: auto !important;
+      background: #06121f !important;
+    }
+
     @media (max-width: 800px) {
       .card { padding: 14px; }
       .sim-controls { flex-direction: column; gap: 8px; }
@@ -756,12 +767,18 @@
     }
 
     document.getElementById('fullscreenBtn').addEventListener('click', function(){
-      const simBox = document.getElementById('simBox');
+      const simBox = document.getElementById('simBox') || document.documentElement;
       if (!document.fullscreenElement) {
         simBox.requestFullscreen().catch(()=>{});
       } else {
-        document.exitFullscreen();
+        document.exitFullscreen().catch(()=>{});
       }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      const btn = document.getElementById('fullscreenBtn');
+      if (btn) btn.textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
     });
 
     function initMixLab(){

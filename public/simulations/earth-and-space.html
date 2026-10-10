@@ -46,7 +46,17 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 .step-dot{width:32px;height:32px;border-radius:50%;background:#1a3550;color:#6a8ca8;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;border:2px solid #2a4a6a;}
 .step-dot.done{background:#00c853;color:#002200;border-color:#00e676}
 .step-dot.current{background:#ff8f00;color:#0a1628;border-color:#ffc107;transform:scale(1.15)}
-.fullscreen-btn{position:absolute;top:12px;right:12px;z-index:10;padding:8px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.12);color:#fff;font-weight:700;font-size:.78rem;cursor:pointer;}
+.fullscreen-btn{position:absolute;top:12px;right:12px;z-index:10;padding:8px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;}
+.fullscreen-btn:hover{background:rgba(56,189,248,.35);color:#fff;}
+
+:fullscreen, :-webkit-full-screen {
+  overflow-y: auto !important;
+  background: #0a1628 !important;
+}
+:fullscreen .container, :-webkit-full-screen .container {
+  max-width: 100% !important;
+  padding: 16px 24px 40px !important;
+}
 </style>
 </head>
 <body>
@@ -160,15 +170,18 @@ document.querySelectorAll('.section-tabs').forEach(group=>{
  }));
 });
 
-function toggleFs(el){
- if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
- else { document.exitFullscreen(); }
+function toggleFs(){
+ if(!document.fullscreenElement){ (document.documentElement||document.body).requestFullscreen().catch(()=>{}); }
+ else { document.exitFullscreen().catch(()=>{}); }
 }
-document.getElementById('waterFsBtn').addEventListener('click',function(){
- toggleFs(document.getElementById('waterSimBox'));
-});
-document.getElementById('dnFsBtn').addEventListener('click',function(){
- toggleFs(document.getElementById('dnSimBox'));
+document.getElementById('waterFsBtn').addEventListener('click',toggleFs);
+document.getElementById('dnFsBtn').addEventListener('click',toggleFs);
+
+document.addEventListener('fullscreenchange',()=>{
+ const isFs = !!document.fullscreenElement;
+ const txt = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+ document.getElementById('waterFsBtn').textContent = txt;
+ document.getElementById('dnFsBtn').textContent = txt;
 });
 
 /* WATER CYCLE */

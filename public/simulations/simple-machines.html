@@ -126,11 +126,20 @@
     font-size:.9rem;font-weight:900;z-index:10;
   }
 
+  .sim-stage:fullscreen,
+  .sim-stage:-webkit-full-screen,
   .canvas-holder:fullscreen,
-  .canvas-holder:-webkit-full-screen{
+  .canvas-holder:-webkit-full-screen {
     width:100vw !important;height:100vh !important;
     max-width:100vw !important;max-height:100vh !important;
     border-radius:0 !important;border:none !important;
+    background:#060a17 !important;
+    padding:20px !important;
+    overflow-y:auto !important;
+  }
+  .sim-stage:fullscreen .canvas-holder,
+  .sim-stage:-webkit-full-screen .canvas-holder {
+    max-height:65vh !important;
   }
 
   .controls{
@@ -576,9 +585,15 @@ document.getElementById('s6r').addEventListener('input', function(){ axleR6 = +t
 
 document.querySelectorAll('.fs-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const el = document.getElementById(btn.dataset.fs);
-    if(!document.fullscreenElement){ el.requestFullscreen().catch(()=>{}); }
+    const stage = btn.closest('.sim-stage') || document.documentElement;
+    if(!document.fullscreenElement){ stage.requestFullscreen().catch(()=>{}); }
     else { document.exitFullscreen().catch(()=>{}); }
+  });
+});
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  document.querySelectorAll('.fs-btn').forEach(b => {
+    b.textContent = isFs ? '✕ Exit Full Screen' : '⛶ Full Screen';
   });
 });
 

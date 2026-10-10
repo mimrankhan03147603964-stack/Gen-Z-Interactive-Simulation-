@@ -188,21 +188,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   ? {
                       backgroundColor: '#1d4ed8',
                       backgroundImage: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
-                      borderColor: '#93c5fd',
-                      borderWidth: '1.5px',
-                      borderStyle: 'solid',
-                      borderLeftWidth: '6px',
+                      borderTopColor: '#93c5fd',
+                      borderRightColor: '#93c5fd',
+                      borderBottomColor: '#93c5fd',
                       borderLeftColor: theme.bgSolid,
+                      borderTopWidth: '1.5px',
+                      borderRightWidth: '1.5px',
+                      borderBottomWidth: '1.5px',
+                      borderLeftWidth: '6px',
+                      borderStyle: 'solid',
                       color: '#ffffff',
                       boxShadow: '0 4px 12px rgba(29, 78, 216, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5)'
                     }
                   : {
                       backgroundColor: isDarkMode ? '#0b1633' : '#ffffff',
-                      borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-                      borderWidth: '1.5px',
-                      borderStyle: 'solid',
-                      borderLeftWidth: '5px',
+                      borderTopColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+                      borderRightColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+                      borderBottomColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
                       borderLeftColor: theme.bgSolid,
+                      borderTopWidth: '1.5px',
+                      borderRightWidth: '1.5px',
+                      borderBottomWidth: '1.5px',
+                      borderLeftWidth: '5px',
+                      borderStyle: 'solid',
                       color: isDarkMode ? '#ffffff' : '#0f172a',
                       boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)'
                     }

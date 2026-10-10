@@ -258,7 +258,7 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
   },
   '16': {
     id: '16',
-    name: 'Plate Tectonics & Moon Phases',
+    name: 'Moon Phases & Lunar Orbit',
     bgSolid: '#7c3aed',
     bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
     borderColor: '#c084fc',
