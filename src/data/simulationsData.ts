@@ -242,24 +242,9 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Middle & Secondary'
   },
   {
-    id: 'sim-pakistan-map',
-    slug: 'pakistan-map',
-    indexNumber: '17',
-    title: 'Interactive Map of Pakistan: Geography & Provinces',
-    subject: 'Physical & Political Geography',
-    category: 'Earth & Space',
-    iconName: 'Map',
-    accentColor: '#16a34a', // Emerald Green
-    description: 'High-detail vector map of Pakistan covering all provinces (Punjab, Sindh, KP, Balochistan, GB, AJK, Islamabad), Indus River basin, K2 mountain ranges, and demographic indicators.',
-    fileUrl: '/simulations/pakistan-map.html',
-    topics: ['Provinces & Federal Territories', 'Indus River Drainage Basin', 'Karakoram & Himalayan Peaks', 'Ports & Trade Corridors (CPEC)'],
-    features: ['Interactive Province Inspector', 'Animated River Flow Layer', 'Mountain Peaks & City Toggles', 'Interactive Geography Quiz'],
-    gradeLevel: 'All Grade Levels'
-  },
-  {
     id: 'sim-solar-lunar-eclipse',
     slug: 'solar-and-lunar-eclipse',
-    indexNumber: '18',
+    indexNumber: '17',
     title: 'Solar & Lunar Eclipse Simulator',
     subject: 'Celestial Mechanics & Ray Optics',
     category: 'Earth & Space',
@@ -274,7 +259,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-planetary-motion-keplers-laws',
     slug: 'planetary-motion-keplers-laws',
-    indexNumber: '19',
+    indexNumber: '18',
     title: 'Solar System & Planetary Motion (Kepler\'s Laws)',
     subject: 'Astrophysics & Classical Mechanics',
     category: 'Physics & Motion',
@@ -289,7 +274,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-solar-system-orbits',
     slug: 'solar-system-orbits',
-    indexNumber: '20',
+    indexNumber: '19',
     title: '3D Solar System & Planetary Orbits',
     subject: 'Planetary Science & Astronomy',
     category: 'Earth & Space',

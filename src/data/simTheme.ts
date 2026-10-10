@@ -274,22 +274,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
   },
   '17': {
     id: '17',
-    name: 'Pakistan Map',
-    bgSolid: '#059669',
-    bgGradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-    borderColor: '#34d399',
-    iconBg: '#059669',
-    iconBorder: '#6ee7b7',
-    iconColor: '#ffffff',
-    badgeBg: '#d1fae5',
-    badgeText: '#065f46',
-    badgeBorder: '#6ee7b7',
-    tagBg: '#ecfdf5',
-    tagText: '#047857',
-    glowColor: 'rgba(16, 185, 129, 0.4)'
-  },
-  '18': {
-    id: '18',
     name: 'Solar & Lunar Eclipse',
     bgSolid: '#ea580c',
     bgGradient: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
@@ -304,8 +288,8 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#c2410c',
     glowColor: 'rgba(249, 115, 22, 0.4)'
   },
-  '19': {
-    id: '19',
+  '18': {
+    id: '18',
     name: 'Keplers Planetary Motion',
     bgSolid: '#4f46e5',
     bgGradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
@@ -320,8 +304,8 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#4338ca',
     glowColor: 'rgba(99, 102, 241, 0.4)'
   },
-  '20': {
-    id: '20',
+  '19': {
+    id: '19',
     name: '3D Solar System',
     bgSolid: '#0891b2',
     bgGradient: 'linear-gradient(135deg, #06b6d4 0%, #0e7490 100%)',
