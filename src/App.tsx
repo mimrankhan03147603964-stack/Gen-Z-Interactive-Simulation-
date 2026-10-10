@@ -59,7 +59,6 @@ export default function App() {
   };
 
   const handleResetLab = () => {
-    // Re-trigger reload on active stage
     const iframe = document.querySelector('iframe');
     if (iframe) {
       const src = iframe.src;
@@ -71,11 +70,13 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans select-none antialiased transition-colors duration-200 ${
-      isDarkMode 
-        ? 'bg-[#040a1c] text-white' 
-        : 'bg-[#f1f5f9] text-slate-900'
-    }`}>
+    <div 
+      className="min-h-screen flex flex-col font-sans select-none antialiased transition-colors duration-200"
+      style={{
+        backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9',
+        color: isDarkMode ? '#ffffff' : '#0f172a'
+      }}
+    >
       
       {/* Top Application Navbar */}
       <TopNavbar
@@ -109,9 +110,12 @@ export default function App() {
         )}
 
         {/* Main Dashboard Scrollable Stage Area */}
-        <main className={`flex-1 flex flex-col min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-200 ${
-          isDarkMode ? 'bg-[#040a1c]' : 'bg-[#f1f5f9]'
-        }`}>
+        <main 
+          className="flex-1 flex flex-col min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-200"
+          style={{
+            backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9'
+          }}
+        >
           
           {/* 1. Royal Blue Hero Header Banner with Live Clock Widget */}
           <HeroBanner 
@@ -145,7 +149,7 @@ export default function App() {
         />
       )}
 
-      {/* Developer Footer - Clean Bar Formatted Exactly as Requested */}
+      {/* Developer Footer */}
       <Footer isDarkMode={isDarkMode} />
 
     </div>
