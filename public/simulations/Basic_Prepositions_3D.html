@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Basic Prepositions in 3D: Space, Movement & Grammar Lab</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #09061c;
+  color: #f1f5f9;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: rgba(22, 16, 53, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(236, 72, 153, 0.4);
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fbcfe8;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(236, 72, 153, 0.2);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: rgba(26, 17, 60, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(244, 114, 182, 0.35);
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #f472b6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fbcfe8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #ec4899;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(236, 72, 153, 0.08);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* 3D SIMULATION CONTAINER */
+.sim-box {
+  background: rgba(14, 10, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(244, 114, 182, 0.4);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+.sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.sim-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sim-badge {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* 3D CANVAS WRAPPER */
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #1e1347 0%, #0c0722 100%);
+  border: 1.5px solid rgba(236, 72, 153, 0.25);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+}
+#threeCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 3D OVERLAY HUD */
+.canvas-hud {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+.hud-pill {
+  pointer-events: auto;
+  background: rgba(14, 9, 38, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fce7f3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.hud-pill b {
+  color: #38bdf8;
+}
+
+.canvas-controls-overlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.icon-btn {
+  background: rgba(14, 9, 38, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.icon-btn:hover {
+  background: rgba(236, 72, 153, 0.4);
+  border-color: #f472b6;
+  transform: translateY(-2px);
+}
+
+/* SENTENCE READOUT DISPLAY */
+.sentence-banner {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  background: rgba(14, 8, 38, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(244, 114, 182, 0.5);
+  border-radius: 16px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.sentence-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+.sentence-text span.prep-highlight {
+  color: #fbbf24;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  background: rgba(245, 158, 11, 0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+.audio-action-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+.audio-action-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.6);
+}
+
+/* PREPOSITIONS SELECTION GRID */
+.prep-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.prep-btn {
+  background: rgba(30, 20, 68, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(244, 114, 182, 0.3);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.prep-btn:hover {
+  background: rgba(236, 72, 153, 0.25);
+  border-color: #f472b6;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+}
+.prep-btn.active {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  border-color: #fbcfe8;
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.5), inset 0 1px 1px #ffffff;
+  transform: translateY(-3px);
+}
+.prep-btn .name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.prep-btn .ipa {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #fbcfe8;
+}
+.prep-btn .type-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #f472b6;
+  margin-top: 2px;
+}
+.prep-btn.active .type-tag {
+  color: #ffffff;
+  background: rgba(0,0,0,0.35);
+}
+
+/* DETAILS & EXPLANATION PANEL */
+.details-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+@media (max-width: 900px) {
+  .details-panel { grid-template-columns: 1fr; }
+}
+.detail-card {
+  background: rgba(22, 15, 52, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.detail-card h3 {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #f472b6;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail-card p {
+  font-size: 0.92rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+.example-list {
+  list-style: none;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.example-list li {
+  font-size: 0.9rem;
+  background: rgba(236, 72, 153, 0.1);
+  border-left: 3px solid #ec4899;
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  color: #f1f5f9;
+}
+.example-list li b {
+  color: #fbbf24;
+}
+
+/* GRAMMAR GUIDE TAB */
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.guide-box {
+  background: rgba(26, 17, 60, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(244, 114, 182, 0.3);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.guide-box h3 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #f472b6;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.88rem;
+}
+.guide-table th {
+  background: rgba(236, 72, 153, 0.25);
+  color: #ffffff;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: 6px;
+  font-weight: 800;
+}
+.guide-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+.guide-table tr:hover td {
+  background: rgba(236, 72, 153, 0.08);
+  color: #ffffff;
+}
+
+/* QUIZ TAB */
+.quiz-container {
+  background: rgba(26, 17, 60, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(244, 114, 182, 0.35);
+  border-radius: 20px;
+  padding: 26px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(244, 114, 182, 0.25);
+  padding-bottom: 14px;
+}
+.quiz-score-badge {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+.question-card {
+  background: rgba(14, 9, 38, 0.8);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.question-prompt {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.question-prompt b {
+  color: #fbbf24;
+}
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .options-grid { grid-template-columns: 1fr; }
+}
+.quiz-opt-btn {
+  background: rgba(30, 20, 68, 0.8);
+  border: 1.5px solid rgba(244, 114, 182, 0.35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.quiz-opt-btn:hover {
+  background: rgba(236, 72, 153, 0.25);
+  border-color: #f472b6;
+  transform: translateY(-2px);
+}
+.quiz-opt-btn.correct {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #34d399 !important;
+  color: #ffffff !important;
+}
+.quiz-opt-btn.wrong {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #f87171 !important;
+  color: #ffffff !important;
+}
+.feedback-box {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: none;
+}
+.feedback-box.correct {
+  display: block;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1.5px solid #10b981;
+  color: #a7f3d0;
+}
+.feedback-box.wrong {
+  display: block;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1.5px solid #ef4444;
+  color: #fca5a5;
+}
+.next-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.5);
+}
+
+/* SENTENCE BUILDER TAB */
+.builder-workbench {
+  background: rgba(26, 17, 60, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(244, 114, 182, 0.35);
+  border-radius: 20px;
+  padding: 24px;
+}
+.slots-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  background: rgba(14, 9, 38, 0.85);
+  padding: 18px;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(244, 114, 182, 0.4);
+  margin-bottom: 20px;
+}
+.word-slot {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1.5px solid rgba(244, 114, 182, 0.4);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 800;
+  color: #fce7f3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.word-slot select {
+  background: #18103d;
+  color: #ffffff;
+  border: 1px solid #ec4899;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+.word-slot label {
+  font-size: 0.68rem;
+  color: #f472b6;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* FULLSCREEN OVERRIDE */
+.sim-box.is-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  border-radius: 0 !important;
+  padding: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-wrapper {
+  flex: 1 !important;
+  height: 100% !important;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- NAVIGATION TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchMainTab('lab-tab', this)">
+      <span>🌐</span> 3D Spatial Preposition Lab
+    </button>
+    <button class="tab-btn" onclick="switchMainTab('guide-tab', this)">
+      <span>📖</span> Complete Grammar Rules &amp; Guide
+    </button>
+    <button class="tab-btn" onclick="switchMainTab('quiz-tab', this)">
+      <span>🎯</span> Interactive Preposition Quiz
+    </button>
+    <button class="tab-btn" onclick="switchMainTab('builder-tab', this)">
+      <span>🧩</span> Sentence Builder Playground
+    </button>
+  </div>
+
+  <!-- TAB 1: 3D SPATIAL PREPOSITION LAB -->
+  <div id="lab-tab" class="tab-content active">
+    
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        <span>Spatial Prepositions in English Grammar</span>
+        <small>Subject: English Language &amp; Linguistics &bull; Class: Elementary &amp; Middle Secondary</small>
+      </h2>
+      <div class="desc">
+        A <b>preposition</b> is a fundamental part of speech that links nouns, pronouns, or phrases to other words within a sentence. Spatial prepositions specify the exact physical position, orientation, or movement of an object relative to a reference frame (table, box, bridge, or person). In this 3D laboratory, rotate the camera in 360 degrees, hear authentic spoken English pronunciations, and examine physical spatial relationships.
+      </div>
+    </div>
+
+    <!-- 3D INTERACTIVE WORKBENCH -->
+    <div class="sim-box" id="simBox28">
+      
+      <div class="sim-header">
+        <div class="sim-title">
+          <span>✨ 3D Spatial Preposition Interactive Lab</span>
+          <span class="sim-badge">3D WebGL + Audio Phonics</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="icon-btn" onclick="toggleSimFullscreen('simBox28')">
+            <span>⛶</span> Fullscreen
+          </button>
+          <button class="icon-btn" onclick="reset3DCamera()">
+            <span>🔄</span> Reset View
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D CANVAS VIEWPORT -->
+      <div class="canvas-wrapper">
+        <canvas id="threeCanvas"></canvas>
+
+        <!-- TOP HUD -->
+        <div class="canvas-hud">
+          <div class="hud-pill">
+            <span>Spatial Subject:</span> <b id="hudSubject">Purple Energy Sphere</b>
+          </div>
+          <div class="hud-pill">
+            <span>Reference Frame:</span> <b id="hudReference">Hardwood Table &amp; Box</b>
+          </div>
+          <div class="hud-pill">
+            <span>Active Relation:</span> <b id="hudRelation" style="color:#fbbf24;">ON (Surface Contact)</b>
+          </div>
+        </div>
+
+        <!-- TOP RIGHT CONTROLS -->
+        <div class="canvas-controls-overlay">
+          <button class="icon-btn" id="autoRotateBtn" onclick="toggleAutoRotate()">
+            <span>🌐</span> Auto Rotate: Off
+          </button>
+          <button class="icon-btn" onclick="switchMascot()">
+            <span>🎭</span> Change Object
+          </button>
+          <button class="icon-btn" onclick="speakCurrentPreposition()">
+            <span>🔊</span> Speak
+          </button>
+        </div>
+
+        <!-- BOTTOM REALTIME SENTENCE BANNER -->
+        <div class="sentence-banner">
+          <div>
+            <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:#f472b6; margin-bottom:2px;">Live Spoken Grammar Construction:</div>
+            <div class="sentence-text" id="liveSentence">
+              The ball is <span class="prep-highlight">ON</span> the table.
+            </div>
+          </div>
+          <button class="audio-action-btn" onclick="speakCurrentPreposition()">
+            <span>🔊</span> Hear Spoken English
+          </button>
+        </div>
+
+      </div>
+
+      <!-- INTERACTIVE PREPOSITION SELECTORS -->
+      <div class="prep-selector-grid" id="prepButtonsContainer">
+        <!-- Buttons injected dynamically -->
+      </div>
+
+      <!-- EXPLANATION DETAILS -->
+      <div class="details-panel">
+        <div class="detail-card">
+          <h3>
+            <span>🔍 Grammar Meaning &amp; Spatial Rule</span>
+          </h3>
+          <p id="ruleText">
+            <b>ON:</b> Indicates position touching the top surface of an object or platform. Requires physical resting contact with the reference surface.
+          </p>
+          <div style="margin-top:12px; font-size:0.85rem; color:#fbcfe8;">
+            <b>Pronunciation (IPA):</b> <span id="ipaDisplay">/ɒn/</span> &bull; 
+            <b>Type:</b> <span id="typeDisplay">Preposition of Place</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3>
+            <span>📝 Real-World Usage Examples</span>
+          </h3>
+          <ul class="example-list" id="examplesList">
+            <li>The book is lying <b>on</b> the desk.</li>
+            <li>He placed the cup <b>on</b> the counter.</li>
+            <li>There is a painting <b>on</b> the wall.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: COMPLETE GRAMMAR GUIDE -->
+  <div id="guide-tab" class="tab-content">
+    <div class="card">
+      <h2><span>English Prepositions: Comprehensive Reference Manual</span></h2>
+      <div class="desc">
+        Prepositions are words that establish relationships between substantives. Mastery of prepositions is key to natural, fluent, and mathematically precise communication in the English language.
+      </div>
+    </div>
+
+    <div class="guide-grid">
+      
+      <div class="guide-box">
+        <h3><span>📍 1. Prepositions of Place (Spatial Position)</span></h3>
+        <p style="font-size:0.9rem; color:#cbd5e1; margin-bottom:12px;">Used to show where someone or something is situated in 3D space.</p>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Preposition</th><th>Spatial Meaning</th><th>Core Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>IN</b></td><td>Enclosed within a 3D boundary or volume</td><td>The pencil is <i>in</i> the box.</td></tr>
+            <tr><td><b>ON</b></td><td>Resting upon an exterior surface</td><td>The clock is <i>on</i> the wall.</td></tr>
+            <tr><td><b>UNDER</b></td><td>Directly below or beneath a surface</td><td>The dog sleeps <i>under</i> the table.</td></tr>
+            <tr><td><b>BEHIND</b></td><td>At the rear side of a reference object</td><td>The sun hid <i>behind</i> the cloud.</td></tr>
+            <tr><td><b>IN FRONT OF</b></td><td>Directly opposite the front side</td><td>The teacher stands <i>in front of</i> the board.</td></tr>
+            <tr><td><b>BESIDE</b></td><td>At the side of; immediately next to</td><td>She sat <i>beside</i> her best friend.</td></tr>
+            <tr><td><b>BETWEEN</b></td><td>In the middle of exactly two points</td><td>The ball stopped <i>between</i> two goalposts.</td></tr>
+            <tr><td><b>OVER / ABOVE</b></td><td>Higher than, with vertical clearance</td><td>The drone hovered <i>over</i> the crowd.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-box">
+        <h3><span>🚀 2. Prepositions of Movement &amp; Direction</span></h3>
+        <p style="font-size:0.9rem; color:#cbd5e1; margin-bottom:12px;">Used to express motion, velocity, and trajectory from one place to another.</p>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Preposition</th><th>Kinematic Trajectory</th><th>Core Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>INTO</b></td><td>Movement entering an enclosed space</td><td>She stepped <i>into</i> the laboratory.</td></tr>
+            <tr><td><b>THROUGH</b></td><td>Movement from one end to another inside a passage</td><td>Light passed <i>through</i> the prism.</td></tr>
+            <tr><td><b>ACROSS</b></td><td>Movement spanning from one side to the other</td><td>The athlete swam <i>across</i> the river.</td></tr>
+            <tr><td><b>TOWARDS</b></td><td>Motion facing in the direction of an object</td><td>The car sped <i>towards</i> the exit.</td></tr>
+            <tr><td><b>OUT OF</b></td><td>Exiting from the interior of a container</td><td>The bird flew <i>out of</i> the cage.</td></tr>
+            <tr><td><b>ONTO</b></td><td>Movement landing on a surface</td><td>The cat leaped <i>onto</i> the counter.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-box">
+        <h3><span>⏳ 3. Prepositions of Time (Temporal Relations)</span></h3>
+        <p style="font-size:0.9rem; color:#cbd5e1; margin-bottom:12px;">Used to position events along the arrow of time (At, On, In hierarchy).</p>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Preposition</th><th>Temporal Precision</th><th>Core Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>AT</b></td><td>Precise clock time, specific moment</td><td>Class begins <i>at</i> 09:00 AM.</td></tr>
+            <tr><td><b>ON</b></td><td>Days of the week, calendar dates</td><td>The exam is <i>on</i> Monday, Oct 12.</td></tr>
+            <tr><td><b>IN</b></td><td>Months, years, seasons, long eras</td><td>Humans landed on Moon <i>in</i> 1969.</td></tr>
+            <tr><td><b>DURING</b></td><td>Throughout the duration of an event</td><td>He took notes <i>during</i> the lecture.</td></tr>
+            <tr><td><b>UNTIL</b></td><td>Up to a boundary point in time</td><td>The library is open <i>until</i> 8 PM.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 3: INTERACTIVE QUIZ -->
+  <div id="quiz-tab" class="tab-content">
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <h2 style="font-size:1.4rem; font-weight:900; color:#f472b6;">🎯 English Prepositions Mastery Challenge</h2>
+        <div class="quiz-score-badge">
+          Score: <span id="quizScore">0</span> / <span id="quizTotal">10</span>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <div style="font-size:0.8rem; font-weight:700; color:#f472b6; text-transform:uppercase; margin-bottom:6px;" id="qNumber">Question 1 of 10</div>
+        <div class="question-prompt" id="qPrompt">
+          Loading question...
+        </div>
+        <div class="options-grid" id="qOptions">
+          <!-- Options injected dynamically -->
+        </div>
+        <div class="feedback-box" id="qFeedback"></div>
+        <button class="next-btn" id="nextQBtn" style="display:none;" onclick="loadNextQuestion()">
+          Next Question ➜
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SENTENCE BUILDER -->
+  <div id="builder-tab" class="tab-content">
+    <div class="builder-workbench">
+      <h2 style="font-size:1.4rem; font-weight:900; color:#f472b6; margin-bottom:12px;">🧩 Interactive Sentence Builder &amp; 3D Visualizer</h2>
+      <p style="font-size:0.92rem; color:#cbd5e1; margin-bottom:18px;">
+        Construct your own custom English sentences below. Select a Subject, Verb, Preposition, and Object, then click "Simulate in 3D &amp; Speak" to see and hear your sentence!
+      </p>
+
+      <div class="slots-container">
+        <div class="word-slot">
+          <label>Subject</label>
+          <select id="buildSubject">
+            <option value="The ball">The ball (Sphere)</option>
+            <option value="The mascot star">The mascot star</option>
+            <option value="The gift box">The gift box</option>
+            <option value="The cat">The cat</option>
+          </select>
+        </div>
+
+        <div class="word-slot">
+          <label>Verb</label>
+          <select id="buildVerb">
+            <option value="is resting">is resting</option>
+            <option value="is placed">is placed</option>
+            <option value="is hovering">is hovering</option>
+            <option value="sits">sits</option>
+          </select>
+        </div>
+
+        <div class="word-slot">
+          <label>Preposition</label>
+          <select id="buildPrep">
+            <option value="on">ON (top of surface)</option>
+            <option value="under">UNDER (beneath)</option>
+            <option value="in">IN (inside container)</option>
+            <option value="behind">BEHIND (rear side)</option>
+            <option value="in front of">IN FRONT OF (forefront)</option>
+            <option value="beside">BESIDE (next to)</option>
+            <option value="between">BETWEEN (in middle)</option>
+            <option value="over">OVER (floating above)</option>
+            <option value="through">THROUGH (passage)</option>
+          </select>
+        </div>
+
+        <div class="word-slot">
+          <label>Reference Object</label>
+          <select id="buildObject">
+            <option value="the table">the table</option>
+            <option value="the box">the box</option>
+            <option value="the room">the room</option>
+          </select>
+        </div>
+
+        <button class="audio-action-btn" style="margin-left:auto;" onclick="applySentenceBuilder()">
+          🚀 Simulate in 3D &amp; Speak
+        </button>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3 style="font-size:1.15rem; font-weight:800; color:#f472b6; margin-bottom:6px;">Resulting Sentence:</h3>
+        <div style="font-size:1.3rem; font-weight:900; color:#ffffff;" id="builderSentenceResult">
+          The ball is resting on the table.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ==========================================
+// PREPOSITIONS DATA DEFINITION
+// ==========================================
+const PREPOSITIONS = [
+  {
+    id: 'on',
+    name: 'ON',
+    ipa: '/ɒn/',
+    type: 'Place & Surface',
+    pos: { x: 0, y: 1.6, z: 0 },
+    rule: '<b>ON:</b> Specifies position on an exterior surface with physical resting contact.',
+    examples: [
+      'The sphere is <b>on</b> the table.',
+      'A textbook is lying <b>on</b> the desk.',
+      'The apple rests <b>on</b> the wooden surface.'
+    ],
+    sentence: 'The ball is on the table.',
+    speechText: 'ON. The ball is on the table.'
+  },
+  {
+    id: 'under',
+    name: 'UNDER',
+    ipa: '/ˈʌn.dər/',
+    type: 'Place & Below',
+    pos: { x: 0, y: 0.25, z: 0 },
+    rule: '<b>UNDER:</b> Indicates a location directly beneath or lower than a covering object or surface.',
+    examples: [
+      'The sphere is <b>under</b> the table.',
+      'The cat is sleeping <b>under</b> the bed.',
+      'The backpack was kept <b>under</b> the chair.'
+    ],
+    sentence: 'The ball is under the table.',
+    speechText: 'UNDER. The ball is under the table.'
+  },
+  {
+    id: 'in',
+    name: 'IN',
+    ipa: '/ɪn/',
+    type: 'Place & Interior',
+    pos: { x: -2.4, y: 0.7, z: 0.8 },
+    rule: '<b>IN:</b> Indicates position enclosed inside a 3D boundary, container, box, or volume.',
+    examples: [
+      'The sphere is <b>in</b> the box.',
+      'The coins are kept <b>in</b> the wooden treasure chest.',
+      'Water is stored <b>in</b> the glass beaker.'
+    ],
+    sentence: 'The ball is in the box.',
+    speechText: 'IN. The ball is in the box.'
+  },
+  {
+    id: 'behind',
+    name: 'BEHIND',
+    ipa: '/bɪˈhaɪnd/',
+    type: 'Place & Rear',
+    pos: { x: 0, y: 1.4, z: -1.8 },
+    rule: '<b>BEHIND:</b> Positioned at the back, posterior, or rear side of a reference object.',
+    examples: [
+      'The sphere is <b>behind</b> the table.',
+      'The child is hiding <b>behind</b> the door.',
+      'The sun disappeared <b>behind</b> the mountains.'
+    ],
+    sentence: 'The ball is behind the table.',
+    speechText: 'BEHIND. The ball is behind the table.'
+  },
+  {
+    id: 'in front of',
+    name: 'IN FRONT OF',
+    ipa: '/ɪn frʌnt əv/',
+    type: 'Place & Forefront',
+    pos: { x: 0, y: 1.2, z: 1.8 },
+    rule: '<b>IN FRONT OF:</b> Positioned directly opposite the anterior or front facing side of an object.',
+    examples: [
+      'The sphere is <b>in front of</b> the table.',
+      'The student stood <b>in front of</b> the classroom.',
+      'A fountain is located <b>in front of</b> the school.'
+    ],
+    sentence: 'The ball is in front of the table.',
+    speechText: 'IN FRONT OF. The ball is in front of the table.'
+  },
+  {
+    id: 'beside',
+    name: 'BESIDE / NEXT TO',
+    ipa: '/bɪˈsaɪd/',
+    type: 'Place & Lateral',
+    pos: { x: 2.1, y: 1.2, z: 0 },
+    rule: '<b>BESIDE:</b> At the lateral side of an object; in immediate proximity side-by-side.',
+    examples: [
+      'The sphere is <b>beside</b> the table.',
+      'She sat down <b>beside</b> her friend.',
+      'The lamp stands <b>beside</b> the couch.'
+    ],
+    sentence: 'The ball is beside the table.',
+    speechText: 'BESIDE. The ball is beside the table.'
+  },
+  {
+    id: 'between',
+    name: 'BETWEEN',
+    ipa: '/bɪˈtwiːn/',
+    type: 'Place & Intermediate',
+    pos: { x: -1.2, y: 1.2, z: 0.5 },
+    rule: '<b>BETWEEN:</b> Situated in the intermediate middle space separating two distinct entities.',
+    examples: [
+      'The sphere is <b>between</b> the table and the box.',
+      'The letter B is <b>between</b> A and C in the alphabet.',
+      'The river flows <b>between</b> two steep valleys.'
+    ],
+    sentence: 'The ball is between the table and the box.',
+    speechText: 'BETWEEN. The ball is between the table and the box.'
+  },
+  {
+    id: 'over',
+    name: 'OVER / ABOVE',
+    ipa: '/ˈoʊ.vər/',
+    type: 'Elevation & Float',
+    pos: { x: 0, y: 3.2, z: 0 },
+    rule: '<b>OVER / ABOVE:</b> Suspended vertically higher than the reference object without direct surface contact.',
+    examples: [
+      'The sphere is floating <b>over</b> the table.',
+      'The airplane flew <b>over</b> the city.',
+      'A pendant lamp hangs <b>over</b> the dining table.'
+    ],
+    sentence: 'The ball is floating over the table.',
+    speechText: 'OVER. The ball is floating over the table.'
+  },
+  {
+    id: 'through',
+    name: 'THROUGH',
+    ipa: '/θruː/',
+    type: 'Movement & Passage',
+    pos: { x: 1.6, y: 1.6, z: -0.2 },
+    rule: '<b>THROUGH:</b> Moving or passing from one side to the other within an enclosed opening or tunnel.',
+    examples: [
+      'The sphere passes <b>through</b> the glowing ring.',
+      'The train journeyed <b>through</b> the dark tunnel.',
+      'Light traveled <b>through</b> the optical fiber.'
+    ],
+    sentence: 'The ball passes through the ring.',
+    speechText: 'THROUGH. The ball passes through the ring.'
+  }
+];
+
+let currentPrepIndex = 0;
+let isAutoRotating = false;
+let currentMascotShape = 0; // 0 = sphere, 1 = star/cube, 2 = gem
+
+// ==========================================
+// THREE.JS 3D SCENE INITIALIZATION
+// ==========================================
+let scene, camera, renderer, controls;
+let targetObject, beaconRings = [], tableGroup, boxGroup, hoopMesh;
+let targetPos = new THREE.Vector3(0, 1.6, 0);
+let currentPos = new THREE.Vector3(0, 1.6, 0);
+let animationProgress = 1;
+
+function init3D() {
+  const canvas = document.getElementById('threeCanvas');
+  const wrapper = canvas.parentElement;
+  const width = wrapper.clientWidth;
+  const height = wrapper.clientHeight;
+
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0c0722, 0.035);
+
+  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera.position.set(0, 4.5, 7.5);
+
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  // ORBIT CONTROLS
+  if (typeof THREE.OrbitControls !== 'undefined') {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2 + 0.05; // Prevent dipping beneath floor
+    controls.minDistance = 3;
+    controls.maxDistance = 14;
+    controls.target.set(0, 1.2, 0);
+  }
+
+  // LIGHTING
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+  scene.add(ambientLight);
+
+  const keyLight = new THREE.DirectionalLight(0xfff5ea, 1.2);
+  keyLight.position.set(4, 8, 5);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.width = 1024;
+  keyLight.shadow.mapSize.height = 1024;
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far = 25;
+  scene.add(keyLight);
+
+  const fillLight = new THREE.PointLight(0xec4899, 1.4, 15);
+  fillLight.position.set(-4, 3, -3);
+  scene.add(fillLight);
+
+  const cyanRimLight = new THREE.PointLight(0x38bdf8, 1.2, 15);
+  cyanRimLight.position.set(4, 2, -4);
+  scene.add(cyanRimLight);
+
+  // STUDIO FLOOR WITH GRID
+  const floorGeo = new THREE.PlaneGeometry(30, 30);
+  const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x120d30,
+    roughness: 0.8,
+    metalness: 0.2
+  });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // GRID HELPER
+  const grid = new THREE.GridHelper(24, 24, 0xec4899, 0x312e81);
+  grid.position.y = 0.01;
+  scene.add(grid);
+
+  // BUILD 3D TABLE
+  buildTable();
+
+  // BUILD 3D OPEN BOX (CONTAINER FOR 'IN')
+  buildOpenBox();
+
+  // BUILD 3D PASSAGE RING (FOR 'THROUGH')
+  buildPassageHoop();
+
+  // BUILD INTERACTIVE MASCOT OBJECT
+  buildMascot();
+
+  // BUILD BEACON PULSE
+  buildBeacon();
+
+  window.addEventListener('resize', onWindowResize);
+  animate();
+}
+
+function buildTable() {
+  tableGroup = new THREE.Group();
+
+  // Table Top
+  const topGeo = new THREE.BoxGeometry(2.4, 0.12, 1.6);
+  const topMat = new THREE.MeshStandardMaterial({
+    color: 0x92400e, // Rich polished wood
+    roughness: 0.4,
+    metalness: 0.1
+  });
+  const tabletop = new THREE.Mesh(topGeo, topMat);
+  tabletop.position.y = 1.2;
+  tabletop.castShadow = true;
+  tabletop.receiveShadow = true;
+  tableGroup.add(tabletop);
+
+  // Legs (4 cylindrical legs)
+  const legGeo = new THREE.CylinderGeometry(0.06, 0.05, 1.14, 16);
+  const legMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.6 });
+
+  const legPositions = [
+    [-1.05, 0.57, -0.65],
+    [1.05, 0.57, -0.65],
+    [-1.05, 0.57, 0.65],
+    [1.05, 0.57, 0.65]
+  ];
+
+  legPositions.forEach(pos => {
+    const leg = new THREE.Mesh(legGeo, legMat);
+    leg.position.set(pos[0], pos[1], pos[2]);
+    leg.castShadow = true;
+    tableGroup.add(leg);
+  });
+
+  scene.add(tableGroup);
+}
+
+function buildOpenBox() {
+  boxGroup = new THREE.Group();
+  boxGroup.position.set(-2.4, 0, 0.8);
+
+  const boxWallMat = new THREE.MeshStandardMaterial({
+    color: 0x4f46e5,
+    roughness: 0.5,
+    metalness: 0.2
+  });
+
+  // Base
+  const baseGeo = new THREE.BoxGeometry(1.2, 0.08, 1.2);
+  const base = new THREE.Mesh(baseGeo, boxWallMat);
+  base.position.y = 0.04;
+  base.receiveShadow = true;
+  boxGroup.add(base);
+
+  // 4 walls
+  const wallGeo1 = new THREE.BoxGeometry(1.2, 0.8, 0.08);
+  const wallGeo2 = new THREE.BoxGeometry(0.08, 0.8, 1.04);
+
+  const backWall = new THREE.Mesh(wallGeo1, boxWallMat);
+  backWall.position.set(0, 0.44, -0.56);
+  backWall.castShadow = true;
+  boxGroup.add(backWall);
+
+  const frontWall = new THREE.Mesh(wallGeo1, boxWallMat);
+  frontWall.position.set(0, 0.44, 0.56);
+  frontWall.castShadow = true;
+  boxGroup.add(frontWall);
+
+  const leftWall = new THREE.Mesh(wallGeo2, boxWallMat);
+  leftWall.position.set(-0.56, 0.44, 0);
+  leftWall.castShadow = true;
+  boxGroup.add(leftWall);
+
+  const rightWall = new THREE.Mesh(wallGeo2, boxWallMat);
+  rightWall.position.set(0.56, 0.44, 0);
+  rightWall.castShadow = true;
+  boxGroup.add(rightWall);
+
+  scene.add(boxGroup);
+}
+
+function buildPassageHoop() {
+  const hoopGeo = new THREE.TorusGeometry(0.65, 0.06, 16, 48);
+  const hoopMat = new THREE.MeshStandardMaterial({
+    color: 0x06b6d4,
+    emissive: 0x0891b2,
+    emissiveIntensity: 0.5,
+    metalness: 0.8,
+    roughness: 0.2
+  });
+  hoopMesh = new THREE.Mesh(hoopGeo, hoopMat);
+  hoopMesh.position.set(1.6, 1.6, -0.2);
+  hoopMesh.rotation.y = Math.PI / 4;
+  hoopMesh.castShadow = true;
+  scene.add(hoopMesh);
+}
+
+function buildMascot() {
+  if (targetObject) scene.remove(targetObject);
+
+  const group = new THREE.Group();
+
+  if (currentMascotShape === 0) {
+    // Vibrant glowing Energy Sphere with eyes
+    const sphereGeo = new THREE.SphereGeometry(0.36, 32, 32);
+    const sphereMat = new THREE.MeshStandardMaterial({
+      color: 0xec4899,
+      emissive: 0xbe185d,
+      emissiveIntensity: 0.35,
+      metalness: 0.3,
+      roughness: 0.2
+    });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    sphere.castShadow = true;
+    group.add(sphere);
+
+    // Eyes
+    const eyeGeo = new THREE.SphereGeometry(0.06, 16, 16);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const pupilMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+
+    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+    leftEye.position.set(-0.12, 0.1, 0.32);
+    const leftPupil = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 12), pupilMat);
+    leftPupil.position.set(-0.12, 0.1, 0.36);
+    group.add(leftEye, leftPupil);
+
+    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+    rightEye.position.set(0.12, 0.1, 0.32);
+    const rightPupil = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 12), pupilMat);
+    rightPupil.position.set(0.12, 0.1, 0.36);
+    group.add(rightEye, rightPupil);
+
+  } else if (currentMascotShape === 1) {
+    // Golden Star / Octahedron
+    const octGeo = new THREE.OctahedronGeometry(0.42, 0);
+    const octMat = new THREE.MeshStandardMaterial({
+      color: 0xfbbf24,
+      emissive: 0xd97706,
+      emissiveIntensity: 0.4,
+      metalness: 0.7,
+      roughness: 0.2
+    });
+    const starMesh = new THREE.Mesh(octGeo, octMat);
+    starMesh.castShadow = true;
+    group.add(starMesh);
+
+  } else {
+    // Cyber Gem (Icosahedron)
+    const icoGeo = new THREE.IcosahedronGeometry(0.38, 0);
+    const icoMat = new THREE.MeshStandardMaterial({
+      color: 0x10b981,
+      emissive: 0x059669,
+      emissiveIntensity: 0.4,
+      metalness: 0.6,
+      roughness: 0.1
+    });
+    const gemMesh = new THREE.Mesh(icoGeo, icoMat);
+    gemMesh.castShadow = true;
+    group.add(gemMesh);
+  }
+
+  targetObject = group;
+  targetObject.position.copy(currentPos);
+  scene.add(targetObject);
+}
+
+function buildBeacon() {
+  const ringGeo = new THREE.RingGeometry(0.4, 0.5, 32);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: 0xf472b6,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.7
+  });
+  const beacon = new THREE.Mesh(ringGeo, ringMat);
+  beacon.rotation.x = -Math.PI / 2;
+  beacon.position.y = 0.02;
+  scene.add(beacon);
+  beaconRings.push(beacon);
+}
+
+function switchMascot() {
+  currentMascotShape = (currentMascotShape + 1) % 3;
+  buildMascot();
+  const names = ['Purple Energy Sphere', 'Golden Star Octahedron', 'Emerald Cyber Gem'];
+  document.getElementById('hudSubject').textContent = names[currentMascotShape];
+}
+
+function onWindowResize() {
+  const canvas = document.getElementById('threeCanvas');
+  const wrapper = canvas.parentElement;
+  if (!wrapper) return;
+  const width = wrapper.clientWidth;
+  const height = wrapper.clientHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Smooth lerp movement between preposition coordinates
+  if (animationProgress < 1) {
+    animationProgress += 0.04;
+    currentPos.lerp(targetPos, 0.1);
+    if (targetObject) {
+      targetObject.position.copy(currentPos);
+      targetObject.rotation.y += 0.03;
+    }
+  } else {
+    if (targetObject) {
+      targetObject.rotation.y += 0.008;
+      // Gentle floating bob for hovering prepositions
+      if (PREPOSITIONS[currentPrepIndex].id === 'over') {
+        targetObject.position.y = targetPos.y + Math.sin(Date.now() * 0.003) * 0.12;
+      }
+    }
+  }
+
+  // Update beacon location under target
+  if (beaconRings.length > 0) {
+    beaconRings[0].position.x = currentPos.x;
+    beaconRings[0].position.z = currentPos.z;
+    beaconRings[0].scale.setScalar(1 + Math.sin(Date.now() * 0.005) * 0.15);
+  }
+
+  // Hoop pulsing
+  if (hoopMesh) {
+    hoopMesh.rotation.z += 0.005;
+  }
+
+  if (controls) {
+    controls.autoRotate = isAutoRotating;
+    controls.update();
+  }
+
+  renderer.render(scene, camera);
+}
+
+function reset3DCamera() {
+  camera.position.set(0, 4.5, 7.5);
+  if (controls) {
+    controls.target.set(0, 1.2, 0);
+  }
+}
+
+function toggleAutoRotate() {
+  isAutoRotating = !isAutoRotating;
+  const btn = document.getElementById('autoRotateBtn');
+  btn.innerHTML = `<span>🌐</span> Auto Rotate: ${isAutoRotating ? 'ON' : 'OFF'}`;
+}
+
+// ==========================================
+// PREPOSITION SELECTION & AUDIO VOICE
+// ==========================================
+function selectPreposition(index) {
+  currentPrepIndex = index;
+  const prep = PREPOSITIONS[index];
+
+  // Set target vector for 3D animation
+  targetPos.set(prep.pos.x, prep.pos.y, prep.pos.z);
+  animationProgress = 0;
+
+  // Update HUD
+  document.getElementById('hudRelation').textContent = `${prep.name} (${prep.type})`;
+
+  // Update Buttons
+  document.querySelectorAll('.prep-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+
+  // Update Sentence Readout
+  const sentenceContainer = document.getElementById('liveSentence');
+  const highlighted = prep.sentence.replace(
+    new RegExp(`\\b${prep.name.split(' ')[0]}\\b`, 'i'),
+    `<span class="prep-highlight">${prep.name}</span>`
+  );
+  sentenceContainer.innerHTML = highlighted;
+
+  // Update Detail Panel
+  document.getElementById('ruleText').innerHTML = prep.rule;
+  document.getElementById('ipaDisplay').textContent = prep.ipa;
+  document.getElementById('typeDisplay').textContent = prep.type;
+
+  const exUl = document.getElementById('examplesList');
+  exUl.innerHTML = '';
+  prep.examples.forEach(ex => {
+    const li = document.createElement('li');
+    li.innerHTML = ex;
+    exUl.appendChild(li);
+  });
+
+  // Speak pronunciation
+  speakCurrentPreposition();
+}
+
+function speakCurrentPreposition() {
+  const prep = PREPOSITIONS[currentPrepIndex];
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel(); // Stop existing audio
+    const utterance = new SpeechSynthesisUtterance(prep.speechText);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.05;
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function renderPrepositionButtons() {
+  const container = document.getElementById('prepButtonsContainer');
+  container.innerHTML = '';
+
+  PREPOSITIONS.forEach((prep, idx) => {
+    const btn = document.createElement('div');
+    btn.className = `prep-btn ${idx === 0 ? 'active' : ''}`;
+    btn.onclick = () => selectPreposition(idx);
+    btn.innerHTML = `
+      <div class="name">${prep.name}</div>
+      <div class="ipa">${prep.ipa}</div>
+      <div class="type-tag">${prep.type}</div>
+    `;
+    container.appendChild(btn);
+  });
+}
+
+// ==========================================
+// TABS CONTROLLER
+// ==========================================
+function switchMainTab(tabId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+
+  if (tabId === 'lab-tab') {
+    setTimeout(onWindowResize, 50);
+  } else if (tabId === 'quiz-tab') {
+    initQuiz();
+  }
+}
+
+// ==========================================
+// FULLSCREEN LOGIC
+// ==========================================
+function toggleSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  const isFull = box.classList.contains('is-fullscreen') || !!document.fullscreenElement;
+
+  if (!isFull) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => {
+        setTimeout(onWindowResize, 100);
+      }).catch(() => {
+        box.classList.add('is-fullscreen');
+        setTimeout(onWindowResize, 100);
+      });
+    } else {
+      box.classList.add('is-fullscreen');
+      setTimeout(onWindowResize, 100);
+    }
+  } else {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    box.classList.remove('is-fullscreen');
+    setTimeout(onWindowResize, 100);
+  }
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox28');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(onWindowResize, 100);
+});
+
+// ==========================================
+// INTERACTIVE QUIZ ENGINE
+// ==========================================
+const QUIZ_QUESTIONS = [
+  {
+    prompt: "The textbook is resting flat upon the wooden surface. Which preposition correctly fits: 'The book is _____ the table'?",
+    options: ["IN", "ON", "UNDER", "THROUGH"],
+    correct: 1,
+    explanation: "Correct! We use ON because the book makes direct physical contact with the top surface of the table."
+  },
+  {
+    prompt: "A mischievous puppy is hiding beneath the chair legs out of sight. 'The puppy is hiding _____ the chair.'",
+    options: ["UNDER", "OVER", "BETWEEN", "ON"],
+    correct: 0,
+    explanation: "Correct! UNDER indicates a physical location lower than or directly below a covering object."
+  },
+  {
+    prompt: "The shiny gold ring is securely placed inside the jewelry velvet box. 'The ring is _____ the box.'",
+    options: ["BESIDE", "IN", "ACROSS", "UNDER"],
+    correct: 1,
+    explanation: "Correct! IN is used for objects contained within a 3D enclosed boundary or receptacle."
+  },
+  {
+    prompt: "A drone is flying high in the air without touching the rooftop. 'The drone is hovering _____ the house.'",
+    options: ["UNDER", "INTO", "OVER", "THROUGH"],
+    correct: 2,
+    explanation: "Correct! OVER (or ABOVE) indicates vertical elevation without physical surface contact."
+  },
+  {
+    prompt: "The goalkeeper is positioned right in the middle between two goalposts. 'The keeper stood _____ the posts.'",
+    options: ["BEHIND", "BETWEEN", "ON", "UNDER"],
+    correct: 1,
+    explanation: "Correct! BETWEEN denotes an intermediate position separating two reference points."
+  },
+  {
+    prompt: "The train passed from one end of the mountain tunnel out to the other. 'The train traveled _____ the tunnel.'",
+    options: ["THROUGH", "ON", "UNDER", "BETWEEN"],
+    correct: 0,
+    explanation: "Correct! THROUGH denotes movement entering one end of an enclosed passage and exiting the other."
+  },
+  {
+    prompt: "The teacher stood at the blackboard facing all students. 'The teacher is standing _____ the class.'",
+    options: ["BEHIND", "IN FRONT OF", "UNDER", "INTO"],
+    correct: 1,
+    explanation: "Correct! IN FRONT OF indicates position on the forward/facing side of an audience or object."
+  },
+  {
+    prompt: "He set down his coffee mug right adjacent to his laptop keyboard. 'The mug is _____ the computer.'",
+    options: ["BESIDE", "OVER", "THROUGH", "IN"],
+    correct: 0,
+    explanation: "Correct! BESIDE (or NEXT TO) means located at the lateral side in close proximity."
+  },
+  {
+    prompt: "The rabbit sprinted directly into its burrow underground. 'The rabbit ran _____ the burrow.'",
+    options: ["INTO", "ONTO", "OVER", "BEHIND"],
+    correct: 0,
+    explanation: "Correct! INTO expresses movement directing inward towards the interior of a space."
+  },
+  {
+    prompt: "During the game of hide-and-seek, Tim stood concealed at the back of the curtain. 'Tim is _____ the curtain.'",
+    options: ["UNDER", "BEHIND", "ON", "BETWEEN"],
+    correct: 1,
+    explanation: "Correct! BEHIND refers to the posterior or back side of an object."
+  }
+];
+
+let quizIndex = 0;
+let quizScore = 0;
+
+function initQuiz() {
+  quizIndex = 0;
+  quizScore = 0;
+  document.getElementById('quizScore').textContent = '0';
+  document.getElementById('quizTotal').textContent = QUIZ_QUESTIONS.length;
+  loadCurrentQuestion();
+}
+
+function loadCurrentQuestion() {
+  const q = QUIZ_QUESTIONS[quizIndex];
+  document.getElementById('qNumber').textContent = `Question ${quizIndex + 1} of ${QUIZ_QUESTIONS.length}`;
+  document.getElementById('qPrompt').innerHTML = q.prompt;
+  
+  const optsContainer = document.getElementById('qOptions');
+  optsContainer.innerHTML = '';
+  
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'feedback-box';
+  fb.style.display = 'none';
+
+  document.getElementById('nextQBtn').style.display = 'none';
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt-btn';
+    btn.innerHTML = `<span><b>${String.fromCharCode(65 + idx)}.</b> ${opt}</span> <span>➜</span>`;
+    btn.onclick = () => handleAnswer(idx, btn);
+    optsContainer.appendChild(btn);
+  });
+}
+
+function handleAnswer(selectedIdx, btnElement) {
+  const q = QUIZ_QUESTIONS[quizIndex];
+  const allBtns = document.querySelectorAll('.quiz-opt-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('qFeedback');
+
+  if (selectedIdx === q.correct) {
+    quizScore++;
+    document.getElementById('quizScore').textContent = quizScore;
+    btnElement.classList.add('correct');
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `🎉 <b>Splendid!</b> ${q.explanation}`;
+  } else {
+    btnElement.classList.add('wrong');
+    allBtns[q.correct].classList.add('correct');
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `❌ <b>Not quite!</b> ${q.explanation}`;
+  }
+
+  document.getElementById('nextQBtn').style.display = 'inline-flex';
+}
+
+function loadNextQuestion() {
+  quizIndex++;
+  if (quizIndex < QUIZ_QUESTIONS.length) {
+    loadCurrentQuestion();
+  } else {
+    const card = document.querySelector('.question-card');
+    card.innerHTML = `
+      <div style="text-align:center; padding:30px 10px;">
+        <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
+        <h3 style="font-size:1.6rem; font-weight:900; color:#f472b6; margin-bottom:8px;">Quiz Completed!</h3>
+        <p style="font-size:1.1rem; color:#cbd5e1; margin-bottom:16px;">
+          You scored <b>${quizScore}</b> out of <b>${QUIZ_QUESTIONS.length}</b> (${Math.round((quizScore/QUIZ_QUESTIONS.length)*100)}%)!
+        </p>
+        <button class="next-btn" onclick="initQuiz()">
+          🔄 Retake Quiz
+        </button>
+      </div>
+    `;
+  }
+}
+
+// ==========================================
+// SENTENCE BUILDER
+// ==========================================
+function applySentenceBuilder() {
+  const subj = document.getElementById('buildSubject').value;
+  const verb = document.getElementById('buildVerb').value;
+  const prep = document.getElementById('buildPrep').value;
+  const obj = document.getElementById('buildObject').value;
+
+  const fullSentence = `${subj} ${verb} ${prep} ${obj}.`;
+  document.getElementById('builderSentenceResult').innerHTML = `
+    ${subj} ${verb} <span style="color:#fbbf24; text-decoration:underline;">${prep.toUpperCase()}</span> ${obj}.
+  `;
+
+  // Find matching preposition in 3D data
+  const matchedIdx = PREPOSITIONS.findIndex(p => p.id === prep || p.name.toLowerCase().includes(prep.toLowerCase()));
+  if (matchedIdx !== -1) {
+    selectPreposition(matchedIdx);
+  }
+
+  // Speak sentence
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(fullSentence);
+    u.rate = 0.9;
+    u.pitch = 1.05;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// INIT ON LOAD
+window.addEventListener('DOMContentLoaded', () => {
+  renderPrepositionButtons();
+  init3D();
+});
+</script>
+</body>
+</html>

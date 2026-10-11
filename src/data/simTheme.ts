@@ -447,6 +447,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f5f3ff',
     tagText: '#6d28d9',
     glowColor: 'rgba(124, 58, 237, 0.4)'
+  },
+  '28': {
+    id: '28',
+    name: 'Basic Prepositions in 3D',
+    bgSolid: '#db2777',
+    bgGradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+    borderColor: '#f472b6',
+    iconBg: '#db2777',
+    iconBorder: '#fbcfe8',
+    iconColor: '#ffffff',
+    badgeBg: '#fce7f3',
+    badgeText: '#9d174d',
+    badgeBorder: '#fbcfe8',
+    tagBg: '#fdf2f8',
+    tagText: '#be185d',
+    glowColor: 'rgba(236, 72, 153, 0.4)'
   }
 };
 

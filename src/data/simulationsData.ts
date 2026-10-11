@@ -405,6 +405,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Universal Clipboard (Ctrl+C/V/X)', 'Multitasking (Alt+Tab/Win+D)', 'History & Undo (Ctrl+Z/Y)', 'Browser Tab Navigation'],
     features: ['Interactive Virtual Keyboard', 'Live Physical Keystroke Detection', 'Shortcut Action Explainer', 'Speed Polling Feedback'],
     gradeLevel: 'Elementary, Middle & High School'
+  },
+  {
+    id: 'sim-basic-prepositions-3d',
+    slug: 'basic-prepositions-3d',
+    indexNumber: '28',
+    title: 'Basic Prepositions in 3D: Space, Movement & Grammar',
+    subject: 'English & Grammar (Linguistics)',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#ec4899', // Radiant Pink / Magenta
+    description: 'Explore fundamental spatial prepositions (in, on, under, behind, in front of, beside, between, over, through) in interactive 3D with 360° rotation, authentic voice pronunciation phonics, sentence builder, and dynamic mastery quiz.',
+    fileUrl: '/simulations/basic-prepositions-3d.html',
+    topics: ['Prepositions of Place (in, on, under, behind)', 'Direction & Motion (through, into, across, over)', 'Spatial Relational Grammar & Syntax', 'Audio Phonics Pronunciation & 3D Quiz'],
+    features: ['Interactive 3D Three.js Spatial Stage', 'Natural Web Audio Speech Pronunciation', 'Custom Sentence Builder Visualizer', 'Mastery Quiz with Explanations'],
+    gradeLevel: 'Elementary, Middle & Secondary English'
   }
 ];
 
@@ -415,7 +430,8 @@ export const CATEGORIES = [
   'Biology & Life',
   'Earth & Space',
   'Mathematics & Logic',
-  'Computer Science & IT'
+  'Computer Science & IT',
+  'English & Grammar'
 ] as const;
 
 

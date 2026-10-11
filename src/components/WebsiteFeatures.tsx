@@ -32,9 +32,9 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       description: 'Single-click theater mode eliminates browser distractions and fills the display for high-impact classroom lectures and science demonstrations.'
     },
     {
-      icon: <BookOpen className="w-6 h-6 text-emerald-500" />,
-      title: 'Standard STEM Curriculum',
-      description: 'Aligned with secondary and higher secondary science competencies across Physics, Chemistry, Biology, and Earth & Space sciences.'
+      icon: <BookOpen className="w-6 h-6 text-pink-500" />,
+      title: 'Multidisciplinary Curriculum & English Arts',
+      description: 'Aligned with elementary, secondary, and higher competencies across Physics, Chemistry, Biology, Earth & Space, Math, Computer Science, and English Language Arts.'
     }
   ];
 

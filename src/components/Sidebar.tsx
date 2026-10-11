@@ -28,7 +28,8 @@ import {
   Scale,
   Ruler,
   Computer,
-  Keyboard
+  Keyboard,
+  BookOpen
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -72,6 +73,7 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Ruler': return <Ruler {...iconProps} />;
     case 'Computer': return <Computer {...iconProps} />;
     case 'Keyboard': return <Keyboard {...iconProps} />;
+    case 'BookOpen': return <BookOpen {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
