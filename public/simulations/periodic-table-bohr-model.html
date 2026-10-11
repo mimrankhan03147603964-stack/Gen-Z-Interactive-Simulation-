@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Periodic Table & Bohr Model</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+.header-card {
+  background: linear-gradient(135deg, #0b1a38 0%, #071329 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.title-group h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.5px;
+}
+.title-group p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #040b17;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 430px;
+  gap: 18px;
+}
+@media (max-width: 1200px) {
+  .main-layout { grid-template-columns: 1fr; }
+}
+
+/* Periodic Table Grid */
+.table-panel {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  overflow-x: auto;
+}
+.ptable-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(38px, 1fr));
+  gap: 4px;
+  min-width: 720px;
+}
+.element-cell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  user-select: none;
+}
+.element-cell:hover {
+  transform: scale(1.16);
+  z-index: 20;
+  box-shadow: 0 0 14px currentColor;
+  border-color: #ffffff;
+}
+.element-cell.active {
+  transform: scale(1.18);
+  z-index: 25;
+  box-shadow: 0 0 18px #38bdf8, inset 0 0 0 2px #ffffff;
+  border-color: #ffffff;
+}
+.elem-num {
+  font-size: 0.62rem;
+  opacity: 0.85;
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-weight: 800;
+}
+.elem-sym {
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 6px;
+}
+.elem-name {
+  font-size: 0.52rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+.elem-mass {
+  font-size: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Side Inspection & Bohr Atom Canvas */
+.inspector-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.bohr-card {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  text-align: center;
+}
+.bohr-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  background: radial-gradient(circle at center, #0e2448 0%, #030814 80%);
+  border-radius: 16px;
+  border: 1px solid #1e3a8a;
+  overflow: hidden;
+  margin-top: 10px;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.details-card {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.big-tile {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.big-sym { font-size: 1.6rem; line-height: 1; }
+.big-num { font-size: 0.7rem; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.stat-box {
+  background: #040c1a;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+}
+.stat-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.stat-val {
+  font-size: 0.95rem;
+  color: #f8fafc;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.config-string {
+  background: #040c1a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 0.88rem;
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.btn-ctrl {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-ctrl:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Top Navigation & Legend -->
+  <div class="header-card">
+    <div class="title-group">
+      <h1>⚛️ Interactive Periodic Table of Elements</h1>
+      <p>Click any element (1 to 20 & beyond) to inspect electron shells, Bohr model orbits, atomic mass, and chemical category.</p>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Reactive Nonmetal</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Alkali Metal</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#eab308"></span>Alkaline Earth</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Transition Metal</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Post-Transition</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#14b8a6"></span>Metalloid</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>Noble Gas</div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- Periodic Table Grid -->
+    <div class="table-panel">
+      <div class="ptable-grid" id="ptable"></div>
+    </div>
+
+    <!-- Live Bohr Inspector & Real-Time Shell Orbital Canvas -->
+    <div class="inspector-panel">
+      <div class="bohr-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:1.1rem; font-weight:800; color:#38bdf8;">🌀 Dynamic Bohr Electron Model</h3>
+          <button class="btn-ctrl" id="speedToggle">Orbit Speed: Normal</button>
+        </div>
+        <div class="bohr-canvas-container">
+          <canvas id="bohrCanvas" width="400" height="290"></canvas>
+        </div>
+        <div style="font-size:0.75rem; color:#94a3b8; margin-top:8px;" id="shellSummary">
+          Electron Shells: 2, 8, 1 (K: 2, L: 8, M: 1)
+        </div>
+      </div>
+
+      <div class="details-card">
+        <div class="details-header">
+          <div class="big-tile" id="detailTile" style="background:#f59e0b; color:#fff;">
+            <span class="big-num" id="detailNum">11</span>
+            <span class="big-sym" id="detailSym">Na</span>
+          </div>
+          <div>
+            <h2 style="font-size:1.3rem; font-weight:900; color:#fff;" id="detailName">Sodium</h2>
+            <div style="font-size:0.82rem; font-weight:700; color:#f59e0b;" id="detailCat">Alkali Metal</div>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">Atomic Mass</div>
+            <div class="stat-val" id="detailMass">22.990 u</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Protons / Electrons</div>
+            <div class="stat-val" id="detailPE">11 / 11</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Neutrons</div>
+            <div class="stat-val" id="detailNeutrons">12</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Valence Electrons</div>
+            <div class="stat-val" id="detailValence">1</div>
+          </div>
+        </div>
+
+        <div class="config-string" id="detailConfig">
+          Configuration: 1s² 2s² 2p⁶ 3s¹
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Complete curated dataset of first 20 elements plus key transitional & noble elements
+const ELEMENTS = [
+  // Period 1
+  { z: 1, sym: "H", name: "Hydrogen", mass: "1.008", r: 1, c: 1, cat: "Reactive Nonmetal", color: "#ef4444", shells: [1], config: "1s¹", desc: "Most abundant chemical substance in the universe." },
+  { z: 2, sym: "He", name: "Helium", mass: "4.0026", r: 1, c: 18, cat: "Noble Gas", color: "#8b5cf6", shells: [2], config: "1s²", desc: "Inert noble gas, second lightest element." },
+  
+  // Period 2
+  { z: 3, sym: "Li", name: "Lithium", mass: "6.94", r: 2, c: 1, cat: "Alkali Metal", color: "#f59e0b", shells: [2, 1], config: "[He] 2s¹", desc: "Lightest metal and least dense solid element." },
+  { z: 4, sym: "Be", name: "Beryllium", mass: "9.0122", r: 2, c: 2, cat: "Alkaline Earth", color: "#eab308", shells: [2, 2], config: "[He] 2s²", desc: "Relatively rare metal in the universe." },
+  { z: 5, sym: "B", name: "Boron", mass: "10.81", r: 2, c: 13, cat: "Metalloid", color: "#14b8a6", shells: [2, 3], config: "[He] 2s² 2p¹", desc: "Low-abundance metalloid used in heat-resistant glass." },
+  { z: 6, sym: "C", name: "Carbon", mass: "12.011", r: 2, c: 14, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 4], config: "[He] 2s² 2p²", desc: "Basis of all known organic life." },
+  { z: 7, sym: "N", name: "Nitrogen", mass: "14.007", r: 2, c: 15, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 5], config: "[He] 2s² 2p³", desc: "Makes up ~78% of Earth's atmosphere." },
+  { z: 8, sym: "O", name: "Oxygen", mass: "15.999", r: 2, c: 16, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 6], config: "[He] 2s² 2p⁴", desc: "Essential for cellular respiration and combustion." },
+  { z: 9, sym: "F", name: "Fluorine", mass: "18.998", r: 2, c: 17, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 7], config: "[He] 2s² 2p⁵", desc: "Most electronegative and reactive element." },
+  { z: 10, sym: "Ne", name: "Neon", mass: "20.180", r: 2, c: 18, cat: "Noble Gas", color: "#8b5cf6", shells: [2, 8], config: "[He] 2s² 2p⁶", desc: "Gives a distinct reddish-orange glow in discharge tubes." },
+
+  // Period 3
+  { z: 11, sym: "Na", name: "Sodium", mass: "22.990", r: 3, c: 1, cat: "Alkali Metal", color: "#f59e0b", shells: [2, 8, 1], config: "[Ne] 3s¹", desc: "Soft, silvery-white, highly reactive alkali metal." },
+  { z: 12, sym: "Mg", name: "Magnesium", mass: "24.305", r: 3, c: 2, cat: "Alkaline Earth", color: "#eab308", shells: [2, 8, 2], config: "[Ne] 3s²", desc: "Shiny gray solid, essential mineral in chlorophyll." },
+  { z: 13, sym: "Al", name: "Aluminium", mass: "26.982", r: 3, c: 13, cat: "Post-Transition", color: "#10b981", shells: [2, 8, 3], config: "[Ne] 3s² 3p¹", desc: "Most widespread metal in Earth's crust." },
+  { z: 14, sym: "Si", name: "Silicon", mass: "28.085", r: 3, c: 14, cat: "Metalloid", color: "#14b8a6", shells: [2, 8, 4], config: "[Ne] 3s² 3p²", desc: "Semiconductor backbone of modern electronics." },
+  { z: 15, sym: "P", name: "Phosphorus", mass: "30.974", r: 3, c: 15, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 8, 5], config: "[Ne] 3s² 3p³", desc: "Crucial component of DNA, RNA, and ATP." },
+  { z: 16, sym: "S", name: "Sulfur", mass: "32.06", r: 3, c: 16, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 8, 6], config: "[Ne] 3s² 3p⁴", desc: "Bright yellow crystalline solid at room temperature." },
+  { z: 17, sym: "Cl", name: "Chlorine", mass: "35.45", r: 3, c: 17, cat: "Reactive Nonmetal", color: "#ef4444", shells: [2, 8, 7], config: "[Ne] 3s² 3p⁵", desc: "Yellow-green gas, powerful disinfectant in water." },
+  { z: 18, sym: "Ar", name: "Argon", mass: "39.948", r: 3, c: 18, cat: "Noble Gas", color: "#8b5cf6", shells: [2, 8, 8], config: "[Ne] 3s² 3p⁶", desc: "Third-most abundant gas in the Earth's atmosphere." },
+
+  // Period 4
+  { z: 19, sym: "K", name: "Potassium", mass: "39.098", r: 4, c: 1, cat: "Alkali Metal", color: "#f59e0b", shells: [2, 8, 8, 1], config: "[Ar] 4s¹", desc: "Silvery-white metal that reacts violently with water." },
+  { z: 20, sym: "Ca", name: "Calcium", mass: "40.078", r: 4, c: 2, cat: "Alkaline Earth", color: "#eab308", shells: [2, 8, 8, 2], config: "[Ar] 4s²", desc: "Vital structural element of human bones and teeth." },
+  { z: 26, sym: "Fe", name: "Iron", mass: "55.845", r: 4, c: 8, cat: "Transition Metal", color: "#3b82f6", shells: [2, 8, 14, 2], config: "[Ar] 3d⁶ 4s²", desc: "Most used of all metals, center of hemoglobin." },
+  { z: 29, sym: "Cu", name: "Copper", mass: "63.546", r: 4, c: 11, cat: "Transition Metal", color: "#3b82f6", shells: [2, 8, 18, 1], config: "[Ar] 3d¹⁰ 4s¹", desc: "High electrical and thermal conductivity." },
+  { z: 30, sym: "Zn", name: "Zinc", mass: "65.38", r: 4, c: 12, cat: "Transition Metal", color: "#3b82f6", shells: [2, 8, 18, 2], config: "[Ar] 3d¹⁰ 4s²", desc: "Resistant to corrosion, used to galvanize steel." },
+  { z: 47, sym: "Ag", name: "Silver", mass: "107.87", r: 5, c: 11, cat: "Transition Metal", color: "#3b82f6", shells: [2, 8, 18, 18, 1], config: "[Kr] 4d¹⁰ 5s¹", desc: "Highest electrical and thermal conductivity of any metal." },
+  { z: 79, sym: "Au", name: "Gold", mass: "196.97", r: 6, c: 11, cat: "Transition Metal", color: "#3b82f6", shells: [2, 8, 18, 32, 18, 1], config: "[Xe] 4f¹⁴ 5d¹⁰ 6s¹", desc: "Dense, precious metal resistant to corrosion and tarnishing." }
+];
+
+let selectedElement = ELEMENTS.find(e => e.z === 11) || ELEMENTS[0];
+let orbitSpeed = 1.0;
+let animAngle = 0;
+
+// Render Grid
+const ptableEl = document.getElementById('ptable');
+ELEMENTS.forEach(elem => {
+  const cell = document.createElement('div');
+  cell.className = 'element-cell' + (elem.z === selectedElement.z ? ' active' : '');
+  cell.style.gridRow = elem.r;
+  cell.style.gridColumn = elem.c;
+  cell.style.backgroundColor = elem.color + '26'; // 15% opacity tint
+  cell.style.borderColor = elem.color;
+  cell.style.color = elem.color;
+
+  cell.innerHTML = `
+    <span class="elem-num">${elem.z}</span>
+    <span class="elem-sym">${elem.sym}</span>
+    <span class="elem-name">${elem.name}</span>
+  `;
+
+  cell.addEventListener('click', () => {
+    document.querySelectorAll('.element-cell').forEach(c => c.classList.remove('active'));
+    cell.classList.add('active');
+    selectElement(elem);
+  });
+
+  ptableEl.appendChild(cell);
+});
+
+function selectElement(elem) {
+  selectedElement = elem;
+  document.getElementById('detailTile').style.backgroundColor = elem.color;
+  document.getElementById('detailTile').style.borderColor = '#ffffff';
+  document.getElementById('detailNum').innerText = elem.z;
+  document.getElementById('detailSym').innerText = elem.sym;
+  document.getElementById('detailName').innerText = elem.name;
+  document.getElementById('detailCat').innerText = elem.cat;
+  document.getElementById('detailCat').style.color = elem.color;
+  document.getElementById('detailMass').innerText = elem.mass + ' u';
+  document.getElementById('detailPE').innerText = `${elem.z} / ${elem.z}`;
+  
+  const neutrons = Math.round(parseFloat(elem.mass)) - elem.z;
+  document.getElementById('detailNeutrons').innerText = neutrons;
+  document.getElementById('detailValence').innerText = elem.shells[elem.shells.length - 1];
+  document.getElementById('detailConfig').innerText = `Configuration: ${elem.config}`;
+  
+  const shellLabels = ['K', 'L', 'M', 'N', 'O', 'P'];
+  const shellBreakdown = elem.shells.map((count, i) => `${shellLabels[i]}: ${count}`).join(', ');
+  document.getElementById('shellSummary').innerText = `Electron Shells: ${elem.shells.join(', ')} (${shellBreakdown})`;
+}
+
+// Canvas Bohr Animation
+const canvas = document.getElementById('bohrCanvas');
+const ctx = canvas.getContext('2d');
+
+function drawBohr() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  // Draw Nucleus
+  const nucleusRadius = 20;
+  const nucGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, nucleusRadius);
+  nucGrad.addColorStop(0, '#ffffff');
+  nucGrad.addColorStop(0.5, '#ef4444');
+  nucGrad.addColorStop(1, '#7f1d1d');
+  
+  ctx.beginPath();
+  ctx.arc(cx, cy, nucleusRadius, 0, Math.PI * 2);
+  ctx.fillStyle = nucGrad;
+  ctx.shadowColor = '#ef4444';
+  ctx.shadowBlur = 12;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Nucleus Text (Proton count)
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${selectedElement.z}p+`, cx, cy);
+
+  // Draw Shells & Electrons
+  const shells = selectedElement.shells;
+  const baseRadius = 38;
+  const radiusStep = 24;
+
+  shells.forEach((electronCount, shellIndex) => {
+    const r = baseRadius + shellIndex * radiusStep;
+    
+    // Orbit line
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Electrons on this shell
+    const speedFactor = (shellIndex % 2 === 0 ? 1 : -1) * (1 / (shellIndex + 1));
+    for (let e = 0; e < electronCount; e++) {
+      const angle = animAngle * speedFactor + (e * (Math.PI * 2) / electronCount);
+      const ex = cx + r * Math.cos(angle);
+      const ey = cy + r * Math.sin(angle);
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(ex, ey, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Inner white dot
+      ctx.beginPath();
+      ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    }
+  });
+
+  animAngle += 0.02 * orbitSpeed;
+  requestAnimationFrame(drawBohr);
+}
+
+drawBohr();
+selectElement(selectedElement);
+
+// Orbit speed toggle button
+const speedBtn = document.getElementById('speedToggle');
+speedBtn.addEventListener('click', () => {
+  if (orbitSpeed === 1.0) {
+    orbitSpeed = 2.2;
+    speedBtn.innerText = 'Orbit Speed: Fast';
+  } else if (orbitSpeed === 2.2) {
+    orbitSpeed = 0.4;
+    speedBtn.innerText = 'Orbit Speed: Slow';
+  } else {
+    orbitSpeed = 1.0;
+    speedBtn.innerText = 'Orbit Speed: Normal';
+  }
+});
+</script>
+</body>
+</html>

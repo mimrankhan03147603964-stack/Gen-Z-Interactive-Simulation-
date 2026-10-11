@@ -319,6 +319,38 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ecfeff',
     tagText: '#0e7490',
     glowColor: 'rgba(6, 182, 212, 0.4)'
+  },
+  '20': {
+    id: '20',
+    name: 'Periodic Table & Bohr Model',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0284c7',
+    iconBorder: '#7dd3fc',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(14, 165, 233, 0.4)'
+  },
+  '21': {
+    id: '21',
+    name: 'Sound Waves & Doppler Effect',
+    bgSolid: '#0d9488',
+    bgGradient: 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)',
+    borderColor: '#2dd4bf',
+    iconBg: '#0d9488',
+    iconBorder: '#5eead4',
+    iconColor: '#ffffff',
+    badgeBg: '#ccfbf1',
+    badgeText: '#115e59',
+    badgeBorder: '#5eead4',
+    tagBg: '#f0fdfa',
+    tagText: '#0f766e',
+    glowColor: 'rgba(20, 184, 166, 0.4)'
   }
 };
 

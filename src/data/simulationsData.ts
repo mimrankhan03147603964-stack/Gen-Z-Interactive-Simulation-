@@ -285,6 +285,36 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['8 Major Planets & Orbits', 'Keplerian Velocity Ratios', 'Asteroid Belt Dynamics', 'Planetary Atmosphere & Moons'],
     features: ['Focus Zoom on Any Planet', 'Time Warp Speed Slider', 'High-Res Planet Previews', 'Orbital Trails & Asteroid Field'],
     gradeLevel: 'All Grade Levels'
+  },
+  {
+    id: 'sim-periodic-table-bohr',
+    slug: 'periodic-table-bohr-model',
+    indexNumber: '20',
+    title: 'Interactive Periodic Table & Bohr Model',
+    subject: 'Atomic Chemistry & Quantum Shells',
+    category: 'Chemistry & Matter',
+    iconName: 'Atom',
+    accentColor: '#0284c7', // Sky Blue
+    description: 'Dynamic periodic table with real-time electron shell orbitals (K, L, M, N), live Bohr model canvas, valence electron readouts, and atomic mass configurations.',
+    fileUrl: '/simulations/periodic-table-bohr-model.html',
+    topics: ['Atomic Number & Mass', 'Bohr Electron Orbits', 'Valence Electrons & Shells', 'Element Groups & Periods'],
+    features: ['Interactive Element Selection', 'Live Canvas Bohr Orbits', 'Electron Shell Breakdown', 'Variable Orbit Speeds'],
+    gradeLevel: 'Middle & High School'
+  },
+  {
+    id: 'sim-sound-waves-doppler',
+    slug: 'sound-waves-doppler-effect',
+    indexNumber: '21',
+    title: 'Sound Waves, Frequency & Doppler Effect',
+    subject: 'Acoustics & Wave Physics',
+    category: 'Physics & Motion',
+    iconName: 'Activity',
+    accentColor: '#0d9488', // Teal
+    description: 'Acoustics virtual lab featuring transverse waveform graphs, longitudinal particle density compressions, live Web Audio tone synthesizer, and moving source Doppler effect.',
+    fileUrl: '/simulations/sound-waves-doppler-effect.html',
+    topics: ['Frequency & Pitch (v = fλ)', 'Amplitude & Loudness', 'Longitudinal Compressions', 'Doppler Frequency Shift'],
+    features: ['Real Audio Tone Synthesizer', 'Air Particle Compression View', 'Moving Siren Vehicle', 'Wavelength & Pitch Readouts'],
+    gradeLevel: 'Secondary & High School'
   }
 ];
 

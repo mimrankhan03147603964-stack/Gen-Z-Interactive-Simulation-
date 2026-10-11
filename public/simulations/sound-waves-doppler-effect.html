@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sound Waves, Frequency, Amplitude & Doppler Effect Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+.header-card {
+  background: linear-gradient(135deg, #0b1a38 0%, #071329 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.title-group h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.5px;
+}
+.title-group p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  background: #040b17;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid #1e293b;
+}
+.mode-tab {
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  transition: all 0.2s;
+}
+.mode-tab.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 18px;
+}
+@media (max-width: 1100px) {
+  .lab-grid { grid-template-columns: 1fr; }
+}
+
+.canvas-panel {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background: #030814;
+  border-radius: 16px;
+  border: 1px solid #1e3a8a;
+  overflow: hidden;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.readout-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+.readout-box {
+  background: #040c1a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.readout-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.readout-val {
+  font-size: 1.15rem;
+  color: #38bdf8;
+  font-weight: 900;
+  margin-top: 2px;
+}
+
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ctrl-card {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.ctrl-card h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slider-group {
+  margin-bottom: 14px;
+}
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.slider-header span:first-child { color: #94a3b8; }
+.slider-header span:last-child { color: #38bdf8; }
+input[type="range"] {
+  width: 100%;
+  accent-color: #38bdf8;
+  cursor: pointer;
+  background: #1e293b;
+  border-radius: 8px;
+  height: 6px;
+}
+
+.audio-toggle-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.audio-toggle-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.audio-toggle-btn.muted {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  box-shadow: none;
+}
+
+.info-box {
+  background: #040c1a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+.info-box strong { color: #38bdf8; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div class="title-group">
+      <h1>🔊 Sound Waves, Frequency & Doppler Effect Lab</h1>
+      <p>Interactive longitudinal & transverse sound wave simulator with real synthesized audio tone generator and moving source Doppler effect.</p>
+    </div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabWave" onclick="switchMode('wave')">Waveform & Particles</button>
+      <button class="mode-tab" id="tabDoppler" onclick="switchMode('doppler')">Moving Source (Doppler)</button>
+    </div>
+  </div>
+
+  <div class="lab-grid">
+    <div class="canvas-panel">
+      <div class="canvas-wrapper">
+        <canvas id="soundCanvas" width="900" height="400"></canvas>
+      </div>
+
+      <div class="readout-strip">
+        <div class="readout-box">
+          <div class="readout-label">Frequency (f)</div>
+          <div class="readout-val" id="valFreq">440 Hz</div>
+        </div>
+        <div class="readout-box">
+          <div class="readout-label">Wavelength (λ)</div>
+          <div class="readout-val" id="valLambda">0.78 m</div>
+        </div>
+        <div class="readout-box">
+          <div class="readout-label">Speed of Sound (v)</div>
+          <div class="readout-val" id="valSpeed">343 m/s</div>
+        </div>
+        <div class="readout-box">
+          <div class="readout-label">Sound Pitch</div>
+          <div class="readout-val" id="valPitch" style="color:#10b981;">A4 (Concert Pitch)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-panel">
+      <div class="ctrl-card">
+        <h3>🎛️ Acoustics Parameters</h3>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Frequency (Pitch)</span>
+            <span id="labelFreq">440 Hz</span>
+          </div>
+          <input type="range" id="sliderFreq" min="100" max="1000" step="10" value="440" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Amplitude (Loudness)</span>
+            <span id="labelAmp">50%</span>
+          </div>
+          <input type="range" id="sliderAmp" min="5" max="100" step="5" value="50" />
+        </div>
+
+        <div class="slider-group" id="groupSourceSpeed" style="display:none;">
+          <div class="slider-header">
+            <span>Source Velocity (Mach)</span>
+            <span id="labelMach">0.50 Mach (171 m/s)</span>
+          </div>
+          <input type="range" id="sliderMach" min="0" max="1.3" step="0.05" value="0.5" />
+        </div>
+
+        <button class="audio-toggle-btn" id="audioBtn" onclick="toggleAudio()">
+          🔊 Play Pure Audio Tone
+        </button>
+      </div>
+
+      <div class="ctrl-card">
+        <h3>📖 Physics Explanation</h3>
+        <div class="info-box" id="infoText">
+          <strong>Longitudinal Sound Waves:</strong> Sound travels through air as oscillating compressions (high density) and rarefactions (low density). Higher frequency corresponds to higher musical pitch and shorter wavelength (v = f × λ).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentMode = 'wave';
+let frequency = 440;
+let amplitude = 50;
+let sourceSpeedMach = 0.5;
+let isAudioPlaying = false;
+let audioCtx = null;
+let oscillator = null;
+let gainNode = null;
+
+const canvas = document.getElementById('soundCanvas');
+const ctx = canvas.getContext('2d');
+let time = 0;
+
+// Doppler wave pulses
+let dopplerPulses = [];
+let sourceX = 100;
+let sourceDir = 1;
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('tabWave').classList.toggle('active', mode === 'wave');
+  document.getElementById('tabDoppler').classList.toggle('active', mode === 'doppler');
+  document.getElementById('groupSourceSpeed').style.display = mode === 'doppler' ? 'block' : 'none';
+
+  const infoEl = document.getElementById('infoText');
+  if (mode === 'wave') {
+    infoEl.innerHTML = `<strong>Waveform & Air Particles:</strong> High pitch = higher frequency of air particle vibrations. Low amplitude = quiet whisper; high amplitude = loud acoustic pressure wave.`;
+  } else {
+    infoEl.innerHTML = `<strong>Doppler Effect:</strong> When an emergency vehicle or source approaches you, waves bunch up in front (higher observed frequency / pitch). As it recedes, waves stretch out (lower observed frequency / pitch).`;
+  }
+}
+
+// Slider listeners
+const sliderFreq = document.getElementById('sliderFreq');
+sliderFreq.addEventListener('input', (e) => {
+  frequency = parseInt(e.target.value);
+  document.getElementById('labelFreq').innerText = `${frequency} Hz`;
+  document.getElementById('valFreq').innerText = `${frequency} Hz`;
+  
+  const lambda = (343 / frequency).toFixed(2);
+  document.getElementById('valLambda').innerText = `${lambda} m`;
+
+  let pitchName = 'Medium';
+  if (frequency < 200) pitchName = 'Deep Bass';
+  else if (frequency <= 300) pitchName = 'Low Baritone';
+  else if (frequency <= 500) pitchName = 'Tenor / Concert A4';
+  else if (frequency <= 800) pitchName = 'High Soprano';
+  else pitchName = 'Very High Whistle';
+  document.getElementById('valPitch').innerText = pitchName;
+
+  if (oscillator && audioCtx) {
+    oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.05);
+  }
+});
+
+const sliderAmp = document.getElementById('sliderAmp');
+sliderAmp.addEventListener('input', (e) => {
+  amplitude = parseInt(e.target.value);
+  document.getElementById('labelAmp').innerText = `${amplitude}%`;
+  if (gainNode && audioCtx) {
+    gainNode.gain.setTargetAtTime((amplitude / 100) * 0.25, audioCtx.currentTime, 0.05);
+  }
+});
+
+const sliderMach = document.getElementById('sliderMach');
+sliderMach.addEventListener('input', (e) => {
+  sourceSpeedMach = parseFloat(e.target.value);
+  const mps = Math.round(sourceSpeedMach * 343);
+  document.getElementById('labelMach').innerText = `${sourceSpeedMach.toFixed(2)} Mach (${mps} m/s)`;
+});
+
+function toggleAudio() {
+  const btn = document.getElementById('audioBtn');
+  if (!isAudioPlaying) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      oscillator = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime((amplitude / 100) * 0.25, audioCtx.currentTime);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.start();
+
+      isAudioPlaying = true;
+      btn.innerText = '🔇 Stop Audio Tone';
+      btn.classList.add('muted');
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    if (oscillator) {
+      oscillator.stop();
+      oscillator.disconnect();
+    }
+    isAudioPlaying = false;
+    btn.innerText = '🔊 Play Pure Audio Tone';
+    btn.classList.remove('muted');
+  }
+}
+
+// Particle field generation for longitudinal wave
+const particles = [];
+const numParticles = 350;
+for (let i = 0; i < numParticles; i++) {
+  particles.push({
+    baseX: Math.random() * 900,
+    baseY: 200 + (Math.random() * 160 - 80),
+    radius: 2 + Math.random() * 1.5
+  });
+}
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (currentMode === 'wave') {
+    // Top: Transverse Sine Wave representation
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 100);
+    ctx.lineTo(900, 100);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    for (let x = 0; x < 900; x++) {
+      const k = (frequency / 250) * 0.04;
+      const y = 100 + Math.sin(x * k - time * 6) * (amplitude * 0.7);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Label transverse
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('Transverse Wave Representation (Oscilloscope View)', 20, 30);
+
+    // Bottom: Longitudinal air particle compression/rarefaction
+    ctx.fillText('Longitudinal Air Molecule Density (Compressions & Rarefactions)', 20, 190);
+    
+    const kLong = (frequency / 250) * 0.04;
+    particles.forEach(p => {
+      const displacement = Math.sin(p.baseX * kLong - time * 6) * (amplitude * 0.5);
+      const px = p.baseX + displacement;
+      const py = p.baseY;
+
+      ctx.beginPath();
+      ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#60a5fa';
+      ctx.fill();
+    });
+
+  } else {
+    // Doppler Mode
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(`Moving Sound Source at Mach ${sourceSpeedMach.toFixed(2)} — Wavefront Compression Front vs Rarefaction Behind`, 20, 30);
+
+    // Update source
+    sourceX += sourceSpeedMach * 3.5 * sourceDir;
+    if (sourceX > 750) sourceDir = -1;
+    if (sourceX < 150) sourceDir = 1;
+
+    // Emit sound pulse every 12 frames
+    if (Math.floor(time * 60) % 12 === 0) {
+      dopplerPulses.push({
+        x: sourceX,
+        y: 200,
+        radius: 4,
+        maxRadius: 400
+      });
+    }
+
+    // Draw expanding pulses
+    dopplerPulses.forEach((pulse, idx) => {
+      pulse.radius += 2.8; // wave speed
+      ctx.beginPath();
+      ctx.arc(pulse.x, pulse.y, pulse.radius, 0, Math.PI * 2);
+      const alpha = Math.max(0, 1 - pulse.radius / pulse.maxRadius);
+      ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * 0.8})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+    dopplerPulses = dopplerPulses.filter(p => p.radius < p.maxRadius);
+
+    // Draw Source Vehicle
+    ctx.beginPath();
+    ctx.arc(sourceX, 200, 16, 0, Math.PI * 2);
+    ctx.fillStyle = '#ef4444';
+    ctx.shadowColor = '#ef4444';
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Vehicle icon / Siren
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🚨', sourceX, 204);
+
+    // Observers
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath();
+    ctx.arc(80, 200, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('👂', 80, 204);
+
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath();
+    ctx.arc(820, 200, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('👂', 820, 204);
+
+    ctx.textAlign = 'left';
+  }
+
+  time += 0.03;
+  requestAnimationFrame(render);
+}
+
+render();
+</script>
+</body>
+</html>
