@@ -351,8 +351,73 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f0fdfa',
     tagText: '#0f766e',
     glowColor: 'rgba(20, 184, 166, 0.4)'
+  },
+  '22': {
+    id: '22',
+    name: 'Basic Maths & Multiplication',
+    bgSolid: '#4f46e5',
+    bgGradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
+    borderColor: '#818cf8',
+    iconBg: '#4f46e5',
+    iconBorder: '#c7d2fe',
+    iconColor: '#ffffff',
+    badgeBg: '#e0e7ff',
+    badgeText: '#3730a3',
+    badgeBorder: '#a5b4fc',
+    tagBg: '#eef2ff',
+    tagText: '#4338ca',
+    glowColor: 'rgba(99, 102, 241, 0.4)'
+  },
+  '23': {
+    id: '23',
+    name: 'Interactive Geometry & Shapes',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0284c7',
+    iconBorder: '#bae6fd',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(14, 165, 233, 0.4)'
+  },
+  '24': {
+    id: '24',
+    name: 'Algebra & Equation Balancer',
+    bgSolid: '#7c3aed',
+    bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+    borderColor: '#a78bfa',
+    iconBg: '#7c3aed',
+    iconBorder: '#ddd6fe',
+    iconColor: '#ffffff',
+    badgeBg: '#ede9fe',
+    badgeText: '#5b21b6',
+    badgeBorder: '#c4b5fd',
+    tagBg: '#f5f3ff',
+    tagText: '#6d28d9',
+    glowColor: 'rgba(139, 92, 246, 0.4)'
+  },
+  '25': {
+    id: '25',
+    name: 'Measurement, Scale & Units',
+    bgSolid: '#059669',
+    bgGradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+    borderColor: '#34d399',
+    iconBg: '#059669',
+    iconBorder: '#a7f3d0',
+    iconColor: '#ffffff',
+    badgeBg: '#d1fae5',
+    badgeText: '#065f46',
+    badgeBorder: '#6ee7b7',
+    tagBg: '#ecfdf5',
+    tagText: '#047857',
+    glowColor: 'rgba(16, 185, 129, 0.4)'
   }
 };
+
 
 export const getSimTheme = (indexNumber: string): SimColorConfig => {
   return SIM_COLOR_CONFIGS[indexNumber] || SIM_COLOR_CONFIGS['01'];

@@ -22,7 +22,11 @@ import {
   Orbit,
   Telescope,
   Search,
-  PanelLeftClose
+  PanelLeftClose,
+  Calculator,
+  Shapes,
+  Scale,
+  Ruler
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -60,9 +64,14 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'CircleDot': return <CircleDot {...iconProps} />;
     case 'Orbit': return <Orbit {...iconProps} />;
     case 'Telescope': return <Telescope {...iconProps} />;
+    case 'Calculator': return <Calculator {...iconProps} />;
+    case 'Shapes': return <Shapes {...iconProps} />;
+    case 'Scale': return <Scale {...iconProps} />;
+    case 'Ruler': return <Ruler {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
+
 
 export const Sidebar: React.FC<SidebarProps> = ({
   simulations,

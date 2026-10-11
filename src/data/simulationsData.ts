@@ -315,6 +315,66 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Frequency & Pitch (v = fλ)', 'Amplitude & Loudness', 'Longitudinal Compressions', 'Doppler Frequency Shift'],
     features: ['Real Audio Tone Synthesizer', 'Air Particle Compression View', 'Moving Siren Vehicle', 'Wavelength & Pitch Readouts'],
     gradeLevel: 'Secondary & High School'
+  },
+  {
+    id: 'sim-basic-maths-multiplication',
+    slug: 'basic-maths-multiplication',
+    indexNumber: '22',
+    title: 'Basic Maths & Multiplication Lab',
+    subject: 'Elementary Mathematics & Arithmetic',
+    category: 'Mathematics & Logic',
+    iconName: 'Calculator',
+    accentColor: '#4f46e5', // Indigo
+    description: 'Interactive visual mathematics lab featuring dynamic Area Array blocks, 12x12 times tables matrix, skip-counting number line, fact families, and speed challenge quiz.',
+    fileUrl: '/simulations/basic-maths-multiplication.html',
+    topics: ['Multiplication Area Model', '12×12 Times Table Matrix', 'Skip-Counting Number Line', 'Fact Families (× & ÷)'],
+    features: ['Dynamic Area Array Canvas', 'Clickable Times Table Matrix', 'Animated Number Line Jumps', 'Speed Challenge Quiz'],
+    gradeLevel: 'Elementary & Middle School'
+  },
+  {
+    id: 'sim-interactive-geometry',
+    slug: 'interactive-geometry-shapes',
+    indexNumber: '23',
+    title: 'Interactive Geometry, Shapes & Angles',
+    subject: 'Geometry & Measurement',
+    category: 'Mathematics & Logic',
+    iconName: 'Shapes',
+    accentColor: '#0284c7', // Ocean Sky Blue
+    description: 'Explore 2D polygons, dynamic area & perimeter calculations, 360° protractor angle classifications, visual Pythagorean theorem proof, and coordinate geometry.',
+    fileUrl: '/simulations/interactive-geometry-shapes.html',
+    topics: ['2D Polygon Area & Perimeter', '360° Protractor Angles', 'Pythagorean Theorem (a²+b²=c²)', 'Cartesian Coordinate Plane'],
+    features: ['Real-time Geometric Render', 'Interactive 360° Protractor', 'Visual Area Squares Proof', 'Draggable Grid Vertices'],
+    gradeLevel: 'Middle & High School'
+  },
+  {
+    id: 'sim-algebra-equation-balancer',
+    slug: 'algebra-equation-balancer',
+    indexNumber: '24',
+    title: 'Algebra & Equation Balancing Lab',
+    subject: 'Algebra & Functions',
+    category: 'Mathematics & Logic',
+    iconName: 'Scale',
+    accentColor: '#7c3aed', // Purple
+    description: 'Balance linear algebraic equations on a physical dual-pan beam scale, deduce unknown variables step-by-step, and explore linear and quadratic function graphs.',
+    fileUrl: '/simulations/algebra-equation-balancer.html',
+    topics: ['Dual-Pan Balance Scale', 'Linear Equation Solving', 'Slope-Intercept Form (y = mx + c)', 'Quadratic Curves & Roots'],
+    features: ['Interactive Pan Balance Beam', 'Step-by-Step Algebraic Solver', 'Cartesian Graph with Slope', 'Dynamic Parabola Roots'],
+    gradeLevel: 'Middle & Secondary School'
+  },
+  {
+    id: 'sim-measurement-units-scale',
+    slug: 'measurement-units-scale',
+    indexNumber: '25',
+    title: 'Measurement, Scale & Units Lab',
+    subject: 'Applied Mathematics & Metric Units',
+    category: 'Mathematics & Logic',
+    iconName: 'Ruler',
+    accentColor: '#059669', // Emerald
+    description: 'Precision measurement lab featuring calibrated metric/imperial rulers, digital tare mass balance scale, Archimedes water displacement cylinder, and unit converters.',
+    fileUrl: '/simulations/measurement-units-scale.html',
+    topics: ['Metric & Imperial Ruler', 'Digital Mass Scale & Tare', 'Liquid Volume Meniscus', 'Archimedes Fluid Displacement'],
+    features: ['Draggable Objects to Measure', 'Precision Electronic Scale', 'Fluid Displacement Density Test', 'Instant Unit Converter Matrix'],
+    gradeLevel: 'Elementary & Middle School'
   }
 ];
 
@@ -323,6 +383,8 @@ export const CATEGORIES = [
   'Physics & Motion',
   'Chemistry & Matter',
   'Biology & Life',
-  'Earth & Space'
+  'Earth & Space',
+  'Mathematics & Logic'
 ] as const;
+
 

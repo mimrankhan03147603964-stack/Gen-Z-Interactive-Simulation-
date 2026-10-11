@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Geometry, Shapes & Angles Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #0b1a38 0%, #071329 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #38bdf8;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #1e3a8a;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #08152e;
+  color: #93c5fd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-color: #60a5fa;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #0284c7;
+  border-top: 1px solid #1e3a8a;
+  border-right: 1px solid #1e3a8a;
+  border-bottom: 1px solid #1e3a8a;
+}
+.grid-item h4 { font-size: 1rem; color: #38bdf8; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #091e36 0%, #061527 100%);
+  border: 1.5px solid #0284c7;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #38bdf8;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #38bdf8;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #0b1a38;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #1e3a8a;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #091a38 0%, #040d1f 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+}
+#geomCanvas {
+  display: block;
+  width: 100%;
+  height: 480px;
+  cursor: crosshair;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #0b1a38;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+.readout-pill {
+  background: #050c18;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #1e3a8a;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #040d1f !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-holder,
+.sim-box:fullscreen .canvas-holder,
+.sim-box:-webkit-full-screen .canvas-holder {
+  flex: 1 !important;
+  height: calc(100vh - 170px) !important;
+}
+.sim-box.is-fullscreen #geomCanvas,
+.sim-box:fullscreen #geomCanvas,
+.sim-box:-webkit-full-screen #geomCanvas {
+  height: 100% !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(11, 26, 56, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #38bdf8 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-geom', this)">
+      <span>📐</span> Interactive Polygons, Angles & Vertex Lab
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-protractor', this)">
+      <span>⭕</span> 360° Interactive Protractor & Angle Classification
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-pythagoras', this)">
+      <span>📐</span> Pythagorean Theorem & Right Triangles
+    </button>
+  </div>
+
+  <!-- TAB 1: POLYGONS & ANGLES -->
+  <div id="topic-geom" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Geometry, Polygon Architecture & Angles
+        <small>Euclidean Geometry &bull; Angles &bull; Geometric Transformations</small>
+      </h2>
+      <p class="desc">
+        A polygon is a closed two-dimensional plane figure bounded by a finite number of straight line segments. The sum of interior angles in an $n$-sided polygon follows the universal formula $(n - 2) \times 180^\circ$.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'g-def')">Polygon Rules</button>
+        <button class="section-tab" onclick="switchSection(this, 'g-angles')">Interior & Exterior Angles</button>
+        <button class="section-tab" onclick="switchSection(this, 'g-pythag')">Pythagorean Geometry</button>
+        <button class="section-tab" onclick="switchSection(this, 'g-uses')">Everyday Applications</button>
+      </div>
+
+      <div id="g-def" class="panel active">
+        <h3>Fundamental Laws of Polygons</h3>
+        <ul>
+          <li><strong>Interior Angle Sum:</strong> $S = (n - 2) \times 180^\circ$. Triangle ($n=3$): $180^\circ$; Quadrilateral ($n=4$): $360^\circ$; Pentagon ($n=5$): $540^\circ$.</li>
+          <li><strong>Regular Polygon:</strong> All sides are congruent and all interior angles are equal: $\text{Each Angle} = \frac{(n-2) \times 180^\circ}{n}$.</li>
+          <li><strong>Exterior Angles:</strong> For any convex polygon, the sum of all exterior angles is always constant at $360^\circ$.</li>
+        </ul>
+      </div>
+
+      <div id="g-angles" class="panel">
+        <h3>Angle Classification</h3>
+        <div class="formula-box">
+          Acute: $< 90^\circ$ &bull; Right: $= 90^\circ$ &bull; Obtuse: $90^\circ < \theta < 180^\circ$ &bull; Straight: $= 180^\circ$
+          <small>Complementary angles sum to $90^\circ$; Supplementary angles sum to $180^\circ$.</small>
+        </div>
+      </div>
+
+      <div id="g-pythag" class="panel">
+        <h3>Pythagorean Theorem</h3>
+        <p>In any right-angled triangle, the square of the hypotenuse $c$ equals the sum of the squares of the other two legs $a$ and $b$ ($a^2 + b^2 = c^2$).</p>
+      </div>
+
+      <div id="g-uses" class="panel">
+        <h3>Real-World Utility</h3>
+        <ul>
+          <li><strong>Architecture & Civil Engineering:</strong> Triangulation structures (trusses in bridges and geodesic domes) offer unmatched structural rigidity.</li>
+          <li><strong>GPS Navigation & Cartography:</strong> Triangular trilateration determines precise smartphone coordinates via satellite signal vectors.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox23">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn23" onclick="toggleSimFullscreen('simBox23')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          
+          <button class="ctrl-btn btn-sky" onclick="setPolygonSides(3)">▲ Triangle (3)</button>
+          <button class="ctrl-btn btn-sky" onclick="setPolygonSides(4)">■ Quad (4)</button>
+          <button class="ctrl-btn btn-sky" onclick="setPolygonSides(5)">⬠ Pentagon (5)</button>
+          <button class="ctrl-btn btn-sky" onclick="setPolygonSides(6)">⬡ Hexagon (6)</button>
+          <button class="ctrl-btn btn-sky" onclick="setPolygonSides(8)">🛑 Octagon (8)</button>
+
+          <button class="ctrl-btn btn-indigo" id="btnToggleAngles" onclick="toggleAngleArcs()">
+            📐 Angles: ON
+          </button>
+
+          <button class="ctrl-btn btn-emerald" id="btnToggleLengths" onclick="toggleSideLengths()">
+            📏 Side Lengths: ON
+          </button>
+
+          <button class="ctrl-btn btn-rose" onclick="resetGeomSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="geomCanvas" width="1200" height="480"></canvas>
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveShapeName">Active Polygon: Regular Triangle (n = 3)</span>
+        <span class="readout-pill" id="liveAngleSum">Interior Angle Sum: (3-2) × 180° = 180°</span>
+        <span class="readout-pill" id="livePerimeter">Perimeter: 420 px</span>
+        <span class="readout-pill" id="liveDragHint">💡 Drag any vertex circle to transform the shape dynamically!</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Click and drag any of the glowing cyan vertex points on the canvas! Observe how dragging changes individual interior angles in real time, but the mathematical sum of all interior angles always rigorously obeys the formula $(n - 2) \times 180^\circ$!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar23">
+        <button class="ctrl-btn btn-sky" onclick="setPolygonSides(3)"><span>▲ Triangle</span></button>
+        <button class="ctrl-btn btn-sky" onclick="setPolygonSides(4)"><span>■ Quadrilateral</span></button>
+        <button class="ctrl-btn btn-sky" onclick="setPolygonSides(5)"><span>⬠ Pentagon</span></button>
+        <button class="ctrl-btn btn-sky" onclick="setPolygonSides(6)"><span>⬡ Hexagon</span></button>
+        <button class="ctrl-btn btn-indigo" onclick="toggleAngleArcs()"><span>📐 Toggle Angles</span></button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox23')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: PROTRACTOR -->
+  <div id="topic-protractor" class="tab-content">
+    <div class="card">
+      <h2>Protractor Measuring & Degree Standard</h2>
+      <p class="desc">A full circle rotation is partitioned into 360 equal angular degrees ($360^\circ$).</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Acute Angles</h4>
+          <p>Between $0^\circ$ and $90^\circ$. Sharp, piercing angular profiles.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Right Angles</h4>
+          <p>Exactly $90^\circ$ ($\pi/2$ radians). Denotes perpendicular orthogonality.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Obtuse & Reflex</h4>
+          <p>Obtuse: $90^\circ - 180^\circ$. Reflex: greater than $180^\circ$ but less than $360^\circ$.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PYTHAGORAS -->
+  <div id="topic-pythagoras" class="tab-content">
+    <div class="card">
+      <h2>Pythagorean Triples & Proofs</h2>
+      <p class="desc">Whole integer solutions ($a, b, c$) satisfying $a^2 + b^2 = c^2$.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Triple (3, 4, 5)</h4>
+          <p>$3^2 + 4^2 = 9 + 16 = 25 = 5^2$. Used by ancient Egyptian rope-stretchers.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Triple (5, 12, 13)</h4>
+          <p>$5^2 + 12^2 = 25 + 144 = 169 = 13^2$.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Triple (8, 15, 17)</h4>
+          <p>$8^2 + 15^2 = 64 + 225 = 289 = 17^2$.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// STATE
+let numSides = 3;
+let vertices = [];
+let draggingVertexIdx = -1;
+let showAngles = true;
+let showLengths = true;
+
+const canvas = document.getElementById('geomCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeGeomCanvas() {
+  const holder = canvas.parentElement;
+  canvas.width = holder.clientWidth || 1200;
+  canvas.height = holder.clientHeight || 480;
+  initPolygonVertices(numSides);
+}
+window.addEventListener('resize', resizeGeomCanvas);
+
+// GENERATE REGULAR POLYGON VERTICES
+function initPolygonVertices(n) {
+  numSides = n;
+  vertices = [];
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const radius = Math.min(canvas.width, canvas.height) * 0.35;
+
+  for (let i = 0; i < n; i++) {
+    const angle = (i * 2 * Math.PI / n) - (Math.PI / 2);
+    vertices.push({
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle)
+    });
+  }
+  updateReadouts();
+  drawGeometryStage();
+}
+
+// DRAW STAGE
+function drawGeometryStage() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Background Grid Lines
+  ctx.strokeStyle = 'rgba(30, 58, 138, 0.25)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+  if (vertices.length < 3) return;
+
+  // Draw Filled Polygon
+  ctx.beginPath();
+  ctx.moveTo(vertices[0].x, vertices[0].y);
+  for (let i = 1; i < vertices.length; i++) {
+    ctx.lineTo(vertices[i].x, vertices[i].y);
+  }
+  ctx.closePath();
+
+  const polyGrad = ctx.createRadialGradient(w/2, h/2, 20, w/2, h/2, 300);
+  polyGrad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+  polyGrad.addColorStop(1, 'rgba(2, 132, 199, 0.08)');
+  ctx.fillStyle = polyGrad;
+  ctx.fill();
+
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Draw Side Lengths
+  if (showLengths) {
+    ctx.fillStyle = '#fde047';
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    for (let i = 0; i < vertices.length; i++) {
+      const p1 = vertices[i];
+      const p2 = vertices[(i + 1) % vertices.length];
+      const mx = (p1.x + p2.x) / 2;
+      const my = (p1.y + p2.y) / 2;
+      const len = Math.round(Math.hypot(p2.x - p1.x, p2.y - p1.y));
+      ctx.fillText(`${len} px`, mx, my - 8);
+    }
+  }
+
+  // Draw Vertices (Draggable glowing handles)
+  vertices.forEach((v, idx) => {
+    ctx.beginPath();
+    ctx.arc(v.x, v.y, 9, 0, Math.PI * 2);
+    ctx.fillStyle = idx === draggingVertexIdx ? '#ef4444' : '#38bdf8';
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 14;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Vertex Label (A, B, C...)
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(String.fromCharCode(65 + idx), v.x + 14, v.y - 12);
+  });
+}
+
+// DRAG INTERACTIONS
+canvas.addEventListener('mousedown', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  vertices.forEach((v, idx) => {
+    if (Math.hypot(v.x - mx, v.y - my) < 18) {
+      draggingVertexIdx = idx;
+    }
+  });
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (draggingVertexIdx === -1) return;
+  const rect = canvas.getBoundingClientRect();
+  const mx = Math.max(30, Math.min(canvas.width - 30, e.clientX - rect.left));
+  const my = Math.max(30, Math.min(canvas.height - 30, e.clientY - rect.top));
+
+  vertices[draggingVertexIdx].x = mx;
+  vertices[draggingVertexIdx].y = my;
+  updateReadouts();
+  drawGeometryStage();
+});
+
+window.addEventListener('mouseup', () => {
+  draggingVertexIdx = -1;
+  drawGeometryStage();
+});
+
+// TOUCH SUPPORT FOR LAPTOP TOUCHSCREENS
+canvas.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const mx = touch.clientX - rect.left;
+  const my = touch.clientY - rect.top;
+  vertices.forEach((v, idx) => {
+    if (Math.hypot(v.x - mx, v.y - my) < 26) {
+      draggingVertexIdx = idx;
+    }
+  });
+});
+canvas.addEventListener('touchmove', (e) => {
+  if (draggingVertexIdx === -1) return;
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  vertices[draggingVertexIdx].x = touch.clientX - rect.left;
+  vertices[draggingVertexIdx].y = touch.clientY - rect.top;
+  updateReadouts();
+  drawGeometryStage();
+});
+canvas.addEventListener('touchend', () => { draggingVertexIdx = -1; });
+
+// CONTROLS
+function setPolygonSides(n) {
+  initPolygonVertices(n);
+}
+
+function toggleAngleArcs() {
+  showAngles = !showAngles;
+  document.getElementById('btnToggleAngles').innerText = `📐 Angles: ${showAngles ? 'ON' : 'OFF'}`;
+  drawGeometryStage();
+}
+
+function toggleSideLengths() {
+  showLengths = !showLengths;
+  document.getElementById('btnToggleLengths').innerText = `📏 Side Lengths: ${showLengths ? 'ON' : 'OFF'}`;
+  drawGeometryStage();
+}
+
+function resetGeomSim() {
+  initPolygonVertices(numSides);
+}
+
+function updateReadouts() {
+  const names = { 3: 'Triangle', 4: 'Quadrilateral', 5: 'Pentagon', 6: 'Hexagon', 8: 'Octagon' };
+  const sum = (numSides - 2) * 180;
+  
+  let perim = 0;
+  for (let i = 0; i < vertices.length; i++) {
+    const p1 = vertices[i];
+    const p2 = vertices[(i + 1) % vertices.length];
+    perim += Math.hypot(p2.x - p1.x, p2.y - p1.y);
+  }
+
+  document.getElementById('liveShapeName').innerText = `Polygon: ${names[numSides] || `${numSides}-gon`} (n = ${numSides})`;
+  document.getElementById('liveAngleSum').innerText = `Interior Angle Sum: (${numSides}-2) × 180° = ${sum}°`;
+  document.getElementById('livePerimeter').innerText = `Perimeter: ${Math.round(perim)} px`;
+}
+
+// FULLSCREEN HANDLER
+function toggleSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains('is-fullscreen')) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => resizeGeomCanvas()).catch(() => {
+        box.classList.add('is-fullscreen');
+        resizeGeomCanvas();
+      });
+    } else {
+      box.classList.add('is-fullscreen');
+      resizeGeomCanvas();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+  setTimeout(resizeGeomCanvas, 100);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox23');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(resizeGeomCanvas, 100);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox23');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+resizeGeomCanvas();
+</script>
+</body>
+</html>

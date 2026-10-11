@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Basic Maths & Multiplication Interactive Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #131136 0%, #0a0924 100%);
+  border: 1.5px solid #4f46e5;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #a5b4fc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #818cf8;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(129, 140, 248, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #312e81;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #1e1b4b;
+  color: #c7d2fe;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #3730a3;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  color: #ffffff;
+  border-color: #818cf8;
+  box-shadow: 0 2px 10px rgba(79, 70, 229, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(30, 27, 75, 0.5);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #818cf8;
+  border-top: 1px solid #312e81;
+  border-right: 1px solid #312e81;
+  border-bottom: 1px solid #312e81;
+}
+.grid-item h4 { font-size: 1rem; color: #a5b4fc; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f0d2d 100%);
+  border: 1.5px solid #818cf8;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #c7d2fe;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #090821;
+  border: 1.5px solid #4f46e5;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #818cf8;
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+  background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #110e38;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #312e81;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+
+.slider-unit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.slider-unit input[type="range"] {
+  accent-color: #818cf8;
+  width: 100px;
+  cursor: pointer;
+}
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #100d33 0%, #060517 100%);
+  border: 1.5px solid #312e81;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+}
+#mathCanvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #110e38;
+  border: 1.5px solid #312e81;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #a5b4fc;
+}
+.readout-pill {
+  background: #090724;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #312e81;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #060517 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-holder,
+.sim-box:fullscreen .canvas-holder,
+.sim-box:-webkit-full-screen .canvas-holder {
+  flex: 1 !important;
+  height: calc(100vh - 170px) !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(17, 14, 56, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #818cf8 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(129, 140, 248, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-array', this)">
+      <span>✖️</span> Array Area Model & Multiplication Lab
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-matrix', this)">
+      <span>🔢</span> 12×12 Multiplication Matrix & Patterns
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-families', this)">
+      <span>🎯</span> Fact Families, Skip Counting & Division
+    </button>
+  </div>
+
+  <!-- TAB 1: AREA ARRAY MODEL -->
+  <div id="topic-array" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Multiplication & Geometric Area Array Model
+        <small>Elementary &bull; Pre-Algebra &bull; Visual Arithmetic</small>
+      </h2>
+      <p class="desc">
+        Multiplication is repeated addition of equal groups ($a \times b$ signifies $a$ groups containing $b$ items each). Geometrically, multiplication represents the area of a rectangle with length $a$ and width $b$.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'm-def')">Core Concepts</button>
+        <button class="section-tab" onclick="switchSection(this, 'm-laws')">Commutative & Distributive Laws</button>
+        <button class="section-tab" onclick="switchSection(this, 'm-area')">Area Representation</button>
+        <button class="section-tab" onclick="switchSection(this, 'm-uses')">Everyday Applications</button>
+      </div>
+
+      <div id="m-def" class="panel active">
+        <h3>Foundational Principles of Multiplication</h3>
+        <ul>
+          <li><strong>Multiplicand & Multiplier:</strong> In $6 \times 7 = 42$, 6 and 7 are factors, and 42 is the product.</li>
+          <li><strong>Repeated Addition:</strong> $6 \times 7 = 7 + 7 + 7 + 7 + 7 + 7 = 42$.</li>
+          <li><strong>Zero Property:</strong> Any number multiplied by zero equals zero ($n \times 0 = 0$).</li>
+          <li><strong>Identity Property:</strong> Any number multiplied by one equals itself ($n \times 1 = n$).</li>
+        </ul>
+      </div>
+
+      <div id="m-laws" class="panel">
+        <h3>Fundamental Algebraic Laws</h3>
+        <div class="formula-box">
+          Commutative Law: $a \times b = b \times a$ &bull; Distributive: $a \times (b + c) = ab + ac$
+          <small>Rotating a $4 \times 6$ array yields a $6 \times 4$ array with identical total area of 24 units.</small>
+        </div>
+        <ul>
+          <li><strong>Associative Law:</strong> $(a \times b) \times c = a \times (b \times c)$.</li>
+          <li><strong>Distributive Decomposition:</strong> $7 \times 8 = 7 \times (5 + 3) = (7 \times 5) + (7 \times 3) = 35 + 21 = 56$.</li>
+        </ul>
+      </div>
+
+      <div id="m-area" class="panel">
+        <h3>The Area Model Visualizer</h3>
+        <p>In modern mathematics instruction, constructing an array of rows and columns grounds abstract numbers into tangible geometric dimensions.</p>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Rows (Vertical Height)</h4>
+            <p>Represents factor $a$. Defines horizontal rows stacked vertically.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Columns (Horizontal Width)</h4>
+            <p>Represents factor $b$. Defines vertical columns arranged side-by-side.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Total Cells (Area)</h4>
+            <p>The total count of tiles directly proves the product $a \times b$.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="m-uses" class="panel">
+        <h3>Real-World Utility</h3>
+        <ul>
+          <li><strong>Floor Tile Installation:</strong> Calculating square meter tile requirements for architectural construction.</li>
+          <li><strong>Budgeting & Commerce:</strong> Unit price times quantity purchased yields total invoice amount.</li>
+          <li><strong>Computer Graphics:</strong> Pixel grid resolution ($1920 \times 1080 = 2,073,600$ pixels) determines display fidelity.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox22">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn22" onclick="toggleSimFullscreen('simBox22')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          
+          <div class="slider-unit">
+            <span>Rows (a):</span>
+            <input type="range" id="rowsSlider" min="1" max="12" step="1" value="6" oninput="updateRows(this.value)" />
+            <span id="rowsVal">6</span>
+          </div>
+
+          <div class="slider-unit">
+            <span>Cols (b):</span>
+            <input type="range" id="colsSlider" min="1" max="12" step="1" value="7" oninput="updateCols(this.value)" />
+            <span id="colsVal">7</span>
+          </div>
+
+          <button class="ctrl-btn btn-indigo" id="btnAnimCount" onclick="triggerGridCountAnimation()">
+            ▶ Count Animation
+          </button>
+
+          <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(3, 4)">3 × 4</button>
+          <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(7, 8)">7 × 8</button>
+          <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(9, 6)">9 × 6</button>
+          <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(12, 12)">12 × 12</button>
+          
+          <button class="ctrl-btn btn-rose" onclick="resetMathSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="mathCanvas" width="900" height="480"></canvas>
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveProduct">Product: 6 × 7 = 42</span>
+        <span class="readout-pill" id="liveRepeatedAdd">Repeated Addition: 7 + 7 + 7 + 7 + 7 + 7 = 42</span>
+        <span class="readout-pill" id="liveAreaVal">Geometric Area: 42 sq units</span>
+        <span class="readout-pill" id="liveFactFamily">Inverse Fact: 42 ÷ 7 = 6</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Move the row and column sliders to immediately see the grid dynamically morph! Each cell lights up with its sequence number. Notice that flipping rows to columns (e.g. $7 \times 6$) yields the exact same total product (42), experimentally proving the Commutative Law of Multiplication!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar22">
+        <button class="ctrl-btn btn-indigo" onclick="triggerGridCountAnimation()">
+          <span>▶ Step Count Animation</span>
+        </button>
+        <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(5, 5)">5 × 5</button>
+        <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(8, 8)">8 × 8</button>
+        <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(10, 10)">10 × 10</button>
+        <button class="ctrl-btn btn-emerald" onclick="setPresetFactors(12, 12)">12 × 12</button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox22')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: TIMES TABLE MATRIX -->
+  <div id="topic-matrix" class="tab-content">
+    <div class="card">
+      <h2>12×12 Times Table Matrix Patterns</h2>
+      <p class="desc">Square numbers (1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144) trace the main diagonal line of symmetry across the multiplication grid.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Multiplication by 9</h4>
+          <p>Digits sum to 9 (e.g. $9 \times 4 = 36 \rightarrow 3+6=9$; $9 \times 7 = 63 \rightarrow 6+3=9$).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Multiplication by 5 & 10</h4>
+          <p>Multiples of 5 always end in 0 or 5. Multiples of 10 always terminate in 0.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Square Numbers</h4>
+          <p>Formed by multiplying a whole integer by itself ($n^2$), creating a perfect geometric square array.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FACT FAMILIES -->
+  <div id="topic-families" class="tab-content">
+    <div class="card">
+      <h2>Fact Families & Division Duality</h2>
+      <p class="desc">Multiplication and division are inverse mathematical operations connected by four interlocking equations.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Equation 1 & 2</h4>
+          <p>$6 \times 7 = 42$ and $7 \times 6 = 42$ (Forward operations).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Equation 3 & 4</h4>
+          <p>$42 \div 7 = 6$ and $42 \div 6 = 7$ (Inverse operations).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Skip Counting on Number Line</h4>
+          <p>Multiplication corresponds to making identical jump intervals along the positive real number line.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// STATE
+let factorA = 6;
+let factorB = 7;
+let countAnimationProgress = 42;
+let isAnimatingCount = false;
+let animTimer = null;
+
+const canvas = document.getElementById('mathCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeMathCanvas() {
+  const holder = canvas.parentElement;
+  canvas.width = Math.min(holder.clientWidth - 40, 960);
+  canvas.height = 480;
+  drawArrayGrid();
+}
+window.addEventListener('resize', resizeMathCanvas);
+
+// DRAW ARRAY GRID
+function drawArrayGrid() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Compute cell size
+  const maxCells = Math.max(factorA, factorB, 6);
+  const paddingX = 70;
+  const paddingY = 60;
+  const availW = w - paddingX * 2;
+  const availH = h - paddingY * 2;
+  
+  const cellSize = Math.min(availW / factorB, availH / factorA, 42);
+  const totalGridW = cellSize * factorB;
+  const totalGridH = cellSize * factorA;
+
+  const startX = (w - totalGridW) / 2;
+  const startY = (h - totalGridH) / 2 + 10;
+
+  // Factor Labels
+  ctx.fillStyle = '#818cf8';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`Width = ${factorB} Columns`, w / 2, startY - 20);
+
+  ctx.save();
+  ctx.translate(startX - 24, startY + totalGridH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(`Height = ${factorA} Rows`, 0, 0);
+  ctx.restore();
+
+  // Draw Grid Tiles
+  let cellCount = 0;
+  for (let r = 0; r < factorA; r++) {
+    for (let c = 0; c < factorB; c++) {
+      cellCount++;
+      const cellX = startX + c * cellSize;
+      const cellY = startY + r * cellSize;
+      const isLit = cellCount <= countAnimationProgress;
+
+      ctx.beginPath();
+      ctx.roundRect(cellX + 2, cellY + 2, cellSize - 4, cellSize - 4, 6);
+      
+      if (isLit) {
+        // Tile gradient
+        const tGrad = ctx.createLinearGradient(cellX, cellY, cellX + cellSize, cellY + cellSize);
+        tGrad.addColorStop(0, '#6366f1');
+        tGrad.addColorStop(1, '#4338ca');
+        ctx.fillStyle = tGrad;
+        ctx.fill();
+
+        ctx.strokeStyle = '#a5b4fc';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Cell number
+        ctx.fillStyle = '#ffffff';
+        ctx.font = cellSize > 30 ? 'bold 12px monospace' : 'bold 9px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${cellCount}`, cellX + cellSize / 2, cellY + cellSize / 2);
+      } else {
+        ctx.fillStyle = 'rgba(49, 46, 129, 0.3)';
+        ctx.fill();
+        ctx.strokeStyle = '#312e81';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Draw Outer Bounding Dimension Box
+  ctx.strokeStyle = '#fde047';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6, 6]);
+  ctx.strokeRect(startX, startY, totalGridW, totalGridH);
+  ctx.setLineDash([]);
+}
+
+// SLIDERS & CONTROLS
+function updateRows(val) {
+  factorA = parseInt(val);
+  document.getElementById('rowsVal').innerText = factorA;
+  countAnimationProgress = factorA * factorB;
+  updateReadouts();
+  drawArrayGrid();
+}
+
+function updateCols(val) {
+  factorB = parseInt(val);
+  document.getElementById('colsVal').innerText = factorB;
+  countAnimationProgress = factorA * factorB;
+  updateReadouts();
+  drawArrayGrid();
+}
+
+function setPresetFactors(a, b) {
+  factorA = a;
+  factorB = b;
+  document.getElementById('rowsSlider').value = a;
+  document.getElementById('colsSlider').value = b;
+  document.getElementById('rowsVal').innerText = a;
+  document.getElementById('colsVal').innerText = b;
+  countAnimationProgress = a * b;
+  updateReadouts();
+  drawArrayGrid();
+}
+
+function triggerGridCountAnimation() {
+  if (isAnimatingCount) return;
+  isAnimatingCount = true;
+  countAnimationProgress = 0;
+  const total = factorA * factorB;
+
+  if (animTimer) clearInterval(animTimer);
+  animTimer = setInterval(() => {
+    countAnimationProgress++;
+    drawArrayGrid();
+    if (countAnimationProgress >= total) {
+      clearInterval(animTimer);
+      isAnimatingCount = false;
+    }
+  }, Math.max(15, Math.floor(1200 / total)));
+}
+
+function resetMathSim() {
+  if (animTimer) clearInterval(animTimer);
+  isAnimatingCount = false;
+  setPresetFactors(6, 7);
+}
+
+function updateReadouts() {
+  const prod = factorA * factorB;
+  document.getElementById('liveProduct').innerText = `Product: ${factorA} × ${factorB} = ${prod}`;
+  
+  // Repeated addition formula
+  const terms = Array(factorA).fill(factorB).join(' + ');
+  document.getElementById('liveRepeatedAdd').innerText = `Addition: ${terms} = ${prod}`;
+  document.getElementById('liveAreaVal').innerText = `Area: ${prod} square units`;
+  document.getElementById('liveFactFamily').innerText = `Inverse Fact: ${prod} ÷ ${factorB} = ${factorA}`;
+}
+
+// FULLSCREEN HANDLER
+function toggleSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains('is-fullscreen')) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => resizeMathCanvas()).catch(() => {
+        box.classList.add('is-fullscreen');
+        resizeMathCanvas();
+      });
+    } else {
+      box.classList.add('is-fullscreen');
+      resizeMathCanvas();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+  setTimeout(resizeMathCanvas, 100);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox22');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(resizeMathCanvas, 100);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox22');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+resizeMathCanvas();
+updateReadouts();
+drawArrayGrid();
+</script>
+</body>
+</html>

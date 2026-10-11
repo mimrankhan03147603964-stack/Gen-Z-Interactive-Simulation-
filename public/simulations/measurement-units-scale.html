@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Measurement, Scale & Units Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #09241b 0%, #05140e 100%);
+  border: 1.5px solid #059669;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #34d399;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(52, 211, 153, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #064e3b;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #022c22;
+  color: #6ee7b7;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #059669;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  border-color: #34d399;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #059669;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(2, 44, 34, 0.4);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #34d399;
+  border-top: 1px solid #064e3b;
+  border-right: 1px solid #064e3b;
+  border-bottom: 1px solid #064e3b;
+}
+.grid-item h4 { font-size: 1rem; color: #6ee7b7; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #022c22 0%, #011a14 100%);
+  border: 1.5px solid #34d399;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #34d399;
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #051813;
+  border: 1.5px solid #059669;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #34d399;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.6);
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #0a261c;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #064e3b;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #09291e 0%, #03120d 100%);
+  border: 1.5px solid #064e3b;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+}
+#measureCanvas {
+  display: block;
+  width: 100%;
+  height: 480px;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #0a261c;
+  border: 1.5px solid #064e3b;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #34d399;
+}
+.readout-pill {
+  background: #021c14;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #064e3b;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #03120d !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-holder,
+.sim-box:fullscreen .canvas-holder,
+.sim-box:-webkit-full-screen .canvas-holder {
+  flex: 1 !important;
+  height: calc(100vh - 170px) !important;
+}
+.sim-box.is-fullscreen #measureCanvas,
+.sim-box:fullscreen #measureCanvas,
+.sim-box:-webkit-full-screen #measureCanvas {
+  height: 100% !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(10, 38, 28, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #34d399 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(52, 211, 153, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-ruler', this)">
+      <span>📏</span> Calibrated Ruler & Precision Measurement
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-balance', this)">
+      <span>⚖️</span> Digital Mass Balance & Tare Lab
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-volume', this)">
+      <span>🧪</span> Volume by Water Displacement & Density ($\rho = m/V$)
+    </button>
+  </div>
+
+  <!-- TAB 1: RULER & SCALE -->
+  <div id="topic-ruler" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Measurement, Calibrated Scales & Scientific Units
+        <small>Applied Mathematics &bull; Metrology &bull; SI Metric Standards</small>
+      </h2>
+      <p class="desc">
+        Measurement is the quantification of physical attributes (length, mass, time, volume) by comparison against standardized units. The International System of Units (SI) establishes the meter (m), kilogram (kg), and liter (L).
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'u-def')">SI Metric Standards</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-prec')">Precision & Parallax</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-dens')">Density Equation</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-uses')">Everyday Applications</button>
+      </div>
+
+      <div id="u-def" class="panel active">
+        <h3>SI Base Units of Measurement</h3>
+        <ul>
+          <li><strong>Length (Meter):</strong> Standard metric scale with centimeter ($1\text{ cm} = 0.01\text{ m}$) and millimeter ($1\text{ mm} = 0.001\text{ m}$) divisions.</li>
+          <li><strong>Mass (Gram / Kilogram):</strong> Measure of total matter content, invariant across different gravitational fields.</li>
+          <li><strong>Volume (Liter / Milliliter):</strong> $1\text{ mL} = 1\text{ cm}^3 = 1\text{ cc}$. Water has a calibrated density of $1.0\text{ g/cm}^3$ at 4°C.</li>
+        </ul>
+      </div>
+
+      <div id="u-prec" class="panel">
+        <h3>Precision & Avoiding Parallax Error</h3>
+        <p>Always view measuring scale markings perpendicular to the sight-line to prevent viewing-angle optical distortion (parallax error).</p>
+      </div>
+
+      <div id="u-dens" class="panel">
+        <h3>Density & Water Displacement (Archimedes' Principle)</h3>
+        <div class="formula-box">
+          Density: $\rho = \frac{\text{Mass}}{\text{Volume}} = \frac{m}{\Delta V}\text{ (g/cm}^3\text{)}$
+          <small>Displaced volume $\Delta V = V_{\text{final}} - V_{\text{initial}}$ precisely equals the solid object's volume.</small>
+        </div>
+      </div>
+
+      <div id="u-uses" class="panel">
+        <h3>Real-World Utility</h3>
+        <ul>
+          <li><strong>Aerospace & Manufacturing:</strong> Micrometer calibration down to microns ($\mu\text{m}$) ensures turbine engine airfoils fit with zero tolerance drift.</li>
+          <li><strong>Pharmaceutical Dosing:</strong> Precise milligram ($mg$) active drug compounding protects patient clinical safety.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox25">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn25" onclick="toggleSimFullscreen('simBox25')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Pencil')">✏️ Pencil</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Key')">🔑 Key</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Phone')">📱 Phone</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Coin')">🪙 Coin</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Gold')">🥇 Gold Bar</button>
+
+          <button class="ctrl-btn btn-indigo" id="btnUnitToggle" onclick="toggleUnits()">
+            📏 Unit: Metric (cm)
+          </button>
+
+          <button class="ctrl-btn btn-sky" onclick="tareDigitalScale()">
+            ⚖️ Tare Scale (0.00g)
+          </button>
+
+          <button class="ctrl-btn btn-rose" onclick="resetMeasureSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="measureCanvas" width="1200" height="480"></canvas>
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveObjName">Selected Item: Pencil</span>
+        <span class="readout-pill" id="liveLengthVal">Length: 14.2 cm (142 mm)</span>
+        <span class="readout-pill" id="liveMassVal">Digital Mass: 8.50 g</span>
+        <span class="readout-pill" id="liveDensityVal">Computed Density: 0.65 g/cm³</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Click the different specimen buttons to inspect items against the high-precision metric ruler, digital strain-gauge scale, and graduated displacement cylinder! Notice how gold's extraordinary density ($\rho = 19.3\text{ g/cm}^3$) causes a small volume to register enormous gravitational mass!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar25">
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Pencil')"><span>✏️ Pencil</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Key')"><span>🔑 Key</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Phone')"><span>📱 Phone</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Coin')"><span>🪙 Coin</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Gold')"><span>🥇 Gold</span></button>
+        <button class="ctrl-btn btn-indigo" onclick="toggleUnits()"><span>📏 Toggle Units</span></button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox25')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: MASS BALANCE -->
+  <div id="topic-balance" class="tab-content">
+    <div class="card">
+      <h2>Digital Strain-Gauge Balance Physics</h2>
+      <p class="desc">A digital laboratory balance measures mass using electrical resistance strain gauges that deflect micro-millimeters under applied gravity.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Tare Function</h4>
+          <p>Zeros out the weight of containers or weighing boats before sample deposition.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Mass vs. Weight</h4>
+          <p>Mass is scalar matter ($kg$). Weight is downward gravitational force ($W = mg$ in Newtons).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Analytical Sensitivity</h4>
+          <p>Laboratory scales measure down to $0.0001\text{ g}$ ($0.1\text{ mg}$) with draft shields.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: WATER DISPLACEMENT -->
+  <div id="topic-volume" class="tab-content">
+    <div class="card">
+      <h2>Archimedes Water Displacement</h2>
+      <p class="desc">Irregular objects submerge and displace an equivalent volume of liquid ($V_{\text{object}} = V_{\text{displaced}}$).</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Meniscus Reading</h4>
+          <p>Read transparent water at the bottom of the concave meniscus curve at eye level.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Sink vs. Float</h4>
+          <p>Objects sink if $\rho_{\text{object}} > \rho_{\text{fluid}}$ ($1.0\text{ g/cm}^3$ for water).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Specific Gravity</h4>
+          <p>Dimensionless ratio of material density compared directly to pure water.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// OBJECT REPOSITORY
+const OBJECTS = {
+  Pencil: { name: 'Pencil', lenCm: 14.2, massG: 8.50, volMl: 13.0, color: '#eab308' },
+  Key: { name: 'Brass Key', lenCm: 5.5, massG: 16.20, volMl: 1.9, color: '#f59e0b' },
+  Phone: { name: 'Smartphone', lenCm: 15.8, massG: 182.00, volMl: 88.0, color: '#38bdf8' },
+  Coin: { name: 'Nickel Coin', lenCm: 2.1, massG: 5.00, volMl: 0.6, color: '#94a3b8' },
+  Gold: { name: 'Gold Ingot', lenCm: 8.0, massG: 480.00, volMl: 24.8, color: '#facc15' }
+};
+
+let currentObject = OBJECTS.Pencil;
+let isMetric = true;
+let tareOffset = 0;
+
+const canvas = document.getElementById('measureCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeMeasureCanvas() {
+  const holder = canvas.parentElement;
+  canvas.width = holder.clientWidth || 1200;
+  canvas.height = holder.clientHeight || 480;
+  drawApparatus();
+}
+window.addEventListener('resize', resizeMeasureCanvas);
+
+// CONTROLS
+function selectTestObject(key) {
+  if (OBJECTS[key]) {
+    currentObject = OBJECTS[key];
+    updateReadouts();
+    drawApparatus();
+  }
+}
+
+function toggleUnits() {
+  isMetric = !isMetric;
+  document.getElementById('btnUnitToggle').innerText = `📏 Unit: ${isMetric ? 'Metric (cm)' : 'Imperial (in)'}`;
+  updateReadouts();
+  drawApparatus();
+}
+
+function tareDigitalScale() {
+  tareOffset = currentObject.massG;
+  updateReadouts();
+  drawApparatus();
+}
+
+function resetMeasureSim() {
+  tareOffset = 0;
+  selectTestObject('Pencil');
+}
+
+function updateReadouts() {
+  const obj = currentObject;
+  const lenStr = isMetric 
+    ? `${obj.lenCm} cm (${Math.round(obj.lenCm * 10)} mm)` 
+    : `${(obj.lenCm / 2.54).toFixed(2)} inches`;
+  
+  const displayMass = Math.max(0, obj.massG - tareOffset).toFixed(2);
+  const density = (obj.massG / obj.volMl).toFixed(2);
+
+  document.getElementById('liveObjName').innerText = `Selected: ${obj.name}`;
+  document.getElementById('liveLengthVal').innerText = `Length: ${lenStr}`;
+  document.getElementById('liveMassVal').innerText = `Digital Mass: ${displayMass} g`;
+  document.getElementById('liveDensityVal').innerText = `Density: ${density} g/cm³`;
+}
+
+// DRAW MEASURING APPARATUS
+function drawApparatus() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Background Grid
+  ctx.strokeStyle = 'rgba(6, 78, 59, 0.25)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+
+  // Draw 1: CALIBRATED RULER (Top Section)
+  drawRuler(w * 0.05, 50, w * 0.9, 90);
+
+  // Draw Object under the ruler
+  drawObjectUnderRuler(w * 0.05 + 40, 160);
+
+  // Draw 2: DIGITAL STRAIN GAUGE SCALE (Bottom Left)
+  drawDigitalScale(w * 0.15, h - 140, 260, 90);
+
+  // Draw 3: GRADUATED CYLINDER (Bottom Right)
+  drawGraduatedCylinder(w * 0.75, h - 220, 90, 180);
+}
+
+// DRAW RULER
+function drawRuler(x, y, rulerW, rulerH) {
+  // Wood / Acrylic Ruler Body
+  const rGrad = ctx.createLinearGradient(x, y, x, y + rulerH);
+  rGrad.addColorStop(0, '#fef08a');
+  rGrad.addColorStop(1, '#ca8a04');
+  ctx.fillStyle = rGrad;
+  ctx.fillRect(x, y, rulerW, rulerH);
+
+  ctx.strokeStyle = '#854d0e';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, rulerW, rulerH);
+
+  // Calibrated Marks
+  const numMajorTicks = 20; // 0 to 20 cm
+  const tickSpacing = (rulerW - 40) / numMajorTicks;
+  const startMarkX = x + 20;
+
+  ctx.fillStyle = '#1e293b';
+  ctx.strokeStyle = '#1e293b';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+
+  for (let i = 0; i <= numMajorTicks; i++) {
+    const tx = startMarkX + i * tickSpacing;
+    
+    // Major tick
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(tx, y + rulerH);
+    ctx.lineTo(tx, y + rulerH - 24);
+    ctx.stroke();
+
+    // Number
+    const label = isMetric ? `${i}` : `${(i * 0.39).toFixed(1)}`;
+    ctx.fillText(label, tx, y + rulerH - 28);
+
+    // Minor millimeter ticks
+    if (i < numMajorTicks) {
+      ctx.lineWidth = 1;
+      for (let m = 1; m < 10; m++) {
+        const subX = tx + (m * (tickSpacing / 10));
+        const subH = m === 5 ? 16 : 9;
+        ctx.beginPath();
+        ctx.moveTo(subX, y + rulerH);
+        ctx.lineTo(subX, y + rulerH - subH);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Unit Stamp
+  ctx.fillStyle = '#713f12';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillText(isMetric ? 'CENTIMETERS (cm)' : 'INCHES (in)', x + rulerW / 2, y + 26);
+}
+
+// DRAW SPECIMEN OBJECT
+function drawObjectUnderRuler(startX, startY) {
+  const rulerW = canvas.width * 0.9;
+  const tickSpacing = (rulerW - 40) / 20;
+  const pixelLen = currentObject.lenCm * tickSpacing;
+
+  ctx.fillStyle = currentObject.color;
+  ctx.fillRect(startX, startY, pixelLen, 24);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(startX, startY, pixelLen, 24);
+
+  // Object text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${currentObject.name} (${currentObject.lenCm} cm)`, startX + pixelLen / 2, startY + 12);
+}
+
+// DRAW DIGITAL SCALE
+function drawDigitalScale(x, y, sw, sh) {
+  // Scale Platform
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(x, y, sw, sh);
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, sw, sh);
+
+  // Digital LED Display Window
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(x + 20, y + 24, sw - 40, 42);
+  ctx.strokeStyle = '#059669';
+  ctx.strokeRect(x + 20, y + 24, sw - 40, 42);
+
+  // Green LED readout text
+  const displayMass = Math.max(0, currentObject.massG - tareOffset).toFixed(2);
+  ctx.fillStyle = '#34d399';
+  ctx.font = 'bold 24px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${displayMass} g`, x + sw / 2, y + 45);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.fillText('HIGH PRECISION 0.01g DIGITAL SCALE', x + sw / 2, y + 78);
+}
+
+// DRAW GRADUATED CYLINDER
+function drawGraduatedCylinder(x, y, cw, ch) {
+  // Glass body
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.fillRect(x, y, cw, ch);
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(x, y, cw, ch);
+
+  // Liquid Column
+  const baseWaterLevel = ch * 0.45;
+  const displacedRise = Math.min(ch * 0.4, (currentObject.volMl / 100) * (ch * 0.45));
+  const totalWaterH = baseWaterLevel + displacedRise;
+
+  const wGrad = ctx.createLinearGradient(x, y + ch - totalWaterH, x, y + ch);
+  wGrad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
+  wGrad.addColorStop(1, 'rgba(2, 132, 199, 0.85)');
+  ctx.fillStyle = wGrad;
+  ctx.fillRect(x + 2, y + ch - totalWaterH, cw - 4, totalWaterH);
+
+  // Meniscus curve
+  ctx.beginPath();
+  ctx.ellipse(x + cw / 2, y + ch - totalWaterH, cw / 2 - 2, 4, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fill();
+
+  // Calibration tick marks on cylinder
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#ffffff';
+  ctx.font = 'bold 8px monospace';
+  ctx.textAlign = 'left';
+
+  for (let ml = 0; ml <= 100; ml += 10) {
+    const my = y + ch - (ml / 100) * ch;
+    ctx.beginPath();
+    ctx.moveTo(x + 2, my);
+    ctx.lineTo(x + 14, my);
+    ctx.stroke();
+    ctx.fillText(`${ml}mL`, x + 16, my + 3);
+  }
+
+  // Label
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`ΔV = ${currentObject.volMl} mL`, x + cw / 2, y + ch + 20);
+}
+
+// FULLSCREEN HANDLER
+function toggleSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains('is-fullscreen')) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => resizeMeasureCanvas()).catch(() => {
+        box.classList.add('is-fullscreen');
+        resizeMeasureCanvas();
+      });
+    } else {
+      box.classList.add('is-fullscreen');
+      resizeMeasureCanvas();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+  setTimeout(resizeMeasureCanvas, 100);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox25');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(resizeMeasureCanvas, 100);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox25');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+resizeMeasureCanvas();
+updateReadouts();
+</script>
+</body>
+</html>

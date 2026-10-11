@@ -217,7 +217,6 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
           className="w-full h-full border-0 block"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads allow-pointer-lock"
         />
       </div>
 

@@ -25,7 +25,11 @@ import {
   Maximize2,
   CheckCircle2,
   ArrowUpRight,
-  Filter
+  Filter,
+  Calculator,
+  Shapes,
+  Scale,
+  Ruler
 } from 'lucide-react';
 
 interface SimulationCatalogGridProps {
@@ -61,6 +65,10 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'CircleDot': return <CircleDot {...iconProps} />;
     case 'Orbit': return <Orbit {...iconProps} />;
     case 'Telescope': return <Telescope {...iconProps} />;
+    case 'Calculator': return <Calculator {...iconProps} />;
+    case 'Shapes': return <Shapes {...iconProps} />;
+    case 'Scale': return <Scale {...iconProps} />;
+    case 'Ruler': return <Ruler {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
@@ -70,8 +78,10 @@ const CATEGORIES = [
   'Physics & Motion',
   'Chemistry & Matter',
   'Biology & Life',
-  'Earth & Space'
+  'Earth & Space',
+  'Mathematics & Logic'
 ] as const;
+
 
 export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   simulations,
