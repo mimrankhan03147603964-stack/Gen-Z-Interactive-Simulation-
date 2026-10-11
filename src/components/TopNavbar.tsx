@@ -1,12 +1,12 @@
 import React from 'react';
-import { Menu, Atom, Layers, Sparkles } from 'lucide-react';
+import { Atom, Layers, Sparkles } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { getSimTheme } from '../data/simTheme';
 
 interface TopNavbarProps {
   activeSim: SimulationItem;
   totalSimulations?: number;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
   onResetLab: () => void;
   onFullscreen: () => void;
   isDarkMode?: boolean;
@@ -15,8 +15,7 @@ interface TopNavbarProps {
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSim,
-  totalSimulations = 19,
-  onToggleSidebar,
+  totalSimulations = 25,
   isDarkMode = false,
   onToggleTheme
 }) => {
@@ -32,24 +31,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       }}
     >
       
-      {/* Left: Navigation Menu Toggle & 3D Glowing Brand Logo */}
+      {/* Left: 3D Glowing Brand Logo & Title */}
       <div className="flex items-center gap-3">
-        <button
-          onClick={onToggleSidebar}
-          className="btn-3d px-2.5 py-1.5 rounded-xl transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
-          style={{
-            backgroundColor: isDarkMode ? '#0c1b3d' : '#f1f5f9',
-            borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
-            borderWidth: '1.5px',
-            borderStyle: 'solid',
-            color: isDarkMode ? '#38bdf8' : '#0f172a'
-          }}
-          title={`Open Labs Catalog Drawer (01 - ${String(totalSimulations).padStart(2, '0')})`}
-        >
-          <Menu className="w-5 h-5" />
-          <span className="hidden sm:inline text-xs font-black">Labs Catalog</span>
-        </button>
-
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div 
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white shadow-lg icon-tile-3d shrink-0"

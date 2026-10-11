@@ -8,7 +8,12 @@ import {
   CheckCircle2, 
   BookOpen, 
   Zap, 
-  Sparkles
+  Sparkles,
+  HelpCircle,
+  Sliders,
+  BarChart3,
+  Layers,
+  GraduationCap
 } from 'lucide-react';
 
 interface MainStageProps {
@@ -78,40 +83,28 @@ export const MainStage: React.FC<MainStageProps> = ({
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
-      {/* Stage Cockpit Header Bar */}
+      {/* =========================================================================
+          STEP 1: SUBJECT HEADING
+          Clearly identifies the overarching subject domain (e.g. Physics, Chemistry, Biology, Mathematics)
+          ========================================================================= */}
       <div 
-        className="p-4 sm:p-5 border-b flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors"
+        className="px-5 py-3 border-b flex flex-wrap items-center justify-between gap-3"
         style={{
-          backgroundColor: isDarkMode ? '#0a1633' : '#f8fafc',
-          borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+          backgroundColor: isDarkMode ? '#0b193d' : '#eff6ff',
+          borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #bfdbfe'
         }}
       >
-        
-        {/* Left: Active Simulation Name & Meta */}
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span 
-              className="px-2.5 py-0.5 rounded-md font-mono font-black text-xs shadow-md shrink-0"
-              style={{
-                backgroundColor: theme.bgSolid,
-                backgroundImage: theme.bgGradient,
-                borderColor: theme.borderColor,
-                borderWidth: '1.5px',
-                borderStyle: 'solid',
-                color: '#ffffff',
-                boxShadow: `0 2px 8px ${theme.glowColor}`
-              }}
-            >
-              LAB {activeSim.indexNumber}
+        <div className="flex items-center gap-2.5">
+          <span 
+            className="w-2.5 h-2.5 rounded-full animate-pulse"
+            style={{ backgroundColor: theme.bgSolid }}
+          />
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider">
+            <span style={{ color: isDarkMode ? '#93c5fd' : '#1e40af' }}>
+              STEP 1 &bull; SUBJECT DOMAIN:
             </span>
-            <h2 
-              className="text-base sm:text-lg font-black drop-shadow-xs"
-              style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-            >
-              {activeSim.title}
-            </h2>
             <span 
-              className="text-xs font-black px-2.5 py-0.5 rounded-full"
+              className="px-2.5 py-0.5 rounded-full text-xs font-black shadow-2xs"
               style={{
                 backgroundColor: theme.badgeBg,
                 color: theme.badgeText,
@@ -120,288 +113,477 @@ export const MainStage: React.FC<MainStageProps> = ({
                 borderStyle: 'solid'
               }}
             >
+              {activeSim.subject}
+            </span>
+            <span 
+              className="text-[11px] font-extrabold px-2 py-0.5 rounded-md"
+              style={{
+                backgroundColor: isDarkMode ? '#13234d' : '#dbeafe',
+                color: isDarkMode ? '#60a5fa' : '#1d4ed8'
+              }}
+            >
               {activeSim.category}
             </span>
           </div>
-          <p 
-            className="text-xs font-bold mt-1"
-            style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
-          >
-            {activeSim.subject} &bull; {activeSim.gradeLevel} &bull;{' '}
-            <span style={{ color: '#047857', fontWeight: 900 }}>4K 3D Interactive Execution</span>
-          </p>
         </div>
 
-        {/* Right: Stage Control 3D Buttons with Guaranteed Visibility and Solid Colors */}
-        <div className="flex items-center gap-2 flex-wrap shrink-0">
-          
-          {/* 3D Aspect Ratio Switcher */}
-          <div 
-            className="flex items-center rounded-xl p-0.5 text-xs shadow-inner"
+        <div className="flex items-center gap-2 text-xs font-black">
+          <span 
+            className="flex items-center gap-1 font-bold text-[11px]"
+            style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
+          >
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>Target: {activeSim.gradeLevel}</span>
+          </span>
+          <span 
+            className="px-2 py-0.5 rounded font-mono text-xs font-black text-white shadow-xs"
             style={{
-              backgroundColor: isDarkMode ? '#07132e' : '#f1f5f9',
-              borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
+              backgroundColor: theme.bgSolid,
+              boxShadow: `0 2px 6px ${theme.glowColor}`
+            }}
+          >
+            LAB {activeSim.indexNumber} OF 25
+          </span>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          STEP 2: TOPIC TITLE & DESCRIPTION / CONCEPT INTRODUCTION
+          Clearly stated first so the user understands what the simulation is about
+          ========================================================================= */}
+      <div 
+        className="p-5 sm:p-6 border-b transition-colors"
+        style={{
+          backgroundColor: isDarkMode ? '#08142f' : '#f8fafc',
+          borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+        }}
+      >
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+          {/* Left: Topic Title & Description */}
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2 text-xs font-black uppercase tracking-wider"
+              style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>STEP 2 &bull; TOPIC OVERVIEW &amp; CONCEPT INTRODUCTION</span>
+            </div>
+
+            <h1 
+              className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-tight"
+              style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+            >
+              {activeSim.title}
+            </h1>
+
+            <p 
+              className="text-xs sm:text-sm lg:text-base font-bold mt-2.5 leading-relaxed"
+              style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
+            >
+              {activeSim.description}
+            </p>
+
+            {/* Core curriculum competencies badges */}
+            <div className="flex flex-wrap items-center gap-2 mt-4">
+              <span 
+                className="text-xs font-black uppercase tracking-wider mr-1 flex items-center gap-1"
+                style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Core Topics:</span>
+              </span>
+              {activeSim.topics.map((t: string, idx: number) => {
+                const pillStyle = topicPillStyles[idx % topicPillStyles.length];
+                return (
+                  <span 
+                    key={idx}
+                    className="px-3 py-1 rounded-lg text-xs font-black shadow-2xs"
+                    style={{
+                      backgroundColor: pillStyle.bg,
+                      color: pillStyle.text,
+                      borderColor: pillStyle.border,
+                      borderWidth: '1.5px',
+                      borderStyle: 'solid'
+                    }}
+                  >
+                    {t}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right: Key Verified Learning Outcomes Card */}
+          <div 
+            className="w-full lg:w-80 shrink-0 p-4 rounded-xl border"
+            style={{
+              backgroundColor: isDarkMode ? '#0c1b3d' : '#ffffff',
+              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
               borderWidth: '1.5px',
               borderStyle: 'solid'
             }}
           >
-            <button
-              onClick={() => setAspectRatio('16:9')}
-              className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
-              style={
-                aspectRatio === '16:9'
-                  ? {
-                      backgroundColor: '#2563eb',
-                      backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                      color: '#ffffff',
-                      boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
-                    }
-                  : {
-                      backgroundColor: 'transparent',
-                      color: isDarkMode ? '#ffffff' : '#0f172a'
-                    }
-              }
-              title="16:9 Widescreen Fit"
+            <div 
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider mb-2.5"
+              style={{ color: '#059669' }}
             >
-              16:9
-            </button>
-            <button
-              onClick={() => setAspectRatio('4:3')}
-              className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
-              style={
-                aspectRatio === '4:3'
-                  ? {
-                      backgroundColor: '#2563eb',
-                      backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                      color: '#ffffff',
-                      boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
-                    }
-                  : {
-                      backgroundColor: 'transparent',
-                      color: isDarkMode ? '#ffffff' : '#0f172a'
-                    }
-              }
-              title="4:3 Screen Fit"
+              <Zap className="w-4 h-4" />
+              <span>Verified Lab Competencies</span>
+            </div>
+            <div className="space-y-1.5">
+              {activeSim.features.slice(0, 3).map((feat: string, idx: number) => (
+                <div 
+                  key={idx}
+                  className="flex items-start gap-2 text-xs font-bold"
+                  style={{ color: isDarkMode ? '#e2e8f0' : '#1e293b' }}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#059669' }} />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+            <div 
+              className="mt-3 pt-2.5 border-t flex items-center justify-between text-[11px] font-black"
+              style={{
+                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                borderTopWidth: '1.5px',
+                color: isDarkMode ? '#38bdf8' : '#2563eb'
+              }}
             >
-              4:3
-            </button>
-            <button
-              onClick={() => setAspectRatio('full')}
-              className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
-              style={
-                aspectRatio === 'full'
-                  ? {
-                      backgroundColor: '#2563eb',
-                      backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                      color: '#ffffff',
-                      boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
-                    }
-                  : {
-                      backgroundColor: 'transparent',
-                      color: isDarkMode ? '#ffffff' : '#0f172a'
-                    }
-              }
-              title="Full Height View"
-            >
-              Full
-            </button>
-          </div>
-
-          {/* 3D Emerald Reset Button */}
-          <button
-            onClick={handleReload}
-            className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
-            style={{
-              backgroundColor: '#059669',
-              backgroundImage: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-              borderColor: '#34d399',
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              color: '#ffffff',
-              boxShadow: '0 4px 10px rgba(5, 150, 105, 0.35)'
-            }}
-            title="Reset simulation parameters"
-          >
-            <RotateCcw className={`w-3.5 h-3.5 ${isReloading ? 'animate-spin' : ''}`} />
-            <span>Reset</span>
-          </button>
-
-          {/* 3D Indigo New Tab Button */}
-          <a
-            href={activeSim.fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
-            style={{
-              backgroundColor: '#4f46e5',
-              backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
-              borderColor: '#818cf8',
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              color: '#ffffff',
-              boxShadow: '0 4px 10px rgba(79, 70, 229, 0.35)'
-            }}
-            title="Open simulation in new browser tab"
-          >
-            <ExternalLink className="w-3.5 h-3.5 text-white" />
-            <span className="hidden sm:inline">New Tab</span>
-          </a>
-
-          {/* 3D Rose Fullscreen Button */}
-          <button
-            onClick={handleNativeFullscreen}
-            className="btn-3d px-3.5 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
-            style={{
-              backgroundColor: '#e11d48',
-              backgroundImage: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)',
-              borderColor: '#fb7185',
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              color: '#ffffff',
-              boxShadow: '0 4px 10px rgba(225, 29, 72, 0.35)'
-            }}
-            title="Open Fullscreen Stage"
-          >
-            <Maximize2 className="w-3.5 h-3.5 text-white" />
-            <span>Fullscreen</span>
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* Live Simulation Iframe Canvas Container */}
-      <div 
-        className={`w-full relative transition-all overflow-hidden ${
-          aspectRatio === '16:9'
-            ? 'aspect-[16/9] min-h-[500px] max-h-[820px]'
-            : aspectRatio === '4:3'
-            ? 'aspect-[4/3] min-h-[540px] max-h-[860px]'
-            : 'h-[780px]'
-        }`}
-        style={{ backgroundColor: '#0f172a' }}
-      >
-        {isReloading && (
-          <div className="absolute inset-0 z-20 bg-slate-950 flex items-center justify-center">
-            <div className="flex items-center gap-3 text-cyan-300 text-sm font-black">
-              <RotateCcw className="w-5 h-5 animate-spin" />
-              <span>Reloading simulation canvas...</span>
+              <span className="flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>4K Ultra Graphics</span>
+              </span>
+              <span>Direct Hands-On</span>
             </div>
           </div>
-        )}
-
-        <iframe
-          ref={iframeRef}
-          key={activeSim.id}
-          src={activeSim.fileUrl}
-          title={activeSim.title}
-          className="w-full h-full border-0 block"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
-        />
+        </div>
       </div>
 
-      {/* Stage Bottom Curriculum & Features Drawer */}
+      {/* =========================================================================
+          STEP 3: INTERACTIVE SIMULATION AREA (CANVAS / PLAYGROUND)
+          Directly below its topic explanation with quick stage tools
+          ========================================================================= */}
+      <div className="w-full flex flex-col">
+        {/* Step 3 Header Bar with Stage Toolbar */}
+        <div 
+          className="px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-3"
+          style={{
+            backgroundColor: isDarkMode ? '#0a1633' : '#f1f5f9',
+            borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <span 
+              className="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white"
+              style={{ backgroundColor: '#2563eb' }}
+            >
+              STEP 3
+            </span>
+            <span 
+              className="text-xs sm:text-sm font-black"
+              style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+            >
+              Interactive Simulation Playground
+            </span>
+          </div>
+
+          {/* Stage Controls: Aspect Ratio, Reset, New Tab, Fullscreen */}
+          <div className="flex items-center gap-2 flex-wrap shrink-0">
+            {/* Aspect Ratio Switcher */}
+            <div 
+              className="flex items-center rounded-xl p-0.5 text-xs shadow-inner"
+              style={{
+                backgroundColor: isDarkMode ? '#07132e' : '#ffffff',
+                borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
+                borderWidth: '1.5px',
+                borderStyle: 'solid'
+              }}
+            >
+              <button
+                onClick={() => setAspectRatio('16:9')}
+                className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
+                style={
+                  aspectRatio === '16:9'
+                    ? {
+                        backgroundColor: '#2563eb',
+                        backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        color: '#ffffff',
+                        boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                        color: isDarkMode ? '#ffffff' : '#0f172a'
+                      }
+                }
+                title="16:9 Widescreen Fit"
+              >
+                16:9
+              </button>
+              <button
+                onClick={() => setAspectRatio('4:3')}
+                className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
+                style={
+                  aspectRatio === '4:3'
+                    ? {
+                        backgroundColor: '#2563eb',
+                        backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        color: '#ffffff',
+                        boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                        color: isDarkMode ? '#ffffff' : '#0f172a'
+                      }
+                }
+                title="4:3 Screen Fit"
+              >
+                4:3
+              </button>
+              <button
+                onClick={() => setAspectRatio('full')}
+                className="px-2.5 py-1 rounded-lg transition-all cursor-pointer font-black"
+                style={
+                  aspectRatio === 'full'
+                    ? {
+                        backgroundColor: '#2563eb',
+                        backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        color: '#ffffff',
+                        boxShadow: '0 2px 6px rgba(37, 99, 235, 0.4)'
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                        color: isDarkMode ? '#ffffff' : '#0f172a'
+                      }
+                }
+                title="Full Height View"
+              >
+                Full
+              </button>
+            </div>
+
+            {/* 3D Emerald Reset Button */}
+            <button
+              onClick={handleReload}
+              className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
+              style={{
+                backgroundColor: '#059669',
+                backgroundImage: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+                borderColor: '#34d399',
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                color: '#ffffff',
+                boxShadow: '0 4px 10px rgba(5, 150, 105, 0.35)'
+              }}
+              title="Reset simulation parameters"
+            >
+              <RotateCcw className={`w-3.5 h-3.5 ${isReloading ? 'animate-spin' : ''}`} />
+              <span>Reset</span>
+            </button>
+
+            {/* 3D Indigo New Tab Button */}
+            <a
+              href={activeSim.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
+              style={{
+                backgroundColor: '#4f46e5',
+                backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
+                borderColor: '#818cf8',
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                color: '#ffffff',
+                boxShadow: '0 4px 10px rgba(79, 70, 229, 0.35)'
+              }}
+              title="Open simulation in new browser tab"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-white" />
+              <span className="hidden sm:inline">New Tab</span>
+            </a>
+
+            {/* 3D Rose Fullscreen Button */}
+            <button
+              onClick={handleNativeFullscreen}
+              className="btn-3d px-3.5 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+              style={{
+                backgroundColor: '#e11d48',
+                backgroundImage: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)',
+                borderColor: '#fb7185',
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                color: '#ffffff',
+                boxShadow: '0 4px 10px rgba(225, 29, 72, 0.35)'
+              }}
+              title="Open Fullscreen Stage"
+            >
+              <Maximize2 className="w-3.5 h-3.5 text-white" />
+              <span>Fullscreen</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Live Simulation Iframe Canvas Container */}
+        <div 
+          className={`w-full relative transition-all overflow-hidden ${
+            aspectRatio === '16:9'
+              ? 'aspect-[16/9] min-h-[520px] max-h-[820px]'
+              : aspectRatio === '4:3'
+              ? 'aspect-[4/3] min-h-[560px] max-h-[860px]'
+              : 'h-[780px]'
+          }`}
+          style={{ backgroundColor: '#0f172a' }}
+        >
+          {isReloading && (
+            <div className="absolute inset-0 z-20 bg-slate-950 flex items-center justify-center">
+              <div className="flex items-center gap-3 text-cyan-300 text-sm font-black">
+                <RotateCcw className="w-5 h-5 animate-spin" />
+                <span>Reloading simulation canvas...</span>
+              </div>
+            </div>
+          )}
+
+          <iframe
+            ref={iframeRef}
+            key={activeSim.id}
+            src={activeSim.fileUrl}
+            title={activeSim.title}
+            className="w-full h-full border-0 block"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+          />
+        </div>
+      </div>
+
+      {/* =========================================================================
+          STEP 4: SIMULATION PERFORMANCE / CONTROLS & ANALYSIS
+          Neatly placed underneath the simulation playground
+          ========================================================================= */}
       <div 
-        className="p-5 sm:p-6 border-t grid grid-cols-1 lg:grid-cols-12 gap-6 items-start transition-colors opacity-100"
+        className="p-5 sm:p-6 border-t transition-colors"
         style={{
-          backgroundColor: isDarkMode ? '#071329' : '#f8fafc',
+          backgroundColor: isDarkMode ? '#071329' : '#ffffff',
           borderTop: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
         }}
       >
-        
-        {/* Left: Learning Focus & Topic Badges */}
-        <div className="lg:col-span-7">
-          <div 
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-2"
-            style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Core Curriculum Topics &amp; Competencies</span>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-4">
-            {activeSim.topics.map((t: string, idx: number) => {
-              const pillStyle = topicPillStyles[idx % topicPillStyles.length];
-              return (
-                <span 
-                  key={idx}
-                  className="px-3 py-1 rounded-lg text-xs font-black shadow-2xs"
-                  style={{
-                    backgroundColor: pillStyle.bg,
-                    color: pillStyle.text,
-                    borderColor: pillStyle.border,
-                    borderWidth: '1.5px',
-                    borderStyle: 'solid'
-                  }}
-                >
-                  {t}
-                </span>
-              );
-            })}
-          </div>
-
-          <p 
-            className="text-xs sm:text-sm leading-relaxed font-bold"
-            style={{ color: isDarkMode ? '#f8fafc' : '#0f172a' }}
-          >
-            {activeSim.description}
-          </p>
+        <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-wider"
+          style={{ color: '#059669' }}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>STEP 4 &bull; SIMULATION PERFORMANCE, CONTROLS &amp; OBSERVATION ANALYSIS</span>
         </div>
 
-        {/* Right: Key Interactive Features */}
-        <div 
-          className="lg:col-span-5 pl-0 lg:pl-6"
-          style={{
-            borderLeft: `1.5px solid ${isDarkMode ? '#1e3a8a' : '#cbd5e1'}`
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Card 1: Interactive Controls Guide */}
           <div 
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-3"
-            style={{ color: '#047857' }}
-          >
-            <Zap className="w-4 h-4" />
-            <span>Verified Interactive Features</span>
-          </div>
-
-          <div className="space-y-2">
-            {activeSim.features.map((feat: string, idx: number) => (
-              <div 
-                key={idx}
-                className="flex items-center gap-2 text-xs font-bold p-2.5 rounded-lg shadow-2xs"
-                style={{
-                  backgroundColor: isDarkMode ? '#0c1a3b' : '#ffffff',
-                  borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-                  borderWidth: '1.5px',
-                  borderStyle: 'solid',
-                  color: isDarkMode ? '#ffffff' : '#0f172a'
-                }}
-              >
-                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#059669' }} />
-                <span>{feat}</span>
-              </div>
-            ))}
-          </div>
-
-          <div 
-            className="mt-3 pt-3 border-t flex items-center justify-between text-[11px] font-black"
+            className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              borderTopColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-              borderTopWidth: '1.5px',
-              color: isDarkMode ? '#e2e8f0' : '#1e293b'
+              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
+              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+              borderWidth: '1.5px',
+              borderStyle: 'solid'
             }}
           >
-            <span>Target Level: {activeSim.gradeLevel}</span>
-            <span 
-              className="flex items-center gap-1 font-black"
-              style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+            <div>
+              <div 
+                className="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5"
+                style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>Interactive Controls</span>
+              </div>
+              <p 
+                className="text-xs font-bold leading-relaxed"
+                style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+              >
+                Use the interactive controls, sliders, and parameter buttons embedded directly in the canvas above. Adjust inputs, toggle modes, and explore real-time responses.
+              </p>
+            </div>
+            <div 
+              className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
+              style={{
+                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                color: isDarkMode ? '#93c5fd' : '#2563eb'
+              }}
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-              <span>4K High-Res Graphics</span>
-            </span>
+              <span>Built-in Canvas Sliders</span>
+              <span className="font-extrabold text-emerald-600">Active</span>
+            </div>
+          </div>
+
+          {/* Card 2: Performance Metrics & Real-time Readouts */}
+          <div 
+            className="p-4 rounded-xl border flex flex-col justify-between"
+            style={{
+              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
+              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+              borderWidth: '1.5px',
+              borderStyle: 'solid'
+            }}
+          >
+            <div>
+              <div 
+                className="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5"
+                style={{ color: '#059669' }}
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                <span>Live Metrics &amp; Telemetry</span>
+              </div>
+              <p 
+                className="text-xs font-bold leading-relaxed"
+                style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+              >
+                Observe live numerical readouts, vectors, formula outputs, and scientific telemetry generated continuously by the 60 FPS physics calculation engine.
+              </p>
+            </div>
+            <div 
+              className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
+              style={{
+                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                color: isDarkMode ? '#93c5fd' : '#2563eb'
+              }}
+            >
+              <span>60 FPS Physics Engine</span>
+              <span className="font-extrabold text-emerald-600">Synchronized</span>
+            </div>
+          </div>
+
+          {/* Card 3: Observation Results & Guided Learning */}
+          <div 
+            className="p-4 rounded-xl border flex flex-col justify-between"
+            style={{
+              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
+              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+              borderWidth: '1.5px',
+              borderStyle: 'solid'
+            }}
+          >
+            <div>
+              <div 
+                className="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5"
+                style={{ color: isDarkMode ? '#c084fc' : '#7c3aed' }}
+              >
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>Observation &amp; Inquiry</span>
+              </div>
+              <p 
+                className="text-xs font-bold leading-relaxed"
+                style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+              >
+                Compare how altering individual parameters affects system equilibrium, wave frequencies, chemical concentrations, orbital periods, or mechanical forces.
+              </p>
+            </div>
+            <div 
+              className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
+              style={{
+                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                color: isDarkMode ? '#93c5fd' : '#2563eb'
+              }}
+            >
+              <span>Inquiry-Based Learning</span>
+              <span className="font-extrabold text-purple-600">Verified</span>
+            </div>
           </div>
         </div>
-
       </div>
 
     </div>

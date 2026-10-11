@@ -121,7 +121,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           Gen Z EdTech Interactive Simulation
         </h1>
         <p className="mt-2 text-xs sm:text-sm text-white max-w-3xl leading-relaxed font-bold opacity-100">
-          Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, and planetary space dynamics. Switch seamlessly across all 19 modules with single-click direct execution in 4K high fidelity.
+          Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, and planetary dynamics. Switch seamlessly across all 25 modules with single-click direct execution in 4K high fidelity.
         </p>
 
         {/* Website Action Buttons for Laptop & Desktop */}
@@ -138,7 +138,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             }}
           >
             <Layers className="w-4 h-4 text-slate-900" />
-            <span>Explore 19 Simulations Grid</span>
+            <span>Explore All 25 Labs Grid</span>
           </a>
           <a
             href="#stage"
