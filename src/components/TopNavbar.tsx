@@ -68,10 +68,20 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               </span>
             </div>
             <div 
-              className="text-[10px] sm:text-[11px] font-black tracking-tight"
+              className="text-[10px] sm:text-[11px] font-black tracking-tight flex items-center gap-1.5 flex-wrap"
               style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
             >
-              Interactive STEM Digital Laboratory Portal &bull; {totalSimulations} Verified Simulators
+              <span>Interactive STEM Digital Laboratory Portal &bull; {totalSimulations} Verified Simulators</span>
+              <span className="hidden md:inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-mono font-bold"
+                style={{
+                  backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.4)' : 'rgba(219, 234, 254, 0.6)',
+                  color: isDarkMode ? '#93c5fd' : '#1e40af',
+                  border: isDarkMode ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid rgba(191, 219, 254, 0.8)'
+                }}
+              >
+                <span>Dev:</span>
+                <span className="font-extrabold">M. Imran Khan</span>
+              </span>
             </div>
           </div>
         </div>
