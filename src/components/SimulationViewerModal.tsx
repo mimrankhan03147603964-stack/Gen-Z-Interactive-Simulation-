@@ -52,15 +52,25 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#030714] flex flex-col animate-in fade-in duration-200 opacity-100">
+    <div 
+      className="fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
+      style={{
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        backgroundColor: 'rgba(3, 7, 20, 0.88)'
+      }}
+    >
       
-      {/* 3D Modal Control Header Bar */}
+      {/* 3D Modal Control Header Bar with Frosted Glass Styling */}
       <div 
         className="h-14 px-4 sm:px-6 flex items-center justify-between gap-4 shrink-0 shadow-lg"
         style={{
-          backgroundColor: '#060e22',
-          backgroundImage: 'linear-gradient(135deg, #060e22 0%, #091838 50%, #060e22 100%)',
-          borderBottom: '1.5px solid #1e3a8a',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: 'rgba(6, 14, 34, 0.85)',
+          backgroundImage: 'linear-gradient(135deg, rgba(6, 14, 34, 0.9) 0%, rgba(9, 24, 56, 0.85) 50%, rgba(6, 14, 34, 0.9) 100%)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.18)',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
           color: '#ffffff'
         }}
       >

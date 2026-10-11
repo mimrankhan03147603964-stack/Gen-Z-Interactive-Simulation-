@@ -125,10 +125,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       <div 
         className="rounded-2xl p-6 sm:p-8 border shadow-xl transition-all"
         style={{
-          backgroundColor: isDarkMode ? '#0a1633' : '#ffffff',
-          borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.82)',
+          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >
@@ -138,10 +141,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <span 
                 className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-2xs"
                 style={{
-                  backgroundColor: isDarkMode ? '#0f2963' : '#eff6ff',
+                  backgroundColor: isDarkMode ? 'rgba(15, 41, 99, 0.75)' : 'rgba(239, 246, 255, 0.85)',
                   color: isDarkMode ? '#38bdf8' : '#1d4ed8',
-                  borderColor: isDarkMode ? '#3b82f6' : '#93c5fd',
-                  borderWidth: '1.5px',
+                  borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+                  borderWidth: '1px',
                   borderStyle: 'solid'
                 }}
               >
@@ -174,9 +177,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <div 
               className="relative flex items-center rounded-xl border shadow-inner transition-all"
               style={{
-                backgroundColor: isDarkMode ? '#060e22' : '#f8fafc',
-                borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
-                borderWidth: '1.5px',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
+                borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(148, 163, 184, 0.6)',
+                borderWidth: '1px',
                 borderStyle: 'solid'
               }}
             >
@@ -288,18 +293,21 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <div 
                 className="px-5 py-3.5 rounded-xl border flex items-center justify-between gap-3 shadow-md"
                 style={{
-                  backgroundColor: isDarkMode ? '#091838' : '#eff6ff',
-                  borderColor: isDarkMode ? '#1e3a8a' : '#bfdbfe',
-                  borderWidth: '1.5px',
-                  borderStyle: 'solid'
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  backgroundColor: isDarkMode ? 'rgba(9, 24, 56, 0.75)' : 'rgba(239, 246, 255, 0.8)',
+                  borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(191, 219, 254, 0.6)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  boxShadow: '0 8px 24px 0 rgba(0, 0, 0, 0.05)'
                 }}
               >
                 <div className="flex items-center gap-2.5">
                   <div 
                     className="w-8 h-8 rounded-lg flex items-center justify-center shadow-xs"
                     style={{
-                      backgroundColor: isDarkMode ? '#0f2963' : '#dbeafe',
-                      borderColor: isDarkMode ? '#3b82f6' : '#93c5fd',
+                      backgroundColor: isDarkMode ? 'rgba(15, 41, 99, 0.8)' : '#dbeafe',
+                      borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.5)' : '#93c5fd',
                       borderWidth: '1px',
                       borderStyle: 'solid'
                     }}
@@ -325,7 +333,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 <span 
                   className="px-3 py-1 rounded-full text-xs font-black shadow-2xs"
                   style={{
-                    backgroundColor: isDarkMode ? '#172554' : '#dbeafe',
+                    backgroundColor: isDarkMode ? 'rgba(23, 37, 84, 0.8)' : '#dbeafe',
                     color: isDarkMode ? '#60a5fa' : '#1e40af'
                   }}
                 >
@@ -347,12 +355,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         isActive ? 'ring-2 ring-offset-2' : ''
                       }`}
                       style={{
-                        backgroundColor: isDarkMode ? '#0a1633' : '#ffffff',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.82)',
                         borderColor: isActive 
                           ? theme.bgSolid 
-                          : (isDarkMode ? '#1e3a8a' : '#cbd5e1'),
-                        borderWidth: isActive ? '2px' : '1.5px',
+                          : (isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)'),
+                        borderWidth: isActive ? '2px' : '1px',
                         borderStyle: 'solid',
+                        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
                         color: isDarkMode ? '#ffffff' : '#0f172a',
                         outlineColor: theme.bgSolid
                       }}
@@ -463,8 +474,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       <div 
                         className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
                         style={{
-                          backgroundColor: isDarkMode ? '#060e22' : '#f8fafc',
-                          borderTop: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+                          backdropFilter: 'blur(12px)',
+                          WebkitBackdropFilter: 'blur(12px)',
+                          backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
+                          borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
                         }}
                       >
                         {isActive ? (

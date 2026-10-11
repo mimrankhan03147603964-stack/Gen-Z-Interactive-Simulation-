@@ -20,10 +20,13 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-4.5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group btn-3d opacity-100"
         style={{
-          backgroundColor: isDarkMode ? '#081735' : '#eff6ff',
-          borderColor: isDarkMode ? '#2563eb' : '#93c5fd',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(8, 23, 53, 0.72)' : 'rgba(239, 246, 255, 0.78)',
+          borderColor: isDarkMode ? 'rgba(37, 99, 235, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(37, 99, 235, 0.08)',
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >
@@ -71,10 +74,13 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-4.5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group btn-3d opacity-100"
         style={{
-          backgroundColor: isDarkMode ? '#200d3d' : '#faf5ff',
-          borderColor: isDarkMode ? '#7c3aed' : '#c084fc',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(32, 13, 61, 0.72)' : 'rgba(250, 245, 255, 0.78)',
+          borderColor: isDarkMode ? 'rgba(124, 58, 237, 0.45)' : 'rgba(192, 132, 252, 0.7)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(124, 58, 237, 0.08)',
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >
@@ -121,10 +127,13 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-4.5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group btn-3d opacity-100"
         style={{
-          backgroundColor: isDarkMode ? '#05291f' : '#ecfdf5',
-          borderColor: isDarkMode ? '#059669' : '#6ee7b7',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(5, 41, 31, 0.72)' : 'rgba(236, 253, 245, 0.78)',
+          borderColor: isDarkMode ? 'rgba(5, 150, 105, 0.45)' : 'rgba(110, 231, 183, 0.7)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(5, 150, 105, 0.08)',
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >
@@ -171,10 +180,13 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-4.5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group btn-3d opacity-100"
         style={{
-          backgroundColor: isDarkMode ? '#2a1a04' : '#fffbeb',
-          borderColor: isDarkMode ? '#d97706' : '#fcd34d',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(42, 26, 4, 0.72)' : 'rgba(255, 251, 235, 0.78)',
+          borderColor: isDarkMode ? 'rgba(217, 119, 6, 0.45)' : 'rgba(252, 211, 77, 0.7)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(217, 119, 6, 0.08)',
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >

@@ -45,26 +45,31 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     <div 
       className="w-full rounded-2xl p-5 sm:p-7 shadow-xl border relative overflow-hidden transition-all text-white opacity-100"
       style={{
-        backgroundColor: isDarkMode ? '#0a1a3e' : '#1e40af',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDarkMode ? 'rgba(9, 24, 56, 0.82)' : 'rgba(30, 64, 175, 0.82)',
         backgroundImage: isDarkMode
-          ? 'linear-gradient(135deg, #091838 0%, #0d255a 50%, #061129 100%)'
-          : 'linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #1d4ed8 100%)',
-        borderColor: isDarkMode ? '#3b82f6' : '#60a5fa',
-        borderWidth: '1.5px',
+          ? 'linear-gradient(135deg, rgba(9, 24, 56, 0.88) 0%, rgba(13, 37, 90, 0.82) 50%, rgba(6, 17, 41, 0.88) 100%)'
+          : 'linear-gradient(135deg, rgba(30, 64, 175, 0.85) 0%, rgba(37, 99, 235, 0.82) 50%, rgba(29, 78, 216, 0.85) 100%)',
+        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.28)',
+        borderWidth: '1px',
         borderStyle: 'solid',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.25)',
         color: '#ffffff'
       }}
     >
       {/* Top Row: Pill Badge on Left + Digital Clock Widget on Right */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 relative z-10">
         
-        {/* Left Pill Badge - Solid high contrast, no foggy wash */}
+        {/* Left Pill Badge - Frosted Glass */}
         <div 
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide uppercase shadow-md"
           style={{
-            backgroundColor: isDarkMode ? '#040d22' : '#0f2963',
-            borderColor: '#67e8f9',
-            borderWidth: '1.5px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(15, 41, 99, 0.72)',
+            borderColor: 'rgba(103, 232, 249, 0.5)',
+            borderWidth: '1px',
             borderStyle: 'solid',
             color: '#ffffff'
           }}
@@ -79,14 +84,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </span>
         </div>
 
-        {/* Right: Crisp Solid Digital Clock Widget */}
+        {/* Right: Crisp Frosted Glass Digital Clock Widget */}
         <div 
           className="px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2.5 text-xs"
           style={{
-            backgroundColor: isDarkMode ? '#040d22' : '#0c2255',
-            borderColor: '#60a5fa',
-            borderWidth: '1.5px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(12, 34, 85, 0.72)',
+            borderColor: 'rgba(96, 165, 250, 0.45)',
+            borderWidth: '1px',
             borderStyle: 'solid',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
             color: '#ffffff'
           }}
         >
@@ -127,13 +135,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </p>
         </div>
 
-        {/* Official Monogram Emblem Badge */}
+        {/* Official Monogram Emblem Badge with Frosted Glass Styling */}
         <div 
-          className="shrink-0 rounded-2xl p-3 border shadow-2xl flex items-center gap-3.5 bg-white/95 dark:bg-slate-900/90 text-slate-900 dark:text-white"
+          className="shrink-0 rounded-2xl p-3 border shadow-2xl flex items-center gap-3.5 text-slate-900 dark:text-white"
           style={{
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.82)' : 'rgba(255, 255, 255, 0.88)',
             borderColor: '#38bdf8',
-            borderWidth: '2px',
-            boxShadow: '0 8px 24px rgba(2, 132, 199, 0.35)'
+            borderWidth: '1.5px',
+            borderStyle: 'solid',
+            boxShadow: '0 8px 24px rgba(2, 132, 199, 0.3)'
           }}
         >
           <img 
@@ -155,7 +167,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             href="#catalog"
             className="btn-3d px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 text-slate-900 shadow-md cursor-pointer"
             style={{
-              backgroundColor: '#fbbf24',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: 'rgba(251, 191, 36, 0.9)',
               borderColor: '#fde047',
               borderWidth: '1.5px',
               borderStyle: 'solid',
@@ -169,7 +183,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             href="#stage"
             className="btn-3d px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 text-white shadow-md cursor-pointer"
             style={{
-              backgroundColor: '#059669',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: 'rgba(5, 150, 105, 0.9)',
               borderColor: '#34d399',
               borderWidth: '1.5px',
               borderStyle: 'solid',
@@ -181,14 +197,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </a>
         </div>
 
-      {/* Continuous Right-to-Left Live Bulletin Ticker for All 27 Interactive Simulations */}
+      {/* Continuous Right-to-Left Live Bulletin Ticker with Frosted Glass Styling */}
       <div 
         className="relative z-10 mt-4 rounded-xl text-xs flex items-center overflow-hidden shadow-md"
         style={{
-          backgroundColor: isDarkMode ? '#040d22' : '#0c2255',
-          borderColor: '#60a5fa',
-          borderWidth: '1.5px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(12, 34, 85, 0.72)',
+          borderColor: 'rgba(96, 165, 250, 0.35)',
+          borderWidth: '1px',
           borderStyle: 'solid',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
           color: '#ffffff'
         }}
       >
@@ -196,9 +215,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         <div 
           className="shrink-0 z-20 px-3.5 py-2.5 flex items-center gap-2 font-black uppercase tracking-wider text-[11px] shadow-lg"
           style={{
-            backgroundColor: '#2563eb',
-            backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-            borderRight: '1.5px solid #60a5fa',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: 'rgba(37, 99, 235, 0.88)',
+            backgroundImage: 'linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(29, 78, 216, 0.9) 100%)',
+            borderRight: '1.5px solid rgba(96, 165, 250, 0.5)',
             color: '#ffffff'
           }}
         >

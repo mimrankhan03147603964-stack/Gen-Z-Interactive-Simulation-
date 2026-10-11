@@ -76,10 +76,13 @@ export const MainStage: React.FC<MainStageProps> = ({
       ref={stageContainerRef}
       className="w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-20"
       style={{
-        backgroundColor: isDarkMode ? '#060e22' : '#ffffff',
-        borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-        borderWidth: '1.5px',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.78)' : 'rgba(255, 255, 255, 0.82)',
+        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+        borderWidth: '1px',
         borderStyle: 'solid',
+        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
@@ -90,8 +93,10 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="px-5 py-3 border-b flex flex-wrap items-center justify-between gap-3"
         style={{
-          backgroundColor: isDarkMode ? '#0b193d' : '#eff6ff',
-          borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #bfdbfe'
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(11, 25, 61, 0.75)' : 'rgba(239, 246, 255, 0.75)',
+          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(191, 219, 254, 0.6)'
         }}
       >
         <div className="flex items-center gap-2.5">
@@ -154,8 +159,10 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="p-5 sm:p-6 border-b transition-colors"
         style={{
-          backgroundColor: isDarkMode ? '#08142f' : '#f8fafc',
-          borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(8, 20, 47, 0.72)' : 'rgba(248, 250, 252, 0.75)',
+          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
         }}
       >
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
@@ -216,10 +223,13 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="w-full lg:w-80 shrink-0 p-4 rounded-xl border"
             style={{
-              backgroundColor: isDarkMode ? '#0c1b3d' : '#ffffff',
-              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-              borderWidth: '1.5px',
-              borderStyle: 'solid'
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.75)' : 'rgba(255, 255, 255, 0.82)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
             }}
           >
             <div 
@@ -244,8 +254,8 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="mt-3 pt-2.5 border-t flex items-center justify-between text-[11px] font-black"
               style={{
-                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
-                borderTopWidth: '1.5px',
+                borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0',
+                borderTopWidth: '1px',
                 color: isDarkMode ? '#38bdf8' : '#2563eb'
               }}
             >
@@ -268,8 +278,10 @@ export const MainStage: React.FC<MainStageProps> = ({
         <div 
           className="px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-3"
           style={{
-            backgroundColor: isDarkMode ? '#0a1633' : '#f1f5f9',
-            borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(241, 245, 249, 0.75)',
+            borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
           }}
         >
           <div className="flex items-center gap-2">
@@ -293,9 +305,11 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="flex items-center rounded-xl p-0.5 text-xs shadow-inner"
               style={{
-                backgroundColor: isDarkMode ? '#07132e' : '#ffffff',
-                borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
-                borderWidth: '1.5px',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                backgroundColor: isDarkMode ? 'rgba(7, 19, 46, 0.75)' : 'rgba(255, 255, 255, 0.75)',
+                borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(148, 163, 184, 0.6)',
+                borderWidth: '1px',
                 borderStyle: 'solid'
               }}
             >
@@ -461,8 +475,10 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="p-5 sm:p-6 border-t transition-colors"
         style={{
-          backgroundColor: isDarkMode ? '#071329' : '#ffffff',
-          borderTop: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1'
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(7, 19, 41, 0.75)' : 'rgba(255, 255, 255, 0.75)',
+          borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
         }}
       >
         <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-wider"
@@ -477,10 +493,13 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
-              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-              borderWidth: '1.5px',
-              borderStyle: 'solid'
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
             }}
           >
             <div>
@@ -501,7 +520,7 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
               style={{
-                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0',
                 color: isDarkMode ? '#93c5fd' : '#2563eb'
               }}
             >
@@ -514,10 +533,13 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
-              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-              borderWidth: '1.5px',
-              borderStyle: 'solid'
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
             }}
           >
             <div>
@@ -538,7 +560,7 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
               style={{
-                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0',
                 color: isDarkMode ? '#93c5fd' : '#2563eb'
               }}
             >
@@ -551,10 +573,13 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backgroundColor: isDarkMode ? '#0c1b3d' : '#f8fafc',
-              borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-              borderWidth: '1.5px',
-              borderStyle: 'solid'
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
             }}
           >
             <div>
@@ -575,7 +600,7 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="mt-3 pt-2 border-t text-[11px] font-black flex items-center justify-between"
               style={{
-                borderTopColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
+                borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0',
                 color: isDarkMode ? '#93c5fd' : '#2563eb'
               }}
             >

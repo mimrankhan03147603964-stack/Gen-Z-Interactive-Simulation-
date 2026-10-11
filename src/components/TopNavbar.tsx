@@ -25,8 +25,11 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     <header 
       className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-30 transition-colors opacity-100"
       style={{
-        backgroundColor: isDarkMode ? '#060f24' : '#ffffff',
-        borderBottom: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.82)' : 'rgba(255, 255, 255, 0.82)',
+        borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid rgba(255, 255, 255, 0.55)',
+        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
@@ -37,7 +40,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <div 
             className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shadow-lg icon-tile-3d shrink-0 p-1 overflow-hidden"
             style={{
-              backgroundColor: isDarkMode ? '#0c1a3b' : '#ffffff',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.85)' : 'rgba(255, 255, 255, 0.88)',
               borderColor: '#38bdf8',
               borderWidth: '1.5px',
               borderStyle: 'solid',
@@ -111,10 +116,12 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         <div 
           className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs"
           style={{
-            backgroundColor: activeTheme.badgeBg,
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
             color: activeTheme.badgeText,
-            borderColor: activeTheme.badgeBorder,
-            borderWidth: '1.5px',
+            borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+            borderWidth: '1px',
             borderStyle: 'solid'
           }}
         >
@@ -126,14 +133,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <span className="truncate max-w-[170px]">{activeSim.title}</span>
         </div>
 
-        {/* Labs Counter Pill - Vibrant Amber */}
+        {/* Labs Counter Pill - Vibrant Amber Frosted Glass */}
         <div 
           className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black shadow-2xs"
           style={{
-            backgroundColor: '#fef3c7',
-            color: '#78350f',
-            borderColor: '#f59e0b',
-            borderWidth: '1.5px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(56, 32, 4, 0.75)' : 'rgba(254, 243, 199, 0.82)',
+            color: isDarkMode ? '#fef08a' : '#78350f',
+            borderColor: isDarkMode ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.5)',
+            borderWidth: '1px',
             borderStyle: 'solid'
           }}
         >
@@ -141,14 +150,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <span>{totalSimulations} Labs</span>
         </div>
 
-        {/* 4K Ultra Indicator - Vibrant Emerald */}
+        {/* 4K Ultra Indicator - Vibrant Emerald Frosted Glass */}
         <div 
           className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-black shadow-2xs"
           style={{
-            backgroundColor: '#d1fae5',
-            color: '#064e3b',
-            borderColor: '#34d399',
-            borderWidth: '1.5px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(6, 45, 34, 0.75)' : 'rgba(209, 250, 229, 0.82)',
+            color: isDarkMode ? '#6ee7b7' : '#064e3b',
+            borderColor: isDarkMode ? 'rgba(52, 211, 153, 0.45)' : 'rgba(52, 211, 153, 0.5)',
+            borderWidth: '1px',
             borderStyle: 'solid'
           }}
         >
@@ -156,7 +167,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <span>4K Ultra</span>
         </div>
 
-        {/* Theme Toggle Button (Day / Night) */}
+        {/* Theme Toggle Button (Day / Night) - Frosted Glass Button */}
         {onToggleTheme && (
           <button
             onClick={onToggleTheme}
@@ -164,17 +175,21 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             style={
               isDarkMode
                 ? {
-                    backgroundColor: '#f59e0b',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    backgroundColor: 'rgba(245, 158, 11, 0.85)',
                     color: '#0f172a',
-                    borderColor: '#fde047',
-                    borderWidth: '1.5px',
+                    borderColor: 'rgba(253, 224, 71, 0.8)',
+                    borderWidth: '1px',
                     borderStyle: 'solid'
                   }
                 : {
-                    backgroundColor: '#f1f5f9',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    backgroundColor: 'rgba(241, 245, 249, 0.85)',
                     color: '#0f172a',
-                    borderColor: '#94a3b8',
-                    borderWidth: '1.5px',
+                    borderColor: 'rgba(148, 163, 184, 0.6)',
+                    borderWidth: '1px',
                     borderStyle: 'solid'
                   }
             }

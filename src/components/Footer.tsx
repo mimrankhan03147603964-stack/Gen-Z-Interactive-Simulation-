@@ -11,8 +11,10 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
       id="developer"
       className="w-full pt-12 pb-8 px-4 border-t text-center shrink-0 shadow-sm select-none transition-colors opacity-100 scroll-mt-20"
       style={{
-        backgroundColor: isDarkMode ? '#060e22' : '#ffffff',
-        borderTop: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #e2e8f0',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.82)' : 'rgba(255, 255, 255, 0.82)',
+        borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid rgba(255, 255, 255, 0.5)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
@@ -23,11 +25,13 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
           <div 
             className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-2 border shadow-lg overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
             style={{
-              backgroundColor: isDarkMode ? '#0c1a3b' : '#ffffff',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.8)' : 'rgba(255, 255, 255, 0.85)',
               borderColor: '#38bdf8',
               borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 8px 20px rgba(2, 132, 199, 0.25)'
+              boxShadow: '0 8px 24px rgba(2, 132, 199, 0.25)'
             }}
           >
             <img 
@@ -56,8 +60,11 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
         <div 
           className="w-full max-w-xl mx-auto rounded-3xl p-6 sm:p-7 flex flex-col items-center justify-center gap-4 transition-all shadow-sm"
           style={{
-            backgroundColor: isDarkMode ? '#0c1a3b' : '#f8fafc',
-            border: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #e2e8f0',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.75)' : 'rgba(248, 250, 252, 0.78)',
+            border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid rgba(255, 255, 255, 0.65)',
+            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.08)'
           }}
         >
           {/* Badge: </> DEVELOPED BY */}
@@ -103,7 +110,9 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
               href="tel:03007603964" 
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-mono font-bold text-xs sm:text-sm transition-all shadow-xs cursor-pointer hover:opacity-90 active:scale-95"
               style={{
-                backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.75)' : 'rgba(255, 255, 255, 0.8)',
                 borderColor: isDarkMode ? '#38bdf8' : '#cbd5e1',
                 borderWidth: '1.5px',
                 borderStyle: 'solid',
@@ -119,7 +128,9 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
               href="tel:03147603964" 
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-mono font-bold text-xs sm:text-sm transition-all shadow-xs cursor-pointer hover:opacity-90 active:scale-95"
               style={{
-                backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.75)' : 'rgba(255, 255, 255, 0.8)',
                 borderColor: isDarkMode ? '#38bdf8' : '#cbd5e1',
                 borderWidth: '1.5px',
                 borderStyle: 'solid',

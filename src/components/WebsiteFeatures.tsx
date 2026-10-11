@@ -43,28 +43,29 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       id="features" 
       className="w-full rounded-2xl p-6 sm:p-8 border shadow-xl transition-all space-y-6 opacity-100"
       style={{
-        backgroundColor: isDarkMode ? '#0a1633' : '#ffffff',
-        borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-        borderWidth: '1.5px',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.82)',
+        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+        borderWidth: '1px',
         borderStyle: 'solid',
+        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4"
         style={{
-          borderBottomColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-          borderBottomWidth: '1.5px',
-          borderBottomStyle: 'solid'
+          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
         }}
       >
         <div>
           <span 
             className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-2xs inline-block mb-1.5"
             style={{
-              backgroundColor: isDarkMode ? '#0f2963' : '#eff6ff',
+              backgroundColor: isDarkMode ? 'rgba(15, 41, 99, 0.75)' : 'rgba(239, 246, 255, 0.85)',
               color: isDarkMode ? '#38bdf8' : '#1d4ed8',
-              borderColor: isDarkMode ? '#3b82f6' : '#93c5fd',
-              borderWidth: '1.5px',
+              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+              borderWidth: '1px',
               borderStyle: 'solid'
             }}
           >
@@ -80,9 +81,11 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         <div 
           className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shrink-0"
           style={{
-            backgroundColor: isDarkMode ? '#060e22' : '#f1f5f9',
-            borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
-            borderWidth: '1.5px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(241, 245, 249, 0.8)',
+            borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(148, 163, 184, 0.6)',
+            borderWidth: '1px',
             borderStyle: 'solid',
             color: isDarkMode ? '#38bdf8' : '#1d4ed8'
           }}
@@ -98,10 +101,13 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
             key={idx}
             className="p-4 rounded-xl border transition-all btn-3d flex flex-col justify-between"
             style={{
-              backgroundColor: isDarkMode ? '#060e22' : '#f8fafc',
-              borderColor: isDarkMode ? '#1e3a8a' : '#e2e8f0',
-              borderWidth: '1.5px',
-              borderStyle: 'solid'
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.72)' : 'rgba(248, 250, 252, 0.75)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.05)'
             }}
           >
             <div>

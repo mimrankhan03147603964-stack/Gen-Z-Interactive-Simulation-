@@ -85,6 +85,9 @@ export default function App() {
       className="min-h-screen flex flex-col font-sans select-none antialiased transition-colors duration-200 opacity-100"
       style={{
         backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9',
+        backgroundImage: isDarkMode
+          ? 'radial-gradient(circle at 15% 15%, rgba(30, 58, 138, 0.25) 0%, transparent 45%), radial-gradient(circle at 85% 65%, rgba(14, 116, 144, 0.18) 0%, transparent 45%), radial-gradient(circle at 50% 90%, rgba(88, 28, 135, 0.15) 0%, transparent 50%)'
+          : 'radial-gradient(circle at 15% 15%, rgba(219, 234, 254, 0.65) 0%, transparent 45%), radial-gradient(circle at 85% 60%, rgba(224, 231, 255, 0.5) 0%, transparent 45%), radial-gradient(circle at 50% 90%, rgba(209, 250, 229, 0.4) 0%, transparent 50%)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
@@ -110,11 +113,16 @@ export default function App() {
         isDarkMode={isDarkMode}
       />
 
-      {/* Drawer Overlay Backdrop */}
+      {/* Drawer Overlay Backdrop with Frosted Glass Blur */}
       {sidebarOpen && (
         <div 
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-slate-950/70 z-40 transition-opacity"
+          className="fixed inset-0 z-40 transition-opacity"
+          style={{
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: 'rgba(2, 6, 23, 0.6)'
+          }}
         />
       )}
 
@@ -122,7 +130,7 @@ export default function App() {
       <main 
         className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 space-y-8 transition-colors duration-200 opacity-100"
         style={{
-          backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9'
+          backgroundColor: 'transparent'
         }}
       >
         
