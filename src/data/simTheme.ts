@@ -415,6 +415,38 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ecfdf5',
     tagText: '#047857',
     glowColor: 'rgba(16, 185, 129, 0.4)'
+  },
+  '26': {
+    id: '26',
+    name: 'Computer Parts & Architecture',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0284c7',
+    iconBorder: '#7dd3fc',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.4)'
+  },
+  '27': {
+    id: '27',
+    name: 'Keyboard Shortcuts & Typing',
+    bgSolid: '#7c3aed',
+    bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+    borderColor: '#a78bfa',
+    iconBg: '#7c3aed',
+    iconBorder: '#c4b5fd',
+    iconColor: '#ffffff',
+    badgeBg: '#ede9fe',
+    badgeText: '#5b21b6',
+    badgeBorder: '#c4b5fd',
+    tagBg: '#f5f3ff',
+    tagText: '#6d28d9',
+    glowColor: 'rgba(124, 58, 237, 0.4)'
   }
 };
 

@@ -46,14 +46,23 @@ export default function App() {
       }
     };
 
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data && e.data.type === 'GENZ_SIM_REQUEST_FULLSCREEN') {
+        const matching = SIMULATIONS_LIST.find(s => s.fileUrl === e.data.simFile || window.location.pathname.includes(s.slug)) || activeSim;
+        setFullscreenModalSim(matching);
+      }
+    };
+
     window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('message', handleMessage);
 
     return () => {
       window.removeEventListener('contextmenu', handleContextMenu);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [activeSim]);
 
   const handleSelectSim = (sim: SimulationItem) => {
     setActiveSim(sim);

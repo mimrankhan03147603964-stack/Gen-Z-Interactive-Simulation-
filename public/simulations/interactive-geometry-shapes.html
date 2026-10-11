@@ -379,6 +379,32 @@ body {
   font-size: 0.85rem !important;
   cursor: pointer !important;
 }
+
+/* FULLSCREEN VISIBILITY & BUTTON GUARANTEE */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  padding-bottom: 90px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
 </style>
 </head>
 <body>
@@ -767,15 +793,26 @@ function updateReadouts() {
 
 // FULLSCREEN HANDLER
 function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
   const box = document.getElementById(boxId);
-  if (!document.fullscreenElement && !box.classList.contains('is-fullscreen')) {
-    if (box.requestFullscreen) {
-      box.requestFullscreen().then(() => resizeGeomCanvas()).catch(() => {
-        box.classList.add('is-fullscreen');
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().then(() => { resizeGeomCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeGeomCanvas();
+      });
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => { resizeGeomCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
         resizeGeomCanvas();
       });
     } else {
-      box.classList.add('is-fullscreen');
+      box.classList.add("is-fullscreen");
       resizeGeomCanvas();
     }
   } else {

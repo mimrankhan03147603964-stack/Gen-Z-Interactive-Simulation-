@@ -26,7 +26,9 @@ import {
   Calculator,
   Shapes,
   Scale,
-  Ruler
+  Ruler,
+  Computer,
+  Keyboard
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -68,6 +70,8 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Shapes': return <Shapes {...iconProps} />;
     case 'Scale': return <Scale {...iconProps} />;
     case 'Ruler': return <Ruler {...iconProps} />;
+    case 'Computer': return <Computer {...iconProps} />;
+    case 'Keyboard': return <Keyboard {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };

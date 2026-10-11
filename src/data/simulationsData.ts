@@ -375,6 +375,36 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Metric & Imperial Ruler', 'Digital Mass Scale & Tare', 'Liquid Volume Meniscus', 'Archimedes Fluid Displacement'],
     features: ['Draggable Objects to Measure', 'Precision Electronic Scale', 'Fluid Displacement Density Test', 'Instant Unit Converter Matrix'],
     gradeLevel: 'Elementary & Middle School'
+  },
+  {
+    id: 'sim-computer-parts-hardware',
+    slug: 'computer-parts-hardware',
+    indexNumber: '26',
+    title: 'Computer Parts & Hardware Architecture',
+    subject: 'Computer Science & System Engineering',
+    category: 'Computer Science & IT',
+    iconName: 'Computer',
+    accentColor: '#0284c7', // Sky Cyan
+    description: 'Explore motherboard anatomy, CPU socket, DDR5 memory slots, discrete GPU, NVMe SSD storage, and live animated high-speed data bus communications with thermal telemetry.',
+    fileUrl: '/simulations/computer-parts-hardware.html',
+    topics: ['CPU Multi-Core Microprocessor', 'DDR5 RAM Semiconductor Memory', 'PCIe 5.0 High-Speed Bus', 'Von Neumann Architecture'],
+    features: ['Interactive Motherboard Anatomy', 'Live Bus Trace Packet Pulses', 'Real-time Spec Readouts', 'Form Factor Hardware Inspection'],
+    gradeLevel: 'Middle & High School / IT'
+  },
+  {
+    id: 'sim-keyboard-shortcuts-typing',
+    slug: 'keyboard-shortcuts-typing',
+    indexNumber: '27',
+    title: 'Keyboard Shortcuts & System Hotkeys Lab',
+    subject: 'Computer Science & Digital Literacy',
+    category: 'Computer Science & IT',
+    iconName: 'Keyboard',
+    accentColor: '#7c3aed', // Purple Violet
+    description: 'Interactive virtual mechanical keyboard and hotkey laboratory. Learn essential Windows, Mac, browser, and word processing shortcuts with animated keystroke feedback.',
+    fileUrl: '/simulations/keyboard-shortcuts-typing.html',
+    topics: ['Universal Clipboard (Ctrl+C/V/X)', 'Multitasking (Alt+Tab/Win+D)', 'History & Undo (Ctrl+Z/Y)', 'Browser Tab Navigation'],
+    features: ['Interactive Virtual Keyboard', 'Live Physical Keystroke Detection', 'Shortcut Action Explainer', 'Speed Polling Feedback'],
+    gradeLevel: 'Elementary, Middle & High School'
   }
 ];
 
@@ -384,7 +414,8 @@ export const CATEGORIES = [
   'Chemistry & Matter',
   'Biology & Life',
   'Earth & Space',
-  'Mathematics & Logic'
+  'Mathematics & Logic',
+  'Computer Science & IT'
 ] as const;
 
 

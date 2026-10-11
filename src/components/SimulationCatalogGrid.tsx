@@ -29,7 +29,9 @@ import {
   Shapes,
   Scale,
   Ruler,
-  BookOpen
+  BookOpen,
+  Computer,
+  Keyboard
 } from 'lucide-react';
 
 interface SimulationCatalogGridProps {
@@ -69,6 +71,8 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Shapes': return <Shapes {...iconProps} />;
     case 'Scale': return <Scale {...iconProps} />;
     case 'Ruler': return <Ruler {...iconProps} />;
+    case 'Computer': return <Computer {...iconProps} />;
+    case 'Keyboard': return <Keyboard {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
@@ -80,6 +84,7 @@ const SUBJECT_CATEGORIES = [
   { key: 'Biology & Life', label: 'Biology & Life', icon: <Leaf className="w-4 h-4 text-emerald-500" /> },
   { key: 'Earth & Space', label: 'Earth & Space (Geography & Astronomy)', icon: <Globe className="w-4 h-4 text-sky-500" /> },
   { key: 'Mathematics & Logic', label: 'Mathematics & Logic', icon: <Calculator className="w-4 h-4 text-indigo-500" /> },
+  { key: 'Computer Science & IT', label: 'Computer Science & IT', icon: <Computer className="w-4 h-4 text-cyan-500" /> },
 ] as const;
 
 export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
