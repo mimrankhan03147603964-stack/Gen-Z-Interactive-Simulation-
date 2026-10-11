@@ -4,6 +4,8 @@ import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
 import { QuickStats } from './components/QuickStats';
 import { MainStage } from './components/MainStage';
+import { SimulationCatalogGrid } from './components/SimulationCatalogGrid';
+import { WebsiteFeatures } from './components/WebsiteFeatures';
 import { SimulationViewerModal } from './components/SimulationViewerModal';
 import { Footer } from './components/Footer';
 import { SIMULATIONS_LIST } from './data/simulationsData';
@@ -78,7 +80,7 @@ export default function App() {
       }}
     >
       
-      {/* Top Application Navbar */}
+      {/* Top Website Header Navbar */}
       <TopNavbar
         activeSim={activeSim}
         totalSimulations={SIMULATIONS_LIST.length}
@@ -89,58 +91,65 @@ export default function App() {
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
       />
 
-      {/* Main Layout Area: Left Sidebar + Content Canvas */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Slide-over Drawer for Fast Navigation when requested */}
+      <Sidebar
+        simulations={SIMULATIONS_LIST}
+        activeSim={activeSim}
+        onSelectSim={handleSelectSim}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+        isDarkMode={isDarkMode}
+      />
+
+      {/* Drawer Overlay Backdrop */}
+      {sidebarOpen && (
+        <div 
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-slate-950/70 z-40 transition-opacity"
+        />
+      )}
+
+      {/* Natural Website Page Flow for Laptop & Computer Screens */}
+      <main 
+        className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 space-y-8 transition-colors duration-200 opacity-100"
+        style={{
+          backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9'
+        }}
+      >
         
-        {/* Responsive Vertical Left Sidebar */}
-        <Sidebar
-          simulations={SIMULATIONS_LIST}
-          activeSim={activeSim}
-          onSelectSim={handleSelectSim}
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        {/* 1. Hero Header Banner with Live Digital Clock & Quick CTAs */}
+        <HeroBanner 
+          activeSim={activeSim} 
           isDarkMode={isDarkMode}
         />
 
-        {/* Mobile Sidebar Backdrop */}
-        {sidebarOpen && (
-          <div 
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-950/70 z-30 lg:hidden"
-          />
-        )}
+        {/* 2. Quick Metrics Row (4 High-Contrast 3D Cards) */}
+        <QuickStats 
+          activeSim={activeSim} 
+          totalSimulations={SIMULATIONS_LIST.length} 
+          isDarkMode={isDarkMode}
+        />
 
-        {/* Main Dashboard Scrollable Stage Area */}
-        <main 
-          className="flex-1 flex flex-col min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-200 opacity-100"
-          style={{
-            backgroundColor: isDarkMode ? '#040a1c' : '#f1f5f9'
-          }}
-        >
-          
-          {/* 1. Royal Blue Hero Header Banner with Live Clock Widget */}
-          <HeroBanner 
-            activeSim={activeSim} 
-            isDarkMode={isDarkMode}
-          />
+        {/* 3. Featured Interactive Simulation Stage (Full Widescreen Viewport) */}
+        <MainStage 
+          activeSim={activeSim}
+          onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+          isDarkMode={isDarkMode}
+        />
 
-          {/* 2. Quick Metrics Row (4 Cards) */}
-          <QuickStats 
-            activeSim={activeSim} 
-            totalSimulations={SIMULATIONS_LIST.length} 
-            isDarkMode={isDarkMode}
-          />
+        {/* 4. Complete Website Interactive Simulations Library Grid (All 19 Labs) */}
+        <SimulationCatalogGrid
+          simulations={SIMULATIONS_LIST}
+          activeSim={activeSim}
+          onSelectSim={handleSelectSim}
+          onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+          isDarkMode={isDarkMode}
+        />
 
-          {/* 3. Single-Click Interactive Simulation Stage */}
-          <MainStage 
-            activeSim={activeSim}
-            onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-            isDarkMode={isDarkMode}
-          />
+        {/* 5. Educational Standards & Digital Laboratory Architecture */}
+        <WebsiteFeatures isDarkMode={isDarkMode} />
 
-        </main>
-
-      </div>
+      </main>
 
       {/* Fullscreen Immersion Viewport Modal */}
       {fullscreenModalSim && (
@@ -150,7 +159,7 @@ export default function App() {
         />
       )}
 
-      {/* Developer Footer */}
+      {/* Developer Website Footer */}
       <Footer isDarkMode={isDarkMode} />
 
     </div>

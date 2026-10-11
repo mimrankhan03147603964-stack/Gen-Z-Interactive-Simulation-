@@ -7,7 +7,8 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
   return (
     <footer 
-      className="w-full py-3 px-4 border-t text-center shrink-0 shadow-sm select-none transition-colors opacity-100"
+      id="developer"
+      className="w-full py-5 px-4 border-t text-center shrink-0 shadow-sm select-none transition-colors opacity-100 scroll-mt-20"
       style={{
         backgroundColor: isDarkMode ? '#060e22' : '#ffffff',
         borderTop: isDarkMode ? '1.5px solid #1e3a8a' : '1.5px solid #cbd5e1',

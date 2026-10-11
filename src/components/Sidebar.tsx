@@ -82,8 +82,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside 
-      className={`fixed lg:static top-0 left-0 z-40 h-full flex flex-col transition-all duration-300 shadow-xl lg:shadow-none select-none opacity-100 ${
-        isOpen ? 'w-84 translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-84'
+      className={`fixed top-0 left-0 z-50 h-full flex flex-col transition-transform duration-300 shadow-2xl select-none opacity-100 ${
+        isOpen ? 'w-84 sm:w-96 translate-x-0' : '-translate-x-full w-84 sm:w-96 pointer-events-none'
       }`}
       style={{
         backgroundColor: isDarkMode ? '#060e1f' : '#ffffff',
@@ -132,16 +132,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Mobile Close Button */}
+        {/* Drawer Close Button */}
         <button
           onClick={onToggle}
-          className="lg:hidden p-1.5 rounded-lg border transition-all cursor-pointer"
+          className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105"
           style={{
             backgroundColor: isDarkMode ? '#0e1f42' : '#f1f5f9',
             borderColor: isDarkMode ? '#3b82f6' : '#cbd5e1',
             color: isDarkMode ? '#ffffff' : '#0f172a'
           }}
-          title="Close Navigation"
+          title="Close Navigation Drawer"
         >
           <PanelLeftClose className="w-4 h-4" />
         </button>

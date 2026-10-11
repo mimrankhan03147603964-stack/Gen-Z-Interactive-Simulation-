@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Sparkles, Star } from 'lucide-react';
+import { Clock, Sparkles, Star, Layers, Play } from 'lucide-react';
 import { SimulationItem } from '../types';
 
 interface HeroBannerProps {
@@ -123,6 +123,38 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         <p className="mt-2 text-xs sm:text-sm text-white max-w-3xl leading-relaxed font-bold opacity-100">
           Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, and planetary space dynamics. Switch seamlessly across all 19 modules with single-click direct execution in 4K high fidelity.
         </p>
+
+        {/* Website Action Buttons for Laptop & Desktop */}
+        <div className="my-3 flex items-center gap-3 flex-wrap">
+          <a
+            href="#catalog"
+            className="btn-3d px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 text-slate-900 shadow-md cursor-pointer"
+            style={{
+              backgroundColor: '#fbbf24',
+              borderColor: '#fde047',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              color: '#0f172a'
+            }}
+          >
+            <Layers className="w-4 h-4 text-slate-900" />
+            <span>Explore 19 Simulations Grid</span>
+          </a>
+          <a
+            href="#stage"
+            className="btn-3d px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 text-white shadow-md cursor-pointer"
+            style={{
+              backgroundColor: '#059669',
+              borderColor: '#34d399',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              color: '#ffffff'
+            }}
+          >
+            <Play className="w-4 h-4 fill-current text-white" />
+            <span>Interactive Stage [Lab {activeSim.indexNumber}]</span>
+          </a>
+        </div>
       </div>
 
       {/* Ticker / Announcement Bar - Solid crisp background without blur or transparency wash */}

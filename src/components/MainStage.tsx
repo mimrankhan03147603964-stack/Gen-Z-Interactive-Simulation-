@@ -67,8 +67,9 @@ export const MainStage: React.FC<MainStageProps> = ({
 
   return (
     <div 
+      id="stage"
       ref={stageContainerRef}
-      className="w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100"
+      className="w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-20"
       style={{
         backgroundColor: isDarkMode ? '#060e22' : '#ffffff',
         borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',

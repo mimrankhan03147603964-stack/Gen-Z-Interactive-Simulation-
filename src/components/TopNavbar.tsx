@@ -36,7 +36,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="btn-3d p-2 rounded-xl transition-all cursor-pointer shadow-xs"
+          className="btn-3d px-2.5 py-1.5 rounded-xl transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
           style={{
             backgroundColor: isDarkMode ? '#0c1b3d' : '#f1f5f9',
             borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
@@ -44,9 +44,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             borderStyle: 'solid',
             color: isDarkMode ? '#38bdf8' : '#0f172a'
           }}
-          title={`Toggle Navigation Menu (01 - ${String(totalSimulations).padStart(2, '0')})`}
+          title={`Open Labs Catalog Drawer (01 - ${String(totalSimulations).padStart(2, '0')})`}
         >
           <Menu className="w-5 h-5" />
+          <span className="hidden sm:inline text-xs font-black">Labs Catalog</span>
         </button>
 
         <div className="flex items-center gap-2.5 sm:gap-3">
@@ -84,6 +85,38 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Center Website Navigation Links for Laptop & Desktop */}
+      <nav className="hidden 2xl:flex items-center gap-1 text-xs font-extrabold">
+        <a
+          href="#stage"
+          className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
+          style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
+        >
+          Interactive Stage
+        </a>
+        <a
+          href="#catalog"
+          className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
+          style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
+        >
+          Simulations Library ({totalSimulations})
+        </a>
+        <a
+          href="#features"
+          className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
+          style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
+        >
+          Features
+        </a>
+        <a
+          href="#developer"
+          className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
+          style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
+        >
+          Developer
+        </a>
+      </nav>
 
       {/* Right: Vibrant 3D Action Buttons & Status Indicators */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
