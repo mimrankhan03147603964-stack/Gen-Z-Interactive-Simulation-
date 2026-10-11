@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Sparkles, Star, Layers, Play } from 'lucide-react';
+import { Clock, Sparkles, Star, Layers, Play, Radio } from 'lucide-react';
 import { SimulationItem } from '../types';
+import { SIMULATIONS_LIST } from '../data/simulationsData';
 
 interface HeroBannerProps {
   activeSim: SimulationItem;
@@ -180,9 +181,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </a>
         </div>
 
-      {/* Ticker / Announcement Bar - Solid crisp background without blur or transparency wash */}
+      {/* Continuous Right-to-Left Live Bulletin Ticker for All 27 Interactive Simulations */}
       <div 
-        className="relative z-10 mt-4 p-3 rounded-xl text-xs flex items-center gap-2.5 overflow-hidden shadow-md"
+        className="relative z-10 mt-4 rounded-xl text-xs flex items-center overflow-hidden shadow-md"
         style={{
           backgroundColor: isDarkMode ? '#040d22' : '#0c2255',
           borderColor: '#60a5fa',
@@ -191,12 +192,69 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           color: '#ffffff'
         }}
       >
-        <Star className="w-4 h-4 shrink-0 fill-amber-300 text-amber-300" />
-        <div className="font-bold truncate text-xs text-white">
-          <span className="font-black text-white">Active Simulation:</span>{' '}
-          <span className="font-black text-amber-300">[{activeSim.indexNumber}] {activeSim.title}</span> ({activeSim.category}) &bull;{' '}
-          <span className="font-bold text-cyan-200">Ready for Interactive Execution &amp; 4K Fullscreen Study</span>
+        {/* Fixed Left Badge: Live STEM Bulletin */}
+        <div 
+          className="shrink-0 z-20 px-3.5 py-2.5 flex items-center gap-2 font-black uppercase tracking-wider text-[11px] shadow-lg"
+          style={{
+            backgroundColor: '#2563eb',
+            backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+            borderRight: '1.5px solid #60a5fa',
+            color: '#ffffff'
+          }}
+        >
+          <Radio className="w-3.5 h-3.5 animate-pulse text-yellow-300" />
+          <span className="whitespace-nowrap">LIVE STEM BULLETIN</span>
         </div>
+
+        {/* Endless Seamless Marquee Viewport (Left-to-Right Screen Flow, English Right-to-Left Continuous Scroll) */}
+        <div className="flex-1 overflow-hidden relative py-2.5">
+          <div className="animate-marquee-infinite flex items-center">
+            
+            {/* Copy 1 of All Simulations */}
+            <div className="flex items-center shrink-0">
+              {SIMULATIONS_LIST.map((sim, index) => (
+                <div key={`sim-ticker-1-${sim.id}`} className="flex items-center shrink-0 mr-8">
+                  <span 
+                    className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
+                    style={{ backgroundColor: sim.accentColor, color: '#ffffff' }}
+                  >
+                    LAB {sim.indexNumber}
+                  </span>
+                  <span className="font-extrabold text-amber-300 mr-1.5">
+                    {sim.title}
+                  </span>
+                  <span className="text-slate-300 text-[11px] font-medium mr-2">
+                    ({sim.category}) &mdash; {sim.description}
+                  </span>
+                  <span className="text-cyan-400 font-bold mx-2">★</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Copy 2 of All Simulations (Guarantees Zero Gap / Seamless Infinite Continuity) */}
+            <div className="flex items-center shrink-0">
+              {SIMULATIONS_LIST.map((sim, index) => (
+                <div key={`sim-ticker-2-${sim.id}`} className="flex items-center shrink-0 mr-8">
+                  <span 
+                    className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
+                    style={{ backgroundColor: sim.accentColor, color: '#ffffff' }}
+                  >
+                    LAB {sim.indexNumber}
+                  </span>
+                  <span className="font-extrabold text-amber-300 mr-1.5">
+                    {sim.title}
+                  </span>
+                  <span className="text-slate-300 text-[11px] font-medium mr-2">
+                    ({sim.category}) &mdash; {sim.description}
+                  </span>
+                  <span className="text-cyan-400 font-bold mx-2">★</span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+
       </div>
 
     </div>

@@ -177,15 +177,24 @@
   background: #1d4ed8;
 }
 
-@keyframes ticker {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.animate-ticker {
-  white-space: nowrap;
-  display: inline-block;
-  animation: ticker 32s linear infinite;
+.animate-marquee-infinite {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 120s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused;
 }
 
 @keyframes spin-slow {
