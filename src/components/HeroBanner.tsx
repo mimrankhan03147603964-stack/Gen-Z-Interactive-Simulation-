@@ -47,14 +47,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
       style={{
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        backgroundColor: isDarkMode ? 'rgba(9, 24, 56, 0.82)' : 'rgba(30, 64, 175, 0.82)',
+        backgroundColor: isDarkMode ? 'rgba(5, 12, 28, 0.95)' : 'rgba(10, 25, 59, 0.95)',
         backgroundImage: isDarkMode
-          ? 'linear-gradient(135deg, rgba(9, 24, 56, 0.88) 0%, rgba(13, 37, 90, 0.82) 50%, rgba(6, 17, 41, 0.88) 100%)'
-          : 'linear-gradient(135deg, rgba(30, 64, 175, 0.85) 0%, rgba(37, 99, 235, 0.82) 50%, rgba(29, 78, 216, 0.85) 100%)',
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.28)',
-        borderWidth: '1px',
+          ? 'linear-gradient(135deg, rgba(5, 12, 28, 0.98) 0%, rgba(10, 25, 59, 0.94) 50%, rgba(3, 8, 20, 0.98) 100%)'
+          : 'linear-gradient(135deg, rgba(10, 25, 59, 0.96) 0%, rgba(15, 36, 84, 0.94) 50%, rgba(7, 18, 46, 0.96) 100%)',
+        borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(56, 189, 248, 0.45)',
+        borderWidth: '1.5px',
         borderStyle: 'solid',
-        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.25)',
+        boxShadow: '0 12px 40px 0 rgba(0, 0, 0, 0.45), 0 0 25px rgba(2, 132, 199, 0.2)',
         color: '#ffffff'
       }}
     >
@@ -67,9 +67,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           style={{
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(15, 41, 99, 0.72)',
-            borderColor: 'rgba(103, 232, 249, 0.5)',
-            borderWidth: '1px',
+            backgroundColor: isDarkMode ? 'rgba(3, 8, 20, 0.85)' : 'rgba(5, 15, 38, 0.85)',
+            borderColor: 'rgba(56, 189, 248, 0.6)',
+            borderWidth: '1.5px',
             borderStyle: 'solid',
             color: '#ffffff'
           }}
@@ -90,11 +90,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           style={{
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(12, 34, 85, 0.72)',
-            borderColor: 'rgba(96, 165, 250, 0.45)',
-            borderWidth: '1px',
+            backgroundColor: isDarkMode ? 'rgba(3, 8, 20, 0.85)' : 'rgba(5, 15, 38, 0.85)',
+            borderColor: 'rgba(56, 189, 248, 0.6)',
+            borderWidth: '1.5px',
             borderStyle: 'solid',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
             color: '#ffffff'
           }}
         >
