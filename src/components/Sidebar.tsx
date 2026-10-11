@@ -114,17 +114,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div className="flex items-center gap-3">
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg icon-tile-3d shrink-0"
+            className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg icon-tile-3d shrink-0 p-1 overflow-hidden"
             style={{
-              backgroundColor: '#2563eb',
-              backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-              borderColor: '#60a5fa',
+              backgroundColor: isDarkMode ? '#0c1a3b' : '#ffffff',
+              borderColor: '#38bdf8',
               borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4), inset 0 1px 1px #ffffff'
+              boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
             }}
           >
-            <Atom className="w-5 h-5 animate-spin-slow text-white" />
+            <img 
+              src="/genz-edtech-symbol.svg" 
+              alt="Gen Z EdTech Interactive Monogram" 
+              className="w-full h-full object-contain filter drop-shadow-xs" 
+            />
           </div>
           <div>
             <h2 

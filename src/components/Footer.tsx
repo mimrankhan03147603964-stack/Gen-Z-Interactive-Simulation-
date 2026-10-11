@@ -18,20 +18,38 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
     >
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-8">
         
-        {/* 1. Header & Brand Title */}
-        <div className="space-y-2 text-center">
-          <h2 
-            className="text-xl sm:text-2xl md:text-3xl font-black tracking-wide uppercase"
-            style={{ color: isDarkMode ? '#f8fafc' : '#0f172a' }}
+        {/* 1. Header & Brand Title with Official Monogram */}
+        <div className="space-y-3 text-center flex flex-col items-center">
+          <div 
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-2 border shadow-lg overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
+            style={{
+              backgroundColor: isDarkMode ? '#0c1a3b' : '#ffffff',
+              borderColor: '#38bdf8',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              boxShadow: '0 8px 20px rgba(2, 132, 199, 0.25)'
+            }}
           >
-            GEN Z EDTECH INTERACTIVE SIMULATION
-          </h2>
-          <p 
-            className="text-sm sm:text-base font-semibold tracking-wide"
-            style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
-          >
-            Digital Laboratory Portal
-          </p>
+            <img 
+              src="/genz-edtech-monogram.svg" 
+              alt="Gen Z EdTech Interactive Monogram Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="space-y-1">
+            <h2 
+              className="text-xl sm:text-2xl md:text-3xl font-black tracking-wide uppercase"
+              style={{ color: isDarkMode ? '#f8fafc' : '#0f172a' }}
+            >
+              GEN Z EDTECH INTERACTIVE SIMULATION
+            </h2>
+            <p 
+              className="text-sm sm:text-base font-semibold tracking-wide"
+              style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
+            >
+              Digital Laboratory Portal
+            </p>
+          </div>
         </div>
 
         {/* 2. Developer Profile Card */}

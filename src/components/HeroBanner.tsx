@@ -115,14 +115,38 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
 
       </div>
 
-      {/* Main Headline - Solid Pure White, Crisp & High Contrast */}
-      <div className="relative z-10 my-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
-          Gen Z EdTech Interactive Simulation
-        </h1>
-        <p className="mt-2 text-xs sm:text-sm text-white max-w-3xl leading-relaxed font-bold opacity-100">
-          Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, and planetary dynamics. Switch seamlessly across all 25 modules with single-click direct execution in 4K high fidelity.
-        </p>
+      {/* Main Headline & Monogram Showcase */}
+      <div className="relative z-10 my-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-sm">
+            Gen Z EdTech Interactive Simulation
+          </h1>
+          <p className="mt-2 text-xs sm:text-sm text-white max-w-2xl leading-relaxed font-bold opacity-100">
+            Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, and computer science. Switch seamlessly across all 27 modules with single-click direct execution in 4K high fidelity.
+          </p>
+        </div>
+
+        {/* Official Monogram Emblem Badge */}
+        <div 
+          className="shrink-0 rounded-2xl p-3 border shadow-2xl flex items-center gap-3.5 bg-white/95 dark:bg-slate-900/90 text-slate-900 dark:text-white"
+          style={{
+            borderColor: '#38bdf8',
+            borderWidth: '2px',
+            boxShadow: '0 8px 24px rgba(2, 132, 199, 0.35)'
+          }}
+        >
+          <img 
+            src="/genz-edtech-monogram.svg" 
+            alt="Gen Z EdTech Interactive Monogram Logo" 
+            className="w-24 sm:w-28 h-auto object-contain"
+          />
+          <div className="hidden sm:block text-left pr-2">
+            <span className="block text-[10px] font-mono font-black text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">Official Monogram</span>
+            <span className="block text-xs font-black text-slate-900 dark:text-white leading-tight">Gen Z EdTech</span>
+            <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400">Interactive Portal</span>
+          </div>
+        </div>
+      </div>
 
         {/* Website Action Buttons for Laptop & Desktop */}
         <div className="my-3 flex items-center gap-3 flex-wrap">
@@ -155,7 +179,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <span>Interactive Stage [Lab {activeSim.indexNumber}]</span>
           </a>
         </div>
-      </div>
 
       {/* Ticker / Announcement Bar - Solid crisp background without blur or transparency wash */}
       <div 

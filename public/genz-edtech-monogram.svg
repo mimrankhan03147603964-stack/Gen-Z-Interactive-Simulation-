@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 380" width="100%" height="100%">
+  <defs>
+    <!-- Background / Glow Filters -->
+    <filter id="glow-brain" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0284c7" flood-opacity="0.3" />
+    </filter>
+
+    <!-- Gradients -->
+    <!-- Brain Cortex Gradient: Tech Cyan to Deep Electric Indigo -->
+    <linearGradient id="grad-brain-cortex" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="40%" stop-color="#0284c7" />
+      <stop offset="80%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Orbit Light Ring Gradient -->
+    <linearGradient id="grad-orbit" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#c084fc" stop-opacity="0.8" />
+    </linearGradient>
+
+    <!-- AI Core Badge Gradient -->
+    <linearGradient id="grad-ai-badge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Student Figure Gradients (Teal to Blue & Orange to Red) -->
+    <linearGradient id="grad-student-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="grad-student-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+
+    <!-- Gen (Cyan to Blue) & Z (Bright Orange-Red) Gradients -->
+    <linearGradient id="grad-gen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00a8e8" />
+      <stop offset="100%" stop-color="#0077b6" />
+    </linearGradient>
+    <linearGradient id="grad-z" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35" />
+      <stop offset="100%" stop-color="#f25c05" />
+    </linearGradient>
+  </defs>
+
+  <g id="monogram-symbol" transform="translate(45, 10)">
+    <!-- ORBITAL GLOW RING AROUND BRAIN -->
+    <ellipse cx="225" cy="95" rx="135" ry="34" fill="none" stroke="url(#grad-orbit)" stroke-width="4.5" transform="rotate(-15 225 95)" filter="url(#glow-brain)" />
+    <!-- Particle dots along orbit -->
+    <circle cx="95" cy="115" r="3.5" fill="#fde047" />
+    <circle cx="340" cy="70" r="4" fill="#38bdf8" />
+    <circle cx="310" cy="118" r="3" fill="#ec4899" />
+
+    <!-- RIGHT SIDE: CIRCUIT TRACES EXTENDING UP & RIGHT -->
+    <g stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+      <!-- Trace 1 -->
+      <path d="M 270 45 L 290 20 L 290 8" />
+      <circle cx="290" cy="8" r="4.5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5" />
+      
+      <!-- Trace 2 -->
+      <path d="M 285 65 L 315 45 L 315 24" />
+      <circle cx="315" cy="24" r="5" fill="#f59e0b" stroke="#fef08a" stroke-width="1.5" />
+      
+      <!-- Trace 3 -->
+      <path d="M 300 85 L 335 85 L 348 70" />
+      <circle cx="348" cy="70" r="4.5" fill="#06b6d4" stroke="#e0f2fe" stroke-width="1.5" />
+
+      <!-- Trace 4 Lower -->
+      <path d="M 275 125 L 305 125 L 320 145" />
+      <circle cx="320" cy="145" r="4" fill="#f97316" stroke="#fed7aa" stroke-width="1.5" />
+
+      <!-- Trace 5 -->
+      <path d="M 260 145 L 285 170 L 305 170" />
+      <circle cx="305" cy="170" r="4" fill="#38bdf8" stroke="#bae6fd" stroke-width="1.5" />
+
+      <!-- Vertical Downward PCB Traces to Stem -->
+      <path d="M 245 140 L 245 175 L 235 185" />
+      <circle cx="235" cy="185" r="3.5" fill="#0284c7" />
+      <path d="M 255 135 L 255 165 L 265 175" />
+      <circle cx="265" cy="175" r="3.5" fill="#059669" />
+    </g>
+
+    <!-- LEFT & CENTER: BRAIN STRUCTURE -->
+    <!-- Left Hemispheric Lobes -->
+    <path d="M 220 32 C 195 24, 160 30, 145 48 C 125 70, 120 100, 138 124 C 145 135, 160 142, 175 142 C 185 142, 192 135, 205 140 C 215 144, 222 155, 230 152 C 238 150, 240 138, 242 125 C 245 80, 240 50, 220 32 Z" 
+          fill="url(#grad-brain-cortex)" 
+          stroke="#38bdf8" 
+          stroke-width="2.5" 
+          filter="url(#soft-shadow)" />
+
+    <!-- Right Hemispheric Lobes (Tech / Neural Matrix) -->
+    <path d="M 220 32 C 245 25, 280 32, 292 50 C 305 70, 305 105, 290 128 C 278 142, 262 148, 248 145 C 242 135, 240 125, 242 100 C 240 70, 235 50, 220 32 Z" 
+          fill="#0c234b" 
+          stroke="#0ea5e9" 
+          stroke-width="2" />
+
+    <!-- Brain Sulci & Neural Network Synapses Pattern (Constellation Nodes) -->
+    <g fill="#38bdf8" stroke="#38bdf8" stroke-width="1.4" opacity="0.9">
+      <!-- Synapse Lines on Left Lobe -->
+      <line x1="155" y1="65" x2="175" y2="55" />
+      <line x1="175" y1="55" x2="195" y2="70" />
+      <line x1="195" y1="70" x2="175" y2="90" />
+      <line x1="175" y1="90" x2="155" y2="65" />
+      <line x1="175" y1="90" x2="150" y2="105" />
+      <line x1="150" y1="105" x2="175" y2="120" />
+      <line x1="175" y1="120" x2="200" y2="110" />
+      <line x1="200" y1="110" x2="195" y2="70" />
+
+      <!-- Synapse Nodes (Glowing Dots) -->
+      <circle cx="155" cy="65" r="4.5" fill="#fde047" stroke="#f59e0b" stroke-width="1.2" />
+      <circle cx="175" cy="55" r="3.5" fill="#67e8f9" />
+      <circle cx="195" cy="70" r="4" fill="#f43f5e" stroke="#ffe4e6" stroke-width="1" />
+      <circle cx="175" cy="90" r="4.5" fill="#38bdf8" />
+      <circle cx="150" cy="105" r="3.5" fill="#a78bfa" />
+      <circle cx="175" cy="120" r="4" fill="#34d399" />
+      <circle cx="200" cy="110" r="4" fill="#38bdf8" />
+    </g>
+
+    <!-- Right Side Binary Matrix Rain Overlay -->
+    <g fill="#7dd3fc" font-family="monospace" font-size="8.5" font-weight="bold" opacity="0.65">
+      <text x="245" y="55">101001</text>
+      <text x="250" y="70">011010</text>
+      <text x="245" y="85">110101</text>
+      <text x="252" y="100">00110</text>
+      <text x="248" y="115">10101</text>
+    </g>
+
+    <!-- CENTER EMBLEM: AI BADGE -->
+    <g transform="translate(202, 72)">
+      <rect x="0" y="0" width="46" height="34" rx="8" fill="url(#grad-ai-badge)" stroke="#ffffff" stroke-width="2" filter="url(#soft-shadow)" />
+      <text x="23" y="23" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="900" text-anchor="middle" letter-spacing="1">AI</text>
+    </g>
+
+    <!-- STEM OF BRAIN / CEREBELLUM / TECH TREE -->
+    <path d="M 230 148 Q 236 175 228 195 Q 242 185 245 160 Z" fill="#0369a1" />
+
+    <!-- STUDENT / HUMAN LEARNER INSPIRATION FIGURE -->
+    <!-- Head of learner -->
+    <circle cx="195" cy="158" r="11" fill="url(#grad-student-body)" stroke="#e0f2fe" stroke-width="1.5" />
+    <!-- Arms reaching upward in discovery & empowerment -->
+    <!-- Left Blue Swoosh -->
+    <path d="M 172 165 C 185 178, 202 188, 208 215 C 202 212, 185 198, 168 182 C 162 174, 165 168, 172 165 Z" fill="url(#grad-student-body)" />
+    <!-- Right Orange / Coral Dynamic Ascending Arc -->
+    <path d="M 215 165 C 208 178, 212 198, 222 225 C 216 215, 214 195, 224 182 C 228 174, 225 168, 215 165 Z" fill="url(#grad-student-orange)" />
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- BRAND TYPOGRAPHY: GenZ EdTech Interactive                                 -->
+  <!-- ========================================================================= -->
+  <g id="brand-text" transform="translate(270, 250)">
+    <!-- Main "GenZ" Wordmark -->
+    <g transform="translate(-150, 0)">
+      <!-- Left decorative geometric sparkles/chevrons -->
+      <polygon points="-28,-8 -20,-14 -20,-2" fill="#00a8e8" />
+      <polygon points="-28,14 -20,8 -20,20" fill="#f97316" />
+
+      <!-- "Gen" Text in Smooth Modern Rounded Blue Font -->
+      <text x="0" y="8" font-family="'Segoe UI', 'Nunito', 'Inter', -apple-system, sans-serif" font-size="64" font-weight="900" fill="url(#grad-gen)" letter-spacing="-1">Gen</text>
+
+      <!-- "Z" Text in Bold Orange-Red Tech Font with Chevron Cuts -->
+      <text x="122" y="8" font-family="'Segoe UI', 'Montserrat', -apple-system, sans-serif" font-size="70" font-weight="950" fill="url(#grad-z)" letter-spacing="0">Z</text>
+
+      <!-- Right decorative geometric chevrons -->
+      <polygon points="186,-12 178,-6 178,-18" fill="#f97316" />
+      <polygon points="186,12 178,6 178,18" fill="#00a8e8" />
+    </g>
+
+    <!-- Sub-heading: "EdTech Interactive" in Crisp Slate -->
+    <text x="0" y="44" font-family="'Segoe UI', 'Inter', sans-serif" font-size="29" font-weight="800" fill="#2d3748" text-anchor="middle" letter-spacing="-0.3">EdTech Interactive</text>
+
+    <!-- Underline Arc Sweep -->
+    <path d="M -115 56 Q 0 63 115 50" fill="none" stroke="#2d3748" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Tagline: "Empowering Next-Gen Learners through Interaction" -->
+    <text x="0" y="80" font-family="'Segoe UI', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" text-anchor="middle" letter-spacing="0.2">Empowering Next-Gen Learners</text>
+    <text x="0" y="100" font-family="'Segoe UI', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" text-anchor="middle" letter-spacing="0.2">through Interaction</text>
+  </g>
+</svg>
