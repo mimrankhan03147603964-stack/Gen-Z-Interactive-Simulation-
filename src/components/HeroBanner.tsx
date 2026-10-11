@@ -204,7 +204,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           backgroundColor: isDarkMode ? 'rgba(4, 13, 34, 0.72)' : 'rgba(12, 34, 85, 0.72)',
-          borderColor: 'rgba(96, 165, 250, 0.35)',
+          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(96, 165, 250, 0.35)',
           borderWidth: '1px',
           borderStyle: 'solid',
           boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',

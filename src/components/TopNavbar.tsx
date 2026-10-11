@@ -28,7 +28,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.82)' : 'rgba(255, 255, 255, 0.82)',
-        borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid rgba(255, 255, 255, 0.55)',
+        borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.55)',
         boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
@@ -43,7 +43,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-              borderColor: '#38bdf8',
+              borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.7)' : '#38bdf8',
               borderWidth: '1.5px',
               borderStyle: 'solid',
               boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
@@ -78,7 +78,15 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       </div>
 
       {/* Center Website Navigation Links for Laptop & Desktop */}
-      <nav className="hidden 2xl:flex items-center gap-1 text-xs font-extrabold">
+      <nav 
+        className="hidden 2xl:flex items-center gap-1 text-xs font-extrabold px-3 py-1 rounded-full border shadow-xs"
+        style={{
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.6)' : 'rgba(241, 245, 249, 0.65)',
+          borderColor: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.6)'
+        }}
+      >
         <a
           href="#stage"
           className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"

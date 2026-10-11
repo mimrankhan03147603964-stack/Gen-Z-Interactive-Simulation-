@@ -102,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         backgroundColor: isDarkMode ? 'rgba(6, 14, 31, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-        borderRight: isDarkMode ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid rgba(255, 255, 255, 0.5)',
+        borderRight: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)',
         boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.5)' : '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
@@ -114,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(248, 250, 252, 0.75)',
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
+          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)'
         }}
       >
         <div className="flex items-center gap-3">
@@ -237,9 +237,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       backdropFilter: 'blur(12px)',
                       WebkitBackdropFilter: 'blur(12px)',
                       backgroundColor: isDarkMode ? 'rgba(11, 22, 51, 0.65)' : 'rgba(255, 255, 255, 0.72)',
-                      borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.6)',
-                      borderRightColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.6)',
-                      borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.6)',
+                      borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.6)',
+                      borderRightColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.6)',
+                      borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.6)',
                       borderLeftColor: theme.bgSolid,
                       borderTopWidth: '1px',
                       borderRightWidth: '1px',
@@ -350,7 +350,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           backgroundColor: isDarkMode ? 'rgba(7, 19, 40, 0.75)' : 'rgba(248, 250, 252, 0.75)',
-          borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)',
+          borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)',
           color: isDarkMode ? '#f8fafc' : '#0f172a'
         }}
       >
