@@ -156,10 +156,10 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'All STEM Disciplines',
     subtitle: 'Comprehensive 33-Lab Suite',
     badgeCount: totalSims,
-    colorName: 'Colorful Dashboard',
+    colorName: 'Multi-Discipline Lab Hub',
     iconBg: 'rgba(59, 130, 246, 0.16)',
     iconBorder: '#60a5fa',
-    activeGradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #4338ca 100%)',
+    activeGradient: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4338ca 100%)',
     activeBorder: '#93c5fd',
     glowColor: 'rgba(37, 99, 235, 0.45)',
     lightCardBg: 'rgba(255, 255, 255, 0.95)',
@@ -168,12 +168,53 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(59, 130, 246, 0.4)',
     textColorLight: '#1e3a8a',
     textColorDark: '#93c5fd',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" className="text-blue-500 fill-blue-500/20" />
-        <rect x="14" y="3" width="7" height="7" rx="1.5" className="text-purple-500 fill-purple-500/20" />
-        <rect x="14" y="14" width="7" height="7" rx="1.5" className="text-emerald-500 fill-emerald-500/20" />
-        <rect x="3" y="14" width="7" height="7" rx="1.5" className="text-amber-500 fill-amber-500/20" />
+    renderIcon: ({ isSelected }) => (
+      /* Multi-discipline laboratory hub emblem with vibrant scientific apparatus */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
+            <stop offset="60%" stopColor="#2563eb" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="hubFlaskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#6366f1" />
+          </linearGradient>
+          <linearGradient id="hubAtomGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#0284c7" />
+          </linearGradient>
+          <linearGradient id="hubLeafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#34d399" />
+            <stop offset="100%" stopColor="#059669" />
+          </linearGradient>
+        </defs>
+        {/* Background Hub Disc */}
+        <circle cx="36" cy="36" r="33" fill="url(#hubGlow)" opacity="0.35" />
+        <circle cx="36" cy="36" r="32" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        {/* Central Core Sphere */}
+        <circle cx="36" cy="36" r="9" fill={isSelected ? '#ffffff' : '#3b82f6'} />
+        <circle cx="36" cy="36" r="5" fill={isSelected ? '#2563eb' : '#93c5fd'} />
+        {/* Revolving Orbital Rings */}
+        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="1.8" opacity="0.75" />
+        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(30 36 36)" stroke={isSelected ? '#fbcfe8' : '#c084fc'} strokeWidth="1.8" opacity="0.75" />
+        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(90 36 36)" stroke={isSelected ? '#bbf7d0' : '#34d399'} strokeWidth="1.8" opacity="0.75" />
+        {/* 4 Multi-Discipline Node Apparatuses */}
+        {/* Top-Right: Atom Node */}
+        <circle cx="56" cy="24" r="5" fill="#38bdf8" />
+        <circle cx="56" cy="24" r="2" fill="#ffffff" />
+        {/* Bottom-Right: Chemistry Flask Node */}
+        <circle cx="53" cy="50" r="5.5" fill="#c084fc" />
+        <path d="M51 47l2 4h-4l2-4z" fill="#ffffff" />
+        {/* Bottom-Left: Biology Leaf Node */}
+        <circle cx="19" cy="50" r="5.5" fill="#34d399" />
+        <circle cx="19" cy="50" r="2.5" fill="#ffffff" />
+        {/* Top-Left: Math / Tech Compass Node */}
+        <circle cx="16" cy="24" r="5" fill="#fbbf24" />
+        <circle cx="16" cy="24" r="2" fill="#ffffff" />
+        {/* Sparkles of discovery */}
+        <polygon points="36,9 38,15 44,17 38,19 36,25 34,19 28,17 34,15" fill={isSelected ? '#ffffff' : '#fbbf24'} />
       </svg>
     )
   },
@@ -183,7 +224,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Physics & Classical Mechanics',
     subtitle: 'Kinematics, Optics & Energy',
     badgeCount: getCategoryCount('Physics & Motion'),
-    colorName: 'Electric Blue',
+    colorName: 'Electric Blue & Cyan',
     iconBg: 'rgba(37, 99, 235, 0.16)',
     iconBorder: '#3b82f6',
     activeGradient: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%)',
@@ -195,12 +236,48 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(59, 130, 246, 0.45)',
     textColorLight: '#1d4ed8',
     textColorDark: '#60a5fa',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)" className="text-blue-400" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-30 12 12)" className="text-cyan-400" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(90 12 12)" className="text-sky-400" />
-        <circle cx="12" cy="12" r="2.5" className="fill-blue-500 text-blue-600" />
+    renderIcon: ({ isSelected }) => (
+      /* Glowing 3D Rutherford-Bohr atom model with revolving electrons and force trajectories */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <radialGradient id="physNucleus" cx="40%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="35%" stopColor="#38bdf8" />
+            <stop offset="70%" stopColor="#2563eb" />
+            <stop offset="100%" stopColor="#1e3a8a" />
+          </radialGradient>
+          <linearGradient id="orbitGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00f5ff" />
+            <stop offset="100%" stopColor="#3b82f6" />
+          </linearGradient>
+          <linearGradient id="orbitGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#6366f1" />
+          </linearGradient>
+        </defs>
+        {/* Quantum Orbital Glow Field */}
+        <circle cx="36" cy="36" r="30" fill="url(#physNucleus)" opacity="0.15" />
+        {/* Orbital 1: Trajectory 30 deg */}
+        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(30 36 36)" stroke={isSelected ? '#ffffff' : 'url(#orbitGrad1)'} strokeWidth="2.2" opacity="0.9" />
+        {/* Electron 1 on Orbit 1 with Cyan Glow */}
+        <circle cx="58" cy="49" r="4.2" fill={isSelected ? '#ffffff' : '#00f5ff'} />
+        <circle cx="58" cy="49" r="6" stroke="#00f5ff" strokeWidth="1" opacity="0.6" />
+        {/* Orbital 2: Trajectory -30 deg */}
+        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : 'url(#orbitGrad2)'} strokeWidth="2.2" opacity="0.9" />
+        {/* Electron 2 on Orbit 2 with Blue Glow */}
+        <circle cx="15" cy="49" r="4.2" fill={isSelected ? '#ffffff' : '#38bdf8'} />
+        <circle cx="15" cy="49" r="6" stroke="#38bdf8" strokeWidth="1" opacity="0.6" />
+        {/* Orbital 3: Vertical Trajectory 90 deg */}
+        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(90 36 36)" stroke={isSelected ? '#e0f2fe' : '#60a5fa'} strokeWidth="2.2" opacity="0.85" />
+        {/* Electron 3 on Orbit 3 */}
+        <circle cx="36" cy="8" r="4.2" fill={isSelected ? '#ffffff' : '#7dd3fc'} />
+        <circle cx="36" cy="64" r="3.2" fill={isSelected ? '#ffffff' : '#93c5fd'} opacity="0.8" />
+        {/* Multi-proton / Neutron Dense 3D Nucleus */}
+        <circle cx="36" cy="36" r="10" fill="url(#physNucleus)" filter="drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))" />
+        <circle cx="33" cy="33" r="3.5" fill="#ffffff" opacity="0.9" />
+        <circle cx="38" cy="37" r="2.5" fill="#93c5fd" opacity="0.8" />
+        {/* Vector Force Arrow Vector */}
+        <path d="M50 18L58 12M58 12L53 12M58 12L58 17" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   },
@@ -210,7 +287,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Chemistry & Molecular Science',
     subtitle: 'Reactions, Acids & Atoms',
     badgeCount: getCategoryCount('Chemistry & Matter'),
-    colorName: 'Vibrant Purple',
+    colorName: 'Vibrant Violet / Purple',
     iconBg: 'rgba(168, 85, 247, 0.16)',
     iconBorder: '#a855f7',
     activeGradient: 'linear-gradient(135deg, #7e22ce 0%, #9333ea 50%, #c026d3 100%)',
@@ -222,13 +299,53 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(168, 85, 247, 0.45)',
     textColorLight: '#7e22ce',
     textColorDark: '#c084fc',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M10 2v5.5L4.4 17.5A3 3 0 0 0 7 22h10a3 3 0 0 0 2.6-4.5L14 7.5V2" className="text-purple-500" />
-        <path d="M8.5 2h7" className="text-purple-400" />
-        <path d="M6 16c2 1 4-1 6 0s4 1 6 0" className="text-fuchsia-400 stroke-dasharray-1" />
-        <circle cx="9" cy="18" r="1" className="fill-purple-400 text-purple-400" />
-        <circle cx="14" cy="17" r="1.5" className="fill-fuchsia-400 text-fuchsia-400" />
+    renderIcon: ({ isSelected }) => (
+      /* Realistic laboratory conical flask with bubbling colorful reagents and molecular structures */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="chemFluidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#e879f9" />
+            <stop offset="50%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#7e22ce" />
+          </linearGradient>
+          <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+            <stop offset="30%" stopColor="#c084fc" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
+        {/* Outer Flask Glass Contour */}
+        <path d="M30 6 H42 V22 L59 55 C61 59 58 64 53 64 H19 C14 64 11 59 13 55 L30 22 V6 Z" 
+          stroke={isSelected ? '#ffffff' : '#d8b4fe'} 
+          strokeWidth="2.5" 
+          strokeLinejoin="round" 
+          fill="rgba(168, 85, 247, 0.08)" 
+        />
+        {/* Flask Lip Rim */}
+        <rect x="27" y="4" width="18" height="3.5" rx="1.5" fill={isSelected ? '#ffffff' : '#c084fc'} />
+        {/* Bubbling Fluid Liquid Volume */}
+        <path d="M19 44 Q28 41 36 45 T53 43 L57 55 C58 58 56 62 52 62 H20 C16 62 14 58 15 55 Z" 
+          fill="url(#chemFluidGrad)" 
+        />
+        {/* Surface Wave Highlight */}
+        <path d="M19 44 Q28 41 36 45 T53 43" stroke="#f0abfc" strokeWidth="2" strokeLinecap="round" />
+        {/* Bubbling Effervescent Reagent Bubbles */}
+        <circle cx="30" cy="51" r="3.2" fill="#ffffff" opacity="0.9" />
+        <circle cx="41" cy="55" r="2.5" fill="#fdf4ff" opacity="0.8" />
+        <circle cx="36" cy="38" r="3.5" fill="#e879f9" stroke="#ffffff" strokeWidth="1" />
+        <circle cx="28" cy="32" r="2.8" fill="#c084fc" />
+        <circle cx="43" cy="28" r="2" fill="#d8b4fe" />
+        <circle cx="34" cy="20" r="1.8" fill="#f0abfc" />
+        {/* Glass Reflection Highlight on Left Edge */}
+        <path d="M19 55 L33 26" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+        {/* Molecular Structure Attachment / Orbit */}
+        <g transform="translate(48, 10)">
+          <line x1="0" y1="8" x2="12" y2="2" stroke={isSelected ? '#ffffff' : '#f0abfc'} strokeWidth="1.8" />
+          <line x1="12" y1="2" x2="12" y2="14" stroke={isSelected ? '#ffffff' : '#f0abfc'} strokeWidth="1.8" />
+          <circle cx="0" cy="8" r="3.5" fill="#e879f9" />
+          <circle cx="12" cy="2" r="3" fill="#c084fc" />
+          <circle cx="12" cy="14" r="3" fill="#a855f7" />
+        </g>
       </svg>
     )
   },
@@ -238,7 +355,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Biology & Living Systems',
     subtitle: 'Genetics, Plants & Organisms',
     badgeCount: getCategoryCount('Biology & Life'),
-    colorName: 'Vibrant Green',
+    colorName: 'Vivid Green',
     iconBg: 'rgba(34, 197, 94, 0.16)',
     iconBorder: '#22c55e',
     activeGradient: 'linear-gradient(135deg, #15803d 0%, #16a34a 50%, #059669 100%)',
@@ -250,15 +367,69 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(34, 197, 94, 0.45)',
     textColorLight: '#15803d',
     textColorDark: '#4ade80',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 15c6.667-6 13.333 0 20-6" className="text-emerald-500" />
-        <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993" className="text-green-500" />
-        <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993" className="text-teal-400" />
-        <path d="M17 6l-2.5 2.5" className="text-emerald-400" />
-        <path d="M14 8l-4 4" className="text-green-400" />
-        <path d="M7 15l-2.5 2.5" className="text-emerald-500" />
-        <circle cx="12" cy="12" r="2" className="fill-emerald-400 text-emerald-500" />
+    renderIcon: ({ isSelected }) => (
+      /* Detailed colorful DNA double helix paired with a lush botanical leaf and microscopic cell */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="dnaStrand1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#34d399" />
+            <stop offset="100%" stopColor="#059669" />
+          </linearGradient>
+          <linearGradient id="dnaStrand2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#a7f3d0" />
+            <stop offset="100%" stopColor="#10b981" />
+          </linearGradient>
+          <linearGradient id="bioLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#86efac" />
+            <stop offset="60%" stopColor="#22c55e" />
+            <stop offset="100%" stopColor="#15803d" />
+          </linearGradient>
+        </defs>
+        {/* Botanical Organic Leaf in background */}
+        <path d="M38 12 C49 14 62 25 60 44 C58 56 46 62 34 60 C32 50 31 38 38 12 Z" 
+          fill="url(#bioLeaf)" 
+          opacity="0.85" 
+          stroke={isSelected ? '#ffffff' : '#86efac'} 
+          strokeWidth="1.5" 
+        />
+        {/* Leaf Vein Structure */}
+        <path d="M38 15 Q43 38 35 59" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M41 28 Q48 30 54 28" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
+        <path d="M40 38 Q48 42 53 40" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
+        <path d="M38 48 Q44 52 48 50" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
+        
+        {/* DNA Double Helix Structure foreground (Left side) */}
+        {/* Helix base rungs connecting strands */}
+        <line x1="12" y1="18" x2="26" y2="18" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="10" y1="28" x2="28" y2="28" stroke={isSelected ? '#ffffff' : '#a7f3d0'} strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="14" y1="38" x2="24" y2="38" stroke={isSelected ? '#ffffff' : '#34d399'} strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="10" y1="48" x2="28" y2="48" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="12" y1="58" x2="26" y2="58" stroke={isSelected ? '#ffffff' : '#a7f3d0'} strokeWidth="2.2" strokeLinecap="round" />
+        
+        {/* Base Pair Nucleotide Nodes */}
+        <circle cx="12" cy="18" r="3" fill="#22c55e" />
+        <circle cx="26" cy="18" r="3" fill="#3b82f6" />
+        <circle cx="19" cy="28" r="3.2" fill="#fbbf24" />
+        <circle cx="10" cy="48" r="3" fill="#3b82f6" />
+        <circle cx="28" cy="48" r="3" fill="#22c55e" />
+        
+        {/* Strand 1 Sine Wave */}
+        <path d="M12 12 Q28 23 19 33 Q10 43 28 53 Q19 63 12 68" 
+          stroke={isSelected ? '#ffffff' : 'url(#dnaStrand1)'} 
+          strokeWidth="3.2" 
+          strokeLinecap="round" 
+          fill="none" 
+        />
+        {/* Strand 2 Cosine Wave */}
+        <path d="M26 12 Q10 23 19 33 Q28 43 10 53 Q19 63 26 68" 
+          stroke={isSelected ? '#e0f2fe' : 'url(#dnaStrand2)'} 
+          strokeWidth="3.2" 
+          strokeLinecap="round" 
+          fill="none" 
+        />
+        {/* Microscopic Living Cell with Nucleus (Bottom Right) */}
+        <circle cx="54" cy="54" r="8" fill="rgba(34, 197, 94, 0.4)" stroke="#86efac" strokeWidth="1.5" />
+        <circle cx="54" cy="54" r="3.5" fill="#15803d" />
       </svg>
     )
   },
@@ -268,7 +439,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Earth & Space Exploration',
     subtitle: 'Planets, Tectonics & Orbits',
     badgeCount: getCategoryCount('Earth & Space'),
-    colorName: 'Sky Blue',
+    colorName: 'Deep Blue & Golden Amber',
     iconBg: 'rgba(2, 132, 199, 0.16)',
     iconBorder: '#0284c7',
     activeGradient: 'linear-gradient(135deg, #0369a1 0%, #0284c7 50%, #0891b2 100%)',
@@ -280,12 +451,61 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(2, 132, 199, 0.45)',
     textColorLight: '#0369a1',
     textColorDark: '#38bdf8',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="9" className="text-sky-500" />
-        <path d="M3.6 9h16.8" className="text-sky-400" />
-        <path d="M3.6 15h16.8" className="text-sky-400" />
-        <ellipse cx="12" cy="12" rx="4.5" ry="9" className="text-cyan-400" />
+    renderIcon: ({ isSelected }) => (
+      /* Photorealistic 3D planet Earth showing atmospheric glow, continents, and planetary orbit rings */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <radialGradient id="earthGlobe" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#7dd3fc" />
+            <stop offset="25%" stopColor="#38bdf8" />
+            <stop offset="60%" stopColor="#0284c7" />
+            <stop offset="85%" stopColor="#0369a1" />
+            <stop offset="100%" stopColor="#082f49" />
+          </radialGradient>
+          <linearGradient id="saturnRing" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="50%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#d97706" />
+          </linearGradient>
+          <radialGradient id="atmoGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Planetary Atmosphere Outer Glow */}
+        <circle cx="36" cy="36" r="28" fill="url(#atmoGlow)" />
+        {/* Planetary Back Orbit Ring */}
+        <ellipse cx="36" cy="36" rx="34" ry="12" transform="rotate(-22 36 36)" stroke="url(#saturnRing)" strokeWidth="3" opacity="0.6" strokeDasharray="38 40" />
+        
+        {/* Spherical Earth Globe Body */}
+        <circle cx="36" cy="36" r="22" fill="url(#earthGlobe)" stroke={isSelected ? '#ffffff' : '#7dd3fc'} strokeWidth="1.5" />
+        
+        {/* Continents & Landmasses (Green & Emerald Shapes) */}
+        {/* Eurasia / Africa Continent */}
+        <path d="M26 24 C28 20 38 21 42 24 C45 27 47 33 43 36 C39 39 34 35 32 37 C29 39 27 33 26 24 Z" 
+          fill="#22c55e" 
+          opacity="0.9" 
+        />
+        {/* Americas / Archipelago */}
+        <path d="M20 28 C22 26 25 30 23 35 C22 38 18 42 19 46 C21 48 24 50 22 52 C19 50 17 44 18 36 Z" 
+          fill="#16a34a" 
+          opacity="0.85" 
+        />
+        {/* Australia / Oceania */}
+        <circle cx="48" cy="44" r="3.5" fill="#22c55e" opacity="0.85" />
+        {/* Cloud Layer / Swirls */}
+        <path d="M22 22 Q32 26 44 20" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.75" />
+        <path d="M28 42 Q38 38 48 42" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+        
+        {/* Planetary Front Orbit Ring with Golden Amber Sheen */}
+        <ellipse cx="36" cy="36" rx="34" ry="12" transform="rotate(-22 36 36)" stroke={isSelected ? '#ffffff' : 'url(#saturnRing)'} strokeWidth="3.2" strokeDasharray="40 38" />
+        {/* Orbiting Satellite / Moon */}
+        <circle cx="62" cy="24" r="3.8" fill={isSelected ? '#ffffff' : '#fbbf24'} />
+        <circle cx="62" cy="24" r="5" stroke="#f59e0b" strokeWidth="1" opacity="0.7" />
+        {/* Stars in Space */}
+        <circle cx="10" cy="14" r="1.2" fill="#ffffff" />
+        <circle cx="64" cy="56" r="1.2" fill="#ffffff" />
+        <circle cx="12" cy="60" r="1" fill="#7dd3fc" />
       </svg>
     )
   },
@@ -295,7 +515,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Mathematics & Geometry',
     subtitle: 'Equations, Algebra & Shapes',
     badgeCount: getCategoryCount('Mathematics & Logic'),
-    colorName: 'Amber / Orange',
+    colorName: 'Vibrant Amber / Orange',
     iconBg: 'rgba(245, 158, 11, 0.16)',
     iconBorder: '#f59e0b',
     activeGradient: 'linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #d97706 100%)',
@@ -307,12 +527,53 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(245, 158, 11, 0.45)',
     textColorLight: '#c2410c',
     textColorDark: '#fb923c',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="4" y="2" width="16" height="20" rx="2" className="text-amber-500" />
-        <line x1="8" y1="6" x2="16" y2="6" className="text-orange-400" />
-        <line x1="16" y1="14" x2="16" y2="18" className="text-amber-500" />
-        <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01" className="text-amber-600 stroke-width-3" />
+    renderIcon: ({ isSelected }) => (
+      /* 3D geometric compass, golden ratio spiral, and calculus coordinate curves */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="mathAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="50%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#ea580c" />
+          </linearGradient>
+          <linearGradient id="compassMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fed7aa" />
+            <stop offset="100%" stopColor="#c2410c" />
+          </linearGradient>
+        </defs>
+        {/* Background Coordinate Axis Grid */}
+        <line x1="8" y1="56" x2="64" y2="56" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
+        <line x1="14" y1="8" x2="14" y2="64" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
+        
+        {/* Calculus Coordinate Curve (Sinusoidal Polynomial) */}
+        <path d="M14 56 Q28 16 42 42 T64 18" stroke={isSelected ? '#ffffff' : '#f59e0b'} strokeWidth="2.8" strokeLinecap="round" fill="none" />
+        
+        {/* Golden Ratio Logarithmic Spiral */}
+        <path d="M50 38 A6 6 0 0 1 44 44 A12 12 0 0 1 32 32 A20 20 0 0 1 52 12" 
+          stroke={isSelected ? '#fef08a' : '#ea580c'} 
+          strokeWidth="2.2" 
+          strokeLinecap="round" 
+          fill="none" 
+          strokeDasharray="2 3"
+        />
+        
+        {/* 3D Drafting Compass Instrument */}
+        {/* Hinge Head */}
+        <circle cx="36" cy="14" r="4.5" fill="url(#mathAmber)" stroke={isSelected ? '#ffffff' : '#7c2d12'} strokeWidth="1.5" />
+        <circle cx="36" cy="14" r="2" fill="#ffffff" />
+        {/* Compass Left Leg */}
+        <path d="M34 16 L22 52" stroke={isSelected ? '#ffffff' : 'url(#compassMetal)'} strokeWidth="3" strokeLinecap="round" />
+        {/* Compass Right Leg with Needle Tip */}
+        <path d="M38 16 L50 52" stroke={isSelected ? '#ffffff' : 'url(#compassMetal)'} strokeWidth="3" strokeLinecap="round" />
+        {/* Center Adjustment Spindle */}
+        <line x1="27" y1="36" x2="45" y2="36" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="36" cy="36" r="2" fill="#ffffff" />
+        {/* Sharp Tips on Paper */}
+        <polygon points="22,52 20,56 24,56" fill={isSelected ? '#ffffff' : '#ea580c'} />
+        <polygon points="50,52 48,56 52,56" fill={isSelected ? '#ffffff' : '#ea580c'} />
+        
+        {/* Mathematical Sigma Symbol badge (Top Right) */}
+        <text x="50" y="24" fill={isSelected ? '#ffffff' : '#ea580c'} fontSize="15" fontWeight="900" fontFamily="serif">∑</text>
       </svg>
     )
   },
@@ -322,7 +583,7 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Computer Science & Hardware',
     subtitle: 'Binary, CPU & Peripherals',
     badgeCount: getCategoryCount('Computer Science & IT'),
-    colorName: 'Teal',
+    colorName: 'Teal / Neon Cyan',
     iconBg: 'rgba(20, 184, 166, 0.16)',
     iconBorder: '#14b8a6',
     activeGradient: 'linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #0284c7 100%)',
@@ -334,13 +595,62 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(20, 184, 166, 0.45)',
     textColorLight: '#0f766e',
     textColorDark: '#2dd4bf',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2" className="text-teal-500" />
-        <line x1="8" y1="21" x2="16" y2="21" className="text-teal-400" />
-        <line x1="12" y1="17" x2="12" y2="21" className="text-teal-400" />
-        <path d="M6 8l3 3-3 3" className="text-emerald-400" />
-        <line x1="11" y1="14" x2="16" y2="14" className="text-teal-300" />
+    renderIcon: ({ isSelected }) => (
+      /* Modern 3D workstation display showing glowing colored code, microchip processor, and binary stream */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="monitorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#14b8a6" />
+            <stop offset="100%" stopColor="#0f766e" />
+          </linearGradient>
+          <linearGradient id="chipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2dd4bf" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
+        {/* Workstation Monitor Outer Chassis */}
+        <rect x="10" y="8" width="52" height="36" rx="4" 
+          fill="rgba(15, 23, 42, 0.92)" 
+          stroke={isSelected ? '#ffffff' : '#2dd4bf'} 
+          strokeWidth="2.5" 
+        />
+        {/* Terminal Screen Screen Glow */}
+        <rect x="13" y="11" width="46" height="30" rx="2" fill="rgba(6, 78, 70, 0.4)" />
+        
+        {/* Code Syntax Lines on Terminal Display */}
+        <line x1="17" y1="18" x2="30" y2="18" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="33" y1="18" x2="44" y2="18" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="21" y1="24" x2="38" y2="24" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="41" y1="24" x2="48" y2="24" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="21" y1="30" x2="32" y2="30" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" />
+        
+        {/* Blinking CLI Cursor */}
+        <rect x="35" y="28" width="4" height="4" fill={isSelected ? '#ffffff' : '#2dd4bf'} />
+        
+        {/* Monitor Ergonomic Stand */}
+        <path d="M31 44 L30 52 H42 L41 44" fill={isSelected ? '#ffffff' : '#0d9488'} />
+        <rect x="24" y="52" width="24" height="3.5" rx="1.5" fill={isSelected ? '#ffffff' : '#14b8a6'} />
+        
+        {/* Floating 3D Microchip Silicon Processor (Bottom Right) */}
+        <g transform="translate(42, 38)">
+          <rect x="2" y="2" width="20" height="20" rx="3" fill="#042f2e" stroke="#5eead4" strokeWidth="2" />
+          <rect x="7" y="7" width="10" height="10" rx="1" fill="url(#chipGrad)" />
+          {/* Chip Pins */}
+          <line x1="6" y1="0" x2="6" y2="2" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="12" y1="0" x2="12" y2="2" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="18" y1="0" x2="18" y2="2" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="0" y1="7" x2="2" y2="7" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="0" y1="13" x2="2" y2="13" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="22" y1="7" x2="24" y2="7" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="22" y1="13" x2="24" y2="13" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="6" y1="22" x2="6" y2="24" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="12" y1="22" x2="12" y2="24" stroke="#5eead4" strokeWidth="1.8" />
+          <line x1="18" y1="22" x2="18" y2="24" stroke="#5eead4" strokeWidth="1.8" />
+        </g>
+        
+        {/* Binary Stream (Left Column: 0101) */}
+        <text x="6" y="58" fill={isSelected ? '#ffffff' : '#2dd4bf'} fontSize="9" fontWeight="900" fontFamily="monospace">01</text>
+        <text x="6" y="66" fill={isSelected ? '#ffffff' : '#0d9488'} fontSize="9" fontWeight="900" fontFamily="monospace">10</text>
       </svg>
     )
   },
@@ -350,23 +660,83 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'English & Spatial Linguistics',
     subtitle: '3D Prepositions & Vocabulary',
     badgeCount: getCategoryCount('English & Grammar'),
-    colorName: 'Violet',
+    colorName: 'Deep Indigo & Gold',
     iconBg: 'rgba(139, 92, 246, 0.16)',
     iconBorder: '#8b5cf6',
-    activeGradient: 'linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #9333ea 100%)',
+    activeGradient: 'linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #7c3aed 100%)',
     activeBorder: '#c4b5fd',
-    glowColor: 'rgba(124, 58, 237, 0.45)',
+    glowColor: 'rgba(99, 102, 241, 0.45)',
     lightCardBg: 'rgba(245, 243, 255, 0.95)',
     darkCardBg: 'rgba(28, 15, 59, 0.85)',
     lightBorder: '#ddd6fe',
     darkBorder: 'rgba(139, 92, 246, 0.45)',
-    textColorLight: '#6d28d9',
-    textColorDark: '#a78bfa',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" className="text-violet-400" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" className="text-violet-500" />
-        <path d="M9 7h6M9 11h4" className="text-purple-300" />
+    textColorLight: '#4338ca',
+    textColorDark: '#a5b4fc',
+    renderIcon: ({ isSelected }) => (
+      /* Beautifully detailed open hardbound book with glowing golden typography letters */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="bookCoverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#312e81" />
+            <stop offset="100%" stopColor="#1e1b4b" />
+          </linearGradient>
+          <linearGradient id="goldFontGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="50%" stopColor="#facc15" />
+            <stop offset="100%" stopColor="#ca8a04" />
+          </linearGradient>
+          <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#f8fafc" />
+          </linearGradient>
+        </defs>
+        {/* Hardbound Book Spine & Outer Binding */}
+        <path d="M36 54 C26 49 14 49 8 51 V21 C14 19 26 19 36 24 C46 19 58 19 64 21 V51 C58 49 46 49 36 54 Z" 
+          fill="url(#bookCoverGrad)" 
+          stroke={isSelected ? '#ffffff' : '#fbbf24'} 
+          strokeWidth="2.5" 
+          strokeLinejoin="round" 
+        />
+        {/* Open Book Left Pages Deck */}
+        <path d="M36 51 C27 46 16 46 10 48 V18 C16 16 27 16 36 21 Z" 
+          fill="url(#pageGrad)" 
+          stroke="#cbd5e1" 
+          strokeWidth="1.5" 
+        />
+        {/* Open Book Right Pages Deck */}
+        <path d="M36 51 C45 46 56 46 62 48 V18 C56 16 45 16 36 21 Z" 
+          fill="url(#pageGrad)" 
+          stroke="#cbd5e1" 
+          strokeWidth="1.5" 
+        />
+        {/* Center Ribbon Bookmark in Scarlet */}
+        <path d="M36 21 V45 L40 41 L44 45 V21" fill="#ef4444" />
+        
+        {/* Left Page Elegant Typography Text Lines */}
+        <line x1="15" y1="26" x2="31" y2="26" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="15" y1="32" x2="29" y2="32" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="15" y1="38" x2="31" y2="38" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="15" y1="44" x2="25" y2="44" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        
+        {/* Right Page Elegant Typography Text Lines */}
+        <line x1="41" y1="26" x2="57" y2="26" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="41" y1="32" x2="55" y2="32" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="41" y1="38" x2="57" y2="38" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+        
+        {/* Floating Glowing Golden Typography Letters (A, B, C) */}
+        {/* Golden 'A' */}
+        <g transform="translate(18, 2)">
+          <circle cx="10" cy="10" r="9" fill="url(#goldFontGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
+          <text x="6" y="14" fill="#1e1b4b" fontSize="13" fontWeight="900" fontFamily="serif">A</text>
+        </g>
+        {/* Golden 'B' */}
+        <g transform="translate(42, 4)">
+          <circle cx="9" cy="9" r="8" fill="url(#goldFontGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
+          <text x="5" y="13" fill="#1e1b4b" fontSize="12" fontWeight="900" fontFamily="serif">B</text>
+        </g>
+        {/* Magic Glowing Sparkles from the Book */}
+        <polygon points="36,7 37,10 40,11 37,12 36,15 35,12 32,11 35,10" fill={isSelected ? '#ffffff' : '#facc15'} />
+        <polygon points="58,16 59,18 61,19 59,20 58,22 57,20 55,19 57,18" fill={isSelected ? '#ffffff' : '#facc15'} />
       </svg>
     )
   },
@@ -376,24 +746,78 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     fullTitle: 'Early Childhood Care & Education',
     subtitle: 'Sensory Blocks, Shapes & Color',
     badgeCount: getCategoryCount('Early Childhood (ECCE)'),
-    colorName: 'Pink',
-    iconBg: 'rgba(236, 72, 153, 0.16)',
-    iconBorder: '#ec4899',
-    activeGradient: 'linear-gradient(135deg, #be185d 0%, #db2777 50%, #e11d48 100%)',
-    activeBorder: '#fbcfe8',
-    glowColor: 'rgba(219, 39, 119, 0.45)',
-    lightCardBg: 'rgba(253, 242, 248, 0.95)',
-    darkCardBg: 'rgba(49, 13, 31, 0.85)',
-    lightBorder: '#fbcfe8',
-    darkBorder: 'rgba(236, 72, 153, 0.45)',
-    textColorLight: '#be185d',
-    textColorDark: '#f472b6',
-    renderIcon: ({ className = "w-7 h-7" }) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="8" height="8" rx="2" className="text-pink-500 fill-pink-500/20" />
-        <rect x="13" y="3" width="8" height="8" rx="2" className="text-rose-400 fill-rose-400/20" />
-        <rect x="3" y="13" width="8" height="8" rx="2" className="text-fuchsia-400 fill-fuchsia-400/20" />
-        <circle cx="17" cy="17" r="4" className="text-pink-400 fill-pink-400/30" />
+    colorName: 'Vibrant Coral / Pink',
+    iconBg: 'rgba(244, 63, 94, 0.16)',
+    iconBorder: '#f43f5e',
+    activeGradient: 'linear-gradient(135deg, #e11d48 0%, #f43f5e 50%, #fb7185 100%)',
+    activeBorder: '#fecdd3',
+    glowColor: 'rgba(244, 63, 94, 0.45)',
+    lightCardBg: 'rgba(255, 241, 242, 0.95)',
+    darkCardBg: 'rgba(49, 13, 26, 0.85)',
+    lightBorder: '#fecdd3',
+    darkBorder: 'rgba(244, 63, 94, 0.45)',
+    textColorLight: '#e11d48',
+    textColorDark: '#fb7185',
+    renderIcon: ({ isSelected }) => (
+      /* Bright 3D alphabet learning blocks (A-B-C) with playful geometric shapes */
+      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="blockAGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fb7185" />
+            <stop offset="100%" stopColor="#e11d48" />
+          </linearGradient>
+          <linearGradient id="blockBGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#0284c7" />
+          </linearGradient>
+          <linearGradient id="blockCGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#facc15" />
+            <stop offset="100%" stopColor="#eab308" />
+          </linearGradient>
+        </defs>
+        
+        {/* Playful Geometric Cylinder / Cone Background Element */}
+        <circle cx="16" cy="18" r="8" fill="#a78bfa" stroke={isSelected ? '#ffffff' : '#c4b5fd'} strokeWidth="1.5" />
+        <polygon points="56,8 64,22 48,22" fill="#34d399" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="1.5" />
+        
+        {/* Block A: Isometric 3D Coral / Pink Block (Bottom Left) */}
+        <g transform="translate(6, 32)">
+          {/* Top Face */}
+          <polygon points="16,0 30,7 16,14 2,7" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+          {/* Left Face */}
+          <polygon points="2,7 16,14 16,30 2,23" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+          {/* Right Face */}
+          <polygon points="16,14 30,7 30,23 16,30" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+          {/* Letter A on Left Face */}
+          <text x="5" y="24" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">A</text>
+        </g>
+        
+        {/* Block B: Isometric 3D Blue Block (Bottom Right) */}
+        <g transform="translate(36, 34)">
+          {/* Top Face */}
+          <polygon points="15,0 28,6 15,13 2,6" fill="#7dd3fc" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+          {/* Left Face */}
+          <polygon points="2,6 15,13 15,28 2,21" fill="#0284c7" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+          {/* Right Face */}
+          <polygon points="15,13 28,6 28,21 15,28" fill="#0369a1" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+          {/* Letter B on Left Face */}
+          <text x="5" y="23" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">B</text>
+        </g>
+        
+        {/* Block C: Isometric 3D Golden Yellow Block (Stacked in Center) */}
+        <g transform="translate(22, 10)">
+          {/* Top Face */}
+          <polygon points="15,0 28,6 15,13 2,6" fill="#fef08a" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
+          {/* Left Face */}
+          <polygon points="2,6 15,13 15,28 2,21" fill="#eab308" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
+          {/* Right Face */}
+          <polygon points="15,13 28,6 28,21 15,28" fill="#ca8a04" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
+          {/* Letter C on Left Face */}
+          <text x="5" y="23" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">C</text>
+        </g>
+        
+        {/* Playful Floating Star */}
+        <polygon points="36,4 37,7 40,7 38,9 39,12 36,10 33,12 34,9 32,7 35,7" fill="#f43f5e" />
       </svg>
     )
   }
@@ -598,7 +1022,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     isSelected ? 'scale-[1.03] z-10' : 'hover:scale-[1.02]'
                   }`}
                   style={{
-                    minHeight: '128px',
+                    minHeight: '168px',
                     backgroundImage: isSelected ? cat.activeGradient : 'none',
                     backgroundColor: isSelected 
                       ? 'transparent' 
@@ -610,28 +1034,27 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     borderStyle: 'solid',
                     color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a'),
                     boxShadow: isSelected 
-                      ? `0 12px 28px -4px ${cat.glowColor}, 0 0 16px ${cat.glowColor}, inset 0 1px 2px rgba(255, 255, 255, 0.4)` 
+                      ? `0 14px 32px -4px ${cat.glowColor}, 0 0 20px ${cat.glowColor}, inset 0 1px 2px rgba(255, 255, 255, 0.4)` 
                       : (isDarkMode ? '0 4px 14px rgba(0, 0, 0, 0.35)' : '0 4px 14px rgba(0, 0, 0, 0.04)')
                   }}
                   title={`Filter by ${cat.fullTitle} (${cat.badgeCount} labs)`}
                 >
-                  {/* Top: Large Colorful Discipline Icon */}
+                  {/* Top: Large Vibrant Realistic Graphic Emblem (minimum 64px - 72px) */}
                   <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shadow-md shrink-0 mb-2"
+                    className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg shrink-0 mb-2.5 p-1"
                     style={{
                       backgroundColor: isSelected 
                         ? 'rgba(255, 255, 255, 0.22)' 
-                        : (isDarkMode ? 'rgba(15, 23, 42, 0.9)' : cat.iconBg),
+                        : (isDarkMode ? 'rgba(15, 23, 42, 0.92)' : cat.iconBg),
                       borderColor: isSelected 
-                        ? 'rgba(255, 255, 255, 0.5)' 
+                        ? 'rgba(255, 255, 255, 0.55)' 
                         : cat.iconBorder,
-                      borderWidth: '1.5px',
+                      borderWidth: '2px',
                       borderStyle: 'solid',
-                      boxShadow: isSelected ? '0 4px 12px rgba(0, 0, 0, 0.25)' : `0 2px 8px ${cat.glowColor}`
+                      boxShadow: isSelected ? '0 6px 16px rgba(0, 0, 0, 0.35)' : `0 4px 14px ${cat.glowColor}`
                     }}
                   >
                     {cat.renderIcon({
-                      className: `w-7 h-7 ${isSelected ? 'text-white' : ''}`,
                       isSelected,
                       isDark: isDarkMode
                     })}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
-import { QuickStats } from './components/QuickStats';
 import { SimulationCatalogGrid } from './components/SimulationCatalogGrid';
 import { WebsiteFeatures } from './components/WebsiteFeatures';
 import { SimulationViewerModal } from './components/SimulationViewerModal';
@@ -194,13 +193,7 @@ export default function App() {
           isDarkMode={isDarkMode}
         />
 
-        {/* 2. Quick Metrics Row (4 High-Contrast 3D Cards) */}
-        <QuickStats 
-          totalSimulations={SIMULATIONS_LIST.length} 
-          isDarkMode={isDarkMode}
-        />
-
-        {/* 3. STEM Catalog & Topic Cards Grid with Subject Filter Bar */}
+        {/* 2. STEM Catalog & Topic Cards Grid with Subject Filter Bar */}
         <SimulationCatalogGrid
           simulations={SIMULATIONS_LIST}
           selectedCategory={selectedSubject}
