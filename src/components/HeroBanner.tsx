@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Clock, Sparkles, Layers, Play, Radio, Camera, Check, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Clock, Sparkles, Layers, Play, Radio } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 
@@ -12,109 +12,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
-  
-  // Custom permanent background state
-  const [bgImage, setBgImage] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem('genz_hero_banner_bg') || '/hero-banner-bg.jpg';
-    } catch {
-      return '/hero-banner-bg.jpg';
-    }
-  });
-  const [hasServerBg, setHasServerBg] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Check if permanent banner image exists on server or in localStorage
-  useEffect(() => {
-    const checkServer = async () => {
-      try {
-        const res = await fetch('/api/save-banner-bg', { method: 'GET' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.exists) {
-            setHasServerBg(true);
-            setBgImage('/hero-banner-bg.jpg');
-            return;
-          }
-        }
-      } catch {}
-
-      try {
-        const local = localStorage.getItem('genz_hero_banner_bg');
-        if (local && local.startsWith('data:image')) {
-          setBgImage(local);
-          // Sync permanently to server
-          syncToServer(local);
-        }
-      } catch {}
-    };
-
-    checkServer();
-  }, []);
-
-  const syncToServer = async (base64Img: string) => {
-    try {
-      const res = await fetch('/api/save-banner-bg', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: base64Img })
-      });
-      if (res.ok) {
-        setHasServerBg(true);
-        setBgImage('/hero-banner-bg.jpg');
-        setUploadSuccess(true);
-        setTimeout(() => setUploadSuccess(false), 4000);
-      }
-    } catch (err) {
-      console.warn('Could not sync to server disk:', err);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith('image/')) return;
-
-    setIsUploading(true);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
-      if (!result) {
-        setIsUploading(false);
-        return;
-      }
-
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_W = 1920;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > MAX_W) {
-          height = Math.round((height * MAX_W) / width);
-          width = MAX_W;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.90);
-          setBgImage(compressed);
-          try {
-            localStorage.setItem('genz_hero_banner_bg', compressed);
-          } catch {}
-          syncToServer(compressed);
-        }
-        setIsUploading(false);
-      };
-      img.src = result;
-    };
-    reader.readAsDataURL(file);
-  };
 
   useEffect(() => {
     const updateTime = () => {
@@ -151,9 +48,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         backgroundColor: '#071638',
-        backgroundImage: bgImage 
-          ? `url(${bgImage})` 
-          : 'linear-gradient(135deg, #050f26 0%, #0a1f4d 50%, #030a1c 100%)',
+        backgroundImage: 'url(/hero-banner-bg.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center 35%',
         backgroundRepeat: 'no-repeat',
@@ -164,15 +59,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         color: '#ffffff'
       }}
     >
-      {/* Hidden File Input for Permanent Background Selection */}
-      <input 
-        ref={fileInputRef}
-        type="file" 
-        accept="image/*" 
-        className="hidden" 
-        onChange={handleFileChange}
-      />
-
       {/* Dark Vignette & Frosted Gradient Overlay (Ensures text, buttons, and clock remain 100% crystal clear) */}
       <div 
         className="absolute inset-0 pointer-events-none transition-all"
@@ -183,7 +69,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         }}
       />
 
-      {/* Top Row: Pill Badge on Left + Digital Clock Widget on Right + Quick Photo Button */}
+      {/* Top Row: Pill Badge on Left + Digital Clock Widget on Right (Zero edit buttons, strictly view-only) */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 relative z-10">
         
         {/* Left Pill Badge - Frosted Glass */}
@@ -209,42 +95,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </span>
         </div>
 
-        {/* Right Area: Digital Clock Widget + Set Permanent Photo Action */}
+        {/* Right Area: Crisp Frosted Glass Digital Clock Widget */}
         <div className="flex items-center gap-2 flex-wrap ml-auto sm:ml-0">
-          
-          {/* Quick Permanent Photo Trigger Button */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
-            className="px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shadow-md hover:scale-105 active:scale-95 cursor-pointer"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: uploadSuccess ? 'rgba(16, 185, 129, 0.9)' : 'rgba(14, 116, 144, 0.85)',
-              borderColor: uploadSuccess ? '#34d399' : '#38bdf8',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              color: '#ffffff'
-            }}
-            title="Click to select and permanently set Muhammad Imran Khan's photo as this banner background"
-          >
-            {uploadSuccess ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-white" />
-                <span>تصویر محفوظ ہو گئی</span>
-              </>
-            ) : isUploading ? (
-              <span>محفوظ ہو رہی ہے...</span>
-            ) : (
-              <>
-                <Camera className="w-3.5 h-3.5 text-cyan-300" />
-                <span>تصویر تبدیل کریں (Set Photo)</span>
-              </>
-            )}
-          </button>
-
-          {/* Crisp Frosted Glass Digital Clock Widget */}
           <div 
             className="px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2.5 text-xs"
             style={{
@@ -279,7 +131,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               {dateStr || 'Loading date...'}
             </span>
           </div>
-
         </div>
 
       </div>
