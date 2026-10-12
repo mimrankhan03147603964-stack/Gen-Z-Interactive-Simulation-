@@ -450,6 +450,51 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Phonics Alphabet & Handwriting Tracing', 'Montessori Ten-Frame & Tactile Counting', '2D Geometric Shapes & Color Mixing', 'Animal Sounds, Babies & Habitats', 'Daily Hygiene & Emotional Care', 'Multi-Sensory Star Quiz Challenge'],
     features: ['Phonetic Web Audio & Voice Pronunciation', 'Interactive Letter Tracing & Magic Canvas', 'Montessori Ten-Frame & Quantity Balancer', '20-Second Handwashing & Routine Timers', 'Star Quiz & Star Explorer Certificate'],
     gradeLevel: 'Pre-K, Nursery, Kindergarten & Early Primary (Ages 3–7)'
+  },
+  {
+    id: 'sim-dna-genetics-punnett-square',
+    slug: 'dna-genetics-punnett-square',
+    indexNumber: '31',
+    title: 'Genetics, DNA & Punnett Square Lab',
+    subject: 'Cellular Biology & Genetics',
+    category: 'Biology & Life',
+    iconName: 'Dna',
+    accentColor: '#10b981', // Emerald Green
+    description: 'Explore molecular genetics, DNA double helix structure, base pairing (A-T, C-G), transcription to mRNA, Mendelian monohybrid/dihybrid Punnett squares, and pedigree genetic disease tracing.',
+    fileUrl: '/simulations/dna-genetics-punnett-square.html',
+    topics: ['DNA Double Helix & Nitrogenous Bases', 'Transcription & Protein Synthesis', 'Mendelian Genetics & Punnett Squares', 'Pedigree Charts & Hereditary Diseases'],
+    features: ['Interactive 3D-Style DNA Helix Visualizer', 'Dynamic Monohybrid & Dihybrid Matrix Solver', 'Family Tree Pedigree Genetic Tracker', 'Real-Time Phenotype & Genotype Calculator'],
+    gradeLevel: 'Middle, Secondary & Advanced High School Biology'
+  },
+  {
+    id: 'sim-acids-bases-ph-titration',
+    slug: 'acids-bases-ph-titration',
+    indexNumber: '32',
+    title: 'Acids, Bases & pH Titration Lab',
+    subject: 'Chemistry & Solution Science',
+    category: 'Chemistry & Matter',
+    iconName: 'TestTube',
+    accentColor: '#a855f7', // Purple Orchid
+    description: 'Interactive analytical chemistry laboratory. Investigate pH scale (0–14), hydronium [H₃O⁺] and hydroxide [OH⁻] concentrations, universal indicator color transitions, and perform precision burette acid-base neutralization titrations with real-time equivalence point curve plotting.',
+    fileUrl: '/simulations/acids-bases-ph-titration.html',
+    topics: ['pH Scale & Logarithmic Concentration', 'Arrhenius & Brønsted-Lowry Acids/Bases', 'Burette Acid-Base Neutralization Titration', 'Universal Indicator & Phenolphthalein Endpoints'],
+    features: ['Interactive pH Meter & Universal Color Probe', 'Precision Volumetric Burette Titration Simulator', 'Real-Time Equivalence Point & pH Curve Plotter', 'Household & Laboratory Chemical Solutions Catalog'],
+    gradeLevel: 'Middle, Secondary & High School Chemistry'
+  },
+  {
+    id: 'sim-electromagnetic-induction-lab',
+    slug: 'electromagnetic-induction-lab',
+    indexNumber: '33',
+    title: 'Electromagnetic Induction & Faraday\'s Law Lab',
+    subject: 'Physics & Electrodynamics',
+    category: 'Physics & Motion',
+    iconName: 'Magnet',
+    accentColor: '#06b6d4', // Royal Electric Cyan
+    description: 'Comprehensive electrodynamics simulation laboratory. Thrust bar magnets through multi-turn copper coils to observe Faraday\'s induction and Lenz\'s Law opposition, map magnetic vector field streamlines with compass needles, configure step-up/step-down AC transformers, and trace Lorentz force charged particle deflection in magnetic fields.',
+    fileUrl: '/simulations/electromagnetic-induction-lab.html',
+    topics: ['Faraday\'s Law & Rate of Magnetic Flux Change', 'Lenz\'s Law & Opposing Induced Fields', 'Magnetic Field Mapping & Compass Array', 'AC Mutual Induction & Step-Up/Down Transformers', 'Lorentz Force & Cyclotron Particle Deflection'],
+    features: ['Dual-Sided Bar Magnet Coil Thrust Simulator', 'Interactive Compass Needle Vector Array Probe', 'Laminated Iron Core AC Transformer Configurator', 'Lorentz Force Charged Particle Deflection Chamber', 'Interactive Electromagnetism Mastery Quiz'],
+    gradeLevel: 'Middle, Secondary & Advanced High School Physics'
   }
 ];
 

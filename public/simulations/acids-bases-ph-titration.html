@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Acids, Bases &amp; pH Titration Lab — Gen Z EdTech</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow-x:hidden; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:#0a1628; color:#e8f4ff; min-height:100vh;
+  display:flex; flex-direction:column;
+}
+.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
+
+/* TOP TABS */
+.tabs {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
+  background:#0f2440; border-radius:14px; padding:8px 12px;
+}
+.tab-btn {
+  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .25s; flex:1 0 auto;
+}
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active {
+  background:linear-gradient(135deg,#a855f7,#7c3aed);
+  color:#ffffff; box-shadow:0 6px 20px rgba(168,85,247,.45);
+}
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+
+/* EDUCATIONAL CARD */
+.card {
+  background:linear-gradient(160deg,#122a44,#0a1e34);
+  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
+  box-shadow:0 14px 40px rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.05);
+}
+.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; color:#c084fc; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc {
+  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
+  border-left:5px solid #a855f7; padding-left:14px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.6;
+}
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab {
+  padding:8px 16px; border:none; border-radius:30px;
+  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
+  cursor:pointer; transition:.2s;
+}
+.section-tab:hover { background:#234468; color:#fff; }
+.section-tab.active { background:#7c3aed; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
+.panel h3 { font-size:1.45rem; font-weight:700; color:#d8b4fe; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before {
+  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
+  border-radius:50%; background:#a855f7; color:#0a1628; font-weight:900;
+  text-align:center; line-height:20px; font-size:.8rem;
+}
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #a855f7; }
+.grid-item h4 { font-size:1.15rem; color:#d8b4fe; margin-bottom:4px; }
+.grid-item p { font-size:.92rem; color:#b8d4f0; }
+
+/* SIMULATION BOX */
+.sim-box {
+  background:#06121f; border-radius:18px; padding:18px 16px 16px;
+  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+}
+.sim-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; margin-bottom:14px;
+  background:#0a1a2e; padding:12px 18px; border-radius:36px;
+  border:1px solid #1e3a5c;
+}
+.sim-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.9rem;
+}
+.sim-controls input[type=range] { width:125px; accent-color:#a855f7; cursor:pointer; }
+.sim-controls select,.sim-controls button {
+  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+}
+.sim-controls button { background:#7c3aed; color:#fff; }
+.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
+.sim-controls .btn-accent { background:linear-gradient(135deg,#a855f7,#7c3aed); color:#fff; }
+.sim-controls .btn-fs { background:linear-gradient(135deg,#7b1fa2,#512da8); color:#fff; }
+
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#d8b4fe; margin:14px 0 6px; }
+.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
+.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
+.teacher-note {
+  background:linear-gradient(135deg,#0d2018,#0a1a14);
+  border-left:5px solid #a855f7; border-radius:0 14px 14px 0;
+  padding:12px 16px; margin-top:12px; font-size:.9rem;
+  color:#b8e6c8; line-height:1.7;
+}
+.teacher-note strong { color:#c084fc; }
+
+/* PRESET CHIPS */
+.preset-chips {
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  margin:12px 0 16px;
+}
+.chip-btn {
+  padding:8px 14px; border-radius:24px; border:1.5px solid #1e3a5c;
+  background:#0a1a2e; color:#cbd5e1; font-weight:800; font-size:0.9rem;
+  cursor:pointer; transition:all 0.15s;
+}
+.chip-btn:hover { background:#1a3550; color:#fff; transform:translateY(-1px); }
+.chip-btn.active {
+  background:linear-gradient(135deg,#a855f7,#7c3aed);
+  color:#ffffff; border-color:#c084fc; box-shadow:0 4px 12px rgba(168,85,247,0.4);
+}
+
+/* FULLSCREEN OVERLAY */
+.fs-overlay {
+  position:fixed; inset:0; background:#040e1a; z-index:99999;
+  display:none; flex-direction:column; padding:10px 16px 12px;
+  overflow:hidden;
+}
+.fs-overlay.active { display:flex; }
+.fs-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+}
+.fs-topbar h2 {
+  font-size:1.45rem; font-weight:800; color:#d8b4fe;
+  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.fs-close-btn {
+  padding:9px 24px; border-radius:30px; border:none;
+  background:linear-gradient(135deg,#ff5252,#d32f2f);
+  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
+  flex-shrink:0;
+}
+.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
+.fs-canvas-area {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  min-height:0; padding:6px 0;
+}
+.fs-canvas-area canvas {
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
+}
+.fs-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; padding:10px 16px;
+  background:#0a1a2e; border-radius:40px;
+  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP NAVIGATION TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('t-scale', this)"><span class="icon">🧪</span>The 0–14 pH Scale &amp; Spectrophotometry</button>
+    <button class="tab-btn" onclick="switchTopic('t-titration', this)"><span class="icon">⚗️</span>Buret Neutralization Titration</button>
+  </div>
+
+  <!-- TOPIC 1: pH SCALE -->
+  <div class="topic active" id="t-scale">
+    <div class="card">
+      <h2>🧪 The 0–14 pH Scale &amp; Hydrogen Ion Concentration <small>Acid-Base Chemistry Lab</small></h2>
+      <div class="desc">
+        Investigate logarithmic acidity and alkalinity. The pH scale measures the decimal logarithm of hydrogen ion activity: pH = -log₁₀[H⁺]. Acidic solutions (pH &lt; 7) have high [H⁺] ions; basic solutions (pH &gt; 7) have high [OH⁻] hydroxide ions.
+      </div>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'p-scale-def')">📖 Logarithmic Definition</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-scale-exp')">💡 Real-World Benchmarks</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-scale-notes')">🎯 Teacher Guidance</button>
+      </div>
+
+      <div class="panel active" id="p-scale-def">
+        <h3>Logarithmic Nature of pH</h3>
+        <p>Because pH is logarithmic, each whole pH unit represents a 10-fold change in hydrogen ion concentration. A solution of pH 3 is 10 times more acidic than pH 4 and 100 times more acidic than pH 5.</p>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>[H⁺] Hydronium Ions</h4>
+            <p>Acids release protons (H⁺) into water, forming hydronium ions (H₃O⁺). Universal indicator glows red/orange.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Neutral Water (pH 7.0)</h4>
+            <p>At 25°C, autoionization gives [H⁺] = [OH⁻] = 1.0 × 10⁻⁷ M, yielding a perfectly balanced neutral pH of 7.</p>
+          </div>
+          <div class="grid-item">
+            <h4>[OH⁻] Hydroxide Ions</h4>
+            <p>Bases accept protons or release OH⁻ ions. Universal indicator shifts to deep royal blue and violet.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-scale-exp">
+        <h3>Substance pH Spectrum</h3>
+        <ul>
+          <li>Strong Acids (pH 0–2): Battery Acid (0.8), Stomach Gastric Juice (1.5), Lemon Juice (2.2).</li>
+          <li>Weak Acids &amp; Everyday Items (pH 3–6): Vinegar (2.8), Tomato Juice (4.2), Black Coffee (5.0), Pure Milk (6.6).</li>
+          <li>Weak Bases &amp; Physiological Fluids (pH 7–10): Human Blood (7.4), Sea Water (8.1), Baking Soda (8.5).</li>
+          <li>Strong Bases (pH 11–14): Ammonia Cleaner (11.5), Bleach (12.5), Drain Cleaner NaOH (14.0).</li>
+        </ul>
+      </div>
+
+      <div class="panel" id="p-scale-notes">
+        <h3>Electrode Sensor Calibration</h3>
+        <p>Remind learners that standard laboratory glass pH electrodes require calibration using two buffer solutions (pH 4.0 and pH 7.0 or pH 10.0) before measurement.</p>
+      </div>
+
+      <!-- Simulation Box -->
+      <div class="sim-box" id="boxScale">
+        <div class="sim-controls">
+          <label>
+            pH Value (0.0 to 14.0):
+            <input type="range" id="phSlider" min="0" max="14" step="0.1" value="7.0" oninput="setPhValue(parseFloat(this.value))">
+            <span id="phSliderVal" style="color:#d8b4fe; font-weight:800;">7.0</span>
+          </label>
+          <label>
+            Solution Dilution (Water Ratio):
+            <input type="range" id="dilutionSlider" min="1" max="10" step="1" value="1" oninput="setDilution(parseInt(this.value))">
+            <span id="dilutionVal" style="color:#d8b4fe; font-weight:800;">1x</span>
+          </label>
+          <button class="btn-fs" onclick="openFullscreen('fs-scale')">⛶ Fullscreen</button>
+        </div>
+
+        <div class="preset-chips" id="liquidChipsContainer"></div>
+
+        <canvas id="scaleCanvas" width="960" height="420"></canvas>
+
+        <div class="sim-readout">
+          <span id="scaleReadout">pH 7.00 • Neutral Pure Water • [H⁺] = 1.00 × 10⁻⁷ M • [OH⁻] = 1.00 × 10⁻⁷ M</span>
+          <small>Dynamic Optical Absorption &amp; Ion Concentration Engine</small>
+        </div>
+
+        <div class="teacher-note">
+          <strong>Teacher Tip:</strong> Adding water to dilute an acid shifts its pH closer to neutral 7.0, but dilution alone can never turn an acid into a base!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 2: TITRATION -->
+  <div class="topic" id="t-titration">
+    <div class="card">
+      <h2>⚗️ Acid-Base Buret Titration &amp; Neutralization <small>Analytical Chemistry Laboratory</small></h2>
+      <div class="desc">
+        Perform a precise quantitative titration. Slowly dispense standardized Sodium Hydroxide (0.10 M NaOH) from a 50 mL graduated buret into 25 mL of 0.10 M Hydrochloric Acid (HCl) containing phenolphthalein indicator. Watch the live pH titration curve plot in real-time!
+      </div>
+
+      <div class="sim-box" id="boxTitration">
+        <div class="sim-controls">
+          <button class="btn-accent" onclick="dispenseDrop()">💧 Add 1 Drop (0.5 mL)</button>
+          <button onclick="toggleAutoTitrate()" id="btnAutoTitrate">▶ Auto Titrate</button>
+          <button onclick="resetTitration()">⟳ Reset Flask &amp; Buret</button>
+          <label>
+            Buret Volume Dispensed:
+            <span id="titrationVolReadout" style="color:#d8b4fe; font-weight:800;">0.0 mL</span>
+          </label>
+          <button class="btn-fs" onclick="openFullscreen('fs-titration')">⛶ Fullscreen</button>
+        </div>
+
+        <canvas id="titrationCanvas" width="960" height="440"></canvas>
+
+        <div class="sim-readout">
+          <span id="titrationReadout">Volume NaOH Added: 0.0 mL &bull; Flask pH: 1.00 &bull; Solution Color: Colorless (Acidic)</span>
+          <small>Equivalence Point: Exactly 25.0 mL of 0.10 M NaOH (pH jumps from 3.5 to 10.5)</small>
+        </div>
+
+        <div class="teacher-note">
+          <strong>Teacher Tip:</strong> Phenolphthalein transitions from colorless to light pink at the end point (pH ~8.2–10.0), signaling that stoichiometric neutralization is complete.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FULLSCREEN OVERLAYS -->
+<div class="fs-overlay" id="fs-scale">
+  <div class="fs-topbar">
+    <h2>🧪 The 0–14 pH Scale &amp; Spectrophotometry — Fullscreen Stage</h2>
+    <button class="fs-close-btn" onclick="closeFullscreen('fs-scale')">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsAreaScale"></div>
+</div>
+
+<div class="fs-overlay" id="fs-titration">
+  <div class="fs-topbar">
+    <h2>⚗️ Buret Neutralization Titration — Fullscreen Stage</h2>
+    <button class="fs-close-btn" onclick="closeFullscreen('fs-titration')">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsAreaTitration"></div>
+  <div class="fs-controls">
+    <button class="btn-accent" onclick="dispenseDrop()">💧 Add Drop</button>
+    <button onclick="toggleAutoTitrate()">▶ Auto Titrate</button>
+    <button onclick="resetTitration()">⟳ Reset</button>
+  </div>
+</div>
+
+<script>
+// WEB AUDIO CHIMES
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playTone(freq, type = 'sine', duration = 0.12, gain = 0.12) {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(gain, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch (e) {}
+}
+
+function switchTopic(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  playTone(587.33, 'sine', 0.1, 0.12);
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  playTone(659.25, 'sine', 0.1, 0.1);
+}
+
+// ================= TOPIC 1: pH SCALE =================
+let currPh = 7.0;
+let dilutionFactor = 1;
+
+const LIQUID_PRESETS = [
+  { name: 'Battery Acid', ph: 0.8, color: '#ef4444' },
+  { name: 'Stomach Acid', ph: 1.5, color: '#f87171' },
+  { name: 'Lemon Juice', ph: 2.2, color: '#fb923c' },
+  { name: 'Vinegar', ph: 2.8, color: '#f97316' },
+  { name: 'Tomato Juice', ph: 4.2, color: '#fbbf24' },
+  { name: 'Black Coffee', ph: 5.0, color: '#facc15' },
+  { name: 'Fresh Milk', ph: 6.6, color: '#a3e635' },
+  { name: 'Pure Water', ph: 7.0, color: '#22c55e' },
+  { name: 'Human Blood', ph: 7.4, color: '#10b981' },
+  { name: 'Sea Water', ph: 8.2, color: '#06b6d4' },
+  { name: 'Baking Soda', ph: 8.5, color: '#0ea5e9' },
+  { name: 'Ammonia Cleaner', ph: 11.5, color: '#3b82f6' },
+  { name: 'Bleach Solution', ph: 12.5, color: '#6366f1' },
+  { name: 'Drain Cleaner (NaOH)', ph: 14.0, color: '#8b5cf6' }
+];
+
+function initLiquidChips() {
+  const container = document.getElementById('liquidChipsContainer');
+  container.innerHTML = '';
+  LIQUID_PRESETS.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.className = `chip-btn ${item.ph === 7.0 ? 'active' : ''}`;
+    btn.textContent = `${item.name} (${item.ph})`;
+    btn.onclick = () => selectLiquid(item, btn);
+    container.appendChild(btn);
+  });
+}
+
+function selectLiquid(item, btn) {
+  document.querySelectorAll('#liquidChipsContainer .chip-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setPhValue(item.ph);
+}
+
+function setPhValue(val) {
+  currPh = val;
+  document.getElementById('phSlider').value = val;
+  document.getElementById('phSliderVal').textContent = val.toFixed(1);
+
+  const hConc = Math.pow(10, -currPh);
+  const ohConc = Math.pow(10, -(14 - currPh));
+
+  let classification = 'Neutral';
+  if (currPh < 6.8) classification = currPh < 3.0 ? 'Strongly Acidic' : 'Mildly Acidic';
+  if (currPh > 7.2) classification = currPh > 11.0 ? 'Strongly Basic (Alkaline)' : 'Mildly Basic';
+
+  document.getElementById('scaleReadout').textContent = 
+    `pH ${currPh.toFixed(2)} • ${classification} • [H⁺] = ${hConc.toExponential(2)} M • [OH⁻] = ${ohConc.toExponential(2)} M`;
+
+  drawScaleCanvas();
+  playTone(200 + currPh * 50, 'sine', 0.08, 0.1);
+}
+
+function setDilution(d) {
+  dilutionFactor = d;
+  document.getElementById('dilutionVal').textContent = `${d}x`;
+  drawScaleCanvas();
+}
+
+function getPhColor(ph) {
+  // Universal indicator spectrophotometric color mapping
+  if (ph < 1) return '#dc2626'; // Deep Red
+  if (ph < 3) return '#ea580c'; // Red-Orange
+  if (ph < 5) return '#f59e0b'; // Orange
+  if (ph < 6) return '#eab308'; // Yellow-Orange
+  if (ph < 7) return '#84cc16'; // Yellow-Green
+  if (ph < 8) return '#22c55e'; // Green (Neutral)
+  if (ph < 9) return '#10b981'; // Green-Cyan
+  if (ph < 10) return '#06b6d4'; // Cyan
+  if (ph < 12) return '#3b82f6'; // Royal Blue
+  if (ph < 13) return '#6366f1'; // Indigo
+  return '#7c3aed';            // Deep Violet
+}
+
+function drawScaleCanvas() {
+  const canvas = document.getElementById('scaleCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.fillStyle = '#051120';
+  ctx.fillRect(0, 0, W, H);
+
+  // Beaker on Left
+  const bX = 140;
+  const bY = 90;
+  const bW = 240;
+  const bH = 260;
+
+  // Beaker glass wall
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(bX, bY);
+  ctx.lineTo(bX, bY + bH);
+  ctx.lineTo(bX + bW, bY + bH);
+  ctx.lineTo(bX + bW, bY);
+  ctx.stroke();
+
+  // Beaker liquid fill
+  const liqColor = getPhColor(currPh);
+  ctx.fillStyle = liqColor;
+  ctx.globalAlpha = 0.82;
+  ctx.fillRect(bX + 4, bY + 60, bW - 8, bH - 64);
+  ctx.globalAlpha = 1.0;
+
+  // Liquid surface meniscus
+  ctx.beginPath();
+  ctx.ellipse(bX + bW / 2, bY + 60, bW / 2 - 4, 10, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fill();
+
+  // Glass electrode probe immersed
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(bX + bW / 2 - 8, 40, 16, 170);
+  ctx.fillStyle = '#64748b';
+  ctx.beginPath();
+  ctx.arc(bX + bW / 2, 210, 12, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Digital pH Display Box above beaker
+  ctx.fillStyle = '#091c33';
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.roundRect(bX + 20, 20, 200, 48, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 26px "Segoe UI", monospace';
+  ctx.fillStyle = '#38bdf8';
+  ctx.textAlign = 'center';
+  ctx.fillText(`pH: ${currPh.toFixed(2)}`, bX + 120, 52);
+
+  // Rainbow 0 to 14 Spectrum Bar on Right
+  const barX = 460;
+  const barY = 90;
+  const barW = 440;
+  const barH = 50;
+
+  const grad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+  for (let p = 0; p <= 14; p++) {
+    grad.addColorStop(p / 14, getPhColor(p));
+  }
+  ctx.fillStyle = grad;
+  ctx.roundRect(barX, barY, barW, barH, 8);
+  ctx.fill();
+
+  // Spectrum tick marks & numbers
+  ctx.font = 'bold 13px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#ffffff';
+  for (let p = 0; p <= 14; p += 2) {
+    const tx = barX + (p / 14) * barW;
+    ctx.fillText(`${p}`, tx, barY + barH + 20);
+  }
+
+  // Pointer indicator on spectrum
+  const pointerX = barX + (currPh / 14) * barW;
+  ctx.beginPath();
+  ctx.moveTo(pointerX, barY - 10);
+  ctx.lineTo(pointerX - 10, barY - 24);
+  ctx.lineTo(pointerX + 10, barY - 24);
+  ctx.closePath();
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = '#000000';
+  ctx.shadowBlur = 8;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Detailed Analysis Card Below Bar
+  ctx.fillStyle = '#0a1e34';
+  ctx.strokeStyle = '#1e3a5c';
+  ctx.lineWidth = 2;
+  ctx.roundRect(barX, 190, barW, 160, 14);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#ffd54f';
+  ctx.textAlign = 'left';
+  ctx.fillText('CHEMICAL EQUILIBRIUM TELEMETRY', barX + 20, 225);
+
+  const hVal = Math.pow(10, -currPh);
+  const ohVal = Math.pow(10, -(14 - currPh));
+
+  ctx.font = '15px "Segoe UI", monospace';
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillText(`[H₃O⁺] Hydronium  : ${hVal.toExponential(4)} mol/L`, barX + 20, 260);
+  ctx.fillText(`[OH⁻]  Hydroxide  : ${ohVal.toExponential(4)} mol/L`, barX + 20, 290);
+  ctx.fillText(`Ion Product Kw   : 1.00 × 10⁻¹⁴ (at 25°C)`, barX + 20, 320);
+}
+
+// ================= TOPIC 2: TITRATION =================
+let titrateVol = 0.0;
+let isAutoTitrating = false;
+let autoInterval = null;
+let titrateHistory = [{ v: 0, ph: 1.0 }];
+
+function dispenseDrop() {
+  if (titrateVol >= 50.0) return;
+  titrateVol = parseFloat((titrateVol + 0.5).toFixed(1));
+  const newPh = calculateTitrationPh(titrateVol);
+  titrateHistory.push({ v: titrateVol, ph: newPh });
+  updateTitrationUI(newPh);
+  playTone(800, 'sine', 0.06, 0.08);
+}
+
+function calculateTitrationPh(vAdded) {
+  // 25.0 mL of 0.10 M HCl titrated with 0.10 M NaOH
+  const vAcid = 25.0;
+  const cAcid = 0.10;
+  const cBase = 0.10;
+  const molesAcidInit = (vAcid / 1000) * cAcid;
+  const molesBaseAdded = (vAdded / 1000) * cBase;
+  const totalVol = (vAcid + vAdded) / 1000;
+
+  if (molesBaseAdded < molesAcidInit) {
+    // Before equivalence: excess H+
+    const molesHRem = molesAcidInit - molesBaseAdded;
+    const hConc = molesHRem / totalVol;
+    return Math.max(1.0, -Math.log10(hConc));
+  } else if (Math.abs(molesBaseAdded - molesAcidInit) < 0.000005) {
+    // Exactly at equivalence point (25.0 mL)
+    return 7.0;
+  } else {
+    // Past equivalence: excess OH-
+    const molesOhRem = molesBaseAdded - molesAcidInit;
+    const ohConc = molesOhRem / totalVol;
+    const pOH = -Math.log10(ohConc);
+    return Math.min(13.0, 14.0 - pOH);
+  }
+}
+
+function updateTitrationUI(currentPh) {
+  document.getElementById('titrationVolReadout').textContent = `${titrateVol.toFixed(1)} mL`;
+  let colorDesc = 'Colorless (Acidic)';
+  if (currentPh >= 8.2) colorDesc = currentPh > 10 ? 'Bright Magenta Pink (Basic Excess)' : 'Faint Light Pink (Endpoint Reached! 🌟)';
+
+  document.getElementById('titrationReadout').textContent = 
+    `Volume NaOH Added: ${titrateVol.toFixed(1)} mL • Flask pH: ${currentPh.toFixed(2)} • Indicator: ${colorDesc}`;
+
+  drawTitrationCanvas();
+}
+
+function toggleAutoTitrate() {
+  isAutoTitrating = !isAutoTitrating;
+  const btn = document.getElementById('btnAutoTitrate');
+  if (isAutoTitrating) {
+    btn.textContent = '⏸ Pause Auto';
+    btn.classList.add('btn-accent');
+    autoInterval = setInterval(() => {
+      if (titrateVol >= 50.0) {
+        toggleAutoTitrate();
+        return;
+      }
+      dispenseDrop();
+    }, 150);
+  } else {
+    btn.textContent = '▶ Auto Titrate';
+    btn.classList.remove('btn-accent');
+    clearInterval(autoInterval);
+  }
+}
+
+function resetTitration() {
+  clearInterval(autoInterval);
+  isAutoTitrating = false;
+  document.getElementById('btnAutoTitrate').textContent = '▶ Auto Titrate';
+  document.getElementById('btnAutoTitrate').classList.remove('btn-accent');
+  titrateVol = 0.0;
+  titrateHistory = [{ v: 0, ph: 1.0 }];
+  updateTitrationUI(1.0);
+  playTone(440, 'triangle', 0.15, 0.12);
+}
+
+function drawTitrationCanvas() {
+  const canvas = document.getElementById('titrationCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.fillStyle = '#051120';
+  ctx.fillRect(0, 0, W, H);
+
+  // Left Apparatus Drawing (Buret + Erlenmeyer Flask)
+  const appX = 140;
+
+  // Buret Tube
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(appX - 12, 30, 24, 200);
+
+  // Liquid inside Buret (decreases as dispensed)
+  const buretFillH = Math.max(0, 190 - (titrateVol / 50) * 190);
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+  ctx.fillRect(appX - 10, 30 + (200 - buretFillH), 20, buretFillH);
+
+  // Stopcock valve
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillRect(appX - 18, 230, 36, 10);
+
+  // Buret Tip
+  ctx.beginPath();
+  ctx.moveTo(appX - 6, 240);
+  ctx.lineTo(appX + 6, 240);
+  ctx.lineTo(appX + 2, 260);
+  ctx.lineTo(appX - 2, 260);
+  ctx.closePath();
+  ctx.fillStyle = '#cbd5e1';
+  ctx.fill();
+
+  // Droplet falling if dispensing
+  if (titrateVol > 0 && titrateVol < 50) {
+    ctx.beginPath();
+    ctx.arc(appX, 275, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fill();
+  }
+
+  // Erlenmeyer Flask below
+  ctx.beginPath();
+  ctx.moveTo(appX - 25, 280);
+  ctx.lineTo(appX + 25, 280);
+  ctx.lineTo(appX + 60, 380);
+  ctx.lineTo(appX - 60, 380);
+  ctx.closePath();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  // Flask Liquid
+  const currentPh = titrateHistory[titrateHistory.length - 1].ph;
+  let flaskColor = 'rgba(241, 245, 249, 0.2)'; // Colorless acidic
+  if (currentPh >= 8.2) {
+    const alpha = Math.min(0.85, (currentPh - 8.2) * 0.2 + 0.3);
+    flaskColor = `rgba(236, 72, 153, ${alpha})`; // Pink phenolphthalein
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(appX - 42, 330);
+  ctx.lineTo(appX + 42, 330);
+  ctx.lineTo(appX + 56, 376);
+  ctx.lineTo(appX - 56, 376);
+  ctx.closePath();
+  ctx.fillStyle = flaskColor;
+  ctx.fill();
+
+  // Right Side Live Dynamic pH Titration Curve Plot
+  const plotX = 360;
+  const plotY = 60;
+  const plotW = 540;
+  const plotH = 320;
+
+  // Graph Background & Axes
+  ctx.fillStyle = '#0a1e34';
+  ctx.strokeStyle = '#1e3a5c';
+  ctx.lineWidth = 2;
+  ctx.roundRect(plotX, plotY, plotW, plotH, 14);
+  ctx.fill();
+  ctx.stroke();
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.lineWidth = 1;
+  for (let p = 0; p <= 14; p += 2) {
+    const gy = plotY + plotH - (p / 14) * (plotH - 40) - 20;
+    ctx.beginPath();
+    ctx.moveTo(plotX + 40, gy);
+    ctx.lineTo(plotX + plotW - 20, gy);
+    ctx.stroke();
+
+    ctx.font = '12px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'right';
+    ctx.fillText(`${p}`, plotX + 34, gy + 4);
+  }
+
+  // Equivalence reference line (at pH 7 and 25 mL)
+  const eqX = plotX + 40 + (25.0 / 50.0) * (plotW - 60);
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.35)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(eqX, plotY + 20);
+  ctx.lineTo(eqX, plotY + plotH - 20);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Titration Curve Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#c084fc';
+  ctx.lineWidth = 3;
+  titrateHistory.forEach((pt, i) => {
+    const px = plotX + 40 + (pt.v / 50.0) * (plotW - 60);
+    const py = plotY + plotH - (pt.ph / 14.0) * (plotH - 40) - 20;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Latest Point Glow
+  if (titrateHistory.length > 0) {
+    const last = titrateHistory[titrateHistory.length - 1];
+    const lx = plotX + 40 + (last.v / 50.0) * (plotW - 60);
+    const ly = plotY + plotH - (last.ph / 14.0) * (plotH - 40) - 20;
+
+    ctx.beginPath();
+    ctx.arc(lx, ly, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#c084fc';
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // Graph Labels
+  ctx.font = 'bold 13px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#cbd5e1';
+  ctx.textAlign = 'center';
+  ctx.fillText('Volume of 0.10 M NaOH Added (mL)', plotX + plotW / 2, plotY + plotH + 20);
+
+  ctx.save();
+  ctx.translate(plotX + 12, plotY + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('pH', 0, 0);
+  ctx.restore();
+}
+
+// FULLSCREEN HANDLERS
+function openFullscreen(id) {
+  document.getElementById(id).classList.add('active');
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'GENZ_SIM_REQUEST_FULLSCREEN', simFile: window.location.pathname }, '*');
+    }
+  } catch (e) {}
+}
+
+function closeFullscreen(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// INITIALIZATION
+window.addEventListener('DOMContentLoaded', () => {
+  initLiquidChips();
+  drawScaleCanvas();
+  drawTitrationCanvas();
+});
+</script>
+</body>
+</html>

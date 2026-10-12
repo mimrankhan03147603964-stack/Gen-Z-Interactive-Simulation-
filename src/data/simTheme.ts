@@ -495,6 +495,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fffbeb',
     tagText: '#b45309',
     glowColor: 'rgba(245, 158, 11, 0.45)'
+  },
+  '31': {
+    id: '31',
+    name: 'Interactive Genetics, DNA & Punnett Square Lab',
+    bgSolid: '#10b981',
+    bgGradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    borderColor: '#34d399',
+    iconBg: '#059669',
+    iconBorder: '#6ee7b7',
+    iconColor: '#ffffff',
+    badgeBg: '#ecfdf5',
+    badgeText: '#065f46',
+    badgeBorder: '#a7f3d0',
+    tagBg: '#f0fdf4',
+    tagText: '#047857',
+    glowColor: 'rgba(16, 185, 129, 0.45)'
+  },
+  '32': {
+    id: '32',
+    name: 'Acids, Bases & pH Titration Lab',
+    bgSolid: '#a855f7',
+    bgGradient: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+    borderColor: '#c084fc',
+    iconBg: '#7c3aed',
+    iconBorder: '#d8b4fe',
+    iconColor: '#ffffff',
+    badgeBg: '#faf5ff',
+    badgeText: '#6b21a8',
+    badgeBorder: '#e9d5ff',
+    tagBg: '#f3e8ff',
+    tagText: '#7e22ce',
+    glowColor: 'rgba(168, 85, 247, 0.45)'
+  },
+  '33': {
+    id: '33',
+    name: 'Electromagnetic Induction & Faraday\'s Law Lab',
+    bgSolid: '#06b6d4',
+    bgGradient: 'linear-gradient(135deg, #06b6d4 0%, #0284c7 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0284c7',
+    iconBorder: '#7dd3fc',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(6, 182, 212, 0.45)'
   }
 };
 

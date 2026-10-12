@@ -30,7 +30,10 @@ import {
   Computer,
   Keyboard,
   BookOpen,
-  Baby
+  Baby,
+  Dna,
+  TestTube,
+  Magnet
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -74,6 +77,9 @@ const renderTopicIcon = (iconName: string, iconColor?: string) => {
       case 'Keyboard': return '#7c3aed'; // Purple
       case 'BookOpen': return '#ec4899'; // Hot Pink
       case 'Baby': return '#f59e0b'; // Warm Amber
+      case 'Dna': return '#10b981'; // Emerald
+      case 'TestTube': return '#a855f7'; // Purple
+      case 'Magnet': return '#06b6d4'; // Electric Cyan
       default: return '#3b82f6';
     }
   };
@@ -110,6 +116,9 @@ const renderTopicIcon = (iconName: string, iconColor?: string) => {
     case 'Keyboard': return <Keyboard {...iconProps} />;
     case 'BookOpen': return <BookOpen {...iconProps} />;
     case 'Baby': return <Baby {...iconProps} />;
+    case 'Dna': return <Dna {...iconProps} />;
+    case 'TestTube': return <TestTube {...iconProps} />;
+    case 'Magnet': return <Magnet {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };

@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Genetics, DNA &amp; Punnett Square Lab — Gen Z EdTech</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow-x:hidden; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:#0a1628; color:#e8f4ff; min-height:100vh;
+  display:flex; flex-direction:column;
+}
+.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
+
+/* TOP TABS */
+.tabs {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
+  background:#0f2440; border-radius:14px; padding:8px 12px;
+}
+.tab-btn {
+  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .25s; flex:1 0 auto;
+}
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active {
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#ffffff; box-shadow:0 6px 20px rgba(16,185,129,.45);
+}
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+
+/* EDUCATIONAL CARD */
+.card {
+  background:linear-gradient(160deg,#122a44,#0a1e34);
+  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
+  box-shadow:0 14px 40px rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.05);
+}
+.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; color:#34d399; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc {
+  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
+  border-left:5px solid #10b981; padding-left:14px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.6;
+}
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab {
+  padding:8px 16px; border:none; border-radius:30px;
+  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
+  cursor:pointer; transition:.2s;
+}
+.section-tab:hover { background:#234468; color:#fff; }
+.section-tab.active { background:#059669; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
+.panel h3 { font-size:1.45rem; font-weight:700; color:#6ee7b7; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before {
+  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
+  border-radius:50%; background:#10b981; color:#0a1628; font-weight:900;
+  text-align:center; line-height:20px; font-size:.8rem;
+}
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #10b981; }
+.grid-item h4 { font-size:1.15rem; color:#6ee7b7; margin-bottom:4px; }
+.grid-item p { font-size:.92rem; color:#b8d4f0; }
+
+/* SIMULATION BOX */
+.sim-box {
+  background:#06121f; border-radius:18px; padding:18px 16px 16px;
+  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+}
+.sim-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; margin-bottom:14px;
+  background:#0a1a2e; padding:12px 18px; border-radius:36px;
+  border:1px solid #1e3a5c;
+}
+.sim-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.9rem;
+}
+.sim-controls input[type=range] { width:125px; accent-color:#10b981; cursor:pointer; }
+.sim-controls select,.sim-controls button {
+  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+}
+.sim-controls button { background:#059669; color:#fff; }
+.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
+.sim-controls .btn-accent { background:linear-gradient(135deg,#10b981,#047857); color:#fff; }
+.sim-controls .btn-fs { background:linear-gradient(135deg,#7b1fa2,#512da8); color:#fff; }
+
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#6ee7b7; margin:14px 0 6px; }
+.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
+.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
+.teacher-note {
+  background:linear-gradient(135deg,#0d2018,#0a1a14);
+  border-left:5px solid #10b981; border-radius:0 14px 14px 0;
+  padding:12px 16px; margin-top:12px; font-size:.9rem;
+  color:#b8e6c8; line-height:1.7;
+}
+.teacher-note strong { color:#34d399; }
+
+/* PRESET CHIPS */
+.preset-chips {
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  margin:12px 0 16px;
+}
+.chip-btn {
+  padding:8px 14px; border-radius:24px; border:1.5px solid #1e3a5c;
+  background:#0a1a2e; color:#cbd5e1; font-weight:800; font-size:0.9rem;
+  cursor:pointer; transition:all 0.15s;
+}
+.chip-btn:hover { background:#1a3550; color:#fff; transform:translateY(-1px); }
+.chip-btn.active {
+  background:linear-gradient(135deg,#10b981,#047857);
+  color:#ffffff; border-color:#34d399; box-shadow:0 4px 12px rgba(16,185,129,0.4);
+}
+
+/* FULLSCREEN OVERLAY */
+.fs-overlay {
+  position:fixed; inset:0; background:#040e1a; z-index:99999;
+  display:none; flex-direction:column; padding:10px 16px 12px;
+  overflow:hidden;
+}
+.fs-overlay.active { display:flex; }
+.fs-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+}
+.fs-topbar h2 {
+  font-size:1.45rem; font-weight:800; color:#6ee7b7;
+  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.fs-close-btn {
+  padding:9px 24px; border-radius:30px; border:none;
+  background:linear-gradient(135deg,#ff5252,#d32f2f);
+  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
+  flex-shrink:0;
+}
+.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
+.fs-canvas-area {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  min-height:0; padding:6px 0;
+}
+.fs-canvas-area canvas {
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
+}
+.fs-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; padding:10px 16px;
+  background:#0a1a2e; border-radius:40px;
+  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP NAVIGATION TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('t-dna', this)"><span class="icon">🧬</span>DNA Double Helix &amp; Replication</button>
+    <button class="tab-btn" onclick="switchTopic('t-punnett', this)"><span class="icon">📊</span>Mendelian Punnett Square Cross</button>
+    <button class="tab-btn" onclick="switchTopic('t-pedigree', this)"><span class="icon">👨‍👩‍👧‍👦</span>Trait Inheritance &amp; Pedigree</button>
+  </div>
+
+  <!-- TOPIC 1: DNA DOUBLE HELIX -->
+  <div class="topic active" id="t-dna">
+    <div class="card">
+      <h2>🧬 DNA Molecular Structure &amp; Base Pairing <small>Molecular Genetics Lab</small></h2>
+      <div class="desc">
+        Explore the 3D helical structure of Deoxyribonucleic Acid (DNA). Observe Watson-Crick complementary nitrogenous base pairs: Adenine (A) binds with Thymine (T) via 2 hydrogen bonds, and Guanine (G) binds with Cytosine (C) via 3 hydrogen bonds.
+      </div>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'p-dna-def')">📖 Molecular Overview</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-dna-exp')">💡 Base Pairing Rules</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-dna-notes')">🎯 Teacher Guidance</button>
+      </div>
+
+      <div class="panel active" id="p-dna-def">
+        <h3>The Double Helix Architecture</h3>
+        <p>DNA stores the genetic code for all living organisms. Two antiparallel strands composed of alternating sugar (deoxyribose) and phosphate groups wind around a central axis, joined by rungs of nitrogenous bases.</p>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Purines &amp; Pyrimidines</h4>
+            <p>Adenine &amp; Guanine (double-ring purines) always pair with Thymine &amp; Cytosine (single-ring pyrimidines).</p>
+          </div>
+          <div class="grid-item">
+            <h4>Hydrogen Bonding</h4>
+            <p>A = T pairs share 2 hydrogen bonds. G ≡ C pairs share 3 hydrogen bonds, making GC-rich DNA thermally stable.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Antiparallel Strands</h4>
+            <p>One strand runs 5' to 3' while the complementary template runs opposite from 3' to 5'.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-dna-exp">
+        <h3>DNA Replication Mechanism</h3>
+        <ul>
+          <li>Helicase unzips hydrogen bonds between base pairs, separating the two template strands.</li>
+          <li>DNA Polymerase synthesizes complementary daughter strands following Chargaff's rules (A=T, G=C).</li>
+          <li>Semi-conservative replication ensures each new cell receives one original and one newly synthesized strand.</li>
+        </ul>
+      </div>
+
+      <div class="panel" id="p-dna-notes">
+        <h3>Classroom Demonstration Tips</h3>
+        <p>Rotate the 3D model using the rotation speed slider. Notice the major and minor grooves where transcription factor proteins bind to control gene expression.</p>
+      </div>
+
+      <!-- Simulation Box -->
+      <div class="sim-box" id="boxDna">
+        <div class="sim-controls">
+          <button class="btn-accent" onclick="toggleDnaSpin()" id="btnDnaSpin">⏸ Pause Rotation</button>
+          <button onclick="toggleUnzipMode()" id="btnDnaUnzip">✂️ Unzip Strands</button>
+          <label>
+            Rotation Speed:
+            <input type="range" id="dnaSpeedSlider" min="0" max="3" step="0.2" value="1" oninput="setDnaSpeed(this.value)">
+            <span id="dnaSpeedVal" style="color:#6ee7b7; font-weight:800;">1.0x</span>
+          </label>
+          <label>
+            Base Pair Count:
+            <input type="range" id="dnaBpSlider" min="8" max="22" step="2" value="14" oninput="setDnaBasePairs(this.value)">
+            <span id="dnaBpVal" style="color:#6ee7b7; font-weight:800;">14 BP</span>
+          </label>
+          <button class="btn-fs" onclick="openFullscreen('fs-dna')">⛶ Fullscreen</button>
+        </div>
+
+        <div class="preset-chips">
+          <button class="chip-btn active" onclick="setDnaMode('normal')">Double Helix (3D)</button>
+          <button class="chip-btn" onclick="setDnaMode('replication')">Replication Fork (Forking)</button>
+          <button class="chip-btn" onclick="setDnaMode('mutation')">Mutation Analysis (Point Mutation)</button>
+        </div>
+
+        <canvas id="dnaCanvas" width="960" height="440"></canvas>
+
+        <div class="sim-readout">
+          <span id="dnaReadout">DNA Double Helix: 14 Base Pairs • Chargaff Ratio [A]=[T] and [G]=[C] Verified</span>
+          <small>Interactive 60 FPS Molecular Physics Simulation Engine</small>
+        </div>
+
+        <div class="sim-info">
+          Color Key: <span style="color:#ef4444; font-weight:bold;">Adenine (Red)</span> &bull; <span style="color:#3b82f6; font-weight:bold;">Thymine (Blue)</span> &bull; <span style="color:#10b981; font-weight:bold;">Guanine (Green)</span> &bull; <span style="color:#f59e0b; font-weight:bold;">Cytosine (Yellow)</span>
+        </div>
+
+        <div class="teacher-note">
+          <strong>Teacher Tip:</strong> Challenge students to predict the complementary strand sequence if the leading strand is <code>5'-ATGCGATC-3'</code> (Answer: <code>3'-TACGCTAG-5'</code>).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 2: PUNNETT SQUARE -->
+  <div class="topic" id="t-punnett">
+    <div class="card">
+      <h2>📊 Mendelian Genetics &amp; Punnett Square Cross <small>Allele Segregation &amp; Probabilities</small></h2>
+      <div class="desc">
+        Calculate genotype and phenotype ratios using Gregor Mendel's Law of Segregation and Law of Independent Assortment. Configure maternal and paternal alleles to observe monohybrid and dihybrid trait inheritance.
+      </div>
+
+      <div class="sim-box" id="boxPunnett">
+        <div class="sim-controls">
+          <label>Maternal Genotype (Parent 1):</label>
+          <select id="p1Genotype" onchange="updatePunnettCross()">
+            <option value="BB">Homozygous Dominant (BB)</option>
+            <option value="Bb" selected>Heterozygous (Bb)</option>
+            <option value="bb">Homozygous Recessive (bb)</option>
+          </select>
+
+          <label>Paternal Genotype (Parent 2):</label>
+          <select id="p2Genotype" onchange="updatePunnettCross()">
+            <option value="BB">Homozygous Dominant (BB)</option>
+            <option value="Bb" selected>Heterozygous (Bb)</option>
+            <option value="bb">Homozygous Recessive (bb)</option>
+          </select>
+
+          <button class="btn-accent" onclick="randomizeParents()">🎲 Randomize Cross</button>
+          <button class="btn-fs" onclick="openFullscreen('fs-punnett')">⛶ Fullscreen</button>
+        </div>
+
+        <div class="preset-chips">
+          <button class="chip-btn active" onclick="setTraitPreset('eye')">Brown vs Blue Eyes (B/b)</button>
+          <button class="chip-btn" onclick="setTraitPreset('pea')">Mendel Tall vs Dwarf Peas (T/t)</button>
+          <button class="chip-btn" onclick="setTraitPreset('flower')">Purple vs White Flowers (P/p)</button>
+        </div>
+
+        <canvas id="punnettCanvas" width="960" height="420"></canvas>
+
+        <div class="sim-readout">
+          <span id="punnettReadout">Genotype Ratio: 1 BB : 2 Bb : 1 bb &bull; Phenotype Ratio: 75% Dominant, 25% Recessive</span>
+          <small>Monohybrid Genetic Probability Matrix</small>
+        </div>
+
+        <div class="teacher-note">
+          <strong>Teacher Tip:</strong> The classic 3:1 phenotypic ratio only appears when crossing two heterozygous carriers (Bb &times; Bb). If one parent is homozygous dominant (BB), 100% of offspring exhibit the dominant phenotype!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 3: PEDIGREE -->
+  <div class="topic" id="t-pedigree">
+    <div class="card">
+      <h2>👨‍👩‍👧‍👦 Trait Inheritance &amp; Multi-Generation Pedigree <small>Family Genetic Chart</small></h2>
+      <div class="desc">
+        Trace how autosomal dominant and recessive traits pass across three generations in a biological family tree. Standard genetic symbols: Squares represent Males, Circles represent Females, and Shaded symbols represent Affected individuals.
+      </div>
+
+      <div class="sim-box" id="boxPedigree">
+        <div class="sim-controls">
+          <label>Inheritance Pattern:</label>
+          <select id="pedigreePattern" onchange="updatePedigree()">
+            <option value="autosomal_recessive" selected>Autosomal Recessive (e.g. Albinism, Cystic Fibrosis)</option>
+            <option value="autosomal_dominant">Autosomal Dominant (e.g. Huntington's Disease)</option>
+          </select>
+          <button class="btn-accent" onclick="generatePedigreeFamily()">🔄 Generate New Family</button>
+          <button class="btn-fs" onclick="openFullscreen('fs-pedigree')">⛶ Fullscreen</button>
+        </div>
+
+        <canvas id="pedigreeCanvas" width="960" height="420"></canvas>
+
+        <div class="sim-readout">
+          <span id="pedigreeReadout">Autosomal Recessive: 2 Affected Offspring, 4 Heterozygous Carriers, 2 Unaffected</span>
+          <small>Three-Generation Genetic Pedigree Telemetry</small>
+        </div>
+
+        <div class="teacher-note">
+          <strong>Teacher Tip:</strong> Autosomal recessive traits often skip generations when carriers mate with unaffected individuals. Autosomal dominant traits appear in every generation with an affected parent.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FULLSCREEN OVERLAYS -->
+<div class="fs-overlay" id="fs-dna">
+  <div class="fs-topbar">
+    <h2>🧬 DNA Molecular Double Helix — Fullscreen Stage</h2>
+    <button class="fs-close-btn" onclick="closeFullscreen('fs-dna')">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsAreaDna"></div>
+  <div class="fs-controls">
+    <button class="btn-accent" onclick="toggleDnaSpin()">⏸ Pause / Play</button>
+    <button onclick="toggleUnzipMode()">✂️ Unzip Strands</button>
+  </div>
+</div>
+
+<div class="fs-overlay" id="fs-punnett">
+  <div class="fs-topbar">
+    <h2>📊 Mendelian Punnett Square — Fullscreen Stage</h2>
+    <button class="fs-close-btn" onclick="closeFullscreen('fs-punnett')">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsAreaPunnett"></div>
+  <div class="fs-controls">
+    <button class="btn-accent" onclick="randomizeParents()">🎲 Randomize Cross</button>
+  </div>
+</div>
+
+<div class="fs-overlay" id="fs-pedigree">
+  <div class="fs-topbar">
+    <h2>👨‍👩‍👧‍👦 Multi-Generation Pedigree — Fullscreen Stage</h2>
+    <button class="fs-close-btn" onclick="closeFullscreen('fs-pedigree')">✕ Close</button>
+  </div>
+  <div class="fs-canvas-area" id="fsAreaPedigree"></div>
+  <div class="fs-controls">
+    <button class="btn-accent" onclick="generatePedigreeFamily()">🔄 New Family</button>
+  </div>
+</div>
+
+<script>
+// WEB AUDIO SYNTHESIZER
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playTone(freq, type = 'sine', duration = 0.15, gain = 0.12) {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(gain, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch (e) {}
+}
+
+function switchTopic(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  playTone(523.25, 'sine', 0.1, 0.12);
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  playTone(659.25, 'sine', 0.1, 0.1);
+}
+
+// ================= TOPIC 1: DNA DOUBLE HELIX =================
+let dnaSpinning = true;
+let dnaAngle = 0;
+let dnaSpeed = 1.0;
+let dnaBpCount = 14;
+let isUnzipped = false;
+let unzipProgress = 0;
+let dnaMode = 'normal';
+
+const BASE_COLORS = {
+  'A': '#ef4444', // Adenine (Red)
+  'T': '#3b82f6', // Thymine (Blue)
+  'G': '#10b981', // Guanine (Green)
+  'C': '#f59e0b'  // Cytosine (Yellow/Amber)
+};
+
+const BASE_PAIRS = [
+  { left: 'A', right: 'T' },
+  { left: 'G', right: 'C' },
+  { left: 'T', right: 'A' },
+  { left: 'C', right: 'G' },
+  { left: 'A', right: 'T' },
+  { left: 'C', right: 'G' },
+  { left: 'G', right: 'C' },
+  { left: 'T', right: 'A' },
+  { left: 'A', right: 'T' },
+  { left: 'G', right: 'C' },
+  { left: 'T', right: 'A' },
+  { left: 'C', right: 'G' },
+  { left: 'A', right: 'T' },
+  { left: 'G', right: 'C' },
+  { left: 'T', right: 'A' },
+  { left: 'C', right: 'G' },
+  { left: 'A', right: 'T' },
+  { left: 'G', right: 'C' },
+  { left: 'T', right: 'A' },
+  { left: 'C', right: 'G' },
+  { left: 'A', right: 'T' },
+  { left: 'G', right: 'C' }
+];
+
+function toggleDnaSpin() {
+  dnaSpinning = !dnaSpinning;
+  document.getElementById('btnDnaSpin').textContent = dnaSpinning ? '⏸ Pause Rotation' : '▶ Resume Rotation';
+  playTone(440, 'sine', 0.1, 0.1);
+}
+
+function toggleUnzipMode() {
+  isUnzipped = !isUnzipped;
+  document.getElementById('btnDnaUnzip').textContent = isUnzipped ? '🔗 Re-Zip Strands' : '✂️ Unzip Strands';
+  playTone(587.33, 'triangle', 0.15, 0.15);
+}
+
+function setDnaSpeed(val) {
+  dnaSpeed = parseFloat(val);
+  document.getElementById('dnaSpeedVal').textContent = `${val}x`;
+}
+
+function setDnaBasePairs(val) {
+  dnaBpCount = parseInt(val);
+  document.getElementById('dnaBpVal').textContent = `${val} BP`;
+  document.getElementById('dnaReadout').textContent = `DNA Double Helix: ${dnaBpCount} Base Pairs • Chargaff Ratio [A]=[T] and [G]=[C] Verified`;
+}
+
+function setDnaMode(mode) {
+  dnaMode = mode;
+  document.querySelectorAll('#boxDna .chip-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  playTone(523.25, 'sine', 0.1, 0.1);
+}
+
+function renderDna() {
+  const canvas = document.getElementById('dnaCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.fillStyle = '#051120';
+  ctx.fillRect(0, 0, W, H);
+
+  // Animate Unzipping
+  if (isUnzipped && unzipProgress < 1) unzipProgress = Math.min(1, unzipProgress + 0.03);
+  if (!isUnzipped && unzipProgress > 0) unzipProgress = Math.max(0, unzipProgress - 0.03);
+
+  if (dnaSpinning) {
+    dnaAngle += 0.025 * dnaSpeed;
+  }
+
+  const cx = W / 2;
+  const startY = 40;
+  const stepY = (H - 80) / dnaBpCount;
+  const radius = 160;
+
+  // Draw Strands & Base Pairs sorted by depth (Z-buffer)
+  const renderItems = [];
+
+  for (let i = 0; i < dnaBpCount; i++) {
+    const pair = BASE_PAIRS[i % BASE_PAIRS.length];
+    const angle = dnaAngle + i * 0.55;
+    const y = startY + i * stepY;
+
+    // Strand 1 position (left)
+    const separation = unzipProgress * 120 * (i / dnaBpCount);
+    const x1 = cx - radius * Math.cos(angle) - separation;
+    const z1 = radius * Math.sin(angle);
+
+    // Strand 2 position (right)
+    const x2 = cx + radius * Math.cos(angle) + separation;
+    const z2 = -z1;
+
+    renderItems.push({
+      type: 'pair',
+      index: i,
+      pair,
+      y,
+      x1, z1,
+      x2, z2,
+      zAvg: (z1 + z2) / 2
+    });
+  }
+
+  // Sort by average depth
+  renderItems.sort((a, b) => a.zAvg - b.zAvg);
+
+  renderItems.forEach(item => {
+    const { x1, z1, x2, z2, y, pair } = item;
+
+    // Center hydrogen bonds
+    const midX = (x1 + x2) / 2;
+    const midY = y;
+
+    // Hydrogen bond line
+    if (unzipProgress < 0.8) {
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(203, 213, 225, ${1 - unzipProgress})`;
+      ctx.lineWidth = 3;
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(x1, y);
+      ctx.lineTo(x2, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Left Nucleotide Base
+    const r1 = 12 + (z1 / radius) * 4;
+    ctx.beginPath();
+    ctx.arc(x1, y, Math.max(6, r1), 0, Math.PI * 2);
+    ctx.fillStyle = BASE_COLORS[pair.left];
+    ctx.shadowColor = BASE_COLORS[pair.left];
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Right Nucleotide Base
+    const r2 = 12 + (z2 / radius) * 4;
+    ctx.beginPath();
+    ctx.arc(x2, y, Math.max(6, r2), 0, Math.PI * 2);
+    ctx.fillStyle = BASE_COLORS[pair.right];
+    ctx.shadowColor = BASE_COLORS[pair.right];
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Text labels on front bases
+    if (z1 > 0) {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 12px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pair.left, x1, y);
+    }
+    if (z2 > 0) {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 12px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pair.right, x2, y);
+    }
+  });
+
+  // Draw continuous phosphate-sugar backbone rails
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+  ctx.beginPath();
+  for (let i = 0; i < dnaBpCount; i++) {
+    const angle = dnaAngle + i * 0.55;
+    const y = startY + i * stepY;
+    const separation = unzipProgress * 120 * (i / dnaBpCount);
+    const x = cx - radius * Math.cos(angle) - separation;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+  ctx.beginPath();
+  for (let i = 0; i < dnaBpCount; i++) {
+    const angle = dnaAngle + i * 0.55;
+    const y = startY + i * stepY;
+    const separation = unzipProgress * 120 * (i / dnaBpCount);
+    const x = cx + radius * Math.cos(angle) + separation;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  requestAnimationFrame(renderDna);
+}
+
+// ================= TOPIC 2: PUNNETT SQUARE =================
+let currTrait = {
+  name: 'Eye Color',
+  domSymbol: 'B',
+  recSymbol: 'b',
+  domName: 'Brown Eyes (Dominant)',
+  recName: 'Blue Eyes (Recessive)',
+  domColor: '#92400e',
+  recColor: '#0284c7'
+};
+
+function setTraitPreset(type) {
+  if (type === 'eye') {
+    currTrait = { name: 'Eye Color', domSymbol: 'B', recSymbol: 'b', domName: 'Brown Eyes', recName: 'Blue Eyes', domColor: '#b45309', recColor: '#0284c7' };
+  } else if (type === 'pea') {
+    currTrait = { name: 'Plant Height', domSymbol: 'T', recSymbol: 't', domName: 'Tall Plant', recName: 'Dwarf Plant', domColor: '#15803d', recColor: '#a855f7' };
+  } else if (type === 'flower') {
+    currTrait = { name: 'Flower Color', domSymbol: 'P', recSymbol: 'p', domName: 'Purple Flower', recName: 'White Flower', domColor: '#7e22ce', recColor: '#cbd5e1' };
+  }
+  document.querySelectorAll('#boxPunnett .chip-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  updatePunnettCross();
+}
+
+function randomizeParents() {
+  const options = ['BB', 'Bb', 'bb'];
+  const p1 = options[Math.floor(Math.random() * options.length)];
+  const p2 = options[Math.floor(Math.random() * options.length)];
+  document.getElementById('p1Genotype').value = p1;
+  document.getElementById('p2Genotype').value = p2;
+  updatePunnettCross();
+  playTone(587.33, 'triangle', 0.15, 0.15);
+}
+
+function updatePunnettCross() {
+  const p1 = document.getElementById('p1Genotype').value; // e.g. "Bb"
+  const p2 = document.getElementById('p2Genotype').value; // e.g. "Bb"
+
+  const a1 = p1[0]; const a2 = p1[1];
+  const b1 = p2[0]; const b2 = p2[1];
+
+  // 4 Offspring combinations
+  const off = [
+    formatGenotype(a1, b1),
+    formatGenotype(a1, b2),
+    formatGenotype(a2, b1),
+    formatGenotype(a2, b2)
+  ];
+
+  // Count Genotypes
+  let countDomHomo = 0; // BB
+  let countHetero = 0;  // Bb
+  let countRecHomo = 0; // bb
+
+  off.forEach(g => {
+    if (g === 'BB') countDomHomo++;
+    else if (g === 'Bb') countHetero++;
+    else if (g === 'bb') countRecHomo++;
+  });
+
+  const domPhenoPct = ((countDomHomo + countHetero) / 4) * 100;
+  const recPhenoPct = (countRecHomo / 4) * 100;
+
+  document.getElementById('punnettReadout').textContent = 
+    `Cross: ${p1} × ${p2} • Genotypes: ${countDomHomo} BB, ${countHetero} Bb, ${countRecHomo} bb • Phenotypes: ${domPhenoPct}% ${currTrait.domName}, ${recPhenoPct}% ${currTrait.recName}`;
+
+  drawPunnettCanvas(a1, a2, b1, b2, off);
+}
+
+function formatGenotype(x, y) {
+  // Uppercase first (e.g. "bB" -> "Bb")
+  if (x === 'B' || y === 'B') {
+    if (x === 'b' || y === 'b') return 'Bb';
+    return 'BB';
+  }
+  return 'bb';
+}
+
+function drawPunnettCanvas(a1, a2, b1, b2, off) {
+  const canvas = document.getElementById('punnettCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.fillStyle = '#051120';
+  ctx.fillRect(0, 0, W, H);
+
+  // Square layout parameters
+  const sqSize = 130;
+  const startX = 320;
+  const startY = 120;
+
+  // Title & Headers
+  ctx.font = 'bold 24px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#34d399';
+  ctx.textAlign = 'center';
+  ctx.fillText(`PUNNETT SQUARE: ${currTrait.name.toUpperCase()}`, W / 2, 40);
+
+  // Maternal Top Alleles (Parent 1)
+  ctx.font = 'bold 36px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText(a1, startX + sqSize * 0.5, startY - 20);
+  ctx.fillText(a2, startX + sqSize * 1.5, startY - 20);
+
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Parent 1 Alleles (Top)', startX + sqSize, startY - 60);
+
+  // Paternal Left Alleles (Parent 2)
+  ctx.font = 'bold 36px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#f472b6';
+  ctx.fillText(b1, startX - 40, startY + sqSize * 0.5);
+  ctx.fillText(b2, startX - 40, startY + sqSize * 1.5);
+
+  ctx.save();
+  ctx.translate(startX - 80, startY + sqSize);
+  ctx.rotate(-Math.PI / 2);
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Parent 2 (Left)', 0, 0);
+  ctx.restore();
+
+  // Draw 2x2 Grid Cells
+  for (let r = 0; r < 2; r++) {
+    for (let c = 0; c < 2; c++) {
+      const idx = r * 2 + c;
+      const g = off[idx];
+      const cx = startX + c * sqSize;
+      const cy = startY + r * sqSize;
+
+      // Cell box
+      ctx.fillStyle = '#0a1e34';
+      ctx.strokeStyle = '#1e3a5c';
+      ctx.lineWidth = 3;
+      ctx.fillRect(cx, cy, sqSize, sqSize);
+      ctx.strokeRect(cx, cy, sqSize, sqSize);
+
+      // Trait color indicator dot
+      const isDom = (g === 'BB' || g === 'Bb');
+      ctx.beginPath();
+      ctx.arc(cx + 25, cy + 25, 12, 0, Math.PI * 2);
+      ctx.fillStyle = isDom ? currTrait.domColor : currTrait.recColor;
+      ctx.fill();
+
+      // Genotype Text
+      ctx.font = 'bold 42px "Segoe UI", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText(g, cx + sqSize / 2, cy + sqSize / 2 + 10);
+
+      // Phenotype Label
+      ctx.font = 'bold 13px "Segoe UI", sans-serif';
+      ctx.fillStyle = isDom ? '#34d399' : '#38bdf8';
+      ctx.fillText(isDom ? 'Dominant' : 'Recessive', cx + sqSize / 2, cy + sqSize - 16);
+    }
+  }
+
+  // Right Side Probability Chart
+  const chartX = 660;
+  ctx.fillStyle = '#0a1e34';
+  ctx.strokeStyle = '#1e3a5c';
+  ctx.lineWidth = 2;
+  ctx.roundRect(chartX, 90, 240, 280, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = 'bold 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#ffd54f';
+  ctx.textAlign = 'center';
+  ctx.fillText('PROBABILITY STATS', chartX + 120, 130);
+
+  ctx.font = '16px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#e2e8f0';
+  ctx.textAlign = 'left';
+  ctx.fillText(`• ${currTrait.domName}`, chartX + 24, 180);
+  ctx.fillText(`• ${currTrait.recName}`, chartX + 24, 220);
+  ctx.fillText(`• Total Possibilities: 4`, chartX + 24, 260);
+  ctx.fillText(`• Mendelian Model: 100%`, chartX + 24, 300);
+}
+
+// ================= TOPIC 3: PEDIGREE =================
+function updatePedigree() {
+  drawPedigreeCanvas();
+  playTone(523.25, 'sine', 0.1, 0.1);
+}
+
+function generatePedigreeFamily() {
+  drawPedigreeCanvas();
+  playTone(659.25, 'triangle', 0.15, 0.15);
+}
+
+function drawPedigreeCanvas() {
+  const canvas = document.getElementById('pedigreeCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.fillStyle = '#051120';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.font = 'bold 26px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#34d399';
+  ctx.textAlign = 'center';
+  ctx.fillText('3-GENERATION GENETIC PEDIGREE CHART', W / 2, 40);
+
+  // Generation I (Grandparents)
+  // Grandfather (Square, unaffected carrier), Grandmother (Circle, affected)
+  drawPedigreeNode(ctx, 380, 90, 'male', false, 'Gen I - P1 (Bb)');
+  drawPedigreeNode(ctx, 580, 90, 'female', true, 'Gen I - P2 (bb)');
+
+  // Mating line Gen I
+  ctx.beginPath();
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 2;
+  ctx.moveTo(400, 90); ctx.lineTo(560, 90);
+  ctx.stroke();
+
+  // Drop line to Gen II
+  ctx.moveTo(480, 90); ctx.lineTo(480, 150);
+  ctx.stroke();
+
+  // Gen II sibling bar
+  ctx.moveTo(280, 150); ctx.lineTo(680, 150);
+  ctx.stroke();
+
+  // Generation II Offspring
+  drawPedigreeNode(ctx, 280, 200, 'male', true, 'Gen II - 1 (bb)');
+  drawPedigreeNode(ctx, 480, 200, 'female', false, 'Gen II - 2 (Bb)');
+  drawPedigreeNode(ctx, 680, 200, 'male', false, 'Gen II - 3 (Bb)');
+
+  // Gen II mating with partner
+  drawPedigreeNode(ctx, 800, 200, 'female', false, 'Partner (Bb)');
+  ctx.beginPath();
+  ctx.moveTo(700, 200); ctx.lineTo(780, 200);
+  ctx.moveTo(740, 200); ctx.lineTo(740, 270);
+  ctx.stroke();
+
+  // Gen III sibling bar
+  ctx.moveTo(660, 270); ctx.lineTo(820, 270);
+  ctx.stroke();
+
+  // Generation III Offspring
+  drawPedigreeNode(ctx, 660, 320, 'female', true, 'Gen III - 1 (bb)');
+  drawPedigreeNode(ctx, 820, 320, 'male', false, 'Gen III - 2 (Bb)');
+
+  // Symbol Legend
+  ctx.font = '14px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.textAlign = 'left';
+  ctx.fillText('Legend: □ Male  ○ Female  ■/● Shaded = Affected Trait', 40, H - 20);
+}
+
+function drawPedigreeNode(ctx, x, y, sex, affected, label) {
+  ctx.save();
+  const size = 34;
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.fillStyle = affected ? '#ef4444' : '#1e3a5c';
+
+  if (sex === 'male') {
+    ctx.fillRect(x - size / 2, y - size / 2, size, size);
+    ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+  } else {
+    ctx.beginPath();
+    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  // Label
+  ctx.font = '12px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#cbd5e1';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x, y + size / 2 + 16);
+  ctx.restore();
+}
+
+// FULLSCREEN HANDLERS
+function openFullscreen(id) {
+  document.getElementById(id).classList.add('active');
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'GENZ_SIM_REQUEST_FULLSCREEN', simFile: window.location.pathname }, '*');
+    }
+  } catch (e) {}
+}
+
+function closeFullscreen(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// INITIALIZATION
+window.addEventListener('DOMContentLoaded', () => {
+  renderDna();
+  updatePunnettCross();
+  drawPedigreeCanvas();
+});
+</script>
+</body>
+</html>
