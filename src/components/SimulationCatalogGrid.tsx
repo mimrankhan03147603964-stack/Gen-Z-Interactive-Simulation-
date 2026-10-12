@@ -407,11 +407,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
                         backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
-                        borderColor: isActive ? theme.bgSolid : theme.borderColor,
-                        borderWidth: isActive ? '2px' : '1.5px',
                         borderStyle: 'solid',
                         borderTopWidth: '4px',
+                        borderRightWidth: isActive ? '2px' : '1.5px',
+                        borderBottomWidth: isActive ? '2px' : '1.5px',
+                        borderLeftWidth: isActive ? '2px' : '1.5px',
                         borderTopColor: theme.bgSolid,
+                        borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
+                        borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
+                        borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
                         boxShadow: isDarkMode 
                           ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
                           : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
