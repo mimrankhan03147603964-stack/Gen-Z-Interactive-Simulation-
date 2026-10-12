@@ -8,158 +8,267 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; overflow-x:hidden; }
 body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:#0a1628; color:#e8f4ff; min-height:100vh;
+  font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Roboto,sans-serif;
+  background:radial-gradient(circle at 50% 10%, #1e1b4b 0%, #0f172a 45%, #030712 100%);
+  color:#f8fafc; min-height:100vh;
   display:flex; flex-direction:column;
 }
 .container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
 
-/* TOP TABS */
+/* TOP TABS - COLORFUL, JOYFUL & TACTILE */
 .tabs {
-  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
-  background:#0f2440; border-radius:14px; padding:8px 12px;
+  display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;
+  background:linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+  border-radius:24px; padding:10px 14px;
+  border:2px solid rgba(255, 255, 255, 0.12);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 .tab-btn {
-  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
-  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
-  transition:all .25s; flex:1 0 auto;
+  padding:12px 22px; border:none; border-radius:50px; font-size:1.02rem;
+  font-weight:800; color:#cbd5e1; background:rgba(255,255,255,0.06); cursor:pointer;
+  transition:all .25s cubic-bezier(0.34, 1.56, 0.64, 1); flex:1 0 auto;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.25);
+  border:1.5px solid rgba(255,255,255,0.08);
 }
-.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn:hover {
+  background:rgba(255,255,255,0.15); color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+}
 .tab-btn.active {
-  background:linear-gradient(135deg,#ff8f00,#ff6f00);
-  color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45);
+  background:linear-gradient(135deg,#ff007a 0%,#ff6600 50%,#ffbb00 100%);
+  color:#0f172a; font-weight:900;
+  box-shadow:0 8px 25px rgba(255,102,0,0.6), inset 0 2px 4px rgba(255,255,255,0.6);
+  border:1.5px solid #ffe082;
+  transform:translateY(-2px) scale(1.02);
 }
-.tab-btn .icon { margin-right:8px; }
-.topic { display:none; } .topic.active { display:block; }
+.tab-btn .icon { font-size:1.3rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+.topic { display:none; animation:fadeIn 0.3s ease-out; }
+.topic.active { display:block; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
 /* EDUCATIONAL CARD */
 .card {
-  background:linear-gradient(160deg,#122a44,#0a1e34);
-  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
-  box-shadow:0 14px 40px rgba(0,0,0,.7);
-  border:1px solid rgba(255,255,255,.05);
+  background:linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+  border-radius:26px; padding:24px 28px 28px; margin-bottom:20px;
+  box-shadow:0 16px 45px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
 }
-.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; color:#ffb74d; }
-.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card h2 {
+  font-size:1.85rem; font-weight:900; margin-bottom:8px;
+  background:linear-gradient(135deg, #fde047, #f97316, #ec4899);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  display:flex; align-items:center; flex-wrap:wrap; gap:10px;
+}
+.card h2 small {
+  font-size:0.95rem; font-weight:700; color:#93c5fd;
+  -webkit-text-fill-color:#93c5fd; background:none;
+  background:rgba(59, 130, 246, 0.2); padding:4px 14px; border-radius:20px;
+  border:1px solid rgba(96, 165, 250, 0.4);
+}
 .card .desc {
-  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
-  border-left:5px solid #ffc107; padding-left:14px;
-  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
-  line-height:1.6;
+  font-size:1.02rem; color:#cbd5e1; margin-bottom:20px;
+  border-left:6px solid #f59e0b; padding:12px 18px;
+  background:linear-gradient(90deg, rgba(245, 158, 11, 0.12), rgba(255,255,255,0.02));
+  border-radius:0 16px 16px 0; line-height:1.65;
 }
-.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0 16px; }
 .section-tab {
-  padding:8px 16px; border:none; border-radius:30px;
-  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
-  cursor:pointer; transition:.2s;
+  padding:10px 20px; border:none; border-radius:30px;
+  font-weight:800; font-size:.9rem; background:rgba(255,255,255,0.08); color:#cbd5e1;
+  cursor:pointer; transition:.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border:1px solid rgba(255,255,255,0.1);
 }
-.section-tab:hover { background:#234468; color:#fff; }
-.section-tab.active { background:#1976d2; color:#fff; }
+.section-tab:hover { background:rgba(255,255,255,0.18); color:#fff; transform:translateY(-1px); }
+.section-tab.active {
+  background:linear-gradient(135deg, #0284c7, #2563eb);
+  color:#fff; box-shadow:0 6px 18px rgba(37,99,235,0.45);
+  border-color:#60a5fa;
+}
 .panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
-.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
-.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel h3 { font-size:1.45rem; font-weight:800; color:#fde047; margin-bottom:12px; }
+.panel p,.panel li { font-size:1.02rem; line-height:1.75; color:#cbd5e1; }
 .panel ul { list-style:none; padding-left:0; }
-.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li { padding:8px 0 8px 36px; position:relative; }
 .panel ul li::before {
-  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
-  border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900;
-  text-align:center; line-height:20px; font-size:.8rem;
+  content:'★'; position:absolute; left:0; top:8px; width:24px; height:24px;
+  border-radius:50%; background:linear-gradient(135deg, #f59e0b, #d97706);
+  color:#fff; font-weight:900; text-align:center; line-height:24px; font-size:.85rem;
+  box-shadow:0 2px 6px rgba(245,158,11,0.5);
 }
-.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:10px; }
-.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
-.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; }
-.grid-item p { font-size:.92rem; color:#b8d4f0; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:12px; }
+.grid-item {
+  background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  padding:16px 18px; border-radius:18px; border-left:6px solid #f97316;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+.grid-item h4 { font-size:1.2rem; color:#fed7aa; margin-bottom:6px; font-weight:800; }
+.grid-item p { font-size:.94rem; color:#cbd5e1; }
 
 /* SIMULATION BOX */
 .sim-box {
-  background:#06121f; border-radius:18px; padding:18px 16px 16px;
-  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+  background:linear-gradient(180deg, #091326 0%, #030712 100%);
+  border-radius:24px; padding:22px 20px 20px;
+  margin-top:10px; border:2px solid rgba(56, 189, 248, 0.35);
+  position:relative; box-shadow:inset 0 2px 10px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.4);
 }
 .sim-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; margin-bottom:14px;
-  background:#0a1a2e; padding:12px 18px; border-radius:36px;
-  border:1px solid #1e3a5c;
+  display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center;
+  justify-content:center; margin-bottom:16px;
+  background:linear-gradient(135deg, #1e293b, #0f172a);
+  padding:14px 22px; border-radius:50px;
+  border:2px solid rgba(255, 255, 255, 0.12);
+  box-shadow:0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .sim-controls label {
-  display:flex; align-items:center; gap:8px; font-weight:600;
-  color:#90b8e0; font-size:.9rem;
+  display:flex; align-items:center; gap:10px; font-weight:800;
+  color:#93c5fd; font-size:.95rem;
 }
-.sim-controls input[type=range] { width:125px; accent-color:#ff9800; cursor:pointer; }
-.sim-controls select,.sim-controls button {
-  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
-  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+.sim-controls input[type=range] {
+  width:140px; accent-color:#f59e0b; cursor:pointer; height:8px; border-radius:4px;
 }
-.sim-controls button { background:#1976d2; color:#fff; }
-.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
-.sim-controls .btn-accent { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; }
-.sim-controls .btn-green { background:#2e7d32; color:#fff; }
-.sim-controls .btn-fs { background:linear-gradient(135deg,#7b1fa2,#512da8); color:#fff; }
+.sim-controls select {
+  padding:10px 18px; border-radius:30px; border:2px solid rgba(255,255,255,0.18);
+  font-weight:800; background:#1e293b; color:#f8fafc; cursor:pointer;
+  transition:.2s; font-size:.92rem; outline:none;
+}
+.sim-controls select:hover { border-color:#38bdf8; }
+.sim-controls button {
+  padding:10px 22px; border-radius:35px; border:none; font-weight:800;
+  background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff;
+  cursor:pointer; transition:all .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size:.92rem; box-shadow:0 4px 14px rgba(37,99,235,0.35);
+  display:inline-flex; align-items:center; gap:8px;
+}
+.sim-controls button:hover {
+  transform:translateY(-2px) scale(1.04);
+  box-shadow:0 8px 22px rgba(37,99,235,0.55); filter:brightness(1.15);
+}
+.sim-controls .btn-accent {
+  background:linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  color:#ffffff; font-weight:900;
+  box-shadow:0 4px 16px rgba(234,88,12,0.45);
+}
+.sim-controls .btn-accent:hover {
+  box-shadow:0 8px 24px rgba(234,88,12,0.65);
+}
+.sim-controls .btn-green {
+  background:linear-gradient(135deg, #10b981, #059669); color:#fff;
+  box-shadow:0 4px 14px rgba(16,185,129,0.35);
+}
+.sim-controls .btn-purple {
+  background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff;
+  box-shadow:0 4px 14px rgba(139,92,246,0.35);
+}
+.sim-controls .btn-pink {
+  background:linear-gradient(135deg, #ec4899, #db2777); color:#fff;
+  box-shadow:0 4px 14px rgba(236,72,153,0.35);
+}
+.sim-controls .btn-fs {
+  background:linear-gradient(135deg, #a855f7, #6366f1); color:#fff;
+  box-shadow:0 4px 16px rgba(168,85,247,0.4);
+}
 
-canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
-.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#ffd54f; margin:14px 0 6px; }
-.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
-.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
-.teacher-note {
-  background:linear-gradient(135deg,#0d2018,#0a1a14);
-  border-left:5px solid #4caf50; border-radius:0 14px 14px 0;
-  padding:12px 16px; margin-top:12px; font-size:.9rem;
-  color:#b8e6c8; line-height:1.7;
+canvas {
+  width:100%; height:auto; background:radial-gradient(circle at 50% 30%, #0e2038 0%, #050d1a 100%);
+  border-radius:20px; border:3px solid rgba(56, 189, 248, 0.45);
+  display:block; margin:0 auto; max-width:100%;
+  box-shadow:0 12px 35px rgba(0,0,0,0.6), inset 0 0 25px rgba(56,189,248,0.1);
 }
-.teacher-note strong { color:#66bb6a; }
+.sim-readout {
+  text-align:center; font-size:1.45rem; font-weight:900;
+  background:linear-gradient(135deg, #fde047, #f97316);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin:16px 0 6px; filter:drop-shadow(0 2px 8px rgba(249,115,22,0.4));
+}
+.sim-readout small {
+  display:block; font-size:.95rem; color:#93c5fd; font-weight:600;
+  -webkit-text-fill-color:#93c5fd; background:none; filter:none; margin-top:4px;
+}
+.sim-info {
+  background:linear-gradient(90deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.15));
+  padding:12px 20px; border-radius:50px; margin-top:14px; text-align:center;
+  font-size:.95rem; font-weight:700; color:#bae6fd;
+  border:1.5px solid rgba(56, 189, 248, 0.35);
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+.teacher-note {
+  background:linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+  border-left:6px solid #10b981; border-radius:0 18px 18px 0;
+  padding:14px 20px; margin-top:14px; font-size:.95rem;
+  color:#d1fae5; line-height:1.75;
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+}
+.teacher-note strong { color:#34d399; font-weight:800; }
 
 /* SELECTION PRESET GRID (CHILD-FRIENDLY TACTILE BUTTONS) */
 .preset-chips {
-  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
-  margin:12px 0 16px;
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+  margin:14px 0 18px;
 }
 .chip-btn {
-  padding:8px 14px; border-radius:24px; border:1.5px solid #1e3a5c;
-  background:#0a1a2e; color:#cbd5e1; font-weight:800; font-size:0.9rem;
-  cursor:pointer; transition:all 0.15s;
+  padding:10px 18px; border-radius:30px; border:2px solid rgba(255, 255, 255, 0.15);
+  background:linear-gradient(135deg, #1e293b, #0f172a);
+  color:#f1f5f9; font-weight:800; font-size:0.96rem;
+  cursor:pointer; transition:all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  display:inline-flex; align-items:center; gap:6px;
 }
-.chip-btn:hover { background:#1a3550; color:#fff; transform:translateY(-1px); }
+.chip-btn:hover {
+  background:linear-gradient(135deg, #334155, #1e293b);
+  color:#fff; transform:translateY(-2px) scale(1.04);
+  border-color:#38bdf8; box-shadow:0 6px 18px rgba(56,189,248,0.3);
+}
 .chip-btn.active {
-  background:linear-gradient(135deg,#ff8f00,#ff6f00);
-  color:#0a1628; border-color:#ffa000; box-shadow:0 4px 12px rgba(255,143,0,0.4);
+  background:linear-gradient(135deg, #ff007a 0%, #ff7700 50%, #ffbb00 100%);
+  color:#0f172a; font-weight:900; border-color:#ffe082;
+  box-shadow:0 6px 20px rgba(255,119,0,0.6), inset 0 2px 3px rgba(255,255,255,0.5);
+  transform:translateY(-2px) scale(1.06);
 }
 
 /* FULLSCREEN OVERLAY */
 .fs-overlay {
-  position:fixed; inset:0; background:#040e1a; z-index:99999;
-  display:none; flex-direction:column; padding:10px 16px 12px;
+  position:fixed; inset:0; background:radial-gradient(circle at 50% 20%, #0f172a 0%, #030712 100%);
+  z-index:99999; display:none; flex-direction:column; padding:12px 18px;
   overflow:hidden;
 }
 .fs-overlay.active { display:flex; }
 .fs-topbar {
   display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+  gap:14px; padding:6px 6px 12px; flex-shrink:0;
 }
 .fs-topbar h2 {
-  font-size:1.45rem; font-weight:800; color:#ffd54f;
+  font-size:1.6rem; font-weight:900;
+  background:linear-gradient(135deg, #fde047, #f97316);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .fs-close-btn {
-  padding:9px 24px; border-radius:30px; border:none;
-  background:linear-gradient(135deg,#ff5252,#d32f2f);
-  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
-  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
+  padding:10px 28px; border-radius:35px; border:none;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff; font-weight:900; font-size:1rem; cursor:pointer;
+  box-shadow:0 6px 20px rgba(239,68,68,0.5); transition:.2s;
   flex-shrink:0;
 }
-.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
+.fs-close-btn:hover { transform:scale(1.06); filter:brightness(1.15); }
 .fs-canvas-area {
   flex:1; display:flex; align-items:center; justify-content:center;
   min-height:0; padding:6px 0;
 }
 .fs-canvas-area canvas {
   max-width:100%; max-height:100%; width:auto; height:auto;
-  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
+  border-radius:18px; border:3px solid #38bdf8;
 }
 .fs-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; padding:10px 16px;
-  background:#0a1a2e; border-radius:40px;
-  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
+  display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center;
+  justify-content:center; padding:12px 20px;
+  background:linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius:50px; border:2px solid rgba(255,255,255,0.15);
+  margin-top:10px; flex-shrink:0; box-shadow:0 8px 25px rgba(0,0,0,0.5);
 }
 </style>
 </head>
@@ -228,12 +337,12 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
       <div class="sim-box" id="boxAlphabet">
         <div class="sim-controls">
           <button class="btn-accent" onclick="speakCurrentPhonics()">🔊 Hear Letter Sound</button>
-          <button onclick="clearLetterTrace()">✨ Clear Tracing</button>
-          <button onclick="cycleNextLetter()">⏩ Next Letter</button>
+          <button class="btn-purple" onclick="clearLetterTrace()">✨ Clear Tracing</button>
+          <button class="btn-green" onclick="cycleNextLetter()">⏩ Next Letter</button>
           <label>
             Trace Size:
-            <input type="range" id="traceBrushSize" min="6" max="24" value="12" oninput="updateBrushSize(this.value)">
-            <span id="brushSizeVal" style="color:#ffd54f;">12px</span>
+            <input type="range" id="traceBrushSize" min="6" max="28" value="16" oninput="updateBrushSize(this.value)">
+            <span id="brushSizeVal" style="color:#fde047; font-weight:800;">16px</span>
           </label>
           <button class="btn-fs" onclick="openFullscreen('fs-alpha')">⛶ Fullscreen</button>
         </div>
@@ -290,12 +399,12 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
       <div class="sim-box" id="boxNumbers">
         <div class="sim-controls">
           <label>
-            Select Quantity (1–10):
+            Quantity (1–10):
             <input type="range" id="numSlider" min="1" max="10" value="5" oninput="setNumberQuantity(parseInt(this.value))">
-            <span id="numSliderVal" style="color:#ffd54f; font-weight:800;">5</span>
+            <span id="numSliderVal" style="color:#fde047; font-weight:900; font-size:1.1rem;">5</span>
           </label>
           <button class="btn-accent" onclick="speakCurrentNumber()">🔊 Count Aloud</button>
-          <button onclick="toggleCompareMode()" id="btnToggleCompare">⚖️ Compare Mode</button>
+          <button class="btn-purple" onclick="toggleCompareMode()" id="btnToggleCompare">⚖️ Compare Mode</button>
           <button class="btn-fs" onclick="openFullscreen('fs-numbers')">⛶ Fullscreen</button>
         </div>
 
@@ -304,8 +413,8 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
         <canvas id="numCanvas" width="960" height="420"></canvas>
 
         <div class="sim-readout">
-          <span id="numReadoutText">Quantity: 5 (Five) — 5 Filled Cells in Ten-Frame</span>
-          <small>Dynamic Real-Time Mathematical Counter</small>
+          <span id="numReadoutText">Quantity: 5 (Five) — 5 Filled Tactile Cells in Ten-Frame</span>
+          <small>Dynamic Real-Time Mathematical Counter with Colorful 3D Gems</small>
         </div>
 
         <div class="teacher-note">
@@ -340,7 +449,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
             <option value="yellow">Yellow 🟡</option>
             <option value="blue">Blue 🔵</option>
           </select>
-          <span>+</span>
+          <span style="font-size:1.2rem; font-weight:900; color:#fde047;">+</span>
           <select id="colorMixSelB" onchange="runColorMix()">
             <option value="yellow">Yellow 🟡</option>
             <option value="red">Red 🔴</option>
@@ -375,7 +484,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
       <div class="sim-box" id="boxAnimals">
         <div class="sim-controls">
           <button class="btn-accent" onclick="speakCurrentAnimal()">🔊 Hear Animal Call</button>
-          <button onclick="cycleNextAnimal()">🐾 Next Animal</button>
+          <button class="btn-green" onclick="cycleNextAnimal()">🐾 Next Animal</button>
           <button class="btn-fs" onclick="openFullscreen('fs-animals')">⛶ Fullscreen</button>
         </div>
 
@@ -385,7 +494,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 
         <div class="sim-readout">
           <span id="animalReadoutText">Cow says "Moo Moo!" • Baby: Calf • Habitat: Farm Meadow 🌾</span>
-          <small>Interactive Natural Habitat Explorer</small>
+          <small>Interactive Natural Habitat Explorer with Vivid Bio-Illustrations</small>
         </div>
 
         <div class="teacher-note">
@@ -406,8 +515,8 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
       <div class="sim-box" id="boxHabits">
         <div class="sim-controls">
           <button class="btn-accent" onclick="startHandwash20s()" id="btnStartSoapTimer">🫧 Start 20s Soap Timer</button>
-          <button onclick="speakHabitTip()">🪥 Toothbrush Tip</button>
-          <button onclick="speakEmotionTip()">😊 Feelings Guide</button>
+          <button class="btn-green" onclick="speakHabitTip()">🪥 Toothbrush Tip</button>
+          <button class="btn-purple" onclick="speakEmotionTip()">😊 Feelings Guide</button>
           <button class="btn-fs" onclick="openFullscreen('fs-habits')">⛶ Fullscreen</button>
         </div>
 
@@ -432,14 +541,14 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
     <div class="card">
       <h2>⭐ ECCE Star Explorer Quiz Challenge <small>Interactive Mastery</small></h2>
       <div class="desc">
-        Fun multi-sensory challenge testing letters, numbers, shapes, and healthy habits. Earn sparkling stars to unlock the official ECCE Star Explorer Certificate!
+        Fun multi-sensory challenge testing letters, numbers, shapes, and healthy habits. Earn sparkling golden stars to unlock the official ECCE Star Explorer Certificate!
       </div>
 
       <div class="sim-box" id="boxQuiz">
         <div class="sim-controls">
           <button class="btn-accent" onclick="readQuizAloud()">🔊 Read Question Aloud</button>
-          <button onclick="resetQuizQuestions()">🔄 Restart Quiz</button>
-          <span style="font-weight:800; color:#ffd54f;" id="quizScoreDisplay">Stars: 0 / 5 ⭐</span>
+          <button class="btn-green" onclick="resetQuizQuestions()">🔄 Restart Quiz</button>
+          <span style="font-weight:900; color:#fde047; font-size:1.1rem;" id="quizScoreDisplay">Stars: 0 / 5 ⭐</span>
         </div>
 
         <canvas id="quizCanvas" width="960" height="380"></canvas>
@@ -590,37 +699,37 @@ function switchSection(btn, panelId) {
 
 // ================= TOPIC 1: ALPHABET & PHONICS =================
 const ALPHABET = [
-  { l: 'A', word: 'Apple', emoji: '🍎', sound: 'A says /æ/ as in Apple' },
-  { l: 'B', word: 'Butterfly', emoji: '🦋', sound: 'B says /b/ as in Butterfly' },
-  { l: 'C', word: 'Cat', emoji: '🐱', sound: 'C says /k/ as in Cat' },
-  { l: 'D', word: 'Dolphin', emoji: '🐬', sound: 'D says /d/ as in Dolphin' },
-  { l: 'E', word: 'Elephant', emoji: '🐘', sound: 'E says /e/ as in Elephant' },
-  { l: 'F', word: 'Frog', emoji: '🐸', sound: 'F says /f/ as in Frog' },
-  { l: 'G', word: 'Giraffe', emoji: '🦒', sound: 'G says /dʒ/ as in Giraffe' },
-  { l: 'H', word: 'House', emoji: '🏠', sound: 'H says /h/ as in House' },
-  { l: 'I', word: 'Ice Cream', emoji: '🍦', sound: 'I says /aɪ/ as in Ice Cream' },
-  { l: 'J', word: 'Jellyfish', emoji: '🪼', sound: 'J says /dʒ/ as in Jellyfish' },
-  { l: 'K', word: 'Kangaroo', emoji: '🦘', sound: 'K says /k/ as in Kangaroo' },
-  { l: 'L', word: 'Lion', emoji: '🦁', sound: 'L says /l/ as in Lion' },
-  { l: 'M', word: 'Monkey', emoji: '🐒', sound: 'M says /m/ as in Monkey' },
-  { l: 'N', word: 'Nest', emoji: '🪺', sound: 'N says /n/ as in Nest' },
-  { l: 'O', word: 'Owl', emoji: '🦉', sound: 'O says /aʊ/ as in Owl' },
-  { l: 'P', word: 'Panda', emoji: '🐼', sound: 'P says /p/ as in Panda' },
-  { l: 'Q', word: 'Queen', emoji: '👑', sound: 'Q says /kw/ as in Queen' },
-  { l: 'R', word: 'Rainbow', emoji: '🌈', sound: 'R says /r/ as in Rainbow' },
-  { l: 'S', word: 'Sun', emoji: '☀️', sound: 'S says /s/ as in Sun' },
-  { l: 'T', word: 'Turtle', emoji: '🐢', sound: 'T says /t/ as in Turtle' },
-  { l: 'U', word: 'Umbrella', emoji: '☂️', sound: 'U says /ʌ/ as in Umbrella' },
-  { l: 'V', word: 'Violin', emoji: '🎻', sound: 'V says /v/ as in Violin' },
-  { l: 'W', word: 'Whale', emoji: '🐋', sound: 'W says /w/ as in Whale' },
-  { l: 'X', word: 'Xylophone', emoji: '🎵', sound: 'X says /z/ as in Xylophone' },
-  { l: 'Y', word: 'Yacht', emoji: '⛵', sound: 'Y says /j/ as in Yacht' },
-  { l: 'Z', word: 'Zebra', emoji: '🦓', sound: 'Z says /z/ as in Zebra' }
+  { l: 'A', word: 'Apple', emoji: '🍎', sound: 'A says /æ/ as in Apple', color1: '#ef4444', color2: '#dc2626', blockColor: '#ff4d4d' },
+  { l: 'B', word: 'Butterfly', emoji: '🦋', sound: 'B says /b/ as in Butterfly', color1: '#3b82f6', color2: '#1d4ed8', blockColor: '#3b82f6' },
+  { l: 'C', word: 'Cat', emoji: '🐱', sound: 'C says /k/ as in Cat', color1: '#f97316', color2: '#c2410c', blockColor: '#fb923c' },
+  { l: 'D', word: 'Dolphin', emoji: '🐬', sound: 'D says /d/ as in Dolphin', color1: '#06b6d4', color2: '#0e7490', blockColor: '#22d3ee' },
+  { l: 'E', word: 'Elephant', emoji: '🐘', sound: 'E says /e/ as in Elephant', color1: '#8b5cf6', color2: '#6d28d9', blockColor: '#a78bfa' },
+  { l: 'F', word: 'Frog', emoji: '🐸', sound: 'F says /f/ as in Frog', color1: '#10b981', color2: '#047857', blockColor: '#34d399' },
+  { l: 'G', word: 'Giraffe', emoji: '🦒', sound: 'G says /dʒ/ as in Giraffe', color1: '#eab308', color2: '#a16207', blockColor: '#facc15' },
+  { l: 'H', word: 'House', emoji: '🏠', sound: 'H says /h/ as in House', color1: '#ec4899', color2: '#be185d', blockColor: '#f472b6' },
+  { l: 'I', word: 'Ice Cream', emoji: '🍦', sound: 'I says /aɪ/ as in Ice Cream', color1: '#06b6d4', color2: '#0891b2', blockColor: '#38bdf8' },
+  { l: 'J', word: 'Jellyfish', emoji: '🪼', sound: 'J says /dʒ/ as in Jellyfish', color1: '#a855f7', color2: '#7e22ce', blockColor: '#c084fc' },
+  { l: 'K', word: 'Kangaroo', emoji: '🦘', sound: 'K says /k/ as in Kangaroo', color1: '#f97316', color2: '#ea580c', blockColor: '#fb923c' },
+  { l: 'L', word: 'Lion', emoji: '🦁', sound: 'L says /l/ as in Lion', color1: '#eab308', color2: '#ca8a04', blockColor: '#fde047' },
+  { l: 'M', word: 'Monkey', emoji: '🐒', sound: 'M says /m/ as in Monkey', color1: '#84cc16', color2: '#4d7c0f', blockColor: '#a3e635' },
+  { l: 'N', word: 'Nest', emoji: '🪺', sound: 'N says /n/ as in Nest', color1: '#14b8a6', color2: '#0f766e', blockColor: '#2dd4bf' },
+  { l: 'O', word: 'Owl', emoji: '🦉', sound: 'O says /aʊ/ as in Owl', color1: '#f59e0b', color2: '#d97706', blockColor: '#fbbf24' },
+  { l: 'P', word: 'Panda', emoji: '🐼', sound: 'P says /p/ as in Panda', color1: '#6366f1', color2: '#4338ca', blockColor: '#818cf8' },
+  { l: 'Q', word: 'Queen', emoji: '👑', sound: 'Q says /kw/ as in Queen', color1: '#ec4899', color2: '#9d174d', blockColor: '#f472b6' },
+  { l: 'R', word: 'Rainbow', emoji: '🌈', sound: 'R says /r/ as in Rainbow', color1: '#ef4444', color2: '#b91c1c', blockColor: '#f87171' },
+  { l: 'S', word: 'Sun', emoji: '☀️', sound: 'S says /s/ as in Sun', color1: '#facc15', color2: '#eab308', blockColor: '#fde047' },
+  { l: 'T', word: 'Turtle', emoji: '🐢', sound: 'T says /t/ as in Turtle', color1: '#10b981', color2: '#059669', blockColor: '#34d399' },
+  { l: 'U', word: 'Umbrella', emoji: '☂️', sound: 'U says /ʌ/ as in Umbrella', color1: '#8b5cf6', color2: '#7c3aed', blockColor: '#a78bfa' },
+  { l: 'V', word: 'Violin', emoji: '🎻', sound: 'V says /v/ as in Violin', color1: '#f97316', color2: '#c2410c', blockColor: '#fb923c' },
+  { l: 'W', word: 'Whale', emoji: '🐋', sound: 'W says /w/ as in Whale', color1: '#0ea5e9', color2: '#0284c7', blockColor: '#38bdf8' },
+  { l: 'X', word: 'Xylophone', emoji: '🎵', sound: 'X says /z/ as in Xylophone', color1: '#ec4899', color2: '#db2777', blockColor: '#f472b6' },
+  { l: 'Y', word: 'Yacht', emoji: '⛵', sound: 'Y says /j/ as in Yacht', color1: '#14b8a6', color2: '#0d9488', blockColor: '#2dd4bf' },
+  { l: 'Z', word: 'Zebra', emoji: '🦓', sound: 'Z says /z/ as in Zebra', color1: '#3b82f6', color2: '#2563eb', blockColor: '#60a5fa' }
 ];
 
 let currLetterIdx = 0;
 let tracePoints = [];
-let brushSize = 12;
+let brushSize = 16;
 
 function initAlphabetChips() {
   const c = document.getElementById('alphaChipsContainer');
@@ -673,64 +782,175 @@ function drawAlphaCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  // Background
+  // Rich Cosmic Stage Gradient
   const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, '#040d1a');
-  grad.addColorStop(1, '#0a1e36');
+  grad.addColorStop(0, '#0c1a30');
+  grad.addColorStop(0.5, '#071224');
+  grad.addColorStop(1, '#020612');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
   const item = ALPHABET[currLetterIdx];
 
-  // Draw Guidelines
-  ctx.strokeStyle = '#1e3a5c';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([8, 8]);
+  // 1. Draw Colorful 3D Wooden/Toy Alphabet Block
+  const blockX = 50;
+  const blockY = 50;
+  const blockW = 540;
+  const blockH = 320;
+
+  // Outer block shadow
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetY = 12;
+
+  // 3D Block Base
+  const blockGrad = ctx.createLinearGradient(blockX, blockY, blockX + blockW, blockY + blockH);
+  blockGrad.addColorStop(0, '#1e293b');
+  blockGrad.addColorStop(1, '#0f172a');
+  ctx.fillStyle = blockGrad;
   ctx.beginPath();
-  ctx.moveTo(60, H * 0.25); ctx.lineTo(W - 60, H * 0.25);
-  ctx.moveTo(60, H * 0.5);  ctx.lineTo(W - 60, H * 0.5);
-  ctx.moveTo(60, H * 0.75); ctx.lineTo(W - 60, H * 0.75);
+  ctx.roundRect(blockX, blockY, blockW, blockH, 28);
+  ctx.fill();
+
+  // Vibrant Multi-colored Border Bevel
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  const borderGrad = ctx.createLinearGradient(blockX, blockY, blockX + blockW, blockY);
+  borderGrad.addColorStop(0, item.color1);
+  borderGrad.addColorStop(1, item.color2);
+  ctx.strokeStyle = borderGrad;
+  ctx.lineWidth = 8;
+  ctx.stroke();
+
+  // Inner colorful play mat
+  const innerGrad = ctx.createLinearGradient(blockX + 16, blockY + 16, blockX + blockW - 16, blockY + blockH - 16);
+  innerGrad.addColorStop(0, 'rgba(30, 41, 59, 0.95)');
+  innerGrad.addColorStop(1, 'rgba(15, 23, 42, 0.98)');
+  ctx.fillStyle = innerGrad;
+  ctx.beginPath();
+  ctx.roundRect(blockX + 14, blockY + 14, blockW - 28, blockH - 28, 20);
+  ctx.fill();
+
+  // Child-friendly Guidelines
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([10, 10]);
+  ctx.beginPath();
+  ctx.moveTo(blockX + 30, blockY + 70); ctx.lineTo(blockX + blockW - 30, blockY + 70);
+  ctx.moveTo(blockX + 30, blockY + 160); ctx.lineTo(blockX + blockW - 30, blockY + 160);
+  ctx.moveTo(blockX + 30, blockY + 250); ctx.lineTo(blockX + blockW - 30, blockY + 250);
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Draw Letter Outline Target
+  // 2. Large Bold 3D Colored Uppercase & Lowercase Letter
   ctx.save();
-  ctx.font = 'bold 220px "Segoe UI", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.strokeStyle = 'rgba(255, 143, 0, 0.35)';
-  ctx.lineWidth = 10;
-  ctx.strokeText(item.l, W * 0.35, H * 0.52);
 
-  // Lowercase next to it
-  ctx.font = 'bold 150px "Segoe UI", sans-serif';
-  ctx.strokeText(item.l.toLowerCase(), W * 0.55, H * 0.55);
+  // Uppercase letter 3D block
+  const letterGrad = ctx.createLinearGradient(blockX + 160, blockY + 60, blockX + 160, blockY + 260);
+  letterGrad.addColorStop(0, '#fff');
+  letterGrad.addColorStop(0.3, item.blockColor);
+  letterGrad.addColorStop(1, item.color2);
+
+  // Drop shadow glow
+  ctx.shadowColor = item.blockColor;
+  ctx.shadowBlur = 24;
+  ctx.font = '900 210px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = letterGrad;
+  ctx.fillText(item.l, blockX + 170, blockY + 160);
+
+  // Lowercase letter
+  const lowerGrad = ctx.createLinearGradient(blockX + 380, blockY + 100, blockX + 380, blockY + 260);
+  lowerGrad.addColorStop(0, '#fde047');
+  lowerGrad.addColorStop(1, '#f97316');
+  ctx.shadowColor = '#f59e0b';
+  ctx.shadowBlur = 20;
+  ctx.font = '900 150px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = lowerGrad;
+  ctx.fillText(item.l.toLowerCase(), blockX + 380, blockY + 175);
   ctx.restore();
 
-  // Companion Illustration
+  // 3. Right Companion Illustration Card - Rich Toy Box
+  const cardX = 630;
+  const cardY = 50;
+  const cardW = 280;
+  const cardH = 320;
+
   ctx.save();
-  ctx.font = '110px "Segoe UI", sans-serif';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetY = 10;
+  const toyGrad = ctx.createLinearGradient(cardX, cardY, cardX + cardW, cardY + cardH);
+  toyGrad.addColorStop(0, '#1e293b');
+  toyGrad.addColorStop(1, '#091326');
+  ctx.fillStyle = toyGrad;
+  ctx.beginPath();
+  ctx.roundRect(cardX, cardY, cardW, cardH, 26);
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // Inner pedestal circle
+  const pedGrad = ctx.createRadialGradient(cardX + cardW/2, cardY + 125, 10, cardX + cardW/2, cardY + 125, 90);
+  pedGrad.addColorStop(0, 'rgba(253, 224, 71, 0.35)');
+  pedGrad.addColorStop(0.7, 'rgba(249, 115, 22, 0.2)');
+  pedGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = pedGrad;
+  ctx.beginPath();
+  ctx.arc(cardX + cardW/2, cardY + 125, 90, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Emoji object
+  ctx.font = '120px "Segoe UI", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(item.emoji, W * 0.82, H * 0.45);
-  ctx.font = 'bold 26px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#ffd54f';
-  ctx.fillText(item.word, W * 0.82, H * 0.75);
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 16;
+  ctx.fillText(item.emoji, cardX + cardW/2, cardY + 125);
+  ctx.shadowBlur = 0;
+
+  // Word Badge capsule
+  const badgeY = cardY + 235;
+  const badgeH = 52;
+  const badgeGrad = ctx.createLinearGradient(cardX + 20, badgeY, cardX + cardW - 20, badgeY);
+  badgeGrad.addColorStop(0, '#f59e0b');
+  badgeGrad.addColorStop(1, '#ea580c');
+  ctx.fillStyle = badgeGrad;
+  ctx.beginPath();
+  ctx.roundRect(cardX + 24, badgeY, cardW - 48, badgeH, 26);
+  ctx.fill();
+  ctx.strokeStyle = '#fef08a';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.font = '900 24px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(item.word, cardX + cardW/2, badgeY + badgeH/2);
   ctx.restore();
 
-  // User Tracing Strokes
+  // 4. Vibrant Rainbow Tracing Strokes
   if (tracePoints.length > 0) {
     ctx.save();
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = brushSize;
-    ctx.strokeStyle = '#00e5ff';
-    ctx.shadowColor = '#00e5ff';
-    ctx.shadowBlur = 12;
+
+    // Rainbow colors for strokes
+    const rainbowColors = ['#ff0055', '#ff5500', '#ffcc00', '#00ff66', '#00ccff', '#aa00ff'];
 
     for (let i = 0; i < tracePoints.length; i++) {
       const seg = tracePoints[i];
       if (seg.length < 2) continue;
+      const strokeColor = rainbowColors[i % rainbowColors.length];
+      ctx.strokeStyle = strokeColor;
+      ctx.shadowColor = strokeColor;
+      ctx.shadowBlur = 16;
+
       ctx.beginPath();
       ctx.moveTo(seg[0].x, seg[0].y);
       for (let j = 1; j < seg.length; j++) {
@@ -797,13 +1017,26 @@ let isCompareMode = false;
 let compareLeft = 4;
 let compareRight = 6;
 
+const GEM_COLORS = [
+  { grad1: '#ff4d4d', grad2: '#dc2626', glow: '#ef4444' }, // Red 1
+  { grad1: '#fb923c', grad2: '#ea580c', glow: '#f97316' }, // Orange 2
+  { grad1: '#fde047', grad2: '#ca8a04', glow: '#eab308' }, // Yellow 3
+  { grad1: '#4ade80', grad2: '#16a34a', glow: '#22c55e' }, // Lime 4
+  { grad1: '#2dd4bf', grad2: '#0d9488', glow: '#14b8a6' }, // Emerald/Teal 5
+  { grad1: '#38bdf8', grad2: '#0284c7', glow: '#0ea5e9' }, // Sky Blue 6
+  { grad1: '#818cf8', grad2: '#4f46e5', glow: '#6366f1' }, // Indigo 7
+  { grad1: '#c084fc', grad2: '#9333ea', glow: '#a855f7' }, // Purple 8
+  { grad1: '#f472b6', grad2: '#db2777', glow: '#ec4899' }, // Pink 9
+  { grad1: '#fb7185', grad2: '#e11d48', glow: '#f43f5e' }  // Ruby 10
+];
+
 function initNumberChips() {
   const c = document.getElementById('numChipsContainer');
   c.innerHTML = '';
   for (let i = 1; i <= 10; i++) {
     const btn = document.createElement('button');
     btn.className = `chip-btn ${i === 5 ? 'active' : ''}`;
-    btn.textContent = `${i}`;
+    btn.textContent = `★ ${i}`;
     btn.onclick = () => setNumberQuantity(i);
     c.appendChild(btn);
   }
@@ -817,9 +1050,9 @@ function setNumberQuantity(n) {
     b.classList.toggle('active', (i + 1) === n);
   });
   const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
-  document.getElementById('numReadoutText').textContent = `Quantity: ${n} (${words[n]}) — ${n} Filled Counter Cells in Ten-Frame`;
+  document.getElementById('numReadoutText').textContent = `Quantity: ${n} (${words[n]}) — ${n} Filled Tactile Gem Cells in Ten-Frame`;
   drawNumCanvas();
-  playChime(440 + n * 30, 'sine', 0.15, 0.15);
+  playChime(440 + n * 35, 'sine', 0.18, 0.18);
 }
 
 function speakCurrentNumber() {
@@ -842,127 +1075,203 @@ function drawNumCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  ctx.fillStyle = '#051120';
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0c1a30');
+  grad.addColorStop(1, '#030712');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
   if (!isCompareMode) {
     // Standard Ten-Frame
-    const frameW = 600;
-    const frameH = 240;
+    const frameW = 680;
+    const frameH = 250;
     const startX = (W - frameW) / 2;
-    const startY = 80;
+    const startY = 65;
 
-    // Draw Ten-Frame background
-    ctx.fillStyle = '#0a1e34';
-    ctx.strokeStyle = '#1e88e5';
-    ctx.lineWidth = 4;
+    // Outer Glow & Shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 10;
+
+    // Ten-Frame board: Rich wood / toy tray styling
+    const boardGrad = ctx.createLinearGradient(startX, startY, startX + frameW, startY + frameH);
+    boardGrad.addColorStop(0, '#1e293b');
+    boardGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = boardGrad;
     ctx.beginPath();
-    ctx.roundRect(startX, startY, frameW, frameH, 16);
+    ctx.roundRect(startX, startY, frameW, frameH, 24);
     ctx.fill();
+
+    // Vibrant Cyan / Gold Outer Border
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 6;
     ctx.stroke();
 
     // 2 rows of 5 cells
-    const cellW = frameW / 5;
-    const cellH = frameH / 2;
+    const cellW = (frameW - 24) / 5;
+    const cellH = (frameH - 24) / 2;
+    const innerStartX = startX + 12;
+    const innerStartY = startY + 12;
 
     for (let r = 0; r < 2; r++) {
       for (let c = 0; c < 5; c++) {
         const cellIdx = r * 5 + c + 1;
-        const cx = startX + c * cellW;
-        const cy = startY + r * cellH;
+        const cx = innerStartX + c * cellW;
+        const cy = innerStartY + r * cellH;
 
-        ctx.strokeStyle = '#1e3a5c';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(cx, cy, cellW, cellH);
+        // Individual cell cup / hollow
+        ctx.fillStyle = '#091326';
+        ctx.beginPath();
+        ctx.roundRect(cx + 6, cy + 6, cellW - 12, cellH - 12, 16);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        const centerX = cx + cellW / 2;
+        const centerY = cy + cellH / 2;
 
         if (cellIdx <= currNum) {
-          // Animated / Glowing Counter Dot
-          ctx.beginPath();
-          ctx.arc(cx + cellW / 2, cy + cellH / 2, 38, 0, Math.PI * 2);
-          const radGrad = ctx.createRadialGradient(cx + cellW/2 - 8, cy + cellH/2 - 8, 5, cx + cellW/2, cy + cellH/2, 40);
-          radGrad.addColorStop(0, '#ffcc80');
-          radGrad.addColorStop(0.5, '#ff9800');
-          radGrad.addColorStop(1, '#e65100');
-          ctx.fillStyle = radGrad;
-          ctx.shadowColor = '#ff9800';
-          ctx.shadowBlur = 14;
-          ctx.fill();
-          ctx.shadowBlur = 0;
+          // Vibrant 3D Gem / Counter Token
+          const col = GEM_COLORS[(cellIdx - 1) % GEM_COLORS.length];
+          const radius = 38;
 
-          // Number inside counter
-          ctx.fillStyle = '#0a1628';
-          ctx.font = 'bold 26px "Segoe UI", sans-serif';
+          // Token shadow & glow
+          ctx.save();
+          ctx.shadowColor = col.glow;
+          ctx.shadowBlur = 18;
+
+          // Radial gradient for 3D sphere look
+          const gemGrad = ctx.createRadialGradient(centerX - 10, centerY - 10, 4, centerX, centerY, radius);
+          gemGrad.addColorStop(0, '#ffffff');
+          gemGrad.addColorStop(0.35, col.grad1);
+          gemGrad.addColorStop(0.85, col.grad2);
+          gemGrad.addColorStop(1, '#000000');
+          ctx.fillStyle = gemGrad;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Specular highlight arc
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(centerX - 8, centerY - 8, radius * 0.55, Math.PI * 1.1, Math.PI * 1.7);
+          ctx.stroke();
+
+          // Bold Contrasting Number inside token
+          ctx.font = '900 28px "Segoe UI", system-ui, sans-serif';
+          ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(`${cellIdx}`, cx + cellW / 2, cy + cellH / 2);
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 6;
+          ctx.fillText(`${cellIdx}`, centerX, centerY);
+          ctx.restore();
+        } else {
+          // Empty cell placeholder indicator (subtle colored star)
+          ctx.save();
+          ctx.font = '24px "Segoe UI", sans-serif';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('☆', centerX, centerY);
+          ctx.restore();
         }
       }
     }
 
-    // Bottom tactile fruit row
-    const icons = ['🍎', '🍓', '⭐', '🎈', '🧸', '🚗', '🍪', '🐱', '🦋', '🧁'];
+    // Bottom Tactile Learning Fruits Row (Bright, colorful and vibrant)
+    const toyFruits = ['🍎', '🍓', '⭐', '🎈', '🧸', '🚗', '🍪', '🐱', '🦋', '🧁'];
     let iconStr = '';
-    for (let i = 0; i < currNum; i++) iconStr += icons[i % icons.length] + ' ';
-    ctx.font = '34px "Segoe UI", sans-serif';
+    for (let i = 0; i < currNum; i++) iconStr += toyFruits[i % toyFruits.length] + '  ';
+
+    ctx.save();
+    ctx.font = '40px "Segoe UI", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(iconStr.trim(), W / 2, 370);
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 10;
+    ctx.fillText(iconStr.trim(), W / 2, 365);
+    ctx.restore();
 
   } else {
-    // Relational Comparison Balance
-    ctx.font = 'bold 30px "Segoe UI", sans-serif';
+    // Relational Comparison Balance Mode
+    ctx.save();
+    ctx.font = '900 28px "Segoe UI", system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#64b5f6';
-    ctx.fillText('QUANTITY BALANCE COMPARISON', W / 2, 45);
+    ctx.fillStyle = '#fde047';
+    ctx.fillText('⚖️ QUANTITY BALANCE COMPARISON', W / 2, 45);
 
-    // Left Box
-    ctx.fillStyle = '#0d2847';
-    ctx.strokeStyle = '#1976d2';
-    ctx.lineWidth = 3;
-    ctx.roundRect(160, 90, 220, 240, 16);
+    // Left Box - Vibrant Cyan
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 18;
+    const leftGrad = ctx.createLinearGradient(160, 80, 380, 310);
+    leftGrad.addColorStop(0, '#1e293b');
+    leftGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = leftGrad;
+    ctx.beginPath();
+    ctx.roundRect(160, 80, 220, 230, 24);
     ctx.fill();
+    ctx.strokeStyle = '#0284c7';
+    ctx.lineWidth = 6;
     ctx.stroke();
 
-    ctx.font = 'bold 64px "Segoe UI", sans-serif';
-    ctx.fillStyle = '#ffb74d';
-    ctx.fillText(`${compareLeft}`, 270, 190);
-    ctx.font = '28px "Segoe UI", sans-serif';
+    ctx.font = '900 70px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`${compareLeft}`, 270, 170);
+    ctx.font = '34px "Segoe UI", sans-serif';
     let leftIcons = ''; for (let i = 0; i < compareLeft; i++) leftIcons += '🍎';
-    ctx.fillText(leftIcons, 270, 270);
+    ctx.fillText(leftIcons, 270, 250);
 
-    // Right Box
-    ctx.fillStyle = '#0d2847';
-    ctx.strokeStyle = '#1976d2';
-    ctx.lineWidth = 3;
-    ctx.roundRect(580, 90, 220, 240, 16);
+    // Right Box - Vibrant Magenta/Pink
+    const rightGrad = ctx.createLinearGradient(580, 80, 800, 310);
+    rightGrad.addColorStop(0, '#1e293b');
+    rightGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = rightGrad;
+    ctx.beginPath();
+    ctx.roundRect(580, 80, 220, 230, 24);
     ctx.fill();
+    ctx.strokeStyle = '#ec4899';
+    ctx.lineWidth = 6;
     ctx.stroke();
 
-    ctx.font = 'bold 64px "Segoe UI", sans-serif';
-    ctx.fillStyle = '#ffb74d';
-    ctx.fillText(`${compareRight}`, 690, 190);
+    ctx.font = '900 70px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#f472b6';
+    ctx.fillText(`${compareRight}`, 690, 170);
+    ctx.font = '34px "Segoe UI", sans-serif';
     let rightIcons = ''; for (let i = 0; i < compareRight; i++) rightIcons += '⭐';
-    ctx.font = '28px "Segoe UI", sans-serif';
-    ctx.fillText(rightIcons, 690, 270);
+    ctx.fillText(rightIcons, 690, 250);
 
     // Center Relation Symbol
     let sym = '=';
-    let relText = 'EQUAL';
-    if (compareLeft < compareRight) { sym = '<'; relText = 'LESS THAN'; }
-    if (compareLeft > compareRight) { sym = '>'; relText = 'GREATER THAN'; }
+    let relText = 'EQUAL TO';
+    let symColor = '#22c55e';
+    if (compareLeft < compareRight) { sym = '<'; relText = 'LESS THAN'; symColor = '#f59e0b'; }
+    if (compareLeft > compareRight) { sym = '>'; relText = 'GREATER THAN'; symColor = '#06b6d4'; }
 
-    ctx.font = 'bold 90px "Segoe UI", sans-serif';
-    ctx.fillStyle = '#00e5ff';
-    ctx.fillText(sym, W / 2, 210);
+    ctx.font = '900 110px "Segoe UI", sans-serif';
+    ctx.fillStyle = symColor;
+    ctx.shadowColor = symColor;
+    ctx.shadowBlur = 24;
+    ctx.fillText(sym, W / 2, 200);
 
-    ctx.font = 'bold 22px "Segoe UI", sans-serif';
-    ctx.fillStyle = '#ffd54f';
-    ctx.fillText(`${compareLeft} is ${relText} ${compareRight}`, W / 2, 370);
+    ctx.shadowBlur = 0;
+    ctx.font = '900 24px "Segoe UI", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`${compareLeft} is ${relText} ${compareRight}`, W / 2, 360);
+    ctx.restore();
   }
 }
 
 // ================= TOPIC 3: SHAPES & COLORS =================
 let currShape = 'circle';
 let mixedColor = 'Orange 🟠';
+let mixedColorCode = '#f97316';
 
 function selectShapeByName(name) {
   currShape = name;
@@ -974,10 +1283,19 @@ function runColorMix() {
   const a = document.getElementById('colorMixSelA').value;
   const b = document.getElementById('colorMixSelB').value;
 
-  if ((a === 'red' && b === 'yellow') || (a === 'yellow' && b === 'red')) mixedColor = 'Orange 🟠';
-  else if ((a === 'blue' && b === 'yellow') || (a === 'yellow' && b === 'blue')) mixedColor = 'Green 🟢';
-  else if ((a === 'red' && b === 'blue') || (a === 'blue' && b === 'red')) mixedColor = 'Purple 🟣';
-  else mixedColor = a.toUpperCase();
+  if ((a === 'red' && b === 'yellow') || (a === 'yellow' && b === 'red')) {
+    mixedColor = 'Orange 🟠';
+    mixedColorCode = '#f97316';
+  } else if ((a === 'blue' && b === 'yellow') || (a === 'yellow' && b === 'blue')) {
+    mixedColor = 'Green 🟢';
+    mixedColorCode = '#10b981';
+  } else if ((a === 'red' && b === 'blue') || (a === 'blue' && b === 'red')) {
+    mixedColor = 'Purple 🟣';
+    mixedColorCode = '#a855f7';
+  } else {
+    mixedColor = a.toUpperCase();
+    mixedColorCode = a === 'red' ? '#ef4444' : (a === 'yellow' ? '#eab308' : '#3b82f6');
+  }
 
   drawShapeCanvas();
   speakText(`${a} plus ${b} makes ${mixedColor}!`);
@@ -985,12 +1303,12 @@ function runColorMix() {
 
 function speakShapeAndColor() {
   const shapeDescriptions = {
-    circle: 'Circle has 0 corners and is perfectly round like a coin or clock.',
-    square: 'Square has 4 equal straight sides and 4 corners like a window.',
-    triangle: 'Triangle has 3 straight sides and 3 sharp corners like a slice of pizza.',
-    rectangle: 'Rectangle has 2 long sides and 2 short sides like a book or door.',
-    star: 'Star has 5 shining points twinkling in the sky.',
-    heart: 'Heart is the curved symbol of love and kindness.'
+    circle: 'Circle has 0 corners and is perfectly round like a golden coin or clock.',
+    square: 'Square has 4 equal straight sides and 4 corners like a colorful wooden building block.',
+    triangle: 'Triangle has 3 straight sides and 3 sharp corners like a slice of delicious pizza.',
+    rectangle: 'Rectangle has 2 long sides and 2 short sides like an open storybook.',
+    star: 'Star has 5 shining golden points twinkling happily in the sky.',
+    heart: 'Heart is the curved symbol of love, warmth and friendship.'
   };
   speakText(shapeDescriptions[currShape] || currShape);
 }
@@ -1001,47 +1319,108 @@ function drawShapeCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  ctx.fillStyle = '#051120';
+  // Cosmic Background
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  bgGrad.addColorStop(0, '#0c1a30');
+  bgGrad.addColorStop(1, '#030712');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
+  // Left Section: 3D Geometric Shape Hero Stage
   const cx = W * 0.35;
   const cy = H * 0.5;
 
   ctx.save();
-  ctx.shadowColor = '#00e5ff';
-  ctx.shadowBlur = 20;
-  ctx.fillStyle = '#00bcd4';
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 6;
+  // Beautiful multi-color gradient based on shape
+  let shapeGrad, strokeCol, glowCol;
+
+  if (currShape === 'circle') {
+    // Cherry Red with radial shine
+    glowCol = '#ef4444';
+    strokeCol = '#fecaca';
+    shapeGrad = ctx.createRadialGradient(cx - 35, cy - 35, 10, cx, cy, 120);
+    shapeGrad.addColorStop(0, '#ffffff');
+    shapeGrad.addColorStop(0.25, '#f87171');
+    shapeGrad.addColorStop(0.7, '#ef4444');
+    shapeGrad.addColorStop(1, '#991b1b');
+  } else if (currShape === 'square') {
+    // Royal Blue with linear shine
+    glowCol = '#3b82f6';
+    strokeCol = '#bfdbfe';
+    shapeGrad = ctx.createLinearGradient(cx - 100, cy - 100, cx + 100, cy + 100);
+    shapeGrad.addColorStop(0, '#93c5fd');
+    shapeGrad.addColorStop(0.4, '#3b82f6');
+    shapeGrad.addColorStop(1, '#1d4ed8');
+  } else if (currShape === 'triangle') {
+    // Lime / Emerald Green
+    glowCol = '#10b981';
+    strokeCol = '#a7f3d0';
+    shapeGrad = ctx.createLinearGradient(cx, cy - 120, cx, cy + 90);
+    shapeGrad.addColorStop(0, '#6ee7b7');
+    shapeGrad.addColorStop(0.5, '#10b981');
+    shapeGrad.addColorStop(1, '#065f46');
+  } else if (currShape === 'rectangle') {
+    // Vivid Orange
+    glowCol = '#f97316';
+    strokeCol = '#fed7aa';
+    shapeGrad = ctx.createLinearGradient(cx - 140, cy - 80, cx + 140, cy + 80);
+    shapeGrad.addColorStop(0, '#fdba74');
+    shapeGrad.addColorStop(0.4, '#f97316');
+    shapeGrad.addColorStop(1, '#c2410c');
+  } else if (currShape === 'star') {
+    // Golden Yellow
+    glowCol = '#facc15';
+    strokeCol = '#fef08a';
+    shapeGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 130);
+    shapeGrad.addColorStop(0, '#ffffff');
+    shapeGrad.addColorStop(0.3, '#fde047');
+    shapeGrad.addColorStop(0.8, '#eab308');
+    shapeGrad.addColorStop(1, '#854d0e');
+  } else if (currShape === 'heart') {
+    // Crimson / Pink
+    glowCol = '#ec4899';
+    strokeCol = '#fbcfe8';
+    shapeGrad = ctx.createLinearGradient(cx - 100, cy - 90, cx + 100, cy + 90);
+    shapeGrad.addColorStop(0, '#f472b6');
+    shapeGrad.addColorStop(0.5, '#ec4899');
+    shapeGrad.addColorStop(1, '#9d174d');
+  }
+
+  // Draw 3D glowing shape
+  ctx.shadowColor = glowCol;
+  ctx.shadowBlur = 30;
+  ctx.fillStyle = shapeGrad;
+  ctx.strokeStyle = strokeCol;
+  ctx.lineWidth = 7;
 
   if (currShape === 'circle') {
     ctx.beginPath();
-    ctx.arc(cx, cy, 110, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 115, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
   } else if (currShape === 'square') {
     ctx.beginPath();
-    ctx.roundRect(cx - 100, cy - 100, 200, 200, 12);
+    ctx.roundRect(cx - 105, cy - 105, 210, 210, 20);
     ctx.fill();
     ctx.stroke();
   } else if (currShape === 'triangle') {
     ctx.beginPath();
-    ctx.moveTo(cx, cy - 120);
-    ctx.lineTo(cx + 120, cy + 90);
-    ctx.lineTo(cx - 120, cy + 90);
+    ctx.moveTo(cx, cy - 125);
+    ctx.lineTo(cx + 125, cy + 95);
+    ctx.lineTo(cx - 125, cy + 95);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
   } else if (currShape === 'rectangle') {
     ctx.beginPath();
-    ctx.roundRect(cx - 140, cy - 80, 280, 160, 12);
+    ctx.roundRect(cx - 145, cy - 85, 290, 170, 20);
     ctx.fill();
     ctx.stroke();
   } else if (currShape === 'star') {
     ctx.beginPath();
     for (let i = 0; i < 10; i++) {
       const angle = (i * Math.PI) / 5 - Math.PI / 2;
-      const r = i % 2 === 0 ? 120 : 55;
+      const r = i % 2 === 0 ? 125 : 60;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
@@ -1051,43 +1430,86 @@ function drawShapeCanvas() {
     ctx.stroke();
   } else if (currShape === 'heart') {
     ctx.beginPath();
-    ctx.moveTo(cx, cy + 80);
-    ctx.bezierCurveTo(cx - 120, cy - 10, cx - 120, cy - 90, cx, cy - 50);
-    ctx.bezierCurveTo(cx + 120, cy - 90, cx + 120, cy - 10, cx, cy + 80);
+    ctx.moveTo(cx, cy + 85);
+    ctx.bezierCurveTo(cx - 125, cy - 10, cx - 125, cy - 95, cx, cy - 50);
+    ctx.bezierCurveTo(cx + 125, cy - 95, cx + 125, cy - 10, cx, cy + 85);
     ctx.fill();
     ctx.stroke();
   }
   ctx.restore();
 
-  // Right side: Color Mixing Flask
-  ctx.fillStyle = '#0d2847';
-  ctx.strokeStyle = '#1e3a5c';
-  ctx.lineWidth = 2;
-  ctx.roundRect(W * 0.65, 80, 260, 260, 16);
+  // Right side: Color Mixing Laboratory Flask & Palette
+  const labX = W * 0.65;
+  const labY = 60;
+  const labW = 280;
+  const labH = 300;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetY = 10;
+
+  const labGrad = ctx.createLinearGradient(labX, labY, labX + labW, labY + labH);
+  labGrad.addColorStop(0, '#1e293b');
+  labGrad.addColorStop(1, '#0f172a');
+  ctx.fillStyle = labGrad;
+  ctx.beginPath();
+  ctx.roundRect(labX, labY, labW, labH, 24);
   ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.strokeStyle = mixedColorCode;
+  ctx.lineWidth = 5;
   ctx.stroke();
 
-  ctx.font = 'bold 22px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#ffd54f';
+  // Lab Title Badge
+  ctx.font = '900 20px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = '#fde047';
   ctx.textAlign = 'center';
-  ctx.fillText('COLOR MIXING LAB', W * 0.65 + 130, 120);
+  ctx.fillText('🎨 COLOR MIXING LAB', labX + labW / 2, labY + 40);
 
-  ctx.font = '36px "Segoe UI", sans-serif';
-  ctx.fillText(mixedColor, W * 0.65 + 130, 210);
+  // Big Glowing Mixed Color Sphere
+  const mixSphereX = labX + labW / 2;
+  const mixSphereY = labY + 140;
+  const mixRadius = 60;
 
-  ctx.font = '16px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#a8c4e0';
-  ctx.fillText('Primary colors blend into new tones!', W * 0.65 + 130, 290);
+  ctx.shadowColor = mixedColorCode;
+  ctx.shadowBlur = 24;
+
+  const sphereGrad = ctx.createRadialGradient(mixSphereX - 16, mixSphereY - 16, 6, mixSphereX, mixSphereY, mixRadius);
+  sphereGrad.addColorStop(0, '#ffffff');
+  sphereGrad.addColorStop(0.35, mixedColorCode);
+  sphereGrad.addColorStop(1, '#000000');
+  ctx.fillStyle = sphereGrad;
+  ctx.beginPath();
+  ctx.arc(mixSphereX, mixSphereY, mixRadius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Mixed Color Label
+  ctx.font = '900 26px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(mixedColor, labX + labW / 2, labY + 235);
+
+  ctx.font = '700 14px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Primary colors blend into magical hues!', labX + labW / 2, labY + 270);
+  ctx.restore();
 }
 
 // ================= TOPIC 4: ANIMALS & SOUNDS =================
 const ANIMALS = [
-  { name: 'Cow', sound: 'Moo Moo!', emoji: '🐮', baby: 'Calf', habitat: 'Farm Green Meadow 🌾' },
-  { name: 'Sheep', sound: 'Baa Baa!', emoji: '🐑', baby: 'Lamb', habitat: 'Rolling Hills 🏔️' },
-  { name: 'Horse', sound: 'Neigh Neigh!', emoji: '🐴', baby: 'Foal', habitat: 'Pasture Stable 🏇' },
-  { name: 'Duck', sound: 'Quack Quack!', emoji: '🦆', baby: 'Duckling', habitat: 'Freshwater Pond 🦆' },
-  { name: 'Dog', sound: 'Woof Woof!', emoji: '🐶', baby: 'Puppy', habitat: 'Garden Home 🏡' },
-  { name: 'Lion', sound: 'Roar!', emoji: '🦁', baby: 'Cub', habitat: 'African Savanna 🌴' }
+  { name: 'Cow', sound: 'Moo Moo!', emoji: '🐮', baby: 'Calf', habitat: 'Farm Green Meadow 🌾', color: '#10b981', bg1: '#064e3b', bg2: '#022c22' },
+  { name: 'Sheep', sound: 'Baa Baa!', emoji: '🐑', baby: 'Lamb', habitat: 'Rolling Hills 🏔️', color: '#0ea5e9', bg1: '#0c4a6e', bg2: '#082f49' },
+  { name: 'Horse', sound: 'Neigh Neigh!', emoji: '🐴', baby: 'Foal', habitat: 'Pasture Stable 🏇', color: '#f59e0b', bg1: '#78350f', bg2: '#451a03' },
+  { name: 'Duck', sound: 'Quack Quack!', emoji: '🦆', baby: 'Duckling', habitat: 'Freshwater Pond 🦆', color: '#06b6d4', bg1: '#164e63', bg2: '#083344' },
+  { name: 'Dog', sound: 'Woof Woof!', emoji: '🐶', baby: 'Puppy', habitat: 'Garden Home 🏡', color: '#f97316', bg1: '#7c2d12', bg2: '#431407' },
+  { name: 'Lion', sound: 'Roar!', emoji: '🦁', baby: 'Cub', habitat: 'African Savanna 🌴', color: '#eab308', bg1: '#713f12', bg2: '#422006' }
 ];
 let currAnimalIdx = 0;
 
@@ -1129,45 +1551,158 @@ function drawAnimalCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  ctx.fillStyle = '#051120';
-  ctx.fillRect(0, 0, W, H);
-
   const a = ANIMALS[currAnimalIdx];
 
+  // Themed Animal Background
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0c1a30');
+  grad.addColorStop(0.5, a.bg1);
+  grad.addColorStop(1, '#020612');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Left Side: Animal Stage Pedestal
+  const pedX = W * 0.35;
+  const pedY = H * 0.45;
+
+  ctx.save();
+  const pedGrad = ctx.createRadialGradient(pedX, pedY, 15, pedX, pedY, 130);
+  pedGrad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+  pedGrad.addColorStop(0.4, a.color);
+  pedGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = pedGrad;
+  ctx.beginPath();
+  ctx.arc(pedX, pedY, 130, 0, Math.PI * 2);
+  ctx.fill();
+
   // Huge animated emoji
-  ctx.font = '150px "Segoe UI", sans-serif';
+  ctx.font = '160px "Segoe UI", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(a.emoji, W * 0.35, H * 0.45);
+  ctx.shadowColor = 'rgba(0,0,0,0.6)';
+  ctx.shadowBlur = 20;
+  ctx.fillText(a.emoji, pedX, pedY);
 
-  // Sound callout
-  ctx.font = 'bold 44px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#ffd54f';
-  ctx.fillText(`"${a.sound}"`, W * 0.35, H * 0.8);
+  // Sound callout speech bubble badge
+  const bubbleY = H * 0.82;
+  const bubbleW = 280;
+  const bubbleH = 55;
 
-  // Metadata Card on right
-  ctx.fillStyle = '#0a1e34';
-  ctx.strokeStyle = '#1e3a5c';
-  ctx.lineWidth = 2;
-  ctx.roundRect(W * 0.58, 60, 320, 280, 16);
+  const bubGrad = ctx.createLinearGradient(pedX - bubbleW/2, bubbleY - bubbleH/2, pedX + bubbleW/2, bubbleY + bubbleH/2);
+  bubGrad.addColorStop(0, '#f59e0b');
+  bubGrad.addColorStop(1, '#ea580c');
+  ctx.fillStyle = bubGrad;
+  ctx.beginPath();
+  ctx.roundRect(pedX - bubbleW/2, bubbleY - bubbleH/2, bubbleW, bubbleH, 28);
   ctx.fill();
+  ctx.strokeStyle = '#fef08a';
+  ctx.lineWidth = 3.5;
   ctx.stroke();
 
-  ctx.font = 'bold 30px "Segoe UI", sans-serif';
+  ctx.font = '900 28px "Segoe UI", system-ui, sans-serif';
   ctx.fillStyle = '#ffffff';
-  ctx.fillText(a.name, W * 0.58 + 160, 110);
+  ctx.fillText(`"${a.sound}"`, pedX, bubbleY);
+  ctx.restore();
 
-  ctx.font = '20px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#4fc3f7';
-  ctx.fillText(`Baby Name: ${a.baby}`, W * 0.58 + 160, 170);
+  // Metadata Card on right - Colorful Child Encyclopedia badge
+  const cardX = W * 0.58;
+  const cardY = 55;
+  const cardW = 340;
+  const cardH = 300;
 
-  ctx.fillStyle = '#81c784';
-  ctx.fillText(`Habitat: ${a.habitat}`, W * 0.58 + 160, 230);
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetY = 10;
+  const metaGrad = ctx.createLinearGradient(cardX, cardY, cardX + cardW, cardY + cardH);
+  metaGrad.addColorStop(0, '#1e293b');
+  metaGrad.addColorStop(1, '#0f172a');
+  ctx.fillStyle = metaGrad;
+  ctx.beginPath();
+  ctx.roundRect(cardX, cardY, cardW, cardH, 24);
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.strokeStyle = a.color;
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // Header Title
+  ctx.font = '900 34px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(a.name, cardX + cardW / 2, cardY + 55);
+
+  // Baby animal capsule
+  const bY = cardY + 120;
+  ctx.fillStyle = 'rgba(14, 165, 233, 0.2)';
+  ctx.beginPath();
+  ctx.roundRect(cardX + 20, bY - 25, cardW - 40, 50, 25);
+  ctx.fill();
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.font = '800 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText(`🐣 Baby: ${a.baby}`, cardX + cardW / 2, bY);
+
+  // Habitat capsule
+  const hY = cardY + 195;
+  ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+  ctx.beginPath();
+  ctx.roundRect(cardX + 20, hY - 25, cardW - 40, 50, 25);
+  ctx.fill();
+  ctx.strokeStyle = '#34d399';
+  ctx.stroke();
+
+  ctx.font = '800 18px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#34d399';
+  ctx.fillText(`🏡 ${a.habitat}`, cardX + cardW / 2, hY);
+
+  // Voice tip
+  ctx.font = '700 14px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Tap "Hear Animal Call" to listen aloud!', cardX + cardW / 2, cardY + 265);
+  ctx.restore();
 }
 
 // ================= TOPIC 5: DAILY HABITS & EMOTIONS =================
 let soapTimeLeft = 0;
 let soapTimer = null;
+
+const EMOTIONS = [
+  { name: 'Happy 😊', tip: 'Share a big smile and give a warm hug to a friend!', color: '#f59e0b', emoji: '😊' },
+  { name: 'Calm 😌', tip: 'Take a soft, slow breath in like smelling a flower, and blow out the candle.', color: '#10b981', emoji: '😌' },
+  { name: 'Curious 🤔', tip: 'Ask questions: "Why is the sky blue? How do birds fly?"', color: '#0ea5e9', emoji: '🤔' },
+  { name: 'Loving 💖', tip: 'Say "Thank you" and help tidy up toys with your family!', color: '#ec4899', emoji: '💖' }
+];
+let currEmotionIdx = 0;
+
+function initEmotionsChips() {
+  const c = document.getElementById('emotionsChipsContainer');
+  if (!c) return;
+  c.innerHTML = '';
+  EMOTIONS.forEach((em, idx) => {
+    const btn = document.createElement('button');
+    btn.className = `chip-btn ${idx === 0 ? 'active' : ''}`;
+    btn.textContent = `${em.emoji} ${em.name}`;
+    btn.onclick = () => selectEmotionIdx(idx);
+    c.appendChild(btn);
+  });
+}
+
+function selectEmotionIdx(idx) {
+  currEmotionIdx = idx;
+  document.querySelectorAll('#emotionsChipsContainer .chip-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  const em = EMOTIONS[idx];
+  document.getElementById('habitsReadoutText').textContent = `Feeling ${em.name} • ${em.tip}`;
+  drawHabitsCanvas();
+  speakText(`Feeling ${em.name}. ${em.tip}`);
+}
 
 function startHandwash20s() {
   clearInterval(soapTimer);
@@ -1179,7 +1714,7 @@ function startHandwash20s() {
   soapTimer = setInterval(() => {
     soapTimeLeft--;
     document.getElementById('habitsReadoutText').textContent = `🫧 Handwashing: ${soapTimeLeft} Seconds Left... Scrub Scrub!`;
-    playChime(500 + soapTimeLeft * 10, 'sine', 0.08, 0.1);
+    playChime(500 + soapTimeLeft * 12, 'sine', 0.08, 0.12);
     drawHabitsCanvas();
     if (soapTimeLeft <= 0) {
       clearInterval(soapTimer);
@@ -1197,7 +1732,8 @@ function speakHabitTip() {
 }
 
 function speakEmotionTip() {
-  speakText('When you feel sad or angry, take three deep belly breaths and talk to a caring teacher or parent.');
+  const em = EMOTIONS[currEmotionIdx];
+  speakText(em.tip);
 }
 
 function drawHabitsCanvas() {
@@ -1206,35 +1742,64 @@ function drawHabitsCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  ctx.fillStyle = '#051120';
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0c1a30');
+  grad.addColorStop(1, '#020612');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
   // Big Soap Bubble Visualizer
+  ctx.save();
   ctx.font = '100px "Segoe UI", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('🧼 🫧 🪥', W / 2, 140);
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 15;
+  ctx.fillText('🧼 🫧 🪥', W / 2, 130);
 
-  ctx.font = 'bold 36px "Segoe UI", sans-serif';
-  ctx.fillStyle = soapTimeLeft > 0 ? '#4fc3f7' : '#ffd54f';
+  // Timer Capsule / Hero Message
+  ctx.font = '900 36px "Segoe UI", system-ui, sans-serif';
   if (soapTimeLeft > 0) {
-    ctx.fillText(`${soapTimeLeft} SECONDS REMAINING`, W / 2, 260);
+    ctx.fillStyle = '#38bdf8';
+    ctx.shadowColor = '#0284c7';
+    ctx.shadowBlur = 20;
+    ctx.fillText(`${soapTimeLeft} SECONDS REMAINING 🫧`, W / 2, 240);
   } else {
-    ctx.fillText('HEALTHY HABITS HERO', W / 2, 260);
+    ctx.fillStyle = '#fde047';
+    ctx.shadowColor = '#f59e0b';
+    ctx.shadowBlur = 18;
+    ctx.fillText('🌟 HEALTHY HABITS HERO 🌟', W / 2, 240);
   }
 
-  ctx.font = '20px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#a8c4e0';
-  ctx.fillText('Wash Hands • Brush Teeth Twice • Eat Colorful Fruits • Share Smiles', W / 2, 330);
+  // Active Emotion capsule
+  const em = EMOTIONS[currEmotionIdx];
+  const pillY = 320;
+  const pillW = 540;
+  const pillH = 50;
+
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(30, 41, 59, 0.9)';
+  ctx.beginPath();
+  ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 25);
+  ctx.fill();
+  ctx.strokeStyle = em.color;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.font = '800 18px "Segoe UI", sans-serif';
+  ctx.fillStyle = em.color;
+  ctx.fillText(`Current Emotion: ${em.name} — ${em.tip}`, W / 2, pillY);
+  ctx.restore();
 }
 
 // ================= TOPIC 6: QUIZ CHALLENGE =================
 const QUIZ = [
-  { q: 'Which letter does "Apple" start with?', opts: ['A', 'B', 'M', 'S'], ans: 0 },
-  { q: 'How many sides does a Triangle have?', opts: ['2', '3', '4', '5'], ans: 1 },
-  { q: 'What sound does a friendly Cow make?', opts: ['Woof', 'Quack', 'Moo', 'Neigh'], ans: 2 },
-  { q: 'How many seconds should we scrub with soap?', opts: ['5 Sec', '10 Sec', '20 Sec', '1 Hour'], ans: 2 },
-  { q: 'What color do Red and Yellow make?', opts: ['Blue', 'Purple', 'Orange', 'Black'], ans: 2 }
+  { q: 'Which letter does "Apple" start with?', opts: ['A 🍎', 'B 🦋', 'M 🐒', 'S ☀️'], ans: 0 },
+  { q: 'How many sides does a Triangle have?', opts: ['2', '3 🔺', '4 🟦', '5 ⭐'], ans: 1 },
+  { q: 'What sound does a friendly Cow make?', opts: ['Woof 🐶', 'Quack 🦆', 'Moo Moo 🐮', 'Neigh 🐴'], ans: 2 },
+  { q: 'How many seconds should we scrub with soap?', opts: ['5 Sec', '10 Sec', '20 Sec 🧼', '1 Hour'], ans: 2 },
+  { q: 'What color do Red and Yellow make?', opts: ['Blue 🔵', 'Purple 🟣', 'Orange 🟠', 'Black ⚫'], ans: 2 }
 ];
 
 let currQIdx = 0;
@@ -1268,16 +1833,17 @@ function selectQuizAnswer(idx, btn) {
   allBtns.forEach(b => b.disabled = true);
 
   if (idx === qData.ans) {
-    btn.style.background = '#2e7d32';
+    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
     btn.style.color = '#fff';
+    btn.style.borderColor = '#6ee7b7';
     quizScore++;
     document.getElementById('quizFeedbackText').textContent = '🌟 Super Job! That is Correct!';
     playSuccessMelody();
     speakText('Super job! Correct!');
   } else {
-    btn.style.background = '#c62828';
+    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
     btn.style.color = '#fff';
-    allBtns[qData.ans].style.background = '#2e7d32';
+    allBtns[qData.ans].style.background = 'linear-gradient(135deg, #10b981, #059669)';
     allBtns[qData.ans].style.color = '#fff';
     document.getElementById('quizFeedbackText').textContent = `Good try! The answer is: ${qData.opts[qData.ans]}`;
     playWrongBuzzer();
@@ -1307,25 +1873,54 @@ function drawQuizCanvas() {
   const W = canvas.width;
   const H = canvas.height;
 
-  ctx.fillStyle = '#051120';
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0c1a30');
+  grad.addColorStop(1, '#020612');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
   const qData = QUIZ[currQIdx];
 
-  ctx.font = 'bold 36px "Segoe UI", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffd54f';
-  ctx.fillText(qData.q, W / 2, 140);
+  // Question Card Badge
+  const qBoxY = 60;
+  const qBoxW = 760;
+  const qBoxH = 130;
 
-  ctx.font = '22px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#81d4fa';
-  ctx.fillText(`Question ${currQIdx + 1} of ${QUIZ.length}`, W / 2, 80);
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 18;
+  const qGrad = ctx.createLinearGradient(W/2 - qBoxW/2, qBoxY, W/2 + qBoxW/2, qBoxY + qBoxH);
+  qGrad.addColorStop(0, '#1e293b');
+  qGrad.addColorStop(1, '#0f172a');
+  ctx.fillStyle = qGrad;
+  ctx.beginPath();
+  ctx.roundRect(W/2 - qBoxW/2, qBoxY, qBoxW, qBoxH, 24);
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 5;
+  ctx.stroke();
+
+  ctx.font = '800 20px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.textAlign = 'center';
+  ctx.fillText(`Question ${currQIdx + 1} of ${QUIZ.length}`, W / 2, qBoxY + 36);
+
+  ctx.font = '900 32px "Segoe UI", system-ui, sans-serif';
+  ctx.fillStyle = '#fde047';
+  ctx.fillText(qData.q, W / 2, qBoxY + 85);
+  ctx.restore();
 
   // Stars display
   let stars = '';
   for (let i = 0; i < quizScore; i++) stars += '⭐ ';
-  ctx.font = '32px "Segoe UI", sans-serif';
-  ctx.fillText(stars.trim() || 'Tap the right option below!', W / 2, 240);
+  ctx.save();
+  ctx.font = '40px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(stars.trim() || 'Tap the right colorful option below!', W / 2, 270);
+  ctx.restore();
 }
 
 // FULLSCREEN HANDLERS
@@ -1352,6 +1947,7 @@ window.addEventListener('DOMContentLoaded', () => {
   drawShapeCanvas();
   initAnimalChips();
   drawAnimalCanvas();
+  initEmotionsChips();
   drawHabitsCanvas();
   renderQuizUI();
 });
