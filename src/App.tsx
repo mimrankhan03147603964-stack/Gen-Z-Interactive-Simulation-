@@ -34,8 +34,8 @@ export default function App() {
     return null;
   });
 
-  // Step 1: Default active subject filter (Physics & Motion provides clean, uncluttered starting view)
-  const [selectedSubject, setSelectedSubject] = useState<string>('Physics & Motion');
+  // Default active subject filter: "All" displays all 33 simulation topic cards neatly organized below
+  const [selectedSubject, setSelectedSubject] = useState<string>('All');
   
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
