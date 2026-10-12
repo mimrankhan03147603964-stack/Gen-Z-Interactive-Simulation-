@@ -13,18 +13,25 @@ import {
   Sliders,
   BarChart3,
   Layers,
-  GraduationCap
+  GraduationCap,
+  ArrowLeft,
+  ChevronRight,
+  X
 } from 'lucide-react';
 
 interface MainStageProps {
   activeSim: SimulationItem;
+  totalSimulations?: number;
   onLaunchFullscreenModal?: (sim: SimulationItem) => void;
+  onBackToCatalog?: () => void;
   isDarkMode?: boolean;
 }
 
 export const MainStage: React.FC<MainStageProps> = ({
   activeSim,
+  totalSimulations = 33,
   onLaunchFullscreenModal,
+  onBackToCatalog,
   isDarkMode = false
 }) => {
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | 'full'>('16:9');
@@ -86,6 +93,76 @@ export const MainStage: React.FC<MainStageProps> = ({
         color: isDarkMode ? '#ffffff' : '#0f172a'
       }}
     >
+      {/* Top Navigation Bar with Back to Topics Button & Breadcrumbs */}
+      <div 
+        className="px-5 py-3 border-b flex flex-wrap items-center justify-between gap-3 transition-colors"
+        style={{
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: isDarkMode ? 'rgba(7, 18, 45, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(226, 232, 240, 0.9)'
+        }}
+      >
+        <div className="flex items-center gap-3">
+          {onBackToCatalog && (
+            <button
+              onClick={onBackToCatalog}
+              className="btn-3d px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center gap-2 cursor-pointer shadow-sm transition-all hover:scale-105"
+              style={{
+                backgroundColor: theme.bgSolid,
+                color: '#ffffff',
+                borderColor: theme.borderColor,
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                boxShadow: `0 4px 12px ${theme.glowColor}`
+              }}
+              title="Return to Subject Topics Catalog"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Topics</span>
+            </button>
+          )}
+
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-1.5 text-xs font-bold" style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>
+            <span 
+              onClick={onBackToCatalog} 
+              className="cursor-pointer hover:underline hover:text-blue-500 font-extrabold"
+            >
+              Subjects
+            </span>
+            <ChevronRight className="w-3 h-3 text-slate-400" />
+            <span 
+              onClick={onBackToCatalog}
+              className="cursor-pointer hover:underline font-extrabold"
+              style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }}
+            >
+              {activeSim.category}
+            </span>
+            <ChevronRight className="w-3 h-3 text-slate-400" />
+            <span className="font-mono font-black" style={{ color: isDarkMode ? '#f8fafc' : '#0f172a' }}>
+              Lab {activeSim.indexNumber}
+            </span>
+          </div>
+        </div>
+
+        {/* Right close lab button */}
+        {onBackToCatalog && (
+          <button
+            onClick={onBackToCatalog}
+            className="p-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer hover:bg-red-500/10 hover:text-red-500 flex items-center gap-1"
+            style={{
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : '#cbd5e1',
+              color: isDarkMode ? '#94a3b8' : '#64748b'
+            }}
+            title="Close Lab and Return to Catalog"
+          >
+            <X className="w-4 h-4" />
+            <span className="text-[11px] font-black hidden sm:inline">Close Lab</span>
+          </button>
+        )}
+      </div>
+
       {/* =========================================================================
           STEP 1: SUBJECT HEADING
           Clearly identifies the overarching subject domain (e.g. Physics, Chemistry, Biology, Mathematics)
@@ -101,7 +178,7 @@ export const MainStage: React.FC<MainStageProps> = ({
       >
         <div className="flex items-center gap-2.5">
           <span 
-            className="w-2.5 h-2.5 rounded-full animate-pulse"
+            className="w-2.5 h-2.5 rounded-full animate-pulse" 
             style={{ backgroundColor: theme.bgSolid }}
           />
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider">
@@ -147,7 +224,7 @@ export const MainStage: React.FC<MainStageProps> = ({
               boxShadow: `0 2px 6px ${theme.glowColor}`
             }}
           >
-            LAB {activeSim.indexNumber} OF 30
+            LAB {activeSim.indexNumber} OF {totalSimulations}
           </span>
         </div>
       </div>

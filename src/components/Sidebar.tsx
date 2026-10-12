@@ -38,7 +38,7 @@ import {
 
 interface SidebarProps {
   simulations: SimulationItem[];
-  activeSim: SimulationItem;
+  activeSim?: SimulationItem | null;
   onSelectSim: (sim: SimulationItem) => void;
   isOpen: boolean;
   onToggle: () => void;
@@ -254,7 +254,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Vertical Navigation List (01 to 14) with Crisp Borders & 100% Opacity */}
       <div className="flex-1 overflow-y-auto px-2.5 py-2 space-y-2 scrollbar-thin">
         {filtered.map((sim) => {
-          const isActive = activeSim.id === sim.id;
+          const isActive = activeSim ? activeSim.id === sim.id : false;
           const theme = getSimTheme(sim.indexNumber);
 
           return (

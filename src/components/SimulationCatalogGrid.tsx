@@ -40,7 +40,9 @@ import {
 
 interface SimulationCatalogGridProps {
   simulations: SimulationItem[];
-  activeSim: SimulationItem;
+  activeSim?: SimulationItem | null;
+  selectedCategory?: string;
+  onSelectCategory?: (category: string) => void;
   onSelectSim: (sim: SimulationItem) => void;
   onLaunchFullscreenModal: (sim: SimulationItem) => void;
   isDarkMode?: boolean;
@@ -137,12 +139,24 @@ const SUBJECT_CATEGORIES = [
 export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   simulations,
   activeSim,
+  selectedCategory: controlledCategory,
+  onSelectCategory,
   onSelectSim,
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [internalCategory, setInternalCategory] = useState<string>('Physics & Motion');
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+
+  const handleCategoryChange = (cat: string) => {
+    if (onSelectCategory) {
+      onSelectCategory(cat);
+    } else {
+      setInternalCategory(cat);
+    }
+  };
 
   const handleCardClick = (sim: SimulationItem) => {
     onSelectSim(sim);
@@ -267,7 +281,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
 
           <button
-            onClick={() => setSelectedCategory('All')}
+            onClick={() => handleCategoryChange('All')}
             className="btn-3d px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap"
             style={
               selectedCategory === 'All'
@@ -310,7 +324,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             return (
               <button
                 key={cat.key}
-                onClick={() => setSelectedCategory(cat.key)}
+                onClick={() => handleCategoryChange(cat.key)}
                 className="btn-3d px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-1.5"
                 style={
                   isSelected
@@ -403,7 +417,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {categorySims.map((sim) => {
                   const theme = getSimTheme(sim.indexNumber);
-                  const isActive = activeSim.id === sim.id;
+                  const isActive = activeSim ? activeSim.id === sim.id : false;
 
                   return (
                     <div
@@ -561,11 +575,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           </span>
                         ) : (
                           <span 
-                            className="inline-flex items-center gap-1 text-xs font-black transition-colors group-hover:translate-x-0.5 duration-150"
-                            style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+                            className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs"
+                            style={{
+                              backgroundColor: theme.bgSolid,
+                              boxShadow: `0 2px 6px ${theme.glowColor}`
+                            }}
                           >
-                            <Play className="w-3.5 h-3.5 fill-current" />
-                            <span>Load Lab &bull; Step 1-4</span>
+                            <Play className="w-3 h-3 fill-current" />
+                            <span>Load Lab / Stage</span>
                           </span>
                         )}
 
@@ -619,7 +636,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </p>
           <button
             onClick={() => {
-              setSelectedCategory('All');
+              handleCategoryChange('All');
               setSearchTerm('');
             }}
             className="btn-3d mt-4 px-4 py-2 rounded-xl text-xs font-black text-white"

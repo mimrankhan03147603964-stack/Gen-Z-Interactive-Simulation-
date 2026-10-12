@@ -4,22 +4,24 @@ import { SimulationItem } from '../types';
 import { getSimTheme } from '../data/simTheme';
 
 interface TopNavbarProps {
-  activeSim: SimulationItem;
+  activeSim?: SimulationItem | null;
   totalSimulations?: number;
   onToggleSidebar?: () => void;
-  onResetLab: () => void;
-  onFullscreen: () => void;
+  onResetLab?: () => void;
+  onFullscreen?: () => void;
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
+  onBackToCatalog?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSim,
   totalSimulations = 33,
   isDarkMode = false,
-  onToggleTheme
+  onToggleTheme,
+  onBackToCatalog
 }) => {
-  const activeTheme = getSimTheme(activeSim.indexNumber);
+  const activeTheme = activeSim ? getSimTheme(activeSim.indexNumber) : null;
 
   return (
     <header 
@@ -131,25 +133,46 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         
         {/* Active Simulation Pill */}
-        <div 
-          className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs"
-          style={{
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
-            color: activeTheme.badgeText,
-            borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
-            borderWidth: '1px',
-            borderStyle: 'solid'
-          }}
-        >
-          <span 
-            className="w-2.5 h-2.5 rounded-full shadow-xs" 
-            style={{ backgroundColor: activeTheme.bgSolid }}
-          />
-          <span className="font-mono font-black">[{activeSim.indexNumber}]</span>
-          <span className="truncate max-w-[170px]">{activeSim.title}</span>
-        </div>
+        {activeSim && activeTheme ? (
+          <div 
+            onClick={onBackToCatalog}
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs cursor-pointer hover:opacity-90 transition-opacity"
+            title="Click to view all labs in catalog"
+            style={{
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
+              color: activeTheme.badgeText,
+              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+              borderWidth: '1px',
+              borderStyle: 'solid'
+            }}
+          >
+            <span 
+              className="w-2.5 h-2.5 rounded-full shadow-xs animate-pulse" 
+              style={{ backgroundColor: activeTheme.bgSolid }}
+            />
+            <span className="font-mono font-black">[{activeSim.indexNumber}]</span>
+            <span className="truncate max-w-[170px]">{activeSim.title}</span>
+          </div>
+        ) : (
+          <a
+            href="#catalog"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs hover:opacity-90 transition-opacity"
+            style={{
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
+              color: isDarkMode ? '#93c5fd' : '#1e40af',
+              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+              borderWidth: '1px',
+              borderStyle: 'solid'
+            }}
+          >
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs" />
+            <span>Select a Subject Lab</span>
+          </a>
+        )}
 
         {/* Labs Counter Pill - Vibrant Amber Frosted Glass */}
         <div 

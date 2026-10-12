@@ -3,7 +3,7 @@ import { Layers, BookOpen, Atom, Sparkles, ArrowRight } from 'lucide-react';
 import { SimulationItem } from '../types';
 
 interface QuickStatsProps {
-  activeSim: SimulationItem;
+  activeSim?: SimulationItem | null;
   totalSimulations: number;
   isDarkMode?: boolean;
 }
@@ -93,19 +93,19 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
               className="w-2.5 h-2.5 rounded-full shadow-xs" 
               style={{ backgroundColor: '#9333ea' }}
             />
-            <span>CURRENT DISCIPLINE</span>
+            <span>{activeSim ? 'CURRENT DISCIPLINE' : 'CORE DISCIPLINES'}</span>
           </div>
           <div 
             className="text-lg sm:text-xl font-black mt-1 truncate max-w-[170px] drop-shadow-xs"
             style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
           >
-            {activeSim.category}
+            {activeSim ? activeSim.category : '8 Key Subjects'}
           </div>
           <div 
             className="text-[11px] font-black mt-1 truncate max-w-[170px]"
             style={{ color: isDarkMode ? '#e9d5ff' : '#581c87' }}
           >
-            {activeSim.subject}
+            {activeSim ? activeSim.subject : 'Curriculum Aligned'}
           </div>
         </div>
         <div 
@@ -146,19 +146,19 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
               className="w-2.5 h-2.5 rounded-full shadow-xs" 
               style={{ backgroundColor: '#10b981' }}
             />
-            <span>ACTIVE MODULE</span>
+            <span>{activeSim ? 'ACTIVE MODULE' : 'LAB STATUS'}</span>
           </div>
           <div 
             className="text-lg sm:text-xl font-black mt-1 truncate max-w-[170px] drop-shadow-xs"
             style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
           >
-            [{activeSim.indexNumber}] {activeSim.title}
+            {activeSim ? `[${activeSim.indexNumber}] ${activeSim.title}` : 'On-Demand Loading'}
           </div>
           <div 
             className="text-[11px] font-black mt-1 truncate max-w-[170px]"
             style={{ color: isDarkMode ? '#a7f3d0' : '#065f46' }}
           >
-            {activeSim.gradeLevel}
+            {activeSim ? activeSim.gradeLevel : 'Select any Topic Card below'}
           </div>
         </div>
         <div 

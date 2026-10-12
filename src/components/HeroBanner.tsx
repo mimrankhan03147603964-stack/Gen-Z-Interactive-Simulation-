@@ -4,7 +4,7 @@ import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 
 interface HeroBannerProps {
-  activeSim: SimulationItem;
+  activeSim?: SimulationItem | null;
   isDarkMode?: boolean;
 }
 
@@ -188,7 +188,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           }}
         >
           <Layers className="w-4 h-4 text-slate-900" />
-          <span>Explore All 25 Labs Grid</span>
+          <span>Explore All {SIMULATIONS_LIST.length} Labs</span>
         </a>
         <a
           href="#stage"
@@ -204,7 +204,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           }}
         >
           <Play className="w-4 h-4 fill-current text-white" />
-          <span>Interactive Stage [Lab {activeSim.indexNumber}]</span>
+          <span>{activeSim ? `Interactive Stage [Lab ${activeSim.indexNumber}]` : 'Interactive Digital Stage'}</span>
         </a>
       </div>
 
