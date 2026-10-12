@@ -380,12 +380,27 @@ function psLoop(){
  });
 
  if(psShowLabels){
-  psCtx.font='bold 16px sans-serif';
-  psCtx.fillStyle='#fff';
-  psCtx.fillText('☀️ SUNLIGHT', sunX-150, sunY+20);
-  psCtx.fillText('💧 XYLEM (Water In)', plantX+40, groundY-120);
-  psCtx.fillText('🌱 CHLOROPLAST (In leaf cells)', zoomX-100, zoomY-zoomR+30);
-  psCtx.fillText('💨 O₂ (Oxygen Released)', zoomX+60, zoomY-40);
+  function drawBadge(text, bx, by, color, bgColor){
+    psCtx.font = 'bold 12px system-ui,sans-serif';
+    const textW = psCtx.measureText(text).width;
+    psCtx.fillStyle = bgColor || '#0f172a';
+    psCtx.strokeStyle = color || '#4ade80';
+    psCtx.lineWidth = 1.5;
+    psCtx.beginPath();
+    psCtx.roundRect(bx - textW/2 - 10, by - 12, textW + 20, 24, 6);
+    psCtx.fill();
+    psCtx.stroke();
+    psCtx.fillStyle = '#ffffff';
+    psCtx.textAlign = 'center';
+    psCtx.fillText(text, bx, by + 4);
+    psCtx.textAlign = 'left';
+  }
+  drawBadge('☀️ SOLAR PHOTON ENERGY', sunX - 10, sunY + sunR + 25, '#fbbf24', '#451a03');
+  drawBadge('💧 XYLEM VESSELS (H₂O UPWARD)', plantX + 110, groundY - 140, '#38bdf8', '#0c2d48');
+  drawBadge('🌿 MESOPHYLL CHLOROPLAST', zoomX, zoomY - zoomR - 15, '#4ade80', '#064e3b');
+  drawBadge('💨 O₂ OXYGEN EXHAUST', zoomX + 90, zoomY - 50, '#a7f3d0', '#064e3b');
+  drawBadge('🌱 ROOT XYLEM ABSORPTION', plantX - 100, groundY + 90, '#f59e0b', '#291b00');
+  drawBadge('💨 STOMATA CO₂ INTAKE', plantX - 130, groundY - 240, '#c084fc', '#2e1065');
  }
 
  document.getElementById('psReadout').innerHTML='PHOTOSYNTHESIS <small>O₂ released: '+o2Bubbles.length+'  |  Glucose synthesis rate: '+Math.round(releaseRate*100)+'%</small>';

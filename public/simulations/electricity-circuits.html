@@ -349,103 +349,172 @@ function getCurrent(){
 }
 
 function drawBattery(ctx,x,y,cells,vertical){
- const cellW=60,cellH=100;
+ const cellW=64,cellH=105;
  if(vertical){
   for(let i=0;i<cells;i++){
-   const oy=y + i*(cellH+14);
+   const oy=y + i*(cellH+16);
+   // Outer drop shadow
+   ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=16;ctx.shadowOffsetY=8;
+   // Dual-tone Metallic Alkaline Battery Casing (Electric Blue & Crimson Red)
    const g=ctx.createLinearGradient(x-cellW/2,oy,x+cellW/2,oy);
-   g.addColorStop(0,'#1a1a1a');g.addColorStop(.2,'#444');g.addColorStop(.5,'#222');g.addColorStop(.8,'#444');g.addColorStop(1,'#1a1a1a');
+   g.addColorStop(0,'#1e3a8a');g.addColorStop(0.2,'#3b82f6');g.addColorStop(0.5,'#60a5fa');g.addColorStop(0.8,'#2563eb');g.addColorStop(1,'#1e3a8a');
    ctx.fillStyle=g;
    ctx.beginPath();ctx.roundRect(x-cellW/2,oy,cellW,cellH,10);ctx.fill();
-   ctx.fillStyle='#c9a227';
-   ctx.beginPath();ctx.roundRect(x-12,oy-14,24,16,4);ctx.fill();
-   ctx.fillStyle='#8b6f1c';ctx.fillRect(x-12,oy-2,24,4);
-   ctx.fillStyle='#999';
-   ctx.beginPath();ctx.roundRect(x-18,oy+cellH-2,36,8,3);ctx.fill();
-   ctx.fillStyle='#fff';ctx.font='bold 24px sans-serif';ctx.textAlign='center';
-   ctx.fillText('+',x,oy+cellH/2+8);
-   ctx.fillStyle='#ffd54f';ctx.font='bold 15px sans-serif';
-   ctx.fillText('1.5V',x,oy+cellH-14);
-   ctx.fillStyle='#ffc107';
-   ctx.fillRect(x-cellW/2+4,oy+8,cellW-8,5);
+   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+
+   // Red top collar (Crimson Energy Band)
+   const redG=ctx.createLinearGradient(x-cellW/2,oy,x+cellW/2,oy);
+   redG.addColorStop(0,'#991b1b');redG.addColorStop(0.4,'#ef4444');redG.addColorStop(0.7,'#f87171');redG.addColorStop(1,'#7f1d1d');
+   ctx.fillStyle=redG;
+   ctx.beginPath();ctx.roundRect(x-cellW/2,oy,cellW,28,[10,10,0,0]);ctx.fill();
+
+   // Gold-plated Positive (+) Terminal Cap
+   const gold=ctx.createLinearGradient(x-14,oy-16,x+14,oy-16);
+   gold.addColorStop(0,'#b45309');gold.addColorStop(0.3,'#fde047');gold.addColorStop(0.7,'#f59e0b');gold.addColorStop(1,'#78350f');
+   ctx.fillStyle=gold;
+   ctx.beginPath();ctx.roundRect(x-14,oy-16,28,18,5);ctx.fill();
+   // Specular sheen on terminal
+   ctx.fillStyle='rgba(255,255,255,0.7)';ctx.fillRect(x-6,oy-15,4,14);
+
+   // Negative Base Plate (Polished Nickel)
+   const baseG=ctx.createLinearGradient(x-22,oy+cellH-3,x+22,oy+cellH-3);
+   baseG.addColorStop(0,'#64748b');baseG.addColorStop(0.5,'#cbd5e1');baseG.addColorStop(1,'#475569');
+   ctx.fillStyle=baseG;
+   ctx.beginPath();ctx.roundRect(x-22,oy+cellH-2,44,8,3);ctx.fill();
+
+   // Battery Brand Badge & Label
+   ctx.fillStyle='#ffffff';ctx.font='bold 22px system-ui,sans-serif';ctx.textAlign='center';
+   ctx.fillText('+',x,oy+22);
+   ctx.fillStyle='#fef08a';ctx.font='black 13px system-ui,sans-serif';
+   ctx.fillText('ALKALINE',x,oy+52);
+   ctx.fillStyle='#ffffff';ctx.font='bold 16px monospace';
+   ctx.fillText('1.5V',x,oy+76);
    ctx.textAlign='left';
   }
+  // On-screen component badge
+  ctx.fillStyle='#0f172a';ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(x-55,y-42,110,24,6);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#60a5fa';ctx.font='bold 11px system-ui,sans-serif';ctx.textAlign='center';
+  ctx.fillText('⚡ POWER CELL (DC)',x,y-26);ctx.textAlign='left';
  }
 }
 
 function drawSwitch(ctx,x,y,on,label){
- const w=130,h=60;
- ctx.fillStyle='#0a0a0a';
- ctx.beginPath();ctx.roundRect(x-14,y-14,w+28,h+28,12);ctx.fill();
- ctx.strokeStyle='#555';ctx.lineWidth=3;ctx.stroke();
- ctx.fillStyle='#c9a227';
- ctx.beginPath();ctx.arc(x,y+h/2,10,0,7);ctx.fill();
- ctx.beginPath();ctx.arc(x+w,y+h/2,10,0,7);ctx.fill();
- ctx.strokeStyle=on?'#4caf50':'#e53935';
- ctx.lineWidth=10;ctx.lineCap='round';
- ctx.shadowColor=on?'#4caf50':'#e53935';ctx.shadowBlur=18;
+ const w=140,h=60;
+ // Polished mahogany insulated wood base block with 3D bevel
+ const wood=ctx.createLinearGradient(x-16,y-16,x+w+16,y+h+16);
+ wood.addColorStop(0,'#78350f');wood.addColorStop(0.5,'#92400e');wood.addColorStop(1,'#451a03');
+ ctx.fillStyle=wood;
+ ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=16;ctx.shadowOffsetY=6;
+ ctx.beginPath();ctx.roundRect(x-16,y-16,w+32,h+32,14);ctx.fill();
+ ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+ ctx.strokeStyle='#b45309';ctx.lineWidth=2;ctx.stroke();
+
+ // Polished Brass Binding Posts (Terminals)
+ const brass=ctx.createRadialGradient(x,y+h/2,2,x,y+h/2,12);
+ brass.addColorStop(0,'#fef08a');brass.addColorStop(0.5,'#f59e0b');brass.addColorStop(1,'#b45309');
+ ctx.fillStyle=brass;
+ ctx.beginPath();ctx.arc(x,y+h/2,12,0,7);ctx.fill();
+ ctx.strokeStyle='#78350f';ctx.lineWidth=2;ctx.stroke();
+
+ ctx.beginPath();ctx.arc(x+w,y+h/2,12,0,7);ctx.fill();
+ ctx.strokeStyle='#78350f';ctx.lineWidth=2;ctx.stroke();
+
+ // Heavy Bronze Knife Switch Blade
+ ctx.strokeStyle=on?'#22c55e':'#ef4444';
+ ctx.lineWidth=12;ctx.lineCap='round';
+ ctx.shadowColor=on?'#22c55e':'#ef4444';ctx.shadowBlur=on?22:8;
  ctx.beginPath();
  ctx.moveTo(x,y+h/2);
- if(on){ctx.lineTo(x+w,y+h/2);}
- else{ctx.lineTo(x+w-12,y-18);}
+ if(on){
+   ctx.lineTo(x+w,y+h/2);
+ } else {
+   ctx.lineTo(x+w-14,y-24);
+   // Insulated handle knob on tip
+   ctx.fillStyle='#dc2626';ctx.shadowBlur=0;
+   ctx.beginPath();ctx.arc(x+w-14,y-24,10,0,7);ctx.fill();
+ }
  ctx.stroke();
  ctx.shadowBlur=0;ctx.lineCap='butt';
- ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';
- ctx.fillText(label,x+w/2,y-26);
- ctx.fillStyle=on?'#4caf50':'#e53935';
- ctx.font='bold 14px sans-serif';
- ctx.fillText(on?'ON':'OFF',x+w/2,y+h+22);
+
+ // Switch Name & Status Badge
+ ctx.fillStyle='#0f172a';ctx.strokeStyle=on?'#22c55e':'#ef4444';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.roundRect(x+w/2-56,y-48,112,24,6);ctx.fill();ctx.stroke();
+ ctx.fillStyle=on?'#4ade80':'#f87171';ctx.font='black 11px system-ui,sans-serif';ctx.textAlign='center';
+ ctx.fillText(on?'KNIFE SWITCH: CLOSED (ON)':'KNIFE SWITCH: OPEN (OFF)',x+w/2,y-32);
  ctx.textAlign='left';
 }
 
 function drawBulb(ctx,x,y,intensity){
- const r=46;
+ const r=50;
+ // Luminous ambient halo projection (Video-grade radial aura)
  if(intensity>0.05){
-  const g=ctx.createRadialGradient(x,y,8,x,y,r*5);
-  g.addColorStop(0,`rgba(255,255,180,${0.95*intensity})`);
-  g.addColorStop(0.2,`rgba(255,240,120,${0.7*intensity})`);
-  g.addColorStop(0.5,`rgba(255,200,60,${0.3*intensity})`);
-  g.addColorStop(1,'rgba(255,180,0,0)');
-  ctx.fillStyle=g;
-  ctx.beginPath();ctx.arc(x,y,r*5,0,7);ctx.fill();
+  const halo=ctx.createRadialGradient(x,y,10,x,y,r*6);
+  halo.addColorStop(0,`rgba(255,255,220,${0.98*intensity})`);
+  halo.addColorStop(0.15,`rgba(255,235,100,${0.85*intensity})`);
+  halo.addColorStop(0.4,`rgba(251,191,36,${0.5*intensity})`);
+  halo.addColorStop(0.7,`rgba(245,158,11,${0.18*intensity})`);
+  halo.addColorStop(1,'rgba(217,119,6,0)');
+  ctx.fillStyle=halo;
+  ctx.beginPath();ctx.arc(x,y,r*6,0,7);ctx.fill();
  }
- const baseY = y + r - 4;
- ctx.fillStyle='#b0b0b0';
- ctx.beginPath();ctx.roundRect(x-20,baseY,40,14,3);ctx.fill();
- ctx.fillStyle='#888';
- ctx.beginPath();ctx.roundRect(x-22,baseY+14,44,10,3);ctx.fill();
- ctx.fillStyle='#666';
- ctx.beginPath();ctx.roundRect(x-20,baseY+24,40,12,4);ctx.fill();
 
- const glassGrad=ctx.createRadialGradient(x-14,y-18,4,x,y,r);
+ // Brass & Metal Screw Base with Realistic Thread Ribs
+ const baseY = y + r - 4;
+ const screwG=ctx.createLinearGradient(x-24,baseY,x+24,baseY);
+ screwG.addColorStop(0,'#92400e');screwG.addColorStop(0.3,'#fde047');screwG.addColorStop(0.7,'#d97706');screwG.addColorStop(1,'#78350f');
+ ctx.fillStyle=screwG;
+ ctx.beginPath();ctx.roundRect(x-22,baseY,44,16,4);ctx.fill();
+ // Thread indents
+ ctx.strokeStyle='#451a03';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(x-22,baseY+5);ctx.lineTo(x+22,baseY+5);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(x-22,baseY+11);ctx.lineTo(x+22,baseY+11);ctx.stroke();
+ // Black insulation contact base
+ ctx.fillStyle='#1e293b';ctx.beginPath();ctx.roundRect(x-14,baseY+16,28,12,3);ctx.fill();
+
+ // High-clarity 3D Translucent Glass Envelope with reflections
+ const glassGrad=ctx.createRadialGradient(x-16,y-20,4,x,y,r);
  if(intensity>0.05){
-  glassGrad.addColorStop(0,`rgba(255,255,240,${0.9+0.1*intensity})`);
-  glassGrad.addColorStop(0.4,`rgba(255,245,170,${0.75+0.25*intensity})`);
-  glassGrad.addColorStop(0.8,`rgba(255,210,80,${0.7+0.3*intensity})`);
-  glassGrad.addColorStop(1,`rgba(230,180,50,0.95)`);
+  glassGrad.addColorStop(0,`rgba(255,255,255,${0.95+0.05*intensity})`);
+  glassGrad.addColorStop(0.3,`rgba(254,240,138,${0.85+0.15*intensity})`);
+  glassGrad.addColorStop(0.7,`rgba(251,191,36,${0.75+0.25*intensity})`);
+  glassGrad.addColorStop(1,`rgba(217,119,6,0.95)`);
  } else {
-  glassGrad.addColorStop(0,'rgba(200,220,240,0.5)');
-  glassGrad.addColorStop(0.5,'rgba(150,180,210,0.4)');
-  glassGrad.addColorStop(1,'rgba(90,130,170,0.55)');
+  glassGrad.addColorStop(0,'rgba(241,245,249,0.7)');
+  glassGrad.addColorStop(0.4,'rgba(203,213,225,0.45)');
+  glassGrad.addColorStop(0.8,'rgba(148,163,184,0.35)');
+  glassGrad.addColorStop(1,'rgba(100,116,139,0.6)');
  }
  ctx.fillStyle=glassGrad;
  ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
- ctx.strokeStyle=intensity>0.05?'#fff8c0':'#7a9cc0';
- ctx.lineWidth=3;ctx.stroke();
+ ctx.strokeStyle=intensity>0.05?'#fef08a':'#94a3b8';
+ ctx.lineWidth=3.5;ctx.stroke();
 
- ctx.strokeStyle=intensity>0.05?'#fff35a':'#5a6a80';
- ctx.lineWidth=3;
- ctx.shadowColor='#fff35a';
- ctx.shadowBlur=intensity>0.05?25*intensity:0;
+ // Specular curved gloss reflection (Light highlight on glass surface)
+ ctx.fillStyle='rgba(255,255,255,0.45)';
  ctx.beginPath();
- ctx.moveTo(x-12,y+r-14);ctx.lineTo(x-12,y-8);
- ctx.moveTo(x+12,y+r-14);ctx.lineTo(x+12,y-8);
- ctx.moveTo(x-12,y-8);ctx.lineTo(x-6,y+8);ctx.lineTo(x,y-10);ctx.lineTo(x+6,y+8);ctx.lineTo(x+12,y-8);
+ ctx.ellipse(x-18,y-18,14,24,-Math.PI/6,0,7);
+ ctx.fill();
+
+ // Glowing Coiled Tungsten Filament
+ ctx.strokeStyle=intensity>0.05?'#ffffff':'#64748b';
+ ctx.lineWidth=3;
+ ctx.shadowColor='#fef08a';
+ ctx.shadowBlur=intensity>0.05?30*intensity:0;
+ ctx.beginPath();
+ ctx.moveTo(x-14,y+r-12);ctx.lineTo(x-14,y-6);
+ ctx.moveTo(x+14,y+r-12);ctx.lineTo(x+14,y-6);
+ // Coiled filament bridge
+ ctx.moveTo(x-14,y-6);ctx.lineTo(x-8,y+10);ctx.lineTo(x,y-12);ctx.lineTo(x+8,y+10);ctx.lineTo(x+14,y-6);
  ctx.stroke();
  ctx.shadowBlur=0;
- ctx.fillStyle=intensity>0.05?'#fff35a':'#a8c8e8';
- ctx.font='bold 16px sans-serif';ctx.textAlign='center';
- ctx.fillText(intensity>0.05?'BULB (ON)':'BULB (OFF)',x,y-r-14);
+
+ // Component Identification Badge
+ ctx.fillStyle='#0f172a';ctx.strokeStyle=intensity>0.05?'#fbbf24':'#64748b';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.roundRect(x-65,y-r-36,130,24,6);ctx.fill();ctx.stroke();
+ ctx.fillStyle=intensity>0.05?'#fef08a':'#94a3b8';
+ ctx.font='bold 11px system-ui,sans-serif';ctx.textAlign='center';
+ ctx.fillText(intensity>0.05?'💡 TUNGSTEN BULB (LIT)':'💡 TUNGSTEN BULB (OFF)',x,y-r-20);
  ctx.textAlign='left';
 }
 

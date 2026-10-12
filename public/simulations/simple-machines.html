@@ -416,19 +416,58 @@ function loop1(){
   const cx = W1/2;
   const fulcX = cx - beamW/2 + beamW * fulc1;
 
-  ctx1.fillStyle = '#64748b';
-  ctx1.fillRect(cx - beamW/2, beamY - 10, beamW, 20);
+  // Polished Timber Wood Beam with grain layers
+  const woodGrad = ctx1.createLinearGradient(0, beamY - 12, 0, beamY + 12);
+  woodGrad.addColorStop(0, '#d97706'); woodGrad.addColorStop(0.3, '#f59e0b');
+  woodGrad.addColorStop(0.7, '#b45309'); woodGrad.addColorStop(1, '#78350f');
+  ctx1.fillStyle = woodGrad;
+  ctx1.strokeStyle = '#451a03'; ctx1.lineWidth = 2;
+  ctx1.beginPath(); ctx1.roundRect(cx - beamW/2, beamY - 12, beamW, 24, 6);
+  ctx1.fill(); ctx1.stroke();
 
-  ctx1.fillStyle = '#fbbf24';
+  // Brass Triangular Fulcrum with 3D bevel & pivot pin
+  const brassGrad = ctx1.createLinearGradient(fulcX - 35, groundY, fulcX + 35, beamY);
+  brassGrad.addColorStop(0, '#78350f'); brassGrad.addColorStop(0.4, '#fde047');
+  brassGrad.addColorStop(0.8, '#d97706'); brassGrad.addColorStop(1, '#b45309');
+  ctx1.fillStyle = brassGrad; ctx1.strokeStyle = '#fef08a'; ctx1.lineWidth = 2;
   ctx1.beginPath();
-  ctx1.moveTo(fulcX, beamY); ctx1.lineTo(fulcX - 30, groundY); ctx1.lineTo(fulcX + 30, groundY);
-  ctx1.closePath(); ctx1.fill();
+  ctx1.moveTo(fulcX, beamY); ctx1.lineTo(fulcX - 35, groundY); ctx1.lineTo(fulcX + 35, groundY);
+  ctx1.closePath(); ctx1.fill(); ctx1.stroke();
+  // Steel pivot axle pin
+  ctx1.fillStyle = '#f8fafc'; ctx1.beginPath(); ctx1.arc(fulcX, beamY + 1, 6, 0, TAU); ctx1.fill();
 
-  ctx1.fillStyle = '#ef4444';
-  ctx1.fillRect(cx - beamW/2 + 20, beamY - 50, 45, 40);
-  ctx1.fillStyle = '#fff';
-  ctx1.font = 'bold 14px sans-serif';
-  ctx1.fillText(load1 + ' N', cx - beamW/2 + 25, beamY - 25);
+  // Heavy Cast-Iron Load Block with brass ring
+  const loadX = cx - beamW/2 + 30;
+  const ironGrad = ctx1.createLinearGradient(loadX, beamY - 60, loadX + 55, beamY - 12);
+  ironGrad.addColorStop(0, '#475569'); ironGrad.addColorStop(0.5, '#1e293b'); ironGrad.addColorStop(1, '#0f172a');
+  ctx1.fillStyle = ironGrad; ctx1.strokeStyle = '#e2e8f0'; ctx1.lineWidth = 2;
+  ctx1.beginPath(); ctx1.roundRect(loadX, beamY - 58, 55, 46, 6); ctx1.fill(); ctx1.stroke();
+  ctx1.fillStyle = '#fef08a'; ctx1.font = 'black 13px system-ui,sans-serif'; ctx1.textAlign = 'center';
+  ctx1.fillText(load1 + ' N', loadX + 27, beamY - 30);
+
+  // Downward Red Force Vector for Load
+  ctx1.strokeStyle = '#ef4444'; ctx1.lineWidth = 5; ctx1.lineCap = 'round';
+  ctx1.beginPath(); ctx1.moveTo(loadX + 27, beamY - 70); ctx1.lineTo(loadX + 27, beamY - 100); ctx1.stroke();
+  ctx1.beginPath(); ctx1.moveTo(loadX + 17, beamY - 76); ctx1.lineTo(loadX + 27, beamY - 64); ctx1.lineTo(loadX + 37, beamY - 76); ctx1.stroke();
+
+  // Green Effort Vector on right arm
+  const effX = cx + beamW/2 - 40;
+  ctx1.strokeStyle = '#22c55e'; ctx1.lineWidth = 5;
+  ctx1.beginPath(); ctx1.moveTo(effX, beamY + 14); ctx1.lineTo(effX, beamY + 54); ctx1.stroke();
+  ctx1.beginPath(); ctx1.moveTo(effX - 10, beamY + 44); ctx1.lineTo(effX, beamY + 58); ctx1.lineTo(effX + 10, beamY + 44); ctx1.stroke();
+
+  // Component Badges
+  function drawBadge(t, bx, by, col){
+    ctx1.font = 'bold 11px system-ui,sans-serif';
+    const tw = ctx1.measureText(t).width;
+    ctx1.fillStyle = '#0f172a'; ctx1.strokeStyle = col; ctx1.lineWidth = 1.5;
+    ctx1.beginPath(); ctx1.roundRect(bx - tw/2 - 8, by - 12, tw + 16, 22, 5); ctx1.fill(); ctx1.stroke();
+    ctx1.fillStyle = col; ctx1.textAlign = 'center'; ctx1.fillText(t, bx, by + 4);
+  }
+  drawBadge('⚖️ LOAD (RESISTANCE)', loadX + 27, beamY - 115, '#f87171');
+  drawBadge('⚙️ FULCRUM PIVOT', fulcX, groundY + 18, '#fde047');
+  drawBadge('💪 APPLIED EFFORT (' + effort1 + 'N)', effX, beamY + 74, '#4ade80');
+  ctx1.textAlign = 'left';
 
   const effArm = beamW * (1 - fulc1);
   const loadArm = beamW * fulc1;
@@ -452,17 +491,45 @@ function loop2(){
   const groundY = drawDarkScene(ctx2, W2, H2, '#fbbf24');
   const cx = W2/2;
 
-  ctx2.fillStyle = '#fbbf24';
+  // Gleaming Chrome Sheave Pulley Wheels with rim highlights
   for(let i=0; i<pulleys2; i++){
-    ctx2.beginPath();
-    ctx2.arc(cx - 50 + i * (100 / Math.max(pulleys2-1, 1)), 120, 20, 0, TAU);
-    ctx2.fill();
+    const px = cx - 60 + i * (120 / Math.max(pulleys2-1, 1));
+    const py = 120;
+    // Chrome rim gradient
+    const chrome = ctx2.createRadialGradient(px - 6, py - 6, 4, px, py, 26);
+    chrome.addColorStop(0, '#ffffff'); chrome.addColorStop(0.3, '#94a3b8');
+    chrome.addColorStop(0.7, '#334155'); chrome.addColorStop(1, '#0f172a');
+    ctx2.fillStyle = chrome; ctx2.strokeStyle = '#38bdf8'; ctx2.lineWidth = 2.5;
+    ctx2.beginPath(); ctx2.arc(px, py, 26, 0, TAU); ctx2.fill(); ctx2.stroke();
+    // Inner grooved wheel hub
+    ctx2.fillStyle = '#f59e0b'; ctx2.beginPath(); ctx2.arc(px, py, 8, 0, TAU); ctx2.fill();
+    // Braided tension rope
+    ctx2.strokeStyle = '#fde047'; ctx2.lineWidth = 4;
+    ctx2.beginPath(); ctx2.moveTo(px, py + 26); ctx2.lineTo(px, groundY - 150); ctx2.stroke();
   }
-  ctx2.fillStyle = '#3b82f6';
-  ctx2.fillRect(cx - 50, groundY - 140, 100, 60);
-  ctx2.fillStyle = '#fff';
-  ctx2.font = 'bold 16px sans-serif';
-  ctx2.fillText(load2 + ' N', cx - 25, groundY - 105);
+
+  // Cast Iron Suspended Weight with industrial hazard stripes & brass hook
+  const wX = cx - 60, wY = groundY - 150, wW = 120, wH = 75;
+  const ironW = ctx2.createLinearGradient(wX, wY, wX + wW, wY + wH);
+  ironW.addColorStop(0, '#1e293b'); ironW.addColorStop(0.5, '#334155'); ironW.addColorStop(1, '#0f172a');
+  ctx2.fillStyle = ironW; ctx2.strokeStyle = '#f59e0b'; ctx2.lineWidth = 2.5;
+  ctx2.beginPath(); ctx2.roundRect(wX, wY, wW, wH, 10); ctx2.fill(); ctx2.stroke();
+  // Hazard striping
+  ctx2.fillStyle = '#fbbf24'; ctx2.fillRect(wX + 10, wY + 8, wW - 20, 6);
+  // Weight readout
+  ctx2.fillStyle = '#ffffff'; ctx2.font = 'bold 20px system-ui,sans-serif'; ctx2.textAlign = 'center';
+  ctx2.fillText(load2 + ' N LOAD', cx, wY + 48);
+
+  // Component Labels Badges
+  ctx2.font = 'bold 11px system-ui,sans-serif';
+  ctx2.fillStyle = '#0f172a'; ctx2.strokeStyle = '#38bdf8'; ctx2.lineWidth = 1.5;
+  ctx2.beginPath(); ctx2.roundRect(cx - 80, 50, 160, 24, 6); ctx2.fill(); ctx2.stroke();
+  ctx2.fillStyle = '#38bdf8'; ctx2.fillText('⚙️ CHROME PULLEY SHEAVE (' + pulleys2 + 'x)', cx, 66);
+
+  ctx2.fillStyle = '#0f172a'; ctx2.strokeStyle = '#22c55e';
+  ctx2.beginPath(); ctx2.roundRect(cx - 75, groundY - 190, 150, 24, 6); ctx2.fill(); ctx2.stroke();
+  ctx2.fillStyle = '#4ade80'; ctx2.fillText('📦 SUSPENDED MASS LOAD', cx, groundY - 174);
+  ctx2.textAlign = 'left';
 
   document.getElementById('hud2N').textContent = pulleys2;
   document.getElementById('hud2L').textContent = load2 + ' N';

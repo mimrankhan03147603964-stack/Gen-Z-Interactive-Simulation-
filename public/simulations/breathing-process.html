@@ -80,14 +80,61 @@ svg{width:100%;height:auto;max-height:68vh;display:block}
 <div id="st"></div>
 <svg viewBox="0 0 1180 930" preserveAspectRatio="xMidYMid meet" id="svg">
 <defs>
-<radialGradient id="lg" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffe0e8"/><stop offset=".5" stop-color="#ff9bb5"/><stop offset="1" stop-color="#d94870"/></radialGradient>
-<pattern id="ring" width="24" height="12" patternUnits="userSpaceOnUse"><rect width="24" height="12" fill="#66c2ff"/><rect y="9" width="24" height="3" fill="#2b6fb0"/></pattern>
-<g id="alv" fill="none"><circle cx="-130" cy="397" r="12"/><circle cx="-142" cy="410" r="9"/><circle cx="-78" cy="405" r="10"/><circle cx="-64" cy="416" r="8"/><circle cx="-96" cy="446" r="12"/><circle cx="-109" cy="455" r="9"/><circle cx="-38" cy="436" r="11"/><circle cx="-50" cy="448" r="8"/></g>
+<radialGradient id="lg" cx=".35" cy=".25" r=".85">
+  <stop offset="0%" stop-color="#ffb6c8"/>
+  <stop offset="30%" stop-color="#ff4370"/>
+  <stop offset="70%" stop-color="#d81b60"/>
+  <stop offset="100%" stop-color="#880e4f"/>
+</radialGradient>
+<radialGradient id="ribGlow" cx="50%" cy="50%" r="50%">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="trachRing" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%" stop-color="#80d8ff"/>
+  <stop offset="50%" stop-color="#0091ea"/>
+  <stop offset="100%" stop-color="#01579b"/>
+</linearGradient>
+<pattern id="ring" width="24" height="14" patternUnits="userSpaceOnUse">
+  <rect width="24" height="14" fill="#0288d1"/>
+  <rect y="1" width="24" height="6" fill="#81d4fa" rx="2"/>
+  <rect y="9" width="24" height="4" fill="#01579b"/>
+</pattern>
+<radialGradient id="alvGrad" cx="35%" cy="35%" r="65%">
+  <stop offset="0%" stop-color="#ffcdd2"/>
+  <stop offset="45%" stop-color="#f06292"/>
+  <stop offset="100%" stop-color="#ad1457"/>
+</radialGradient>
+<g id="alv" fill="none">
+  <circle cx="-130" cy="397" r="13" stroke="#f8bbd0" stroke-width="2" fill="url(#alvGrad)"/>
+  <circle cx="-142" cy="410" r="10" stroke="#f8bbd0" stroke-width="1.8" fill="url(#alvGrad)"/>
+  <circle cx="-78" cy="405" r="11" stroke="#f8bbd0" stroke-width="2" fill="url(#alvGrad)"/>
+  <circle cx="-64" cy="416" r="9" stroke="#f8bbd0" stroke-width="1.8" fill="url(#alvGrad)"/>
+  <circle cx="-96" cy="446" r="13" stroke="#f8bbd0" stroke-width="2" fill="url(#alvGrad)"/>
+  <circle cx="-109" cy="455" r="10" stroke="#f8bbd0" stroke-width="1.8" fill="url(#alvGrad)"/>
+  <circle cx="-38" cy="436" r="12" stroke="#f8bbd0" stroke-width="2" fill="url(#alvGrad)"/>
+  <circle cx="-50" cy="448" r="9" stroke="#f8bbd0" stroke-width="1.8" fill="url(#alvGrad)"/>
+</g>
 <g id="lungShape">
-<path d="M-18 285 C-65 268 -138 292 -164 372 C-182 440 -160 478 -108 476 C-55 474 -20 452 -18 400 Z" fill="url(#lg)" stroke="#ffb3c6" stroke-width="2"/>
-<ellipse cx="-118" cy="345" rx="14" ry="52" fill="#fff" opacity=".28" transform="rotate(22 -118 345)"/>
-<path d="M-48 322 L-95 352 L-128 395 M-95 352 L-78 402 L-96 442 M-65 338 L-28 384 L-38 432" stroke="#b5e3ff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<g fill="#ff7f9f" stroke="#ffd6e0" stroke-width="1.5"><circle cx="-130" cy="397" r="10"/><circle cx="-142" cy="410" r="7"/><circle cx="-78" cy="405" r="8"/><circle cx="-64" cy="416" r="6"/><circle cx="-96" cy="446" r="10"/><circle cx="-109" cy="455" r="7"/><circle cx="-38" cy="436" r="9"/><circle cx="-50" cy="448" r="6"/></g>
+  <!-- Subtle rib shadows overlay -->
+  <path d="M-18 285 C-65 268 -138 292 -164 372 C-182 440 -160 478 -108 476 C-55 474 -20 452 -18 400 Z" fill="url(#lg)" stroke="#ff80ab" stroke-width="3" style="filter:drop-shadow(0 12px 24px rgba(216,27,96,0.5))"/>
+  <!-- 3D Specular Highlight curvature -->
+  <path d="M-40 295 C-85 290 -140 330 -150 380 C-138 335 -85 305 -40 305 Z" fill="#ffffff" opacity="0.38"/>
+  <ellipse cx="-118" cy="345" rx="16" ry="54" fill="#ffffff" opacity=".35" transform="rotate(22 -118 345)"/>
+  <!-- Branching Bronchial Tree with vibrant metallic cyan vessels -->
+  <path d="M-48 322 L-95 352 L-128 395 M-95 352 L-78 402 L-96 442 M-65 338 L-28 384 L-38 432" stroke="#4fc3f7" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/>
+  <path d="M-48 322 L-95 352 L-128 395 M-95 352 L-78 402 L-96 442 M-65 338 L-28 384 L-38 432" stroke="#e1f5fe" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Alveolar Clusters -->
+  <g fill="url(#alvGrad)" stroke="#ff80ab" stroke-width="1.8">
+    <circle cx="-130" cy="397" r="11"/>
+    <circle cx="-142" cy="410" r="8"/>
+    <circle cx="-78" cy="405" r="9"/>
+    <circle cx="-64" cy="416" r="7"/>
+    <circle cx="-96" cy="446" r="11"/>
+    <circle cx="-109" cy="455" r="8"/>
+    <circle cx="-38" cy="436" r="10"/>
+    <circle cx="-50" cy="448" r="7"/>
+  </g>
 </g></defs>
 <text x="590" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#f4f7ff" style="filter:drop-shadow(0 4px 6px #000)">THE BREATHING PROCESS</text>
 <text x="350" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#7fd0ff" id="hIn">INHALATION</text>
@@ -111,7 +158,7 @@ for(let i=0;i<14;i++){const b=document.createElement("div");b.className="bub";co
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));t.classList.add("on");$(t.dataset.pg).classList.add("on");window.scrollTo(0,0)});
 document.querySelectorAll(".tilt").forEach(c=>{c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`});c.addEventListener("mouseleave",()=>c.style.transform="")});
 
-const lab=(t,x,y,tx,ty)=>{const w=t.length*6.9+16;return `<g class="lab"><line x1="${tx}" y1="${ty}" x2="${x}" y2="${y}"/><rect x="${x-w/2}" y="${y-11}" width="${w}" height="22" rx="7"/><text x="${x}" y="${y+4.5}" text-anchor="middle">${t}</text></g>`};
+const lab=(t,x,y,tx,ty)=>{const w=t.length*7.2+22;return `<g class="lab"><line x1="${tx}" y1="${ty}" x2="${x}" y2="${y}" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,2"/><circle cx="${tx}" cy="${ty}" r="4" fill="#38bdf8"/><rect x="${x-w/2}" y="${y-13}" width="${w}" height="26" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))"/><text x="${x}" y="${y+5}" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="800" font-family="'Segoe UI',sans-serif">${t}</text></g>`};
 const LB=[["Pharynx / Larynx",100,108,18,108],["Trachea",64,232,12,232],["Bronchus (R)",-140,288,-50,322],["Bronchus (L)",140,288,50,322],["Bronchioles",-172,368,-95,352],["Alveoli",-178,452,-130,398],["Lungs",150,440,100,420]];
 function panel(k){const inn=k==="in",c=inn?"#2ea8ff":"#ff4d67",w=inn?210:290;
  const arr=inn?`<path d="M-38 128 V182 M38 128 V182" stroke-width="9" stroke-linecap="round"/><path d="M-52 180 L-38 204 L-24 180Z M24 180 L38 204 L52 180Z" stroke="none"/>`:`<path d="M-38 204 V150 M38 204 V150" stroke-width="9" stroke-linecap="round"/><path d="M-52 152 L-38 128 L-24 152Z M24 152 L38 128 L52 152Z" stroke="none"/>`;
