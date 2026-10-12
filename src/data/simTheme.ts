@@ -463,6 +463,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fdf2f8',
     tagText: '#be185d',
     glowColor: 'rgba(236, 72, 153, 0.4)'
+  },
+  '29': {
+    id: '29',
+    name: 'Atoms & Molecules Builder',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0284c7',
+    iconBorder: '#7dd3fc',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.4)'
   }
 };
 

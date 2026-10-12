@@ -420,6 +420,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Prepositions of Place (in, on, under, behind)', 'Direction & Motion (through, into, across, over)', 'Spatial Relational Grammar & Syntax', 'Audio Phonics Pronunciation & 3D Quiz'],
     features: ['Interactive 3D Three.js Spatial Stage', 'Natural Web Audio Speech Pronunciation', 'Custom Sentence Builder Visualizer', 'Mastery Quiz with Explanations'],
     gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-atoms-molecules-builder',
+    slug: 'atoms-and-molecules-builder',
+    indexNumber: '29',
+    title: 'Atoms & Molecules: Interactive Chemistry Lab',
+    subject: 'Chemistry & Molecular Science',
+    category: 'Chemistry & Matter',
+    iconName: 'Atom',
+    accentColor: '#0284c7', // Sky Cyan Blue
+    description: 'Interactive Cambridge Scholar chemistry simulation. Construct custom atoms with protons, neutrons, and orbiting electron shells, calculate net charge and isotopes, and explore 3D ball-and-stick covalent molecules (H₂O, CO₂, CH₄, NH₃, O₂, NaCl).',
+    fileUrl: '/simulations/atoms-and-molecules-builder.html',
+    topics: ['Protons, Neutrons & Electron Orbitals', 'Pauli Exclusion & Bohr Shells (K, L, M)', 'Covalent & Ionic Molecules (H₂O, CO₂, CH₄)', 'Isotopes & Nuclear Stability'],
+    features: ['Interactive Subatomic Particle Steppers', 'Real-time Animated Electron Orbitals', '3D Ball-and-Stick Molecule Viewer', 'Cambridge Scholar Program Theory'],
+    gradeLevel: 'Middle & Secondary School Chemistry'
   }
 ];
 

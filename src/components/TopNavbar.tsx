@@ -15,7 +15,7 @@ interface TopNavbarProps {
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSim,
-  totalSimulations = 28,
+  totalSimulations = 29,
   isDarkMode = false,
   onToggleTheme
 }) => {
