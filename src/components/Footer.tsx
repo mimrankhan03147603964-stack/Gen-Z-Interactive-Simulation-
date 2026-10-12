@@ -56,47 +56,37 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
           </div>
         </div>
 
-        {/* 2. Compact Developer Bar - Exactly 2 clean, elegant lines without multiple bulky boxes */}
-        <div 
-          className="w-full max-w-3xl mx-auto rounded-2xl px-5 py-4 flex flex-col items-center justify-center gap-2.5 transition-all shadow-md relative"
-          style={{
-            backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.75)' : 'rgba(255, 255, 255, 0.9)',
-            border: isDarkMode ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid rgba(147, 197, 253, 0.65)',
-            boxShadow: isDarkMode 
-              ? '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.1)' 
-              : '0 4px 20px rgba(37, 99, 235, 0.08)'
-          }}
-        >
-          {/* Line 1: Developer Name, Credentials, Role & Verification */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-center text-sm sm:text-base font-semibold">
-            <span className="font-mono text-xs font-bold text-cyan-500 uppercase tracking-wider">&lt;/&gt; Developed by</span>
+        {/* 2. Seamless Developer Details - Directly on the page, completely without any box, border, or container */}
+        <div className="w-full flex flex-col items-center justify-center gap-2 pt-1 text-center">
+          {/* Line 1: Developer Name, Degree, and Designation */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-sm sm:text-base font-semibold">
+            <span className="font-mono text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">
+              &lt;/&gt; DEVELOPED BY
+            </span>
             <span 
               className="font-black text-base sm:text-lg tracking-tight"
               style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
             >
               Muhammad Imran Khan
             </span>
-            <span className="text-slate-400 hidden sm:inline">•</span>
+            <span className="text-slate-400">•</span>
             <span 
-              className="text-xs sm:text-sm font-mono font-bold px-2 py-0.5 rounded-md"
-              style={{
-                backgroundColor: isDarkMode ? 'rgba(124, 58, 237, 0.25)' : 'rgba(243, 232, 255, 0.9)',
-                color: isDarkMode ? '#c084fc' : '#7e22ce'
-              }}
+              className="font-bold text-xs sm:text-sm"
+              style={{ color: isDarkMode ? '#c084fc' : '#7e22ce' }}
             >
               MSc Computer Science
             </span>
-            <span className="text-slate-400 hidden sm:inline">•</span>
+            <span className="text-slate-400">•</span>
             <span 
-              className="text-xs sm:text-sm font-bold"
+              className="font-bold text-xs sm:text-sm"
               style={{ color: isDarkMode ? '#38bdf8' : '#0284c7' }}
             >
               Software &amp; Web Page Developer
             </span>
           </div>
 
-          {/* Line 2: Direct Contact Numbers & WhatsApp in one neat row */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs sm:text-sm">
+          {/* Line 2: Contact Numbers and WhatsApp */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-xs sm:text-sm pt-0.5">
             {/* Call 03007603964 */}
             <a 
               href="tel:03007603964" 
@@ -108,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
               <span>03007603964</span>
             </a>
 
-            <span className="text-slate-400 hidden sm:inline">|</span>
+            <span className="text-slate-400">|</span>
 
             {/* Call 03147603964 */}
             <a 
@@ -121,19 +111,15 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
               <span>03147603964</span>
             </a>
 
-            <span className="text-slate-400 hidden sm:inline">|</span>
+            <span className="text-slate-400">|</span>
 
             {/* WhatsApp Direct Chat */}
             <a 
               href="https://wa.me/923147603964" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-bold px-3 py-1 rounded-full text-xs transition-all hover:scale-105 active:scale-95 shadow-sm"
-              style={{
-                backgroundColor: isDarkMode ? 'rgba(6, 78, 59, 0.8)' : 'rgba(236, 253, 245, 0.95)',
-                color: isDarkMode ? '#86efac' : '#15803d',
-                border: '1px solid #22c55e'
-              }}
+              className="inline-flex items-center gap-1.5 font-bold transition-colors hover:underline"
+              style={{ color: isDarkMode ? '#4ade80' : '#16a34a' }}
               title="WhatsApp Muhammad Imran Khan"
             >
               <MessageCircle className="w-3.5 h-3.5 shrink-0 text-green-500 fill-green-500/20" />
