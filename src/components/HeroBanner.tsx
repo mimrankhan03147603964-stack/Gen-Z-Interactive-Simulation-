@@ -188,10 +188,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           }}
         >
           <Layers className="w-4 h-4 text-slate-900" />
-          <span>Explore All {SIMULATIONS_LIST.length} Labs</span>
+          <span>Browse All {SIMULATIONS_LIST.length} STEM Labs</span>
         </a>
         <a
-          href="#stage"
+          href="#catalog"
           className="btn-3d px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 text-white shadow-md cursor-pointer"
           style={{
             backdropFilter: 'blur(12px)',
@@ -204,7 +204,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           }}
         >
           <Play className="w-4 h-4 fill-current text-white" />
-          <span>{activeSim ? `Interactive Stage [Lab ${activeSim.indexNumber}]` : 'Interactive Digital Stage'}</span>
+          <span>Launch Labs in Dedicated New Tabs</span>
         </a>
       </div>
 

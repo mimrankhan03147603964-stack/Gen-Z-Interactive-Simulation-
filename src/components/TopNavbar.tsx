@@ -100,18 +100,11 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         }}
       >
         <a
-          href="#stage"
-          className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
-          style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
-        >
-          Interactive Stage
-        </a>
-        <a
           href="#catalog"
           className="px-3 py-1.5 rounded-lg transition-colors hover:text-blue-600"
           style={{ color: isDarkMode ? '#e2e8f0' : '#334155' }}
         >
-          Simulations Library ({totalSimulations})
+          STEM Catalog ({totalSimulations} Labs)
         </a>
         <a
           href="#features"

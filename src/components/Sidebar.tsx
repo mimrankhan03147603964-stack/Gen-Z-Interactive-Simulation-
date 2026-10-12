@@ -35,6 +35,7 @@ import {
   TestTube,
   Magnet
 } from 'lucide-react';
+import { openSimulationInNewTab } from '../utils/navigation';
 
 interface SidebarProps {
   simulations: SimulationItem[];
@@ -260,7 +261,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <button
               key={sim.id}
-              onClick={() => onSelectSim(sim)}
+              onClick={() => {
+                openSimulationInNewTab(sim);
+                onSelectSim(sim);
+              }}
               style={
                 isActive
                   ? {

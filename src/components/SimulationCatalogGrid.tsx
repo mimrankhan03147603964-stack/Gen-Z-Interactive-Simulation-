@@ -35,8 +35,11 @@ import {
   Baby,
   Dna,
   TestTube,
-  Magnet
+  Magnet,
+  ExternalLink
 } from 'lucide-react';
+
+import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
 
 interface SimulationCatalogGridProps {
   simulations: SimulationItem[];
@@ -159,11 +162,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const handleCardClick = (sim: SimulationItem) => {
+    // Open in separate new tab/window leaving main catalog portal completely clean & active
+    openSimulationInNewTab(sim);
     onSelectSim(sim);
-    const stageElement = document.getElementById('stage');
-    if (stageElement) {
-      stageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   };
 
   const matchesSearch = (sim: SimulationItem) => {
@@ -559,34 +560,26 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
                         }}
                       >
-                        {isActive ? (
-                          <span 
-                            className="inline-flex items-center gap-1.5 text-xs font-black px-2.5 py-1 rounded-lg"
-                            style={{
-                              backgroundColor: '#dcfce7',
-                              color: '#15803d',
-                              borderColor: '#86efac',
-                              borderWidth: '1px',
-                              borderStyle: 'solid'
-                            }}
-                          >
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Active in Stage</span>
-                          </span>
-                        ) : (
-                          <span 
-                            className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs"
-                            style={{
-                              backgroundColor: theme.bgSolid,
-                              boxShadow: `0 2px 6px ${theme.glowColor}`
-                            }}
-                          >
-                            <Play className="w-3 h-3 fill-current" />
-                            <span>Load Lab / Stage</span>
-                          </span>
-                        )}
+                        <a
+                          href={getSimulationStandaloneUrl(sim)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectSim(sim);
+                          }}
+                          className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
+                          style={{
+                            backgroundColor: theme.bgSolid,
+                            boxShadow: `0 2px 6px ${theme.glowColor}`
+                          }}
+                          title="Open Lab in Dedicated New Tab"
+                        >
+                          <ExternalLink className="w-3 h-3 text-white" />
+                          <span>Launch Lab</span>
+                        </a>
 
-                        {/* Direct Fullscreen Button */}
+                        {/* Direct Fullscreen Modal Button */}
                         <button
                           type="button"
                           onClick={(e) => {
@@ -601,7 +594,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                             borderStyle: 'solid',
                             color: '#ffffff'
                           }}
-                          title="Launch in 4K Fullscreen"
+                          title="Launch in 4K Fullscreen Modal"
                         >
                           <Maximize2 className="w-3.5 h-3.5 text-white" />
                         </button>
