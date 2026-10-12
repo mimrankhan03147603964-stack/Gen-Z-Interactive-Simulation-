@@ -19,6 +19,7 @@ import {
   Moon,
   Compass
 } from 'lucide-react';
+import { TopicRealisticIcon } from './TopicRealisticIcon';
 
 interface StandaloneLabPlayerProps {
   sim: SimulationItem;
@@ -159,20 +160,35 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
           </div>
 
           {/* Lab Info */}
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 truncate">
-              <span 
-                className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs shrink-0"
-                style={{
-                  backgroundColor: theme.bgSolid,
-                  color: '#ffffff'
-                }}
-              >
-                LAB [{sim.indexNumber}]
-              </span>
-              <h1 className="text-sm sm:text-base font-black truncate text-slate-900 dark:text-white">
-                {sim.title}
-              </h1>
+          <div className="min-w-0 flex items-center gap-2.5">
+            {/* Topic Realistic Emblem */}
+            <div 
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md p-1"
+              style={{
+                backgroundColor: theme.badgeBg,
+                borderColor: theme.borderColor,
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                boxShadow: `0 2px 8px ${theme.glowColor}`
+              }}
+            >
+              <TopicRealisticIcon indexNumber={sim.indexNumber} simId={sim.id} className="w-6 h-6 sm:w-7 sm:h-7" />
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 truncate">
+                <span 
+                  className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs shrink-0"
+                  style={{
+                    backgroundColor: theme.bgSolid,
+                    color: '#ffffff'
+                  }}
+                >
+                  LAB [{sim.indexNumber}]
+                </span>
+                <h1 className="text-sm sm:text-base font-black truncate text-slate-900 dark:text-white">
+                  {sim.title}
+                </h1>
               <span 
                 className="hidden lg:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black shrink-0"
                 style={{
@@ -199,6 +215,7 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
               <span className="hidden sm:inline font-mono text-emerald-600 dark:text-emerald-400">
                 Standalone Workspace
               </span>
+            </div>
             </div>
           </div>
         </div>

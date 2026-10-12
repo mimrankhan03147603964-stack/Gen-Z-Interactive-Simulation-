@@ -122,118 +122,24 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         </a>
       </nav>
 
-      {/* Right: Vibrant 3D Action Buttons & Status Indicators */}
+      {/* Right: Clean, spacious navigation cluster */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        
-        {/* Active Simulation Pill */}
-        {activeSim && activeTheme ? (
-          <div 
-            onClick={onBackToCatalog}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs cursor-pointer hover:opacity-90 transition-opacity"
-            title="Click to view all labs in catalog"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
-              color: activeTheme.badgeText,
-              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
-              borderWidth: '1px',
-              borderStyle: 'solid'
-            }}
-          >
-            <span 
-              className="w-2.5 h-2.5 rounded-full shadow-xs animate-pulse" 
-              style={{ backgroundColor: activeTheme.bgSolid }}
-            />
-            <span className="font-mono font-black">[{activeSim.indexNumber}]</span>
-            <span className="truncate max-w-[170px]">{activeSim.title}</span>
-          </div>
-        ) : (
-          <a
-            href="#catalog"
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs hover:opacity-90 transition-opacity"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(15, 33, 76, 0.75)' : 'rgba(239, 246, 255, 0.85)',
-              color: isDarkMode ? '#93c5fd' : '#1e40af',
-              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
-              borderWidth: '1px',
-              borderStyle: 'solid'
-            }}
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs" />
-            <span>Select a Subject Lab</span>
-          </a>
-        )}
-
-        {/* Labs Counter Pill - Vibrant Amber Frosted Glass */}
-        <div 
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black shadow-2xs"
+        <a
+          href="#catalog"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all hover:scale-105 active:scale-95 shadow-sm"
           style={{
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(56, 32, 4, 0.75)' : 'rgba(254, 243, 199, 0.82)',
-            color: isDarkMode ? '#fef08a' : '#78350f',
-            borderColor: isDarkMode ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.5)',
-            borderWidth: '1px',
+            backgroundColor: isDarkMode ? 'rgba(37, 99, 235, 0.25)' : 'rgba(239, 246, 255, 0.95)',
+            color: isDarkMode ? '#93c5fd' : '#1d4ed8',
+            borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.5)' : 'rgba(147, 197, 253, 0.9)',
+            borderWidth: '1.5px',
             borderStyle: 'solid'
           }}
         >
-          <Layers className="w-3.5 h-3.5 text-amber-600" />
-          <span>{totalSimulations} Labs</span>
-        </div>
-
-        {/* 4K Ultra Indicator - Vibrant Emerald Frosted Glass */}
-        <div 
-          className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-black shadow-2xs"
-          style={{
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(6, 45, 34, 0.75)' : 'rgba(209, 250, 229, 0.82)',
-            color: isDarkMode ? '#6ee7b7' : '#064e3b',
-            borderColor: isDarkMode ? 'rgba(52, 211, 153, 0.45)' : 'rgba(52, 211, 153, 0.5)',
-            borderWidth: '1px',
-            borderStyle: 'solid'
-          }}
-        >
-          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-          <span>4K Ultra</span>
-        </div>
-
-        {/* Theme Toggle Button (Day / Night) - Frosted Glass Button */}
-        {onToggleTheme && (
-          <button
-            onClick={onToggleTheme}
-            className="btn-3d px-3 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-xs"
-            style={
-              isDarkMode
-                ? {
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    backgroundColor: 'rgba(245, 158, 11, 0.85)',
-                    color: '#0f172a',
-                    borderColor: 'rgba(253, 224, 71, 0.8)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid'
-                  }
-                : {
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    backgroundColor: 'rgba(241, 245, 249, 0.85)',
-                    color: '#0f172a',
-                    borderColor: 'rgba(148, 163, 184, 0.6)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid'
-                  }
-            }
-            title={isDarkMode ? "Switch to Bright Light Display" : "Switch to Dark Display"}
-          >
-            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: isDarkMode ? '#0f172a' : '#2563eb' }} />
-            <span>{isDarkMode ? 'Bright' : 'Dark'}</span>
-          </button>
-        )}
-
+          <span className="w-2 h-2 rounded-full bg-blue-500 shadow-xs animate-pulse" />
+          <span>Explore Catalog</span>
+        </a>
       </div>
 
     </header>

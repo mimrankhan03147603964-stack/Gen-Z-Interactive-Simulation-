@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { SimulationItem } from '../types';
 import { X, RotateCcw, ExternalLink, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
+import { TopicRealisticIcon } from './TopicRealisticIcon';
 
 interface SimulationViewerModalProps {
   sim: SimulationItem | null;
@@ -78,9 +79,16 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
         {/* Left: Active Simulation Info */}
         <div className="flex items-center gap-3 min-w-0">
           <div 
-            className="w-3 h-3 rounded-full animate-pulse shrink-0"
-            style={{ backgroundColor: '#22d3ee', boxShadow: '0 0 10px #22d3ee' }}
-          />
+            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 p-0.5"
+            style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.8)',
+              borderColor: 'rgba(56, 189, 248, 0.5)',
+              borderWidth: '1px',
+              borderStyle: 'solid'
+            }}
+          >
+            <TopicRealisticIcon indexNumber={sim.indexNumber} simId={sim.id} className="w-5 h-5" />
+          </div>
           <div className="flex items-center gap-2 truncate">
             <span className="text-xs font-mono font-black" style={{ color: '#fde047' }}>
               [{sim.indexNumber}]
