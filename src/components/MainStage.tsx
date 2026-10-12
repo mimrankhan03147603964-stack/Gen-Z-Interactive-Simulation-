@@ -147,7 +147,7 @@ export const MainStage: React.FC<MainStageProps> = ({
               boxShadow: `0 2px 6px ${theme.glowColor}`
             }}
           >
-            LAB {activeSim.indexNumber} OF 25
+            LAB {activeSim.indexNumber} OF 30
           </span>
         </div>
       </div>

@@ -479,6 +479,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f0f9ff',
     tagText: '#0284c7',
     glowColor: 'rgba(2, 132, 199, 0.4)'
+  },
+  '30': {
+    id: '30',
+    name: 'Early Childhood Care & Education (ECCE)',
+    bgSolid: '#f59e0b',
+    bgGradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    borderColor: '#fbbf24',
+    iconBg: '#f59e0b',
+    iconBorder: '#fde68a',
+    iconColor: '#ffffff',
+    badgeBg: '#fef3c7',
+    badgeText: '#92400e',
+    badgeBorder: '#fde68a',
+    tagBg: '#fffbeb',
+    tagText: '#b45309',
+    glowColor: 'rgba(245, 158, 11, 0.45)'
   }
 };
 

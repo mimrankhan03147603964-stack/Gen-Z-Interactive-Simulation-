@@ -4,7 +4,7 @@ export interface SimulationItem {
   indexNumber: string; // e.g. "01", "02"
   title: string;
   subject: string;
-  category: 'Physics & Motion' | 'Chemistry & Matter' | 'Biology & Life' | 'Earth & Space' | 'Mathematics & Logic' | 'Computer Science & IT' | 'English & Grammar';
+  category: 'Physics & Motion' | 'Chemistry & Matter' | 'Biology & Life' | 'Earth & Space' | 'Mathematics & Logic' | 'Computer Science & IT' | 'English & Grammar' | 'Early Childhood (ECCE)';
   description: string;
   fileUrl: string;
   thumbnail?: string;
@@ -17,5 +17,5 @@ export interface SimulationItem {
   gradeLevel: string;
 }
 
-export type CategoryFilter = 'All Simulations' | 'Physics & Motion' | 'Chemistry & Matter' | 'Biology & Life' | 'Earth & Space' | 'Mathematics & Logic' | 'Computer Science & IT' | 'English & Grammar';
+export type CategoryFilter = 'All Simulations' | 'Physics & Motion' | 'Chemistry & Matter' | 'Biology & Life' | 'Earth & Space' | 'Mathematics & Logic' | 'Computer Science & IT' | 'English & Grammar' | 'Early Childhood (ECCE)';
 

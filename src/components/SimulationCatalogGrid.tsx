@@ -31,7 +31,8 @@ import {
   Ruler,
   BookOpen,
   Computer,
-  Keyboard
+  Keyboard,
+  Baby
 } from 'lucide-react';
 
 interface SimulationCatalogGridProps {
@@ -42,11 +43,44 @@ interface SimulationCatalogGridProps {
   isDarkMode?: boolean;
 }
 
-// 3D Vibrant colorful icon mapper preserving 100% exact icon colors & styles
-const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
+// 3D Vibrant colorful icon mapper preserving original rich colors
+const renderTopicIcon = (iconName: string, iconColor?: string) => {
+  const getIconColor = () => {
+    if (iconColor && iconColor !== '#ffffff') return iconColor;
+    switch (iconName) {
+      case 'Activity': return '#10b981'; // Emerald
+      case 'Atom': return '#06b6d4'; // Cyan
+      case 'Zap': return '#f59e0b'; // Amber
+      case 'Flame': return '#f43f5e'; // Rose
+      case 'Gauge': return '#3b82f6'; // Royal Blue
+      case 'Sun': return '#eab308'; // Bright Gold
+      case 'Sparkles': return '#ec4899'; // Radiant Pink
+      case 'FlaskConical': return '#a855f7'; // Purple
+      case 'Rocket': return '#ef4444'; // Scarlet
+      case 'Cpu': return '#0284c7'; // Sky Blue
+      case 'Leaf': return '#22c55e'; // Green
+      case 'Cog': return '#f97316'; // Orange
+      case 'Layers': return '#8b5cf6'; // Violet
+      case 'Globe': return '#0284c7'; // Ocean
+      case 'Moon': return '#38bdf8'; // Lunar Cyan
+      case 'CircleDot': return '#f43f5e'; // Rose
+      case 'Orbit': return '#6366f1'; // Indigo
+      case 'Telescope': return '#8b5cf6'; // Violet
+      case 'Calculator': return '#4f46e5'; // Indigo
+      case 'Shapes': return '#d946ef'; // Fuchsia
+      case 'Scale': return '#0ea5e9'; // Cyan
+      case 'Ruler': return '#f59e0b'; // Amber
+      case 'Computer': return '#0284c7'; // Cyan
+      case 'Keyboard': return '#7c3aed'; // Purple
+      case 'BookOpen': return '#ec4899'; // Hot Pink
+      case 'Baby': return '#f59e0b'; // Warm Amber
+      default: return '#3b82f6';
+    }
+  };
+  const color = getIconColor();
   const iconProps = { 
-    className: "w-5 h-5 transition-transform group-hover:scale-110 opacity-100",
-    style: { color: iconColor, opacity: 1 }
+    className: "w-5 h-5 transition-transform group-hover:scale-110",
+    style: { color, stroke: color }
   };
   switch (iconName) {
     case 'Activity': return <Activity {...iconProps} />;
@@ -74,6 +108,7 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Computer': return <Computer {...iconProps} />;
     case 'Keyboard': return <Keyboard {...iconProps} />;
     case 'BookOpen': return <BookOpen {...iconProps} />;
+    case 'Baby': return <Baby {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
@@ -87,6 +122,7 @@ const SUBJECT_CATEGORIES = [
   { key: 'Mathematics & Logic', label: 'Mathematics & Logic', icon: <Calculator className="w-4 h-4 text-indigo-500" /> },
   { key: 'Computer Science & IT', label: 'Computer Science & IT', icon: <Computer className="w-4 h-4 text-cyan-500" /> },
   { key: 'English & Grammar', label: 'English & Grammar (Linguistics)', icon: <BookOpen className="w-4 h-4 text-pink-500" /> },
+  { key: 'Early Childhood (ECCE)', label: 'Early Childhood Care & Education (ECCE)', icon: <Baby className="w-4 h-4 text-amber-500" /> },
 ] as const;
 
 export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
@@ -250,6 +286,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           {SUBJECT_CATEGORIES.map((cat) => {
             const count = simulations.filter(s => s.category === cat.key).length;
             const isSelected = selectedCategory === cat.key;
+            const catColors: Record<string, { bg: string; border: string; text: string; activeBg: string; activeBorder: string }> = {
+              'Physics & Motion': { bg: '#eff6ff', border: '#93c5fd', text: '#1d4ed8', activeBg: '#2563eb', activeBorder: '#60a5fa' },
+              'Chemistry & Matter': { bg: '#faf5ff', border: '#d8b4fe', text: '#7e22ce', activeBg: '#9333ea', activeBorder: '#c084fc' },
+              'Biology & Life': { bg: '#f0fdf4', border: '#86efac', text: '#15803d', activeBg: '#16a34a', activeBorder: '#4ade80' },
+              'Earth & Space': { bg: '#f0f9ff', border: '#7dd3fc', text: '#0369a1', activeBg: '#0284c7', activeBorder: '#38bdf8' },
+              'Mathematics & Logic': { bg: '#eef2ff', border: '#a5b4fc', text: '#4338ca', activeBg: '#4f46e5', activeBorder: '#818cf8' },
+              'Computer Science & IT': { bg: '#ecfeff', border: '#67e8f9', text: '#0e7490', activeBg: '#0891b2', activeBorder: '#22d3ee' },
+              'English & Grammar': { bg: '#fdf2f8', border: '#f9a8d4', text: '#be185d', activeBg: '#db2777', activeBorder: '#f472b6' },
+              'Early Childhood (ECCE)': { bg: '#fffbeb', border: '#fde68a', text: '#b45309', activeBg: '#d97706', activeBorder: '#fbbf24' }
+            };
+            const cStyle = catColors[cat.key] || { bg: '#f1f5f9', border: '#cbd5e1', text: '#334155', activeBg: '#2563eb', activeBorder: '#60a5fa' };
+
             return (
               <button
                 key={cat.key}
@@ -258,25 +306,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 style={
                   isSelected
                     ? {
-                        backgroundColor: '#2563eb',
-                        backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                        borderColor: '#60a5fa',
+                        backgroundColor: cStyle.activeBg,
+                        borderColor: cStyle.activeBorder,
                         borderWidth: '1.5px',
                         borderStyle: 'solid',
                         color: '#ffffff',
-                        boxShadow: '0 4px 10px rgba(37, 99, 235, 0.35)'
+                        boxShadow: `0 4px 10px ${cStyle.border}`
                       }
                     : {
-                        backgroundColor: isDarkMode ? '#060e22' : '#f1f5f9',
-                        borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.75)' : cStyle.bg,
+                        borderColor: isDarkMode ? cStyle.activeBorder : cStyle.border,
                         borderWidth: '1.5px',
                         borderStyle: 'solid',
-                        color: isDarkMode ? '#cbd5e1' : '#334155'
+                        color: isDarkMode ? '#ffffff' : cStyle.text
                       }
                 }
               >
                 <span>{cat.label}</span>
-                <span className="opacity-80 text-[10px]">({count})</span>
+                <span className="opacity-90 font-mono text-[10px]">({count})</span>
               </button>
             );
           })}
@@ -359,15 +406,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       style={{
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
-                        backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.82)',
-                        borderColor: isActive 
-                          ? theme.bgSolid 
-                          : (isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)'),
-                        borderWidth: isActive ? '2px' : '1px',
+                        backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
+                        borderColor: isActive ? theme.bgSolid : theme.borderColor,
+                        borderWidth: isActive ? '2px' : '1.5px',
                         borderStyle: 'solid',
-                        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.35)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
-                        color: isDarkMode ? '#ffffff' : '#0f172a',
-                        outlineColor: theme.bgSolid
+                        borderTopWidth: '4px',
+                        borderTopColor: theme.bgSolid,
+                        boxShadow: isDarkMode 
+                          ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
+                          : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
+                        color: isDarkMode ? '#ffffff' : '#0f172a'
                       }}
                     >
                       {/* Card Content */}
@@ -377,15 +425,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           <div 
                             className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform"
                             style={{
-                              backgroundColor: theme.bgSolid,
-                              backgroundImage: theme.bgGradient,
+                              backgroundColor: theme.badgeBg,
                               borderColor: theme.borderColor,
-                              borderWidth: '1.5px',
+                              borderWidth: '2px',
                               borderStyle: 'solid',
-                              boxShadow: `0 4px 10px ${theme.glowColor}, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
+                              boxShadow: `0 4px 12px ${theme.glowColor}`
                             }}
                           >
-                            {renderTopicIcon(sim.iconName, '#ffffff')}
+                            {renderTopicIcon(sim.iconName, theme.iconBg || theme.bgSolid)}
                           </div>
 
                           {/* Badges: Lab Number & Grade */}
@@ -448,9 +495,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                               key={i}
                               className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
                               style={{
-                                backgroundColor: isDarkMode ? '#060e22' : '#f1f5f9',
-                                color: isDarkMode ? '#cbd5e1' : '#334155',
-                                borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
+                                backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
+                                color: isDarkMode ? '#cbd5e1' : theme.tagText,
+                                borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
                                 borderWidth: '1px',
                                 borderStyle: 'solid'
                               }}
@@ -462,8 +509,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                             <span 
                               className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
                               style={{
-                                backgroundColor: isDarkMode ? '#060e22' : '#f1f5f9',
-                                color: isDarkMode ? '#94a3b8' : '#64748b'
+                                backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
+                                color: isDarkMode ? '#94a3b8' : theme.badgeText,
+                                borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
+                                borderWidth: '1px',
+                                borderStyle: 'solid'
                               }}
                             >
                               +{sim.topics.length - 2}
@@ -513,17 +563,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                             e.stopPropagation();
                             onLaunchFullscreenModal(sim);
                           }}
-                          className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105"
+                          className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
                           style={{
-                            backgroundColor: isDarkMode ? '#0c1b3d' : '#ffffff',
-                            borderColor: isDarkMode ? '#3b82f6' : '#cbd5e1',
-                            borderWidth: '1px',
+                            backgroundColor: theme.bgSolid,
+                            borderColor: theme.borderColor,
+                            borderWidth: '1.5px',
                             borderStyle: 'solid',
-                            color: isDarkMode ? '#38bdf8' : '#0f172a'
+                            color: '#ffffff'
                           }}
                           title="Launch in 4K Fullscreen"
                         >
-                          <Maximize2 className="w-3.5 h-3.5" />
+                          <Maximize2 className="w-3.5 h-3.5 text-white" />
                         </button>
                       </div>
                     </div>

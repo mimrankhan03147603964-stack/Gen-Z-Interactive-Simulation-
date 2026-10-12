@@ -29,7 +29,8 @@ import {
   Ruler,
   Computer,
   Keyboard,
-  BookOpen
+  BookOpen,
+  Baby
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -41,11 +42,45 @@ interface SidebarProps {
   isDarkMode?: boolean;
 }
 
-// 3D Vibrant colorful icon mapper for all simulation modules with 100% opacity & crisp rendering
-const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
+// 3D Vibrant colorful icon mapper preserving original rich colors
+const renderTopicIcon = (iconName: string, iconColor?: string) => {
+  const getIconColor = () => {
+    if (iconColor && iconColor !== '#ffffff') return iconColor;
+    switch (iconName) {
+      case 'Activity': return '#10b981'; // Emerald
+      case 'Atom': return '#06b6d4'; // Cyan
+      case 'Zap': return '#f59e0b'; // Amber
+      case 'Flame': return '#f43f5e'; // Rose
+      case 'Gauge': return '#3b82f6'; // Royal Blue
+      case 'Sun': return '#eab308'; // Bright Gold
+      case 'Sparkles': return '#ec4899'; // Radiant Pink
+      case 'FlaskConical': return '#a855f7'; // Purple
+      case 'Rocket': return '#ef4444'; // Scarlet
+      case 'Cpu': return '#0284c7'; // Sky Blue
+      case 'Leaf': return '#22c55e'; // Green
+      case 'Cog': return '#f97316'; // Orange
+      case 'Layers': return '#8b5cf6'; // Violet
+      case 'Globe': return '#0284c7'; // Ocean
+      case 'Moon': return '#38bdf8'; // Lunar Cyan
+      case 'Map': return '#14b8a6'; // Teal
+      case 'CircleDot': return '#f43f5e'; // Rose
+      case 'Orbit': return '#6366f1'; // Indigo
+      case 'Telescope': return '#8b5cf6'; // Violet
+      case 'Calculator': return '#4f46e5'; // Indigo
+      case 'Shapes': return '#d946ef'; // Fuchsia
+      case 'Scale': return '#0ea5e9'; // Cyan
+      case 'Ruler': return '#f59e0b'; // Amber
+      case 'Computer': return '#0284c7'; // Cyan
+      case 'Keyboard': return '#7c3aed'; // Purple
+      case 'BookOpen': return '#ec4899'; // Hot Pink
+      case 'Baby': return '#f59e0b'; // Warm Amber
+      default: return '#3b82f6';
+    }
+  };
+  const color = getIconColor();
   const iconProps = { 
-    className: "w-5 h-5 transition-transform group-hover:scale-110 opacity-100",
-    style: { color: iconColor, opacity: 1 }
+    className: "w-5 h-5 transition-transform group-hover:scale-110",
+    style: { color, stroke: color }
   };
   switch (iconName) {
     case 'Activity': return <Activity {...iconProps} />;
@@ -74,6 +109,7 @@ const renderTopicIcon = (iconName: string, iconColor = '#ffffff') => {
     case 'Computer': return <Computer {...iconProps} />;
     case 'Keyboard': return <Keyboard {...iconProps} />;
     case 'BookOpen': return <BookOpen {...iconProps} />;
+    case 'Baby': return <Baby {...iconProps} />;
     default: return <Atom {...iconProps} />;
   }
 };
@@ -258,15 +294,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div 
                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md"
                 style={{
-                  backgroundColor: theme.bgSolid,
-                  backgroundImage: theme.bgGradient,
+                  backgroundColor: isActive ? '#ffffff' : theme.badgeBg,
                   borderColor: theme.borderColor,
-                  borderWidth: '1.5px',
+                  borderWidth: '2px',
                   borderStyle: 'solid',
-                  boxShadow: `0 4px 10px ${theme.glowColor}, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
+                  boxShadow: `0 4px 10px ${theme.glowColor}`
                 }}
               >
-                {renderTopicIcon(sim.iconName, '#ffffff')}
+                {renderTopicIcon(sim.iconName, theme.iconBg || theme.bgSolid)}
               </div>
 
               {/* Title, Number and Subject - Crisp High Contrast Typography */}

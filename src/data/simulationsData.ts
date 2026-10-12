@@ -430,11 +430,26 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     category: 'Chemistry & Matter',
     iconName: 'Atom',
     accentColor: '#0284c7', // Sky Cyan Blue
-    description: 'Interactive Cambridge Scholar chemistry simulation. Construct custom atoms with protons, neutrons, and orbiting electron shells, calculate net charge and isotopes, and explore 3D ball-and-stick covalent molecules (H₂O, CO₂, CH₄, NH₃, O₂, NaCl).',
+    description: 'Interactive chemistry laboratory simulation. Construct custom atoms with protons, neutrons, and orbiting electron shells, calculate net charge and isotopes, and explore 3D ball-and-stick covalent molecules (H₂O, CO₂, CH₄, NH₃, O₂, NaCl).',
     fileUrl: '/simulations/atoms-and-molecules-builder.html',
     topics: ['Protons, Neutrons & Electron Orbitals', 'Pauli Exclusion & Bohr Shells (K, L, M)', 'Covalent & Ionic Molecules (H₂O, CO₂, CH₄)', 'Isotopes & Nuclear Stability'],
-    features: ['Interactive Subatomic Particle Steppers', 'Real-time Animated Electron Orbitals', '3D Ball-and-Stick Molecule Viewer', 'Cambridge Scholar Program Theory'],
+    features: ['Interactive Subatomic Particle Steppers', 'Real-time Animated Electron Orbitals', '3D Ball-and-Stick Molecule Viewer', 'Atomic & Molecular Orbital Theory'],
     gradeLevel: 'Middle & Secondary School Chemistry'
+  },
+  {
+    id: 'sim-early-childhood-care-education',
+    slug: 'early-childhood-care-education',
+    indexNumber: '30',
+    title: 'Early Childhood Care & Education (ECCE) Discovery Academy',
+    subject: 'Early Childhood & Foundation Stage (ECCE / Pre-K)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Baby',
+    accentColor: '#f59e0b', // Radiant Amber / Gold
+    description: 'Interactive early childhood discovery studio for foundational early learners. Explore alphabet phonics with natural speech & letter tracing, Montessori 1–10 counting & Ten-Frames, shapes & primary color mixing, animal sounds & habitats, daily hygiene routines, and emotional wellness.',
+    fileUrl: '/simulations/early-childhood-care-education.html',
+    topics: ['Phonics Alphabet & Handwriting Tracing', 'Montessori Ten-Frame & Tactile Counting', '2D Geometric Shapes & Color Mixing', 'Animal Sounds, Babies & Habitats', 'Daily Hygiene & Emotional Care', 'Multi-Sensory Star Quiz Challenge'],
+    features: ['Phonetic Web Audio & Voice Pronunciation', 'Interactive Letter Tracing & Magic Canvas', 'Montessori Ten-Frame & Quantity Balancer', '20-Second Handwashing & Routine Timers', 'Star Quiz & Star Explorer Certificate'],
+    gradeLevel: 'Pre-K, Nursery, Kindergarten & Early Primary (Ages 3–7)'
   }
 ];
 
@@ -446,7 +461,8 @@ export const CATEGORIES = [
   'Earth & Space',
   'Mathematics & Logic',
   'Computer Science & IT',
-  'English & Grammar'
+  'English & Grammar',
+  'Early Childhood (ECCE)'
 ] as const;
 
 
