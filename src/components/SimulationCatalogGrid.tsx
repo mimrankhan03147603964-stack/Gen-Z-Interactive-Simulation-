@@ -85,75 +85,7 @@ interface SubjectCategoryConfig {
   renderIcon: (props: { className?: string; isSelected?: boolean; isDark?: boolean }) => React.ReactNode;
 }
 
-const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string) => number): SubjectCategoryConfig[] => [
-  {
-    key: 'All',
-    shortLabel: 'All Subjects',
-    fullTitle: 'All STEM Disciplines',
-    subtitle: 'Comprehensive 33-Lab Suite',
-    badgeCount: totalSims,
-    colorName: 'Multi-Discipline Lab Hub',
-    iconBg: 'rgba(59, 130, 246, 0.16)',
-    iconBorder: '#60a5fa',
-    activeGradient: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4338ca 100%)',
-    activeBorder: '#93c5fd',
-    glowColor: 'rgba(37, 99, 235, 0.45)',
-    lightCardBg: 'rgba(255, 255, 255, 0.95)',
-    darkCardBg: 'rgba(10, 22, 51, 0.85)',
-    lightBorder: 'rgba(147, 197, 253, 0.8)',
-    darkBorder: 'rgba(59, 130, 246, 0.4)',
-    textColorLight: '#1e3a8a',
-    textColorDark: '#93c5fd',
-    renderIcon: ({ isSelected }) => (
-      /* Multi-discipline laboratory hub emblem with vibrant scientific apparatus */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
-        <defs>
-          <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
-            <stop offset="60%" stopColor="#2563eb" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="hubFlaskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="100%" stopColor="#6366f1" />
-          </linearGradient>
-          <linearGradient id="hubAtomGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0284c7" />
-          </linearGradient>
-          <linearGradient id="hubLeafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#059669" />
-          </linearGradient>
-        </defs>
-        {/* Background Hub Disc */}
-        <circle cx="36" cy="36" r="33" fill="url(#hubGlow)" opacity="0.35" />
-        <circle cx="36" cy="36" r="32" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
-        {/* Central Core Sphere */}
-        <circle cx="36" cy="36" r="9" fill={isSelected ? '#ffffff' : '#3b82f6'} />
-        <circle cx="36" cy="36" r="5" fill={isSelected ? '#2563eb' : '#93c5fd'} />
-        {/* Revolving Orbital Rings */}
-        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="1.8" opacity="0.75" />
-        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(30 36 36)" stroke={isSelected ? '#fbcfe8' : '#c084fc'} strokeWidth="1.8" opacity="0.75" />
-        <ellipse cx="36" cy="36" rx="28" ry="10" transform="rotate(90 36 36)" stroke={isSelected ? '#bbf7d0' : '#34d399'} strokeWidth="1.8" opacity="0.75" />
-        {/* 4 Multi-Discipline Node Apparatuses */}
-        {/* Top-Right: Atom Node */}
-        <circle cx="56" cy="24" r="5" fill="#38bdf8" />
-        <circle cx="56" cy="24" r="2" fill="#ffffff" />
-        {/* Bottom-Right: Chemistry Flask Node */}
-        <circle cx="53" cy="50" r="5.5" fill="#c084fc" />
-        <path d="M51 47l2 4h-4l2-4z" fill="#ffffff" />
-        {/* Bottom-Left: Biology Leaf Node */}
-        <circle cx="19" cy="50" r="5.5" fill="#34d399" />
-        <circle cx="19" cy="50" r="2.5" fill="#ffffff" />
-        {/* Top-Left: Math / Tech Compass Node */}
-        <circle cx="16" cy="24" r="5" fill="#fbbf24" />
-        <circle cx="16" cy="24" r="2" fill="#ffffff" />
-        {/* Sparkles of discovery */}
-        <polygon points="36,9 38,15 44,17 38,19 36,25 34,19 28,17 34,15" fill={isSelected ? '#ffffff' : '#fbbf24'} />
-      </svg>
-    )
-  },
+const getSubjectCategories = (getCategoryCount: (cat: string) => number): SubjectCategoryConfig[] => [
   {
     key: 'Physics & Motion',
     shortLabel: 'Physics & Motion',
@@ -172,9 +104,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(59, 130, 246, 0.45)',
     textColorLight: '#1d4ed8',
     textColorDark: '#60a5fa',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Glowing 3D Rutherford-Bohr atom model with revolving electrons and force trajectories */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <radialGradient id="physNucleus" cx="40%" cy="40%" r="60%">
             <stop offset="0%" stopColor="#ffffff" />
@@ -235,9 +167,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(168, 85, 247, 0.45)',
     textColorLight: '#7e22ce',
     textColorDark: '#c084fc',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Realistic laboratory conical flask with bubbling colorful reagents and molecular structures */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="chemFluidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#e879f9" />
@@ -303,9 +235,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(34, 197, 94, 0.45)',
     textColorLight: '#15803d',
     textColorDark: '#4ade80',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Detailed colorful DNA double helix paired with a lush botanical leaf and microscopic cell */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="dnaStrand1" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#34d399" />
@@ -387,9 +319,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(2, 132, 199, 0.45)',
     textColorLight: '#0369a1',
     textColorDark: '#38bdf8',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Photorealistic 3D planet Earth showing atmospheric glow, continents, and planetary orbit rings */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <radialGradient id="earthGlobe" cx="35%" cy="35%" r="65%">
             <stop offset="0%" stopColor="#7dd3fc" />
@@ -463,9 +395,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(245, 158, 11, 0.45)',
     textColorLight: '#c2410c',
     textColorDark: '#fb923c',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* 3D geometric compass, golden ratio spiral, and calculus coordinate curves */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="mathAmber" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#fef08a" />
@@ -531,9 +463,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(20, 184, 166, 0.45)',
     textColorLight: '#0f766e',
     textColorDark: '#2dd4bf',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Modern 3D workstation display showing glowing colored code, microchip processor, and binary stream */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="monitorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#14b8a6" />
@@ -608,9 +540,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(139, 92, 246, 0.45)',
     textColorLight: '#4338ca',
     textColorDark: '#a5b4fc',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Beautifully detailed open hardbound book with glowing golden typography letters */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="bookCoverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#312e81" />
@@ -694,9 +626,9 @@ const getSubjectCategories = (totalSims: number, getCategoryCount: (cat: string)
     darkBorder: 'rgba(244, 63, 94, 0.45)',
     textColorLight: '#e11d48',
     textColorDark: '#fb7185',
-    renderIcon: ({ isSelected }) => (
+    renderIcon: ({ isSelected, className }) => (
       /* Bright 3D alphabet learning blocks (A-B-C) with playful geometric shapes */
-      <svg className="w-16 h-16 sm:w-[68px] sm:h-[68px]" viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="blockAGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#fb7185" />
@@ -768,8 +700,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
-  // By default, 'All' must be selected when the page opens, displaying all 33 simulation topic cards neatly organized below
-  const [internalCategory, setInternalCategory] = useState<string>('All');
+  // By default, the first subject 'Physics & Motion' is selected when the page opens
+  const [internalCategory, setInternalCategory] = useState<string>('Physics & Motion');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
@@ -803,7 +735,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return simulations.filter(s => s.category === categoryKey).length;
   };
 
-  const subjectCategories = getSubjectCategories(simulations.length, getCategoryCount);
+  const subjectCategories = getSubjectCategories(getCategoryCount);
 
   // Determine active subject configuration for visual summary
   const activeSubjectConfig = subjectCategories.find(c => c.key === selectedCategory) || subjectCategories[0];
@@ -907,44 +839,35 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* 2. PROMINENT & LARGE SUBJECT BUTTONS (VISUAL HIGHLIGHT) */}
+        {/* 2. PROMINENT & LARGE SUBJECT BUTTONS (STRICT 2-COLUMN GRID) */}
         <div className="mt-8 pt-6 border-t" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(226, 232, 240, 0.9)' }}>
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black uppercase tracking-wider flex items-center gap-1.5" style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>
-                <Filter className="w-3.5 h-3.5 text-blue-500" />
-                Select Discipline to Filter:
+              <span className="text-sm font-black uppercase tracking-wider flex items-center gap-1.5" style={{ color: isDarkMode ? '#94a3b8' : '#475569' }}>
+                <Filter className="w-4 h-4 text-blue-500" />
+                Curriculum Subject Filtering:
               </span>
               <span 
-                className="text-[11px] font-black px-2.5 py-0.5 rounded-full"
+                className="text-xs font-black px-3 py-1 rounded-full shadow-xs"
                 style={{
-                  backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.4)' : '#e0e7ff',
-                  color: isDarkMode ? '#93c5fd' : '#3730a3'
+                  backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.55)' : '#dbeafe',
+                  color: isDarkMode ? '#60a5fa' : '#1d4ed8',
+                  border: isDarkMode ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid #bfdbfe'
                 }}
               >
-                Showing: {selectedCategory === 'All' ? `All Subjects (${simulations.length})` : `${selectedCategory} (${getCategoryCount(selectedCategory)})`}
+                Active Discipline: {selectedCategory} ({getCategoryCount(selectedCategory)} {getCategoryCount(selectedCategory) === 1 ? 'Lab' : 'Labs'})
               </span>
             </div>
-
-            {selectedCategory !== 'All' && (
-              <button
-                onClick={() => handleCategoryChange('All')}
-                className="text-xs font-black px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer shadow-xs"
-                style={{
-                  backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
-                  borderColor: isDarkMode ? '#3b82f6' : '#94a3b8',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  color: isDarkMode ? '#60a5fa' : '#2563eb'
-                }}
-              >
-                &larr; Reset to All Subjects ({simulations.length})
-              </button>
-            )}
           </div>
 
-          {/* Large, Prominent, Side-by-Side Subject Cards Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 gap-3 sm:gap-3.5">
+          {/* Strict 2-Column Grid on Desktops & Tablets, 1-Column on Mobile */}
+          <div 
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
+            style={{
+              display: 'grid',
+              gap: '1.5rem'
+            }}
+          >
             {subjectCategories.map((cat) => {
               const isSelected = selectedCategory === cat.key;
               
@@ -954,8 +877,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   type="button"
                   onClick={() => handleCategoryChange(cat.key)}
                   aria-pressed={isSelected}
-                  className={`group relative rounded-2xl p-3.5 flex flex-col items-center text-center justify-between transition-all duration-200 cursor-pointer select-none btn-3d ${
-                    isSelected ? 'scale-[1.03] z-10' : 'hover:scale-[1.02]'
+                  className={`group relative rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left justify-between transition-all duration-300 cursor-pointer select-none btn-3d w-full ${
+                    isSelected ? 'scale-[1.02] z-10' : 'hover:scale-[1.01]'
                   }`}
                   style={{
                     minHeight: '168px',
@@ -966,78 +889,111 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     borderColor: isSelected 
                       ? cat.activeBorder 
                       : (isDarkMode ? cat.darkBorder : cat.lightBorder),
-                    borderWidth: isSelected ? '2.5px' : '1.5px',
+                    borderWidth: isSelected ? '3px' : '2px',
                     borderStyle: 'solid',
                     color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a'),
                     boxShadow: isSelected 
-                      ? `0 14px 32px -4px ${cat.glowColor}, 0 0 20px ${cat.glowColor}, inset 0 1px 2px rgba(255, 255, 255, 0.4)` 
-                      : (isDarkMode ? '0 4px 14px rgba(0, 0, 0, 0.35)' : '0 4px 14px rgba(0, 0, 0, 0.04)')
+                      ? `0 20px 40px -8px ${cat.glowColor}, 0 0 28px ${cat.glowColor}, inset 0 2px 4px rgba(255, 255, 255, 0.45)` 
+                      : (isDarkMode ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 6px 20px rgba(0, 0, 0, 0.05)')
                   }}
                   title={`Filter by ${cat.fullTitle} (${cat.badgeCount} labs)`}
                 >
-                  {/* Top: Large Vibrant Realistic Graphic Emblem (minimum 64px - 72px) */}
-                  <div 
-                    className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg shrink-0 mb-2.5 p-1"
-                    style={{
-                      backgroundColor: isSelected 
-                        ? 'rgba(255, 255, 255, 0.22)' 
-                        : (isDarkMode ? 'rgba(15, 23, 42, 0.92)' : cat.iconBg),
-                      borderColor: isSelected 
-                        ? 'rgba(255, 255, 255, 0.55)' 
-                        : cat.iconBorder,
-                      borderWidth: '2px',
-                      borderStyle: 'solid',
-                      boxShadow: isSelected ? '0 6px 16px rgba(0, 0, 0, 0.35)' : `0 4px 14px ${cat.glowColor}`
-                    }}
-                  >
-                    {cat.renderIcon({
-                      isSelected,
-                      isDark: isDarkMode
-                    })}
-                  </div>
-
-                  {/* Center: Bold Subject Title */}
-                  <div className="w-full">
-                    <span 
-                      className="block text-xs sm:text-[13px] font-black tracking-tight leading-tight line-clamp-2"
-                      style={{
-                        color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a')
-                      }}
-                    >
-                      {cat.shortLabel}
-                    </span>
-                  </div>
-
-                  {/* Bottom: Clear Badge Counter Showing Number of Labs */}
-                  <div className="mt-2 w-full flex items-center justify-center">
-                    <span 
-                      className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full font-mono text-[11px] font-black transition-all shadow-xs"
+                  <div className="flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 w-full">
+                    {/* Significantly Enlarged Subject Icon (84px - 96px width/height) */}
+                    <div 
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-xl shrink-0 p-2"
                       style={{
                         backgroundColor: isSelected 
-                          ? 'rgba(255, 255, 255, 0.95)' 
-                          : (isDarkMode ? 'rgba(30, 41, 59, 0.9)' : '#ffffff'),
-                        color: isSelected 
-                          ? '#0f172a' 
-                          : (isDarkMode ? cat.textColorDark : cat.textColorLight),
+                          ? 'rgba(255, 255, 255, 0.22)' 
+                          : (isDarkMode ? 'rgba(15, 23, 42, 0.94)' : cat.iconBg),
                         borderColor: isSelected 
-                          ? '#ffffff' 
-                          : (isDarkMode ? cat.darkBorder : cat.lightBorder),
-                        borderWidth: '1px',
+                          ? 'rgba(255, 255, 255, 0.65)' 
+                          : cat.iconBorder,
+                        borderWidth: '2.5px',
                         borderStyle: 'solid',
-                        boxShadow: isSelected ? '0 2px 6px rgba(0, 0, 0, 0.2)' : 'none'
+                        boxShadow: isSelected ? '0 8px 24px rgba(0, 0, 0, 0.4)' : `0 6px 20px ${cat.glowColor}`
                       }}
                     >
-                      {cat.badgeCount} {cat.badgeCount === 1 ? 'Lab' : 'Labs'}
-                    </span>
+                      {cat.renderIcon({
+                        className: "w-16 h-16 sm:w-20 sm:h-20",
+                        isSelected,
+                        isDark: isDarkMode
+                      })}
+                    </div>
+
+                    {/* Center: Large & Bold Typography + Subtitle */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-center sm:justify-start gap-2 mb-1 flex-wrap">
+                        <span 
+                          className="text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md"
+                          style={{
+                            backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.25)' : (isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)'),
+                            color: isSelected ? '#ffffff' : (isDarkMode ? '#cbd5e1' : '#64748b')
+                          }}
+                        >
+                          {cat.colorName}
+                        </span>
+                        {isSelected && (
+                          <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-blue-900 shadow-xs">
+                            Active Selection
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 
+                        className="text-xl sm:text-2xl font-black tracking-tight leading-snug"
+                        style={{
+                          fontSize: '1.4rem',
+                          fontWeight: 800,
+                          color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a'),
+                          textShadow: isSelected ? '0 2px 8px rgba(0, 0, 0, 0.4)' : 'none'
+                        }}
+                      >
+                        {cat.fullTitle}
+                      </h3>
+                      
+                      <p 
+                        className="text-xs sm:text-sm font-semibold mt-1 line-clamp-1"
+                        style={{
+                          color: isSelected ? 'rgba(255, 255, 255, 0.9)' : (isDarkMode ? '#94a3b8' : '#64748b')
+                        }}
+                      >
+                        {cat.subtitle}
+                      </p>
+
+                      {/* Prominent Lab Count Badge cleanly positioned below the title */}
+                      <div className="mt-3 flex items-center justify-center sm:justify-start">
+                        <span 
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full font-mono text-xs font-black transition-all shadow-sm"
+                          style={{
+                            backgroundColor: isSelected 
+                              ? 'rgba(255, 255, 255, 0.95)' 
+                              : (isDarkMode ? 'rgba(30, 41, 59, 0.95)' : '#ffffff'),
+                            color: isSelected 
+                              ? '#0f172a' 
+                              : (isDarkMode ? cat.textColorDark : cat.textColorLight),
+                            borderColor: isSelected 
+                              ? '#ffffff' 
+                              : (isDarkMode ? cat.darkBorder : cat.lightBorder),
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            boxShadow: isSelected ? '0 3px 8px rgba(0, 0, 0, 0.25)' : 'none'
+                          }}
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          {cat.badgeCount} {cat.badgeCount === 1 ? 'Simulation Lab' : 'Simulation Labs'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Active Selection Indicator Pip */}
                   {isSelected && (
                     <div 
-                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white text-blue-700 flex items-center justify-center shadow-md animate-pulse border-2 border-blue-600"
-                      title="Currently Active Filter"
+                      className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white text-blue-700 flex items-center justify-center shadow-lg border-2 border-blue-600 animate-pulse"
+                      title="Currently Active Discipline"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                      <CheckCircle2 className="w-4 h-4 text-blue-600" />
                     </div>
                   )}
                 </button>
@@ -1347,11 +1303,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             No simulations match &ldquo;{searchTerm}&rdquo;
           </h3>
           <p className="text-xs font-bold mt-1" style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>
-            Try searching for another keyword or select &ldquo;All Subjects&rdquo;.
+            Try searching for another keyword or clear your search input.
           </p>
           <button
             onClick={() => {
-              handleCategoryChange('All');
               setSearchTerm('');
             }}
             className="btn-3d mt-4 px-4 py-2 rounded-xl text-xs font-black text-white"
@@ -1361,7 +1316,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               borderWidth: '1px'
             }}
           >
-            Clear Filters
+            Clear Search
           </button>
         </div>
       )}
