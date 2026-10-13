@@ -241,7 +241,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div 
                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md"
                 style={{
-                  backgroundColor: isActive ? '#ffffff' : theme.badgeBg,
+                  backgroundColor: theme.badgeBg,
                   borderColor: theme.borderColor,
                   borderWidth: '2px',
                   borderStyle: 'solid',
@@ -256,9 +256,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div className="text-xs font-black truncate leading-tight flex items-center gap-1.5">
                   <span 
                     style={{
-                      backgroundColor: isActive ? '#ffffff' : theme.badgeBg,
-                      color: isActive ? '#1e40af' : theme.badgeText,
-                      borderColor: isActive ? '#93c5fd' : theme.badgeBorder,
+                      backgroundColor: theme.badgeBg,
+                      color: theme.badgeText,
+                      borderColor: theme.badgeBorder,
                       borderWidth: '1.5px',
                       borderStyle: 'solid'
                     }}
@@ -290,10 +290,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div 
                   className="shrink-0 px-2 py-0.5 rounded-md font-black text-[9px] uppercase tracking-wider shadow-md border"
                   style={{
-                    backgroundColor: '#ffffff',
-                    color: '#1e3a8a',
-                    borderColor: '#93c5fd',
-                    borderWidth: '1.5px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.45)',
+                    borderWidth: '1px',
                     borderStyle: 'solid'
                   }}
                 >

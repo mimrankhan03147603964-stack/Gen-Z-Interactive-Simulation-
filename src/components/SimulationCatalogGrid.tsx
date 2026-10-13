@@ -933,11 +933,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         >
                           {cat.colorName}
                         </span>
-                        {isSelected && (
-                          <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-blue-900 shadow-xs">
-                            Active Selection
-                          </span>
-                        )}
                       </div>
 
                       <h3 
@@ -967,13 +962,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full font-mono text-xs font-black transition-all shadow-sm"
                           style={{
                             backgroundColor: isSelected 
-                              ? 'rgba(255, 255, 255, 0.95)' 
+                              ? 'rgba(255, 255, 255, 0.22)' 
                               : (isDarkMode ? 'rgba(30, 41, 59, 0.95)' : '#ffffff'),
                             color: isSelected 
-                              ? '#0f172a' 
+                              ? '#ffffff' 
                               : (isDarkMode ? cat.textColorDark : cat.textColorLight),
                             borderColor: isSelected 
-                              ? '#ffffff' 
+                              ? 'rgba(255, 255, 255, 0.45)' 
                               : (isDarkMode ? cat.darkBorder : cat.lightBorder),
                             borderWidth: '1.5px',
                             borderStyle: 'solid',
@@ -986,16 +981,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       </div>
                     </div>
                   </div>
-
-                  {/* Active Selection Indicator Pip */}
-                  {isSelected && (
-                    <div 
-                      className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white text-blue-700 flex items-center justify-center shadow-lg border-2 border-blue-600 animate-pulse"
-                      title="Currently Active Discipline"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                    </div>
-                  )}
                 </button>
               );
             })}
@@ -1098,7 +1083,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         key={sim.id}
                         onClick={() => handleCardClick(sim)}
                         className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
-                          isActive ? 'ring-2 ring-offset-2' : ''
+                          isActive ? 'scale-[1.01]' : ''
                         }`}
                         style={{
                           backdropFilter: 'blur(12px)',
