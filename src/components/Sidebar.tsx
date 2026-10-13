@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <img 
               src="/genz-edtech-symbol.svg" 
               alt="Gen Z EdTech Interactive Monogram" 
-              className="w-full h-full object-contain filter drop-shadow-xs" 
+              className="w-full h-full object-contain drop-shadow-xs" 
             />
           </div>
           <div>

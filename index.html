@@ -13,8 +13,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* Ensure full 100% vibrant color reproduction on mobile, tablet, laptop, and desktop displays */
+      html, body, #root {
+        -webkit-filter: none !important;
+        filter: none !important;
+        forced-color-adjust: none !important;
+        -ms-high-contrast-adjust: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      @media screen and (min-width: 640px),
+             screen and (min-width: 768px),
+             screen and (min-width: 1024px),
+             screen and (min-width: 1280px),
+             screen and (min-width: 1440px),
+             screen and (min-width: 1920px),
+             (forced-colors: active),
+             (prefers-contrast),
+             print {
+        html, body, #root, main, canvas, svg, iframe, img, div {
+          forced-color-adjust: none !important;
+          -ms-high-contrast-adjust: none !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+      }
+    </style>
   </head>
-  <body oncontextmenu="return false;" class="bg-[#f1f5f9] text-slate-900 antialiased select-none">
+  <body oncontextmenu="return false;" class="bg-[#f1f5f9] text-slate-900 subpixel-antialiased select-none">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
