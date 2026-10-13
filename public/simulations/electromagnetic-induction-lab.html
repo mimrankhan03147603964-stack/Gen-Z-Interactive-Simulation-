@@ -766,26 +766,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
   <div class="fs-canvas-area">
     <canvas id="fsCanvas" width="1280" height="680"></canvas>
 
-<div class="ctl" id="ctlInduction">
-  <div class="row">
-    <span>Faraday & Induction</span>
-    <button class="btn b-play" onclick="document.getElementById('fAutoBtn')?.click()">▶ Auto-Oscillate Magnet</button>
-    <button class="btn b-out" onclick="if(window.flipMagnet)flipMagnet()">🧲 Flip Polarity (N ⇄ S)</button>
-    <button class="btn b-auto" onclick="if(window.toggleCompass)toggleCompass()">🧭 Compass Array</button>
-    <button class="btn b-set" onclick="location.reload()">⟳ Reset Coil</button>
-  </div>
-  <div class="row">
-    <span>Coil Turns</span>
-    <button class="btn b-in" onclick="var s=document.getElementById('fTurns');if(s){s.value=1;s.dispatchEvent(new Event('input'))}">1 Coil Turn</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('fTurns');if(s){s.value=2;s.dispatchEvent(new Event('input'))}">2 Coil Turns</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('fTurns');if(s){s.value=3;s.dispatchEvent(new Event('input'))}">3 Coil Turns</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Induced EMF Voltage Meter</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
   </div>
   <div class="fs-controls" id="fsControls"></div>

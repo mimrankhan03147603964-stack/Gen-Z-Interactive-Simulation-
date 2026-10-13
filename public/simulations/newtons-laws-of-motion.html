@@ -612,26 +612,7 @@ html, body, canvas, svg {
         <div class="canvas-wrap" id="holder3">
           <canvas id="canvas3"></canvas>
 
-<div class="ctl" id="ctlNewtons">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('fs1Push')?.click()">⚽ Push Football</button>
-    <button class="btn b-out" onclick="document.getElementById('fs1PushBig')?.click()">💥 Big Kick (50 N)</button>
-    <button class="btn b-auto" onclick="document.getElementById('fs1Fric')?.click()">🔥 Toggle Friction</button>
-    <button class="btn b-set" onclick="document.getElementById('fs1Reset')?.click()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Mass / Resistance</span>
-    <button class="btn b-in" onclick="var s=document.getElementById('slider2Mass');if(s){s.value=1;s.dispatchEvent(new Event('input'))}">🪶 1 kg Mass</button>
-    <button class="btn b-hold" onclick="var s=document.getElementById('slider2Mass');if(s){s.value=3;s.dispatchEvent(new Event('input'))}">📦 3 kg Mass</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('slider2Mass');if(s){s.value=5;s.dispatchEvent(new Event('input'))}">🪨 5 kg Mass</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Force Vectors (F = m · a)</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-stage, .card')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
           <button class="fs-btn" data-fs="holder3" type="button">⛶ Full Screen</button>
           <div class="hud">

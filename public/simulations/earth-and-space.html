@@ -347,27 +347,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 <div class="sim-readout" id="dnReadout">EARTH ROTATION <small>One full rotation = 24 hours</small></div>
 <canvas id="dnCanvas" width="1400" height="620"></canvas>
 
-<div class="ctl" id="ctlWaterCycle">
-  <div class="row">
-    <span>Cycle Stages</span>
-    <button class="btn b-play" onclick="document.getElementById('wStep1')?.click()">☀️ Evaporation</button>
-    <button class="btn b-in" onclick="document.getElementById('wStep2')?.click()">☁️ Condensation</button>
-    <button class="btn b-out" onclick="document.getElementById('wStep3')?.click()">🌧️ Precipitation</button>
-    <button class="btn b-auto" onclick="document.getElementById('wStep4')?.click()">🌊 Collection</button>
-    <button class="btn b-set" onclick="document.getElementById('waterResetBtn')?.click()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Time Scale</span>
-    <button class="btn b-hold" onclick="var s=document.getElementById('dnSpeed');if(s){s.value=0.5;s.dispatchEvent(new Event('input'))}">🐢 0.5x Slow</button>
-    <button class="btn b-auto" onclick="var s=document.getElementById('dnSpeed');if(s){s.value=1;s.dispatchEvent(new Event('input'))}">🌤 1x Normal</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('dnSpeed');if(s){s.value=2;s.dispatchEvent(new Event('input'))}">⚡ 2x Fast</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Hydrological Cycle Badges</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
 <div class="sim-info" id="dnInfo">Click "Rotate Earth" to simulate diurnal cycle rotation.</div>
 </div>

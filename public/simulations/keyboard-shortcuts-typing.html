@@ -724,25 +724,7 @@ body {
     <!-- STEP 3: INTERACTIVE SIMULATION BOX -->
     <div class="sim-box" id="simBox27">
 
-<div class="ctl" id="ctlKeyboard">
-  <div class="row">
-    <span>Categories</span>
-    <button class="btn b-in" onclick="if(window.filterShortcuts)filterShortcuts('editing')">✂️ Editing (Ctrl+C, V, Z)</button>
-    <button class="btn b-play" onclick="if(window.filterShortcuts)filterShortcuts('nav')">📑 Tabs & Navigation</button>
-    <button class="btn b-auto" onclick="if(window.filterShortcuts)filterShortcuts('system')">⚙️ System (Win+L, Task Mgr)</button>
-    <button class="btn b-set" onclick="if(window.clearKeys)clearKeys()">⟳ Clear Keyboard</button>
-  </div>
-  <div class="row">
-    <span>Platform</span>
-    <button class="btn b-in" onclick="if(window.setKeyboardPlatform)setKeyboardPlatform('win')">🪟 Windows OS Layout</button>
-    <button class="btn b-play" onclick="if(window.setKeyboardPlatform)setKeyboardPlatform('mac')">🍎 macOS Command Layout</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Visual Key Highlighting</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       
       <!-- PROMINENT FULLSCREEN BUTTON -->

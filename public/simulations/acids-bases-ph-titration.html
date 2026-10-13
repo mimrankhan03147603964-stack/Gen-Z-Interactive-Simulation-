@@ -475,28 +475,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 
         <canvas id="titrationCanvas" width="960" height="440"></canvas>
 
-<div class="ctl" id="ctlAcids">
-  <div class="row">
-    <span>Titration Controls</span>
-    <button class="btn b-in" onclick="document.getElementById('btnAutoTitrate')?.click()">▶ Auto Neutralize</button>
-    <button class="btn b-play" onclick="if(window.addTitrantDrop)addTitrantDrop(0.5)">💧 Add 1 Drop (0.5 mL)</button>
-    <button class="btn b-out" onclick="if(window.addTitrantDrop)addTitrantDrop(5.0)">⚡ Fast Add (5.0 mL)</button>
-    <button class="btn b-set" onclick="location.reload()">⟳ Wash Buret & Beaker</button>
-  </div>
-  <div class="row">
-    <span>pH Standard Solutions</span>
-    <button class="btn b-out" onclick="var s=document.getElementById('phSlider');if(s){s.value=1;s.dispatchEvent(new Event('input'))}">🍋 Gastric Acid (pH 1)</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('phSlider');if(s){s.value=3;s.dispatchEvent(new Event('input'))}">🍎 Vinegar (pH 3)</button>
-    <button class="btn b-auto" onclick="var s=document.getElementById('phSlider');if(s){s.value=7;s.dispatchEvent(new Event('input'))}">💧 Pure Water (pH 7)</button>
-    <button class="btn b-in" onclick="var s=document.getElementById('phSlider');if(s){s.value=10;s.dispatchEvent(new Event('input'))}">🧼 Soap (pH 10)</button>
-    <button class="btn b-hold" onclick="var s=document.getElementById('phSlider');if(s){s.value=13;s.dispatchEvent(new Event('input'))}">🧪 Bleach (pH 13)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Spectrophotometer Curve</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
 
         <div class="sim-readout">

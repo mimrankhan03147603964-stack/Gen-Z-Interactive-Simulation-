@@ -696,26 +696,7 @@ body {
       <div class="canvas-holder">
         <canvas id="compCanvas" width="1200" height="520"></canvas>
 
-<div class="ctl" id="ctlHardware">
-  <div class="row">
-    <span>Von Neumann Execution</span>
-    <button class="btn b-play" onclick="if(window.stepExecution)stepExecution()">⚡ Step: Fetch-Decode-Execute</button>
-    <button class="btn b-auto" onclick="document.getElementById('btnDataFlow')?.click()">🔄 Toggle Bus Data Stream</button>
-    <button class="btn b-set" onclick="if(window.resetHardware)resetHardware()">⟳ Reset Architecture</button>
-  </div>
-  <div class="row">
-    <span>Subsystems</span>
-    <button class="btn b-in" onclick="if(window.highlightHardware)highlightHardware('cpu')">🧠 CPU & ALU Core</button>
-    <button class="btn b-play" onclick="if(window.highlightHardware)highlightHardware('ram')">💾 RAM Primary Memory</button>
-    <button class="btn b-out" onclick="if(window.highlightHardware)highlightHardware('gpu')">🎮 GPU Graphics Engine</button>
-    <button class="btn b-hold" onclick="if(window.highlightHardware)highlightHardware('ssd')">⚡ NVMe SSD Storage</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Data, Address & Control Buses</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       </div>
 

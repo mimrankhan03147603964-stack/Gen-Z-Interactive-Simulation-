@@ -708,27 +708,7 @@ body {
       <div class="canvas-holder">
         <canvas id="measureCanvas" width="1200" height="480"></canvas>
 
-<div class="ctl" id="ctlMeasurement">
-  <div class="row">
-    <span>Lab Tools</span>
-    <button class="btn b-in" onclick="if(window.switchTool)switchTool('ruler')">📏 Precision Ruler</button>
-    <button class="btn b-play" onclick="if(window.switchTool)switchTool('balance')">⚖️ Digital Mass Scale</button>
-    <button class="btn b-auto" onclick="if(window.switchTool)switchTool('cylinder')">🧪 Displacement Flask</button>
-    <button class="btn b-set" onclick="document.getElementById('btnUnitToggle')?.click()">📏 Toggle Units</button>
-  </div>
-  <div class="row">
-    <span>Materials</span>
-    <button class="btn b-hold" onclick="if(window.setMaterial)setMaterial('wood')">🪵 Pine Wood (0.6 g/cm³)</button>
-    <button class="btn b-in" onclick="if(window.setMaterial)setMaterial('aluminum')">⚙️ Aluminum (2.7 g/cm³)</button>
-    <button class="btn b-out" onclick="if(window.setMaterial)setMaterial('iron')">🔩 Iron (7.9 g/cm³)</button>
-    <button class="btn b-play" onclick="if(window.setMaterial)setMaterial('gold')">🏆 Pure Gold (19.3 g/cm³)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">📋 Density Formula ρ = m / V</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       </div>
 

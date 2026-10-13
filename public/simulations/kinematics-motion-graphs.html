@@ -709,26 +709,7 @@ html, body, canvas, svg {
         <div class="canvas-holder" id="holder3">
           <canvas id="canvas3"></canvas>
 
-<div class="ctl" id="ctlKinematics">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('btn1Play')?.click()||document.getElementById('fs1Play')?.click()">⏸ Pause / Resume</button>
-    <button class="btn b-auto" onclick="document.getElementById('fs1Go')?.click()||document.getElementById('btn1Play')?.click()">🚗 Start Car</button>
-    <button class="btn b-out" onclick="document.getElementById('fs1Stop')?.click()||document.getElementById('btn1Play')?.click()">🛑 Brake / Stop</button>
-    <button class="btn b-set" onclick="document.getElementById('btn1Reset')?.click()||document.getElementById('fs1Reset')?.click()">⟳ Reset Motion</button>
-  </div>
-  <div class="row">
-    <span>Speed / Scale</span>
-    <button class="btn b-in" onclick="var s=document.getElementById('slider1Speed')||document.getElementById('fs1Speed');if(s){s.value=5;s.dispatchEvent(new Event('input'))}">🐢 Slow (5 m/s)</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('slider1Speed')||document.getElementById('fs1Speed');if(s){s.value=15;s.dispatchEvent(new Event('input'))}">⚡ Cruise (15 m/s)</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('slider1Speed')||document.getElementById('fs1Speed');if(s){s.value=25;s.dispatchEvent(new Event('input'))}">🚀 Sprint (25 m/s)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">📈 Distance & Speed Graphs</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-stage, .card')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
           <button class="fs-btn" data-fs="holder3" type="button">⛶ Full Screen</button>
           <div class="hud">

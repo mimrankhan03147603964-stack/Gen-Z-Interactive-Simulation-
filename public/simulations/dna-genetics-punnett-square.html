@@ -532,26 +532,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 
         <canvas id="pedigreeCanvas" width="960" height="420"></canvas>
 
-<div class="ctl" id="ctlDna">
-  <div class="row">
-    <span>Molecular DNA</span>
-    <button class="btn b-play" onclick="document.getElementById('btnDnaSpin')?.click()">⏸ Pause DNA Rotation</button>
-    <button class="btn b-out" onclick="document.getElementById('btnDnaUnzip')?.click()">✂️ Unzip Hydrogen Bonds</button>
-    <button class="btn b-auto" onclick="if(window.replicateDna)replicateDna()">🧬 Replication Live</button>
-    <button class="btn b-set" onclick="location.reload()">⟳ Reset DNA</button>
-  </div>
-  <div class="row">
-    <span>Punnett Cross</span>
-    <button class="btn b-in" onclick="if(window.crossGenotypes)crossGenotypes('Bb','Bb')">Heterozygous (Bb × Bb)</button>
-    <button class="btn b-play" onclick="if(window.crossGenotypes)crossGenotypes('BB','bb')">Homozygous Dominant (BB × bb)</button>
-    <button class="btn b-hold" onclick="if(window.crossGenotypes)crossGenotypes('bb','bb')">Homozygous Recessive (bb × bb)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Base Pairs (A-T / G-C)</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
 
         <div class="sim-readout">

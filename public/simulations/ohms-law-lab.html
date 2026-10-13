@@ -475,27 +475,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 <div class="sim-readout" id="powReadout">POWER = 230 W <small>I = 1.00 A · Energy = 1.15 kWh</small></div>
 <canvas id="powCanvas" width="1100" height="480"></canvas>
 
-<div class="ctl" id="ctlOhms">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('circSwitch')?.click()">🔘 Toggle Switch</button>
-    <button class="btn b-in" onclick="document.getElementById('basicsPreset1')?.click()">⚡ Low R (2 Ω)</button>
-    <button class="btn b-out" onclick="document.getElementById('basicsPreset2')?.click()">💡 High R (30 Ω)</button>
-    <button class="btn b-set" onclick="document.getElementById('basicsReset')?.click()||document.getElementById('circReset')?.click()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Voltage Presets</span>
-    <button class="btn b-hold" onclick="var s=document.getElementById('basicsV');if(s){s.value=3;s.dispatchEvent(new Event('input'))}">🔋 3 Volts</button>
-    <button class="btn b-auto" onclick="var s=document.getElementById('basicsV');if(s){s.value=6;s.dispatchEvent(new Event('input'))}">🔋 6 Volts</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('basicsV');if(s){s.value=9;s.dispatchEvent(new Event('input'))}">🔋 9 Volts</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('basicsV');if(s){s.value=12;s.dispatchEvent(new Event('input'))}">⚡ 12 Volts</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">📈 Dynamic V-I Curve</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
 </div>
 </div>

@@ -746,27 +746,7 @@ body {
         <div class="canvas-card">
           <canvas id="moleculeCanvas" width="600" height="380"></canvas>
 
-<div class="ctl" id="ctlMolecules">
-  <div class="row">
-    <span>Subatomic Particles</span>
-    <button class="btn b-out" onclick="if(window.addSubatomic)addSubatomic('proton')">➕ Add Proton (p⁺)</button>
-    <button class="btn b-hold" onclick="if(window.addSubatomic)addSubatomic('neutron')">⚪ Add Neutron (n⁰)</button>
-    <button class="btn b-in" onclick="if(window.addSubatomic)addSubatomic('electron')">➖ Add Electron (e⁻)</button>
-    <button class="btn b-set" onclick="if(window.resetAtom)resetAtom()">⟳ Reset Atom</button>
-  </div>
-  <div class="row">
-    <span>Stable Elements</span>
-    <button class="btn b-in" onclick="if(window.buildPresetAtom)buildPresetAtom(1)">Hydrogen (1p)</button>
-    <button class="btn b-hold" onclick="if(window.buildPresetAtom)buildPresetAtom(2)">Helium (2p)</button>
-    <button class="btn b-auto" onclick="if(window.buildPresetAtom)buildPresetAtom(6)">Carbon (6p)</button>
-    <button class="btn b-play" onclick="if(window.buildPresetAtom)buildPresetAtom(8)">Oxygen (8p)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Quantum Shells (K=2, L=8)</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
           <div style="display:flex; justify-content:space-between; width:100%; margin-top:8px; font-size:0.82rem; color:#94a3b8;">
             <span id="molFormulaDisplay">Formula: Water (H₂O)</span>

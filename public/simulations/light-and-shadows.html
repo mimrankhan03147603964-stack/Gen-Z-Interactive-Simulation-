@@ -358,27 +358,7 @@ body.fs-mode .fs-toggle{display:flex!important}
     <div class="lab-wrap" id="labWrap">
       <canvas id="scene"></canvas>
 
-<div class="ctl" id="ctlLightShadow">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('btnAuto')?.click()">☀️ Animate Sun</button>
-    <button class="btn b-in" onclick="document.getElementById('btnSource')?.click()">🔦 Torch / Sun Mode</button>
-    <button class="btn b-set" onclick="location.reload()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Time of Day</span>
-    <button class="btn b-play" onclick="var s=document.getElementById('heightSlider');if(s){s.value=15;s.dispatchEvent(new Event('input'))}">🌅 Morning</button>
-    <button class="btn b-auto" onclick="var s=document.getElementById('heightSlider');if(s){s.value=75;s.dispatchEvent(new Event('input'))}">☀️ Noon (Zenith)</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('heightSlider');if(s){s.value=25;s.dispatchEvent(new Event('input'))}">🌇 Evening</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="document.getElementById('btnRays')?.click();this.classList.toggle('on')">➜ Light Rays</button>
-    <button class="btn tg on" onclick="document.getElementById('btnSoft')?.click();this.classList.toggle('on')">🌑 Soft Shadow</button>
-    <button class="btn tg on" onclick="document.getElementById('btnMeasure')?.click();this.classList.toggle('on')">📏 Measurements</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       <div class="hud">
         <div class="chip">Light Source</div>

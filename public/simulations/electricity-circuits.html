@@ -435,26 +435,7 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
 
 <canvas id="elecCanvas" width="1100" height="520"></canvas>
 
-<div class="ctl" id="ctlElec">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('switchBtn')?.click()">🔌 Toggle Switch</button>
-    <button class="btn b-auto" onclick="document.getElementById('flowBtn')?.click()">⚡ Show Electrons</button>
-    <button class="btn b-set" onclick="document.getElementById('resetElecBtn')?.click()">⟳ Reset Circuit</button>
-  </div>
-  <div class="row">
-    <span>Variables / Cells</span>
-    <button class="btn b-in" onclick="var s=document.getElementById('circuitType');if(s){s.value='simple';s.dispatchEvent(new Event('change'))}">💡 Simple (1 Bulb)</button>
-    <button class="btn b-hold" onclick="var s=document.getElementById('circuitType');if(s){s.value='series';s.dispatchEvent(new Event('change'))}">🔗 Series (2 Bulbs)</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('circuitType');if(s){s.value='parallel';s.dispatchEvent(new Event('change'))}">⚡ Parallel (2 Bulbs)</button>
-    <button class="btn b-out" onclick="var s=document.getElementById('cellCount');if(s){s.value='3';s.dispatchEvent(new Event('change'))}">🔋 3 Cells (4.5V)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Voltage & Amperage Readout</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
 
 <div class="sim-info" id="elecInfo">Battery pushes electrons. Wires carry them. Switch controls flow. Bulb glows when current passes.</div>

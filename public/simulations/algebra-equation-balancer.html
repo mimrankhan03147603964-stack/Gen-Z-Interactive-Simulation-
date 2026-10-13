@@ -714,27 +714,7 @@ body {
       <div class="canvas-holder">
         <canvas id="scaleCanvas" width="1200" height="480"></canvas>
 
-<div class="ctl" id="ctlAlgebra">
-  <div class="row">
-    <span>Preset Equations</span>
-    <button class="btn b-play" onclick="if(window.loadEquation)loadEquation('2x + 3 = 11')">⚖️ 2x + 3 = 11</button>
-    <button class="btn b-in" onclick="if(window.loadEquation)loadEquation('3x + 1 = x + 7')">⚖️ 3x + 1 = x + 7</button>
-    <button class="btn b-out" onclick="if(window.loadEquation)loadEquation('4x - 2 = 14')">⚖️ 4x - 2 = 14</button>
-    <button class="btn b-set" onclick="if(window.resetEquation)resetEquation()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Balance Actions</span>
-    <button class="btn b-in" onclick="if(window.addVariable)addVariable('left', 1)">➕ Add x (Left)</button>
-    <button class="btn b-out" onclick="if(window.addVariable)addVariable('left', -1)">➖ Remove x (Left)</button>
-    <button class="btn b-auto" onclick="if(window.addConstant)addConstant('right', 1)">➕ Add 1 (Right)</button>
-    <button class="btn b-hold" onclick="if(window.addConstant)addConstant('right', -1)">➖ Remove 1 (Right)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">📈 Linear Function y = mx + b</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       </div>
 

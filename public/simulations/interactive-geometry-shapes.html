@@ -709,27 +709,7 @@ body {
       <div class="canvas-holder">
         <canvas id="geomCanvas" width="1200" height="480"></canvas>
 
-<div class="ctl" id="ctlGeometry">
-  <div class="row">
-    <span>Polygons</span>
-    <button class="btn b-in" onclick="if(window.setShape)setShape(3)">🔺 Triangle (3)</button>
-    <button class="btn b-play" onclick="if(window.setShape)setShape(4)">⬛ Square (4)</button>
-    <button class="btn b-auto" onclick="if(window.setShape)setShape(5)">⬟ Pentagon (5)</button>
-    <button class="btn b-out" onclick="if(window.setShape)setShape(6)">⬡ Hexagon (6)</button>
-    <button class="btn b-hold" onclick="if(window.setShape)setShape(8)">🛑 Octagon (8)</button>
-    <button class="btn b-set" onclick="if(window.setShape)setShape(0)">⭕ Circle</button>
-  </div>
-  <div class="row">
-    <span>Measurements</span>
-    <button class="btn b-play" onclick="document.getElementById('btnToggleAngles')?.click()">📐 Show Angles</button>
-    <button class="btn b-in" onclick="document.getElementById('btnToggleLengths')?.click()">📏 Show Side Lengths</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Interior Angle Sum (n-2)×180°</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       </div>
 

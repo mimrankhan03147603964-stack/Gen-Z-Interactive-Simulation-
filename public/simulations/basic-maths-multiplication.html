@@ -743,25 +743,7 @@ body {
       <div class="canvas-holder">
         <canvas id="mathCanvas" width="900" height="480"></canvas>
 
-<div class="ctl" id="ctlMultiplication">
-  <div class="row">
-    <span>Dimensions</span>
-    <button class="btn b-in" onclick="var r=document.getElementById('rowsSlider'),c=document.getElementById('colsSlider');if(r&&c){r.value=3;c.value=4;r.dispatchEvent(new Event('input'));c.dispatchEvent(new Event('input'))}">3 × 4 Array</button>
-    <button class="btn b-play" onclick="var r=document.getElementById('rowsSlider'),c=document.getElementById('colsSlider');if(r&&c){r.value=5;c.value=6;r.dispatchEvent(new Event('input'));c.dispatchEvent(new Event('input'))}">5 × 6 Array</button>
-    <button class="btn b-auto" onclick="var r=document.getElementById('rowsSlider'),c=document.getElementById('colsSlider');if(r&&c){r.value=7;c.value=8;r.dispatchEvent(new Event('input'));c.dispatchEvent(new Event('input'))}">7 × 8 Array</button>
-    <button class="btn b-out" onclick="var r=document.getElementById('rowsSlider'),c=document.getElementById('colsSlider');if(r&&c){r.value=9;c.value=9;r.dispatchEvent(new Event('input'));c.dispatchEvent(new Event('input'))}">9 × 9 Matrix</button>
-  </div>
-  <div class="row">
-    <span>Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('btnAnimCount')?.click()">▶ Animated Unit Counting</button>
-    <button class="btn b-in" onclick="if(window.toggleCommutative)toggleCommutative()">🔄 Commutative Flip (a×b = b×a)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Area & Fact Family Readout</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
       </div>
 

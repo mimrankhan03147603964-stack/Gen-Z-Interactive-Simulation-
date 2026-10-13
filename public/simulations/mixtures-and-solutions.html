@@ -540,27 +540,7 @@ html, body, canvas, svg {
 
         <canvas id="mixCanvas" width="1100" height="540"></canvas>
 
-<div class="ctl" id="ctlMix">
-  <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-in" onclick="document.getElementById('addBtn')?.click()">➕ Add Solute</button>
-    <button class="btn b-play" onclick="document.getElementById('stirBtn')?.click()">🥄 Stir Solution</button>
-    <button class="btn b-out" onclick="document.getElementById('heatBtn')?.click()">🔥 Heat Beaker</button>
-    <button class="btn b-hold" onclick="document.getElementById('coolBtn')?.click()">❄️ Cool Beaker</button>
-    <button class="btn b-set" onclick="document.getElementById('resetBtn')?.click()">⟳ Reset</button>
-  </div>
-  <div class="row">
-    <span>Solute / Solvent</span>
-    <button class="btn b-auto" onclick="var s=document.getElementById('soluteSel');if(s){s.value='salt';s.dispatchEvent(new Event('change'))}">🧂 Salt (NaCl)</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('soluteSel');if(s){s.value='sugar';s.dispatchEvent(new Event('change'))}">🍬 Sugar</button>
-    <button class="btn b-in" onclick="var s=document.getElementById('soluteSel');if(s){s.value='sand';s.dispatchEvent(new Event('change'))}">🏖️ Sand</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Concentration % Readout</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
-  </div>
-</div>
+
 
         <div class="sim-info" id="mixInfo">Click <strong>Add Solute</strong> to drop sugar into the water. Then click <strong>Stir</strong> to dissolve it. Watch the particles move!</div>
       </div>
