@@ -1469,18 +1469,62 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
     case 44:
       return (
         <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Aorta Arch Artery (Top) */}
-          <path d="M26 18 C26 6 42 6 42 20" stroke="#f43f5e" strokeWidth="5" fill="none" strokeLinecap="round" />
-          <path d="M18 16 C18 10 26 10 26 20" stroke="#38bdf8" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-          {/* Heart Muscle Body */}
-          <path d="M32 20 C20 12 8 26 20 44 C26 52 32 58 32 58 C32 58 38 52 44 44 C56 26 44 12 32 20 Z" 
-            fill="#be123c" stroke="#fda4af" strokeWidth="2" />
-          {/* Right Ventricle (Blue oxygen-poor) */}
-          <circle cx="24" cy="34" r="5" fill="#0284c7" />
-          {/* Left Ventricle (Red oxygen-rich) */}
-          <circle cx="40" cy="34" r="5" fill="#f43f5e" />
-          {/* Central Septum Divider */}
-          <line x1="32" y1="24" x2="32" y2="52" stroke="#881337" strokeWidth="2.5" strokeLinecap="round" />
+          <defs>
+            <radialGradient id="heartMyo" cx="45%" cy="50%" r="55%">
+              <stop offset="0%" stopColor="#e11d48" />
+              <stop offset="50%" stopColor="#be123c" />
+              <stop offset="85%" stopColor="#881337" />
+              <stop offset="100%" stopColor="#4c0519" />
+            </radialGradient>
+            <linearGradient id="aortaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f43f5e" />
+              <stop offset="60%" stopColor="#e11d48" />
+              <stop offset="100%" stopColor="#be123c" />
+            </linearGradient>
+            <linearGradient id="venaCavaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="50%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#0369a1" />
+            </linearGradient>
+            <linearGradient id="pulmArteryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0ea5e9" />
+              <stop offset="100%" stopColor="#0369a1" />
+            </linearGradient>
+          </defs>
+
+          {/* Superior Vena Cava (Top Right Blue Vessel) */}
+          <path d="M20 6 V18 C20 20 22 22 24 24" stroke="url(#venaCavaGrad)" strokeWidth="6" strokeLinecap="round" />
+          
+          {/* Aortic Arch (Great Central Red Arch) */}
+          <path d="M28 22 C28 8 46 8 46 24" stroke="url(#aortaGrad)" strokeWidth="7" fill="none" strokeLinecap="round" />
+          {/* 3 Brachiocephalic Branches on Aorta */}
+          <line x1="33" y1="12" x2="31" y2="5" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="38" y1="10" x2="38" y2="4" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="43" y1="12" x2="45" y2="5" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" />
+
+          {/* Pulmonary Artery Trunk (Crossover Blue) */}
+          <path d="M26 24 C28 20 38 18 48 20" stroke="url(#pulmArteryGrad)" strokeWidth="5" strokeLinecap="round" />
+
+          {/* Pulmonary Veins (Left side red return vessels) */}
+          <rect x="47" y="24" width="7" height="4" rx="2" fill="#e11d48" />
+          <rect x="10" y="24" width="7" height="4" rx="2" fill="#0284c7" />
+
+          {/* Realistic Anatomical Cardiac Muscle Mass */}
+          <path d="M32 20 C22 14 13 22 14 34 C15 44 24 53 30 58 C31 59 33 59 34 58 C42 52 52 44 51 32 C50 20 40 14 32 20 Z" 
+            fill="url(#heartMyo)" stroke="#fda4af" strokeWidth="1.5" />
+
+          {/* Anatomical Chamber Separations & Internal Grooves */}
+          {/* Sulcus / Septum groove */}
+          <path d="M30 24 Q31 38 32 57" stroke="#4c0519" strokeWidth="2" strokeLinecap="round" opacity="0.8" />
+          {/* Right Ventricle / Atrium contour (Anatomical Right = Left side) */}
+          <path d="M16 28 C18 36 24 38 28 36" stroke="#0284c7" strokeWidth="1.8" fill="none" opacity="0.8" />
+          {/* Left Ventricle thick apex myocardium highlight */}
+          <path d="M33 34 C38 42 42 48 35 55" stroke="#ffe4e6" strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.6" />
+
+          {/* Branching Coronary Arteries (Vibrant Gold/Coral Red) */}
+          <path d="M30 26 Q33 34 27 42 Q25 46 28 50" stroke="#facc15" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <path d="M30 33 Q36 37 38 43" stroke="#facc15" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M28 42 Q23 44 21 47" stroke="#38bdf8" strokeWidth="0.8" fill="none" strokeLinecap="round" />
         </svg>
       );
 
@@ -1580,6 +1624,29 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <path d="M23 35 Q26 38 29 35" stroke="#78350f" strokeWidth="1.5" fill="none" strokeLinecap="round" />
           {/* Happy Confetti Star */}
           <polygon points="12,12 14,16 19,16 15,19 17,24 12,21 7,24 9,19 5,16 10,16" fill="#f43f5e" />
+        </svg>
+      );
+
+    // 50: ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)
+    case 50:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Seven Learning Areas Rainbow Spectrum Halo */}
+          <path d="M8 46 A24 24 0 0 1 56 46" stroke="#1677ff" strokeWidth="3" fill="none" strokeDasharray="4 2" />
+          {/* Open Pedagogical Curriculum Book */}
+          <path d="M10 44 C20 40 32 42 32 48 C32 42 44 40 54 44 V18 C44 14 32 16 32 22 C32 16 20 14 10 18 Z" 
+            fill="#082b57" stroke="#38bdf8" strokeWidth="2.5" />
+          <line x1="32" y1="22" x2="32" y2="48" stroke="#60a5fa" strokeWidth="2" />
+          {/* 7 Learning Areas Colored Dots on Pages */}
+          <circle cx="18" cy="26" r="2.5" fill="#e11d48" />
+          <circle cx="24" cy="31" r="2.5" fill="#7957ff" />
+          <circle cx="18" cy="36" r="2.5" fill="#16b96b" />
+          <circle cx="46" cy="26" r="2.5" fill="#ff9f2d" />
+          <circle cx="40" cy="31" r="2.5" fill="#f04f9f" />
+          <circle cx="46" cy="36" r="2.5" fill="#8559ff" />
+          <circle cx="32" cy="14" r="3.5" fill="#facc15" stroke="#ffffff" strokeWidth="1" />
+          {/* Golden Badge Bookmark Ribbon */}
+          <path d="M30 46 L32 54 L34 46 Z" fill="#f59e0b" />
         </svg>
       );
 

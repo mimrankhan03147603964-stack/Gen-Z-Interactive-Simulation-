@@ -997,203 +997,276 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             const categorySims = simulations.filter(s => s.category === cat.key && matchesSearch(s));
             if (categorySims.length === 0) return null;
 
-            return (
-              <div key={cat.key} className="space-y-4">
-                {/* Grid of Simulation Cards under this Subject */}
+            const isEcceCategory = cat.key === 'Early Childhood (ECCE)';
+            const interactiveSims = isEcceCategory 
+              ? categorySims.filter(s => s.id !== 'sim-ecce-curriculum-learning-areas')
+              : categorySims;
+            const conceptSims = isEcceCategory
+              ? categorySims.filter(s => s.id === 'sim-ecce-curriculum-learning-areas')
+              : [];
 
-                {/* Grid of Simulation Cards under this Subject */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                  {categorySims.map((sim) => {
-                    const theme = getSimTheme(sim.indexNumber);
-                    const isActive = activeSim ? activeSim.id === sim.id : false;
+            const renderCard = (sim: SimulationItem) => {
+              const theme = getSimTheme(sim.indexNumber);
+              const isActive = activeSim ? activeSim.id === sim.id : false;
+              const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
 
-                    return (
-                      <div
-                        key={sim.id}
-                        onClick={() => handleCardClick(sim)}
-                        className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
-                          isActive ? 'scale-[1.01]' : ''
-                        }`}
+              return (
+                <div
+                  key={sim.id}
+                  onClick={() => handleCardClick(sim)}
+                  className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
+                    isActive ? 'scale-[1.01]' : ''
+                  }`}
+                  style={{
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
+                    borderStyle: 'solid',
+                    borderTopWidth: isConceptGuide ? '5px' : '4px',
+                    borderRightWidth: isActive ? '2px' : '1.5px',
+                    borderBottomWidth: isActive ? '2px' : '1.5px',
+                    borderLeftWidth: isActive ? '2px' : '1.5px',
+                    borderTopColor: theme.bgSolid,
+                    borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
+                    borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
+                    borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
+                    boxShadow: isDarkMode 
+                      ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
+                      : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
+                    color: isDarkMode ? '#ffffff' : '#0f172a'
+                  }}
+                >
+                  {/* Card Content */}
+                  <div className="p-5 pb-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      {/* Realistic Visual Emblem */}
+                      <div 
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1"
                         style={{
-                          backdropFilter: 'blur(12px)',
-                          WebkitBackdropFilter: 'blur(12px)',
-                          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
+                          backgroundColor: theme.badgeBg,
+                          borderColor: theme.borderColor,
+                          borderWidth: '2px',
                           borderStyle: 'solid',
-                          borderTopWidth: '4px',
-                          borderRightWidth: isActive ? '2px' : '1.5px',
-                          borderBottomWidth: isActive ? '2px' : '1.5px',
-                          borderLeftWidth: isActive ? '2px' : '1.5px',
-                          borderTopColor: theme.bgSolid,
-                          borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
-                          borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
-                          borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
-                          boxShadow: isDarkMode 
-                            ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
-                            : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
-                          color: isDarkMode ? '#ffffff' : '#0f172a'
+                          boxShadow: `0 4px 14px ${theme.glowColor}`
                         }}
                       >
-                        {/* Card Content */}
-                        <div className="p-5 pb-3">
-                          <div className="flex items-start justify-between gap-3 mb-3">
-                            {/* Prominent, Large, Colorful Realistic Visual Emblem */}
-                            <div 
-                              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1"
-                              style={{
-                                backgroundColor: theme.badgeBg,
-                                borderColor: theme.borderColor,
-                                borderWidth: '2px',
-                                borderStyle: 'solid',
-                                boxShadow: `0 4px 14px ${theme.glowColor}`
-                              }}
-                            >
-                              <TopicRealisticIcon 
-                                indexNumber={sim.indexNumber}
-                                simId={sim.id}
-                                className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
-                              />
-                            </div>
+                        <TopicRealisticIcon 
+                          indexNumber={sim.indexNumber}
+                          simId={sim.id}
+                          className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
+                        />
+                      </div>
 
-                            {/* Badges: Lab Number & Grade */}
-                            <div className="flex flex-col items-end gap-1.5">
-                              <span 
-                                className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs"
-                                style={{
-                                  backgroundColor: theme.bgSolid,
-                                  color: '#ffffff',
-                                  borderColor: theme.borderColor,
-                                  borderWidth: '1px',
-                                  borderStyle: 'solid'
-                                }}
-                              >
-                                LAB {sim.indexNumber}
-                              </span>
-                              <span 
-                                className="text-[10px] font-black px-2 py-0.5 rounded-full"
-                                style={{
-                                  backgroundColor: theme.badgeBg,
-                                  color: theme.badgeText,
-                                  borderColor: theme.badgeBorder,
-                                  borderWidth: '1px',
-                                  borderStyle: 'solid'
-                                }}
-                              >
-                                {sim.gradeLevel}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Simulation Topic Title */}
-                          <h4 
-                            className="text-base font-black tracking-tight leading-snug line-clamp-1 group-hover:text-blue-500 transition-colors"
-                            style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-                          >
-                            {sim.title}
-                          </h4>
-
-                          {/* Subject & Sub-discipline */}
-                          <p 
-                            className="text-xs font-bold mt-1 line-clamp-1"
-                            style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
-                          >
-                            {sim.subject}
-                          </p>
-
-                          {/* Concept Description Intro */}
-                          <p 
-                            className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
-                            style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
-                          >
-                            {sim.description}
-                          </p>
-
-                          {/* Topic Tags */}
-                          <div className="flex flex-wrap gap-1.5 mt-3">
-                            {sim.topics.slice(0, 2).map((topic, i) => (
-                              <span
-                                key={i}
-                                className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
-                                style={{
-                                  backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
-                                  color: isDarkMode ? '#cbd5e1' : theme.tagText,
-                                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                                  borderWidth: '1px',
-                                  borderStyle: 'solid'
-                                }}
-                              >
-                                {topic}
-                              </span>
-                            ))}
-                            {sim.topics.length > 2 && (
-                              <span 
-                                className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-                                style={{
-                                  backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
-                                  color: isDarkMode ? '#94a3b8' : theme.badgeText,
-                                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                                  borderWidth: '1px',
-                                  borderStyle: 'solid'
-                                }}
-                              >
-                                +{sim.topics.length - 2}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Card Action Bar */}
-                        <div 
-                          className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
+                      {/* Badges: Lab / Concept & Grade */}
+                      <div className="flex flex-col items-end gap-1.5">
+                        <span 
+                          className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs"
                           style={{
-                            backdropFilter: 'blur(12px)',
-                            WebkitBackdropFilter: 'blur(12px)',
-                            backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
-                            borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
+                            backgroundColor: theme.bgSolid,
+                            color: '#ffffff',
+                            borderColor: theme.borderColor,
+                            borderWidth: '1px',
+                            borderStyle: 'solid'
                           }}
                         >
-                          <a
-                            href={getSimulationStandaloneUrl(sim)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSelectSim(sim);
-                            }}
-                            className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
-                            style={{
-                              backgroundColor: theme.bgSolid,
-                              boxShadow: `0 2px 6px ${theme.glowColor}`
-                            }}
-                            title="Open Lab in Dedicated New Tab"
-                          >
-                            <ExternalLink className="w-3 h-3 text-white" />
-                            <span>Launch Lab</span>
-                          </a>
+                          {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
+                        </span>
+                        <span 
+                          className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                          style={{
+                            backgroundColor: theme.badgeBg,
+                            color: theme.badgeText,
+                            borderColor: theme.badgeBorder,
+                            borderWidth: '1px',
+                            borderStyle: 'solid'
+                          }}
+                        >
+                          {sim.gradeLevel}
+                        </span>
+                      </div>
+                    </div>
 
-                          {/* Direct Fullscreen Modal Button */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onLaunchFullscreenModal(sim);
-                            }}
-                            className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
-                            style={{
-                              backgroundColor: theme.bgSolid,
-                              borderColor: theme.borderColor,
-                              borderWidth: '1.5px',
-                              borderStyle: 'solid',
-                              color: '#ffffff'
-                            }}
-                            title="Launch in 4K Fullscreen Modal"
-                          >
-                            <Maximize2 className="w-3.5 h-3.5 text-white" />
-                          </button>
+                    {/* Simulation Topic Title */}
+                    <h4 
+                      className="text-base font-black tracking-tight leading-snug line-clamp-2 group-hover:text-blue-500 transition-colors"
+                      style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+                    >
+                      {sim.title}
+                    </h4>
+
+                    {/* Subject & Sub-discipline */}
+                    <p 
+                      className="text-xs font-bold mt-1 line-clamp-1"
+                      style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+                    >
+                      {sim.subject}
+                    </p>
+
+                    {/* Concept Description Intro */}
+                    <p 
+                      className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
+                      style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+                    >
+                      {sim.description}
+                    </p>
+
+                    {/* Topic Tags */}
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {sim.topics.slice(0, 2).map((topic, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
+                          style={{
+                            backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
+                            color: isDarkMode ? '#cbd5e1' : theme.tagText,
+                            borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
+                            borderWidth: '1px',
+                            borderStyle: 'solid'
+                          }}
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                      {sim.topics.length > 2 && (
+                        <span 
+                          className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
+                          style={{
+                            backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
+                            color: isDarkMode ? '#94a3b8' : theme.badgeText,
+                            borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
+                            borderWidth: '1px',
+                            borderStyle: 'solid'
+                          }}
+                        >
+                          +{sim.topics.length - 2}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card Action Bar */}
+                  <div 
+                    className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
+                    style={{
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
+                      borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
+                    }}
+                  >
+                    <a
+                      href={getSimulationStandaloneUrl(sim)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectSim(sim);
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
+                      style={{
+                        backgroundColor: theme.bgSolid,
+                        boxShadow: `0 2px 6px ${theme.glowColor}`
+                      }}
+                      title={isConceptGuide ? "Open Concept Guide in Dedicated Tab" : "Open Lab in Dedicated New Tab"}
+                    >
+                      <ExternalLink className="w-3 h-3 text-white" />
+                      <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+                    </a>
+
+                    {/* Direct Fullscreen Modal Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onLaunchFullscreenModal(sim);
+                      }}
+                      className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
+                      style={{
+                        backgroundColor: theme.bgSolid,
+                        borderColor: theme.borderColor,
+                        borderWidth: '1.5px',
+                        borderStyle: 'solid',
+                        color: '#ffffff'
+                      }}
+                      title="Launch in 4K Fullscreen View"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5 text-white" />
+                    </button>
+                  </div>
+                </div>
+              );
+            };
+
+            return (
+              <div key={cat.key} className="space-y-6">
+                {/* Regular Interactive Simulations Grid */}
+                {interactiveSims.length > 0 && (
+                  <div className="space-y-3">
+                    {isEcceCategory && (
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5"
+                          style={{
+                            backgroundColor: isDarkMode ? 'rgba(234, 88, 12, 0.2)' : 'rgba(255, 237, 213, 0.9)',
+                            color: '#ea580c',
+                            border: '1px solid rgba(234, 88, 12, 0.4)'
+                          }}
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                          ECCE Interactive Simulations • Visual Preschool Labs
+                        </span>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                      {interactiveSims.map(renderCard)}
+                    </div>
+                  </div>
+                )}
+
+                {/* Dedicated Separate Heading & Section for ECCE Pedagogical Concept */}
+                {isEcceCategory && conceptSims.length > 0 && (
+                  <div className="mt-8 pt-6 border-t" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(226, 232, 240, 0.8)' }}>
+                    <div 
+                      className="mb-5 p-5 sm:p-6 rounded-2xl border shadow-lg transition-all"
+                      style={{
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        backgroundColor: isDarkMode ? 'rgba(8, 43, 87, 0.55)' : 'rgba(239, 246, 255, 0.92)',
+                        borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.45)' : 'rgba(147, 197, 253, 0.85)',
+                        boxShadow: isDarkMode ? '0 8px 32px rgba(0, 0, 0, 0.35)' : '0 8px 24px rgba(22, 119, 255, 0.1)'
+                      }}
+                    >
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider text-white shadow-xs" style={{ backgroundColor: '#1677ff' }}>
+                              Pedagogical Concept & Standards Guide • NCP 2022–23
+                            </span>
+                            <span className="px-3 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.6)' : '#dbeafe', color: isDarkMode ? '#93c5fd' : '#1e40af' }}>
+                              National Curriculum Standards Reference Guide
+                            </span>
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-black tracking-tight" style={{ color: isDarkMode ? '#ffffff' : '#082b57' }}>
+                            ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards
+                          </h3>
+                          <p className="text-xs sm:text-sm font-semibold max-w-4xl leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#334155' }}>
+                            Comprehensive pedagogical concept guide and curriculum standard framework. Designed specifically for teachers, educators, and parents to explain the 7 core development areas and visual competency standards to early learners.
+                          </p>
+                        </div>
+                        <div className="shrink-0">
+                          <span className="px-4 py-2 rounded-xl text-xs font-black shadow-sm flex items-center gap-2" style={{ backgroundColor: '#0284c7', color: '#ffffff' }}>
+                            <BookOpen className="w-4 h-4" />
+                            Teacher Conceptual Reference
+                          </span>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                      {conceptSims.map(renderCard)}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

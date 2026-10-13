@@ -799,6 +799,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ffedd5',
     tagText: '#ea580c',
     glowColor: 'rgba(234, 88, 12, 0.45)'
+  },
+  '50': {
+    id: '50',
+    name: 'ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)',
+    bgSolid: '#1677ff',
+    bgGradient: 'linear-gradient(135deg, #1677ff 0%, #082b57 100%)',
+    borderColor: '#60a5fa',
+    iconBg: '#1677ff',
+    iconBorder: '#93c5fd',
+    iconColor: '#ffffff',
+    badgeBg: '#eff6ff',
+    badgeText: '#1d4ed8',
+    badgeBorder: '#93c5fd',
+    tagBg: '#dbeafe',
+    tagText: '#1e40af',
+    glowColor: 'rgba(22, 119, 255, 0.45)'
   }
 };
 

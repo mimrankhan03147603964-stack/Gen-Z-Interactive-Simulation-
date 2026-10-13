@@ -735,6 +735,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['4 Global Wildlife Habitats (Savannah, Jungle, Ocean, Arctic)', 'Animal Names, Sounds & Recognitions', 'Diet & Behavioral Adaptations', 'Multi-Sensory Fine Motor Coordination'],
     features: ['Interactive Bouncy Cartoon Animals with Sounds', '4 High-Contrast Vibrant Biome Landscapes', 'Pop-able Celebratory Balloon Confetti', 'Web-Audio Synthesized Friendly Musical Chimes'],
     gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
+  },
+  {
+    id: 'sim-ecce-curriculum-learning-areas',
+    slug: 'ecce-curriculum-learning-areas',
+    indexNumber: '50',
+    title: 'ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)',
+    subject: 'ECCE Teacher Pedagogical Concept & Learning Areas Framework',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'BookOpen',
+    accentColor: '#1677ff', // Vibrant Royal Blue
+    description: 'Comprehensive pedagogical concept and curriculum standard framework for Early Childhood Care and Education (NCP 2022–23). Covers all Seven Learning Areas (PSED, Language & Literacy, Physical Development, Health & Safety, Basic Mathematics, Creative Arts, World Around Us) with full pictorial standard explanations, classroom practice steps, and teacher-parent tips.',
+    fileUrl: '/simulations/ecce-curriculum-learning-areas.html',
+    topics: ['7 ECCE Learning Areas (PSED, LL, PD, HHS, BMS, CA, WAU)', 'All Learning Standards with Pictorial Explanations', 'How to Practise Classroom Steps for Teachers', 'Teacher & Parent Guidance Tips for Early Development'],
+    features: ['Pedagogical Concept & Curriculum Framework Guide', 'Interactive 7 Domain Explorers with Real SVG Graphics', 'Standard-by-Standard Interactive Modal Explanations', 'Designed for Teachers, Educators & Early Learners'],
+    gradeLevel: 'ECCE, Nursery, Kindergarten & Teacher Professional Training'
   }
 ];
 
