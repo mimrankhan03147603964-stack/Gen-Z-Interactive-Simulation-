@@ -1215,6 +1215,219 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 34: Projectile Motion & Gravitational Trajectory Lab
+    case 34:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cannonGrad" x1="10" y1="45" x2="35" y2="20" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="ballGrad" x1="42" y1="18" x2="52" y2="28" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#ef4444" />
+            </linearGradient>
+          </defs>
+          {/* Ground Baseline */}
+          <line x1="6" y1="54" x2="58" y2="54" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+          {/* Parabolic Trajectory Dashed Curve */}
+          <path d="M16 42 Q36 6 52 50" stroke="#facc15" strokeWidth="2.5" strokeDasharray="3 3" fill="none" />
+          {/* Cannon Barrel */}
+          <g transform="rotate(-35 16 48)">
+            <rect x="14" y="42" width="22" height="10" rx="3" fill="url(#cannonGrad)" stroke="#0369a1" strokeWidth="1.2" />
+          </g>
+          {/* Cannon Wheel */}
+          <circle cx="16" cy="48" r="9" fill="#0f172a" stroke="#00f5ff" strokeWidth="2.2" />
+          <circle cx="16" cy="48" r="3" fill="#ffffff" />
+          {/* Glowing Projectile Cannonball at Peak */}
+          <circle cx="36" cy="18" r="5.5" fill="url(#ballGrad)" stroke="#ffffff" strokeWidth="1.5" />
+          {/* Tangent Velocity Vector Arrow */}
+          <line x1="36" y1="18" x2="48" y2="18" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+          <polygon points="48,15 53,18 48,21" fill="#4ade80" />
+        </svg>
+      );
+
+    // 35: Chemical Reaction Kinetics & Catalysis Lab
+    case 35:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="kineticsFlask" x1="20" y1="10" x2="44" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#c084fc" />
+              <stop offset="100%" stopColor="#7e22ce" />
+            </linearGradient>
+            <linearGradient id="rxnFluid" x1="16" y1="36" x2="48" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#9333ea" />
+              <stop offset="100%" stopColor="#4c1d95" />
+            </linearGradient>
+          </defs>
+          {/* Erlenmeyer Flask Outline */}
+          <path d="M26 8 H38 V22 L52 50 C54 54 50 58 46 58 H18 C14 58 10 54 12 50 L26 22 Z" fill="url(#rxnFluid)" stroke="#c084fc" strokeWidth="2" strokeLinejoin="round" />
+          {/* Catalyst Golden Crystal */}
+          <polygon points="32,40 37,45 32,50 27,45" fill="#facc15" stroke="#ffffff" strokeWidth="1" />
+          {/* Reacting Particles Colliding */}
+          <circle cx="22" cy="48" r="3.5" fill="#38bdf8" stroke="#fff" strokeWidth="1" />
+          <circle cx="42" cy="46" r="3.5" fill="#f43f5e" stroke="#fff" strokeWidth="1" />
+          {/* Product Emergence Spark */}
+          <circle cx="32" cy="32" r="4.5" fill="#34d399" stroke="#fff" strokeWidth="1.5" />
+          {/* Kinetic Energy Wave / Flame */}
+          <path d="M22 62 Q32 58 42 62" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 36: Photosynthesis & Cellular Chloroplast Engine
+    case 36:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#fef08a" />
+              <stop offset="100%" stopColor="#f59e0b" />
+            </radialGradient>
+            <linearGradient id="leafGrad" x1="14" y1="14" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#4ade80" />
+              <stop offset="60%" stopColor="#16a34a" />
+              <stop offset="100%" stopColor="#14532d" />
+            </linearGradient>
+          </defs>
+          {/* Lush Green Chloroplast Leaf */}
+          <path d="M14 50 C12 30 28 12 50 14 C52 34 36 52 14 50 Z" fill="url(#leafGrad)" stroke="#86efac" strokeWidth="2" />
+          {/* Leaf Vein Structure */}
+          <path d="M14 50 Q32 32 50 14" stroke="#bbf7d0" strokeWidth="2" strokeLinecap="round" />
+          <line x1="26" y1="38" x2="36" y2="40" stroke="#bbf7d0" strokeWidth="1.5" />
+          <line x1="36" y1="28" x2="44" y2="30" stroke="#bbf7d0" strokeWidth="1.5" />
+          {/* Radiant Solar Photon Beam */}
+          <circle cx="48" cy="16" r="6" fill="url(#sunGlow)" stroke="#ffffff" strokeWidth="1.5" />
+          <line x1="42" y1="22" x2="32" y2="30" stroke="#fde047" strokeWidth="2" strokeDasharray="2 2" strokeLinecap="round" />
+          {/* O2 Oxygen Bubble Emitted */}
+          <circle cx="20" cy="22" r="5" fill="rgba(56,189,248,0.85)" stroke="#ffffff" strokeWidth="1.2" />
+          <text x="20" y="24" fill="#ffffff" fontSize="5" fontWeight="900" textAnchor="middle">O₂</text>
+        </svg>
+      );
+
+    // 37: Moon Phases, Tides & Lunar Orbit Simulator
+    case 37:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="earthBlue" x1="16" y1="16" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+          </defs>
+          {/* Starfield Dark Space */}
+          <circle cx="32" cy="32" r="28" fill="#020617" stroke="#1e293b" strokeWidth="1.5" />
+          {/* Earth Body */}
+          <circle cx="28" cy="32" r="14" fill="url(#earthBlue)" stroke="#7dd3fc" strokeWidth="1.5" />
+          <path d="M24 24 Q30 26 32 32 Q26 38 22 34 Z" fill="#22c55e" />
+          {/* Elliptical Moon Orbit Path */}
+          <ellipse cx="28" cy="32" rx="22" ry="16" stroke="rgba(56,189,248,0.4)" strokeWidth="1.5" strokeDasharray="3 3" />
+          {/* Crescent / Quarter Moon in Orbit */}
+          <circle cx="48" cy="24" r="6.5" fill="#334155" stroke="#94a3b8" strokeWidth="1" />
+          <path d="M48 17.5 A6.5 6.5 0 0 1 48 30.5 A4 6.5 0 0 0 48 17.5" fill="#fef08a" />
+          {/* Tidal Bulge Water Vector */}
+          <path d="M12 32 C12 26 15 24 18 32 C15 40 12 38 12 32 Z" fill="rgba(56,189,248,0.5)" />
+        </svg>
+      );
+
+    // 38: Pythagorean Theorem & Geometric Distance Engine
+    case 38:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="pythOrange" x1="14" y1="14" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#fb923c" />
+              <stop offset="100%" stopColor="#ea580c" />
+            </linearGradient>
+          </defs>
+          {/* Square a^2 (Vertical Left) */}
+          <rect x="8" y="16" width="16" height="16" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" strokeWidth="1.5" />
+          {/* Square b^2 (Bottom Horizontal) */}
+          <rect x="24" y="32" width="22" height="22" fill="rgba(244,63,94,0.25)" stroke="#f43f5e" strokeWidth="1.5" />
+          {/* Right Angle Triangle in Center */}
+          <polygon points="24,32 46,32 24,16" fill="url(#pythOrange)" stroke="#fde047" strokeWidth="2" />
+          {/* Right Angle Corner Pip */}
+          <polyline points="24,28 28,28 28,32" stroke="#ffffff" strokeWidth="1.2" fill="none" />
+          {/* Square c^2 (Rotated on Hypotenuse) */}
+          <g transform="rotate(36 35 24)">
+            <rect x="26" y="6" width="20" height="20" fill="rgba(34,197,94,0.28)" stroke="#22c55e" strokeWidth="1.5" />
+          </g>
+        </svg>
+      );
+
+    // 39: Sorting Algorithms & Computational Complexity Workbench
+    case 39:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="barTeal" x1="0" y1="0" x2="0" y2="100%">
+              <stop offset="0%" stopColor="#2dd4bf" />
+              <stop offset="100%" stopColor="#0f766e" />
+            </linearGradient>
+          </defs>
+          {/* Bar Chart Slices in Ascending Sorted Order */}
+          <rect x="8" y="44" width="7" height="12" rx="1.5" fill="#14b8a6" stroke="#5eead4" strokeWidth="1" />
+          <rect x="18" y="34" width="7" height="22" rx="1.5" fill="#14b8a6" stroke="#5eead4" strokeWidth="1" />
+          <rect x="28" y="24" width="7" height="32" rx="1.5" fill="#f59e0b" stroke="#fde68a" strokeWidth="1" />
+          <rect x="38" y="14" width="7" height="42" rx="1.5" fill="#f43f5e" stroke="#fda4af" strokeWidth="1" />
+          <rect x="48" y="8" width="7" height="48" rx="1.5" fill="url(#barTeal)" stroke="#2dd4bf" strokeWidth="1" />
+          {/* Ground Baseline */}
+          <line x1="6" y1="58" x2="58" y2="58" stroke="#2dd4bf" strokeWidth="2" strokeLinecap="round" />
+          {/* Pivot Swapping Loop Arrow above */}
+          <path d="M28 18 Q38 8 42 16" stroke="#facc15" strokeWidth="2" fill="none" markerEnd="url(#arrow)" />
+        </svg>
+      );
+
+    // 40: English Sentence Structure & Syntax Tree Builder
+    case 40:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Root Node S */}
+          <rect x="24" y="8" width="16" height="10" rx="2" fill="#6366f1" stroke="#a5b4fc" strokeWidth="1.2" />
+          <text x="32" y="15" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">S</text>
+          {/* Branch Lines */}
+          <line x1="30" y1="18" x2="18" y2="28" stroke="#a5b4fc" strokeWidth="1.5" />
+          <line x1="34" y1="18" x2="46" y2="28" stroke="#a5b4fc" strokeWidth="1.5" />
+          {/* NP Node */}
+          <rect x="10" y="28" width="16" height="10" rx="2" fill="#38bdf8" stroke="#7dd3fc" strokeWidth="1.2" />
+          <text x="18" y="35" fill="#04102a" fontSize="6.5" fontWeight="bold" textAnchor="middle">NP</text>
+          {/* VP Node */}
+          <rect x="38" y="28" width="16" height="10" rx="2" fill="#f43f5e" stroke="#fda4af" strokeWidth="1.2" />
+          <text x="46" y="35" fill="#ffffff" fontSize="6.5" fontWeight="bold" textAnchor="middle">VP</text>
+          {/* Leaf Branches */}
+          <line x1="18" y1="38" x2="14" y2="46" stroke="#a5b4fc" strokeWidth="1.2" />
+          <line x1="46" y1="38" x2="42" y2="46" stroke="#a5b4fc" strokeWidth="1.2" />
+          <line x1="46" y1="38" x2="52" y2="46" stroke="#a5b4fc" strokeWidth="1.2" />
+          {/* Book / Leaf Foundation */}
+          <path d="M10 54 Q32 50 54 54" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 41: Vibrant Color Mixing & Geometric Sorting Playground (100% Colorful ECCE)
+    case 41:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Golden Smiling Star */}
+          <g transform="translate(18, 18)">
+            <polygon points="14,2 17,9 25,9 18,14 21,22 14,17 7,22 10,14 3,9 11,9" fill="#ffea00" stroke="#ffffff" strokeWidth="1.5" />
+          </g>
+          {/* Sunny Ruby Red Smiling Circle */}
+          <circle cx="44" cy="22" r="11" fill="#ff0055" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="41" cy="20" r="1.5" fill="#ffffff" />
+          <circle cx="47" cy="20" r="1.5" fill="#ffffff" />
+          <path d="M41 24 Q44 27 47 24" stroke="#ffffff" strokeWidth="1.5" fill="none" />
+          {/* Playful Ocean Blue Alphabet Block Square */}
+          <rect x="10" y="34" width="18" height="18" rx="4" fill="#00d2ff" stroke="#ffffff" strokeWidth="2" />
+          <text x="19" y="47" fill="#ffffff" fontSize="11" fontWeight="900" textAnchor="middle">A</text>
+          {/* Emerald Green Triangle */}
+          <polygon points="46,34 56,52 36,52" fill="#00e676" stroke="#ffffff" strokeWidth="2" />
+          {/* Violet Confetti Sparkles */}
+          <circle cx="32" cy="38" r="3" fill="#d500f9" />
+          <circle cx="56" cy="14" r="2.5" fill="#ff9100" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

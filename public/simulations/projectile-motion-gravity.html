@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Projectile Motion & Gravitational Trajectory Lab</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--red:#ff4d67;--grn:#22d3a0;--amb:#ffc247;--vio:#9b7bff;--cyan:#00f5ff}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#10205a,#1a0f3a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#38bdf8,#0284c7);color:#fff;box-shadow:0 5px 0 #0369a1,0 10px 26px #0284c766}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#10235e,#050a1e 75%);border:1px solid var(--line);border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:var(--cyan);text-shadow:0 0 14px rgba(0,245,255,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#030718;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-fire{background:linear-gradient(90deg,#f59e0b,#ef4444);color:#fff}
+.b-play{background:var(--amb)}
+.b-reset{background:var(--red);color:#fff}
+.b-var{background:var(--blue);color:#fff}
+.b-grn{background:var(--grn);color:#04102a}
+.b-fs{background:linear-gradient(90deg,var(--vio),#ff7eb6);color:#fff}
+.tg{background:#1c2b63;color:#d4e0ff;border:2px solid #3a4f9a}
+.tg.on{background:var(--vio);color:#fff;border-color:#cbbcff;box-shadow:0 0 16px #9b7bffaa}
+.metric-pill{background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#38bdf8}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#14286e,#050a1e 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Theory & Formulas</button><button class="tab on" data-pg="s">🎮 Interactive Ballistics Stage</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>Projectile Motion & Classical Trajectory</h2>
+  <p>A projectile moves under two independent 1D motions: <b>Horizontal motion</b> with constant velocity (zero acceleration) and <b>Vertical motion</b> governed by gravitational acceleration <i>g</i>.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px">
+    <div style="background:#091434;padding:12px;border-radius:14px;border:1px solid #2a3d80"><b style="color:#38bdf8">Max Range (R):</b><br><code>R = (v₀² · sin 2θ) / g</code></div>
+    <div style="background:#091434;padding:12px;border-radius:14px;border:1px solid #2a3d80"><b style="color:#4ade80">Peak Height (H):</b><br><code>H = (v₀² · sin² θ) / (2g)</code></div>
+    <div style="background:#091434;padding:12px;border-radius:14px;border:1px solid #2a3d80"><b style="color:#fbbf24">Time of Flight (T):</b><br><code>T = (2v₀ · sin θ) / g</code></div>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">🚀 Ballistics Simulation: Launch Angle 45° • Velocity 25 m/s</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Launch</span>
+      <button class="btn b-fire" id="bLaunch">💥 Fire Projectile</button>
+      <button class="btn b-play" id="bPause">⏸ Pause / Play</button>
+      <button class="btn b-reset" id="bClear">⟳ Clear Traces</button>
+      <button class="btn b-var" id="bAngDown">− Angle (30°)</button>
+      <button class="btn b-var" id="bAngUp">+ Angle (60°)</button>
+      <button class="btn b-grn" id="bOptAng">🎯 45° Max Range</button>
+    </div>
+    <div class="row">
+      <span>Velocity & Gravity</span>
+      <button class="btn b-var" id="bVelDown">− Speed (15 m/s)</button>
+      <button class="btn b-var" id="bVelUp">+ Speed (35 m/s)</button>
+      <button class="btn tg on" data-g="9.8" id="bEarth">🌍 Earth (9.8m/s²)</button>
+      <button class="btn tg" data-g="1.62" id="bMoon">🌕 Moon (1.62m/s²)</button>
+      <button class="btn tg" data-g="3.72" id="bMars">🔴 Mars (3.72m/s²)</button>
+      <button class="btn tg" data-g="24.79" id="bJup">🪐 Jupiter (24.8m/s²)</button>
+    </div>
+    <div class="row">
+      <span>Show & Tools</span>
+      <button class="btn tg on" id="bVectors">➜ Velocity Vectors</button>
+      <button class="btn tg on" id="bGrid">📐 Grid & Scale</button>
+      <button class="btn tg on" id="bParabola">⌒ Theoretical Path</button>
+      <div class="metric-pill" id="mMetrics">Range: 0.0 m | Max H: 0.0 m | Flight: 0.0 s</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let angle=45, v0=25, g=9.8, paused=false;
+let showVec=true, showGrid=true, showTheory=true;
+let planet="Earth";
+let balls=[], traces=[];
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+function launch(){
+  const rad = angle * Math.PI / 180;
+  balls.push({
+    x: 80, y: cv.height - 70,
+    vx: v0 * Math.cos(rad) * 4.2,
+    vy: -v0 * Math.sin(rad) * 4.2,
+    r: 9,
+    color: 'hsl(' + ((balls.length * 65) % 360) + ', 90%, 60%)',
+    path: [],
+    alive: true,
+    maxH: 0
+  });
+  updateStatus();
+}
+
+function updateStatus(){
+  const rad = angle * Math.PI / 180;
+  const theoR = (v0*v0 * Math.sin(2*rad) / g).toFixed(1);
+  const theoH = (v0*v0 * Math.sin(rad)*Math.sin(rad) / (2*g)).toFixed(1);
+  const theoT = (2*v0 * Math.sin(rad) / g).toFixed(2);
+  $("st").textContent = '🚀 Projectile Stage (' + planet + '): Angle ' + angle + '° • v₀ = ' + v0 + ' m/s • g = ' + g + ' m/s²';
+  $("mMetrics").textContent = 'Theo Range: ' + theoR + 'm | Max H: ' + theoH + 'm | Flight: ' + theoT + 's';
+}
+
+$("bLaunch").onclick=launch;
+$("bPause").onclick=()=>{ paused=!paused; $("bPause").textContent=paused?"▶ Resume":"⏸ Pause"; };
+$("bClear").onclick=()=>{ balls=[]; traces=[]; };
+$("bAngDown").onclick=()=>{ angle=Math.max(15, angle-5); updateStatus(); };
+$("bAngUp").onclick=()=>{ angle=Math.min(85, angle+5); updateStatus(); };
+$("bOptAng").onclick=()=>{ angle=45; updateStatus(); };
+$("bVelDown").onclick=()=>{ v0=Math.max(10, v0-5); updateStatus(); };
+$("bVelUp").onclick=()=>{ v0=Math.min(45, v0+5); updateStatus(); };
+
+[ {b:$("bEarth"), p:"Earth", val:9.8}, {b:$("bMoon"), p:"Moon", val:1.62}, {b:$("bMars"), p:"Mars", val:3.72}, {b:$("bJup"), p:"Jupiter", val:24.79} ].forEach(item=>{
+  item.b.onclick=()=>{
+    document.querySelectorAll("[data-g]").forEach(e=>e.classList.remove("on"));
+    item.b.classList.add("on");
+    g=item.val;
+    planet=item.p;
+    updateStatus();
+  };
+});
+
+$("bVectors").onclick=()=>{ showVec=!showVec; $("bVectors").classList.toggle("on", showVec); };
+$("bGrid").onclick=()=>{ showGrid=!showGrid; $("bGrid").classList.toggle("on", showGrid); };
+$("bParabola").onclick=()=>{ showTheory=!showTheory; $("bParabola").classList.toggle("on", showTheory); };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const groundY = cv.height - 70;
+
+  ctx.fillStyle="#04091e";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const gGrad = ctx.createLinearGradient(0, groundY, 0, cv.height);
+  gGrad.addColorStop(0, "#0e2340");
+  gGrad.addColorStop(1, "#071224");
+  ctx.fillStyle = gGrad;
+  ctx.fillRect(0, groundY, cv.width, 70);
+
+  ctx.strokeStyle = "#38bdf8";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(cv.width, groundY);
+  ctx.stroke();
+
+  if(showGrid){
+    ctx.strokeStyle = "rgba(56,189,248,0.12)";
+    ctx.lineWidth = 1;
+    for(let x=80; x<cv.width; x+=60){
+      ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, groundY); ctx.stroke();
+      ctx.fillStyle="rgba(148,163,184,0.6)"; ctx.font="10px monospace";
+      ctx.fillText(((x-80)/10).toFixed(0)+"m", x-10, groundY+18);
+    }
+    for(let y=groundY-50; y>30; y-=50){
+      ctx.beginPath(); ctx.moveTo(80, y); ctx.lineTo(cv.width-20, y); ctx.stroke();
+      ctx.fillStyle="rgba(148,163,184,0.6)"; ctx.font="10px monospace";
+      ctx.fillText(((groundY-y)/10).toFixed(0)+"m", 50, y+4);
+    }
+  }
+
+  const canonX = 80, canonY = groundY;
+  ctx.save();
+  ctx.translate(canonX, canonY);
+  ctx.rotate(-angle * Math.PI / 180);
+  ctx.fillStyle = "#38bdf8";
+  ctx.fillRect(0, -9, 44, 18);
+  ctx.fillStyle = "#0284c7";
+  ctx.fillRect(40, -11, 6, 22);
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.arc(canonX, canonY, 16, 0, Math.PI*2);
+  ctx.fillStyle = "#0f172a";
+  ctx.fill();
+  ctx.strokeStyle = "#00f5ff";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  if(showTheory){
+    const rad = angle * Math.PI / 180;
+    const vx = v0 * Math.cos(rad) * 4.2;
+    const vy = -v0 * Math.sin(rad) * 4.2;
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(250,204,21,0.5)";
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 2;
+    let px=canonX, py=canonY, pvy=vy;
+    ctx.moveTo(px, py);
+    while(py <= groundY && px < cv.width){
+      px += vx * 0.08;
+      pvy += g * 0.35 * 0.08 * 4.2;
+      py += pvy * 0.08;
+      ctx.lineTo(px, Math.min(py, groundY));
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  traces.forEach(t=>{
+    ctx.beginPath();
+    ctx.strokeStyle = t.color;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.6;
+    t.pts.forEach((p,i)=>{ if(i===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  balls.forEach(b=>{
+    if(!paused && b.alive){
+      b.x += b.vx * 0.04;
+      b.vy += g * 0.38 * 0.04 * 4.2;
+      b.y += b.vy * 0.04;
+      b.path.push({x:b.x, y:b.y});
+      const heightAbove = (groundY - b.y)/10;
+      if(heightAbove > b.maxH) b.maxH = heightAbove;
+
+      if(b.y >= groundY){
+        b.y = groundY;
+        b.alive = false;
+        traces.push({pts: b.path, color: b.color});
+      }
+    }
+
+    ctx.beginPath();
+    ctx.strokeStyle = b.color;
+    ctx.lineWidth = 2.5;
+    b.path.forEach((p,i)=>{ if(i===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    ctx.fillStyle = b.color;
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if(showVec && b.alive){
+      ctx.beginPath();
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 2;
+      ctx.moveTo(b.x, b.y);
+      ctx.lineTo(b.x + b.vx*0.5, b.y);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#ef4444";
+      ctx.lineWidth = 2;
+      ctx.moveTo(b.x, b.y);
+      ctx.lineTo(b.x, b.y + b.vy*0.5);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#4ade80";
+      ctx.lineWidth = 2;
+      ctx.moveTo(b.x, b.y);
+      ctx.lineTo(b.x + b.vx*0.5, b.y + b.vy*0.5);
+      ctx.stroke();
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+updateStatus();
+draw();
+</script></body></html>

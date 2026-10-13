@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pythagorean Theorem & Geometric Distance Engine</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#78350f;--tx:#eaf0ff;--mut:#a3b4e0;--amb:#f59e0b;--ora:#ea580c;--blue:#38bdf8;--grn:#22c55e;--vio:#a855f7}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#261204,#0f172a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#3d2208,#1e1003);box-shadow:0 5px 0 #120902,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#f59e0b,#d97706);color:#04102a;box-shadow:0 5px 0 #92400e,0 10px 26px #f59e0b66}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#2b1607,#0c1328);border:1px solid #f59e0b55;border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#2e1706,#050a1e 75%);border:1px solid #f59e0b66;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:#fde047;text-shadow:0 0 14px rgba(250,204,21,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#060d1f;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-var{background:linear-gradient(90deg,#f59e0b,#ea580c);color:#fff}
+.b-trip{background:linear-gradient(90deg,#10b981,#059669);color:#fff}
+.b-reset{background:#dc2626;color:#fff}
+.b-fs{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff}
+.tg{background:#2a1708;color:#fde68a;border:2px solid #f59e0b}
+.tg.on{background:#ea580c;color:#fff;border-color:#fde68a;box-shadow:0 0 16px #ea580caa}
+.metric-pill{background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#fde047}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#2e1706,#050a1e 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Geometric Theorem Proof</button><button class="tab on" data-pg="s">🎮 Visual Pythagorean Stage</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>The Pythagorean Theorem Formula</h2>
+  <p>In any right-angled Euclidean triangle, the area of the square whose side is the hypotenuse (<i>c</i>) is equal to the sum of the areas of the squares on the other two sides (<i>a</i> and <i>b</i>).</p>
+  <div style="background:#1c0f05;padding:14px;border-radius:14px;border:1px solid #f59e0b;margin-top:10px;text-align:center;font-size:22px;font-family:Georgia,serif">
+    <b style="color:#38bdf8">a²</b> + <b style="color:#f43f5e">b²</b> = <b style="color:#22c55e">c²</b> &nbsp;&nbsp;⟹&nbsp;&nbsp; <b style="color:#fde047">c = √(a² + b²)</b>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">📐 Right Triangle: a = 3 &bull; b = 4 &bull; c = 5 (3² + 4² = 5²)</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Adjust Legs</span>
+      <button class="btn b-var" id="bLegADown">− Leg a</button>
+      <button class="btn b-var" id="bLegAUp">+ Leg a</button>
+      <button class="btn b-var" id="bLegBDown">− Leg b</button>
+      <button class="btn b-var" id="bLegBUp">+ Leg b</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset 3-4-5</button>
+    </div>
+    <div class="row">
+      <span>Pythagorean Triples</span>
+      <button class="btn b-trip" data-a="3" data-b="4">⭐ 3-4-5 Triple</button>
+      <button class="btn b-trip" data-a="5" data-b="12">⭐ 5-12-13 Triple</button>
+      <button class="btn b-trip" data-a="6" data-b="8">⭐ 6-8-10 Triple</button>
+      <button class="btn b-trip" data-a="8" data-b="15">⭐ 8-15-17 Triple</button>
+    </div>
+    <div class="row">
+      <span>Visual Aids & Proof</span>
+      <button class="btn tg on" id="bSquares">🟦 Area Squares (a², b², c²)</button>
+      <button class="btn tg on" id="bGrid">📐 Cartesian Grid & Coordinates</button>
+      <button class="btn tg on" id="bProofWater">💧 Water Volume Analogy</button>
+      <div class="metric-pill" id="mMetrics">a²: 9 | b²: 16 | c²: 25 | Hypotenuse c: 5.00</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let a=3, b=4;
+let showSquares=true, showGrid=true, showWater=true;
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+document.querySelectorAll("[data-a]").forEach(btn=>{
+  btn.onclick=()=>{
+    a = parseInt(btn.dataset.a, 10);
+    b = parseInt(btn.dataset.b, 10);
+    updateStatus();
+  };
+});
+
+function updateStatus(){
+  const c = Math.hypot(a, b);
+  const a2 = a*a, b2 = b*b, c2 = a2+b2;
+  $("st").textContent = '📐 Triangle: a = ' + a + ' • b = ' + b + ' • c = ' + c.toFixed(2) + ' (' + a2 + ' + ' + b2 + ' = ' + c2 + ')';
+  $("mMetrics").textContent = 'Area a²: ' + a2 + ' | Area b²: ' + b2 + ' | Hypotenuse Area c²: ' + c2 + ' | c: ' + c.toFixed(2);
+}
+
+$("bLegADown").onclick=()=>{ a=Math.max(2, a-1); updateStatus(); };
+$("bLegAUp").onclick=()=>{ a=Math.min(10, a+1); updateStatus(); };
+$("bLegBDown").onclick=()=>{ b=Math.max(2, b-1); updateStatus(); };
+$("bLegBUp").onclick=()=>{ b=Math.min(12, b+1); updateStatus(); };
+$("bReset").onclick=()=>{ a=3; b=4; updateStatus(); };
+
+$("bSquares").onclick=()=>{ showSquares=!showSquares; $("bSquares").classList.toggle("on", showSquares); };
+$("bGrid").onclick=()=>{ showGrid=!showGrid; $("bGrid").classList.toggle("on", showGrid); };
+$("bProofWater").onclick=()=>{ showWater=!showWater; $("bProofWater").classList.toggle("on", showWater); };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+
+  ctx.fillStyle="#04091a";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const scale = Math.min(26, 260 / Math.max(a, b, 8));
+  const ox = 360, oy = 340;
+
+  // Background Grid
+  if(showGrid){
+    ctx.strokeStyle="rgba(56,189,248,0.08)";
+    ctx.lineWidth=1;
+    for(let x=20; x<cv.width; x+=scale){
+      ctx.beginPath(); ctx.moveTo(x, 10); ctx.lineTo(x, cv.height-10); ctx.stroke();
+    }
+    for(let y=10; y<cv.height; y+=scale){
+      ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(cv.width-20, y); ctx.stroke();
+    }
+  }
+
+  const pA = { x: ox, y: oy }; // Right angle vertex
+  const pB = { x: ox + b * scale, y: oy }; // Horizontal base
+  const pC = { x: ox, y: oy - a * scale }; // Vertical leg
+
+  // Square a^2 (Vertical Left side)
+  if(showSquares){
+    ctx.fillStyle="rgba(56,189,248,0.22)";
+    ctx.strokeStyle="#38bdf8";
+    ctx.lineWidth=2;
+    ctx.fillRect(ox - a * scale, pC.y, a * scale, a * scale);
+    ctx.strokeRect(ox - a * scale, pC.y, a * scale, a * scale);
+
+    // Label inside a^2
+    ctx.fillStyle="#38bdf8";
+    ctx.font="bold 15px Georgia,serif";
+    ctx.textAlign="center";
+    ctx.fillText("a² = " + (a*a), ox - (a*scale)/2, pC.y + (a*scale)/2 + 5);
+
+    // Square b^2 (Bottom Horizontal)
+    ctx.fillStyle="rgba(244,63,94,0.22)";
+    ctx.strokeStyle="#f43f5e";
+    ctx.fillRect(ox, oy, b * scale, b * scale);
+    ctx.strokeRect(ox, oy, b * scale, b * scale);
+
+    ctx.fillStyle="#f43f5e";
+    ctx.fillText("b² = " + (b*b), ox + (b*scale)/2, oy + (b*scale)/2 + 5);
+
+    // Square c^2 on Hypotenuse (Rotated along hypotenuse)
+    ctx.save();
+    ctx.translate(pC.x, pC.y);
+    const hypAng = Math.atan2(pB.y - pC.y, pB.x - pC.x);
+    ctx.rotate(hypAng);
+    const hypLen = Math.hypot(pB.x - pC.x, pB.y - pC.y);
+    ctx.fillStyle="rgba(34,197,94,0.25)";
+    ctx.strokeStyle="#22c55e";
+    ctx.fillRect(0, -hypLen, hypLen, hypLen);
+    ctx.strokeRect(0, -hypLen, hypLen, hypLen);
+
+    ctx.fillStyle="#22c55e";
+    ctx.fillText("c² = " + (a*a + b*b), hypLen/2, -hypLen/2 + 5);
+    ctx.restore();
+  }
+
+  // Right-Angled Triangle Body
+  ctx.beginPath();
+  ctx.moveTo(pA.x, pA.y);
+  ctx.lineTo(pB.x, pB.y);
+  ctx.lineTo(pC.x, pC.y);
+  ctx.closePath();
+  ctx.fillStyle="rgba(245,158,11,0.3)";
+  ctx.fill();
+  ctx.strokeStyle="#f59e0b";
+  ctx.lineWidth=3.5;
+  ctx.stroke();
+
+  // Right-Angle Corner Box
+  ctx.strokeStyle="#fde68a";
+  ctx.lineWidth=2;
+  ctx.strokeRect(ox, oy - 14, 14, 14);
+
+  // Labels on Sides
+  ctx.fillStyle="#ffffff";
+  ctx.font="bold 16px sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText("a = " + a, ox - 18, oy - (a*scale)/2);
+  ctx.fillText("b = " + b, ox + (b*scale)/2, oy + 22);
+  ctx.fillStyle="#4ade80";
+  ctx.fillText("c = " + Math.hypot(a,b).toFixed(2), ox + (b*scale)/2 + 18, oy - (a*scale)/2);
+
+  // Live Formula Proof Card on Right
+  const px = cv.width - 340, py = 40, pw = 300, ph = 260;
+  ctx.fillStyle="#0e1b38";
+  ctx.fillRect(px, py, pw, ph);
+  ctx.strokeStyle="#f59e0b";
+  ctx.lineWidth=2;
+  ctx.strokeRect(px, py, pw, ph);
+
+  ctx.fillStyle="#f59e0b";
+  ctx.font="bold 16px Georgia,serif";
+  ctx.textAlign="left";
+  ctx.fillText("📜 Geometric Proof Breakdown", px+16, py+30);
+
+  ctx.font="14px monospace";
+  ctx.fillStyle="#38bdf8"; ctx.fillText("• Leg a = " + a + " ➔ a² = " + (a*a), px+20, py+70);
+  ctx.fillStyle="#f43f5e"; ctx.fillText("• Leg b = " + b + " ➔ b² = " + (b*b), px+20, py+105);
+  ctx.fillStyle="#22c55e"; ctx.fillText("• Sum = " + (a*a) + " + " + (b*b) + " = " + (a*a+b*b), px+20, py+140);
+  ctx.fillStyle="#fde047"; ctx.fillText("• c = √" + (a*a+b*b) + " = " + Math.hypot(a,b).toFixed(2), px+20, py+175);
+
+  ctx.fillStyle="rgba(255,255,255,0.7)";
+  ctx.font="12px sans-serif";
+  ctx.fillText(Math.hypot(a,b) % 1 === 0 ? "🎉 Exact Pythagorean Integer Triple!" : "Approximated decimal hypotenuse", px+20, py+220);
+
+  requestAnimationFrame(draw);
+}
+
+updateStatus();
+draw();
+</script></body></html>

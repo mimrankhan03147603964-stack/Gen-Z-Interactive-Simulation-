@@ -495,6 +495,126 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Faraday\'s Law & Rate of Magnetic Flux Change', 'Lenz\'s Law & Opposing Induced Fields', 'Magnetic Field Mapping & Compass Array', 'AC Mutual Induction & Step-Up/Down Transformers', 'Lorentz Force & Cyclotron Particle Deflection'],
     features: ['Dual-Sided Bar Magnet Coil Thrust Simulator', 'Interactive Compass Needle Vector Array Probe', 'Laminated Iron Core AC Transformer Configurator', 'Lorentz Force Charged Particle Deflection Chamber', 'Interactive Electromagnetism Mastery Quiz'],
     gradeLevel: 'Middle, Secondary & Advanced High School Physics'
+  },
+  {
+    id: 'sim-projectile-motion-gravity',
+    slug: 'projectile-motion-gravity',
+    indexNumber: '34',
+    title: 'Projectile Motion & Gravitational Trajectory Lab',
+    subject: 'Classical Mechanics & Kinematics',
+    category: 'Physics & Motion',
+    iconName: 'Compass',
+    accentColor: '#0284c7', // Sky Blue
+    description: 'Launch cannon projectiles across multiple planetary gravitational fields (Earth, Moon, Mars, Jupiter). Investigate launch angle optimization, velocity vector decomposition (Vx, Vy), peak flight altitude, and real-time parabolic trajectories.',
+    fileUrl: '/simulations/projectile-motion-gravity.html',
+    topics: ['2D Projectile Trajectory', 'Horizontal vs Vertical Velocity', 'Launch Angle & Max Range', 'Planetary Gravity Field Variations'],
+    features: ['Adjustable Angle & Initial Velocity', 'Planetary Gravity Presets (Earth, Moon, Mars, Jupiter)', 'Real-Time Velocity Vector Display', 'Parabolic Theoretical Path Tracing'],
+    gradeLevel: 'Middle & High School Physics'
+  },
+  {
+    id: 'sim-chemical-reaction-kinetics',
+    slug: 'chemical-reaction-kinetics',
+    indexNumber: '35',
+    title: 'Chemical Reaction Kinetics & Catalysis Lab',
+    subject: 'Physical & Molecular Chemistry',
+    category: 'Chemistry & Matter',
+    iconName: 'FlaskConical',
+    accentColor: '#9333ea', // Purple
+    description: 'Investigate collision theory and reaction kinetics. Alter temperature, reactant concentrations, and activate enzymatic catalysts to lower activation energy (Ea) and observe real-time molecular product formation with dynamic rate curve plotting.',
+    fileUrl: '/simulations/chemical-reaction-kinetics.html',
+    topics: ['Collision Theory & Activation Energy', 'Temperature Effects on Reaction Rates', 'Catalytic Mechanisms & Energy Barriers', 'Concentration vs Product Yield'],
+    features: ['Dynamic Particle Collision Engine', 'Interactive Catalyst Activation Toggle', 'Thermodynamic Temperature Controls', 'Live Concentration Progress Curve Plotter'],
+    gradeLevel: 'Secondary & High School Chemistry'
+  },
+  {
+    id: 'sim-photosynthesis-chloroplast-engine',
+    slug: 'photosynthesis-chloroplast-engine',
+    indexNumber: '36',
+    title: 'Photosynthesis & Cellular Chloroplast Engine',
+    subject: 'Cellular Biology & Bioenergetics',
+    category: 'Biology & Life',
+    iconName: 'Leaf',
+    accentColor: '#16a34a', // Emerald Green
+    description: 'Interactive chloroplast bioenergetics simulator. Control solar photon flux, water intake, and stomatal CO₂ levels to drive thylakoid light-dependent reactions, photolysis, and the Calvin cycle stroma synthesis of organic glucose and oxygen gas.',
+    fileUrl: '/simulations/photosynthesis-chloroplast-engine.html',
+    topics: ['Light-Dependent Reactions & Photolysis', 'Thylakoid Membrane Energy Transport', 'Calvin Cycle Dark Reactions & Carbon Fixation', 'Environmental Limiting Factors'],
+    features: ['Solar Photon Radiation Slider', 'H₂O & CO₂ Environmental Gas Regulators', 'Animated Thylakoid Grana & Calvin Stroma', 'Live O₂ Bubble & Glucose Output Metrics'],
+    gradeLevel: 'Middle & Secondary School Biology'
+  },
+  {
+    id: 'sim-moon-phases-tides-orbit',
+    slug: 'moon-phases-tides-orbit',
+    indexNumber: '37',
+    title: 'Moon Phases, Tides & Lunar Orbit Simulator',
+    subject: 'Astronomy & Planetary Science',
+    category: 'Earth & Space',
+    iconName: 'Moon',
+    accentColor: '#0284c7', // Deep Sky Blue
+    description: 'Explore the 29.5-day synodic lunar cycle and gravitational ocean tides. Observe the Moon’s 3D orbit around Earth from both space and an Earth-based telescope portal, correlating orbital positions with Spring and Neap tidal bulges.',
+    fileUrl: '/simulations/moon-phases-tides-orbit.html',
+    topics: ['8 Synodic Lunar Phases', 'Waxing & Waning Cycles', 'Gravitational Ocean Tidal Bulges', 'Spring vs Neap Tides Alignment'],
+    features: ['Dual Spatial & Telescope Viewports', 'Interactive Phase Jumper (New, Quarter, Full)', 'Live Ocean Tidal Bulge Deformation', 'Day-by-Day Orbital Tracking Engine'],
+    gradeLevel: 'Elementary, Middle & Secondary Astronomy'
+  },
+  {
+    id: 'sim-pythagorean-theorem-geometry',
+    slug: 'pythagorean-theorem-geometry',
+    indexNumber: '38',
+    title: 'Pythagorean Theorem & Geometric Distance Engine',
+    subject: 'Euclidean Geometry & Algebra',
+    category: 'Mathematics & Logic',
+    iconName: 'Compass',
+    accentColor: '#ea580c', // Vibrant Orange
+    description: 'Visual mathematical proof of the Pythagorean Theorem (a² + b² = c²). Dynamically scale triangle leg lengths, test classic Pythagorean integer triples (3-4-5, 5-12-13, 8-15-17), and observe the physical area conservation of square surfaces.',
+    fileUrl: '/simulations/pythagorean-theorem-geometry.html',
+    topics: ['Right-Angled Triangle Geometry', 'Pythagorean Theorem & Distance Formula', 'Area Geometric Proofs (a², b², c²)', 'Integer Triples & Non-Euclidean Approximations'],
+    features: ['Dynamic Leg Length Drag & Sliders', 'Instant Pythagorean Triple Presets', 'Rotated Hypotenuse Square Surface Visualizer', 'Step-by-Step Algebraic Proof Card'],
+    gradeLevel: 'Middle & High School Mathematics'
+  },
+  {
+    id: 'sim-sorting-algorithms-visualizer',
+    slug: 'sorting-algorithms-visualizer',
+    indexNumber: '39',
+    title: 'Sorting Algorithms & Computational Complexity Workbench',
+    subject: 'Algorithms & Data Structures',
+    category: 'Computer Science & IT',
+    iconName: 'Cpu',
+    accentColor: '#0d9488', // Teal
+    description: 'Interactive computer science algorithms lab. Visualize and compare Bubble Sort, Quick Sort, and Insertion Sort in real time with step-by-step execution, dynamic pivot pointers, comparison counters, and computational complexity metrics.',
+    fileUrl: '/simulations/sorting-algorithms-visualizer.html',
+    topics: ['Sorting Algorithms Mechanics', 'Time Complexity (O(N²) vs O(N log N))', 'Pivot Selection & Partitioning', 'Array In-Place Swapping & Comparisons'],
+    features: ['Real-Time Step-by-Step Generator Engine', 'Bubble, Quick & Insertion Sort Algorithms', 'Dynamic Array Size & Speed Controls', 'Live Operations & Comparison Counter'],
+    gradeLevel: 'Middle, High School & Introductory CS'
+  },
+  {
+    id: 'sim-english-syntax-tree-grammar',
+    slug: 'english-syntax-tree-grammar',
+    indexNumber: '40',
+    title: 'English Sentence Structure & Syntax Tree Builder',
+    subject: 'English Grammar & Linguistics',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#4f46e5', // Royal Indigo
+    description: 'Interactive linguistics and grammar laboratory. Dissect English sentences into hierarchical constituent syntax trees (Sentence ➔ Noun Phrase + Verb Phrase), label parts of speech, and transform tenses across Present, Past, and Future simple forms.',
+    fileUrl: '/simulations/english-syntax-tree-grammar.html',
+    topics: ['Sentence Constituent Analysis', 'Phrase Structure Rules (NP, VP, PP)', 'Parts of Speech Labeling (Nouns, Verbs, Adjectives)', 'Tense & Voice Grammatical Transformations'],
+    features: ['Interactive Hierarchical Tree Diagram Engine', 'Live Tense Shifter (Present, Past, Future)', 'Color-Coded Parts of Speech Tags', 'Multiple Syntactic Sentence Complexity Models'],
+    gradeLevel: 'Elementary, Middle & Secondary English Arts'
+  },
+  {
+    id: 'sim-color-mixing-shapes-playground',
+    slug: 'color-mixing-shapes-playground',
+    indexNumber: '41',
+    title: 'Vibrant Color Mixing & Geometric Sorting Playground',
+    subject: 'Sensory Arts & Early Cognitive Development',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Sparkles',
+    accentColor: '#e11d48', // Bright Coral Red
+    description: '100% colorful, joyful, and multi-sensory preschool playground. Children blend primary colors (Red, Yellow, Blue) to discover secondary hues (Orange, Green, Purple) while sorting cheerful smiling geometric shapes with playful confetti celebrations.',
+    fileUrl: '/simulations/color-mixing-shapes-playground.html',
+    topics: ['Primary & Secondary Color Blending', 'Geometric 2D Shapes (Stars, Circles, Squares, Triangles)', 'Sensory Cognitive Recognition', 'Positive Reinforcement & Fine Motor Coordination'],
+    features: ['100% Vibrant Color Palette (No Monochrome)', 'Interactive Happy-Face Smiling Shapes', 'Magic Color Mixing Splashes', 'Celebratory Confetti & Star Rewards Engine'],
+    gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
   }
 ];
 

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photosynthesis & Cellular Chloroplast Engine</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#1a4d2e;--tx:#eaf0ff;--mut:#a3b4e0;--grn:#22c55e;--leaf:#15803d;--sun:#facc15;--water:#38bdf8;--sugar:#f43f5e;--vio:#a855f7}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#04140b,#0c2817,#050a1e,#04140b);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#1c3d25,#0d2415);box-shadow:0 5px 0 #05140b,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#4ade80,#16a34a);color:#04140b;box-shadow:0 5px 0 #0f5127,0 10px 26px #22c55e66}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#0e2c1a,#05140c);border:1px solid #22c55e44;border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#10381e,#041108 75%);border:1px solid #22c55e55;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:#86efac;text-shadow:0 0 14px rgba(74,222,128,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#031109;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-sun{background:linear-gradient(90deg,#facc15,#f59e0b);color:#04102a}
+.b-water{background:linear-gradient(90deg,#38bdf8,#0284c7);color:#fff}
+.b-co2{background:linear-gradient(90deg,#94a3b8,#64748b);color:#fff}
+.b-reset{background:#dc2626;color:#fff}
+.b-fs{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff}
+.tg{background:#11381e;color:#bbf7d0;border:2px solid #22c55e}
+.tg.on{background:#22c55e;color:#04140b;border-color:#bbf7d0;box-shadow:0 0 16px #22c55eaa}
+.metric-pill{background:rgba(5,20,12,0.85);border:1px solid rgba(74,222,128,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#86efac}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#10381e,#041108 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Photosynthesis Biology</button><button class="tab on" data-pg="s">🎮 Chloroplast Bioreactor</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>The Chemical Formula of Photosynthesis</h2>
+  <p>Plants synthesize organic glucose from sunlight, water, and atmospheric carbon dioxide inside chloroplast thylakoid membranes.</p>
+  <div style="background:#04190e;padding:14px;border-radius:14px;border:1px solid #22c55e;margin-top:10px;text-align:center;font-size:19px;font-family:Georgia,serif">
+    <b style="color:#facc15">6 CO₂</b> + <b style="color:#38bdf8">6 H₂O</b> + <b style="color:#fde047">Light Photons</b> ➔ <b style="color:#f43f5e">C₆H₁₂O₆ (Glucose)</b> + <b style="color:#4ade80">6 O₂ (Oxygen)</b>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">🌿 Chloroplast Engine: Solar Lux 80% • Glucose Output: Active</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Environmental Inputs</span>
+      <button class="btn b-sun" id="bSunUp">☀️ + Sunlight Intensity</button>
+      <button class="btn b-sun" id="bSunDown">☁️ − Sunlight</button>
+      <button class="btn b-water" id="bWaterUp">💧 + Water (H₂O) Roots</button>
+      <button class="btn b-co2" id="bCo2Up">💨 + CO₂ Stomata</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset Chamber</button>
+    </div>
+    <div class="row">
+      <span>Simulation Mode</span>
+      <button class="btn tg on" id="bThylakoid">🔬 Thylakoid Granum View</button>
+      <button class="btn tg on" id="bCalvinCycle">🔄 Calvin Cycle Stroma</button>
+      <button class="btn tg on" id="bAtpFlow">⚡ ATP / NADPH Transfer</button>
+      <button class="btn" style="background:#f59e0b;color:#04102a" id="bPause">⏸ Pause / Play</button>
+    </div>
+    <div class="row">
+      <span>Harvest & Fullscreen</span>
+      <div class="metric-pill" id="mMetrics">Photons: 100% | H₂O: High | O₂ Emitted: 0 | Glucose Synthesized: 0g</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let sun=80, water=80, co2=80, paused=false;
+let o2Count=0, glucoseCount=0;
+let photons=[], bubbles=[], molecules=[];
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+function initChamber(){
+  photons=[]; bubbles=[]; molecules=[]; o2Count=0; glucoseCount=0;
+  updateStatus();
+}
+
+function updateStatus(){
+  const rate = Math.min(sun, water, co2);
+  $("st").textContent = '🌿 Photosynthesis: Sunlight ' + sun + '% • H₂O ' + water + '% • CO₂ ' + co2 + '% • Synthesis Efficiency: ' + rate + '%';
+  $("mMetrics").textContent = 'Light: ' + sun + '% | H₂O: ' + water + '% | CO₂: ' + co2 + '% | O₂ Gas: ' + o2Count + ' | Glucose: ' + (glucoseCount*0.1).toFixed(1) + 'g';
+}
+
+$("bSunUp").onclick=()=>{ sun=Math.min(100, sun+15); updateStatus(); };
+$("bSunDown").onclick=()=>{ sun=Math.max(10, sun-15); updateStatus(); };
+$("bWaterUp").onclick=()=>{ water=Math.min(100, water+20); updateStatus(); };
+$("bCo2Up").onclick=()=>{ co2=Math.min(100, co2+20); updateStatus(); };
+$("bReset").onclick=initChamber;
+$("bPause").onclick=()=>{ paused=!paused; $("bPause").textContent=paused?"▶ Resume":"⏸ Pause"; };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+let cycleAng=0;
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+
+  // Background Leaf Cross-section
+  const bgGrad = ctx.createLinearGradient(0,0,0,cv.height);
+  bgGrad.addColorStop(0, "#082613");
+  bgGrad.addColorStop(1, "#021207");
+  ctx.fillStyle=bgGrad;
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  // Chloroplast Outer Double Membrane
+  ctx.save();
+  ctx.strokeStyle="#4ade80";
+  ctx.lineWidth=4;
+  ctx.fillStyle="rgba(21,128,61,0.25)";
+  ctx.beginPath();
+  ctx.ellipse(cv.width/2, cv.height/2, cv.width*0.44, cv.height*0.42, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Thylakoid Stacks (Grana) Left Side
+  const granumX = 260, granumY = 170;
+  ctx.fillStyle="#15803d";
+  ctx.strokeStyle="#86efac";
+  ctx.lineWidth=2;
+  for(let stack=0; stack<3; stack++){
+    for(let disc=0; disc<5; disc++){
+      const dx = granumX + stack*90;
+      const dy = granumY + disc*26;
+      ctx.beginPath();
+      ctx.ellipse(dx, dy, 36, 11, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  // Label Grana
+  ctx.fillStyle="#86efac";
+  ctx.font="bold 14px sans-serif";
+  ctx.fillText("🌿 Thylakoid Stacks (Light Reactions)", 180, 130);
+  ctx.fillText("☀️ Photolysis: 2H₂O ➔ 4H⁺ + O₂", 180, 320);
+
+  // Calvin Cycle Stroma Right Side
+  const calvinX = 740, calvinY = cv.height/2;
+  if(!paused) cycleAng += (sun/100)*0.03;
+
+  ctx.save();
+  ctx.translate(calvinX, calvinY);
+  ctx.rotate(cycleAng);
+  ctx.strokeStyle="#fbbf24";
+  ctx.lineWidth=3;
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath();
+  ctx.arc(0, 0, 110, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  ctx.fillStyle="#fde047";
+  ctx.font="bold 15px Georgia,serif";
+  ctx.textAlign="center";
+  ctx.fillText("🔄 Calvin Cycle (Stroma)", calvinX, calvinY - 20);
+  ctx.font="12px sans-serif";
+  ctx.fillText("CO₂ Fixation ➔ C₆H₁₂O₆ (Glucose)", calvinX, calvinY + 14);
+
+  // Spawn Photons from Top
+  if(!paused && Math.random() < (sun/100)*0.6){
+    photons.push({
+      x: 100 + Math.random()*400,
+      y: 10,
+      vx: (Math.random()-0.5)*1,
+      vy: 3 + (sun/100)*4,
+      r: 4
+    });
+  }
+
+  // Draw Photons
+  photons.forEach((p, i)=>{
+    if(!paused){
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.y > cv.height/2 + 80){
+        photons.splice(i, 1);
+        if(Math.random()<0.4){
+          o2Count++;
+          bubbles.push({ x: p.x, y: p.y, vy: -2, r: 6 });
+        }
+      }
+    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle="#fef08a";
+    ctx.shadowColor="#facc15";
+    ctx.shadowBlur=10;
+    ctx.fill();
+    ctx.shadowBlur=0;
+  });
+
+  // O2 Bubbles floating up
+  bubbles.forEach((b, i)=>{
+    if(!paused){
+      b.y += b.vy;
+      if(b.y < 30) bubbles.splice(i, 1);
+    }
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    ctx.fillStyle="rgba(74,222,128,0.7)";
+    ctx.strokeStyle="#fff";
+    ctx.lineWidth=1.5;
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle="#fff";
+    ctx.font="bold 9px monospace";
+    ctx.fillText("O₂", b.x-6, b.y+3);
+  });
+
+  // Synthesis Glucose pellets
+  if(!paused && Math.random() < (Math.min(sun, water, co2)/100)*0.1){
+    glucoseCount++;
+    molecules.push({ x: calvinX, y: calvinY + 110, vx: (Math.random()-0.5)*2, vy: 2, r: 12 });
+  }
+
+  molecules.forEach((m, i)=>{
+    if(!paused){
+      m.x += m.vx; m.y += m.vy;
+      if(m.y > cv.height - 40) molecules.splice(i, 1);
+    }
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.r, 0, Math.PI*2);
+    ctx.fillStyle="#f43f5e";
+    ctx.strokeStyle="#fda4af";
+    ctx.lineWidth=2;
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle="#fff";
+    ctx.font="bold 9px sans-serif";
+    ctx.fillText("C₆H₁₂O₆", m.x-10, m.y+3);
+  });
+
+  requestAnimationFrame(draw);
+}
+
+initChamber();
+draw();
+</script></body></html>

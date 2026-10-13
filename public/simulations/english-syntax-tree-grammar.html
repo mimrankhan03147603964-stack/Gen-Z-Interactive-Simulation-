@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Sentence Structure & Syntax Tree Builder</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#4338ca;--tx:#eaf0ff;--mut:#a3b4e0;--indigo:#6366f1;--gold:#facc15;--noun:#38bdf8;--verb:#f43f5e;--adj:#10b981;--adv:#fbbf24}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#0a0928,#1e1b4b,#050a1e,#0a0928);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#282566,#13113d);box-shadow:0 5px 0 #090824,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#818cf8,#4f46e5);color:#fff;box-shadow:0 5px 0 #312e81,0 10px 26px #4f46e566}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#1c1854,#0d0b2e);border:1px solid #6366f155;border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#1e1b4b,#050a1e 75%);border:1px solid #6366f166;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:#a5b4fc;text-shadow:0 0 14px rgba(165,180,252,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#080720;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-sent{background:linear-gradient(90deg,#818cf8,#6366f1);color:#fff}
+.b-tense{background:linear-gradient(90deg,#38bdf8,#0284c7);color:#fff}
+.b-reset{background:#dc2626;color:#fff}
+.b-fs{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff}
+.tg{background:#1e1b4b;color:#c7d2fe;border:2px solid #6366f1}
+.tg.on{background:#4f46e5;color:#fff;border-color:#a5b4fc;box-shadow:0 0 16px #4f46e5aa}
+.metric-pill{background:rgba(15,23,42,0.85);border:1px solid rgba(99,102,241,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#a5b4fc}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#1e1b4b,#050a1e 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Syntax Tree Grammar Rules</button><button class="tab on" data-pg="s">🎮 Interactive Parsing Stage</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>Constituent Syntax Tree (Phrase Structure Rules)</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px">
+    <div style="background:#090824;padding:12px;border-radius:12px;border:1px solid #6366f1"><b style="color:#a5b4fc">Sentence (S):</b><br><code>S ➔ NP (Subject) + VP (Predicate)</code></div>
+    <div style="background:#090824;padding:12px;border-radius:12px;border:1px solid #6366f1"><b style="color:#38bdf8">Noun Phrase (NP):</b><br><code>NP ➔ Det + (Adj) + Noun</code></div>
+    <div style="background:#090824;padding:12px;border-radius:12px;border:1px solid #6366f1"><b style="color:#f43f5e">Verb Phrase (VP):</b><br><code>VP ➔ Verb + NP + (PP)</code></div>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">📖 Sentence: "The curious astronaut explores distant galaxies"</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Sample Sentences</span>
+      <button class="btn b-sent" id="bSent1">🚀 Astronaut Sentence</button>
+      <button class="btn b-sent" id="bSent2">🔬 Scientist Sentence</button>
+      <button class="btn b-sent" id="bSent3">🌿 Nature Sentence</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset Tree</button>
+    </div>
+    <div class="row">
+      <span>Tense & Voice Transform</span>
+      <button class="btn b-tense" id="bPresent">Present Simple</button>
+      <button class="btn b-tense" id="bPast">Past Simple</button>
+      <button class="btn b-tense" id="bFuture">Future Simple</button>
+      <button class="btn tg on" id="bHighlightParts">🏷 Color Parts of Speech</button>
+      <button class="btn tg on" id="bShowLines">🌿 Branch Connectors</button>
+    </div>
+    <div class="row">
+      <span>Analysis & Fullscreen</span>
+      <div class="metric-pill" id="mMetrics">Subject: The curious astronaut | Verb: explores | Object: distant galaxies</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let showParts=true, showLines=true;
+let currentSentIndex=0, currentTense="present";
+
+const sentences = [
+  {
+    title: "The curious astronaut explores distant galaxies",
+    tenseMap: {
+      present: "The curious astronaut explores distant galaxies",
+      past: "The curious astronaut explored distant galaxies",
+      future: "The curious astronaut will explore distant galaxies"
+    },
+    root: {
+      label: "S (Sentence)", color: "#a5b4fc",
+      children: [
+        {
+          label: "NP (Subject)", color: "#38bdf8",
+          children: [
+            { label: "Det", word: "The", color: "#facc15" },
+            { label: "Adj", word: "curious", color: "#10b981" },
+            { label: "Noun", word: "astronaut", color: "#38bdf8" }
+          ]
+        },
+        {
+          label: "VP (Predicate)", color: "#f43f5e",
+          children: [
+            { label: "Verb", word: "explores", color: "#f43f5e" },
+            {
+              label: "NP (Object)", color: "#38bdf8",
+              children: [
+                { label: "Adj", word: "distant", color: "#10b981" },
+                { label: "Noun", word: "galaxies", color: "#38bdf8" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    title: "A brilliant scientist discovers green energy",
+    tenseMap: {
+      present: "A brilliant scientist discovers green energy",
+      past: "A brilliant scientist discovered green energy",
+      future: "A brilliant scientist will discover green energy"
+    },
+    root: {
+      label: "S (Sentence)", color: "#a5b4fc",
+      children: [
+        {
+          label: "NP (Subject)", color: "#38bdf8",
+          children: [
+            { label: "Det", word: "A", color: "#facc15" },
+            { label: "Adj", word: "brilliant", color: "#10b981" },
+            { label: "Noun", word: "scientist", color: "#38bdf8" }
+          ]
+        },
+        {
+          label: "VP (Predicate)", color: "#f43f5e",
+          children: [
+            { label: "Verb", word: "discovers", color: "#f43f5e" },
+            {
+              label: "NP (Object)", color: "#38bdf8",
+              children: [
+                { label: "Adj", word: "green", color: "#10b981" },
+                { label: "Noun", word: "energy", color: "#38bdf8" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    title: "Swift robotic rovers map alien terrain",
+    tenseMap: {
+      present: "Swift robotic rovers map alien terrain",
+      past: "Swift robotic rovers mapped alien terrain",
+      future: "Swift robotic rovers will map alien terrain"
+    },
+    root: {
+      label: "S (Sentence)", color: "#a5b4fc",
+      children: [
+        {
+          label: "NP (Subject)", color: "#38bdf8",
+          children: [
+            { label: "Adj", word: "Swift", color: "#10b981" },
+            { label: "Adj", word: "robotic", color: "#10b981" },
+            { label: "Noun", word: "rovers", color: "#38bdf8" }
+          ]
+        },
+        {
+          label: "VP (Predicate)", color: "#f43f5e",
+          children: [
+            { label: "Verb", word: "map", color: "#f43f5e" },
+            {
+              label: "NP (Object)", color: "#38bdf8",
+              children: [
+                { label: "Adj", word: "alien", color: "#10b981" },
+                { label: "Noun", word: "terrain", color: "#38bdf8" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+];
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+function updateStatus(){
+  const sent = sentences[currentSentIndex];
+  const activeText = sent.tenseMap[currentTense];
+  $("st").textContent = '📖 Sentence (' + currentTense.toUpperCase() + '): "' + activeText + '"';
+  $("mMetrics").textContent = 'Tense: ' + currentTense + ' | Active Tree Nodes: Parsed | Grammar: Valid';
+}
+
+$("bSent1").onclick=()=>{ currentSentIndex=0; updateStatus(); };
+$("bSent2").onclick=()=>{ currentSentIndex=1; updateStatus(); };
+$("bSent3").onclick=()=>{ currentSentIndex=2; updateStatus(); };
+$("bReset").onclick=()=>{ currentSentIndex=0; currentTense="present"; updateStatus(); };
+
+$("bPresent").onclick=()=>{ currentTense="present"; updateStatus(); };
+$("bPast").onclick=()=>{ currentTense="past"; updateStatus(); };
+$("bFuture").onclick=()=>{ currentTense="future"; updateStatus(); };
+
+$("bHighlightParts").onclick=()=>{ showParts=!showParts; $("bHighlightParts").classList.toggle("on", showParts); };
+$("bShowLines").onclick=()=>{ showLines=!showLines; $("bShowLines").classList.toggle("on", showLines); };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+function drawNode(node, x, y, width){
+  // Draw Node Box
+  ctx.fillStyle=node.color || "#a5b4fc";
+  ctx.fillRect(x - 55, y - 18, 110, 36);
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=1.5;
+  ctx.strokeRect(x - 55, y - 18, 110, 36);
+
+  ctx.fillStyle="#04102a";
+  ctx.font="bold 12px sans-serif";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText(node.label, x, y);
+
+  if(node.word){
+    // Leaf Word
+    ctx.fillStyle="#facc15";
+    ctx.font="bold 16px Georgia,serif";
+    ctx.fillText('"' + node.word + '"', x, y + 42);
+  }
+
+  if(node.children && node.children.length){
+    const childWidth = width / node.children.length;
+    node.children.forEach((child, i)=>{
+      const childX = x - width/2 + childWidth*i + childWidth/2;
+      const childY = y + 80;
+
+      if(showLines){
+        ctx.strokeStyle="rgba(165,180,252,0.6)";
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 18);
+        ctx.lineTo(childX, childY - 18);
+        ctx.stroke();
+      }
+
+      drawNode(child, childX, childY, childWidth);
+    });
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+
+  ctx.fillStyle="#080720";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const root = sentences[currentSentIndex].root;
+  drawNode(root, cv.width/2, 60, cv.width * 0.85);
+
+  requestAnimationFrame(draw);
+}
+
+updateStatus();
+draw();
+</script></body></html>

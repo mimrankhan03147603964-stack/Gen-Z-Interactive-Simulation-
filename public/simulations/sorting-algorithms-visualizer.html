@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sorting Algorithms & Computational Complexity Workbench</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#0f766e;--tx:#eaf0ff;--mut:#a3b4e0;--teal:#14b8a6;--cyan:#06b6d4;--amber:#f59e0b;--red:#f43f5e;--grn:#10b981}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#041716,#082f2c,#050a1e,#041716);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#134e4a,#042f2e);box-shadow:0 5px 0 #021a19,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#2dd4bf,#0d9488);color:#042f2e;box-shadow:0 5px 0 #115e59,0 10px 26px #14b8a666}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#093a36,#041e1c);border:1px solid #14b8a655;border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#0b4440,#021917 75%);border:1px solid #14b8a666;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:#5eead4;text-shadow:0 0 14px rgba(45,212,191,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#031413;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-sort{background:linear-gradient(90deg,#2dd4bf,#0d9488);color:#042f2e}
+.b-step{background:linear-gradient(90deg,#38bdf8,#0284c7);color:#fff}
+.b-shuf{background:linear-gradient(90deg,#f59e0b,#ea580c);color:#fff}
+.b-reset{background:#dc2626;color:#fff}
+.b-fs{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff}
+.tg{background:#115e59;color:#ccfbf1;border:2px solid #2dd4bf}
+.tg.on{background:#14b8a6;color:#042f2e;border-color:#5eead4;box-shadow:0 0 16px #14b8a6aa}
+.metric-pill{background:rgba(4,47,46,0.85);border:1px solid rgba(45,212,191,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#5eead4}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#0b4440,#021917 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Big-O Complexity & Algorithms</button><button class="tab on" data-pg="s">🎮 Visual Sorting Engine</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>Sorting Algorithms Time Complexity (Big-O)</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px">
+    <div style="background:#02201d;padding:12px;border-radius:12px;border:1px solid #14b8a6"><b style="color:#f59e0b">Bubble Sort:</b><br>O(N²) quadratic comparisons.</div>
+    <div style="background:#02201d;padding:12px;border-radius:12px;border:1px solid #14b8a6"><b style="color:#38bdf8">Quick Sort:</b><br>O(N log N) divide & conquer partition.</div>
+    <div style="background:#02201d;padding:12px;border-radius:12px;border:1px solid #14b8a6"><b style="color:#2dd4bf">Merge Sort:</b><br>O(N log N) stable recursive divide & merge.</div>
+    <div style="background:#02201d;padding:12px;border-radius:12px;border:1px solid #14b8a6"><b style="color:#4ade80">Insertion Sort:</b><br>O(N²) optimal for nearly sorted arrays.</div>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">💻 Algorithm: Bubble Sort (O(N²)) &bull; Comparisons: 0 &bull; Swaps: 0</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Algorithm Selection</span>
+      <button class="btn tg on" id="bAlgoBubble">Bubble Sort</button>
+      <button class="btn tg" id="bAlgoQuick">Quick Sort</button>
+      <button class="btn tg" id="bAlgoInsertion">Insertion Sort</button>
+      <button class="btn b-sort" id="bPlaySort">▶ Run Visualizer</button>
+      <button class="btn b-step" id="bStep">⏭ Single Step</button>
+      <button class="btn b-shuf" id="bShuffle">🔀 Randomize Array</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset</button>
+    </div>
+    <div class="row">
+      <span>Array Size & Speed</span>
+      <button class="btn tg on" data-n="25" id="bSize25">25 Bars</button>
+      <button class="btn tg" data-n="40" id="bSize40">40 Bars</button>
+      <button class="btn tg" data-n="60" id="bSize60">60 Bars</button>
+      <button class="btn" style="background:#38bdf8;color:#04102a" id="bFastSpeed">⚡ 2x Speed</button>
+    </div>
+    <div class="row">
+      <span>Metrics & Fullscreen</span>
+      <div class="metric-pill" id="mMetrics">Comparisons: 0 | Swaps: 0 | Operations: 0 | State: Ready</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let arr=[], barCount=25, algo="Bubble Sort";
+let comparisons=0, swaps=0, isSorting=false, sortGen=null;
+let activeIndices=[-1, -1], pivotIdx=-1;
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+function initArray(n=barCount){
+  barCount=n; arr=[];
+  for(let i=1; i<=n; i++) arr.push(i);
+  shuffle();
+}
+
+function shuffle(){
+  isSorting=false; sortGen=null; comparisons=0; swaps=0;
+  activeIndices=[-1,-1]; pivotIdx=-1;
+  for(let i=arr.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  updateStatus();
+}
+
+function updateStatus(){
+  $("st").textContent = '💻 Algorithm: ' + algo + ' • Comparisons: ' + comparisons + ' • Swaps: ' + swaps;
+  $("mMetrics").textContent = 'Comparisons: ' + comparisons + ' | Swaps: ' + swaps + ' | Array Size: ' + barCount + ' | ' + (isSorting ? 'SORTING...' : 'IDLE');
+}
+
+// Generators for Step-by-Step Visualization
+function* bubbleSortGen(){
+  const n = arr.length;
+  for(let i=0; i<n-1; i++){
+    for(let j=0; j<n-i-1; j++){
+      comparisons++;
+      activeIndices = [j, j+1];
+      if(arr[j] > arr[j+1]){
+        swaps++;
+        [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+      }
+      yield;
+    }
+  }
+  activeIndices = [-1,-1];
+}
+
+function* insertionSortGen(){
+  const n = arr.length;
+  for(let i=1; i<n; i++){
+    let key = arr[i];
+    let j = i-1;
+    activeIndices = [i, j];
+    while(j>=0 && arr[j] > key){
+      comparisons++; swaps++;
+      arr[j+1] = arr[j];
+      j = j-1;
+      activeIndices = [j, i];
+      yield;
+    }
+    arr[j+1] = key;
+    yield;
+  }
+  activeIndices = [-1,-1];
+}
+
+function* quickSortGen(low=0, high=arr.length-1){
+  if(low < high){
+    const pi = yield* partitionGen(low, high);
+    yield* quickSortGen(low, pi-1);
+    yield* quickSortGen(pi+1, high);
+  }
+}
+
+function* partitionGen(low, high){
+  const pivot = arr[high];
+  pivotIdx = high;
+  let i = low - 1;
+  for(let j=low; j<high; j++){
+    comparisons++;
+    activeIndices = [j, high];
+    if(arr[j] < pivot){
+      i++;
+      swaps++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    yield;
+  }
+  swaps++;
+  [arr[i+1], arr[high]] = [arr[high], arr[i+1]];
+  yield;
+  return i+1;
+}
+
+function startSort(){
+  if(algo === "Bubble Sort") sortGen = bubbleSortGen();
+  else if(algo === "Insertion Sort") sortGen = insertionSortGen();
+  else sortGen = quickSortGen(0, arr.length-1);
+  isSorting = true;
+}
+
+$("bAlgoBubble").onclick=()=>{ setAlgo("Bubble Sort", $("bAlgoBubble")); };
+$("bAlgoQuick").onclick=()=>{ setAlgo("Quick Sort", $("bAlgoQuick")); };
+$("bAlgoInsertion").onclick=()=>{ setAlgo("Insertion Sort", $("bAlgoInsertion")); };
+
+function setAlgo(name, btn){
+  algo = name;
+  document.querySelectorAll(".ctl .tg").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  shuffle();
+}
+
+$("bPlaySort").onclick=()=>{
+  if(!isSorting){ startSort(); }
+  else { isSorting = !isSorting; }
+  $("bPlaySort").textContent = isSorting ? "⏸ Pause Sorting" : "▶ Resume Sorting";
+};
+
+$("bStep").onclick=()=>{
+  if(!sortGen) startSort();
+  stepSort();
+};
+
+$("bShuffle").onclick=shuffle;
+$("bReset").onclick=()=>{ shuffle(); };
+
+function stepSort(){
+  if(sortGen){
+    const res = sortGen.next();
+    if(res.done){ isSorting=false; sortGen=null; activeIndices=[-1,-1]; pivotIdx=-1; }
+    updateStatus();
+  }
+}
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+let tick=0;
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+
+  ctx.fillStyle="#041413";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  // Stepping loop
+  if(isSorting){
+    tick++;
+    stepSort();
+  }
+
+  // Draw Bars
+  const pad = 60, availW = cv.width - pad*2;
+  const barW = availW / arr.length;
+  const maxVal = arr.length;
+  const baseH = cv.height - 80;
+
+  for(let i=0; i<arr.length; i++){
+    const val = arr[i];
+    const h = (val / maxVal) * (cv.height - 140);
+    const x = pad + i * barW;
+    const y = baseH - h;
+
+    let fill = "#14b8a6";
+    if(i === pivotIdx) fill = "#f59e0b"; // Pivot Orange
+    else if(activeIndices.includes(i)) fill = "#f43f5e"; // Active Red
+    else if(isSorting && i % 2 === 0) fill = "#2dd4bf";
+
+    ctx.fillStyle = fill;
+    ctx.fillRect(x + 2, y, barW - 4, h);
+
+    // Number text if <= 30 bars
+    if(barCount <= 30){
+      ctx.fillStyle="#ffffff";
+      ctx.font="bold 11px monospace";
+      ctx.textAlign="center";
+      ctx.fillText(val, x + barW/2, baseH + 16);
+    }
+  }
+
+  // Baseline
+  ctx.strokeStyle="#2dd4bf";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(pad - 10, baseH);
+  ctx.lineTo(cv.width - pad + 10, baseH);
+  ctx.stroke();
+
+  requestAnimationFrame(draw);
+}
+
+initArray(25);
+draw();
+</script></body></html>

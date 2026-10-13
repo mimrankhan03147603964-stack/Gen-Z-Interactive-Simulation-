@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chemical Reaction Kinetics & Catalysis Lab</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--red:#ff4d67;--grn:#22d3a0;--amb:#ffc247;--vio:#c084fc;--pink:#f43f5e}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#1a0933,#0b153d,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#c084fc,#9333ea);color:#fff;box-shadow:0 5px 0 #6b21a8,0 10px 26px #9333ea66}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#221142,#0a1332);border:1px solid var(--line);border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#27124f,#050a1e 75%);border:1px solid var(--line);border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:var(--vio);text-shadow:0 0 14px rgba(192,132,252,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#050718;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-heat{background:linear-gradient(90deg,#f43f5e,#fb7185);color:#fff}
+.b-cool{background:linear-gradient(90deg,#0284c7,#38bdf8);color:#fff}
+.b-cat{background:linear-gradient(90deg,#10b981,#34d399);color:#04102a}
+.b-reset{background:#dc2626;color:#fff}
+.b-conc{background:#a855f7;color:#fff}
+.b-fs{background:linear-gradient(90deg,var(--vio),#ff7eb6);color:#fff}
+.tg{background:#1c2b63;color:#d4e0ff;border:2px solid #3a4f9a}
+.tg.on{background:var(--vio);color:#fff;border-color:#cbbcff;box-shadow:0 0 16px #9b7bffaa}
+.metric-pill{background:rgba(15,23,42,0.8);border:1px solid rgba(192,132,252,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#c084fc}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#27124f,#050a1e 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Theory & Collision Model</button><button class="tab on" data-pg="s">🎮 Molecular Reactor Stage</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>Chemical Reaction Kinetics & Collision Theory</h2>
+  <p>Chemical reactions occur when reactant molecules collide with <b>sufficient kinetic energy</b> (exceeding Activation Energy <i>Eₐ</i>) and <b>proper geometric orientation</b>.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px">
+    <div style="background:#130b2c;padding:12px;border-radius:14px;border:1px solid #4a2175"><b style="color:#f43f5e">Temperature (T):</b><br>Higher temperature increases molecular speed and collision frequency.</div>
+    <div style="background:#130b2c;padding:12px;border-radius:14px;border:1px solid #4a2175"><b style="color:#34d399">Catalyst Presence:</b><br>Lowers Activation Energy <i>Eₐ</i> providing an alternate reaction pathway.</div>
+    <div style="background:#130b2c;padding:12px;border-radius:14px;border:1px solid #4a2175"><b style="color:#c084fc">Reactant Concentration:</b><br>Increases probability of effective binary collisions per second.</div>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">⚗️ Reaction: A (Blue) + B (Red) ➔ Product C (Glowing Emerald)</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Reagents & Controls</span>
+      <button class="btn b-conc" id="bAddA">+ Add Reactant A</button>
+      <button class="btn b-conc" id="bAddB">+ Add Reactant B</button>
+      <button class="btn b-cat" id="bCatalyst">🧪 Toggle Catalyst (Active)</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset Reactor</button>
+      <button class="btn" style="background:#eab308;color:#04102a" id="bPause">⏸ Pause / Play</button>
+    </div>
+    <div class="row">
+      <span>Thermodynamics</span>
+      <button class="btn b-heat" id="bHeat">🔥 Heat Up (+50 K)</button>
+      <button class="btn b-cool" id="bCool">❄️ Cool Down (-50 K)</button>
+      <button class="btn tg on" id="bRoomTemp">🌡️ Room Temp (298 K)</button>
+      <button class="btn tg" id="bBoil">🌋 High Thermal (500 K)</button>
+    </div>
+    <div class="row">
+      <span>Analytics & Views</span>
+      <button class="btn tg on" id="bShowBonds">🔗 Bond Spark Effect</button>
+      <button class="btn tg on" id="bShowGraph">📊 Live Concentration Curve</button>
+      <div class="metric-pill" id="mMetrics">Temp: 298 K | Reactants: 40 | Products: 0 | Rate: 0/s</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let temp=298, hasCatalyst=false, paused=false, showSparks=true, showGraph=true;
+let particles=[], sparks=[], history=[];
+let productCount=0, rxnCountPerSec=0;
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+function initReactor(){
+  particles=[]; sparks=[]; history=[]; productCount=0;
+  for(let i=0; i<25; i++) addParticle('A');
+  for(let i=0; i<25; i++) addParticle('B');
+  updateStatus();
+}
+
+function addParticle(type){
+  const speed = Math.sqrt(temp / 298) * 2.8;
+  const ang = Math.random() * Math.PI * 2;
+  particles.push({
+    x: 80 + Math.random() * (cv.width - 420),
+    y: 60 + Math.random() * (cv.height - 120),
+    vx: Math.cos(ang) * speed,
+    vy: Math.sin(ang) * speed,
+    r: type==='C' ? 11 : 8,
+    type: type, // 'A', 'B', 'C'
+    color: type==='A' ? '#38bdf8' : (type==='B' ? '#f43f5e' : '#34d399')
+  });
+}
+
+function updateStatus(){
+  const ea = hasCatalyst ? "35 kJ/mol (Catalyzed)" : "80 kJ/mol (Standard)";
+  $("st").textContent = '⚗️ Reactor: Temp ' + temp + ' K • Eₐ = ' + ea + ' • Catalyst: ' + (hasCatalyst ? 'ON' : 'OFF');
+  const countA = particles.filter(p=>p.type==='A').length;
+  const countB = particles.filter(p=>p.type==='B').length;
+  const countC = particles.filter(p=>p.type==='C').length;
+  $("mMetrics").textContent = 'T: ' + temp + 'K | A: ' + countA + ' | B: ' + countB + ' | C: ' + countC + ' (' + productCount + ' formed)';
+}
+
+$("bAddA").onclick=()=>{ for(let i=0;i<5;i++) addParticle('A'); updateStatus(); };
+$("bAddB").onclick=()=>{ for(let i=0;i<5;i++) addParticle('B'); updateStatus(); };
+$("bCatalyst").onclick=()=>{
+  hasCatalyst=!hasCatalyst;
+  $("bCatalyst").textContent = hasCatalyst ? '🧪 Catalyst ACTIVE (Eₐ Lowered)' : '🧪 Catalyst OFF';
+  $("bCatalyst").style.filter = hasCatalyst ? 'brightness(1.2)' : 'none';
+  updateStatus();
+};
+$("bReset").onclick=initReactor;
+$("bPause").onclick=()=>{ paused=!paused; $("bPause").textContent=paused?"▶ Resume":"⏸ Pause"; };
+
+$("bHeat").onclick=()=>{ temp=Math.min(600, temp+50); adjustSpeeds(); updateStatus(); };
+$("bCool").onclick=()=>{ temp=Math.max(150, temp-50); adjustSpeeds(); updateStatus(); };
+$("bRoomTemp").onclick=()=>{ temp=298; adjustSpeeds(); updateStatus(); };
+$("bBoil").onclick=()=>{ temp=500; adjustSpeeds(); updateStatus(); };
+
+function adjustSpeeds(){
+  const mult = Math.sqrt(temp / 298);
+  particles.forEach(p=>{
+    const curSpeed = Math.hypot(p.vx, p.vy) || 1;
+    const targetSpeed = mult * 2.8;
+    p.vx = (p.vx / curSpeed) * targetSpeed;
+    p.vy = (p.vy / curSpeed) * targetSpeed;
+  });
+}
+
+$("bShowBonds").onclick=()=>{ showSparks=!showSparks; $("bShowBonds").classList.toggle("on", showSparks); };
+$("bShowGraph").onclick=()=>{ showGraph=!showGraph; $("bShowGraph").classList.toggle("on", showGraph); };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+let frame=0;
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const reactorW = showGraph ? cv.width - 320 : cv.width - 40;
+  const reactorH = cv.height - 40;
+  const rx=20, ry=20;
+
+  // Reactor Chamber
+  ctx.fillStyle="#080e28";
+  ctx.fillRect(rx, ry, reactorW, reactorH);
+  ctx.strokeStyle="#4f46e5";
+  ctx.lineWidth=3;
+  ctx.strokeRect(rx, ry, reactorW, reactorH);
+
+  // Particles & Collisions
+  if(!paused){
+    frame++;
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Wall bounce
+      if(p.x - p.r < rx){ p.x = rx + p.r; p.vx = -p.vx; }
+      if(p.x + p.r > rx + reactorW){ p.x = rx + reactorW - p.r; p.vx = -p.vx; }
+      if(p.y - p.r < ry){ p.y = ry + p.r; p.vy = -p.vy; }
+      if(p.y + p.r > ry + reactorH){ p.y = ry + reactorH - p.r; p.vy = -p.vy; }
+
+      // Inter-particle collision & Reaction check
+      for(let j=i+1; j<particles.length; j++){
+        const p2 = particles[j];
+        const dx = p2.x - p.x;
+        const dy = p2.y - p.y;
+        const dist = Math.hypot(dx, dy);
+        const minDist = p.r + p2.r;
+
+        if(dist < minDist){
+          // Collision elastic bounce
+          const angle = Math.atan2(dy, dx);
+          const sin = Math.sin(angle), cos = Math.cos(angle);
+          p.vx -= cos * 0.8; p.vy -= sin * 0.8;
+          p2.vx += cos * 0.8; p2.vy += sin * 0.8;
+
+          // Check chemical reaction: A + B -> C
+          if((p.type==='A' && p2.type==='B') || (p.type==='B' && p2.type==='A')){
+            const relativeKE = (p.vx*p.vx + p.vy*p.vy + p2.vx*p2.vx + p2.vy*p2.vy);
+            const reqKE = hasCatalyst ? 6.0 : 16.0;
+            if(relativeKE >= reqKE || Math.random() < (temp/600)*(hasCatalyst?0.75:0.25)){
+              // Transform p into C, remove p2
+              p.type = 'C';
+              p.color = '#34d399';
+              p.r = 11;
+              particles.splice(j, 1);
+              productCount++;
+              if(showSparks){
+                for(let s=0; s<8; s++){
+                  sparks.push({ x: p.x, y: p.y, vx: (Math.random()-0.5)*4, vy: (Math.random()-0.5)*4, life: 20 });
+                }
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Sparks decay
+    sparks.forEach((s, idx)=>{
+      s.x += s.vx; s.y += s.vy; s.life--;
+      if(s.life<=0) sparks.splice(idx, 1);
+    });
+
+    if(frame%30===0){
+      const cA = particles.filter(p=>p.type==='A').length;
+      const cC = particles.filter(p=>p.type==='C').length;
+      history.push({A:cA, C:cC});
+      if(history.length>100) history.shift();
+      updateStatus();
+    }
+  }
+
+  // Draw Particles
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    ctx.strokeStyle = p.type==='C' ? '#a7f3d0' : '#ffffff';
+    ctx.lineWidth = p.type==='C' ? 2.5 : 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle="#04102a";
+    ctx.font="bold 9px sans-serif";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText(p.type, p.x, p.y);
+  });
+
+  // Draw Sparks
+  sparks.forEach(s=>{
+    ctx.fillStyle = "rgba(250,204,21," + (s.life/20) + ")";
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, 3, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // Live Graph Panel
+  if(showGraph){
+    const gx = cv.width - 290, gy = 20, gw = 270, gh = reactorH;
+    ctx.fillStyle="#0a1236";
+    ctx.fillRect(gx, gy, gw, gh);
+    ctx.strokeStyle="#38bdf8";
+    ctx.lineWidth=1.5;
+    ctx.strokeRect(gx, gy, gw, gh);
+
+    ctx.fillStyle="#38bdf8";
+    ctx.font="bold 13px sans-serif";
+    ctx.textAlign="left";
+    ctx.fillText("📊 Kinetics Reaction Progress", gx+12, gy+22);
+
+    ctx.font="11px monospace";
+    ctx.fillStyle="#38bdf8"; ctx.fillText("● [A] Reactant", gx+14, gy+44);
+    ctx.fillStyle="#34d399"; ctx.fillText("● [C] Product", gx+130, gy+44);
+
+    // Plot History Curves
+    if(history.length>1){
+      const plotY = gy + 60, plotH = gh - 80;
+      ctx.strokeStyle="#38bdf8"; ctx.lineWidth=2; ctx.beginPath();
+      history.forEach((h, i)=>{
+        const px = gx + 15 + (i / 100) * (gw - 30);
+        const py = plotY + plotH - (h.A / 30) * plotH;
+        if(i===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      ctx.strokeStyle="#34d399"; ctx.lineWidth=2.5; ctx.beginPath();
+      history.forEach((h, i)=>{
+        const px = gx + 15 + (i / 100) * (gw - 30);
+        const py = plotY + plotH - (h.C / 30) * plotH;
+        if(i===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+initReactor();
+draw();
+</script></body></html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moon Phases, Tides & Lunar Orbit Simulator</title>
+<style>
+*, *::before, *::after { forced-color-adjust: none !important; -ms-high-contrast-adjust: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+:root{--bg:#050a1e;--line:#1e293b;--tx:#eaf0ff;--mut:#a3b4e0;--moon:#fef08a;--earth:#38bdf8;--sun:#fbbf24;--vio:#a855f7}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#030712,#09132e,#050a1e,#030712);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:16px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:14px 16px 20px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 20px}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 16px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#1e293b,#0f172a);box-shadow:0 5px 0 #020617,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#38bdf8,#0284c7);color:#fff;box-shadow:0 5px 0 #0369a1,0 10px 26px #0284c766}
+.pg{display:none;animation:in .4s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}}
+h2{font-family:Georgia,serif;font-size:26px;margin-bottom:12px;text-align:center}
+.card{background:linear-gradient(160deg,#0f172a,#020617);border:1px solid #38bdf844;border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009;margin-bottom:16px}
+.sim{background:radial-gradient(circle at 50% 0,#0b1a3d,#020617 75%);border:1px solid #38bdf855;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+#st{text-align:center;font:800 22px Georgia,serif;min-height:34px;color:#7dd3fc;text-shadow:0 0 14px rgba(56,189,248,0.6)}
+canvas{width:100%;height:auto;max-height:64vh;display:block;border-radius:16px;background:#020617;box-shadow:inset 0 0 30px #000}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;font-weight:700}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 15px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.b-orbit{background:linear-gradient(90deg,#38bdf8,#0284c7);color:#fff}
+.b-phase{background:linear-gradient(90deg,#fef08a,#facc15);color:#04102a}
+.b-reset{background:#dc2626;color:#fff}
+.b-fs{background:linear-gradient(90deg,#a855f7,#ec4899);color:#fff}
+.tg{background:#1e293b;color:#bae6fd;border:2px solid #38bdf8}
+.tg.on{background:#0284c7;color:#fff;border-color:#7dd3fc;box-shadow:0 0 16px #0284c7aa}
+.metric-pill{background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:6px 14px;font-family:monospace;font-size:13px;color:#7dd3fc}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#0b1a3d,#020617 70%)}
+.sim:fullscreen canvas{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:13px 20px;font-size:17px}
+.sim:fullscreen #st{font-size:28px}
+</style></head><body>
+<div class="wrap">
+<nav><button class="tab" data-pg="d">📖 Lunar Cycle & Ocean Tides</button><button class="tab on" data-pg="s">🎮 Interactive Lunar Orbit Stage</button></nav>
+
+<section class="pg" id="d">
+<div class="card">
+  <h2>The 8 Lunar Phases & Tidal Bulges</h2>
+  <p>As the Moon orbits Earth every 29.5 days (Synodic Month), sunlight illuminates half its surface. The phase we observe depends on the Moon's orbital angle relative to the Earth-Sun vector.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px">
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">1. New Moon</b> (Day 0)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">2. Waxing Crescent</b> (Day 3.7)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">3. First Quarter</b> (Day 7.4)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">4. Waxing Gibbous</b> (Day 11.1)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">5. Full Moon</b> (Day 14.8)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">6. Waning Gibbous</b> (Day 18.5)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">7. Third Quarter</b> (Day 22.1)</div>
+    <div style="background:#020617;padding:10px;border-radius:12px;border:1px solid #38bdf8"><b style="color:#fef08a">8. Waning Crescent</b> (Day 25.8)</div>
+  </div>
+</div>
+</section>
+
+<section class="pg on" id="s">
+<div class="sim" id="sim">
+  <div id="st">🌑 Lunar Stage: Orbit Angle 0° &bull; Phase: New Moon &bull; Spring Tide</div>
+  <canvas id="cv" width="1100" height="520"></canvas>
+  <div class="ctl">
+    <div class="row">
+      <span>Orbital Position</span>
+      <button class="btn b-phase" data-a="0">🌑 New Moon (0°)</button>
+      <button class="btn b-phase" data-a="90">🌓 First Quarter (90°)</button>
+      <button class="btn b-phase" data-a="180">🌕 Full Moon (180°)</button>
+      <button class="btn b-phase" data-a="270">🌗 Third Quarter (270°)</button>
+      <button class="btn" style="background:#f59e0b;color:#04102a" id="bPause">⏸ Pause / Orbit</button>
+      <button class="btn b-reset" id="bReset">⏮ Reset Orbit</button>
+    </div>
+    <div class="row">
+      <span>Speed & View Tools</span>
+      <button class="btn b-orbit" id="bSlower">− Slower Speed</button>
+      <button class="btn b-orbit" id="bFaster">+ Faster Orbit</button>
+      <button class="btn tg on" id="bTides">🌊 Ocean Tidal Bulges</button>
+      <button class="btn tg on" id="bSunRays">☀️ Sunlight Ray Beams</button>
+      <button class="btn tg on" id="bLabels">🏷 Planetary Labels</button>
+    </div>
+    <div class="row">
+      <span>Analytics</span>
+      <div class="metric-pill" id="mMetrics">Orbital Day: 0.0 / 29.5 | Illuminated: 0% | Tide Type: Spring High Tide</div>
+      <button class="btn b-fs" id="bFs">⛶ Full screen</button>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+let angle=0, speed=0.012, paused=false;
+let showTides=true, showRays=true, showLabels=true;
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab,.pg").forEach(e=>e.classList.remove("on"));
+  t.classList.add("on");
+  $(t.dataset.pg).classList.add("on");
+});
+
+document.querySelectorAll("[data-a]").forEach(b=>{
+  b.onclick=()=>{
+    angle = parseFloat(b.dataset.a) * Math.PI / 180;
+    updateStatus();
+  };
+});
+
+function getPhaseName(ang){
+  const deg = (ang * 180 / Math.PI) % 360;
+  if(deg < 22.5 || deg >= 337.5) return "New Moon (Solar Alignment)";
+  if(deg < 67.5) return "Waxing Crescent";
+  if(deg < 112.5) return "First Quarter (Half Moon)";
+  if(deg < 157.5) return "Waxing Gibbous";
+  if(deg < 202.5) return "Full Moon (Opposite Sun)";
+  if(deg < 247.5) return "Waning Gibbous";
+  if(deg < 292.5) return "Third Quarter (Half Moon)";
+  return "Waning Crescent";
+}
+
+function updateStatus(){
+  const deg = Math.round((angle * 180 / Math.PI) % 360);
+  const phase = getPhaseName(angle);
+  const day = (deg / 360 * 29.5).toFixed(1);
+  const illum = Math.round((1 - Math.cos(angle)) / 2 * 100);
+  const tide = (deg<45 || deg>315 || (deg>135 && deg<225)) ? "Spring Tide (Extreme High/Low)" : "Neap Tide (Moderate)";
+
+  $("st").textContent = '🌑 Lunar Orbit (' + deg + '°): ' + phase + ' • Day ' + day;
+  $("mMetrics").textContent = 'Day ' + day + ' | Illumination: ' + illum + '% | ' + tide;
+}
+
+$("bPause").onclick=()=>{ paused=!paused; $("bPause").textContent=paused?"▶ Resume":"⏸ Pause"; };
+$("bReset").onclick=()=>{ angle=0; updateStatus(); };
+$("bSlower").onclick=()=>{ speed=Math.max(0.003, speed-0.005); };
+$("bFaster").onclick=()=>{ speed=Math.min(0.04, speed+0.005); };
+$("bTides").onclick=()=>{ showTides=!showTides; $("bTides").classList.toggle("on", showTides); };
+$("bSunRays").onclick=()=>{ showRays=!showRays; $("bSunRays").classList.toggle("on", showRays); };
+$("bLabels").onclick=()=>{ showLabels=!showLabels; $("bLabels").classList.toggle("on", showLabels); };
+
+const fs=()=>{
+  try {
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen().catch(()=>{}); }
+    else if($("sim") && $("sim").requestFullscreen){ $("sim").requestFullscreen().catch(()=>{}); }
+  }catch(e){}
+};
+$("bFs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>{
+  $("bFs").textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen";
+});
+
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+
+  // Deep Cosmos Starfield
+  ctx.fillStyle="#020617";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const cx = cv.width/2 - 80, cy = cv.height/2;
+  const orbitR = 175;
+
+  if(!paused){
+    angle = (angle + speed) % (Math.PI*2);
+    if(Math.random()<0.05) updateStatus();
+  }
+
+  // Sunlight Rays from Left Side
+  if(showRays){
+    ctx.strokeStyle="rgba(250,204,21,0.18)";
+    ctx.lineWidth=2;
+    for(let y=60; y<cv.height; y+=35){
+      ctx.beginPath();
+      ctx.moveTo(10, y);
+      ctx.lineTo(cx - 30, y);
+      ctx.stroke();
+    }
+    // Sun Source Disc on far left
+    ctx.beginPath();
+    ctx.arc(0, cy, 70, -Math.PI/2, Math.PI/2);
+    ctx.fillStyle="#facc15";
+    ctx.shadowColor="#f59e0b";
+    ctx.shadowBlur=30;
+    ctx.fill();
+    ctx.shadowBlur=0;
+    if(showLabels){
+      ctx.fillStyle="#020617";
+      ctx.font="bold 12px sans-serif";
+      ctx.fillText("☀️ SUN", 10, cy+4);
+    }
+  }
+
+  // Lunar Orbit Ellipse
+  ctx.strokeStyle="rgba(56,189,248,0.3)";
+  ctx.setLineDash([6, 6]);
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, orbitR, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Earth Ocean Tidal Bulge
+  if(showTides){
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.fillStyle="rgba(56,189,248,0.25)";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 56, 42, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Earth Body
+  ctx.beginPath();
+  ctx.arc(cx, cy, 38, 0, Math.PI*2);
+  ctx.fillStyle="#0284c7";
+  ctx.fill();
+  ctx.strokeStyle="#38bdf8";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  // Continents on Earth
+  ctx.fillStyle="#22c55e";
+  ctx.beginPath();
+  ctx.arc(cx-10, cy-12, 14, 0, Math.PI*2);
+  ctx.arc(cx+8, cy+14, 12, 0, Math.PI*2);
+  ctx.fill();
+
+  // Moon Position in Orbit
+  const mx = cx + Math.cos(angle) * orbitR;
+  const my = cy + Math.sin(angle) * orbitR;
+
+  // Moon body in orbit (half lit by Sun on left)
+  ctx.beginPath();
+  ctx.arc(mx, my, 16, 0, Math.PI*2);
+  ctx.fillStyle="#334155";
+  ctx.fill();
+
+  // Sunlight hemisphere on left of moon
+  ctx.beginPath();
+  ctx.arc(mx, my, 16, Math.PI/2, Math.PI*3/2);
+  ctx.fillStyle="#fef08a";
+  ctx.fill();
+
+  ctx.strokeStyle="#94a3b8";
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+
+  // Live Earth-View Lunar Telescope Portal (Right Side)
+  const viewX = cv.width - 150, viewY = cy;
+  ctx.fillStyle="#09132e";
+  ctx.fillRect(viewX - 110, viewY - 140, 220, 280);
+  ctx.strokeStyle="#38bdf8";
+  ctx.lineWidth=2;
+  ctx.strokeRect(viewX - 110, viewY - 140, 220, 280);
+
+  ctx.fillStyle="#38bdf8";
+  ctx.font="bold 13px sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText("🔭 View From Earth", viewX, viewY - 115);
+
+  // Large Moon in Telescope
+  const teleR = 64;
+  ctx.beginPath();
+  ctx.arc(viewX, viewY - 10, teleR, 0, Math.PI*2);
+  ctx.fillStyle="#1e293b";
+  ctx.fill();
+  ctx.strokeStyle="#94a3b8";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  // Draw Earth Phase Mask
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(viewX, viewY - 10, teleR, 0, Math.PI*2);
+  ctx.clip();
+
+  const phaseShift = -Math.cos(angle); // -1 (new) to +1 (full)
+  ctx.fillStyle="#fef08a";
+  if(Math.sin(angle) >= 0){ // Waxing
+    ctx.beginPath();
+    ctx.arc(viewX, viewY - 10, teleR, -Math.PI/2, Math.PI/2, false);
+    ctx.ellipse(viewX, viewY - 10, Math.abs(phaseShift)*teleR, teleR, 0, Math.PI/2, -Math.PI/2, phaseShift < 0);
+    ctx.fill();
+  } else { // Waning
+    ctx.beginPath();
+    ctx.arc(viewX, viewY - 10, teleR, Math.PI/2, -Math.PI/2, false);
+    ctx.ellipse(viewX, viewY - 10, Math.abs(phaseShift)*teleR, teleR, 0, -Math.PI/2, Math.PI/2, phaseShift < 0);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Phase Name text below telescope
+  ctx.fillStyle="#fef08a";
+  ctx.font="bold 13px Georgia,serif";
+  ctx.fillText(getPhaseName(angle), viewX, viewY + 95);
+
+  requestAnimationFrame(draw);
+}
+
+updateStatus();
+draw();
+</script></body></html>
