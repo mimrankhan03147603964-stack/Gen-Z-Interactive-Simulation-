@@ -425,6 +425,26 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
         </div>
         <div class="sim-readout" id="atomReadout">LIQUID <small>Atoms slide past each other</small></div>
         <canvas id="atomCanvas" width="1100" height="480"></canvas>
+        <div class="ctl" id="ctlAtoms">
+          <div class="row">
+            <span>Mode / Actions</span>
+            <button class="btn b-play" onclick="document.getElementById('atomHeatBtn')?.click()">🔥 Heat Atoms</button>
+            <button class="btn b-in" onclick="document.getElementById('atomCoolBtn')?.click()">❄️ Cool Atoms</button>
+            <button class="btn b-auto" onclick="document.getElementById('atomBondBtn')?.click()">➕ Bond Atoms</button>
+            <button class="btn b-set" onclick="document.getElementById('atomResetBtn')?.click()">⟳ Reset</button>
+          </div>
+          <div class="row">
+            <span>Speed / State</span>
+            <button class="btn b-hold" onclick="var s=document.getElementById('atomState');if(s){s.value='solid';s.dispatchEvent(new Event('change'))}">🧊 Solid (Ice)</button>
+            <button class="btn b-in" onclick="var s=document.getElementById('atomState');if(s){s.value='liquid';s.dispatchEvent(new Event('change'))}">💧 Liquid (Water)</button>
+            <button class="btn b-play" onclick="var s=document.getElementById('atomState');if(s){s.value='gas';s.dispatchEvent(new Event('change'))}">💨 Gas (Steam)</button>
+          </div>
+          <div class="row">
+            <span>Show / Options</span>
+            <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Molecular Orbitals</button>
+            <button class="btn b-fs" onclick="toggleFullscreen(document.getElementById('atomsSimBox')||document.documentElement)">⛶ Full screen</button>
+          </div>
+        </div>
         <div class="sim-info" id="atomInfo">Atoms are drawn as glowing spheres with element labels. Bonds are yellow lines.</div>
         <div class="teacher-note"><strong>Real-Life:</strong> Ice = solid (molecules vibrate in place). Water = liquid (molecules slide). Steam = gas (molecules fly).</div>
       </div>
@@ -571,24 +591,18 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
         <div class="sim-readout" id="pressureReadout">PRESSURE = 1.25 Pa <small>Force 10 · Area 8</small></div>
         <canvas id="pressureCanvas" width="1100" height="480"></canvas>
 
-<div class="ctl" id="ctlAtoms">
+<div class="ctl" id="ctlPressure">
   <div class="row">
-    <span>Mode / Actions</span>
-    <button class="btn b-play" onclick="document.getElementById('atomHeatBtn')?.click()">🔥 Heat Atoms</button>
-    <button class="btn b-in" onclick="document.getElementById('atomCoolBtn')?.click()">❄️ Cool Atoms</button>
-    <button class="btn b-auto" onclick="document.getElementById('atomBondBtn')?.click()">➕ Bond Atoms</button>
-    <button class="btn b-set" onclick="document.getElementById('atomResetBtn')?.click()">⟳ Reset</button>
+    <span>Mode / Force</span>
+    <button class="btn b-play" onclick="document.getElementById('pressureHigh')?.click()">⚡ High Pressure</button>
+    <button class="btn b-in" onclick="document.getElementById('pressureLow')?.click()">🍃 Low Pressure</button>
+    <button class="btn b-set" onclick="document.getElementById('pressureReset')?.click()">⟳ Reset</button>
   </div>
   <div class="row">
-    <span>Speed / State</span>
-    <button class="btn b-hold" onclick="var s=document.getElementById('atomState');if(s){s.value='solid';s.dispatchEvent(new Event('change'))}">🧊 Solid (Ice)</button>
-    <button class="btn b-in" onclick="var s=document.getElementById('atomState');if(s){s.value='liquid';s.dispatchEvent(new Event('change'))}">💧 Liquid (Water)</button>
-    <button class="btn b-play" onclick="var s=document.getElementById('atomState');if(s){s.value='gas';s.dispatchEvent(new Event('change'))}">💨 Gas (Steam)</button>
-  </div>
-  <div class="row">
-    <span>Show / Options</span>
-    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Molecular Orbitals</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-box')||document.documentElement)">⛶ Full screen</button>
+    <span>Variables</span>
+    <button class="btn b-hold" onclick="var f=document.getElementById('forceRange');if(f){f.value=Math.min(20,parseInt(f.value)+4);f.dispatchEvent(new Event('input'))}">+ Force (N)</button>
+    <button class="btn b-auto" onclick="var a=document.getElementById('areaRange');if(a){a.value=Math.max(1,parseInt(a.value)-2);a.dispatchEvent(new Event('input'))}">− Area (cm²)</button>
+    <button class="btn b-fs" onclick="toggleFullscreen(document.getElementById('pressureSimBox')||document.documentElement)">⛶ Full screen</button>
   </div>
 </div>
 
