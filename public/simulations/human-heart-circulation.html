@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Human Heart Anatomy & Double Blood Circulation Simulator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #1a060e 0%, #050204 100%);
+      color: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    header {
+      padding: 10px 18px;
+      background: rgba(36, 10, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(244, 63, 94, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .title-box { display: flex; align-items: center; gap: 10px; }
+    .badge {
+      background: #e11d48;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    h1 { font-size: 16px; font-weight: 800; color: #ffe4e6; }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #cbd5e1;
+    }
+    .stats-bar span b { color: #fb7185; }
+    .main-stage {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .side-metrics {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 240px;
+      background: rgba(30, 8, 16, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .ecg-card {
+      background: #090204;
+      border-radius: 8px;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+    .ecg-canvas {
+      width: 100%;
+      height: 60px;
+      display: block;
+    }
+    .chamber-info {
+      font-size: 11px;
+      color: #f1f5f9;
+      line-height: 1.4;
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .dock {
+      padding: 10px 16px;
+      background: rgba(22, 6, 12, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(244, 63, 94, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(50, 15, 25, 0.7);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ctrl-group label { color: #fda4af; font-size: 11px; }
+    input[type="range"] {
+      width: 80px;
+      accent-color: #fb7185;
+      cursor: pointer;
+    }
+    .btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .btn-secondary {
+      background: rgba(50, 15, 25, 0.85);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fecdd3;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title-box">
+      <span class="badge">LAB 44</span>
+      <h1>Human Heart Anatomy & Double Blood Circulation</h1>
+    </div>
+    <div class="stats-bar">
+      <span>Heart Rate: <b id="statBpm">72 BPM</b></span>
+      <span>Cardiac Output: <b id="statCO">5.0 L/min</b></span>
+      <span>Cycle: <b id="statPhase">Ventricular Systole</b></span>
+      <span>Oxygenation: <b id="statO2" style="color: #4ade80;">98% SaO₂</b></span>
+    </div>
+  </header>
+
+  <div class="main-stage">
+    <canvas id="simCanvas"></canvas>
+    
+    <div class="side-metrics">
+      <div style="font-size: 11px; font-weight: 800; color: #fb7185; margin-bottom: 6px; text-transform: uppercase;">
+        📈 Live ECG Telemetry
+      </div>
+      <div class="ecg-card">
+        <canvas id="ecgCanvas" class="ecg-canvas"></canvas>
+      </div>
+
+      <div class="chamber-info" id="boxChamber">
+        <b>Double Circulation:</b>
+        <div style="margin-top: 4px; font-size: 10px; color: #e2e8f0;">
+          <span style="color: #60a5fa;">🔵 Pulmonary:</span> Heart ➔ Lungs (O₂ uptake)<br>
+          <span style="color: #f43f5e;">🔴 Systemic:</span> Heart ➔ Tissues & Organs
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" id="btnPlayPause">⏸ Pause Heart</button>
+
+    <div class="ctrl-group">
+      <label>Heart Rate (BPM):</label>
+      <input type="range" id="rngBpm" min="40" max="180" step="5" value="72">
+      <span id="lblBpm" style="color:#fb7185;">72 BPM</span>
+    </div>
+
+    <button class="btn btn-secondary" id="btnRest">Rest (60 BPM)</button>
+    <button class="btn btn-secondary" id="btnExercise">Exercise (130 BPM)</button>
+    <button class="btn btn-secondary" id="btnLabels">Labels: ON</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const ecgCanvas = document.getElementById('ecgCanvas');
+    const ecgCtx = ecgCanvas.getContext('2d');
+
+    let bpm = 72;
+    let isPlaying = true;
+    let showLabels = true;
+
+    function resize() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      ecgCanvas.width = ecgCanvas.clientWidth;
+      ecgCanvas.height = ecgCanvas.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Controls
+    document.getElementById('btnPlayPause').addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      document.getElementById('btnPlayPause').textContent = isPlaying ? '⏸ Pause Heart' : '▶ Beat Heart';
+    });
+
+    document.getElementById('rngBpm').addEventListener('input', (e) => {
+      bpm = parseInt(e.target.value, 10);
+      document.getElementById('lblBpm').textContent = bpm + ' BPM';
+    });
+
+    document.getElementById('btnRest').addEventListener('click', () => {
+      bpm = 60;
+      document.getElementById('rngBpm').value = 60;
+      document.getElementById('lblBpm').textContent = '60 BPM';
+    });
+
+    document.getElementById('btnExercise').addEventListener('click', () => {
+      bpm = 130;
+      document.getElementById('rngBpm').value = 130;
+      document.getElementById('lblBpm').textContent = '130 BPM';
+    });
+
+    document.getElementById('btnLabels').addEventListener('click', () => {
+      showLabels = !showLabels;
+      document.getElementById('btnLabels').textContent = showLabels ? 'Labels: ON' : 'Labels: OFF';
+    });
+
+    // Blood cells
+    const bloodCells = [];
+    for (let i = 0; i < 90; i++) {
+      bloodCells.push({
+        path: i % 2 === 0 ? 'pulmonary' : 'systemic',
+        progress: (i / 90),
+        size: 3 + Math.random() * 2
+      });
+    }
+
+    // ECG wave points
+    const ecgPoints = [];
+    for (let x = 0; x < 250; x++) ecgPoints.push(0);
+
+    let phaseTime = 0;
+    let lastTime = performance.now();
+
+    function loop(now) {
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      if (isPlaying) {
+        phaseTime += dt * (bpm / 60);
+      }
+
+      // Cardiac cycle beat progress [0 to 1)
+      const beatFraction = phaseTime % 1;
+      const isSystole = beatFraction > 0.15 && beatFraction < 0.45;
+      const contractFactor = isSystole ? Math.sin((beatFraction - 0.15) / 0.3 * Math.PI) * 0.12 : 0;
+
+      // Update text
+      document.getElementById('statBpm').textContent = bpm + ' BPM';
+      document.getElementById('statCO').textContent = (bpm * 0.07).toFixed(1) + ' L/min';
+      document.getElementById('statPhase').textContent = isSystole ? 'Ventricular Systole' : 'Atrial / Diastole';
+
+      // Update ECG wave
+      if (isPlaying) {
+        let ecgVal = 0;
+        if (beatFraction > 0.08 && beatFraction < 0.16) {
+          // P Wave (Atrial depolarization)
+          ecgVal = Math.sin((beatFraction - 0.08) / 0.08 * Math.PI) * 12;
+        } else if (beatFraction > 0.22 && beatFraction < 0.28) {
+          // QRS complex
+          const qrsProg = (beatFraction - 0.22) / 0.06;
+          if (qrsProg < 0.3) ecgVal = -6; // Q
+          else if (qrsProg < 0.7) ecgVal = 38; // R peak
+          else ecgVal = -12; // S dip
+        } else if (beatFraction > 0.42 && beatFraction < 0.58) {
+          // T Wave
+          ecgVal = Math.sin((beatFraction - 0.42) / 0.16 * Math.PI) * 16;
+        }
+        ecgPoints.push(ecgVal);
+        if (ecgPoints.length > ecgCanvas.width) ecgPoints.shift();
+      }
+
+      // Render ECG
+      ecgCtx.fillStyle = '#090204';
+      ecgCtx.fillRect(0, 0, ecgCanvas.width, ecgCanvas.height);
+      ecgCtx.strokeStyle = 'rgba(244, 63, 94, 0.15)';
+      ecgCtx.lineWidth = 1;
+      // Grid lines
+      for (let y = 0; y < ecgCanvas.height; y += 15) {
+        ecgCtx.beginPath(); ecgCtx.moveTo(0, y); ecgCtx.lineTo(ecgCanvas.width, y); ecgCtx.stroke();
+      }
+      // Green ECG Line
+      ecgCtx.strokeStyle = '#22c55e';
+      ecgCtx.lineWidth = 2;
+      ecgCtx.beginPath();
+      const midY = ecgCanvas.height / 2;
+      for (let i = 0; i < ecgPoints.length; i++) {
+        const x = i;
+        const y = midY - ecgPoints[i];
+        if (i === 0) ecgCtx.moveTo(x, y);
+        else ecgCtx.lineTo(x, y);
+      }
+      ecgCtx.stroke();
+
+      // Main Render
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width * 0.45;
+      const centerY = canvas.height * 0.50;
+      const heartW = Math.min(280, canvas.width * 0.35) * (1 - contractFactor);
+      const heartH = Math.min(340, canvas.height * 0.55) * (1 - contractFactor * 0.8);
+
+      // Draw Circulation Pathways Loops (Left pulmonary, Right systemic)
+      drawVascularCircuits(centerX, centerY, heartW, heartH, beatFraction);
+
+      // Draw Anatomical 4-Chamber Heart Body
+      drawHeartBody(centerX, centerY, heartW, heartH, isSystole);
+
+      // Draw Flowing Blood Cells
+      drawBloodCells(centerX, centerY, heartW, heartH, dt);
+
+      // Draw Chamber & Vessel Labels
+      if (showLabels) {
+        drawLabels(centerX, centerY, heartW, heartH);
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    function drawVascularCircuits(cx, cy, hw, hh, beat) {
+      ctx.lineWidth = 18;
+      ctx.lineCap = 'round';
+
+      // Pulmonary Loop (Top to Lungs) - Blue deoxygenated out, Red oxygenated in
+      ctx.strokeStyle = 'rgba(2, 132, 199, 0.25)';
+      ctx.beginPath();
+      ctx.ellipse(cx - 70, cy - hh * 0.45, 90, 60, -0.2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Systemic Loop (Bottom to Organs) - Red oxygenated out, Blue deoxygenated in
+      ctx.strokeStyle = 'rgba(225, 29, 72, 0.25)';
+      ctx.beginPath();
+      ctx.ellipse(cx + 70, cy + hh * 0.45, 90, 60, 0.2, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function drawHeartBody(cx, cy, hw, hh, isSystole) {
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // Heart Muscle Mass Outer Contour
+      ctx.beginPath();
+      ctx.moveTo(0, -hh * 0.3);
+      ctx.bezierCurveTo(-hw * 0.7, -hh * 0.6, -hw * 0.9, hh * 0.1, 0, hh * 0.55);
+      ctx.bezierCurveTo(hw * 0.9, hh * 0.1, hw * 0.7, -hh * 0.6, 0, -hh * 0.3);
+      ctx.closePath();
+
+      const muscleGrad = ctx.createRadialGradient(0, 0, 20, 0, 0, hw);
+      muscleGrad.addColorStop(0, '#be123c');
+      muscleGrad.addColorStop(0.7, '#881337');
+      muscleGrad.addColorStop(1, '#4c0519');
+      ctx.fillStyle = muscleGrad;
+      ctx.shadowColor = 'rgba(244, 63, 94, 0.4)';
+      ctx.shadowBlur = 24;
+      ctx.fill();
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+
+      // Internal Chambers Separation (Right Blue side, Left Red side)
+      // 1. Right Atrium (Top Left anatomically)
+      drawChamber(cx - hw * 0.28, cy - hh * 0.16, hw * 0.24, hh * 0.18, '#0369a1', '#38bdf8');
+      // 2. Right Ventricle (Bottom Left)
+      drawChamber(cx - hw * 0.24, cy + hh * 0.14, hw * 0.25, hh * 0.24, '#0284c7', '#7dd3fc');
+      // 3. Left Atrium (Top Right)
+      drawChamber(cx + hw * 0.28, cy - hh * 0.16, hw * 0.24, hh * 0.18, '#be123c', '#fb7185');
+      // 4. Left Ventricle (Bottom Right)
+      drawChamber(cx + hw * 0.24, cy + hh * 0.14, hw * 0.26, hh * 0.26, '#e11d48', '#fda4af');
+
+      // Interventricular Septum (Center Wall)
+      ctx.strokeStyle = '#4c0519';
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - hh * 0.25);
+      ctx.lineTo(cx, cy + hh * 0.45);
+      ctx.stroke();
+
+      // Valves
+      const valveColor = isSystole ? '#facc15' : '#ffffff';
+      drawValve(cx - hw * 0.25, cy - 2, 22, isSystole, valveColor); // Tricuspid
+      drawValve(cx + hw * 0.25, cy - 2, 22, isSystole, valveColor); // Bicuspid/Mitral
+    }
+
+    function drawChamber(x, y, w, h, fill, stroke) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(x, y, w, h, 0, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawValve(x, y, width, isOpen, color) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      if (isOpen) {
+        ctx.moveTo(x - width/2, y - 6); ctx.lineTo(x, y + 4);
+        ctx.moveTo(x + width/2, y - 6); ctx.lineTo(x, y + 4);
+      } else {
+        ctx.moveTo(x - width/2, y); ctx.lineTo(x + width/2, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBloodCells(cx, cy, hw, hh, dt) {
+      const speed = (bpm / 60) * 0.35;
+      bloodCells.forEach(cell => {
+        cell.progress = (cell.progress + dt * speed) % 1;
+
+        let x, y, color;
+        if (cell.path === 'pulmonary') {
+          // Deoxygenated blue going through right heart to lungs
+          const theta = cell.progress * Math.PI * 2;
+          x = (cx - 70) + Math.cos(theta) * 90;
+          y = (cy - hh * 0.45) + Math.sin(theta) * 60;
+          color = cell.progress < 0.5 ? '#38bdf8' : '#f43f5e';
+        } else {
+          // Oxygenated red through left heart to body
+          const theta = cell.progress * Math.PI * 2;
+          x = (cx + 70) + Math.cos(theta) * 90;
+          y = (cy + hh * 0.45) + Math.sin(theta) * 60;
+          color = cell.progress < 0.5 ? '#f43f5e' : '#38bdf8';
+        }
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, cell.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function drawLabels(cx, cy, hw, hh) {
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+
+      // Right Atrium (Blue)
+      ctx.fillStyle = '#bae6fd';
+      ctx.fillText('Right Atrium', cx - hw * 0.28, cy - hh * 0.16);
+
+      // Right Ventricle
+      ctx.fillText('Right Ventricle', cx - hw * 0.24, cy + hh * 0.14);
+
+      // Left Atrium (Red)
+      ctx.fillStyle = '#fecdd3';
+      ctx.fillText('Left Atrium', cx + hw * 0.28, cy - hh * 0.16);
+
+      // Left Ventricle
+      ctx.fillText('Left Ventricle', cx + hw * 0.24, cy + hh * 0.14);
+
+      // Superior Vena Cava & Aorta
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('Vena Cava (Deoxy)', cx - hw * 0.65, cy - hh * 0.35);
+
+      ctx.fillStyle = '#fda4af';
+      ctx.fillText('Aorta (Oxygenated)', cx + hw * 0.65, cy - hh * 0.35);
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

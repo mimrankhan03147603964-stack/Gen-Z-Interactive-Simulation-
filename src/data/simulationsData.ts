@@ -615,6 +615,126 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Primary & Secondary Color Blending', 'Geometric 2D Shapes (Stars, Circles, Squares, Triangles)', 'Sensory Cognitive Recognition', 'Positive Reinforcement & Fine Motor Coordination'],
     features: ['100% Vibrant Color Palette (No Monochrome)', 'Interactive Happy-Face Smiling Shapes', 'Magic Color Mixing Splashes', 'Celebratory Confetti & Star Rewards Engine'],
     gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
+  },
+  {
+    id: 'sim-pendulum-harmonic-motion',
+    slug: 'pendulum-harmonic-motion',
+    indexNumber: '42',
+    title: 'Simple Harmonic Motion & Pendulum Conservation',
+    subject: 'Classical Mechanics & Oscillations',
+    category: 'Physics & Motion',
+    iconName: 'Gauge',
+    accentColor: '#0284c7', // Electric Cyan / Blue
+    description: 'Explore simple harmonic motion, period periodicity (T = 2π√(L/g)), and mechanical energy conservation (Kinetic Ek vs Potential Ep). Drag and release the glowing pendulum bob across Earth, Moon, Mars, and Jupiter gravity fields.',
+    fileUrl: '/simulations/pendulum-harmonic-motion.html',
+    topics: ['Simple Harmonic Oscillations', 'Kinetic vs Gravitational Potential Energy', 'Planetary Gravity Variations', 'Force Vector Decomposition (Tension & mg)'],
+    features: ['Interactive Drag & Release Pendulum Bob', 'Live Mechanical Energy Conservation Bar Chart', 'Planetary Gravity Presets (Earth, Moon, Mars, Jupiter)', 'Real-Time Dynamic Force & Velocity Vectors'],
+    gradeLevel: 'Middle & High School Physics'
+  },
+  {
+    id: 'sim-ideal-gas-laws',
+    slug: 'ideal-gas-laws',
+    indexNumber: '43',
+    title: 'Ideal Gas Laws & Kinetic Molecular Theory Engine',
+    subject: 'Physical & Thermal Chemistry',
+    category: 'Chemistry & Matter',
+    iconName: 'FlaskConical',
+    accentColor: '#9333ea', // Royal Purple
+    description: 'Kinetic molecular simulation of gas particles in an adjustable cylinder. Test Boyle’s Law (P ∝ 1/V), Charles’s Law (V ∝ T), and Gay-Lussac’s Law with live manometer pressure gauges, burner heating, ice cooling, and particle pumps.',
+    fileUrl: '/simulations/ideal-gas-laws.html',
+    topics: ['Ideal Gas Law (PV = nRT)', 'Kinetic Molecular Theory & v_rms', 'Boyle, Charles & Gay-Lussac Laws', 'Molecular Collision Pressure Dynamics'],
+    features: ['Interactive Adjustable Volume Piston Cylinder', 'Flame Burner & Ice Cooling Temperature Regulator', 'Live Manometer Gauge (atm & v_rms m/s)', 'Molecular Particle Pump & Vent Valves'],
+    gradeLevel: 'Secondary & High School Chemistry'
+  },
+  {
+    id: 'sim-human-heart-circulation',
+    slug: 'human-heart-circulation',
+    indexNumber: '44',
+    title: 'Human Heart Anatomy & Double Blood Circulation',
+    subject: 'Human Anatomy & Cardiovascular Physiology',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#e11d48', // Vibrant Rose Red
+    description: 'High-definition 60 FPS beating 4-chamber human heart. Follow double circulation pathways through pulmonary (deoxygenated to lungs) and systemic (oxygenated to body) circuits with live ECG electrocardiogram telemetry and valve kinematics.',
+    fileUrl: '/simulations/human-heart-circulation.html',
+    topics: ['4 Cardiac Chambers (Atria & Ventricles)', 'Double Blood Circulation (Pulmonary & Systemic)', 'Cardiac Cycle (Systole & Diastole)', 'Electrocardiogram (ECG P-QRS-T Waves)'],
+    features: ['Rhythmic 60 FPS Cardiac Contraction Engine', 'Interactive Heart Rate Regulator (40 to 180 BPM)', 'Live Synchronized ECG Telemetry Monitor', 'Deoxygenated & Oxygenated Flowing Blood Cell Streams'],
+    gradeLevel: 'Middle & High School Biology'
+  },
+  {
+    id: 'sim-volcano-magma-dynamics',
+    slug: 'volcano-magma-dynamics',
+    indexNumber: '45',
+    title: 'Volcano Anatomy, Magma Chambers & Eruption Dynamics',
+    subject: 'Geology & Volcanology',
+    category: 'Earth & Space',
+    iconName: 'Flame',
+    accentColor: '#ea580c', // Fiery Orange
+    description: 'Interactive geological cross-section of an active stratovolcano. Regulate sub-crustal magma overpressure, magma viscosity (Basaltic vs Rhyolitic), and dissolved volatiles (H₂O/CO₂) to trigger catastrophic Plinian eruptions and monitor seismographs.',
+    fileUrl: '/simulations/volcano-magma-dynamics.html',
+    topics: ['Stratovolcano Geological Cross-Section', 'Magma Chamber Overpressure & Volatiles', 'Magma Viscosity & Eruption Styles', 'Seismic Harmonic Tremor Monitoring'],
+    features: ['Dynamic Sub-Crustal Magma Chamber Accumulator', 'Live Harmonic Tremor Seismograph Monitor', 'Interactive Catastrophic Eruption Trigger', 'Parabolic Volcanic Bombs & Stratospheric Plumes'],
+    gradeLevel: 'Middle & Secondary Earth Science'
+  },
+  {
+    id: 'sim-unit-circle-trigonometry',
+    slug: 'unit-circle-trigonometry',
+    indexNumber: '46',
+    title: 'Interactive Unit Circle & Trigonometric Functions',
+    subject: 'Trigonometry & Analytic Geometry',
+    category: 'Mathematics & Logic',
+    iconName: 'Orbit',
+    accentColor: '#0284c7', // Sky Blue
+    description: 'Interactive unit circle (R = 1) coordinate engine. Rotate the angle arm θ to visualize sine (vertical projection), cosine (horizontal base), and tangent in real time, accompanied by a synchronous harmonic sine wave generator and exact values.',
+    fileUrl: '/simulations/unit-circle-trigonometry.html',
+    topics: ['Unit Circle Coordinate Plane (x=cos θ, y=sin θ)', 'Pythagorean Identity (sin²θ + cos²θ = 1)', 'Degree & Radian Equivalence (0 to 2π)', 'Harmonic Continuous Wave Generation'],
+    features: ['Interactive Rotating Angle Arm & Slider', 'Synchronized Live Sine Wave Curve Plotter', 'Degree & Radian Quick Jumper Presets', 'Color-Coded Geometric Projections (Sin, Cos, Tan)'],
+    gradeLevel: 'High School Geometry & Trigonometry'
+  },
+  {
+    id: 'sim-logic-gates-circuit-designer',
+    slug: 'logic-gates-circuit-designer',
+    indexNumber: '47',
+    title: 'Digital Logic Gates & Boolean Circuit Designer',
+    subject: 'Digital Electronics & Computer Architecture',
+    category: 'Computer Science & IT',
+    iconName: 'Cpu',
+    accentColor: '#0d9488', // Emerald Teal
+    description: 'Interactive digital electronics workbench. Build and evaluate ANSI logic gates (AND, OR, NOT, NAND, NOR, XOR, XNOR) and Half Adders. Toggle 5V High/Low input switches with real-time glowing wires, dynamic truth tables, and output LED lamps.',
+    fileUrl: '/simulations/logic-gates-circuit-designer.html',
+    topics: ['Boolean Logic & Gate Schematics', 'Binary Digital Voltage States (1 / 0)', 'Dynamic Truth Table Evaluation', 'Arithmetic Half Adder Circuits'],
+    features: ['Interactive Toggleable Input Switches (A & B)', 'All 7 Standard Logic Gates + Half Adder', 'Real-Time Glowing High/Low Voltage Wires', 'Active Truth Table Row Highlighting & LED Lamp'],
+    gradeLevel: 'Middle, High School & Introductory IT'
+  },
+  {
+    id: 'sim-parts-of-speech-grammar-quest',
+    slug: 'parts-of-speech-grammar-quest',
+    indexNumber: '48',
+    title: 'Parts of Speech Explorer & Grammar Quest Engine',
+    subject: 'Grammar, Syntax & Lexicology',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#4f46e5', // Indigo
+    description: 'Interactive English grammar dissector. Click words across diverse sentence structures to identify Nouns, Verbs, Adjectives, Adverbs, Pronouns, Prepositions, and Conjunctions with instant linguistic definitions, color-coded tags, and grammar rules.',
+    fileUrl: '/simulations/parts-of-speech-grammar-quest.html',
+    topics: ['8 Standard Parts of Speech', 'Sentence Syntactic Constituent Roles', 'Modifiers, Determiners & Prepositional Phrases', 'Word Classes & Morphological Definitions'],
+    features: ['Interactive Click-to-Inspect Word Cards', 'Color-Coded Linguistic Badges & Legend', 'Multi-Genre Curated Sentence Library', 'Comprehensive Lexicology Definition Card'],
+    gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-animal-safari-habitats',
+    slug: 'animal-safari-habitats',
+    indexNumber: '49',
+    title: 'Animal Kingdom & Safari Discovery Academy',
+    subject: 'Early Cognitive Science & Nature Exploration',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Sparkles',
+    accentColor: '#ea580c', // Bright Safari Orange
+    description: 'Joyful 100% colorful multi-sensory preschool safari across 4 rich habitats: African Savannah, Tropical Jungle, Deep Blue Ocean, and Snowy Arctic. Tap smiling animals for cheerful greetings, fun facts, balloon confetti, and friendly audio chimes.',
+    fileUrl: '/simulations/animal-safari-habitats.html',
+    topics: ['4 Global Wildlife Habitats (Savannah, Jungle, Ocean, Arctic)', 'Animal Names, Sounds & Recognitions', 'Diet & Behavioral Adaptations', 'Multi-Sensory Fine Motor Coordination'],
+    features: ['Interactive Bouncy Cartoon Animals with Sounds', '4 High-Contrast Vibrant Biome Landscapes', 'Pop-able Celebratory Balloon Confetti', 'Web-Audio Synthesized Friendly Musical Chimes'],
+    gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
   }
 ];
 

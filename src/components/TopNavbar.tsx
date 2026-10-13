@@ -27,12 +27,12 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     <header 
       className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-30 transition-colors opacity-100"
       style={{
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.82)' : 'rgba(255, 255, 255, 0.82)',
-        borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.55)',
-        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
-        color: isDarkMode ? '#ffffff' : '#0f172a'
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.90)' : 'rgba(10, 20, 44, 0.90)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.35)',
+        color: '#ffffff'
       }}
     >
       
@@ -44,8 +44,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             style={{
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-              borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.7)' : '#38bdf8',
+              backgroundColor: 'rgba(12, 26, 59, 0.85)',
+              borderColor: 'rgba(56, 189, 248, 0.7)',
               borderWidth: '1.5px',
               borderStyle: 'solid',
               boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
@@ -59,7 +59,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-wider leading-tight flex items-center gap-1.5">
-              <span style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
+              <span style={{ color: '#ffffff' }}>
                 GEN Z EDTECH INTERACTIVE SIMULATION
               </span>
               <span 

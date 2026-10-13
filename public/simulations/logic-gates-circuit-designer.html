@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Logic Gates & Boolean Circuit Designer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #031c19 0%, #010a09 100%);
+      color: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    header {
+      padding: 10px 18px;
+      background: rgba(4, 30, 27, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(45, 212, 191, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .title-box { display: flex; align-items: center; gap: 10px; }
+    .badge {
+      background: #0d9488;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    h1 { font-size: 16px; font-weight: 800; color: #ccfbf1; }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #cbd5e1;
+    }
+    .stats-bar span b { color: #2dd4bf; }
+    .main-stage {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .side-metrics {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 250px;
+      background: rgba(4, 25, 23, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(45, 212, 191, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .tt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      font-family: monospace;
+      margin-top: 6px;
+    }
+    .tt-table th, .tt-table td {
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      padding: 4px 6px;
+      text-align: center;
+    }
+    .tt-table th { background: rgba(13, 148, 136, 0.3); color: #5eead4; }
+    .tt-active { background: rgba(34, 197, 94, 0.35) !important; font-weight: 900; color: #4ade80; }
+    .dock {
+      padding: 10px 16px;
+      background: rgba(3, 20, 18, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(45, 212, 191, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 148, 136, 0.2);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(45, 212, 191, 0.3);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ctrl-group label { color: #5eead4; font-size: 11px; }
+    select {
+      background: #042f2e;
+      color: #2dd4bf;
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+    .btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 10px rgba(13, 148, 136, 0.35);
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .btn-toggle {
+      background: #1e293b;
+      border-color: #475569;
+      color: #94a3b8;
+    }
+    .btn-toggle.active {
+      background: #22c55e;
+      border-color: #86efac;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.6);
+    }
+    .btn-secondary {
+      background: rgba(13, 148, 136, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ccfbf1;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title-box">
+      <span class="badge">LAB 47</span>
+      <h1>Digital Logic Gates & Boolean Circuit Designer</h1>
+    </div>
+    <div class="stats-bar">
+      <span>Mode: <b id="statMode">AND Gate</b></span>
+      <span>Inputs: <b id="statInputs">A=0, B=0</b></span>
+      <span>Output (Q): <b id="statOutput" style="color: #ef4444;">0 (LOW)</b></span>
+      <span>Expression: <b id="statExpr">Q = A · B</b></span>
+    </div>
+  </header>
+
+  <div class="main-stage">
+    <canvas id="simCanvas"></canvas>
+    
+    <div class="side-metrics">
+      <div style="font-size: 11px; font-weight: 800; color: #2dd4bf; margin-bottom: 6px; text-transform: uppercase;">
+        📊 Live Truth Table (Active State)
+      </div>
+
+      <table class="tt-table" id="ttBody">
+        <!-- Rendered dynamically -->
+      </table>
+
+      <div style="margin-top: 10px; font-size: 10.5px; color: #ccfbf1; background: rgba(13, 148, 136, 0.2); border: 1px solid rgba(45, 212, 191, 0.3); padding: 7px; border-radius: 6px;">
+        💡 Click <b>Input Switch A & B</b> below to toggle voltage signals (1 = 5V High, 0 = 0V Low).
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn btn-toggle" id="btnToggleA">Switch A: 0</button>
+    <button class="btn btn-toggle" id="btnToggleB">Switch B: 0</button>
+
+    <div class="ctrl-group">
+      <label>Logic Circuit:</label>
+      <select id="selCircuit">
+        <option value="AND">AND Gate (A · B)</option>
+        <option value="OR">OR Gate (A + B)</option>
+        <option value="NOT">NOT Gate (A')</option>
+        <option value="NAND">NAND Gate (A · B)'</option>
+        <option value="NOR">NOR Gate (A + B)'</option>
+        <option value="XOR">XOR Gate (A ⊕ B)</option>
+        <option value="XNOR">XNOR Gate (A ⊙ B)</option>
+        <option value="HALF_ADDER">Half Adder (Sum & Carry)</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary" id="btnInvert">⟳ Invert Signals</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let inputA = 0;
+    let inputB = 0;
+    let selectedCircuit = 'AND';
+
+    function resize() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Controls
+    const btnA = document.getElementById('btnToggleA');
+    const btnB = document.getElementById('btnToggleB');
+
+    btnA.addEventListener('click', () => {
+      inputA = inputA === 0 ? 1 : 0;
+      updateSwitchesUI();
+    });
+
+    btnB.addEventListener('click', () => {
+      inputB = inputB === 0 ? 1 : 0;
+      updateSwitchesUI();
+    });
+
+    document.getElementById('selCircuit').addEventListener('change', (e) => {
+      selectedCircuit = e.target.value;
+      updateSwitchesUI();
+    });
+
+    document.getElementById('btnInvert').addEventListener('click', () => {
+      inputA = inputA === 0 ? 1 : 0;
+      inputB = inputB === 0 ? 1 : 0;
+      updateSwitchesUI();
+    });
+
+    function updateSwitchesUI() {
+      btnA.textContent = `Switch A: ${inputA}`;
+      btnA.className = `btn btn-toggle ${inputA === 1 ? 'active' : ''}`;
+
+      btnB.textContent = `Switch B: ${inputB}`;
+      btnB.className = `btn btn-toggle ${inputB === 1 ? 'active' : ''}`;
+
+      updateTruthTable();
+    }
+
+    function calculateOutput(A, B, circ) {
+      switch (circ) {
+        case 'AND': return A & B;
+        case 'OR': return A | B;
+        case 'NOT': return A === 0 ? 1 : 0;
+        case 'NAND': return (A & B) === 1 ? 0 : 1;
+        case 'NOR': return (A | B) === 1 ? 0 : 1;
+        case 'XOR': return A ^ B;
+        case 'XNOR': return (A ^ B) === 1 ? 0 : 1;
+        case 'HALF_ADDER': return { sum: A ^ B, carry: A & B };
+      }
+      return 0;
+    }
+
+    function updateTruthTable() {
+      const tt = document.getElementById('ttBody');
+      let html = '';
+
+      if (selectedCircuit === 'NOT') {
+        html += '<tr><th>A</th><th>Q (NOT A)</th></tr>';
+        [0, 1].forEach(a => {
+          const q = a === 0 ? 1 : 0;
+          const isActive = a === inputA;
+          html += `<tr class="${isActive ? 'tt-active' : ''}"><td>${a}</td><td>${q}</td></tr>`;
+        });
+      } else if (selectedCircuit === 'HALF_ADDER') {
+        html += '<tr><th>A</th><th>B</th><th>Sum (⊕)</th><th>Carry (·)</th></tr>';
+        [[0,0],[0,1],[1,0],[1,1]].forEach(([a, b]) => {
+          const res = calculateOutput(a, b, 'HALF_ADDER');
+          const isActive = a === inputA && b === inputB;
+          html += `<tr class="${isActive ? 'tt-active' : ''}"><td>${a}</td><td>${b}</td><td>${res.sum}</td><td>${res.carry}</td></tr>`;
+        });
+      } else {
+        html += `<tr><th>A</th><th>B</th><th>Q (${selectedCircuit})</th></tr>`;
+        [[0,0],[0,1],[1,0],[1,1]].forEach(([a, b]) => {
+          const q = calculateOutput(a, b, selectedCircuit);
+          const isActive = a === inputA && b === inputB;
+          html += `<tr class="${isActive ? 'tt-active' : ''}"><td>${a}</td><td>${b}</td><td>${q}</td></tr>`;
+        });
+      }
+      tt.innerHTML = html;
+    }
+    updateSwitchesUI();
+
+    function loop() {
+      const out = calculateOutput(inputA, inputB, selectedCircuit);
+      const isSingleOut = typeof out === 'number';
+      const outputVal = isSingleOut ? out : out.sum;
+
+      // Stats
+      document.getElementById('statMode').textContent = selectedCircuit.replace('_', ' ');
+      document.getElementById('statInputs').textContent = `A=${inputA}, B=${inputB}`;
+      if (isSingleOut) {
+        document.getElementById('statOutput').textContent = `${out} (${out === 1 ? 'HIGH / 5V' : 'LOW / 0V'})`;
+        document.getElementById('statOutput').style.color = out === 1 ? '#4ade80' : '#ef4444';
+      } else {
+        document.getElementById('statOutput').textContent = `Sum=${out.sum}, Carry=${out.carry}`;
+        document.getElementById('statOutput').style.color = '#38bdf8';
+      }
+
+      // Render
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Grid background
+      ctx.strokeStyle = 'rgba(45, 212, 191, 0.05)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 30) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      const cx = canvas.width * 0.40;
+      const cy = canvas.height * 0.50;
+
+      // Draw Gate Representation
+      drawLogicCircuit(cx, cy, inputA, inputB, out, selectedCircuit);
+
+      requestAnimationFrame(loop);
+    }
+
+    function drawLogicCircuit(cx, cy, a, b, out, circ) {
+      const wireInColorA = a === 1 ? '#22c55e' : '#475569';
+      const wireInColorB = b === 1 ? '#22c55e' : '#475569';
+      const isSingle = typeof out === 'number';
+      const wireOutColor = (isSingle ? out === 1 : out.sum === 1) ? '#22c55e' : '#475569';
+
+      // 1. Input Wires from left
+      drawWire(cx - 220, cy - 35, cx - 70, cy - 35, wireInColorA, `A = ${a}`);
+      if (circ !== 'NOT') {
+        drawWire(cx - 220, cy + 35, cx - 70, cy + 35, wireInColorB, `B = ${b}`);
+      }
+
+      // 2. Logic Gate Body (ANSI standard shape)
+      drawGateBody(cx, cy, circ);
+
+      // 3. Output Wire to right
+      drawWire(cx + 70, cy, cx + 220, cy, wireOutColor, isSingle ? `Q = ${out}` : `Sum = ${out.sum}`);
+
+      // 4. Output LED Lamp
+      drawLED(cx + 250, cy, isSingle ? out : out.sum);
+    }
+
+    function drawWire(x1, y1, x2, y2, color, label) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      if (label) {
+        ctx.fillStyle = color;
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(label, (x1 + x2) / 2 - 20, y1 - 10);
+      }
+      ctx.restore();
+    }
+
+    function drawGateBody(x, y, circ) {
+      ctx.save();
+      ctx.fillStyle = '#0f766e';
+      ctx.strokeStyle = '#2dd4bf';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = '#14b8a6';
+      ctx.shadowBlur = 15;
+
+      ctx.beginPath();
+      if (circ.includes('OR') || circ === 'NOR' || circ === 'XOR' || circ === 'XNOR') {
+        // Curved OR shape
+        ctx.moveTo(x - 70, y - 50);
+        ctx.quadraticCurveTo(x - 30, y - 50, x + 30, y);
+        ctx.quadraticCurveTo(x - 30, y + 50, x - 70, y + 50);
+        ctx.quadraticCurveTo(x - 45, y, x - 70, y - 50);
+      } else if (circ === 'NOT') {
+        // Inverter Triangle
+        ctx.moveTo(x - 60, y - 45);
+        ctx.lineTo(x + 35, y);
+        ctx.lineTo(x - 60, y + 45);
+        ctx.closePath();
+      } else {
+        // AND / NAND shape
+        ctx.moveTo(x - 70, y - 45);
+        ctx.lineTo(x, y - 45);
+        ctx.arc(x, y, 45, -Math.PI / 2, Math.PI / 2);
+        ctx.lineTo(x - 70, y + 45);
+        ctx.closePath();
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      // Inversion bubble circle for NOT, NAND, NOR, XNOR
+      if (circ === 'NOT' || circ === 'NAND' || circ === 'NOR' || circ === 'XNOR') {
+        ctx.beginPath();
+        ctx.arc(x + 42, y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#042f2e';
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      // Gate text label inside
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(circ, x - 15, y + 5);
+      ctx.restore();
+    }
+
+    function drawLED(x, y, val) {
+      ctx.save();
+      const isOn = val === 1;
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.fillStyle = isOn ? '#22c55e' : '#1e293b';
+      if (isOn) {
+        ctx.shadowColor = '#4ade80';
+        ctx.shadowBlur = 25;
+      }
+      ctx.fill();
+      ctx.strokeStyle = isOn ? '#86efac' : '#475569';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = isOn ? '#022c22' : '#94a3b8';
+      ctx.font = 'bold 10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(isOn ? 'ON' : 'OFF', x, y + 4);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

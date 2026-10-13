@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Logic Gates & Boolean Circuit Workbench</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #04121a; font-family: system-ui, -apple-system, sans-serif; color: #f0fdfa; }
+    .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 45% 50%, #082f3c 0%, #041620 70%, #020b10 100%); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ctl {
+      flex-shrink: 0;
+      width: 100%;
+      background: rgba(3, 16, 24, 0.96);
+      border-top: 1.5px solid rgba(45, 212, 191, 0.45);
+      padding: 10px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(16px);
+      z-index: 20;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+    .row span.lbl { font-size: 11px; font-weight: 800; color: #5eead4; text-transform: uppercase; letter-spacing: 0.05em; min-width: 90px; }
+    .btn {
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      color: #fff;
+    }
+    .btn:hover { transform: translateY(-1.5px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .b-preset { background: #134e4a; border-color: #0d9488; }
+    .b-preset.active { background: #0d9488; border-color: #5eead4; box-shadow: 0 0 12px rgba(45, 212, 191, 0.6); }
+    .b-switch { background: #334155; border-color: #64748b; }
+    .b-switch.on { background: #059669; border-color: #34d399; box-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
+    .b-reset { background: #374151; border-color: #6b7280; }
+    .b-fs { background: linear-gradient(135deg, #0d9488, #0284c7); border-color: #38bdf8; margin-left: auto; }
+    .hud { position: absolute; top: 12px; left: 14px; background: rgba(3, 22, 32, 0.88); border: 1px solid rgba(45, 212, 191, 0.4); border-radius: 12px; padding: 10px 14px; font-size: 11px; line-height: 1.5; pointer-events: none; backdrop-filter: blur(8px); }
+    .hud b { color: #5eead4; }
+  </style>
+</head>
+<body>
+  <div class="sim" id="simContainer">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud">
+        <b>Digital Logic Gates & Boolean Architecture</b><br/>
+        Circuit: <span id="hudCircuit" style="color:#5eead4; font-weight:900;">1-Bit Half Adder (Sum & Carry)</span><br/>
+        Inputs: <span id="hudIn" style="color:#fde047; font-family:monospace; font-weight:900;">A = 0, B = 0</span> | 
+        Outputs: <span id="hudOut" style="color:#34d399; font-family:monospace; font-weight:900;">Sum = 0, Carry = 0</span>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="row">
+        <span class="lbl">Circuit Preset</span>
+        <button class="btn b-preset active" id="btnAdder" onclick="setCircuit('adder')">➕ 1-Bit Half Adder</button>
+        <button class="btn b-preset" id="btnXor" onclick="setCircuit('xor')">⚡ XOR vs OR Gate</button>
+        <button class="btn b-preset" id="btnNand" onclick="setCircuit('nand')">🔒 Universal NAND Latch</button>
+        <button class="btn b-preset" id="btnMux" onclick="setCircuit('mux')">🔀 2-to-1 Multiplexer (MUX)</button>
+        <button class="btn b-reset" onclick="resetSim()">⟳ Reset All</button>
+        <button class="btn b-fs" id="bFs" onclick="toggleFs()">⛶ Full Screen</button>
+      </div>
+      <div class="row">
+        <span class="lbl">Logic Inputs</span>
+        <button class="btn b-switch" id="btnInA" onclick="toggleInput('A')">Toggle Input A: 0 (LOW)</button>
+        <button class="btn b-switch" id="btnInB" onclick="toggleInput('B')">Toggle Input B: 0 (LOW)</button>
+        <button class="btn b-switch" id="btnInC" onclick="toggleInput('C')">Toggle Select S: 0</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let width, height;
+    let circuit = 'adder'; // 'adder', 'xor', 'nand', 'mux'
+    let inA = 0, inB = 0, inC = 0;
+    let t = 0;
+
+    function resize() {
+      const rect = cv.parentElement.getBoundingClientRect();
+      width = cv.width = rect.width * (window.devicePixelRatio || 1);
+      height = cv.height = rect.height * (window.devicePixelRatio || 1);
+    }
+    window.addEventListener('resize', resize);
+
+    function setCircuit(c) {
+      circuit = c;
+      document.getElementById('btnAdder').classList.toggle('active', c === 'adder');
+      document.getElementById('btnXor').classList.toggle('active', c === 'xor');
+      document.getElementById('btnNand').classList.toggle('active', c === 'nand');
+      document.getElementById('btnMux').classList.toggle('active', c === 'mux');
+      document.getElementById('btnInC').style.display = (c === 'mux' ? 'inline-flex' : 'none');
+      document.getElementById('hudCircuit').textContent = (c === 'adder' ? '1-Bit Half Adder (Sum & Carry)' : (c === 'xor' ? 'XOR vs OR Gate Comparison' : (c === 'nand' ? 'Universal NAND Gate' : '2-to-1 Multiplexer (MUX)')));
+      updateVars();
+    }
+
+    function toggleInput(pin) {
+      if (pin === 'A') inA = inA === 0 ? 1 : 0;
+      if (pin === 'B') inB = inB === 0 ? 1 : 0;
+      if (pin === 'C') inC = inC === 0 ? 1 : 0;
+      updateVars();
+    }
+
+    function updateVars() {
+      const btnA = document.getElementById('btnInA');
+      const btnB = document.getElementById('btnInB');
+      const btnC = document.getElementById('btnInC');
+      btnA.classList.toggle('on', inA === 1);
+      btnA.textContent = inA === 1 ? 'Input A: 1 (HIGH)' : 'Input A: 0 (LOW)';
+      btnB.classList.toggle('on', inB === 1);
+      btnB.textContent = inB === 1 ? 'Input B: 1 (HIGH)' : 'Input B: 0 (LOW)';
+      btnC.classList.toggle('on', inC === 1);
+      btnC.textContent = inC === 1 ? 'Select S: 1 (HIGH)' : 'Select S: 0 (LOW)';
+
+      document.getElementById('hudIn').textContent = `A = ${inA}, B = ${inB}` + (circuit === 'mux' ? `, S = ${inC}` : '');
+      let outText = '';
+      if (circuit === 'adder') {
+        const sum = inA ^ inB;
+        const carry = inA & inB;
+        outText = `Sum = ${sum}, Carry = ${carry}`;
+      } else if (circuit === 'xor') {
+        outText = `XOR = ${inA ^ inB}, OR = ${inA | inB}`;
+      } else if (circuit === 'nand') {
+        outText = `NAND = ${!(inA && inB) ? 1 : 0}`;
+      } else {
+        const out = inC === 0 ? inA : inB;
+        outText = `Y = ${out}`;
+      }
+      document.getElementById('hudOut').textContent = outText;
+    }
+
+    function resetSim() {
+      inA = 0; inB = 0; inC = 0;
+      setCircuit('adder');
+      updateVars();
+    }
+
+    function drawWire(x1, y1, x2, y2, state) {
+      ctx.strokeStyle = state === 1 ? '#00f5ff' : '#64748b';
+      ctx.lineWidth = state === 1 ? 4 : 2;
+      ctx.shadowColor = state === 1 ? '#00f5ff' : 'transparent';
+      ctx.shadowBlur = state === 1 ? 12 : 0;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    function drawGate(x, y, type, w = 90, h = 60) {
+      ctx.fillStyle = '#0f2937';
+      ctx.strokeStyle = '#2dd4bf';
+      ctx.lineWidth = 2.5;
+      ctx.fillRect(x - w / 2, y - h / 2, w, h);
+      ctx.strokeRect(x - w / 2, y - h / 2, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 15px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(type, x, y + 5);
+    }
+
+    function drawBulb(x, y, state, label) {
+      ctx.fillStyle = state === 1 ? '#facc15' : '#1e293b';
+      ctx.strokeStyle = state === 1 ? '#fef08a' : '#475569';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = state === 1 ? '#facc15' : 'transparent';
+      ctx.shadowBlur = state === 1 ? 20 : 0;
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = state === 1 ? '#04121a' : '#94a3b8';
+      ctx.font = 'bold 13px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText(state === 1 ? '1' : '0', x, y + 4);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 12px system-ui';
+      ctx.fillText(label, x, y + 36);
+    }
+
+    function loop() {
+      t += 0.04;
+      ctx.clearRect(0, 0, width, height);
+
+      const inX = width * 0.16;
+      const inY1 = height * 0.35;
+      const inY2 = height * 0.65;
+
+      // Draw Input Terminals
+      ctx.fillStyle = inA === 1 ? '#34d399' : '#475569';
+      ctx.beginPath(); ctx.arc(inX, inY1, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 12px monospace'; ctx.fillText('A=' + inA, inX - 12, inY1 - 22);
+
+      ctx.fillStyle = inB === 1 ? '#34d399' : '#475569';
+      ctx.beginPath(); ctx.arc(inX, inY2, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText('B=' + inB, inX - 12, inY2 + 32);
+
+      if (circuit === 'adder') {
+        const sum = inA ^ inB;
+        const carry = inA & inB;
+
+        // XOR Gate for Sum
+        const xorX = width * 0.45, xorY = height * 0.35;
+        drawWire(inX, inY1, xorX - 45, xorY - 15, inA);
+        drawWire(inX, inY2, xorX - 45, xorY + 15, inB);
+        drawGate(xorX, xorY, 'XOR');
+        drawWire(xorX + 45, xorY, width * 0.72, xorY, sum);
+        drawBulb(width * 0.72, xorY, sum, 'SUM (S)');
+
+        // AND Gate for Carry
+        const andX = width * 0.45, andY = height * 0.65;
+        drawWire(inX + 30, inY1, andX - 45, andY - 15, inA);
+        drawWire(inX + 50, inY2, andX - 45, andY + 15, inB);
+        drawGate(andX, andY, 'AND');
+        drawWire(andX + 45, andY, width * 0.72, andY, carry);
+        drawBulb(width * 0.72, andY, carry, 'CARRY (C)');
+
+        // Truth table on right side
+        const ttX = width * 0.82, ttY = height * 0.25;
+        ctx.fillStyle = 'rgba(8, 47, 60, 0.85)';
+        ctx.fillRect(ttX, ttY, width * 0.15, height * 0.50);
+        ctx.strokeStyle = '#2dd4bf'; ctx.lineWidth = 1.5;
+        ctx.strokeRect(ttX, ttY, width * 0.15, height * 0.50);
+
+        ctx.fillStyle = '#fde047'; ctx.font = 'bold 11px monospace';
+        ctx.fillText('A B | S C', ttX + 15, ttY + 25);
+        ctx.fillStyle = (inA === 0 && inB === 0) ? '#38bdf8' : '#cbd5e1';
+        ctx.fillText('0 0 | 0 0', ttX + 15, ttY + 50);
+        ctx.fillStyle = (inA === 0 && inB === 1) ? '#38bdf8' : '#cbd5e1';
+        ctx.fillText('0 1 | 1 0', ttX + 15, ttY + 75);
+        ctx.fillStyle = (inA === 1 && inB === 0) ? '#38bdf8' : '#cbd5e1';
+        ctx.fillText('1 0 | 1 0', ttX + 15, ttY + 100);
+        ctx.fillStyle = (inA === 1 && inB === 1) ? '#38bdf8' : '#cbd5e1';
+        ctx.fillText('1 1 | 0 1', ttX + 15, ttY + 125);
+      } else if (circuit === 'xor') {
+        const xorRes = inA ^ inB;
+        const orRes = inA | inB;
+        drawWire(inX, inY1, width * 0.45 - 45, height * 0.35 - 15, inA);
+        drawWire(inX, inY2, width * 0.45 - 45, height * 0.35 + 15, inB);
+        drawGate(width * 0.45, height * 0.35, 'XOR');
+        drawWire(width * 0.45 + 45, height * 0.35, width * 0.72, height * 0.35, xorRes);
+        drawBulb(width * 0.72, height * 0.35, xorRes, 'A ⊕ B');
+
+        drawWire(inX + 30, inY1, width * 0.45 - 45, height * 0.65 - 15, inA);
+        drawWire(inX + 50, inY2, width * 0.45 - 45, height * 0.65 + 15, inB);
+        drawGate(width * 0.45, height * 0.65, 'OR');
+        drawWire(width * 0.45 + 45, height * 0.65, width * 0.72, height * 0.65, orRes);
+        drawBulb(width * 0.72, height * 0.65, orRes, 'A + B');
+      } else if (circuit === 'nand') {
+        const nandRes = !(inA && inB) ? 1 : 0;
+        drawWire(inX, inY1, width * 0.45 - 45, height * 0.5 - 15, inA);
+        drawWire(inX, inY2, width * 0.45 - 45, height * 0.5 + 15, inB);
+        drawGate(width * 0.45, height * 0.5, 'NAND');
+        drawWire(width * 0.45 + 45, height * 0.5, width * 0.72, height * 0.5, nandRes);
+        drawBulb(width * 0.72, height * 0.5, nandRes, '!(A · B)');
+      } else {
+        // Mux
+        const sel = inC;
+        const out = sel === 0 ? inA : inB;
+        drawWire(inX, inY1, width * 0.45 - 45, height * 0.5 - 20, inA);
+        drawWire(inX, inY2, width * 0.45 - 45, height * 0.5 + 20, inB);
+        // Sel wire from bottom
+        drawWire(width * 0.45, height * 0.85, width * 0.45, height * 0.5 + 30, sel);
+        ctx.fillStyle = '#fff'; ctx.fillText('S=' + sel, width * 0.45, height * 0.89);
+
+        drawGate(width * 0.45, height * 0.5, 'MUX');
+        drawWire(width * 0.45 + 45, height * 0.5, width * 0.72, height * 0.5, out);
+        drawBulb(width * 0.72, height * 0.5, out, 'OUTPUT Y');
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    function toggleFs() {
+      const container = document.getElementById('simContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '✕ Exit full screen';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '⛶ Full Screen';
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      document.getElementById('bFs').innerHTML = isFs ? '✕ Exit full screen' : '⛶ Full Screen';
+      setTimeout(resize, 100);
+    });
+
+    resize();
+    setCircuit('adder');
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

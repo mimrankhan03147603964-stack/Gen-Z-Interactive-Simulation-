@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibrant Musical Animal Orchestra & Shape Rhythm Carnival</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #ffeb3b; font-family: 'Comic Sans MS', 'Bubblegum Sans', system-ui, sans-serif; color: #1e1b4b; }
+    .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 30%, #ffefd5 0%, #fed7aa 60%, #fdba74 100%); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ctl {
+      flex-shrink: 0;
+      width: 100%;
+      background: linear-gradient(180deg, #ff6b8b 0%, #ff4081 100%);
+      border-top: 4px solid #ffeb3b;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+      box-shadow: 0 -8px 24px rgba(255, 64, 129, 0.4);
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; }
+    .row span.lbl { font-size: 13px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .btn {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 900;
+      border-radius: 20px;
+      border: 2.5px solid #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #fff;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .btn:hover { transform: translateY(-3px) scale(1.05); filter: brightness(1.15); }
+    .btn:active { transform: translateY(2px) scale(0.98); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+    .b-lion { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .b-eleph { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .b-frog { background: linear-gradient(135deg, #10b981, #059669); }
+    .b-monkey { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    .b-burst { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .b-reset { background: linear-gradient(135deg, #64748b, #475569); }
+    .b-fs { background: linear-gradient(135deg, #06b6d4, #0284c7); margin-left: auto; }
+    
+    /* Rainbow Xylophone Keys in Bottom Panel */
+    .xylo-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .k-key {
+      flex: 1;
+      height: 48px;
+      border-radius: 12px;
+      border: 3px solid #ffffff;
+      font-size: 15px;
+      font-weight: 900;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+      transition: all 0.1s ease;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .k-key:hover { transform: scale(1.08); }
+    .k-key:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+
+    .k-c { background: #ef4444; }
+    .k-d { background: #f97316; }
+    .k-e { background: #facc15; color:#78350f; text-shadow:none; }
+    .k-f { background: #22c55e; }
+    .k-g { background: #06b6d4; }
+    .k-a { background: #3b82f6; }
+    .k-b { background: #a855f7; }
+
+    .hud { position: absolute; top: 14px; left: 16px; background: rgba(255, 255, 255, 0.92); border: 3px solid #ff4081; border-radius: 18px; padding: 10px 16px; font-size: 12px; line-height: 1.5; pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,0.15); color: #831843; font-weight: 800; }
+    .hud b { color: #e11d48; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="sim" id="simContainer">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud">
+        <b>🦁 Musical Animal Orchestra & Carnival! 🎺</b><br/>
+        Tap animals to make them dance and play!<br/>
+        Joy Note: <span id="hudNote" style="color:#2563eb; font-weight:900;">DO (C)</span> |
+        Cheer Level: <span id="hudCheer" style="color:#059669; font-weight:900;">100% Super Happy! ⭐</span>
+      </div>
+    </div>
+
+    <div class="ctl">
+      <!-- 7 Rainbow Xylophone Bars -->
+      <div class="xylo-bar">
+        <button class="k-key k-c" onclick="playTone(261.63, 'DO (C)')">C • Do</button>
+        <button class="k-key k-d" onclick="playTone(293.66, 'RE (D)')">D • Re</button>
+        <button class="k-key k-e" onclick="playTone(329.63, 'MI (E)')">E • Mi</button>
+        <button class="k-key k-f" onclick="playTone(349.23, 'FA (F)')">F • Fa</button>
+        <button class="k-key k-g" onclick="playTone(392.00, 'SOL (G)')">G • Sol</button>
+        <button class="k-key k-a" onclick="playTone(440.00, 'LA (A)')">A • La</button>
+        <button class="k-key k-b" onclick="playTone(493.88, 'TI (B)')">B • Ti</button>
+      </div>
+
+      <div class="row">
+        <span class="lbl">Animal Musicians</span>
+        <button class="btn b-lion" onclick="triggerAnimal('lion')">🦁 Leo the Drummer</button>
+        <button class="btn b-eleph" onclick="triggerAnimal('elephant')">🐘 Ellie the Trumpeter</button>
+        <button class="btn b-frog" onclick="triggerAnimal('frog')">🐸 Freddy the Bass Ribbit</button>
+        <button class="btn b-monkey" onclick="triggerAnimal('monkey')">🐵 Coco the Xylophonist</button>
+        <button class="btn b-burst" onclick="spawnConfettiBurst()">🎉 Confetti Party Burst!</button>
+        <button class="btn b-fs" id="bFs" onclick="toggleFs()">⛶ Full Screen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let width, height;
+    let t = 0;
+    const confetti = [];
+    const soundNotes = [];
+
+    // Web Audio Synthesizer
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTone(freq, name) {
+      initAudio();
+      document.getElementById('hudNote').textContent = name;
+      spawnConfetti(width * (0.3 + Math.random() * 0.4), height * 0.8, 15);
+
+      if (audioCtx) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.28, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      }
+    }
+
+    const animals = [
+      { id: 'lion', name: 'Leo', icon: '🦁', x: 0.18, bounce: 0, instrument: '🥁 Big Bass Drum' },
+      { id: 'elephant', name: 'Ellie', icon: '🐘', x: 0.38, bounce: 0, instrument: '🎺 Golden Horn' },
+      { id: 'monkey', name: 'Coco', icon: '🐵', x: 0.62, bounce: 0, instrument: '🌈 Rainbow Marimba' },
+      { id: 'frog', name: 'Freddy', icon: '🐸', x: 0.82, bounce: 0, instrument: '🎸 Groovy Bass' }
+    ];
+
+    function triggerAnimal(id) {
+      const a = animals.find(item => item.id === id);
+      if (a) {
+        a.bounce = 35;
+        if (id === 'lion') playTone(130.81, 'BASS BOOM 🥁');
+        else if (id === 'elephant') playTone(392.00, 'TRUMPET TOOT 🎺');
+        else if (id === 'monkey') playTone(523.25, 'HIGH CHIME ✨');
+        else playTone(196.00, 'RIBBIT BASS 🐸');
+        spawnConfetti(width * a.x, height * 0.5, 25);
+      }
+    }
+
+    function spawnConfetti(x, y, count) {
+      const colors = ['#ff0055', '#ffea00', '#00e676', '#00d2ff', '#ff00c8', '#ff9100'];
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 3;
+        confetti.push({
+          x: x, y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * 10 + 6,
+          rot: Math.random() * Math.PI,
+          life: 70
+        });
+      }
+    }
+
+    function spawnConfettiBurst() {
+      playTone(440, 'PARTY FIESTA 🎉');
+      for (let i = 0; i < 4; i++) {
+        spawnConfetti(width * (0.2 + i * 0.2), height * 0.4, 25);
+      }
+    }
+
+    function resize() {
+      const rect = cv.parentElement.getBoundingClientRect();
+      width = cv.width = rect.width * (window.devicePixelRatio || 1);
+      height = cv.height = rect.height * (window.devicePixelRatio || 1);
+    }
+    window.addEventListener('resize', resize);
+
+    function loop() {
+      t += 0.05;
+      ctx.clearRect(0, 0, width, height);
+
+      // Cheerful Carnival Clouds & Rainbow Background in sky
+      const cy = height * 0.22;
+      ctx.lineWidth = 14;
+      const rainbowColors = ['#ff4d4d', '#ff9900', '#ffff00', '#33cc33', '#3399ff', '#9933ff'];
+      rainbowColors.forEach((col, idx) => {
+        ctx.strokeStyle = col;
+        ctx.beginPath();
+        ctx.arc(width * 0.5, height * 0.85, width * 0.45 + idx * 14, Math.PI, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Ground Carnival Stage Carpet
+      ctx.fillStyle = '#ff80ab';
+      ctx.fillRect(0, height * 0.70, width, height * 0.30);
+      ctx.fillStyle = '#ff4081';
+      for (let x = 0; x < width; x += 40) {
+        ctx.fillRect(x, height * 0.70, 20, height * 0.30);
+      }
+
+      // Draw Dancing Animals
+      animals.forEach(a => {
+        if (a.bounce > 0) a.bounce *= 0.92;
+        const curY = height * 0.58 - a.bounce - Math.abs(Math.sin(t * 3 + a.x * 10)) * 14;
+        const curX = width * a.x;
+
+        // Stage Pedestal
+        ctx.fillStyle = '#ffd54f';
+        ctx.beginPath();
+        ctx.ellipse(curX, height * 0.72, 54, 20, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ff8f00';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Animal Character Body
+        ctx.font = `${Math.floor(width * 0.08 + 36)}px serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(a.icon, curX, curY);
+
+        // Name Banner
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#ff4081';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(curX - 60, curY + 22, 120, 28, 14);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#c2185b';
+        ctx.font = 'bold 13px system-ui';
+        ctx.fillText(a.name, curX, curY + 41);
+      });
+
+      // Update & Draw Confetti
+      for (let i = confetti.length - 1; i >= 0; i--) {
+        const c = confetti[i];
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += 0.25; // gravity
+        c.life--;
+        c.rot += 0.1;
+
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.rot);
+        ctx.fillStyle = c.color;
+        ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size);
+        ctx.restore();
+
+        if (c.life <= 0 || c.y > height) confetti.splice(i, 1);
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    // Click canvas on animals
+    cv.addEventListener('click', (e) => {
+      const rect = cv.getBoundingClientRect();
+      const clickX = ((e.clientX - rect.left) / rect.width) * width;
+      animals.forEach(a => {
+        if (Math.abs(clickX - width * a.x) < 70) {
+          triggerAnimal(a.id);
+        }
+      });
+    });
+
+    function toggleFs() {
+      const container = document.getElementById('simContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '✕ Exit full screen';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '⛶ Full Screen';
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      document.getElementById('bFs').innerHTML = isFs ? '✕ Exit full screen' : '⛶ Full Screen';
+      setTimeout(resize, 100);
+    });
+
+    resize();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

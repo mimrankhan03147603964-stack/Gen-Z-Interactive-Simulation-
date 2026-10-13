@@ -116,9 +116,10 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
         style={{
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.92)' : 'rgba(255, 255, 255, 0.92)',
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.6)',
-          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.5)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)'
+          backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.94)' : 'rgba(10, 20, 44, 0.94)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+          color: '#ffffff'
         }}
       >
         {/* Left: Brand + Navigation Breadcrumb + Lab Title */}
@@ -316,17 +317,18 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
           <div 
             className="px-4 py-2 flex items-center justify-between gap-3 text-xs font-bold border-b transition-colors"
             style={{
-              backgroundColor: isDarkMode ? 'rgba(8, 20, 50, 0.85)' : 'rgba(241, 245, 249, 0.85)',
-              borderBottomColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
+              backgroundColor: 'rgba(8, 20, 50, 0.92)',
+              borderBottomColor: 'rgba(255, 255, 255, 0.12)',
+              color: '#ffffff'
             }}
           >
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-xs" />
-              <span className="font-mono text-[11px] font-black text-emerald-600 dark:text-emerald-400">
+              <span className="font-mono text-[11px] font-black text-emerald-400">
                 LIVE 60 FPS PHYSICS ENGINE
               </span>
               <span className="text-slate-400">&bull;</span>
-              <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">
+              <span className="text-[11px] font-bold text-slate-300">
                 Interactive Touch &amp; Mouse Controls Active
               </span>
             </div>

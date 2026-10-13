@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ideal Gas Laws & Kinetic Molecular Theory Engine</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #15082b 0%, #060211 100%);
+      color: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    header {
+      padding: 10px 18px;
+      background: rgba(26, 12, 48, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(192, 132, 252, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .title-box { display: flex; align-items: center; gap: 10px; }
+    .badge {
+      background: #9333ea;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    h1 { font-size: 16px; font-weight: 800; color: #f3e8ff; }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #cbd5e1;
+    }
+    .stats-bar span b { color: #c084fc; }
+    .main-stage {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .side-metrics {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 230px;
+      background: rgba(24, 11, 46, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .gauge-card {
+      text-align: center;
+      padding: 8px;
+      background: rgba(10, 4, 20, 0.6);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 10px;
+    }
+    .gauge-val { font-size: 20px; font-weight: 900; color: #38bdf8; font-family: monospace; }
+    .gauge-unit { font-size: 11px; color: #a855f7; font-weight: 700; }
+    .law-box {
+      font-size: 10.5px;
+      color: #e2e8f0;
+      line-height: 1.4;
+      background: rgba(147, 51, 234, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+    .dock {
+      padding: 10px 16px;
+      background: rgba(18, 7, 36, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(192, 132, 252, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(45, 22, 80, 0.7);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ctrl-group label { color: #d8b4fe; font-size: 11px; }
+    input[type="range"] {
+      width: 75px;
+      accent-color: #c084fc;
+      cursor: pointer;
+    }
+    .btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 10px rgba(147, 51, 234, 0.35);
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .btn-fire { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-color: #f87171; }
+    .btn-ice { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #38bdf8; }
+    .btn-secondary {
+      background: rgba(45, 22, 80, 0.85);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #e9d5ff;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title-box">
+      <span class="badge">LAB 43</span>
+      <h1>Ideal Gas Laws & Kinetic Molecular Theory Engine</h1>
+    </div>
+    <div class="stats-bar">
+      <span>Volume (V): <b id="statV">5.0 L</b></span>
+      <span>Temp (T): <b id="statT">300 K</b></span>
+      <span>Pressure (P): <b id="statP">1.00 atm</b></span>
+      <span>Molecules (n): <b id="statN">60</b></span>
+    </div>
+  </header>
+
+  <div class="main-stage">
+    <canvas id="simCanvas"></canvas>
+    
+    <div class="side-metrics">
+      <div style="font-size: 11px; font-weight: 800; color: #c084fc; margin-bottom: 8px; text-transform: uppercase;">
+        🔬 Manometer & Law Analysis
+      </div>
+      <div class="gauge-card">
+        <div class="gauge-val" id="dispPressure">1.00</div>
+        <div class="gauge-unit">ATMOSPHERES (atm)</div>
+      </div>
+      <div class="gauge-card">
+        <div class="gauge-val" id="dispVrms" style="color: #4ade80;">512</div>
+        <div class="gauge-unit">v_rms (m/s)</div>
+      </div>
+      <div class="law-box" id="lawExplanation">
+        <b>Boyle's Law (P ∝ 1/V):</b> As chamber volume decreases, molecular collision frequency against cylinder walls rises proportionally.
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn btn-fire" id="btnHeat">🔥 Heat (+25K)</button>
+    <button class="btn btn-ice" id="btnCool">❄️ Cool (-25K)</button>
+
+    <div class="ctrl-group">
+      <label>Piston Volume:</label>
+      <input type="range" id="rngVolume" min="2.0" max="8.0" step="0.2" value="5.0">
+      <span id="lblVolume" style="color:#c084fc;">5.0L</span>
+    </div>
+
+    <button class="btn" id="btnAddGas">➕ Pump Gas (+20)</button>
+    <button class="btn btn-secondary" id="btnRemoveGas">➖ Vent Gas</button>
+    <button class="btn btn-secondary" id="btnReset">⟳ Reset 300K</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let T = 300; // Kelvin
+    let V = 5.0; // Liters (proportional to cylinder height)
+    let n = 60;  // count of gas molecules
+
+    const particles = [];
+
+    function initParticles() {
+      particles.length = 0;
+      for (let i = 0; i < n; i++) {
+        spawnParticle();
+      }
+    }
+
+    function spawnParticle() {
+      const speed = Math.sqrt(T / 300) * 3.5;
+      const ang = Math.random() * Math.PI * 2;
+      particles.push({
+        x: 0,
+        y: 0,
+        vx: Math.cos(ang) * speed,
+        vy: Math.sin(ang) * speed,
+        color: '#c084fc',
+        radius: 3.5
+      });
+    }
+
+    function resize() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    initParticles();
+
+    // Controls
+    document.getElementById('btnHeat').addEventListener('click', () => {
+      T = Math.min(800, T + 25);
+      updateSpeed();
+    });
+
+    document.getElementById('btnCool').addEventListener('click', () => {
+      T = Math.max(100, T - 25);
+      updateSpeed();
+    });
+
+    document.getElementById('rngVolume').addEventListener('input', (e) => {
+      V = parseFloat(e.target.value);
+      document.getElementById('lblVolume').textContent = V.toFixed(1) + 'L';
+    });
+
+    document.getElementById('btnAddGas').addEventListener('click', () => {
+      if (particles.length < 150) {
+        for (let i = 0; i < 20; i++) spawnParticle();
+        n = particles.length;
+      }
+    });
+
+    document.getElementById('btnRemoveGas').addEventListener('click', () => {
+      if (particles.length > 20) {
+        particles.splice(0, 20);
+        n = particles.length;
+      }
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      T = 300;
+      V = 5.0;
+      document.getElementById('rngVolume').value = 5.0;
+      document.getElementById('lblVolume').textContent = '5.0L';
+      n = 60;
+      initParticles();
+    });
+
+    function updateSpeed() {
+      const targetSpeed = Math.sqrt(T / 300) * 3.5;
+      particles.forEach(p => {
+        const curSpeed = Math.hypot(p.vx, p.vy) || 1;
+        p.vx = (p.vx / curSpeed) * targetSpeed;
+        p.vy = (p.vy / curSpeed) * targetSpeed;
+      });
+    }
+
+    let collisionCount = 0;
+    let lastPressureSample = performance.now();
+
+    function loop() {
+      // Calculate chamber box dimensions
+      const boxW = Math.min(460, canvas.width * 0.55);
+      const maxH = canvas.height * 0.65;
+      const boxH = (V / 8.0) * maxH;
+      const boxX = (canvas.width - boxW) / 2 - 80;
+      const boxBottom = canvas.height * 0.82;
+      const boxTop = boxBottom - boxH;
+
+      // Position new particles inside cylinder if just spawned
+      particles.forEach(p => {
+        if (p.x === 0 && p.y === 0) {
+          p.x = boxX + 10 + Math.random() * (boxW - 20);
+          p.y = boxTop + 10 + Math.random() * (boxH - 20);
+        }
+      });
+
+      // Ideal gas formula: P = (n * R * T) / V
+      // Normalizing so n=60, T=300, V=5.0 gives P = 1.00 atm
+      const P = (n * (T / 300)) / (V * 12.0);
+      const vrms = Math.round(Math.sqrt(T / 300) * 512);
+
+      // Update text
+      document.getElementById('statV').textContent = V.toFixed(1) + ' L';
+      document.getElementById('statT').textContent = T + ' K';
+      document.getElementById('statP').textContent = P.toFixed(2) + ' atm';
+      document.getElementById('statN').textContent = particles.length;
+      document.getElementById('dispPressure').textContent = P.toFixed(2);
+      document.getElementById('dispVrms').textContent = vrms;
+
+      // Physics loop
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Collisions with Left and Right Walls
+        if (p.x - p.radius <= boxX) {
+          p.x = boxX + p.radius;
+          p.vx = Math.abs(p.vx);
+          collisionCount++;
+        } else if (p.x + p.radius >= boxX + boxW) {
+          p.x = boxX + boxW - p.radius;
+          p.vx = -Math.abs(p.vx);
+          collisionCount++;
+        }
+
+        // Collisions with Piston Top & Bottom Floor
+        if (p.y - p.radius <= boxTop) {
+          p.y = boxTop + p.radius;
+          p.vy = Math.abs(p.vy);
+          collisionCount++;
+        } else if (p.y + p.radius >= boxBottom) {
+          p.y = boxBottom - p.radius;
+          p.vy = -Math.abs(p.vy);
+          collisionCount++;
+        }
+      }
+
+      // Render
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Glass Cylinder Body
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
+      ctx.fillRect(boxX, boxTop, boxW, boxH);
+
+      // Draw Cylinder Outer Metal Walls
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(boxX, boxBottom - maxH - 20);
+      ctx.lineTo(boxX, boxBottom);
+      ctx.lineTo(boxX + boxW, boxBottom);
+      ctx.lineTo(boxX + boxW, boxBottom - maxH - 20);
+      ctx.stroke();
+
+      // Draw Piston Head
+      const pistonHeight = 22;
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(boxX + 2, boxTop - pistonHeight, boxW - 4, pistonHeight);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(boxX + 2, boxTop - pistonHeight, boxW - 4, pistonHeight);
+
+      // Draw Piston Shaft Rod
+      const shaftW = 28;
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(boxX + (boxW - shaftW) / 2, boxTop - pistonHeight - 80, shaftW, 80);
+      ctx.strokeRect(boxX + (boxW - shaftW) / 2, boxTop - pistonHeight - 80, shaftW, 80);
+
+      // Draw Burner Heat Glow underneath
+      if (T > 320) {
+        const flameAlpha = Math.min(0.8, (T - 300) / 400);
+        const flameGrad = ctx.createRadialGradient(boxX + boxW/2, boxBottom + 20, 5, boxX + boxW/2, boxBottom + 20, boxW/2);
+        flameGrad.addColorStop(0, `rgba(239, 68, 68, ${flameAlpha})`);
+        flameGrad.addColorStop(0.5, `rgba(249, 115, 22, ${flameAlpha * 0.7})`);
+        flameGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = flameGrad;
+        ctx.fillRect(boxX, boxBottom, boxW, 50);
+      } else if (T < 280) {
+        const frostAlpha = Math.min(0.8, (300 - T) / 200);
+        const iceGrad = ctx.createRadialGradient(boxX + boxW/2, boxBottom + 20, 5, boxX + boxW/2, boxBottom + 20, boxW/2);
+        iceGrad.addColorStop(0, `rgba(56, 189, 248, ${frostAlpha})`);
+        iceGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = iceGrad;
+        ctx.fillRect(boxX, boxBottom, boxW, 50);
+      }
+
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = T > 450 ? '#f87171' : (T < 250 ? '#38bdf8' : '#c084fc');
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      });
+
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

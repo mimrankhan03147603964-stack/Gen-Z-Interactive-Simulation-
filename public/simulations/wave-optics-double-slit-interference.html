@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Optics & Double-Slit Interference Lab</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #030712; font-family: system-ui, -apple-system, sans-serif; color: #f9fafb; }
+    .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 30% 50%, #081b33 0%, #020617 100%); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ctl {
+      flex-shrink: 0;
+      width: 100%;
+      background: rgba(3, 7, 18, 0.95);
+      border-top: 1.5px solid rgba(56, 189, 248, 0.4);
+      padding: 10px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(16px);
+      z-index: 20;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+    .row span.lbl { font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; min-width: 90px; }
+    .btn {
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      color: #fff;
+    }
+    .btn:hover { transform: translateY(-1.5px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .b-laser-red { background: linear-gradient(135deg, #ef4444, #b91c1c); border-color: #f87171; }
+    .b-laser-grn { background: linear-gradient(135deg, #10b981, #047857); border-color: #34d399; }
+    .b-laser-blu { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-color: #60a5fa; }
+    .b-laser-vio { background: linear-gradient(135deg, #8b5cf6, #6d28d9); border-color: #a78bfa; }
+    .b-mode { background: #1e293b; border-color: #475569; }
+    .b-mode.active { background: #0284c7; border-color: #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5); }
+    .b-reset { background: #374151; border-color: #6b7280; }
+    .b-fs { background: linear-gradient(135deg, #ec4899, #be185d); border-color: #f472b6; margin-left: auto; }
+    .slider-box { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: #cbd5e1; }
+    input[type=range] { accent-color: #38bdf8; width: 110px; cursor: pointer; }
+    .hud { position: absolute; top: 12px; left: 14px; background: rgba(3, 7, 18, 0.85); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 10px 14px; font-size: 11px; line-height: 1.5; pointer-events: none; backdrop-filter: blur(8px); }
+    .hud b { color: #38bdf8; }
+    :fullscreen .sim, :-webkit-full-screen .sim { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div class="sim" id="simContainer">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud" id="hud">
+        <b>Young's Double-Slit Experiment</b><br/>
+        Wavelength &lambda;: <span id="hudLambda">532 nm (Green)</span><br/>
+        Slit Sep. d: <span id="hudD">180 &mu;m</span> | Screen Dist. D: <span id="hudDist">1.2 m</span><br/>
+        Fringe Width &Delta;y = (&lambda;D)/d: <span id="hudFringe" style="color:#fde047;">3.55 mm</span>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="row">
+        <span class="lbl">Laser Beam</span>
+        <button class="btn b-laser-red" onclick="setLaser(650, '#ef4444', 'Red')">🔴 650 nm</button>
+        <button class="btn b-laser-grn" onclick="setLaser(532, '#10b981', 'Green')">🟢 532 nm</button>
+        <button class="btn b-laser-blu" onclick="setLaser(450, '#3b82f6', 'Blue')">🔵 450 nm</button>
+        <button class="btn b-laser-vio" onclick="setLaser(405, '#a855f7', 'Violet')">🟣 405 nm</button>
+        <button class="btn b-mode active" id="btnWave" onclick="setMode('wave')">🌊 Continuous Wave</button>
+        <button class="btn b-mode" id="btnPhoton" onclick="setMode('photons')">✨ Quantum Photons</button>
+        <button class="btn b-reset" onclick="resetSim()">⟳ Reset</button>
+        <button class="btn b-fs" id="bFs" onclick="toggleFs()">⛶ Full Screen</button>
+      </div>
+      <div class="row">
+        <span class="lbl">Variables</span>
+        <div class="slider-box">
+          Slit Separation (d):
+          <input type="range" id="rngD" min="80" max="350" value="180" oninput="updateVars()" />
+          <span id="valD">180 &mu;m</span>
+        </div>
+        <div class="slider-box">
+          Slit Width (a):
+          <input type="range" id="rngA" min="20" max="90" value="40" oninput="updateVars()" />
+          <span id="valA">40 &mu;m</span>
+        </div>
+        <div class="slider-box">
+          Screen Dist (D):
+          <input type="range" id="rngDist" min="0.5" max="2.0" step="0.1" value="1.2" oninput="updateVars()" />
+          <span id="valDist">1.2 m</span>
+        </div>
+        <div class="slider-box">
+          Slits:
+          <button class="btn b-mode" id="btnSlit1" onclick="setSlits(1)">1 Slit</button>
+          <button class="btn b-mode active" id="btnSlit2" onclick="setSlits(2)">2 Slits</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let width, height;
+    let lambda = 532, colorHex = '#10b981', colorName = 'Green';
+    let slitSep = 180, slitWidth = 40, screenDist = 1.2, slitCount = 2;
+    let mode = 'wave'; // 'wave' or 'photons'
+    let t = 0;
+    const photons = [];
+    const screenHits = new Array(300).fill(0);
+
+    function resize() {
+      const rect = cv.parentElement.getBoundingClientRect();
+      width = cv.width = rect.width * (window.devicePixelRatio || 1);
+      height = cv.height = rect.height * (window.devicePixelRatio || 1);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function setLaser(nm, hex, name) {
+      lambda = nm; colorHex = hex; colorName = name;
+      updateVars();
+      screenHits.fill(0);
+      photons.length = 0;
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('btnWave').classList.toggle('active', m === 'wave');
+      document.getElementById('btnPhoton').classList.toggle('active', m === 'photons');
+      screenHits.fill(0);
+      photons.length = 0;
+    }
+
+    function setSlits(n) {
+      slitCount = n;
+      document.getElementById('btnSlit1').classList.toggle('active', n === 1);
+      document.getElementById('btnSlit2').classList.toggle('active', n === 2);
+      screenHits.fill(0);
+      photons.length = 0;
+    }
+
+    function updateVars() {
+      slitSep = parseFloat(document.getElementById('rngD').value);
+      slitWidth = parseFloat(document.getElementById('rngA').value);
+      screenDist = parseFloat(document.getElementById('rngDist').value);
+      document.getElementById('valD').innerHTML = slitSep + ' &mu;m';
+      document.getElementById('valA').innerHTML = slitWidth + ' &mu;m';
+      document.getElementById('valDist').textContent = screenDist + ' m';
+      document.getElementById('hudLambda').textContent = `${lambda} nm (${colorName})`;
+      document.getElementById('hudD').innerHTML = slitSep + ' &mu;m';
+      document.getElementById('hudDist').textContent = screenDist + ' m';
+      const fringeMm = ((lambda * 1e-9 * screenDist) / (slitSep * 1e-6)) * 1000;
+      document.getElementById('hudFringe').textContent = (slitCount === 2 ? fringeMm.toFixed(2) + ' mm' : 'Diffraction Airy disc');
+    }
+
+    function resetSim() {
+      setLaser(532, '#10b981', 'Green');
+      document.getElementById('rngD').value = 180;
+      document.getElementById('rngA').value = 40;
+      document.getElementById('rngDist').value = 1.2;
+      setSlits(2);
+      setMode('wave');
+      updateVars();
+    }
+
+    function loop() {
+      t += 0.08;
+      ctx.clearRect(0, 0, width, height);
+      const barrierX = width * 0.38;
+      const screenX = width * 0.82;
+      const cy = height * 0.5;
+
+      // Draw Laser Source
+      const laserX = width * 0.06;
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(laserX - 30, cy - 25, 50, 50);
+      ctx.strokeStyle = colorHex;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(laserX - 30, cy - 25, 50, 50);
+      ctx.fillStyle = colorHex;
+      ctx.beginPath();
+      ctx.arc(laserX + 20, cy, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Laser Beam before barrier
+      const gradBeam = ctx.createLinearGradient(laserX + 20, cy, barrierX, cy);
+      gradBeam.addColorStop(0, colorHex);
+      gradBeam.addColorStop(1, 'rgba(255,255,255,0.7)');
+      ctx.strokeStyle = gradBeam;
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(laserX + 20, cy);
+      ctx.lineTo(barrierX, cy);
+      ctx.stroke();
+
+      // Double-slit barrier
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(barrierX - 8, 0, 16, height);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(barrierX - 8, 0, 16, height);
+
+      // Slit positions
+      const sHalf = (slitSep * 0.35) * (height / 800);
+      const sW = (slitWidth * 0.25) * (height / 800);
+      const slitY1 = slitCount === 2 ? cy - sHalf : cy;
+      const slitY2 = slitCount === 2 ? cy + sHalf : cy;
+
+      // Clear slits in barrier
+      ctx.clearRect(barrierX - 9, slitY1 - sW, 18, sW * 2);
+      if (slitCount === 2) {
+        ctx.clearRect(barrierX - 9, slitY2 - sW, 18, sW * 2);
+      }
+
+      // Draw interference waves
+      if (mode === 'wave') {
+        const k = 0.09 * (700 / lambda);
+        const step = 8;
+        ctx.save();
+        for (let x = barrierX + 6; x < screenX; x += step) {
+          for (let y = height * 0.08; y < height * 0.92; y += step) {
+            const r1 = Math.hypot(x - barrierX, y - slitY1);
+            const r2 = slitCount === 2 ? Math.hypot(x - barrierX, y - slitY2) : r1;
+            const amp1 = Math.cos(k * r1 - t) / Math.sqrt(r1 + 10);
+            const amp2 = slitCount === 2 ? Math.cos(k * r2 - t) / Math.sqrt(r2 + 10) : 0;
+            const totalAmp = slitCount === 2 ? (amp1 + amp2) : amp1;
+            const intensity = Math.min(1, totalAmp * totalAmp * 12);
+            if (intensity > 0.05) {
+              ctx.fillStyle = colorHex;
+              ctx.globalAlpha = intensity * 0.75;
+              ctx.fillRect(x, y, step, step);
+            }
+          }
+        }
+        ctx.restore();
+      } else {
+        // Photon particle mode
+        if (photons.length < 350) {
+          const s = (slitCount === 2 && Math.random() > 0.5) ? slitY2 : slitY1;
+          const angle = (Math.random() - 0.5) * 1.2;
+          photons.push({ x: barrierX + 2, y: s, vx: Math.cos(angle) * 7, vy: Math.sin(angle) * 7 });
+        }
+        ctx.fillStyle = colorHex;
+        for (let i = photons.length - 1; i >= 0; i--) {
+          const p = photons[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.x >= screenX) {
+            const bin = Math.floor((p.y / height) * screenHits.length);
+            if (bin >= 0 && bin < screenHits.length) screenHits[bin]++;
+            photons.splice(i, 1);
+          }
+        }
+      }
+
+      // Detection Screen Plate
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(screenX, height * 0.05, 18, height * 0.9);
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(screenX, height * 0.05, 18, height * 0.9);
+
+      // Live Intensity Fringe Pattern on Screen
+      const fringeWidth = ((lambda * 1e-9 * screenDist) / (slitSep * 1e-6)) * (height * 0.5);
+      const betaFactor = (Math.PI * slitSep * 0.005) / (lambda * 0.005);
+      const alphaFactor = (Math.PI * slitWidth * 0.002) / (lambda * 0.005);
+
+      for (let y = height * 0.05; y < height * 0.95; y += 2) {
+        const dy = (y - cy) / (height * 0.4);
+        const theta = Math.atan(dy / screenDist);
+        const beta = betaFactor * Math.sin(theta);
+        const alpha = alphaFactor * Math.sin(theta);
+        const diff = alpha === 0 ? 1 : Math.sin(alpha) / alpha;
+        const interf = slitCount === 2 ? Math.cos(beta) : 1;
+        const I = Math.pow(diff * interf, 2);
+
+        // Screen color fringe
+        ctx.fillStyle = colorHex;
+        ctx.globalAlpha = Math.min(1, I * 1.2);
+        ctx.fillRect(screenX, y, 18, 2);
+        ctx.globalAlpha = 1.0;
+
+        // Intensity graph curve to right of screen
+        const plotX = screenX + 30 + I * (width * 0.12);
+        ctx.fillStyle = colorHex;
+        ctx.fillRect(plotX, y, 3, 2);
+      }
+
+      // Intensity curve baseline
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(screenX + 30, height * 0.05);
+      ctx.lineTo(screenX + 30, height * 0.95);
+      ctx.stroke();
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 10px system-ui';
+      ctx.fillText('INTENSITY I(&theta;)', screenX + 35, height * 0.08);
+
+      requestAnimationFrame(loop);
+    }
+
+    function toggleFs() {
+      const container = document.getElementById('simContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '✕ Exit full screen';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '⛶ Full Screen';
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      document.getElementById('bFs').innerHTML = isFs ? '✕ Exit full screen' : '⛶ Full Screen';
+      setTimeout(resize, 100);
+    });
+
+    updateVars();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

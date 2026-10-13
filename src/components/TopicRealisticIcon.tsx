@@ -1428,6 +1428,161 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 42: Simple Harmonic Motion & Pendulum Conservation (Physics)
+    case 42:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Pivot Base */}
+          <circle cx="32" cy="10" r="4" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
+          {/* Swing Arc Path */}
+          <path d="M12 48 Q32 58 52 48" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.6" />
+          {/* Angled String Rod */}
+          <line x1="32" y1="10" x2="48" y2="44" stroke="#94a3b8" strokeWidth="2.5" />
+          {/* Glowing Metallic Bob */}
+          <circle cx="48" cy="44" r="9" fill="#0284c7" stroke="#67e8f9" strokeWidth="2" />
+          <circle cx="45" cy="41" r="2.5" fill="#ffffff" />
+          {/* Energy Vector Arrow */}
+          <path d="M48 44 L56 38" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 43: Ideal Gas Laws & Kinetic Molecular Theory Engine (Chemistry)
+    case 43:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Cylinder Walls */}
+          <path d="M14 10 V54 H50 V10" stroke="#c084fc" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* Piston Head & Shaft */}
+          <rect x="16" y="22" width="32" height="6" rx="1.5" fill="#a855f7" stroke="#e9d5ff" strokeWidth="1.2" />
+          <line x1="32" y1="22" x2="32" y2="6" stroke="#c084fc" strokeWidth="3" strokeLinecap="round" />
+          {/* Gas Molecules */}
+          <circle cx="22" cy="38" r="3" fill="#38bdf8" />
+          <circle cx="34" cy="44" r="3" fill="#f43f5e" />
+          <circle cx="42" cy="36" r="3" fill="#fbbf24" />
+          <circle cx="28" cy="48" r="2.5" fill="#4ade80" />
+          {/* Collision Trajectory Sparks */}
+          <line x1="22" y1="38" x2="16" y2="35" stroke="#38bdf8" strokeWidth="1" strokeDasharray="2 2" />
+        </svg>
+      );
+
+    // 44: Human Heart Anatomy & Double Blood Circulation (Biology)
+    case 44:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Aorta Arch Artery (Top) */}
+          <path d="M26 18 C26 6 42 6 42 20" stroke="#f43f5e" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path d="M18 16 C18 10 26 10 26 20" stroke="#38bdf8" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+          {/* Heart Muscle Body */}
+          <path d="M32 20 C20 12 8 26 20 44 C26 52 32 58 32 58 C32 58 38 52 44 44 C56 26 44 12 32 20 Z" 
+            fill="#be123c" stroke="#fda4af" strokeWidth="2" />
+          {/* Right Ventricle (Blue oxygen-poor) */}
+          <circle cx="24" cy="34" r="5" fill="#0284c7" />
+          {/* Left Ventricle (Red oxygen-rich) */}
+          <circle cx="40" cy="34" r="5" fill="#f43f5e" />
+          {/* Central Septum Divider */}
+          <line x1="32" y1="24" x2="32" y2="52" stroke="#881337" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 45: Volcano Anatomy, Magma Chambers & Eruption Dynamics (Earth & Space)
+    case 45:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Mountain Flanks */}
+          <polygon points="6,54 26,26 38,26 58,54" fill="#44403c" stroke="#78716c" strokeWidth="2" />
+          {/* Central Conduit Pipe */}
+          <rect x="29" y="26" width="6" height="28" fill="#ea580c" />
+          {/* Sub-crustal Magma Chamber */}
+          <ellipse cx="32" cy="54" rx="18" ry="7" fill="#f97316" stroke="#fef08a" strokeWidth="1.5" />
+          {/* Exploding Lava Plume & Volcanic Bombs */}
+          <path d="M32 26 Q24 8 20 12 Q32 2 44 12 Q40 8 32 26" fill="#ef4444" opacity="0.9" />
+          <circle cx="22" cy="14" r="2.5" fill="#facc15" />
+          <circle cx="42" cy="12" r="2.5" fill="#f97316" />
+          <circle cx="32" cy="8" r="3" fill="#fef08a" />
+        </svg>
+      );
+
+    // 46: Interactive Unit Circle & Trigonometric Functions (Mathematics)
+    case 46:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Cartesian Axes */}
+          <line x1="6" y1="32" x2="58" y2="32" stroke="#64748b" strokeWidth="1.5" />
+          <line x1="32" y1="6" x2="32" y2="58" stroke="#64748b" strokeWidth="1.5" />
+          {/* Unit Circle (R = 1) */}
+          <circle cx="32" cy="32" r="22" stroke="#38bdf8" strokeWidth="2" fill="none" />
+          {/* Cosine Base (Blue) */}
+          <line x1="32" y1="32" x2="47" y2="32" stroke="#3b82f6" strokeWidth="3" />
+          {/* Sine Height (Green) */}
+          <line x1="47" y1="32" x2="47" y2="16" stroke="#22c55e" strokeWidth="3" />
+          {/* Radius Arm (White) */}
+          <line x1="32" y1="32" x2="47" y2="16" stroke="#ffffff" strokeWidth="2" />
+          {/* Circumference Coordinate Point */}
+          <circle cx="47" cy="16" r="3.5" fill="#38bdf8" stroke="#ffffff" strokeWidth="1" />
+        </svg>
+      );
+
+    // 47: Digital Logic Gates & Boolean Circuit Designer (Computer Science)
+    case 47:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Input Wires */}
+          <line x1="8" y1="22" x2="22" y2="22" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="8" y1="42" x2="22" y2="42" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
+          {/* AND Gate Body */}
+          <path d="M22 14 H34 A18 18 0 0 1 34 50 H22 Z" fill="#0f766e" stroke="#2dd4bf" strokeWidth="2" />
+          {/* Output Wire */}
+          <line x1="48" y1="32" x2="56" y2="32" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Glowing Green Output LED Lamp */}
+          <circle cx="56" cy="32" r="4.5" fill="#22c55e" stroke="#86efac" strokeWidth="1.5" />
+          {/* 1 / 0 logic tags */}
+          <text x="14" y="19" fill="#22c55e" fontSize="7" fontWeight="bold">1</text>
+          <text x="14" y="49" fill="#94a3b8" fontSize="7" fontWeight="bold">0</text>
+        </svg>
+      );
+
+    // 48: Parts of Speech Explorer & Grammar Quest Engine (English)
+    case 48:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Open Grammar Book Pages */}
+          <path d="M8 44 C18 40 32 42 32 48 C32 42 46 40 56 44 V16 C46 12 32 14 32 20 C32 14 18 12 8 16 Z" 
+            fill="#312e81" stroke="#818cf8" strokeWidth="2" />
+          <line x1="32" y1="20" x2="32" y2="48" stroke="#a5b4fc" strokeWidth="2" />
+          {/* Word Tag Badges on Pages */}
+          <rect x="12" y="24" width="14" height="6" rx="2" fill="#3b82f6" />
+          <text x="14" y="29" fill="#ffffff" fontSize="5" fontWeight="bold">NOUN</text>
+          <rect x="38" y="24" width="14" height="6" rx="2" fill="#10b981" />
+          <text x="40" y="29" fill="#ffffff" fontSize="5" fontWeight="bold">VERB</text>
+          <rect x="22" y="34" width="20" height="6" rx="2" fill="#f59e0b" />
+          <text x="24" y="39" fill="#ffffff" fontSize="5" fontWeight="bold">ADJECTIVE</text>
+        </svg>
+      );
+
+    // 49: Animal Kingdom & Safari Discovery Academy (Early Childhood ECCE)
+    case 49:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Sunny Savannah Background Hill */}
+          <ellipse cx="32" cy="54" rx="26" ry="12" fill="#f59e0b" />
+          {/* Safari Acacia Tree (Right) */}
+          <path d="M48 50 V34" stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
+          <ellipse cx="48" cy="30" rx="12" ry="6" fill="#16a34a" />
+          {/* Friendly Smiling Cartoon Lion (Center) */}
+          {/* Mane */}
+          <circle cx="26" cy="32" r="16" fill="#d97706" />
+          {/* Head */}
+          <circle cx="26" cy="32" r="11" fill="#fbbf24" />
+          {/* Eyes */}
+          <circle cx="22" cy="30" r="1.8" fill="#1e293b" />
+          <circle cx="30" cy="30" r="1.8" fill="#1e293b" />
+          {/* Smiling Mouth */}
+          <path d="M23 35 Q26 38 29 35" stroke="#78350f" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          {/* Happy Confetti Star */}
+          <polygon points="12,12 14,16 19,16 15,19 17,24 12,21 7,24 9,19 5,16 10,16" fill="#f43f5e" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

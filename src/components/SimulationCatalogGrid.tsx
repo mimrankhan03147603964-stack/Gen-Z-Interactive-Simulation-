@@ -999,78 +999,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
             return (
               <div key={cat.key} className="space-y-4">
-                {/* Subject Category Group Header */}
-                <div 
-                  className="px-5 py-4 rounded-2xl border flex items-center justify-between gap-3 shadow-md transition-all"
-                  style={{
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    backgroundColor: isDarkMode ? 'rgba(9, 24, 56, 0.85)' : 'rgba(248, 250, 252, 0.92)',
-                    borderColor: isDarkMode ? cat.darkBorder : cat.lightBorder,
-                    borderWidth: '1.5px',
-                    borderLeftWidth: '6px',
-                    borderLeftColor: cat.iconBorder,
-                    borderStyle: 'solid',
-                    boxShadow: isDarkMode ? '0 8px 24px 0 rgba(0, 0, 0, 0.25)' : '0 4px 20px 0 rgba(31, 38, 135, 0.05)'
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shadow-xs shrink-0"
-                      style={{
-                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.8)' : cat.iconBg,
-                        borderColor: cat.iconBorder,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid'
-                      }}
-                    >
-                      {cat.renderIcon({ className: "w-6 h-6", isSelected: false, isDark: isDarkMode })}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 
-                          className="text-base sm:text-lg font-black tracking-tight"
-                          style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-                        >
-                          {cat.fullTitle}
-                        </h3>
-                        <span 
-                          className="text-[10px] font-mono font-black px-2 py-0.5 rounded shadow-2xs"
-                          style={{
-                            backgroundColor: cat.iconBg,
-                            color: isDarkMode ? cat.textColorDark : cat.textColorLight,
-                            borderColor: cat.iconBorder,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          {cat.colorName}
-                        </span>
-                      </div>
-                      <p 
-                        className="text-[11px] font-extrabold mt-0.5"
-                        style={{ color: isDarkMode ? cat.textColorDark : cat.textColorLight }}
-                      >
-                        {cat.subtitle} &bull; {categorySims.length} Active Modules
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span 
-                      className="px-3 py-1 rounded-full text-xs font-black shadow-2xs"
-                      style={{
-                        backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.8)' : '#ffffff',
-                        color: isDarkMode ? cat.textColorDark : cat.textColorLight,
-                        borderColor: isDarkMode ? cat.darkBorder : cat.lightBorder,
-                        borderWidth: '1px',
-                        borderStyle: 'solid'
-                      }}
-                    >
-                      {categorySims.length} {categorySims.length === 1 ? 'Lab' : 'Labs'}
-                    </span>
-                  </div>
-                </div>
+                {/* Grid of Simulation Cards under this Subject */}
 
                 {/* Grid of Simulation Cards under this Subject */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
