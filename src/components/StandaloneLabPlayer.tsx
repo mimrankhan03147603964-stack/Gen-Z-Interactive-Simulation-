@@ -33,6 +33,7 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
   onBackToCatalog
 }) => {
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | 'full'>('full');
+  const [iframeHeight, setIframeHeight] = useState<number>(850);
   const [isReloading, setIsReloading] = useState(false);
   const [isNativeFs, setIsNativeFs] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -40,6 +41,125 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const theme = getSimTheme(sim.indexNumber);
+
+  // Measure and synchronize the natural content height of the simulation document
+  const syncIframeHeight = React.useCallback(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc || !doc.body) return;
+
+      // Strip inner scrollbars from the iframe document
+      doc.documentElement.style.overflowX = 'hidden';
+      doc.documentElement.style.overflowY = 'hidden';
+      doc.body.style.overflowX = 'hidden';
+      doc.body.style.overflowY = 'hidden';
+
+      // Check whether this simulation has structured document cards/tabs
+      const hasEducationalCards = !!doc.querySelector(
+        '.container, .card, .tabs, .tab-btn, .section-tabs, #topicsContainer, .grid-3, .quiz, .theory, .sim-readout, .teacher-note'
+      );
+
+      const bodyScroll = doc.body.scrollHeight || 0;
+      const docScroll = doc.documentElement.scrollHeight || 0;
+      const bodyOffset = doc.body.offsetHeight || 0;
+      const docOffset = doc.documentElement.offsetHeight || 0;
+
+      let contentH = Math.max(bodyScroll, docScroll, bodyOffset, docOffset);
+
+      if (!hasEducationalCards) {
+        // For single-screen canvas simulations, provide a generous, expansive full-viewport stage
+        contentH = Math.max(window.innerHeight - 140, 760);
+      } else {
+        // For educational document simulations with cards/tabs, expand to full natural height
+        contentH = Math.max(contentH + 24, 760);
+      }
+
+      if (contentH > 200) {
+        setIframeHeight(contentH);
+      }
+    } catch {
+      // Cross-origin fallback
+    }
+  }, []);
+
+  const handleIframeLoad = () => {
+    setIsReloading(false);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
+
+      // Inject style to suppress inner scrollbars inside iframe document
+      const styleId = 'genz-kill-inner-scrollbar';
+      if (!doc.getElementById(styleId)) {
+        const style = doc.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+          html, body {
+            overflow: hidden !important;
+            overflow-x: hidden !important;
+            overflow-y: hidden !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+        `;
+        doc.head?.appendChild(style);
+      }
+
+      syncIframeHeight();
+
+      if (doc.body) {
+        // MutationObserver for tab switching, panel toggles, accordion updates
+        const mo = new MutationObserver(() => {
+          syncIframeHeight();
+        });
+        mo.observe(doc.body, { childList: true, subtree: true, attributes: true, characterData: true });
+
+        // ResizeObserver on the iframe document body
+        if (iframe.contentWindow && 'ResizeObserver' in iframe.contentWindow) {
+          const ro = new (iframe.contentWindow as any).ResizeObserver(() => {
+            syncIframeHeight();
+          });
+          ro.observe(doc.body);
+        }
+
+        // Click listeners on buttons/tabs inside the simulation
+        doc.addEventListener('click', () => {
+          setTimeout(syncIframeHeight, 50);
+          setTimeout(syncIframeHeight, 150);
+          setTimeout(syncIframeHeight, 350);
+        });
+      }
+    } catch {
+      // Cross-origin fallback
+    }
+  };
+
+  useEffect(() => {
+    syncIframeHeight();
+    const handleResize = () => syncIframeHeight();
+    window.addEventListener('resize', handleResize);
+
+    // Initial polling interval for dynamically rendered canvases and math fonts
+    const interval = setInterval(syncIframeHeight, 600);
+    const timer = setTimeout(() => clearInterval(interval), 3600);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
+  }, [sim, aspectRatio, syncIframeHeight]);
 
   useEffect(() => {
     // Dynamically set document title to the simulation name
@@ -336,47 +456,85 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
               </span>
             </div>
 
-            {/* Aspect Ratio Selector */}
+            {/* Viewport Scale Selector */}
             <div className="flex items-center gap-1">
-              <span className="text-[10px] font-extrabold uppercase text-slate-500 mr-1 hidden sm:inline">
+              <span className="text-[10px] font-extrabold uppercase text-slate-400 mr-1 hidden sm:inline">
                 Viewport:
               </span>
-              {(['full', '16:9', '4:3'] as const).map((ratio) => (
-                <button
-                  key={ratio}
-                  type="button"
-                  onClick={() => setAspectRatio(ratio)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-black uppercase transition-all cursor-pointer ${
-                    aspectRatio === ratio
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'
-                  }`}
-                >
-                  {ratio}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => setAspectRatio('full')}
+                className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase transition-all cursor-pointer ${
+                  aspectRatio === 'full'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'
+                }`}
+                title="Full Natural Page Height (Single Unified Scrollbar)"
+              >
+                Full Height
+              </button>
+              <button
+                type="button"
+                onClick={() => setAspectRatio('16:9')}
+                className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase transition-all cursor-pointer ${
+                  aspectRatio === '16:9'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'
+                }`}
+                title="16:9 Cinema View"
+              >
+                16:9
+              </button>
+              <button
+                type="button"
+                onClick={() => setAspectRatio('4:3')}
+                className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase transition-all cursor-pointer ${
+                  aspectRatio === '4:3'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'
+                }`}
+                title="4:3 Ratio View"
+              >
+                4:3
+              </button>
             </div>
           </div>
 
-          {/* The Live Interactive Engine Iframe */}
-          <div 
-            className="w-full relative transition-all"
-            style={{
-              height: aspectRatio === 'full' 
-                ? 'calc(100vh - 190px)' 
-                : aspectRatio === '16:9' ? '700px' : '600px',
-              minHeight: '520px'
-            }}
-          >
-            <iframe
-              ref={iframeRef}
-              src={sim.fileUrl}
-              title={`${sim.title} Interactive Simulation`}
-              className="w-full h-full border-0 block"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              loading="eager"
-            />
-          </div>
+          {/* The Live Interactive Engine Iframe - Expands Naturally with Single Page Scroll */}
+          {(() => {
+            const calculatedHeight = 
+              aspectRatio === '16:9'
+                ? 'max(700px, 56.25vw)'
+                : aspectRatio === '4:3'
+                ? 'max(750px, 75vw)'
+                : `${iframeHeight}px`;
+
+            return (
+              <div 
+                className="w-full relative transition-all"
+                style={{
+                  height: calculatedHeight,
+                  minHeight: '680px'
+                }}
+              >
+                <iframe
+                  ref={iframeRef}
+                  src={sim.fileUrl}
+                  title={`${sim.title} Interactive Simulation`}
+                  className="w-full border-0 block"
+                  style={{
+                    height: calculatedHeight,
+                    minHeight: '680px',
+                    overflow: 'hidden'
+                  }}
+                  scrolling="no"
+                  onLoad={handleIframeLoad}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  loading="eager"
+                />
+              </div>
+            );
+          })()}
         </div>
 
         {/* 3. Concept Overview, Interactive Controls & Learning Objectives */}

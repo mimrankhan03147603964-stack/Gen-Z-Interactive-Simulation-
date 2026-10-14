@@ -35,12 +35,124 @@ export const MainStage: React.FC<MainStageProps> = ({
   onBackToCatalog,
   isDarkMode = false
 }) => {
-  const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | 'full'>('16:9');
+  const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | 'full'>('full');
+  const [iframeHeight, setIframeHeight] = useState<number>(850);
   const [isReloading, setIsReloading] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const stageContainerRef = useRef<HTMLDivElement>(null);
 
   const theme = getSimTheme(activeSim.indexNumber);
+
+  // Measure and synchronize the natural content height of the simulation document
+  const syncIframeHeight = React.useCallback(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc || !doc.body) return;
+
+      // Strip inner scrollbars from the iframe document
+      doc.documentElement.style.overflowX = 'hidden';
+      doc.documentElement.style.overflowY = 'hidden';
+      doc.body.style.overflowX = 'hidden';
+      doc.body.style.overflowY = 'hidden';
+
+      const hasEducationalCards = !!doc.querySelector(
+        '.container, .card, .tabs, .tab-btn, .section-tabs, #topicsContainer, .grid-3, .quiz, .theory, .sim-readout, .teacher-note'
+      );
+
+      const bodyScroll = doc.body.scrollHeight || 0;
+      const docScroll = doc.documentElement.scrollHeight || 0;
+      const bodyOffset = doc.body.offsetHeight || 0;
+      const docOffset = doc.documentElement.offsetHeight || 0;
+
+      let contentH = Math.max(bodyScroll, docScroll, bodyOffset, docOffset);
+
+      if (!hasEducationalCards) {
+        contentH = Math.max(window.innerHeight - 150, 750);
+      } else {
+        contentH = Math.max(contentH + 24, 760);
+      }
+
+      if (contentH > 200) {
+        setIframeHeight(contentH);
+      }
+    } catch {
+      // Cross-origin fallback
+    }
+  }, []);
+
+  const handleIframeLoad = () => {
+    setIsReloading(false);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
+
+      const styleId = 'genz-kill-inner-scrollbar';
+      if (!doc.getElementById(styleId)) {
+        const style = doc.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+          html, body {
+            overflow: hidden !important;
+            overflow-x: hidden !important;
+            overflow-y: hidden !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+        `;
+        doc.head?.appendChild(style);
+      }
+
+      syncIframeHeight();
+
+      if (doc.body) {
+        const mo = new MutationObserver(() => {
+          syncIframeHeight();
+        });
+        mo.observe(doc.body, { childList: true, subtree: true, attributes: true, characterData: true });
+
+        if (iframe.contentWindow && 'ResizeObserver' in iframe.contentWindow) {
+          const ro = new (iframe.contentWindow as any).ResizeObserver(() => {
+            syncIframeHeight();
+          });
+          ro.observe(doc.body);
+        }
+
+        doc.addEventListener('click', () => {
+          setTimeout(syncIframeHeight, 50);
+          setTimeout(syncIframeHeight, 150);
+          setTimeout(syncIframeHeight, 350);
+        });
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
+  React.useEffect(() => {
+    syncIframeHeight();
+    const handleResize = () => syncIframeHeight();
+    window.addEventListener('resize', handleResize);
+
+    const interval = setInterval(syncIframeHeight, 600);
+    const timer = setTimeout(() => clearInterval(interval), 3600);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
+  }, [activeSim, aspectRatio, syncIframeHeight]);
 
   const handleReload = () => {
     setIsReloading(true);
@@ -514,36 +626,52 @@ export const MainStage: React.FC<MainStageProps> = ({
           </div>
         </div>
 
-        {/* Live Simulation Iframe Canvas Container */}
-        <div 
-          className={`w-full relative transition-all overflow-hidden ${
+        {/* Live Simulation Iframe Canvas Container - Expands Naturally with Single Page Scroll */}
+        {(() => {
+          const calculatedHeight = 
             aspectRatio === '16:9'
-              ? 'aspect-[16/9] min-h-[520px] max-h-[820px]'
+              ? 'max(700px, 56.25vw)'
               : aspectRatio === '4:3'
-              ? 'aspect-[4/3] min-h-[560px] max-h-[860px]'
-              : 'h-[780px]'
-          }`}
-          style={{ backgroundColor: '#0f172a' }}
-        >
-          {isReloading && (
-            <div className="absolute inset-0 z-20 bg-slate-950 flex items-center justify-center">
-              <div className="flex items-center gap-3 text-cyan-300 text-sm font-black">
-                <RotateCcw className="w-5 h-5 animate-spin" />
-                <span>Reloading simulation canvas...</span>
-              </div>
-            </div>
-          )}
+              ? 'max(750px, 75vw)'
+              : `${iframeHeight}px`;
 
-          <iframe
-            ref={iframeRef}
-            key={activeSim.id}
-            src={activeSim.fileUrl}
-            title={activeSim.title}
-            className="w-full h-full border-0 block"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
-        </div>
+          return (
+            <div 
+              className="w-full relative transition-all"
+              style={{
+                height: calculatedHeight,
+                minHeight: '680px',
+                backgroundColor: '#0f172a'
+              }}
+            >
+              {isReloading && (
+                <div className="absolute inset-0 z-20 bg-slate-950 flex items-center justify-center">
+                  <div className="flex items-center gap-3 text-cyan-300 text-sm font-black">
+                    <RotateCcw className="w-5 h-5 animate-spin" />
+                    <span>Reloading simulation canvas...</span>
+                  </div>
+                </div>
+              )}
+
+              <iframe
+                ref={iframeRef}
+                key={activeSim.id}
+                src={activeSim.fileUrl}
+                title={activeSim.title}
+                className="w-full border-0 block"
+                style={{
+                  height: calculatedHeight,
+                  minHeight: '680px',
+                  overflow: 'hidden'
+                }}
+                scrolling="no"
+                onLoad={handleIframeLoad}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+              />
+            </div>
+          );
+        })()}
       </div>
 
       {/* =========================================================================

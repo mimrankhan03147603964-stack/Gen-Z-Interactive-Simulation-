@@ -53,6 +53,20 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
     }
   };
 
+  const handleIframeLoad = () => {
+    setIsReloading(false);
+    try {
+      const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document;
+      if (!doc) return;
+      doc.documentElement.style.overflowX = 'hidden';
+      if (doc.body) {
+        doc.body.style.overflowX = 'hidden';
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
   return (
     <div 
       className="fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
@@ -234,6 +248,7 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
           src={sim.fileUrl}
           title={sim.title}
           className="w-full h-full border-0 block"
+          onLoad={handleIframeLoad}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
           allowFullScreen
         />
