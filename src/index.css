@@ -342,3 +342,57 @@
 .monogram-glow-ring {
   animation: monogram-ambient-pulse 4s ease-in-out infinite;
 }
+
+/* ==========================================================
+   FULLSCREEN PSEUDO-CLASS STYLING & BACKDROP ENGINE
+   Fix for fullscreen container, canvas aspect ratio, and overlay controls
+   ========================================================== */
+:fullscreen, ::backdrop {
+  background-color: #0b0f19 !important;
+}
+
+.simulation-wrapper:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background-color: #0b0f19 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.simulation-wrapper:fullscreen canvas,
+.simulation-wrapper:fullscreen iframe,
+.simulation-wrapper:fullscreen svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+}
+
+/* Preserve Overlay Controls and Interactive State with high z-index (50+) */
+.simulation-wrapper:fullscreen .fullscreen-overlay-controls,
+.simulation-wrapper:fullscreen .ctl,
+.simulation-wrapper:fullscreen .controls,
+.simulation-wrapper:fullscreen .sim-controls,
+.simulation-wrapper:fullscreen .sim-readout,
+.simulation-wrapper:fullscreen .preset-chips,
+.simulation-wrapper:fullscreen .row,
+.simulation-wrapper:fullscreen .fs-bar,
+.simulation-wrapper:fullscreen nav,
+.simulation-wrapper:fullscreen header {
+  position: relative !important;
+  z-index: 50 !important;
+  flex-shrink: 0 !important;
+}

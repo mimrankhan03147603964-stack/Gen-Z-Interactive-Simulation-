@@ -361,7 +361,7 @@ html, body, canvas, svg {
   box-shadow: 0 0 18px #9b7bffaa !important;
 }
 
-/* Fullscreen Full-Bleed 100vw x 100vh Layout & Aspect Scaling */
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
 :fullscreen,
 :-webkit-full-screen,
 :-moz-full-screen,
@@ -438,6 +438,69 @@ html, body, canvas, svg {
 /* ================= END BLUEPRINT CSS ================= */
 
 </style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  :fullscreen, ::backdrop {
+    background-color: #0b0f19 !important;
+  }
+  .simulation-wrapper:fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    background-color: #0b0f19 !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    margin: 0 !important;
+    padding: 8px 16px !important;
+    box-sizing: border-box !important;
+  }
+  .simulation-wrapper:fullscreen canvas,
+  .simulation-wrapper:fullscreen iframe,
+  .simulation-wrapper:fullscreen svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+  }
+  /* Preserve Overlay Controls and Interactive State with high z-index (50+) */
+  .simulation-wrapper:fullscreen .ctl,
+  .simulation-wrapper:fullscreen .controls,
+  .simulation-wrapper:fullscreen .sim-controls,
+  .simulation-wrapper:fullscreen .sim-readout,
+  .simulation-wrapper:fullscreen .preset-chips,
+  .simulation-wrapper:fullscreen .row,
+  .simulation-wrapper:fullscreen .fs-bar,
+  .simulation-wrapper:fullscreen .floating-controls,
+  .simulation-wrapper:fullscreen .btn,
+  .simulation-wrapper:fullscreen .fs-topbar,
+  .simulation-wrapper:fullscreen .fullscreen-overlay-controls,
+  .simulation-wrapper:fullscreen .topic-header,
+  .simulation-wrapper:fullscreen .control-panel,
+  .simulation-wrapper:fullscreen .dashboard {
+    position: relative !important;
+    z-index: 50 !important;
+    flex-shrink: 0 !important;
+    max-width: 100% !important;
+  }
+  /* Neutralize legacy empty overlay divs that blank out the page */
+  .fs-overlay {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+</style>
+
 </head>
 <body>
 
@@ -1000,61 +1063,176 @@ html, body, canvas, svg {
 </script>
 
 <script>
-/* ================= BLUEPRINT FULLSCREEN & TACTILE CONTROLS ENGINE ================= */
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
 (function() {
-  window.toggleFullscreen = function(target) {
+  function findSimulationRootContainer(el) {
+    if (el && el.nodeType === 1) {
+      var found = el.closest(".simulation-wrapper, .sim, .sim-box, .sim-stage, .simulation, #sim, #simContainer, .card, .main-stage, .stage, .container");
+      if (found && found !== document.body && found !== document.documentElement) {
+        found.classList.add("simulation-wrapper");
+        return found;
+      }
+    }
+    var candidate = document.querySelector(".simulation-wrapper") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".sim-stage") ||
+                    document.querySelector(".sim-box") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".card") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".container") ||
+                    document.body;
+    if (candidate && candidate !== document.documentElement) {
+      candidate.classList.add("simulation-wrapper");
+      return candidate;
+    }
+    document.body.classList.add("simulation-wrapper");
+    return document.body;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
     try {
-      if (document.fullscreenElement) {
-        if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-      } else {
-        var el = (target && target.nodeType === 1) ? target : 
-                 (document.querySelector('.sim') || 
-                  document.querySelector('.sim-box') || 
-                  document.querySelector('.sim-stage') || 
-                  document.querySelector('.simulation') || 
-                  document.documentElement);
-        if (el && el.requestFullscreen) {
-          el.requestFullscreen().catch(function() {
-            document.documentElement.requestFullscreen().catch(()=>{});
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (container && container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed:", err);
+            if (document.body && document.body.requestFullscreen) {
+              document.body.classList.add("simulation-wrapper");
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
           });
-        } else if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen().catch(()=>{});
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
         }
       }
-    } catch(err) {
-      console.warn("Fullscreen toggle error:", err);
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  // Override/intercept all simulation fullscreen function names
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic="" + clean + ""]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
     }
   };
 
-  document.addEventListener('fullscreenchange', function() {
-    var isFs = !!document.fullscreenElement;
-    var btns = document.querySelectorAll('.b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit');
-    btns.forEach(function(btn) {
-      if (isFs) {
-        btn.innerHTML = '✕ Exit full screen';
-        btn.classList.remove('b-fs');
-        btn.classList.add('b-exit');
-        btn.style.setProperty('background', 'linear-gradient(90deg, #ff4d67, #ff7eb6)', 'important');
-        btn.style.setProperty('color', '#ffffff', 'important');
-      } else {
-        btn.innerHTML = '⛶ Full screen';
-        btn.classList.remove('b-exit');
-        btn.classList.add('b-fs');
-        btn.style.setProperty('background', 'linear-gradient(90deg, var(--vio, #9b7bff), #ff7eb6)', 'important');
-        btn.style.setProperty('color', '#ffffff', 'important');
+  // Canvas Re-sizing and Redrawing on fullscreen change and window resize
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
       }
     });
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (isFs) {
+        btn.innerHTML = "✕ Exit full screen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Full screen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
   });
 
-  document.addEventListener('keydown', function(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
-    var k = e.key.toLowerCase();
-    if (k === 'f') {
-      window.toggleFullscreen();
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  // Event delegation to capture clicks on any fullscreen button reliably
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
     }
-  });
+  }, true);
 })();
-/* ================= END BLUEPRINT ENGINE ================= */
 </script>
 
 </body>

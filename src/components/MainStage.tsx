@@ -174,10 +174,11 @@ export const MainStage: React.FC<MainStageProps> = ({
     if (onLaunchFullscreenModal) {
       onLaunchFullscreenModal(activeSim);
     } else if (stageContainerRef.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+      const container = stageContainerRef.current;
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch((err) => console.error('Fullscreen request error:', err));
       } else {
-        stageContainerRef.current.requestFullscreen().catch(() => {});
+        document.exitFullscreen().catch((err) => console.error('Exit fullscreen error:', err));
       }
     }
   };
@@ -194,7 +195,7 @@ export const MainStage: React.FC<MainStageProps> = ({
     <div 
       id="stage"
       ref={stageContainerRef}
-      className="w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-20"
+      className="simulation-wrapper w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-20"
       style={{
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',

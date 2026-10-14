@@ -18,6 +18,7 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   const [isReloading, setIsReloading] = useState(false);
   const [isNativeFs, setIsNativeFs] = useState(!!document.fullscreenElement);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const simulationContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleFsChange = () => {
@@ -30,10 +31,12 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   }, []);
 
   const handleToggleBrowserFs = () => {
+    const container = simulationContainerRef.current;
+    if (!container) return;
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      container.requestFullscreen().catch((err) => console.error('Fullscreen request error:', err));
     } else {
-      document.exitFullscreen().catch(() => {});
+      document.exitFullscreen().catch((err) => console.error('Exit fullscreen error:', err));
     }
   };
 
@@ -69,7 +72,8 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
+      ref={simulationContainerRef}
+      className="simulation-wrapper fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
       style={{
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
