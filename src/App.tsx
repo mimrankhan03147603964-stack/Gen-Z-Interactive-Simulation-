@@ -13,16 +13,32 @@ import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navi
 
 function resolveSimulationFromUrl(): SimulationItem | null {
   try {
+    // 1. Check Query Parameters: ?sim=... or ?lab=...
+    const searchParams = new URLSearchParams(window.location.search);
+    const queryParam = searchParams.get('sim') || searchParams.get('lab');
+
+    // 2. Check Hash Parameters: #sim=... or #lab=... or #...
+    let hashParam: string | null = null;
+    const rawHash = window.location.hash || '';
+    if (rawHash) {
+      const cleanHash = rawHash.replace(/^#\/?/, '').trim();
+      const hashParams = new URLSearchParams(cleanHash.includes('=') ? cleanHash : '');
+      hashParam =
+        hashParams.get('sim') ||
+        hashParams.get('lab') ||
+        (cleanHash.startsWith('sim=') ? cleanHash.replace(/^sim=/, '') : null) ||
+        (cleanHash.startsWith('lab=') ? cleanHash.replace(/^lab=/, '') : null) ||
+        (!cleanHash.includes('=') && !cleanHash.includes('/') && cleanHash.length > 0 ? cleanHash : null);
+    }
+
+    // 3. Check Pathname fallback: /simulation/:id
     const pathname = window.location.pathname;
-    // Check dedicated /simulation/:id or /simulation/:slug route
     const simMatch = pathname.match(/^\/simulation\/(.+?)(?:\/)?$/);
-    const identifier = simMatch ? decodeURIComponent(simMatch[1]).trim().toLowerCase() : null;
+    const pathMatch = simMatch ? decodeURIComponent(simMatch[1]).trim() : null;
 
-    const params = new URLSearchParams(window.location.search);
-    const labParam = (params.get('lab') || params.get('sim') || '').trim().toLowerCase();
-
-    const targetKey = identifier || labParam;
-    if (targetKey) {
+    const rawTarget = queryParam || hashParam || pathMatch;
+    if (rawTarget) {
+      const targetKey = decodeURIComponent(rawTarget).trim().toLowerCase();
       return (
         SIMULATIONS_LIST.find((s) => {
           return (
@@ -98,14 +114,16 @@ export default function App() {
     };
   }, []);
 
-  // Listen to popstate in case of browser back/forward with route or query params
+  // Listen to popstate and hashchange in case of browser back/forward or hash changes
   useEffect(() => {
-    const handlePopState = () => {
+    const handleUrlChange = () => {
       setStandaloneLab(resolveSimulationFromUrl());
     };
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
     };
   }, []);
 
