@@ -1650,6 +1650,206 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 51: Wave Optics & Double-Slit Interference Lab (Physics)
+    case 51:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="laserBeamGrad" x1="4" y1="32" x2="22" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#34d399" />
+            </linearGradient>
+            <linearGradient id="fringeGrad" x1="56" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#0f172a" />
+              <stop offset="25%" stopColor="#10b981" />
+              <stop offset="35%" stopColor="#0f172a" />
+              <stop offset="50%" stopColor="#34d399" />
+              <stop offset="65%" stopColor="#0f172a" />
+              <stop offset="75%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#0f172a" />
+            </linearGradient>
+          </defs>
+          {/* Laser Emitter Body */}
+          <rect x="4" y="27" width="14" height="10" rx="2" fill="#1e293b" stroke="#34d399" strokeWidth="1.5" />
+          <polygon points="18,29 22,32 18,35" fill="#10b981" />
+          <line x1="22" y1="32" x2="30" y2="32" stroke="url(#laserBeamGrad)" strokeWidth="2.5" />
+          {/* Double-Slit Barrier */}
+          <line x1="30" y1="10" x2="30" y2="25" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" />
+          <line x1="30" y1="29" x2="30" y2="35" stroke="#94a3b8" strokeWidth="3" />
+          <line x1="30" y1="39" x2="30" y2="54" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" />
+          {/* Slit 1 Ripples */}
+          <path d="M32 27 A8 8 0 0 1 38 22 M32 27 A16 16 0 0 1 44 18 M32 27 A24 24 0 0 1 50 14" stroke="#34d399" strokeWidth="1.2" strokeDasharray="2 2" fill="none" opacity="0.8" />
+          {/* Slit 2 Ripples */}
+          <path d="M32 37 A8 8 0 0 0 38 42 M32 37 A16 16 0 0 0 44 46 M32 37 A24 24 0 0 0 50 50" stroke="#34d399" strokeWidth="1.2" strokeDasharray="2 2" fill="none" opacity="0.8" />
+          {/* Detector Screen Barrier */}
+          <rect x="54" y="8" width="5" height="48" rx="2" fill="url(#fringeGrad)" stroke="#38bdf8" strokeWidth="1.2" />
+          {/* Overlapping Central Maxima Peak */}
+          <circle cx="56.5" cy="32" r="2.5" fill="#ffffff" />
+        </svg>
+      );
+
+    // 52: Electrochemistry & Galvanic Voltaic Cell Lab (Chemistry)
+    case 52:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="znBeaker" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#64748b" stopOpacity="0.7" />
+            </linearGradient>
+            <linearGradient id="cuBeaker" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#0284c7" stopOpacity="0.85" />
+            </linearGradient>
+          </defs>
+          {/* Left Beaker (Zinc Anode) */}
+          <path d="M10 28 V52 C10 54 12 56 14 56 H26 C28 56 30 54 30 52 V28" stroke="#cbd5e1" strokeWidth="1.5" fill="none" />
+          <rect x="11" y="36" width="18" height="19" rx="1" fill="url(#znBeaker)" />
+          {/* Zn Electrode Strip */}
+          <rect x="17" y="22" width="6" height="26" rx="1" fill="#94a3b8" stroke="#e2e8f0" strokeWidth="1" />
+          {/* Right Beaker (Copper Cathode) */}
+          <path d="M34 28 V52 C34 54 36 56 38 56 H50 C52 56 54 54 54 52 V28" stroke="#cbd5e1" strokeWidth="1.5" fill="none" />
+          <rect x="35" y="36" width="18" height="19" rx="1" fill="url(#cuBeaker)" />
+          {/* Cu Electrode Strip */}
+          <rect x="41" y="22" width="6" height="26" rx="1" fill="#ea580c" stroke="#fdba74" strokeWidth="1" />
+          {/* U-Tube Salt Bridge */}
+          <path d="M23 44 V30 C23 26 41 26 41 30 V44" stroke="#f1f5f9" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.9" />
+          {/* External Wire with Voltmeter */}
+          <path d="M20 22 V14 H44 V22" stroke="#facc15" strokeWidth="1.8" fill="none" />
+          <circle cx="32" cy="14" r="6" fill="#1e1b4b" stroke="#facc15" strokeWidth="1.5" />
+          <text x="29" y="17" fill="#38bdf8" fontSize="7" fontWeight="900" fontFamily="sans-serif">V</text>
+        </svg>
+      );
+
+    // 53: Global Ocean Currents & Coriolis Dynamics Simulator (Earth & Space)
+    case 53:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="oceanGlobe" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="60%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#082f49" />
+            </radialGradient>
+          </defs>
+          {/* Globe */}
+          <circle cx="32" cy="32" r="24" fill="url(#oceanGlobe)" stroke="#7dd3fc" strokeWidth="2" />
+          {/* Equator Line */}
+          <ellipse cx="32" cy="32" rx="24" ry="7" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" fill="none" opacity="0.6" />
+          {/* Continents Silhouettes */}
+          <path d="M22 20 C24 16 30 18 34 20 C36 24 34 28 30 28 C26 28 22 24 22 20 Z" fill="#22c55e" opacity="0.85" />
+          <path d="M38 34 C42 32 46 34 46 38 C44 42 38 44 36 40 Z" fill="#16a34a" opacity="0.85" />
+          {/* Northern Clockwise Warm Gyre (Red) */}
+          <path d="M20 28 C22 18 38 16 44 24" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <polygon points="44,24 40,21 44,20" fill="#ef4444" />
+          {/* Southern Counter-Clockwise Cold Deep Current (Cyan/Blue) */}
+          <path d="M44 38 C40 48 24 46 18 40" stroke="#00f5ff" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <polygon points="18,40 22,43 18,44" fill="#00f5ff" />
+        </svg>
+      );
+
+    // 54: Fractals, Chaos Theory & Mandelbrot Complex Plane Explorer (Mathematics)
+    case 54:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="mandelGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="60%" stopColor="#ea580c" />
+              <stop offset="100%" stopColor="#000000" />
+            </radialGradient>
+          </defs>
+          {/* Dark Cosmic Background */}
+          <rect x="6" y="6" width="52" height="52" rx="10" fill="#0a0518" stroke="#d97706" strokeWidth="1.5" />
+          {/* Complex Axes */}
+          <line x1="10" y1="32" x2="54" y2="32" stroke="#475569" strokeWidth="1" strokeDasharray="2 2" />
+          <line x1="34" y1="10" x2="34" y2="54" stroke="#475569" strokeWidth="1" strokeDasharray="2 2" />
+          {/* Main Cardioid Heart Shape */}
+          <path d="M38 32 C38 22 26 20 24 26 C22 30 26 32 30 32 C26 32 22 34 24 38 C26 44 38 42 38 32 Z" 
+            fill="url(#mandelGlow)" stroke="#fde68a" strokeWidth="1.8" />
+          {/* Circular Head Bulb */}
+          <circle cx="18" cy="32" r="5.5" fill="#f59e0b" stroke="#fef08a" strokeWidth="1.5" />
+          {/* Antenna Needle */}
+          <line x1="12.5" y1="32" x2="8" y2="32" stroke="#fbbf24" strokeWidth="1.5" />
+          <circle cx="8" cy="32" r="1.5" fill="#ffffff" />
+          {/* Mini Satellite Bulbs */}
+          <circle cx="28" cy="18" r="2.5" fill="#d97706" stroke="#fde68a" strokeWidth="1" />
+          <circle cx="28" cy="46" r="2.5" fill="#d97706" stroke="#fde68a" strokeWidth="1" />
+        </svg>
+      );
+
+    // 55: Binary Search Tree (BST) & Tree Traversal Algorithm Workbench (Computer Science)
+    case 55:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Connecting Branches */}
+          <line x1="32" y1="16" x2="18" y2="32" stroke="#2dd4bf" strokeWidth="2.5" />
+          <line x1="32" y1="16" x2="46" y2="32" stroke="#2dd4bf" strokeWidth="2.5" />
+          <line x1="18" y1="32" x2="10" y2="48" stroke="#0d9488" strokeWidth="2" />
+          <line x1="18" y1="32" x2="26" y2="48" stroke="#0d9488" strokeWidth="2" />
+          <line x1="46" y1="32" x2="54" y2="48" stroke="#0d9488" strokeWidth="2" />
+          {/* Root Node (e.g. 50) */}
+          <circle cx="32" cy="16" r="7.5" fill="#042f2e" stroke="#5eead4" strokeWidth="2" />
+          <text x="32" y="19" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">50</text>
+          {/* Left Child Node (e.g. 25) */}
+          <circle cx="18" cy="32" r="6.5" fill="#042f2e" stroke="#2dd4bf" strokeWidth="1.8" />
+          <text x="18" y="35" fill="#5eead4" fontSize="6.5" fontWeight="bold" textAnchor="middle">25</text>
+          {/* Right Child Node (e.g. 75) */}
+          <circle cx="46" cy="32" r="6.5" fill="#042f2e" stroke="#2dd4bf" strokeWidth="1.8" />
+          <text x="46" y="35" fill="#5eead4" fontSize="6.5" fontWeight="bold" textAnchor="middle">75</text>
+          {/* Leaf Nodes */}
+          <circle cx="10" cy="48" r="5" fill="#115e59" stroke="#99f6e4" strokeWidth="1.5" />
+          <circle cx="26" cy="48" r="5" fill="#115e59" stroke="#99f6e4" strokeWidth="1.5" />
+          <circle cx="54" cy="48" r="5" fill="#115e59" stroke="#99f6e4" strokeWidth="1.5" />
+          {/* Traversal Arrow Sparkle */}
+          <circle cx="32" cy="16" r="10" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3 2" opacity="0.8" />
+        </svg>
+      );
+
+    // 56: Active vs. Passive Voice & Verb Tenses Timeline Studio (English & Grammar)
+    case 56:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Circular Voice Transformation Ring */}
+          <path d="M16 28 C16 18 28 14 36 14 C44 14 50 18 50 26" stroke="#6366f1" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <polygon points="50,26 46,21 53,22" fill="#6366f1" />
+          <path d="M48 38 C48 48 36 52 28 52 C20 52 14 48 14 40" stroke="#a855f7" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <polygon points="14,40 18,45 11,44" fill="#a855f7" />
+          {/* Subject Badge (S) */}
+          <circle cx="20" cy="22" r="7" fill="#3b82f6" stroke="#93c5fd" strokeWidth="1.5" />
+          <text x="20" y="25" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">S</text>
+          {/* Object Badge (O) */}
+          <circle cx="44" cy="44" r="7" fill="#10b981" stroke="#a7f3d0" strokeWidth="1.5" />
+          <text x="44" y="47" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">O</text>
+          {/* Central Verb Box (V) */}
+          <rect x="23" y="28" width="18" height="10" rx="3" fill="#312e81" stroke="#facc15" strokeWidth="1.8" />
+          <text x="32" y="35" fill="#facc15" fontSize="7" fontWeight="900" textAnchor="middle">VERB</text>
+        </svg>
+      );
+
+    // 57: Musical Animal Orchestra & Rainbow Rhythm Carnival (Early Childhood ECCE)
+    case 57:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Rainbow Xylophone Bars */}
+          <rect x="10" y="42" width="6" height="16" rx="2" fill="#ef4444" />
+          <rect x="18" y="39" width="6" height="19" rx="2" fill="#f97316" />
+          <rect x="26" y="36" width="6" height="22" rx="2" fill="#facc15" />
+          <rect x="34" y="33" width="6" height="25" rx="2" fill="#22c55e" />
+          <rect x="42" y="30" width="6" height="28" rx="2" fill="#06b6d4" />
+          <rect x="50" y="27" width="6" height="31" rx="2" fill="#8b5cf6" />
+          {/* Xylophone Mallet */}
+          <line x1="16" y1="18" x2="38" y2="35" stroke="#fde68a" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="16" cy="18" r="4" fill="#ec4899" stroke="#ffffff" strokeWidth="1.2" />
+          {/* Musical Notes in Air */}
+          <path d="M44 14 V8 H54 V14 M44 11 H54" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="44" cy="14" r="2.5" fill="#facc15" />
+          <circle cx="54" cy="14" r="2.5" fill="#facc15" />
+          {/* Confetti Sparkles */}
+          <polygon points="28,10 30,13 33,13 31,16 32,19 28,17 25,19 26,16 23,13 27,13" fill="#ec4899" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (
