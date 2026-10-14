@@ -61,9 +61,11 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
     try {
       const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document;
       if (!doc) return;
-      doc.documentElement.style.overflowX = 'hidden';
+      doc.documentElement.style.overflow = 'hidden';
+      doc.documentElement.style.scrollbarWidth = 'none';
       if (doc.body) {
-        doc.body.style.overflowX = 'hidden';
+        doc.body.style.overflow = 'hidden';
+        doc.body.style.scrollbarWidth = 'none';
       }
     } catch {
       // Fallback
@@ -73,11 +75,17 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   return (
     <div 
       ref={simulationContainerRef}
-      className="simulation-wrapper fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
+      className="simulation-wrapper fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100 overflow-hidden"
       style={{
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        backgroundColor: 'rgba(3, 7, 20, 0.88)'
+        backgroundColor: 'rgba(3, 7, 20, 0.88)',
+        height: '100vh',
+        maxHeight: '100vh',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
       }}
     >
       
@@ -237,7 +245,7 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
       </div>
 
       {/* Main Simulation Iframe Canvas Viewport */}
-      <div className="flex-1 w-full bg-[#020617] relative">
+      <div className="flex-1 min-h-0 w-full bg-[#020617] relative overflow-hidden">
         {isReloading && (
           <div className="absolute inset-0 z-20 bg-slate-950 flex items-center justify-center">
             <div className="flex items-center gap-3 text-cyan-300 text-sm font-black">

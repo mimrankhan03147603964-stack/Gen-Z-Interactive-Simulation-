@@ -42,30 +42,52 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
     }
   };
 
+  const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    try {
+      const iframe = e.currentTarget;
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!doc) return;
+      doc.documentElement.style.overflow = 'hidden';
+      doc.documentElement.style.scrollbarWidth = 'none';
+      if (doc.body) {
+        doc.body.style.overflow = 'hidden';
+        doc.body.style.scrollbarWidth = 'none';
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
   return (
     <div 
       ref={simulationContainerRef}
-      className="simulation-wrapper fixed inset-0 w-screen h-screen min-h-screen m-0 p-0 overflow-hidden bg-slate-950 z-[99999]"
+      className="simulation-wrapper fixed inset-0 w-screen h-screen m-0 p-0 overflow-hidden bg-slate-950 z-[99999]"
       style={{
         position: 'fixed',
         inset: 0,
         width: '100vw',
         height: '100vh',
-        minHeight: '100vh',
+        maxHeight: '100vh',
         margin: 0,
         padding: 0,
         overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
         backgroundColor: '#020617'
       }}
     >
       <iframe
         src={sim.fileUrl}
         title={sim.title}
+        onLoad={handleIframeLoad}
         className="w-full h-full border-0 block"
         style={{
           width: '100vw',
           height: '100vh',
-          minHeight: '100vh',
+          maxHeight: '100vh',
+          flex: '1 1 0',
+          minHeight: 0,
           margin: 0,
           padding: 0,
           border: 'none',

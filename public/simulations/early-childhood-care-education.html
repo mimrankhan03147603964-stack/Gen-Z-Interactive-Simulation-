@@ -478,60 +478,336 @@ canvas {
 
 <!-- ================= FULLSCREEN ENGINE STYLES ================= -->
 <style id="genz-simulation-fullscreen-styles">
-  :fullscreen, ::backdrop {
-    background-color: #0b0f19 !important;
-  }
-  .simulation-wrapper:fullscreen {
+  /* 1. ZERO SCROLLING IN FULLSCREEN (fit-to-screen root container) */
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
     width: 100vw !important;
+    max-width: 100vw !important;
     height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-    background-color: #0b0f19 !important;
+    justify-content: space-between !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 8px 14px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
     position: fixed !important;
     inset: 0 !important;
     z-index: 999999 !important;
-    margin: 0 !important;
-    padding: 8px 16px !important;
-    box-sizing: border-box !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
-  .simulation-wrapper:fullscreen canvas,
-  .simulation-wrapper:fullscreen iframe,
-  .simulation-wrapper:fullscreen svg {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    display: block !important;
+
+  /* Force zero scrollbars everywhere in fullscreen mode */
+  html:has(:fullscreen),
+  body:has(:fullscreen),
+  html.in-fullscreen-mode,
+  body.in-fullscreen-mode,
+  html.in-fullscreen-mode body {
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :fullscreen *,
+  :-webkit-full-screen *,
+  :-moz-full-screen *,
+  :-ms-fullscreen *,
+  .in-fullscreen-mode * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  :fullscreen *::-webkit-scrollbar,
+  :-webkit-full-screen *::-webkit-scrollbar,
+  :-moz-full-screen *::-webkit-scrollbar,
+  :-ms-fullscreen *::-webkit-scrollbar,
+  .in-fullscreen-mode *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE (flex: 1; min-height: 0; object-fit: contain;) */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :fullscreen iframe,
+  :fullscreen .main-stage,
+  :fullscreen .canvas-holder,
+  :fullscreen .canvas-wrap,
+  :fullscreen .canvas-wrapper,
+  :fullscreen .stage,
+  :fullscreen .sim-stage,
+  :fullscreen .card-board,
+  :fullscreen .sentence-strip,
+  :fullscreen #canvasWrap,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  :-webkit-full-screen iframe,
+  :-webkit-full-screen .main-stage,
+  :-webkit-full-screen .canvas-holder,
+  :-webkit-full-screen .canvas-wrap,
+  :-webkit-full-screen .canvas-wrapper,
+  :-webkit-full-screen .stage,
+  :-webkit-full-screen .sim-stage,
+  :-webkit-full-screen .card-board,
+  :-webkit-full-screen .sentence-strip,
+  :-webkit-full-screen #canvasWrap,
+  .is-fullscreen canvas,
+  .is-fullscreen svg,
+  .is-fullscreen iframe,
+  .is-fullscreen .main-stage,
+  .is-fullscreen .canvas-holder,
+  .is-fullscreen .canvas-wrap,
+  .is-fullscreen .canvas-wrapper,
+  .is-fullscreen .stage,
+  .is-fullscreen .sim-stage,
+  .is-fullscreen .card-board,
+  .is-fullscreen .sentence-strip,
+  .is-fullscreen #canvasWrap {
     flex: 1 1 0 !important;
     min-height: 0 !important;
-    margin: 0 auto !important;
-  }
-  /* Preserve Overlay Controls and Interactive State with high z-index (50+) */
-  .simulation-wrapper:fullscreen .ctl,
-  .simulation-wrapper:fullscreen .controls,
-  .simulation-wrapper:fullscreen .sim-controls,
-  .simulation-wrapper:fullscreen .sim-readout,
-  .simulation-wrapper:fullscreen .preset-chips,
-  .simulation-wrapper:fullscreen .row,
-  .simulation-wrapper:fullscreen .fs-bar,
-  .simulation-wrapper:fullscreen .floating-controls,
-  .simulation-wrapper:fullscreen .btn,
-  .simulation-wrapper:fullscreen .fs-topbar,
-  .simulation-wrapper:fullscreen .fullscreen-overlay-controls,
-  .simulation-wrapper:fullscreen .topic-header,
-  .simulation-wrapper:fullscreen .control-panel,
-  .simulation-wrapper:fullscreen .controls-bar,
-  .simulation-wrapper:fullscreen .dashboard {
+    height: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     position: relative !important;
-    z-index: 50 !important;
-    flex-shrink: 0 !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    order: 5 !important;
+  }
+
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
     max-width: 100% !important;
   }
-  /* Neutralize legacy empty overlay divs that blank out the page */
+
+  /* 3. PINNED & VISIBLE CONTROLS (flex-shrink: 0; fixed auto-height docked neatly) */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 2px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    order: 10 !important;
+    padding: 6px 12px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    order: 1 !important;
+    padding: 6px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Compact readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    order: 2 !important;
+    margin: 2px auto !important;
+    padding: 2px 8px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Clean view: hide static textbook cards/notes during immersion */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen nav,
+  :fullscreen .tabs,
+  :fullscreen .section-tabs,
+  :fullscreen .desc,
+  :fullscreen .panel:not(.active),
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen nav,
+  :-webkit-full-screen .tabs,
+  :-webkit-full-screen .section-tabs,
+  :-webkit-full-screen .desc,
+  :-webkit-full-screen .panel:not(.active),
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen nav,
+  .is-fullscreen .tabs,
+  .is-fullscreen .section-tabs,
+  .is-fullscreen .desc,
+  .is-fullscreen .panel:not(.active) {
+    display: none !important;
+  }
+
   .fs-overlay {
     display: none !important;
     visibility: hidden !important;
@@ -2178,67 +2454,72 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
 <script id="genz-simulation-fullscreen-engine">
 (function() {
-  function findSimulationRootContainer(el) {
-    if (el) {
-      if (typeof el === "string") {
-        var cleanId = el.replace(/^fs-?/, "");
-        var byId = document.getElementById(cleanId) || document.getElementById(el) || document.getElementById(cleanId + "SimBox");
-        if (byId) {
-          byId.classList.add("simulation-wrapper");
-          return byId;
-        }
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
       }
-      if (el.nodeType === 1) {
-        if (el.dataset && el.dataset.fs) {
-          var targetByFs = document.getElementById(el.dataset.fs);
-          if (targetByFs) {
-            targetByFs.classList.add("simulation-wrapper");
-            return targetByFs;
-          }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
         }
-        if (el.dataset && el.dataset.target) {
-          var cleanTargetId = el.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(el.dataset.target);
-          if (targetByData) {
-            targetByData.classList.add("simulation-wrapper");
-            return targetByData;
-          }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
         }
-        var found = el.closest(".simulation-wrapper, .sim-box, .sim-stage, .simulation, #sim, #simContainer, .card, .main-stage, .stage, .container, .sim");
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
         if (found && found !== document.body && found !== document.documentElement) {
-          found.classList.add("simulation-wrapper");
           return found;
         }
       }
     }
-    var candidate = document.querySelector(".simulation-wrapper") ||
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
                     document.getElementById("simContainer") ||
                     document.getElementById("sim") ||
-                    document.querySelector(".sim-stage") ||
-                    document.querySelector(".sim-box") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
                     document.querySelector(".simulation") ||
                     document.querySelector(".sim") ||
-                    document.querySelector(".card") ||
-                    document.querySelector(".main-stage") ||
-                    document.querySelector(".container") ||
+                    document.querySelector(".simulation-wrapper") ||
                     document.body;
-    if (candidate && candidate !== document.documentElement) {
-      candidate.classList.add("simulation-wrapper");
-      return candidate;
-    }
-    document.body.classList.add("simulation-wrapper");
-    return document.body;
+    return candidate;
   }
 
   function toggleSimulationFullscreen(triggerEl) {
     try {
       if (!document.fullscreenElement) {
         var container = findSimulationRootContainer(triggerEl);
-        if (container && container.requestFullscreen) {
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
           container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed:", err);
-            if (document.body && document.body.requestFullscreen) {
-              document.body.classList.add("simulation-wrapper");
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
               document.body.requestFullscreen().catch(function(e) { console.error(e); });
             }
           });
@@ -2255,7 +2536,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Override/intercept all simulation fullscreen function names
   window.toggleFullscreen = function(target) {
     toggleSimulationFullscreen(target || this);
   };
@@ -2276,8 +2556,11 @@ window.addEventListener('DOMContentLoaded', () => {
       var clean = id.replace(/^fs-?/, "");
       var target = document.getElementById(clean) ||
                    document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
                    document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic="" + clean + ""]") ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
                    document.getElementById(id);
       toggleSimulationFullscreen(target || clean);
       return;
@@ -2302,7 +2585,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Canvas Re-sizing and Redrawing on fullscreen change and window resize
   function resizeAndRedrawSimulationCanvases() {
     window.dispatchEvent(new Event("resize"));
 
@@ -2319,32 +2601,60 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
       "draw", "render", "animate", "redraw", "update", "drawCanvas",
       "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
       "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics"
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
     ];
     redrawFns.forEach(function(fn) {
       if (typeof window[fn] === "function") {
         try { window[fn](); } catch(e) {}
       }
     });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
   }
 
   document.addEventListener("fullscreenchange", function() {
     var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
     var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*="fsToggleBtn"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn"
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
     );
     fsButtons.forEach(function(btn) {
       if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
         return;
       }
       if (isFs) {
-        btn.innerHTML = "✕ Exit full screen";
+        btn.innerHTML = "✕ Exit Fullscreen";
         btn.classList.add("is-fullscreen-active");
       } else {
-        btn.innerHTML = "⛶ Full screen";
+        btn.innerHTML = "⛶ Fullscreen";
         btn.classList.remove("is-fullscreen-active");
       }
     });
@@ -2357,10 +2667,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
 
-  // Event delegation to capture clicks on any built-in fullscreen button reliably
   document.addEventListener("click", function(e) {
     var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role="fs-btn"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*="fsToggleBtn"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button.icon-btn[onclick*="toggleSimFullscreen"]"
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
     );
     if (btn) {
       e.preventDefault();
