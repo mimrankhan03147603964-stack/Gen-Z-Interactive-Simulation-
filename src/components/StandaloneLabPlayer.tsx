@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SimulationItem } from '../types';
-import { Maximize2, Minimize2 } from 'lucide-react';
 
 interface StandaloneLabPlayerProps {
   sim: SimulationItem;
@@ -59,39 +58,6 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
         backgroundColor: '#020617'
       }}
     >
-      {/* Floating high-z-index overlay controls */}
-      <div 
-        className="fullscreen-overlay-controls absolute top-3 right-4 z-50 flex items-center gap-2 pointer-events-auto"
-        style={{ zIndex: 50 }}
-      >
-        <button
-          onClick={handleToggleFullscreen}
-          className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-lg cursor-pointer transition-all hover:scale-105"
-          style={{
-            backgroundColor: '#0f172a',
-            backgroundImage: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
-            borderColor: 'rgba(56, 189, 248, 0.6)',
-            borderWidth: '1.5px',
-            borderStyle: 'solid',
-            color: '#38bdf8',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.6)'
-          }}
-          title={isFullscreen ? "Exit Fullscreen" : "Enter True Fullscreen"}
-        >
-          {isFullscreen ? (
-            <>
-              <Minimize2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">Exit Fullscreen</span>
-            </>
-          ) : (
-            <>
-              <Maximize2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">Fullscreen</span>
-            </>
-          )}
-        </button>
-      </div>
-
       <iframe
         src={sim.fileUrl}
         title={sim.title}

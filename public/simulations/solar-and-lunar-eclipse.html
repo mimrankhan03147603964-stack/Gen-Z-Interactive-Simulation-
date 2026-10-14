@@ -274,6 +274,9 @@ canvas { display:block; width:100%; height:auto; }
 
 </style>
 
+
+
+
 <!-- ================= FULLSCREEN ENGINE STYLES ================= -->
 <style id="genz-simulation-fullscreen-styles">
   :fullscreen, ::backdrop {
@@ -322,6 +325,7 @@ canvas { display:block; width:100%; height:auto; }
   .simulation-wrapper:fullscreen .fullscreen-overlay-controls,
   .simulation-wrapper:fullscreen .topic-header,
   .simulation-wrapper:fullscreen .control-panel,
+  .simulation-wrapper:fullscreen .controls-bar,
   .simulation-wrapper:fullscreen .dashboard {
     position: relative !important;
     z-index: 50 !important;
@@ -410,7 +414,7 @@ canvas { display:block; width:100%; height:auto; }
   <div class="row">
     <span>Show / Options</span>
     <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Umbra & Penumbra Cones</button>
-    <button class="btn b-fs" onclick="toggleFullscreen(this.closest('.sim-stage')||document.documentElement)">⛶ Full screen</button>
+    
   </div>
 </div>
 
@@ -843,15 +847,43 @@ loop();
 </script>
 
 
+
+
+
 <!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
 <script id="genz-simulation-fullscreen-engine">
 (function() {
   function findSimulationRootContainer(el) {
-    if (el && el.nodeType === 1) {
-      var found = el.closest(".simulation-wrapper, .sim, .sim-box, .sim-stage, .simulation, #sim, #simContainer, .card, .main-stage, .stage, .container");
-      if (found && found !== document.body && found !== document.documentElement) {
-        found.classList.add("simulation-wrapper");
-        return found;
+    if (el) {
+      if (typeof el === "string") {
+        var cleanId = el.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) || document.getElementById(el) || document.getElementById(cleanId + "SimBox");
+        if (byId) {
+          byId.classList.add("simulation-wrapper");
+          return byId;
+        }
+      }
+      if (el.nodeType === 1) {
+        if (el.dataset && el.dataset.fs) {
+          var targetByFs = document.getElementById(el.dataset.fs);
+          if (targetByFs) {
+            targetByFs.classList.add("simulation-wrapper");
+            return targetByFs;
+          }
+        }
+        if (el.dataset && el.dataset.target) {
+          var cleanTargetId = el.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(el.dataset.target);
+          if (targetByData) {
+            targetByData.classList.add("simulation-wrapper");
+            return targetByData;
+          }
+        }
+        var found = el.closest(".simulation-wrapper, .sim-box, .sim-stage, .simulation, #sim, #simContainer, .card, .main-stage, .stage, .container, .sim");
+        if (found && found !== document.body && found !== document.documentElement) {
+          found.classList.add("simulation-wrapper");
+          return found;
+        }
       }
     }
     var candidate = document.querySelector(".simulation-wrapper") ||
@@ -904,7 +936,7 @@ loop();
   };
   window.toggleSimFullscreen = function(boxId) {
     var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el);
+    toggleSimulationFullscreen(el || boxId);
   };
   window.toggleFs = function() {
     toggleSimulationFullscreen(this);
@@ -922,7 +954,7 @@ loop();
                    document.getElementById("t-" + clean) ||
                    document.querySelector("[data-topic="" + clean + ""]") ||
                    document.getElementById(id);
-      toggleSimulationFullscreen(target);
+      toggleSimulationFullscreen(target || clean);
       return;
     }
     toggleSimulationFullscreen(this);
@@ -977,9 +1009,12 @@ loop();
   document.addEventListener("fullscreenchange", function() {
     var isFs = !!document.fullscreenElement;
     var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn"
+      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*="fsToggleBtn"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn"
     );
     fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
       if (isFs) {
         btn.innerHTML = "✕ Exit full screen";
         btn.classList.add("is-fullscreen-active");
@@ -997,10 +1032,10 @@ loop();
 
   window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
 
-  // Event delegation to capture clicks on any fullscreen button reliably
+  // Event delegation to capture clicks on any built-in fullscreen button reliably
   document.addEventListener("click", function(e) {
     var btn = e.target.closest(
-      ".b-fs, .b-exit, [data-role="fs-btn"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn"
+      "button.b-fs, button.b-exit, button[data-role="fs-btn"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*="fsToggleBtn"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button.icon-btn[onclick*="toggleSimFullscreen"]"
     );
     if (btn) {
       e.preventDefault();
