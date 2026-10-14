@@ -1,13 +1,11 @@
 import { SimulationItem } from '../types';
 
 /**
- * Generates the URL to open a simulation in a clean dedicated standalone tab.
- * Uses query parameter `?lab={indexNumber}` or `?lab={slug}`.
+ * Generates the clean independent URL to open a simulation in a dedicated tab.
+ * Uses dedicated independent route `/simulation/{indexNumber}`.
  */
 export function getSimulationStandaloneUrl(sim: SimulationItem): string {
-  // Uses clean URL parameter ?lab={indexNumber} preserving current origin and pathname
-  const base = window.location.origin + window.location.pathname;
-  return `${base}?lab=${encodeURIComponent(sim.indexNumber)}`;
+  return `${window.location.origin}/simulation/${encodeURIComponent(sim.indexNumber)}`;
 }
 
 /**

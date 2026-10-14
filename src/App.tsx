@@ -11,27 +11,38 @@ import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
 
-export default function App() {
-  // Check if current window was launched as a standalone simulation workspace via URL query parameter (e.g., ?lab=01 or ?lab=sim-01)
-  const [standaloneLab, setStandaloneLab] = useState<SimulationItem | null>(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const labParam = params.get('lab') || params.get('sim');
-      if (labParam) {
-        const found = SIMULATIONS_LIST.find(
-          (s) =>
-            s.indexNumber === labParam ||
-            s.slug === labParam ||
-            s.id === labParam ||
-            s.fileUrl.includes(labParam)
-        );
-        return found || null;
-      }
-    } catch {
-      // In case of SSR or URLSearchParams error
+function resolveSimulationFromUrl(): SimulationItem | null {
+  try {
+    const pathname = window.location.pathname;
+    // Check dedicated /simulation/:id or /simulation/:slug route
+    const simMatch = pathname.match(/^\/simulation\/(.+?)(?:\/)?$/);
+    const identifier = simMatch ? decodeURIComponent(simMatch[1]).trim().toLowerCase() : null;
+
+    const params = new URLSearchParams(window.location.search);
+    const labParam = (params.get('lab') || params.get('sim') || '').trim().toLowerCase();
+
+    const targetKey = identifier || labParam;
+    if (targetKey) {
+      return (
+        SIMULATIONS_LIST.find((s) => {
+          return (
+            s.indexNumber.toLowerCase() === targetKey ||
+            s.slug.toLowerCase() === targetKey ||
+            s.id.toLowerCase() === targetKey ||
+            s.fileUrl.toLowerCase().includes(targetKey)
+          );
+        }) || null
+      );
     }
-    return null;
-  });
+  } catch {
+    // Fallback
+  }
+  return null;
+}
+
+export default function App() {
+  // Check if launched as dedicated standalone simulation workspace via /simulation/:id or ?lab=01
+  const [standaloneLab, setStandaloneLab] = useState<SimulationItem | null>(() => resolveSimulationFromUrl());
 
   // Default active subject filter: "Physics & Motion" is the default initial discipline
   const [selectedSubject, setSelectedSubject] = useState<string>('Physics & Motion');
@@ -87,23 +98,10 @@ export default function App() {
     };
   }, []);
 
-  // Listen to popstate in case of browser back/forward with query params
+  // Listen to popstate in case of browser back/forward with route or query params
   useEffect(() => {
     const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      const labParam = params.get('lab') || params.get('sim');
-      if (labParam) {
-        const found = SIMULATIONS_LIST.find(
-          (s) =>
-            s.indexNumber === labParam ||
-            s.slug === labParam ||
-            s.id === labParam ||
-            s.fileUrl.includes(labParam)
-        );
-        setStandaloneLab(found || null);
-      } else {
-        setStandaloneLab(null);
-      }
+      setStandaloneLab(resolveSimulationFromUrl());
     };
     window.addEventListener('popstate', handlePopState);
     return () => {
@@ -118,27 +116,19 @@ export default function App() {
     openSimulationInNewTab(sim);
   };
 
-  // Back to Catalog: smoothly exits detailed simulation view and returns to the catalog
   const handleBackToCatalog = () => {
     setStandaloneLab(null);
-    const cleanUrl = window.location.origin + window.location.pathname;
     try {
-      window.history.pushState({}, '', cleanUrl);
+      window.history.pushState({}, '', '/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
-      // History fallback
+      // Fallback
     }
   };
 
-  // IF LOADED AS DEDICATED STANDALONE TAB/WINDOW (?lab=01):
+  // IF LOADED AS DEDICATED STANDALONE TAB/WINDOW (/simulation/:id or ?lab=01):
   if (standaloneLab) {
-    return (
-      <StandaloneLabPlayer
-        sim={standaloneLab}
-        totalSimulations={SIMULATIONS_LIST.length}
-        onBackToCatalog={handleBackToCatalog}
-      />
-    );
+    return <StandaloneLabPlayer sim={standaloneLab} />;
   }
 
   // MAIN CATALOG PORTAL & DASHBOARD: Lightweight, clean, clutter-free
