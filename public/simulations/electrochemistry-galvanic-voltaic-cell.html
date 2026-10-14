@@ -8,49 +8,99 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #030712; font-family: system-ui, -apple-system, sans-serif; color: #f9fafb; }
     .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
-    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, #1e113a 0%, #030712 100%); overflow: hidden; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 35%, #180d30 0%, #030712 100%); overflow: hidden; }
     canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
     .ctl {
       flex-shrink: 0;
       width: 100%;
-      background: rgba(8, 4, 20, 0.95);
-      border-top: 1.5px solid rgba(168, 85, 247, 0.45);
-      padding: 10px 18px;
+      background: linear-gradient(180deg, rgba(16, 8, 36, 0.98) 0%, rgba(5, 2, 16, 0.99) 100%);
+      border-top: 2px solid rgba(168, 85, 247, 0.65);
+      padding: 12px 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      backdrop-filter: blur(16px);
+      gap: 10px;
+      backdrop-filter: blur(24px);
       z-index: 20;
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.8), 0 0 25px rgba(168, 85, 247, 0.35);
     }
-    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-    .row span.lbl { font-size: 11px; font-weight: 800; color: #c084fc; text-transform: uppercase; letter-spacing: 0.05em; min-width: 90px; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+    .row span.lbl {
+      font-size: 11px;
+      font-weight: 900;
+      color: #d8b4fe;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      min-width: 95px;
+      text-shadow: 0 0 12px rgba(168, 85, 247, 0.65);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
     .btn {
-      padding: 7px 14px;
+      padding: 9px 18px;
       font-size: 12px;
-      font-weight: 800;
-      border-radius: 10px;
+      font-weight: 900;
+      border-radius: 14px;
       border: 1.5px solid transparent;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      color: #fff;
+      gap: 7px;
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4);
     }
-    .btn:hover { transform: translateY(-1.5px); filter: brightness(1.15); }
-    .btn:active { transform: translateY(1px); }
-    .b-load { background: #3b0764; border-color: #9333ea; }
-    .b-load.active { background: #9333ea; border-color: #d8b4fe; box-shadow: 0 0 12px rgba(168, 85, 247, 0.6); }
-    .b-bridge { background: #1e1b4b; border-color: #6366f1; }
-    .b-bridge.active { background: #4f46e5; border-color: #a5b4fc; }
-    .b-reset { background: #374151; border-color: #6b7280; }
-    .b-fs { background: linear-gradient(135deg, #a855f7, #ec4899); border-color: #f472b6; margin-left: auto; }
-    .slider-box { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: #e9d5ff; }
-    input[type=range] { accent-color: #c084fc; width: 110px; cursor: pointer; }
-    .hud { position: absolute; top: 12px; left: 14px; background: rgba(15, 6, 32, 0.88); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 12px; padding: 10px 14px; font-size: 11px; line-height: 1.5; pointer-events: none; backdrop-filter: blur(8px); }
-    .hud b { color: #d8b4fe; }
+    .btn:hover { transform: translateY(-2px) scale(1.04); filter: brightness(1.22); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.6); }
+    .btn:active { transform: translateY(1px) scale(0.97); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); }
+    
+    /* Vibrant Color Schemed Buttons */
+    .b-volt { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #7dd3fc; }
+    .b-volt.active { background: linear-gradient(135deg, #00f5ff 0%, #0284c7 100%); border-color: #ffffff; color: #04102a; text-shadow: none; box-shadow: 0 0 20px rgba(0, 245, 255, 0.85), inset 0 1px 3px #ffffff; }
+
+    .b-bulb { background: linear-gradient(135deg, #b45309 0%, #78350f 100%); border-color: #fde68a; }
+    .b-bulb.active { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border-color: #ffffff; color: #451a03; text-shadow: none; box-shadow: 0 0 22px rgba(251, 191, 36, 0.9), inset 0 1px 3px #ffffff; }
+
+    .b-motor { background: linear-gradient(135deg, #047857 0%, #064e3b 100%); border-color: #86efac; }
+    .b-motor.active { background: linear-gradient(135deg, #10b981 0%, #047857 100%); border-color: #ffffff; color: #022c22; text-shadow: none; box-shadow: 0 0 20px rgba(16, 185, 129, 0.85), inset 0 1px 3px #ffffff; }
+
+    .b-bridge { background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%); border-color: #fca5a5; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5); }
+    .b-bridge.active { background: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%); border-color: #ddd6fe; box-shadow: 0 0 18px rgba(139, 92, 246, 0.8); }
+
+    .b-reset { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); border-color: #fda4af; box-shadow: 0 4px 16px rgba(244, 63, 94, 0.55); }
+    .b-fs { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); border-color: #fbcfe8; margin-left: auto; box-shadow: 0 4px 18px rgba(236, 72, 153, 0.55); }
+
+    .slider-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #f5d0fe;
+      background: linear-gradient(135deg, rgba(30, 10, 50, 0.85) 0%, rgba(45, 15, 75, 0.7) 100%);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(168, 85, 247, 0.45);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    input[type=range] { accent-color: #c084fc; width: 120px; cursor: pointer; height: 6px; border-radius: 3px; }
+    .hud {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      background: linear-gradient(135deg, rgba(16, 6, 36, 0.95) 0%, rgba(6, 2, 18, 0.96) 100%);
+      border: 1.5px solid rgba(168, 85, 247, 0.55);
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 12px;
+      line-height: 1.65;
+      pointer-events: none;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.7), 0 0 15px rgba(168, 85, 247, 0.25);
+    }
+    .hud b { color: #d8b4fe; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
     .hud .rxn { color: #fbcfe8; font-family: monospace; font-size: 11px; }
+    .hud .stat-pill { display: inline-block; padding: 2px 8px; border-radius: 6px; background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.45); font-weight: 800; margin-left: 4px; }
   </style>
 
 <!-- ================= FULLSCREEN ENGINE STYLES ================= -->
@@ -447,137 +497,303 @@
       const volt = calcVoltage();
 
       const bkW = width * 0.30;
-      const bkH = height * 0.45;
-      const bkY = height * 0.44;
-      const bk1X = width * 0.16;
-      const bk2X = width * 0.54;
+      const bkH = height * 0.46;
+      const bkY = height * 0.43;
+      const bk1X = width * 0.15;
+      const bk2X = width * 0.55;
 
-      // Draw Beaker 1 (Zinc Anode)
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
-      ctx.fillRect(bk1X, bkY, bkW, bkH);
+      // Realistic Laboratory Bench Surface
+      const benchY = bkY + bkH;
+      const benchGrad = ctx.createLinearGradient(0, benchY, 0, height);
+      benchGrad.addColorStop(0, '#1e1b4b');
+      benchGrad.addColorStop(0.3, '#0f0a2a');
+      benchGrad.addColorStop(1, '#050212');
+      ctx.fillStyle = benchGrad;
+      ctx.fillRect(0, benchY, width, height - benchY);
+      ctx.strokeStyle = '#6366f1';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, benchY);
+      ctx.lineTo(width, benchY);
+      ctx.stroke();
+
+      // ================= DRAW BEAKER 1: ZINC ANODE (Clear / Pale Silvery Cyan) =================
+      // Solution Gradient
+      const znSolGrad = ctx.createLinearGradient(bk1X, bkY + 20, bk1X, bkY + bkH);
+      znSolGrad.addColorStop(0, 'rgba(56, 189, 248, 0.28)');
+      znSolGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.45)');
+      znSolGrad.addColorStop(1, 'rgba(2, 132, 199, 0.65)');
+      ctx.fillStyle = znSolGrad;
+      ctx.fillRect(bk1X + 4, bkY + 18, bkW - 8, bkH - 20);
+
+      // Beaker 1 Pyrex Glass Body
+      ctx.strokeStyle = '#7dd3fc';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.roundRect(bk1X, bkY, bkW, bkH, [4, 4, 18, 18]);
+      ctx.stroke();
+
+      // Glass Lip Flange
+      ctx.fillStyle = '#bae6fd';
+      ctx.fillRect(bk1X - 6, bkY - 4, bkW + 12, 6);
+
+      // Glass Volumetric Ticks
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 9px sans-serif';
+      for (let tk = 1; tk <= 4; tk++) {
+        const ty = bkY + bkH - (tk * (bkH / 5));
+        ctx.fillRect(bk1X + 8, ty, 14, 2);
+        ctx.fillText(tk * 50 + ' mL', bk1X + 26, ty + 3);
+      }
+      ctx.fillStyle = '#e0f2fe';
+      ctx.font = 'bold 12px system-ui';
+      ctx.fillText(`1.0 M ZnSO₄ (${znConc.toFixed(2)} M Zn²⁺)`, bk1X + 16, bkY + bkH - 12);
+
+      // ================= DRAW BEAKER 2: COPPER CATHODE (Deep Luminous Royal Blue) =================
+      const cuSolGrad = ctx.createLinearGradient(bk2X, bkY + 20, bk2X, bkY + bkH);
+      cuSolGrad.addColorStop(0, 'rgba(14, 165, 233, 0.55)');
+      cuSolGrad.addColorStop(0.4, 'rgba(2, 132, 199, 0.75)');
+      cuSolGrad.addColorStop(1, 'rgba(30, 58, 138, 0.95)');
+      ctx.fillStyle = cuSolGrad;
+      ctx.fillRect(bk2X + 4, bkY + 18, bkW - 8, bkH - 20);
+
+      // Beaker 2 Pyrex Glass Body
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 3;
-      ctx.strokeRect(bk1X, bkY, bkW, bkH);
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = 'bold 12px system-ui';
-      ctx.fillText(`1.0 M ZnSO₄ (${znConc.toFixed(2)} M Zn²⁺)`, bk1X + 15, bkY + bkH - 15);
+      ctx.beginPath();
+      ctx.roundRect(bk2X, bkY, bkW, bkH, [4, 4, 18, 18]);
+      ctx.stroke();
 
-      // Draw Beaker 2 (Copper Cathode)
-      ctx.fillStyle = 'rgba(14, 165, 233, 0.35)';
-      ctx.fillRect(bk2X, bkY, bkW, bkH);
-      ctx.strokeStyle = '#0284c7';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(bk2X, bkY, bkW, bkH);
+      // Glass Lip Flange
+      ctx.fillStyle = '#bae6fd';
+      ctx.fillRect(bk2X - 6, bkY - 4, bkW + 12, 6);
+
+      // Glass Volumetric Ticks
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      for (let tk = 1; tk <= 4; tk++) {
+        const ty = bkY + bkH - (tk * (bkH / 5));
+        ctx.fillRect(bk2X + 8, ty, 14, 2);
+        ctx.fillText(tk * 50 + ' mL', bk2X + 26, ty + 3);
+      }
       ctx.fillStyle = '#67e8f9';
-      ctx.fillText(`1.0 M CuSO₄ (${cuConc.toFixed(2)} M Cu²⁺)`, bk2X + 15, bkY + bkH - 15);
+      ctx.font = 'bold 12px system-ui';
+      ctx.fillText(`1.0 M CuSO₄ (${cuConc.toFixed(2)} M Cu²⁺)`, bk2X + 16, bkY + bkH - 12);
 
-      // Electrodes
-      const elW = bkW * 0.22;
+      // ================= METALLIC ELECTRODES =================
+      const elW = bkW * 0.24;
       const elH = bkH * 0.85;
-      const el1X = bk1X + bkW * 0.38;
-      const el2X = bk2X + bkW * 0.38;
-      const elY = bkY - bkH * 0.18;
+      const el1X = bk1X + bkW * 0.36;
+      const el2X = bk2X + bkW * 0.36;
+      const elY = bkY - bkH * 0.20;
 
-      // Zinc Electrode (Silver Grey)
+      // Zinc Strip (Gleaming Metallic Silver / Zinc Crystal Spangles)
       const gradZn = ctx.createLinearGradient(el1X, 0, el1X + elW, 0);
       gradZn.addColorStop(0, '#94a3b8');
-      gradZn.addColorStop(0.5, '#cbd5e1');
+      gradZn.addColorStop(0.3, '#f1f5f9');
+      gradZn.addColorStop(0.7, '#cbd5e1');
       gradZn.addColorStop(1, '#64748b');
       ctx.fillStyle = gradZn;
-      ctx.fillRect(el1X, elY, elW, elH);
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(el1X, elY, elW, elH);
+      ctx.beginPath();
+      ctx.roundRect(el1X, elY, elW, elH, 4);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
       ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 12px system-ui';
-      ctx.fillText('Zn (-)', el1X + 8, elY + 22);
+      ctx.font = 'bold 13px system-ui';
+      ctx.fillText('Zn (Anode -)', el1X + 4, elY + 22);
 
-      // Copper Electrode (Reddish Bronze)
+      // Copper Strip (Rich Gleaming Rose Bronze / Red Copper)
       const gradCu = ctx.createLinearGradient(el2X, 0, el2X + elW, 0);
       gradCu.addColorStop(0, '#b45309');
-      gradCu.addColorStop(0.5, '#f59e0b');
-      gradCu.addColorStop(1, '#78350f');
+      gradCu.addColorStop(0.3, '#fdba74');
+      gradCu.addColorStop(0.7, '#ea580c');
+      gradCu.addColorStop(1, '#7c2d12');
       ctx.fillStyle = gradCu;
-      ctx.fillRect(el2X, elY, elW, elH);
-      ctx.strokeStyle = '#fbbf24';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(el2X, elY, elW, elH);
-      ctx.fillStyle = '#451a03';
-      ctx.fillText('Cu (+)', el2X + 8, elY + 22);
+      ctx.beginPath();
+      ctx.roundRect(el2X, elY, elW, elH, 4);
+      ctx.fill();
+      ctx.strokeStyle = '#fed7aa';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('Cu (Cathode +)', el2X + 4, elY + 22);
 
-      // Salt Bridge (U-tube)
+      // Microscopic Redox Bubbles & Precipitates on Electrodes
+      if (volt > 0.05) {
+        ctx.fillStyle = '#ffffff';
+        for (let b = 0; b < 6; b++) {
+          const by = bkY + 30 + ((t * 40 + b * 25) % (bkH - 50));
+          ctx.beginPath();
+          ctx.arc(el1X + (b % 2 === 0 ? -4 : elW + 4), by, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // ================= SALT BRIDGE (U-TUBE) =================
       if (hasBridge) {
-        ctx.fillStyle = 'rgba(244, 244, 245, 0.85)';
-        ctx.strokeStyle = '#a1a1aa';
-        ctx.lineWidth = 2;
-        const sbW = width * 0.24;
-        const sbX = width * 0.38;
-        const sbY = bkY - 20;
+        const sbW = width * 0.26;
+        const sbX = width * 0.37;
+        const sbY = bkY - 24;
+        const tubeThickness = 22;
+
+        // Glass U-tube outer contour
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.strokeStyle = '#c4b5fd';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.roundRect(sbX, sbY, sbW, bkH * 0.55, [14, 14, 0, 0]);
+        ctx.roundRect(sbX, sbY, sbW, bkH * 0.58, [18, 18, 0, 0]);
         ctx.fill();
         ctx.stroke();
 
-        // KNO3 Salt ions moving in bridge
-        ctx.fillStyle = '#9333ea';
-        ctx.font = 'bold 10px monospace';
-        ctx.fillText('K⁺ →', sbX + sbW * 0.65, sbY + 25);
+        // Inner Agar-Agar electrolyte gel gradient (KNO3)
+        const gelGrad = ctx.createLinearGradient(sbX, sbY, sbX + sbW, sbY);
+        gelGrad.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+        gelGrad.addColorStop(0.5, 'rgba(250, 204, 21, 0.5)');
+        gelGrad.addColorStop(1, 'rgba(168, 85, 247, 0.4)');
+        ctx.fillStyle = gelGrad;
+        ctx.fillRect(sbX + 4, sbY + 4, sbW - 8, bkH * 0.54);
+
+        // Cotton plugs at ends
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(sbX, sbY + bkH * 0.54, 26, 8);
+        ctx.fillRect(sbX + sbW - 26, sbY + bkH * 0.54, 26, 8);
+
+        // Moving Ion Labels
+        ctx.fillStyle = '#7e22ce';
+        ctx.font = 'bold 11px system-ui';
+        ctx.fillText('K⁺ → (To Cathode)', sbX + sbW * 0.52, sbY + 22);
         ctx.fillStyle = '#dc2626';
-        ctx.fillText('← NO₃⁻', sbX + sbW * 0.15, sbY + 25);
+        ctx.fillText('← NO₃⁻ (To Anode)', sbX + 16, sbY + 22);
       }
 
-      // External Connecting Wire & Load at top
+      // ================= EXTERNAL CIRCUIT COPPER WIRE & ELECTRON FLOW =================
       const wireY = height * 0.16;
-      ctx.strokeStyle = '#eab308';
-      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 4;
+      ctx.shadowColor = '#f59e0b';
+      ctx.shadowBlur = 8;
       ctx.beginPath();
       ctx.moveTo(el1X + elW / 2, elY);
       ctx.lineTo(el1X + elW / 2, wireY);
       ctx.lineTo(el2X + elW / 2, wireY);
       ctx.lineTo(el2X + elW / 2, elY);
       ctx.stroke();
+      ctx.shadowBlur = 0;
 
-      // Load device in middle of wire
+      // Animated Glowing Electrons moving from Anode to Cathode
+      if (volt > 0.05) {
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 10;
+        const totalWireLen = (elY - wireY) * 2 + (el2X - el1X);
+        for (let e = 0; e < 16; e++) {
+          const progress = ((t * 0.18 + e / 16) % 1);
+          const dist = progress * totalWireLen;
+          let ex, ey;
+          const leg1 = elY - wireY;
+          const leg2 = el2X - el1X;
+          if (dist < leg1) {
+            ex = el1X + elW / 2;
+            ey = elY - dist;
+          } else if (dist < leg1 + leg2) {
+            ex = el1X + elW / 2 + (dist - leg1);
+            ey = wireY;
+          } else {
+            ex = el2X + elW / 2;
+            ey = wireY + (dist - leg1 - leg2);
+          }
+          ctx.beginPath();
+          ctx.arc(ex, ey, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+      }
+
+      // ================= TOP ELECTRICAL LOAD WORKBENCH =================
       const loadX = (el1X + el2X + elW) / 2;
       if (loadType === 'voltmeter') {
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(loadX - 45, wireY - 28, 90, 56);
+        // Digital Multimeter Housing
+        const mmGrad = ctx.createLinearGradient(loadX - 55, wireY - 32, loadX + 55, wireY + 32);
+        mmGrad.addColorStop(0, '#0369a1');
+        mmGrad.addColorStop(0.5, '#0284c7');
+        mmGrad.addColorStop(1, '#0c4a6e');
+        ctx.fillStyle = mmGrad;
+        ctx.beginPath();
+        ctx.roundRect(loadX - 55, wireY - 32, 110, 64, 10);
+        ctx.fill();
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 2.5;
-        ctx.strokeRect(loadX - 45, wireY - 28, 90, 56);
-        ctx.fillStyle = '#34d399';
-        ctx.font = 'bold 16px monospace';
-        ctx.fillText((volt).toFixed(2) + ' V', loadX - 30, wireY + 6);
-      } else if (loadType === 'bulb') {
-        ctx.fillStyle = volt > 0.4 ? '#fef08a' : '#475569';
-        ctx.beginPath();
-        ctx.arc(loadX, wireY, 22, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#f59e0b';
-        ctx.lineWidth = 2;
         ctx.stroke();
-        if (volt > 0.4) {
-          ctx.fillStyle = 'rgba(253, 224, 71, 0.25)';
+
+        // LCD Display Bezel
+        ctx.fillStyle = '#02101a';
+        ctx.fillRect(loadX - 44, wireY - 24, 88, 34);
+        ctx.strokeStyle = '#0284c7';
+        ctx.strokeRect(loadX - 44, wireY - 24, 88, 34);
+
+        // Glowing LCD Readout
+        ctx.fillStyle = '#34d399';
+        ctx.shadowColor = '#34d399';
+        ctx.shadowBlur = 10;
+        ctx.font = 'bold 20px monospace';
+        ctx.fillText((volt).toFixed(3) + ' V', loadX - 38, wireY + 1);
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px system-ui';
+        ctx.fillText('DIGITAL MULTIMETER', loadX - 44, wireY + 24);
+      } else if (loadType === 'bulb') {
+        // Incandescent Glass Bulb
+        const bulbLit = volt > 0.35;
+        const bGrad = ctx.createRadialGradient(loadX, wireY, 2, loadX, wireY, 26);
+        bGrad.addColorStop(0, bulbLit ? '#ffffff' : '#64748b');
+        bGrad.addColorStop(0.4, bulbLit ? '#fef08a' : '#334155');
+        bGrad.addColorStop(1, bulbLit ? '#f59e0b' : '#1e293b');
+        ctx.fillStyle = bGrad;
+        ctx.beginPath();
+        ctx.arc(loadX, wireY, 26, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        if (bulbLit) {
+          // Luminous Radial Light Bloom
+          const glow = ctx.createRadialGradient(loadX, wireY, 10, loadX, wireY, 70);
+          glow.addColorStop(0, 'rgba(253, 224, 71, 0.45)');
+          glow.addColorStop(1, 'transparent');
+          ctx.fillStyle = glow;
           ctx.beginPath();
-          ctx.arc(loadX, wireY, 44 * (volt / 1.1), 0, Math.PI * 2);
+          ctx.arc(loadX, wireY, 70, 0, Math.PI * 2);
           ctx.fill();
         }
       } else {
-        // Motor
-        ctx.fillStyle = '#1e293b';
+        // Electric Motor with Spinning Rotor
+        ctx.fillStyle = '#1e1b4b';
         ctx.beginPath();
-        ctx.arc(loadX, wireY, 24, 0, Math.PI * 2);
+        ctx.arc(loadX, wireY, 28, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#a855f7';
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#818cf8';
+        ctx.lineWidth = 3;
         ctx.stroke();
+
         ctx.save();
         ctx.translate(loadX, wireY);
-        ctx.rotate(t * volt * 4);
-        ctx.fillStyle = '#ec4899';
-        ctx.fillRect(-18, -4, 36, 8);
-        ctx.fillRect(-4, -18, 8, 36);
+        ctx.rotate(t * volt * 6);
+        // Motor Fan Blades
+        const bladeColors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b'];
+        for (let bl = 0; bl < 4; bl++) {
+          ctx.rotate(Math.PI / 2);
+          ctx.fillStyle = bladeColors[bl];
+          ctx.fillRect(-6, -24, 12, 24);
+        }
         ctx.restore();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(loadX, wireY, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
       }
 
       // Animated Electrons travelling through Wire from Anode to Cathode
