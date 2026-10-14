@@ -61,11 +61,11 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
     try {
       const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document;
       if (!doc) return;
-      doc.documentElement.style.overflow = 'hidden';
-      doc.documentElement.style.scrollbarWidth = 'none';
+      doc.documentElement.style.overflowY = 'auto';
+      doc.documentElement.style.overflowX = 'hidden';
       if (doc.body) {
-        doc.body.style.overflow = 'hidden';
-        doc.body.style.scrollbarWidth = 'none';
+        doc.body.style.overflowY = 'auto';
+        doc.body.style.overflowX = 'hidden';
       }
     } catch {
       // Fallback
@@ -75,17 +75,16 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
   return (
     <div 
       ref={simulationContainerRef}
-      className="simulation-wrapper fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100 overflow-hidden"
+      className="simulation-wrapper fixed inset-0 z-50 flex flex-col animate-in fade-in duration-200 opacity-100"
       style={{
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         backgroundColor: 'rgba(3, 7, 20, 0.88)',
         height: '100vh',
-        maxHeight: '100vh',
+        width: '100vw',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
+        flexDirection: 'column'
       }}
     >
       

@@ -47,11 +47,11 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
       const iframe = e.currentTarget;
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!doc) return;
-      doc.documentElement.style.overflow = 'hidden';
-      doc.documentElement.style.scrollbarWidth = 'none';
+      doc.documentElement.style.overflowY = 'auto';
+      doc.documentElement.style.overflowX = 'hidden';
       if (doc.body) {
-        doc.body.style.overflow = 'hidden';
-        doc.body.style.scrollbarWidth = 'none';
+        doc.body.style.overflowY = 'auto';
+        doc.body.style.overflowX = 'hidden';
       }
     } catch {
       // Fallback
@@ -67,13 +67,11 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
         inset: 0,
         width: '100vw',
         height: '100vh',
-        maxHeight: '100vh',
         margin: 0,
         padding: 0,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
         backgroundColor: '#020617'
       }}
     >

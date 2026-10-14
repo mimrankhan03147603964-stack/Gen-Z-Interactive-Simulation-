@@ -52,11 +52,11 @@ export const MainStage: React.FC<MainStageProps> = ({
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!doc || !doc.body) return;
 
-      // Strip inner scrollbars from the iframe document
+      // Restore natural, smooth vertical scrolling in the iframe document
       doc.documentElement.style.overflowX = 'hidden';
-      doc.documentElement.style.overflowY = 'hidden';
+      doc.documentElement.style.overflowY = 'auto';
       doc.body.style.overflowX = 'hidden';
-      doc.body.style.overflowY = 'hidden';
+      doc.body.style.overflowY = 'auto';
 
       const hasEducationalCards = !!doc.querySelector(
         '.container, .card, .tabs, .tab-btn, .section-tabs, #topicsContainer, .grid-3, .quiz, .theory, .sim-readout, .teacher-note'
@@ -92,22 +92,27 @@ export const MainStage: React.FC<MainStageProps> = ({
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!doc) return;
 
-      const styleId = 'genz-kill-inner-scrollbar';
+      const styleId = 'genz-natural-scrollbar';
       if (!doc.getElementById(styleId)) {
         const style = doc.createElement('style');
         style.id = styleId;
         style.textContent = `
           html, body {
-            overflow: hidden !important;
             overflow-x: hidden !important;
-            overflow-y: hidden !important;
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
+            overflow-y: auto !important;
+            scrollbar-width: thin !important;
+            scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
           }
-          html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
+          ::-webkit-scrollbar {
+            width: 8px !important;
+            height: 8px !important;
+          }
+          ::-webkit-scrollbar-track {
+            background: rgba(10, 15, 30, 0.7) !important;
+          }
+          ::-webkit-scrollbar-thumb {
+            background: #0284c7 !important;
+            border-radius: 4px !important;
           }
         `;
         doc.head?.appendChild(style);

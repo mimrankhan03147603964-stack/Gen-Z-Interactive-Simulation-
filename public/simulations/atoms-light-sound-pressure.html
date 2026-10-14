@@ -5,375 +5,310 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Interactive Science Lab · Atoms, Light, Sound & Pressure</title>
 <style>
-/* Zero-monochrome & 100% desktop color fidelity enforcement */
+/* Zero-monochrome & color fidelity enforcement */
 *, *::before, *::after {
   forced-color-adjust: none !important;
   -ms-high-contrast-adjust: none !important;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-html, body, canvas, svg {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-}
-@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
-  html, body, canvas, svg, div {
-    forced-color-adjust: none !important;
-    -ms-high-contrast-adjust: none !important;
-  }
+html, body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #060e1d;
+  color: #e2e8f0;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; overflow-x:hidden; }
-body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:#0a1628; color:#e8f4ff; min-height:100vh;
-  display:flex; flex-direction:column;
-}
-.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.7); }
+::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
 
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  width: 100%;
+}
+
+/* Top Navigation Tabs */
 .tabs {
-  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
-  background:#0f2440; border-radius:14px; padding:8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #0c182e;
+  border: 1px solid #1e3a5f;
+  border-radius: 16px;
+  padding: 10px 14px;
 }
 .tab-btn {
-  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
-  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
-  transition:all .25s; flex:1 0 auto;
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #94a3b8;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1 0 auto;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
-.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+}
 .tab-btn.active {
-  background:linear-gradient(135deg,#ff8f00,#ff6f00);
-  color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45);
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.45);
 }
-.tab-btn .icon { margin-right:8px; }
-.topic { display:none; } .topic.active { display:block; }
+
+.topic { display: none; }
+.topic.active { display: block; }
 
 .card {
-  background:linear-gradient(160deg,#122a44,#0a1e34);
-  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
-  box-shadow:0 14px 40px rgba(0,0,0,.7);
-  border:1px solid rgba(255,255,255,.05);
+  background: linear-gradient(165deg, #0d1e38 0%, #071224 100%);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid #1e3a63;
 }
-.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; }
-.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #f8fafc;
+}
+.card h2 small {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #7dd3fc;
+  margin-left: 10px;
+}
 .card .desc {
-  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
-  border-left:5px solid #ffc107; padding-left:14px;
-  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
-  line-height:1.6;
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 18px;
+  border-left: 4px solid #38bdf8;
+  padding: 8px 16px;
+  background: rgba(56, 189, 248, 0.06);
+  border-radius: 0 10px 10px 0;
+  line-height: 1.6;
 }
-.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
-.section-tab {
-  padding:8px 16px; border:none; border-radius:30px;
-  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
-  cursor:pointer; transition:.2s;
-}
-.section-tab:hover { background:#234468; color:#fff; }
-.section-tab.active { background:#1976d2; color:#fff; }
-.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
-.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
-.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
-.panel ul { list-style:none; padding-left:0; }
-.panel ul li { padding:7px 0 7px 32px; position:relative; }
-.panel ul li::before {
-  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
-  border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900;
-  text-align:center; line-height:20px; font-size:.8rem;
-}
-.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
-.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
-.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; }
-.grid-item p { font-size:.92rem; color:#b8d4f0; }
 
+.section-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 14px; }
+.section-tab {
+  padding: 8px 18px;
+  border: 1px solid #23436d;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: #11223f;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.section-tab:hover { background: #1a3560; color: #fff; }
+.section-tab.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+
+.panel { display: none; padding: 14px 0 8px; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.4rem; font-weight: 700; color: #fde047; margin-bottom: 12px; }
+.panel p, .panel li { font-size: 1rem; line-height: 1.7; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 6px 0 6px 30px; position: relative; }
+.panel ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #38bdf8;
+  color: #060e1d;
+  font-weight: 900;
+  text-align: center;
+  line-height: 20px;
+  font-size: 0.8rem;
+}
+.teacher-note {
+  background: rgba(245, 158, 11, 0.12);
+  border-left: 4px solid #f59e0b;
+  padding: 10px 16px;
+  border-radius: 0 10px 10px 0;
+  margin-top: 14px;
+  color: #fef3c7;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 12px; }
+.grid-item { background: rgba(255, 255, 255, 0.04); padding: 16px; border-radius: 14px; border-left: 4px solid #38bdf8; }
+.grid-item h4 { font-size: 1.15rem; color: #7dd3fc; margin-bottom: 6px; }
+.grid-item p { font-size: 0.94rem; color: #cbd5e1; line-height: 1.5; }
+
+/* Simulation Stage Box */
 .sim-box {
-  background:#06121f; border-radius:18px; padding:18px 16px 16px;
-  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+  background: #040915;
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 10px;
+  border: 1px solid #1e3a5f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .sim-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; margin-bottom:14px;
-  background:#0a1a2e; padding:12px 18px; border-radius:36px;
-  border:1px solid #1e3a5c;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: #0c182e;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid #1e3a5f;
+  z-index: 10;
 }
 .sim-controls label {
-  display:flex; align-items:center; gap:8px; font-weight:600;
-  color:#90b8e0; font-size:.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #cbd5e1;
+  font-size: 0.9rem;
 }
-.sim-controls input[type=range] { width:125px; accent-color:#ff9800; cursor:pointer; }
-.sim-controls select,.sim-controls button {
-  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
-  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+.sim-controls select, .sim-controls button, .sim-controls input[type="range"] {
+  cursor: pointer;
 }
-.sim-controls button { background:#1976d2; color:#fff; }
-.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
-canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
-.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#ffd54f; margin:14px 0 6px; }
-.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
-.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
-.teacher-note {
-  background:linear-gradient(135deg,#0d2018,#0a1a14);
-  border-left:5px solid #4caf50; border-radius:0 14px 14px 0;
-  padding:12px 16px; margin-top:12px; font-size:.9rem;
-  color:#b8e6c8; line-height:1.7;
+.sim-controls select {
+  background: #132646;
+  color: #f8fafc;
+  border: 1px solid #2e5584;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
 }
-.teacher-note strong { color:#66bb6a; }
-
-/* ============ TRUE FULLSCREEN OVERLAY ============ */
-.fs-overlay {
-  position:fixed; inset:0; background:#040e1a; z-index:99999;
-  display:none; flex-direction:column; padding:10px 16px 12px;
-  overflow:hidden;
+.sim-controls input[type="range"] {
+  accent-color: #38bdf8;
+  max-width: 130px;
 }
-.fs-overlay.active { display:flex; }
-.fs-topbar {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+.sim-controls button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #2e5584;
+  font-weight: 800;
+  font-size: 0.88rem;
+  background: #172e54;
+  color: #f8fafc;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
-.fs-topbar h2 {
-  font-size:1.45rem; font-weight:800; color:#ffd54f;
-  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+.sim-controls button:hover {
+  background: #234375;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
 }
-.fs-close-btn {
-  padding:9px 24px; border-radius:30px; border:none;
-  background:linear-gradient(135deg,#ff5252,#d32f2f);
-  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
-  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
-  flex-shrink:0;
+.sim-controls button:active {
+  transform: translateY(1px);
 }
-.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
-.fs-canvas-area {
-  flex:1; display:flex; align-items:center; justify-content:center;
-  min-height:0; padding:6px 0;
-}
-.fs-canvas-area canvas {
-  max-width:100%; max-height:100%; width:auto; height:auto;
-  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
-}
-.fs-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; padding:10px 16px;
-  background:#0a1a2e; border-radius:40px;
-  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
-}
-.fs-controls label {
-  display:flex; align-items:center; gap:8px; font-weight:600;
-  color:#90b8e0; font-size:.92rem;
-}
-.fs-controls input[type=range] { width:140px; accent-color:#ff9800; cursor:pointer; }
-.fs-controls select,.fs-controls button {
-  padding:8px 18px; border-radius:30px; border:none; font-weight:700;
-  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
-}
-.fs-controls button { background:#1976d2; color:#fff; }
-.fs-readout {
-  text-align:center; font-size:1.25rem; font-weight:700;
-  color:#ffd54f; margin:6px 0 2px; flex-shrink:0;
-}
-.fs-readout small { display:block; font-size:.88rem; color:#7a9cc0; font-weight:400; }
-.fs-note {
-  text-align:center; font-size:.88rem; color:#a8c8e8;
-  padding:2px 0 2px; flex-shrink:0;
+.btn-primary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  border-color: #38bdf8 !important;
 }
 
-@media(max-width:900px){
-  .tab-btn{font-size:.9rem;padding:10px 14px}
-  .card{padding:16px}
-  .fs-topbar h2{font-size:1.1rem}
-  .fs-controls label{font-size:.82rem}
-  .fs-controls input[type=range]{width:110px}
+.sim-readout {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin: 6px 0 10px;
+  padding: 6px 14px;
+  background: rgba(14, 27, 50, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.sim-readout small {
+  display: block;
+  font-size: 0.88rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.sim-info {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  text-align: center;
 }
 
-/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
-:root {
-  --blue: #2ea8ff;
-  --red: #ff4d67;
-  --grn: #22d3a0;
-  --amb: #ffc247;
-  --vio: #9b7bff;
-  --line: #2a3d80;
-  --mut: #a3b4e0;
+canvas {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  border-radius: 14px;
+  border: 1.5px solid #1e3a5f;
+  background: #030712;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
 }
 
-/* Universal 3D Tactile Buttons & Docked Control Overlay */
-.ctl {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-  max-width: 1180px !important;
-  margin: 10px auto 0 !important;
-  padding: 8px 14px !important;
-  background: rgba(5, 10, 30, 0.78) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
-  box-sizing: border-box !important;
-  z-index: 99999 !important;
+/* Sub-mode selector bar */
+.submode-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
-.row {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  align-items: center !important;
-  justify-content: center !important;
+.submode-btn {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 1px solid #1e3a5f;
+  background: #09152a;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.row span {
-  color: var(--mut) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  padding-right: 4px !important;
-  user-select: none !important;
+.submode-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
 }
-.btn {
-  border: 0 !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  color: #04102a !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  user-select: none !important;
-  white-space: nowrap !important;
-  text-decoration: none !important;
-}
-.btn:hover {
-  filter: brightness(1.15) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
-}
-.btn:active {
-  transform: translateY(3px) !important;
-  box-shadow: 0 1px 0 #0007 !important;
-}
-.b-in { background: var(--blue) !important; color: #04102a !important; }
-.b-out { background: var(--red) !important; color: #ffffff !important; }
-.b-auto { background: var(--grn) !important; color: #04102a !important; }
-.b-play { background: var(--amb) !important; color: #04102a !important; }
-.b-hold { background: #cfd9ff !important; color: #04102a !important; }
-.b-set { background: #3d509a !important; color: #ffffff !important; }
-.b-fs {
-  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
-}
-.b-exit {
-  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
-}
-.tg {
-  background: #1c2b63 !important;
-  color: #d4e0ff !important;
-  border: 2px solid #3a4f9a !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-}
-.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
-.tg.on {
-  background: var(--vio) !important;
-  color: #ffffff !important;
-  border-color: #cbbcff !important;
-  box-shadow: 0 0 18px #9b7bffaa !important;
-}
-
-/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
-:fullscreen,
-:-webkit-full-screen,
-:-moz-full-screen,
-:-ms-fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  padding: 8px 18px 12px !important;
-  box-sizing: border-box !important;
-  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  overflow: hidden !important;
-  border-radius: 0 !important;
-  border: none !important;
-  margin: 0 !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen canvas,
-:fullscreen svg,
-:-webkit-full-screen canvas,
-:-webkit-full-screen svg {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  object-fit: contain !important;
-  display: block !important;
-  margin: 0 auto !important;
-}
-
-:fullscreen .ctl,
-:-webkit-full-screen .ctl {
-  flex-shrink: 0 !important;
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 4px auto 0 !important;
-  padding: 8px 16px !important;
-  background: rgba(5, 10, 30, 0.94) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen .btn,
-:-webkit-full-screen .btn {
-  padding: 11px 18px !important;
-  font-size: 16px !important;
-}
-
-:fullscreen .teacher-note,
-:fullscreen .sim-info,
-:fullscreen nav,
-:fullscreen .tabs,
-:fullscreen .section-tabs,
-:-webkit-full-screen .teacher-note,
-:-webkit-full-screen .sim-info,
-:-webkit-full-screen nav,
-:-webkit-full-screen .tabs,
-:-webkit-full-screen .section-tabs {
-  display: none !important;
-}
-/* ================= END BLUEPRINT CSS ================= */
-
 </style>
 
-
-
-
-<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<!-- FULLSCREEN STYLES -->
 <style id="genz-simulation-fullscreen-styles">
-  /* 1. ZERO SCROLLING IN FULLSCREEN (fit-to-screen root container) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
   html:fullscreen,
   body:fullscreen,
   :fullscreen,
@@ -385,331 +320,52 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
   [data-is-fullscreen="true"] {
     width: 100vw !important;
     max-width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: hidden !important;
+    min-height: 100vh !important;
     overflow-x: hidden !important;
-    overflow-y: hidden !important;
+    overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     align-items: stretch !important;
     box-sizing: border-box !important;
     margin: 0 !important;
-    padding: 8px 14px !important;
+    padding: 10px 16px !important;
     background-color: #060e1d !important;
     background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
     position: fixed !important;
     inset: 0 !important;
     z-index: 999999 !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
   }
-
-  /* Force zero scrollbars everywhere in fullscreen mode */
-  html:has(:fullscreen),
-  body:has(:fullscreen),
-  html.in-fullscreen-mode,
-  body.in-fullscreen-mode,
-  html.in-fullscreen-mode body {
-    overflow: hidden !important;
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  :fullscreen *,
-  :-webkit-full-screen *,
-  :-moz-full-screen *,
-  :-ms-fullscreen *,
-  .in-fullscreen-mode * {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-
-  :fullscreen *::-webkit-scrollbar,
-  :-webkit-full-screen *::-webkit-scrollbar,
-  :-moz-full-screen *::-webkit-scrollbar,
-  :-ms-fullscreen *::-webkit-scrollbar,
-  .in-fullscreen-mode *::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-  }
-
-  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE (flex: 1; min-height: 0; object-fit: contain;) */
   :fullscreen canvas,
-  :fullscreen svg,
-  :fullscreen iframe,
-  :fullscreen .main-stage,
-  :fullscreen .canvas-holder,
-  :fullscreen .canvas-wrap,
-  :fullscreen .canvas-wrapper,
-  :fullscreen .stage,
-  :fullscreen .sim-stage,
-  :fullscreen .card-board,
-  :fullscreen .sentence-strip,
-  :fullscreen #canvasWrap,
   :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  :-webkit-full-screen iframe,
-  :-webkit-full-screen .main-stage,
-  :-webkit-full-screen .canvas-holder,
-  :-webkit-full-screen .canvas-wrap,
-  :-webkit-full-screen .canvas-wrapper,
-  :-webkit-full-screen .stage,
-  :-webkit-full-screen .sim-stage,
-  :-webkit-full-screen .card-board,
-  :-webkit-full-screen .sentence-strip,
-  :-webkit-full-screen #canvasWrap,
-  .is-fullscreen canvas,
-  .is-fullscreen svg,
-  .is-fullscreen iframe,
-  .is-fullscreen .main-stage,
-  .is-fullscreen .canvas-holder,
-  .is-fullscreen .canvas-wrap,
-  .is-fullscreen .canvas-wrapper,
-  .is-fullscreen .stage,
-  .is-fullscreen .sim-stage,
-  .is-fullscreen .card-board,
-  .is-fullscreen .sentence-strip,
-  .is-fullscreen #canvasWrap {
-    flex: 1 1 0 !important;
-    min-height: 0 !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    object-fit: contain !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    margin: 0 auto !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-    order: 5 !important;
-  }
-
-  :fullscreen canvas,
-  :fullscreen svg,
-  :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  .is-fullscreen canvas,
-  .is-fullscreen svg {
+  .is-fullscreen canvas {
     display: block !important;
     object-fit: contain !important;
-    flex: 1 1 0 !important;
-    min-height: 0 !important;
     width: 100% !important;
-    height: 100% !important;
-    max-height: 100% !important;
     max-width: 100% !important;
+    max-height: 68vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
   }
-
-  /* 3. PINNED & VISIBLE CONTROLS (flex-shrink: 0; fixed auto-height docked neatly) */
-  :fullscreen .ctl,
-  :fullscreen .controls,
   :fullscreen .sim-controls,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .controls-bar,
-  :fullscreen .fs-bar,
-  :fullscreen .fs-topbar,
-  :fullscreen .fullscreen-overlay-controls,
-  :fullscreen .floating-controls,
-  :fullscreen .preset-chips,
-  :fullscreen .stats-bar,
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :fullscreen header,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .controls,
   :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .controls-bar,
-  :-webkit-full-screen .fs-bar,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen .fullscreen-overlay-controls,
-  :-webkit-full-screen .floating-controls,
-  :-webkit-full-screen .preset-chips,
-  :-webkit-full-screen .stats-bar,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  :-webkit-full-screen header,
-  .is-fullscreen .ctl,
-  .is-fullscreen .controls,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .controls-bar,
-  .is-fullscreen .fs-bar,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen .fullscreen-overlay-controls,
-  .is-fullscreen .floating-controls,
-  .is-fullscreen .preset-chips,
-  .is-fullscreen .stats-bar,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout,
-  .is-fullscreen header {
+  .is-fullscreen .sim-controls {
     flex-shrink: 0 !important;
     position: relative !important;
     z-index: 100 !important;
     width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    box-sizing: border-box !important;
-    margin: 2px auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Bottom docked toolbars */
-  :fullscreen .ctl,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .fs-bar,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .fs-bar,
-  .is-fullscreen .ctl,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .fs-bar {
-    order: 10 !important;
-    padding: 6px 12px !important;
-    background: rgba(5, 10, 30, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
-  }
-
-  /* Top docked toolbars */
-  :fullscreen .sim-controls,
-  :fullscreen .fs-topbar,
-  :fullscreen header,
-  :fullscreen .stats-bar,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen header,
-  :-webkit-full-screen .stats-bar,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen header,
-  .is-fullscreen .stats-bar {
-    order: 1 !important;
-    padding: 6px 14px !important;
+    padding: 8px 14px !important;
     background: rgba(6, 14, 34, 0.92) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     border-radius: 14px !important;
     border: 1px solid rgba(56, 189, 248, 0.4) !important;
   }
-
-  /* Compact readouts between top toolbar and simulation canvas */
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout {
-    order: 2 !important;
-    margin: 2px auto !important;
-    padding: 2px 8px !important;
-    font-size: clamp(12px, 1.2vw, 15px) !important;
-  }
-
-  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
-  :fullscreen .btn,
-  :fullscreen button,
-  :-webkit-full-screen .btn,
-  :-webkit-full-screen button,
-  .is-fullscreen .btn,
-  .is-fullscreen button {
-    font-size: clamp(11px, 1.1vw, 15px) !important;
-    padding: 6px 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  :fullscreen .row,
-  :-webkit-full-screen .row,
-  .is-fullscreen .row {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  :fullscreen .ctrl-group,
-  :-webkit-full-screen .ctrl-group,
-  .is-fullscreen .ctrl-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-  }
-
-  :fullscreen input[type="range"],
-  :-webkit-full-screen input[type="range"],
-  .is-fullscreen input[type="range"] {
-    max-width: 140px !important;
-    cursor: pointer !important;
-  }
-
-  :fullscreen select,
-  :-webkit-full-screen select,
-  .is-fullscreen select {
-    cursor: pointer !important;
-    font-size: clamp(11px, 1.1vw, 14px) !important;
-  }
-
-  /* Clean view: hide static textbook cards/notes during immersion */
-  :fullscreen .teacher-note,
-  :fullscreen .sim-info,
-  :fullscreen nav,
-  :fullscreen .tabs,
-  :fullscreen .section-tabs,
-  :fullscreen .desc,
-  :fullscreen .panel:not(.active),
-  :-webkit-full-screen .teacher-note,
-  :-webkit-full-screen .sim-info,
-  :-webkit-full-screen nav,
-  :-webkit-full-screen .tabs,
-  :-webkit-full-screen .section-tabs,
-  :-webkit-full-screen .desc,
-  :-webkit-full-screen .panel:not(.active),
-  .is-fullscreen .teacher-note,
-  .is-fullscreen .sim-info,
-  .is-fullscreen nav,
-  .is-fullscreen .tabs,
-  .is-fullscreen .section-tabs,
-  .is-fullscreen .desc,
-  .is-fullscreen .panel:not(.active) {
-    display: none !important;
-  }
-
-  .fs-overlay {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
 </style>
-
 </head>
 <body>
 
@@ -721,678 +377,1765 @@ canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border
     <button class="tab-btn" data-topic="pressure"><span class="icon">🔄</span> Pressure</button>
   </div>
 
-  <!-- ================= ATOMS ================= -->
-  <div class="topic active" id="topic-atoms"><div class="card">
-    <h2>⚛️ Atoms & Molecules <small>building blocks of matter</small></h2>
-    <div class="desc">Watch atoms vibrate, slide, and fly. Bond them into molecules. Heat or cool them to change state.</div>
-    <div class="section-tabs" data-topic="atoms">
-      <button class="section-tab" data-section="def">Definition</button>
-      <button class="section-tab" data-section="exp">Explanation</button>
-      <button class="section-tab" data-section="types">Types</button>
-      <button class="section-tab active" data-section="sim">Simulation</button>
-    </div>
-    <div class="panel" id="atoms-def"><h3>📖 Definition</h3>
-      <p><strong>Atoms</strong> are the smallest particles of a chemical element. <strong>Molecules</strong> are groups of two or more atoms held together by chemical bonds.</p>
-      <div class="teacher-note"><strong>Teacher's Note:</strong> Cut chalk in half again and again — you reach an atom. Two hydrogen + one oxygen = water molecule (H₂O).</div>
-    </div>
-    <div class="panel" id="atoms-exp"><h3>💡 Explanation</h3>
-      <p>Everything is made of atoms. The state of matter depends on how tightly atoms are packed and how much they move.</p>
-      <ul>
-        <li><strong>Solid:</strong> atoms vibrate in fixed positions.</li>
-        <li><strong>Liquid:</strong> atoms slide past each other.</li>
-        <li><strong>Gas:</strong> atoms move freely and fill space.</li>
-      </ul>
-    </div>
-    <div class="panel" id="atoms-types"><h3>🧩 Types of Matter</h3>
-      <div class="grid-3">
-        <div class="grid-item"><h4>Elements</h4><p>One type of atom. Examples: Oxygen (O), Gold (Au).</p></div>
-        <div class="grid-item"><h4>Compounds</h4><p>Different atoms bonded. Examples: Water (H₂O), Salt (NaCl).</p></div>
-        <div class="grid-item"><h4>Mixtures</h4><p>Mixed but not joined. Examples: Air, salad.</p></div>
+  <!-- ================= ATOMS & MOLECULES ================= -->
+  <div class="topic active" id="topic-atoms">
+    <div class="card">
+      <h2>⚛️ Atoms & Molecules <small>building blocks of matter</small></h2>
+      <div class="desc">Explore the inner atomic structure with active electron orbits, build 3D rotating molecules, or observe particle phase transitions.</div>
+      <div class="section-tabs" data-topic="atoms">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Types</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
       </div>
-    </div>
-    <div class="panel active" id="atoms-sim"><h3>🎮 Interactive Simulation</h3>
-      <div class="sim-box" id="atomsSimBox">
-        <div class="sim-controls" id="atomsControls">
-          <label>State:
-            <select id="atomState">
-              <option value="solid">Solid (Ice)</option>
-              <option value="liquid" selected>Liquid (Water)</option>
-              <option value="gas">Gas (Steam)</option>
-            </select>
-          </label>
-          <button id="atomBondBtn">➕ Bond Atoms</button>
-          <button id="atomHeatBtn">🔥 Heat</button>
-          <button id="atomCoolBtn">❄️ Cool</button>
-          <button id="atomResetBtn">⟳ Reset</button>
-          <button id="atomFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+      <div class="panel" id="atoms-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Atoms</strong> are the fundamental units of chemical elements, consisting of a central nucleus (protons and neutrons) surrounded by orbiting electrons. <strong>Molecules</strong> consist of two or more atoms bound together by covalent or ionic bonds.</p>
+        <div class="teacher-note"><strong>Teacher Note:</strong> Water is H₂O (2 hydrogen + 1 oxygen). Carbon dioxide is CO₂ (1 carbon + 2 oxygen). Matter transitions between solid, liquid, and gas as temperature changes.</div>
+      </div>
+      <div class="panel" id="atoms-exp">
+        <h3>💡 Explanation</h3>
+        <p>Electrons occupy discrete quantum energy shells (K: up to 2e⁻, L: up to 8e⁻, M: up to 8e⁻). Protons define the atomic number Z, while neutrons provide nuclear binding stability.</p>
+        <ul>
+          <li><strong>Protons (p⁺):</strong> Positively charged nuclear particles.</li>
+          <li><strong>Neutrons (n⁰):</strong> Neutral nuclear particles that stabilize the nucleus.</li>
+          <li><strong>Electrons (e⁻):</strong> Negatively charged leptons orbiting in quantized shells.</li>
+        </ul>
+      </div>
+      <div class="panel" id="atoms-types">
+        <h3>🧩 Types of Matter</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Elements</h4><p>Pure substances composed of identical atoms (e.g., Gold, Carbon, Neon).</p></div>
+          <div class="grid-item"><h4>Molecules & Compounds</h4><p>Chemically bonded combinations (e.g., H₂O, CO₂, CH₄, NaCl).</p></div>
+          <div class="grid-item"><h4>States of Matter</h4><p>Solids vibrate in fixed lattices, liquids slide past each other, gases fly freely.</p></div>
         </div>
-        <div class="sim-readout" id="atomReadout">LIQUID <small>Atoms slide past each other</small></div>
-        <canvas id="atomCanvas" width="1100" height="480"></canvas>
-        
-        <div class="sim-info" id="atomInfo">Atoms are drawn as glowing spheres with element labels. Bonds are yellow lines.</div>
-        <div class="teacher-note"><strong>Real-Life:</strong> Ice = solid (molecules vibrate in place). Water = liquid (molecules slide). Steam = gas (molecules fly).</div>
+      </div>
+      <div class="panel active" id="atoms-sim">
+        <div class="sim-box" id="atomsSimBox">
+          <div class="submode-bar">
+            <button class="submode-btn active" id="btnModeBohr">🪐 Bohr Model Atom</button>
+            <button class="submode-btn" id="btnModeMolecule">🧬 3D Molecules</button>
+            <button class="submode-btn" id="btnModeStates">🧊 States of Matter</button>
+          </div>
+
+          <div class="sim-controls" id="atomsControls">
+            <!-- Controls for Bohr Mode -->
+            <span id="bohrControlsGroup" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>Element:
+                <select id="atomElementSelect">
+                  <option value="H">1 - Hydrogen (H)</option>
+                  <option value="He">2 - Helium (He)</option>
+                  <option value="Li">3 - Lithium (Li)</option>
+                  <option value="C" selected>6 - Carbon (C)</option>
+                  <option value="N">7 - Nitrogen (N)</option>
+                  <option value="O">8 - Oxygen (O)</option>
+                  <option value="Ne">10 - Neon (Ne)</option>
+                  <option value="Na">11 - Sodium (Na)</option>
+                  <option value="Cl">17 - Chlorine (Cl)</option>
+                </select>
+              </label>
+              <button id="atomAddProton">p⁺ Add</button>
+              <button id="atomAddNeutron">n⁰ Add</button>
+              <button id="atomAddElectron">e⁻ Add</button>
+            </span>
+
+            <!-- Controls for Molecule Mode -->
+            <span id="moleculeControlsGroup" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>Molecule:
+                <select id="molSelect">
+                  <option value="H2O" selected>Water (H₂O)</option>
+                  <option value="CO2">Carbon Dioxide (CO₂)</option>
+                  <option value="CH4">Methane (CH₄)</option>
+                  <option value="NH3">Ammonia (NH₃)</option>
+                  <option value="O2">Oxygen (O₂)</option>
+                  <option value="NaCl">Salt (NaCl)</option>
+                </select>
+              </label>
+              <button id="molRotateBtn">🔄 Rotate</button>
+            </span>
+
+            <!-- Controls for States of Matter Mode -->
+            <span id="statesControlsGroup" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>State:
+                <select id="atomState">
+                  <option value="solid">Solid (Ice)</option>
+                  <option value="liquid" selected>Liquid (Water)</option>
+                  <option value="gas">Gas (Steam)</option>
+                </select>
+              </label>
+              <button id="atomBondBtn">➕ Bond Atoms</button>
+              <button id="atomHeatBtn">🔥 Heat</button>
+              <button id="atomCoolBtn">❄️ Cool</button>
+            </span>
+
+            <button id="atomResetBtn">⟳ Reset</button>
+            <button id="atomFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+
+          <div class="sim-readout" id="atomReadout">CARBON (C-12) · ATOM<small>6 Protons · 6 Neutrons · 6 Electrons (K:2, L:4) · Stable Neutral</small></div>
+          <canvas id="atomCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="atomInfo">Glowing central nucleus with proton/neutron cluster, concentric quantized electron shells K & L, and active orbiting electrons.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> All living organisms on Earth are carbon-based. Covalent bonds form the backbone of DNA and proteins.</div>
+        </div>
       </div>
     </div>
-  </div></div>
+  </div>
 
   <!-- ================= LIGHT ================= -->
-  <div class="topic" id="topic-light"><div class="card">
-    <h2>💡 Light <small>reflection, refraction & spectrum</small></h2>
-    <div class="desc">A real laser beam, a mirror, a glass block, and a prism — all drawn clearly with labels.</div>
-    <div class="section-tabs" data-topic="light">
-      <button class="section-tab" data-section="def">Definition</button>
-      <button class="section-tab" data-section="exp">Explanation</button>
-      <button class="section-tab" data-section="types">Properties</button>
-      <button class="section-tab active" data-section="sim">Simulation</button>
-    </div>
-    <div class="panel" id="light-def"><h3>📖 Definition</h3>
-      <p><strong>Light</strong> is electromagnetic radiation visible to the human eye. It travels in straight lines.</p>
-    </div>
-    <div class="panel" id="light-exp"><h3>💡 Explanation</h3>
-      <p>Light can be <strong>reflected</strong> (bounced), <strong>refracted</strong> (bent), and <strong>dispersed</strong> (split into colours).</p>
-      <ul>
-        <li><strong>Reflection:</strong> Angle in = Angle out. Mirrors use this.</li>
-        <li><strong>Refraction:</strong> Light bends entering glass or water.</li>
-        <li><strong>Spectrum:</strong> White light splits into 7 colours.</li>
-      </ul>
-    </div>
-    <div class="panel" id="light-types"><h3>🌈 Key Properties</h3>
-      <div class="grid-3">
-        <div class="grid-item"><h4>Reflection</h4><p>Mirror bounces light back at same angle.</p></div>
-        <div class="grid-item"><h4>Refraction</h4><p>Light bends when entering glass.</p></div>
-        <div class="grid-item"><h4>Spectrum</h4><p>Prism splits white light into ROYGBIV.</p></div>
+  <div class="topic" id="topic-light">
+    <div class="card">
+      <h2>💡 Light <small>reflection, refraction, lenses & spectrum</small></h2>
+      <div class="desc">Interactive optical bench with laser source, plane mirror, glass block, convex focusing lens, and dispersion prism.</div>
+      <div class="section-tabs" data-topic="light">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Properties</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
       </div>
-    </div>
-    <div class="panel active" id="light-sim"><h3>🎮 Interactive Simulation</h3>
-      <div class="sim-box" id="lightSimBox">
-        <div class="sim-controls" id="lightControls">
-          <label>Phenomenon:
-            <select id="lightMode">
-              <option value="reflect">Reflection (Mirror)</option>
-              <option value="refract">Refraction (Glass Block)</option>
-              <option value="spectrum">Spectrum (Prism)</option>
-            </select>
-          </label>
-          <button id="lightAnimBtn">⏸ Pause</button>
-          <button id="lightAngleBtn">📐 Change Angle</button>
-          <button id="lightAutoBtn">🔄 Auto-Sweep ON</button>
-          <button id="lightFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+      <div class="panel" id="light-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Light</strong> is transverse electromagnetic radiation. In optical media, light reflects at equal angles, refracts according to Snell's Law (n₁ sin θ₁ = n₂ sin θ₂), focuses through lenses, and disperses into spectral colors.</p>
+      </div>
+      <div class="panel" id="light-exp">
+        <h3>💡 Explanation</h3>
+        <p>When light encounters a boundary between two optical media, part of the wave reflects back and part enters the medium with changed wave velocity and wavelength.</p>
+        <ul>
+          <li><strong>Law of Reflection:</strong> Angle of incidence θ₁ = Angle of reflection θ₂ relative to normal.</li>
+          <li><strong>Refraction:</strong> Bends toward the normal when entering a denser medium (air to glass).</li>
+          <li><strong>Optical Lens:</strong> Convex lenses converge parallel rays to a common focal point F.</li>
+          <li><strong>Dispersion:</strong> Prisms split white light because shorter blue wavelengths refract more than longer red wavelengths.</li>
+        </ul>
+      </div>
+      <div class="panel" id="light-types">
+        <h3>🌈 Key Optical Phenomena</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Plane Mirror</h4><p>Specular reflection with virtual image at equal distance.</p></div>
+          <div class="grid-item"><h4>Refractive Glass Block</h4><p>Lateral ray displacement with parallel emergent beam.</p></div>
+          <div class="grid-item"><h4>Convex Focusing Lens</h4><p>Convergences incident rays at focal point F = 1/P.</p></div>
+          <div class="grid-item"><h4>Prism Dispersion</h4><p>Full ROYGBIV visible color spectrum decomposition.</p></div>
         </div>
-        <div class="sim-readout" id="lightReadout">REFLECTION <small>Angle in = Angle out</small></div>
-        <canvas id="lightCanvas" width="1100" height="480"></canvas>
-        <div class="sim-info" id="lightInfo">Yellow beam = incoming. Orange beam = reflected. Blue dashed = normal.</div>
-        <div class="teacher-note"><strong>Real-Life:</strong> Mirror (reflection), pencil in water (refraction), rainbow (spectrum).</div>
+      </div>
+      <div class="panel active" id="light-sim">
+        <div class="sim-box" id="lightSimBox">
+          <div class="sim-controls" id="lightControls">
+            <label>Phenomenon:
+              <select id="lightMode">
+                <option value="reflect" selected>Reflection (Plane Mirror)</option>
+                <option value="refract">Refraction (Glass Block)</option>
+                <option value="lens">Convex Lens (Focal Focus)</option>
+                <option value="spectrum">Spectrum (Prism Dispersion)</option>
+              </select>
+            </label>
+            <label id="lblLightAngle">Incident Angle:
+              <input type="range" id="lightAngleSlider" min="15" max="75" value="45">
+              <span id="valLightAngle">45°</span>
+            </label>
+            <button id="lightAnimBtn">⏸ Pause</button>
+            <button id="lightAutoBtn">🔄 Auto-Sweep ON</button>
+            <button id="lightWavefrontsBtn">🌊 Wave Fronts: ON</button>
+            <button id="lightFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="lightReadout">REFLECTION (PLANE MIRROR) <small>Angle of Incidence θ₁ = 45° · Angle of Reflection θ₂ = 45°</small></div>
+          <canvas id="lightCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="lightInfo">Yellow laser ray = Incident · Orange ray = Reflected · Dashed cyan = Normal vector · Protractor arcs measure angles.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Eyeglasses, car mirrors, fiber-optic telecommunication cables, camera lenses, and natural rainbows.</div>
+        </div>
       </div>
     </div>
-  </div></div>
+  </div>
 
   <!-- ================= SOUND ================= -->
-  <div class="topic" id="topic-sound"><div class="card">
-    <h2>🔊 Sound <small>vibrations, pitch & loudness</small></h2>
-    <div class="desc">A speaker cone vibrates and pushes air particles. Change frequency and amplitude.</div>
-    <div class="section-tabs" data-topic="sound">
-      <button class="section-tab" data-section="def">Definition</button>
-      <button class="section-tab" data-section="exp">Explanation</button>
-      <button class="section-tab" data-section="types">Features</button>
-      <button class="section-tab active" data-section="sim">Simulation</button>
-    </div>
-    <div class="panel" id="sound-def"><h3>📖 Definition</h3>
-      <p><strong>Sound</strong> is a vibration that travels as a mechanical wave through a medium. It cannot travel in a vacuum.</p>
-    </div>
-    <div class="panel" id="sound-exp"><h3>💡 Explanation</h3>
-      <p>Vibrating objects create pressure waves. <strong>Frequency</strong> = pitch. <strong>Amplitude</strong> = loudness.</p>
-      <ul>
-        <li><strong>Pitch:</strong> High frequency = high pitch.</li>
-        <li><strong>Loudness:</strong> Large amplitude = loud sound.</li>
-        <li><strong>Speed:</strong> Fastest in solids, slowest in gases.</li>
-      </ul>
-    </div>
-    <div class="panel" id="sound-types"><h3>🎚️ Key Features</h3>
-      <div class="grid-3">
-        <div class="grid-item"><h4>Pitch</h4><p>Frequency determines pitch.</p></div>
-        <div class="grid-item"><h4>Loudness</h4><p>Amplitude determines loudness.</p></div>
-        <div class="grid-item"><h4>Speed</h4><p>Fastest in solids, slowest in gases.</p></div>
+  <div class="topic" id="topic-sound">
+    <div class="card">
+      <h2>🔊 Sound <small>vibrations, longitudinal compression & waveforms</small></h2>
+      <div class="desc">Observe vibrating speaker cones or tuning forks creating longitudinal air compression and rarefaction waves, mapped directly to oscilloscope waveforms.</div>
+      <div class="section-tabs" data-topic="sound">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Features</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
       </div>
-    </div>
-    <div class="panel active" id="sound-sim"><h3>🎮 Interactive Simulation</h3>
-      <div class="sim-box" id="soundSimBox">
-        <div class="sim-controls" id="soundControls">
-          <label>Frequency: <input type="range" id="freqRange" min="1" max="20" value="8"></label>
-          <label>Amplitude: <input type="range" id="ampRange" min="1" max="20" value="10"></label>
-          <button id="soundPresetLow">Low Pitch</button>
-          <button id="soundPresetHigh">High Pitch</button>
-          <button id="soundPresetSoft">Soft</button>
-          <button id="soundPresetLoud">Loud</button>
-          <button id="soundPlayBtn">🔊 Play Tone</button>
-          <button id="soundFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+      <div class="panel" id="sound-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Sound</strong> is a mechanical longitudinal wave produced by vibrating matter. It requires an elastic material medium (solid, liquid, or gas) and propagates through alternating compressions (high pressure) and rarefactions (low pressure).</p>
+      </div>
+      <div class="panel" id="sound-exp">
+        <h3>💡 Explanation</h3>
+        <p>Individual medium particles do not travel across the room; they oscillate back and forth about their equilibrium positions while energy propagates forward.</p>
+        <ul>
+          <li><strong>Frequency (Hz):</strong> Number of wave cycles per second; determines musical pitch.</li>
+          <li><strong>Amplitude (A):</strong> Maximum particle displacement from equilibrium; determines loudness and sound pressure level.</li>
+          <li><strong>Compression & Rarefaction:</strong> High density air bands vs low density air bands.</li>
+        </ul>
+      </div>
+      <div class="panel" id="sound-types">
+        <h3>🎚️ Wave Properties</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Pitch & Frequency</h4><p>Higher frequency vibrations generate higher pitch tones.</p></div>
+          <div class="grid-item"><h4>Loudness & Amplitude</h4><p>Greater physical vibration excursion creates higher sound pressure.</p></div>
+          <div class="grid-item"><h4>Medium Requirement</h4><p>Speed of sound is ~343 m/s in air, ~1480 m/s in water, ~5120 m/s in iron.</p></div>
         </div>
-        <div class="sim-readout" id="soundReadout">SOUND WAVE <small>Frequency: 8 · Amplitude: 10</small></div>
-        <canvas id="soundCanvas" width="1100" height="480"></canvas>
-        <div class="sim-info" id="soundInfo">Speaker cone vibrates. Air particles push and pull, creating the wave.</div>
-        <div class="teacher-note"><strong>Real-Life:</strong> Man's deep voice (low pitch), woman's high voice (high pitch). Whisper (soft), shout (loud).</div>
+      </div>
+      <div class="panel active" id="sound-sim">
+        <div class="sim-box" id="soundSimBox">
+          <div class="sim-controls" id="soundControls">
+            <label>Source:
+              <select id="soundSourceSelect">
+                <option value="speaker" selected>Subwoofer Speaker</option>
+                <option value="tuningFork">Acoustic Tuning Fork</option>
+              </select>
+            </label>
+            <label>Frequency (Hz): <input type="range" id="freqRange" min="1" max="20" value="8"></label>
+            <label>Amplitude: <input type="range" id="ampRange" min="1" max="20" value="12"></label>
+            <button id="soundPresetLow">Low Pitch</button>
+            <button id="soundPresetHigh">High Pitch</button>
+            <button id="soundPresetSoft">Soft</button>
+            <button id="soundPresetLoud">Loud</button>
+            <button id="soundPlayBtn">🔊 Play Tone</button>
+            <button id="soundFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="soundReadout">LONGITUDINAL SOUND WAVE <small>Frequency: 8 · Amplitude: 12 · Moving Compression & Rarefaction Bands</small></div>
+          <canvas id="soundCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="soundInfo">Left: Vibrating source. Middle: Medium air particles showing dense compression bands and rarefactions with particle motion indicators. Bottom: Transverse waveform.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Megaphones, ultrasound medical imaging, musical instruments, human vocal cords, and sonar.</div>
+        </div>
       </div>
     </div>
-  </div></div>
+  </div>
 
   <!-- ================= PRESSURE ================= -->
-  <div class="topic" id="topic-pressure"><div class="card">
-    <h2>🔄 Pressure <small>force per unit area</small></h2>
-    <div class="desc">A piston presses down on a surface. Change force and area to see pressure change.</div>
-    <div class="section-tabs" data-topic="pressure">
-      <button class="section-tab" data-section="def">Definition</button>
-      <button class="section-tab" data-section="exp">Explanation</button>
-      <button class="section-tab" data-section="types">Concepts</button>
-      <button class="section-tab active" data-section="sim">Simulation</button>
-    </div>
-    <div class="panel" id="pressure-def"><h3>📖 Definition</h3>
-      <p><strong>Pressure</strong> is force applied perpendicular to a surface per unit area. Measured in pascals (Pa).</p>
-    </div>
-    <div class="panel" id="pressure-exp"><h3>💡 Explanation</h3>
-      <p>Pressure = Force ÷ Area. Smaller area = more pressure.</p>
-      <ul>
-        <li><strong>Force & Area:</strong> More force or less area = more pressure.</li>
-        <li><strong>Atmospheric:</strong> Weight of air, ~101 kPa at sea level.</li>
-        <li><strong>Liquid:</strong> Pressure increases with depth.</li>
-      </ul>
-    </div>
-    <div class="panel" id="pressure-types"><h3>📊 Key Concepts</h3>
-      <div class="grid-3">
-        <div class="grid-item"><h4>Force & Area</h4><p>More force or less area = more pressure.</p></div>
-        <div class="grid-item"><h4>Atmospheric</h4><p>Weight of air, ~101 kPa.</p></div>
-        <div class="grid-item"><h4>Liquid</h4><p>Pressure increases with depth.</p></div>
+  <div class="topic" id="topic-pressure">
+    <div class="card">
+      <h2>🔄 Pressure & Gas Laws <small>force per unit area & kinetic molecular collisions</small></h2>
+      <div class="desc">A transparent pressure vessel with movable piston, colliding gas molecules with real-time velocity vectors, analog needle manometer, and mercury thermometer.</div>
+      <div class="section-tabs" data-topic="pressure">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Concepts</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
       </div>
-    </div>
-    <div class="panel active" id="pressure-sim"><h3>🎮 Interactive Simulation</h3>
-      <div class="sim-box" id="pressureSimBox">
-        <div class="sim-controls" id="pressureControls">
-          <label>Force (N): <input type="range" id="forceRange" min="1" max="20" value="10"></label>
-          <label>Area (cm²): <input type="range" id="areaRange" min="1" max="20" value="8"></label>
-          <button id="pressureHigh">High Pressure</button>
-          <button id="pressureLow">Low Pressure</button>
-          <button id="pressureReset">⟳ Reset</button>
-          <button id="pressureFullscreenBtn" style="background:#ff8f00;color:#0a1628;">⛶ Fullscreen</button>
+      <div class="panel" id="pressure-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Pressure (P)</strong> is the perpendicular force exerted per unit surface area (P = F / A), measured in Pascals (1 Pa = 1 N/m² = 1 J/m³). In gases, pressure arises from the sum of kinetic molecular collisions against container walls.</p>
+      </div>
+      <div class="panel" id="pressure-exp">
+        <h3>💡 Explanation</h3>
+        <p>According to Kinetic Molecular Theory and the Ideal Gas Law (PV = nRT), reducing container volume or increasing thermal temperature causes molecules to collide more frequently and vigorously with container walls, driving pressure upward.</p>
+        <ul>
+          <li><strong>Boyle's Law:</strong> Pressure is inversely proportional to volume at constant temperature (P ∝ 1/V).</li>
+          <li><strong>Gay-Lussac's Law:</strong> Pressure is directly proportional to absolute temperature (P ∝ T).</li>
+          <li><strong>Force vs Area:</strong> A smaller contact area concentrates mechanical force into extreme localized pressure.</li>
+        </ul>
+      </div>
+      <div class="panel" id="pressure-types">
+        <h3>📊 Thermodynamic Relations</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Boyle's Law</h4><p>Halving cylinder volume doubles molecular wall collision rate.</p></div>
+          <div class="grid-item"><h4>Thermal Heating</h4><p>Higher temperature accelerates molecular velocity vectors.</p></div>
+          <div class="grid-item"><h4>Gauge Pressure</h4><p>Measured directly via Bourdon tube needle deflection.</p></div>
         </div>
-        <div class="sim-readout" id="pressureReadout">PRESSURE = 1.25 Pa <small>Force 10 · Area 8</small></div>
-        <canvas id="pressureCanvas" width="1100" height="480"></canvas>
-
-
-
-        <div class="sim-info" id="pressureInfo">Piston presses down. Smaller area = higher pressure. Particles move faster with more force.</div>
-        <div class="teacher-note"><strong>Real-Life:</strong> Sharp needle (high pressure), tractor tyre (low pressure).</div>
+      </div>
+      <div class="panel active" id="pressure-sim">
+        <div class="sim-box" id="pressureSimBox">
+          <div class="sim-controls" id="pressureControls">
+            <label>Piston Force (N): <input type="range" id="forceRange" min="2" max="24" value="12"></label>
+            <label>Chamber Area (cm²): <input type="range" id="areaRange" min="2" max="20" value="8"></label>
+            <label>Temperature (K): <input type="range" id="pressTempRange" min="150" max="600" value="300"></label>
+            <button id="pressureHigh">High Pressure</button>
+            <button id="pressureLow">Low Pressure</button>
+            <button id="pressAddMol">➕ Add Gas</button>
+            <button id="pressureReset">⟳ Reset</button>
+            <button id="pressureFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="pressureReadout">PRESSURE = 1.50 atm (152 kPa) <small>Force: 12 N · Area: 8 cm² · Temp: 300 K · Colliding Molecules with Velocity Vectors</small></div>
+          <canvas id="pressureCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="pressureInfo">Left: Vertical mercury thermometer. Center: Cylindrical pressure chamber with movable piston and colliding gas molecules with real-time velocity vectors. Right: Analog dial pressure gauge.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Hydraulic car brakes, syringe needles, submarine depth hulls, scuba diving tanks, and pressure cookers.</div>
+        </div>
       </div>
     </div>
-  </div></div>
+  </div>
 </div>
 
-<!-- ============ TRUE FULLSCREEN OVERLAY ============ -->
+<!-- ================= JAVASCRIPT SIMULATION LOGIC ================= -->
 <script>
-(function(){
-'use strict';
+(function() {
+  "use strict";
 
-/* ---------- TABS ---------- */
-const topicTabs=document.querySelectorAll('.tab-btn');
-const topics={atoms:document.getElementById('topic-atoms'),light:document.getElementById('topic-light'),sound:document.getElementById('topic-sound'),pressure:document.getElementById('topic-pressure')};
-topicTabs.forEach(btn=>btn.addEventListener('click',function(){
-  topicTabs.forEach(b=>b.classList.remove('active'));this.classList.add('active');
-  const topic=this.dataset.topic;Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
-}));
-document.querySelectorAll('.section-tabs').forEach(group=>{
-  const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
-  btns.forEach(btn=>btn.addEventListener('click',function(){
-    btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
-    const section=this.dataset.section,parent=this.closest('.card');
-    parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
-  }));
-});
+  /* ==============================================================
+     TOPIC & SECTION TAB SWITCHING
+     ============================================================== */
+  const topicTabs = document.querySelectorAll(".tab-btn");
+  const topics = {
+    atoms: document.getElementById("topic-atoms"),
+    light: document.getElementById("topic-light"),
+    sound: document.getElementById("topic-sound"),
+    pressure: document.getElementById("topic-pressure")
+  };
 
-/* ================================================================
-   TRUE FULLSCREEN MANAGER (Chrome optimized)
-   ================================================================ */
-const fsOverlay=document.getElementById('fsOverlay');
-const fsTitle=document.getElementById('fsTitle');
-const fsCanvasArea=document.getElementById('fsCanvasArea');
-const fsControls=document.getElementById('fsControls');
-const fsReadout=document.getElementById('fsReadout');
-const fsNote=document.getElementById('fsNote');
-const fsCloseBtn=document.getElementById('fsCloseBtn');
-
-let activeFS=null;
-
-function openFullscreen(topic){
-  if(activeFS) return;
-  const simBox=document.getElementById(topic+'SimBox');
-  if(!simBox) return;
-  const canvas=simBox.querySelector('canvas');
-  const controls=simBox.querySelector('.sim-controls');
-  const readout=simBox.querySelector('.sim-readout');
-  const info=simBox.querySelector('.sim-info');
-
-  const titles={atoms:'⚛️ Atoms & Molecules',light:'💡 Light',sound:'🔊 Sound',pressure:'🔄 Pressure'};
-  fsTitle.textContent=titles[topic]||'Simulation';
-
-  activeFS={ topic, canvas, controls, readout, info, originalParent:simBox };
-
-  fsCanvasArea.innerHTML='';
-  fsCanvasArea.appendChild(canvas);
-
-  fsControls.innerHTML='';
-  const cloned=controls.cloneNode(true);
-  const fsBtn=cloned.querySelector('button[id$="FullscreenBtn"]');
-  if(fsBtn) fsBtn.remove();
-  cloned.querySelectorAll('[id]').forEach(el=>{ el.dataset.fsId=el.id; el.removeAttribute('id'); });
-  fsControls.appendChild(cloned);
-
-  bindClonedControls(topic, cloned, controls);
-
-  fsReadout.innerHTML=readout?readout.innerHTML:'';
-  fsNote.textContent=info?info.textContent:'';
-
-  fsOverlay.classList.add('active');
-
-  const el=fsOverlay;
-  if(el.requestFullscreen){
-    el.requestFullscreen().catch(err=>{ console.warn('Fullscreen request failed:', err); });
-  } else if(el.webkitRequestFullscreen){
-    el.webkitRequestFullscreen();
-  }
-
-  startReadoutUpdater(topic);
-}
-
-function closeFullscreen(){
-  if(!activeFS) return;
-  const { topic, canvas, controls, readout, info, originalParent } = activeFS;
-
-  stopReadoutUpdater();
-
-  originalParent.insertBefore(canvas, readout);
-
-  fsControls.innerHTML='';
-  fsOverlay.classList.remove('active');
-
-  if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-
-  activeFS=null;
-}
-
-fsCloseBtn.addEventListener('click',closeFullscreen);
-
-document.addEventListener('fullscreenchange',()=>{
-  if(!document.fullscreenElement && activeFS) closeFullscreen();
-});
-document.addEventListener('webkitfullscreenchange',()=>{
-  if(!document.webkitFullscreenElement && activeFS) closeFullscreen();
-});
-
-function bindClonedControls(topic, cloned, original){
-  cloned.querySelectorAll('[data-fs-id]').forEach(el=>{
-    const origId=el.dataset.fsId;
-    const orig=original.querySelector('#'+origId);
-    if(!orig) return;
-    if(el.tagName==='INPUT' && el.type==='range') el.value=orig.value;
-    if(el.tagName==='SELECT') el.value=orig.value;
-    const evtMap={atomState:'change',lightMode:'change',freqRange:'input',ampRange:'input',forceRange:'input',areaRange:'input'};
-    const evt=evtMap[origId]||'click';
-    el.addEventListener(evt,function(e){
-      if(orig.tagName==='INPUT' && orig.type==='range') orig.value=el.value;
-      if(orig.tagName==='SELECT') orig.value=el.value;
-      orig.dispatchEvent(new Event(evt,{bubbles:true}));
-      if(origId==='lightAnimBtn') el.textContent=orig.textContent;
-      if(origId==='lightAutoBtn') el.textContent=orig.textContent;
+  topicTabs.forEach(btn => {
+    btn.addEventListener("click", function() {
+      topicTabs.forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+      const selected = this.dataset.topic;
+      Object.keys(topics).forEach(k => {
+        topics[k].classList.toggle("active", k === selected);
+      });
+      setTimeout(function() {
+        window.dispatchEvent(new Event("resize"));
+      }, 50);
     });
   });
-}
 
-let readoutRAF=null;
-function startReadoutUpdater(topic){
-  const simBox=document.getElementById(topic+'SimBox');
-  const readout=simBox.querySelector('.sim-readout');
-  const info=simBox.querySelector('.sim-info');
-  function tick(){
-    if(!activeFS || activeFS.topic!==topic){ readoutRAF=null; return; }
-    if(readout) fsReadout.innerHTML=readout.innerHTML;
-    if(info) fsNote.textContent=info.textContent;
-    fsControls.querySelectorAll('[data-fs-id]').forEach(el=>{
-      const origId=el.dataset.fsId;
-      const orig=simBox.querySelector('#'+origId);
-      if(!orig) return;
-      if(el.tagName==='INPUT' && el.type==='range' && el.value!==orig.value) el.value=orig.value;
-      if(el.tagName==='SELECT' && el.value!==orig.value) el.value=orig.value;
+  document.querySelectorAll(".section-tabs").forEach(group => {
+    const topic = group.dataset.topic;
+    const btns = group.querySelectorAll(".section-tab");
+    btns.forEach(btn => {
+      btn.addEventListener("click", function() {
+        btns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        const section = this.dataset.section;
+        const parent = this.closest(".card");
+        parent.querySelectorAll(".panel").forEach(p => {
+          p.classList.toggle("active", p.id === topic + "-" + section);
+        });
+        setTimeout(function() {
+          window.dispatchEvent(new Event("resize"));
+        }, 50);
+      });
     });
-    readoutRAF=requestAnimationFrame(tick);
-  }
-  tick();
-}
-function stopReadoutUpdater(){
-  if(readoutRAF){ cancelAnimationFrame(readoutRAF); readoutRAF=null; }
-}
+  });
 
-document.getElementById('atomFullscreenBtn').addEventListener('click',()=>openFullscreen('atoms'));
-document.getElementById('lightFullscreenBtn').addEventListener('click',()=>openFullscreen('light'));
-document.getElementById('soundFullscreenBtn').addEventListener('click',()=>openFullscreen('sound'));
-document.getElementById('pressureFullscreenBtn').addEventListener('click',()=>openFullscreen('pressure'));
+  /* ==============================================================
+     1. ATOMS & MOLECULES SIMULATION ENGINE
+     ============================================================== */
+  let atomMode = "bohr"; // "bohr", "molecule", "states"
+  let atomElem = "C";
+  let bohrAngle = 0;
+  let bohrP = 6, bohrN = 6, bohrE = 6;
 
-/* ================================================================
-   ATOMS SIMULATION
-   ================================================================ */
-let atomCtx,atomParts=[],atomBonds=[],atomTime=0,atomState='liquid',atomHeat=1;
-const ELEMENT_COLORS={'H':'#ffffff','O':'#ff5252','C':'#444444','N':'#448aff','Na':'#ab47bc','Cl':'#76ff03'};
+  const ELEMENTS = {
+    H:  { name: "Hydrogen", sym: "H",  p: 1,  n: 0,  e: 1,  mass: 1,  color: "#38bdf8" },
+    He: { name: "Helium",   sym: "He", p: 2,  n: 2,  e: 2,  mass: 4,  color: "#f59e0b" },
+    Li: { name: "Lithium",  sym: "Li", p: 3,  n: 4,  e: 3,  mass: 7,  color: "#ec4899" },
+    C:  { name: "Carbon",   sym: "C",  p: 6,  n: 6,  e: 6,  mass: 12, color: "#94a3b8" },
+    N:  { name: "Nitrogen", sym: "N",  p: 7,  n: 7,  e: 7,  mass: 14, color: "#3b82f6" },
+    O:  { name: "Oxygen",   sym: "O",  p: 8,  n: 8,  e: 8,  mass: 16, color: "#ef4444" },
+    Ne: { name: "Neon",     sym: "Ne", p: 10, n: 10, e: 10, mass: 20, color: "#f97316" },
+    Na: { name: "Sodium",   sym: "Na", p: 11, n: 12, e: 11, mass: 23, color: "#a855f7" },
+    Cl: { name: "Chlorine", sym: "Cl", p: 17, n: 18, e: 17, mass: 35, color: "#10b981" }
+  };
 
-function makeAtoms(state){
-  atomParts=[];atomBonds=[];
-  const count=state==='solid'?48:state==='liquid'?56:40;
-  for(let i=0;i<count;i++){
-    let x,y,vx=0,vy=0;
-    if(state==='solid'){const col=i%8,row=Math.floor(i/8);x=90+col*115;y=80+row*60;vx=(Math.random()-.5)*.3;vy=(Math.random()-.5)*.3;}
-    else{x=60+Math.random()*980;y=60+Math.random()*360;vx=(Math.random()-.5)*(state==='gas'?5:2.2);vy=(Math.random()-.5)*(state==='gas'?5:2.2);}
-    const elemKeys=Object.keys(ELEMENT_COLORS);
-    const elem=elemKeys[Math.floor(Math.random()*elemKeys.length)];
-    atomParts.push({x,y,vx,vy,r:state==='solid'?20:state==='liquid'?18:15,color:ELEMENT_COLORS[elem],elem,baseX:state==='solid'?x:null,baseY:state==='solid'?y:null});
-  }
-  if(state!=='gas') for(let i=0;i<Math.min(count,18);i++){let j=(i+3)%Math.min(count,18);if(i!==j)atomBonds.push([i,j]);}
-  atomState=state;
-}
-function updateAtomUI(state){
-  const labels={solid:['SOLID (ICE)','Atoms vibrate in fixed positions'],liquid:['LIQUID (WATER)','Atoms slide past each other'],gas:['GAS (STEAM)','Atoms fly freely and fill space']};
-  const ro=document.getElementById('atomReadout'); if(ro) ro.innerHTML=labels[state][0]+' <small>'+labels[state][1]+'</small>';
-  const inf=document.getElementById('atomInfo'); if(inf) inf.textContent=labels[state][1]+'. Click Bond Atoms to form molecules.';
-}
-function atomLoop(){
-  const c=document.getElementById('atomCanvas'); if(!atomCtx) return;
-  const w=c.width,h=c.height; atomCtx.clearRect(0,0,w,h);
-  const g=atomCtx.createRadialGradient(w/2,h/2,100,w/2,h/2,600);
-  g.addColorStop(0,'#0a1f33'); g.addColorStop(1,'#05101c');
-  atomCtx.fillStyle=g; atomCtx.fillRect(0,0,w,h);
-  const solid=atomState==='solid',gas=atomState==='gas';
-  for(const p of atomParts){
-    if(solid){p.x=p.baseX+Math.sin(atomTime*1.8*atomHeat+p.y*.1)*2*atomHeat;p.y=p.baseY+Math.cos(atomTime*1.6*atomHeat+p.x*.1)*2*atomHeat;}
-    else{
-      p.x+=p.vx*(gas?2.8:1.2)*atomHeat; p.y+=p.vy*(gas?2.8:1.2)*atomHeat;
-      if(p.x<30||p.x>w-30)p.vx*=-1; if(p.y<30||p.y>h-30)p.vy*=-1;
-      p.x=Math.max(30,Math.min(w-30,p.x)); p.y=Math.max(30,Math.min(h-30,p.y));
-      p.vx+=(Math.random()-.5)*.2; p.vy+=(Math.random()-.5)*.2;
-      const mv=gas?6:2.5,sp=Math.hypot(p.vx,p.vy);
-      if(sp>mv){p.vx=p.vx/sp*mv;p.vy=p.vy/sp*mv;}
+  const MOLECULES = {
+    H2O: {
+      name: "Water (H₂O)",
+      formula: "H₂O",
+      desc: "Bent polar covalent molecule (104.5° angle)",
+      atoms: [
+        { sym: "O", color: "#ef4444", r: 24, x: 0, y: -15, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: -65, y: 35, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 65, y: 35, z: 0 }
+      ],
+      bonds: [[0, 1], [0, 2]]
+    },
+    CO2: {
+      name: "Carbon Dioxide (CO₂)",
+      formula: "CO₂",
+      desc: "Linear double-bonded molecule (O=C=O)",
+      atoms: [
+        { sym: "C", color: "#64748b", r: 22, x: 0, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 22, x: -85, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 22, x: 85, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1], [0, 2]]
+    },
+    CH4: {
+      name: "Methane (CH₄)",
+      formula: "CH₄",
+      desc: "Tetrahedral hydrocarbon geometry (109.5°)",
+      atoms: [
+        { sym: "C", color: "#64748b", r: 25, x: 0, y: 0, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 0, y: -75, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: -70, y: 45, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 70, y: 45, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 0, y: 30, z: -70 }
+      ],
+      bonds: [[0, 1], [0, 2], [0, 3], [0, 4]]
+    },
+    NH3: {
+      name: "Ammonia (NH₃)",
+      formula: "NH₃",
+      desc: "Trigonal pyramidal shape with polar lone pair",
+      atoms: [
+        { sym: "N", color: "#3b82f6", r: 23, x: 0, y: -25, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: -60, y: 40, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: 60, y: 40, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: 0, y: 50, z: -50 }
+      ],
+      bonds: [[0, 1], [0, 2], [0, 3]]
+    },
+    O2: {
+      name: "Oxygen Molecule (O₂)",
+      formula: "O₂",
+      desc: "Diatomic double covalent bond",
+      atoms: [
+        { sym: "O", color: "#ef4444", r: 25, x: -50, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 25, x: 50, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1]]
+    },
+    NaCl: {
+      name: "Sodium Chloride (NaCl)",
+      formula: "NaCl",
+      desc: "Ionic crystal compound: Na⁺ and Cl⁻ electrostatic attraction",
+      atoms: [
+        { sym: "Na⁺", color: "#a855f7", r: 22, x: -55, y: 0, z: 0 },
+        { sym: "Cl⁻", color: "#10b981", r: 30, x: 55, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1]]
     }
-  }
-  for(const [i,j] of atomBonds){
-    if(i<atomParts.length&&j<atomParts.length){
-      const a=atomParts[i],b=atomParts[j],dist=Math.hypot(a.x-b.x,a.y-b.y);
-      if(dist<110){
-        atomCtx.strokeStyle=`rgba(255,220,100,${.7*(1-dist/110)})`;
-        atomCtx.lineWidth=4; atomCtx.shadowColor='#ffcc66'; atomCtx.shadowBlur=12;
-        atomCtx.beginPath(); atomCtx.moveTo(a.x,a.y); atomCtx.lineTo(b.x,b.y); atomCtx.stroke();
-        atomCtx.shadowBlur=0;
+  };
+
+  let molKey = "H2O";
+  let molRotAngle = 0;
+  let molAutoRotate = true;
+
+  // States of matter
+  let stateKind = "liquid";
+  let stateHeat = 1.0;
+  let stateParticles = [];
+  let stateBonds = [];
+  let stateTime = 0;
+
+  function initStateParticles(kind) {
+    stateKind = kind;
+    stateParticles = [];
+    stateBonds = [];
+    const count = kind === "solid" ? 48 : kind === "liquid" ? 52 : 36;
+    for (let i = 0; i < count; i++) {
+      let x, y, vx, vy;
+      if (kind === "solid") {
+        const col = i % 8;
+        const row = Math.floor(i / 8);
+        x = 140 + col * 110;
+        y = 110 + row * 60;
+        vx = (Math.random() - 0.5) * 0.4;
+        vy = (Math.random() - 0.5) * 0.4;
+      } else {
+        x = 80 + Math.random() * 940;
+        y = 80 + Math.random() * 320;
+        vx = (Math.random() - 0.5) * (kind === "gas" ? 5 : 2);
+        vy = (Math.random() - 0.5) * (kind === "gas" ? 5 : 2);
+      }
+      const elems = ["H", "O", "C", "N"];
+      const el = elems[i % elems.length];
+      const col = el === "H" ? "#f8fafc" : el === "O" ? "#ef4444" : el === "C" ? "#94a3b8" : "#3b82f6";
+      stateParticles.push({
+        x, y, vx, vy,
+        baseX: kind === "solid" ? x : null,
+        baseY: kind === "solid" ? y : null,
+        r: kind === "solid" ? 18 : kind === "liquid" ? 16 : 14,
+        elem: el,
+        color: col
+      });
+    }
+    if (kind !== "gas") {
+      for (let i = 0; i < Math.min(count, 24); i++) {
+        const j = (i + 3) % Math.min(count, 24);
+        if (i !== j) stateBonds.push([i, j]);
       }
     }
   }
-  for(const p of atomParts){
-    atomCtx.fillStyle=p.color; atomCtx.shadowColor=p.color; atomCtx.shadowBlur=25;
-    atomCtx.beginPath(); atomCtx.arc(p.x,p.y,p.r,0,7); atomCtx.fill();
-    atomCtx.shadowBlur=0;
-    atomCtx.fillStyle='rgba(255,255,255,.4)';
-    atomCtx.beginPath(); atomCtx.arc(p.x-p.r*.35,p.y-p.r*.35,p.r*.35,0,7); atomCtx.fill();
-    atomCtx.strokeStyle='rgba(255,255,255,.5)'; atomCtx.lineWidth=1.5;
-    atomCtx.beginPath(); atomCtx.arc(p.x,p.y,p.r,0,7); atomCtx.stroke();
-    atomCtx.fillStyle=p.elem==='H'?'#000':'#fff';
-    atomCtx.font='bold 11px sans-serif'; atomCtx.textAlign='center';
-    atomCtx.fillText(p.elem,p.x,p.y+4); atomCtx.textAlign='left';
+  initStateParticles("liquid");
+
+  function getShells(electrons) {
+    const caps = [2, 8, 8];
+    const res = [];
+    let rem = electrons;
+    for (const cap of caps) {
+      if (rem <= 0) break;
+      const c = Math.min(rem, cap);
+      res.push(c);
+      rem -= c;
+    }
+    return res;
   }
-  atomCtx.fillStyle='rgba(255,255,255,.8)'; atomCtx.font='bold 18px sans-serif';
-  atomCtx.fillText('Atoms: '+atomParts.length+'   Bonds: '+atomBonds.length,20,40);
-  atomTime+=.04; requestAnimationFrame(atomLoop);
-}
-document.getElementById('atomState').addEventListener('change',e=>{makeAtoms(e.target.value);updateAtomUI(e.target.value);atomHeat=1;});
-document.getElementById('atomBondBtn').addEventListener('click',()=>{
-  if(atomParts.length<4)return;
-  let a=Math.floor(Math.random()*atomParts.length),b=Math.floor(Math.random()*atomParts.length);
-  while(b===a)b=Math.floor(Math.random()*atomParts.length);
-  if(!atomBonds.some(x=>(x[0]===a&&x[1]===b)||(x[0]===b&&x[1]===a)))atomBonds.push([a,b]);
-  const inf=document.getElementById('atomInfo'); if(inf) inf.textContent='🧬 New bond formed! Total bonds: '+atomBonds.length;
-});
-document.getElementById('atomHeatBtn').addEventListener('click',()=>{atomHeat=2;const inf=document.getElementById('atomInfo');if(inf)inf.textContent='🔥 Heating: atoms move faster!';setTimeout(()=>{atomHeat=1},3000);});
-document.getElementById('atomCoolBtn').addEventListener('click',()=>{atomHeat=0.4;const inf=document.getElementById('atomInfo');if(inf)inf.textContent='❄️ Cooling: atoms move slower!';setTimeout(()=>{atomHeat=1},3000);});
-document.getElementById('atomResetBtn').addEventListener('click',()=>{const s=document.getElementById('atomState').value;makeAtoms(s);updateAtomUI(s);atomHeat=1;});
 
-/* ================================================================
-   LIGHT SIMULATION
-   ================================================================ */
-let lightCtx,lightAngle=0,lightManualOffset=0,lightPaused=false,lightAuto=true;
-
-function drawLight(){
-  const c=document.getElementById('lightCanvas'); if(!c) return;
-  lightCtx=c.getContext('2d');
-  const w=c.width,h=c.height;
-  lightCtx.clearRect(0,0,w,h);
-  lightCtx.fillStyle='#040e1a'; lightCtx.fillRect(0,0,w,h);
-  lightCtx.strokeStyle='rgba(255,255,255,.04)'; lightCtx.lineWidth=1;
-  for(let x=0;x<w;x+=60){lightCtx.beginPath();lightCtx.moveTo(x,0);lightCtx.lineTo(x,h);lightCtx.stroke();}
-  for(let y=0;y<h;y+=60){lightCtx.beginPath();lightCtx.moveTo(0,y);lightCtx.lineTo(w,y);lightCtx.stroke();}
-
-  const mode=document.getElementById('lightMode').value;
-  const labels={
-    reflect:['REFLECTION','Angle of incidence = Angle of reflection','Mirror on the right. Yellow beam hits it, orange beam bounces off.'],
-    refract:['REFRACTION','Light bends when entering glass','Glass block in the middle. Beam bends towards normal inside, then out.'],
-    spectrum:['SPECTRUM','White light splits into 7 colours','Prism in the middle. White beam enters, rainbow comes out.']
-  };
-  const ro=document.getElementById('lightReadout'); if(ro) ro.innerHTML=labels[mode][0]+' <small>'+labels[mode][1]+'</small>';
-  const inf=document.getElementById('lightInfo'); if(inf) inf.textContent=labels[mode][2];
-
-  const sweep=lightAuto?Math.sin(lightAngle)*10:0;
-  const finalAngle=30+sweep+lightManualOffset;
-  const ang=finalAngle*Math.PI/180;
-
-  if(mode==='reflect'){
-    const mx=700;
-    lightCtx.fillStyle='#b0d4f0'; lightCtx.fillRect(mx-14,80,28,h-160);
-    lightCtx.strokeStyle='#2a4a6a'; lightCtx.lineWidth=3; lightCtx.strokeRect(mx-14,80,28,h-160);
-    lightCtx.strokeStyle='#5a8ab0'; lightCtx.lineWidth=2;
-    for(let i=0;i<10;i++){lightCtx.beginPath();lightCtx.moveTo(mx-14,100+i*40);lightCtx.lineTo(mx+14,90+i*40);lightCtx.stroke();}
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('MIRROR',mx-50,60);
-    lightCtx.strokeStyle='rgba(100,200,255,.7)'; lightCtx.lineWidth=2; lightCtx.setLineDash([8,8]);
-    lightCtx.beginPath(); lightCtx.moveTo(mx,h/2); lightCtx.lineTo(mx,60); lightCtx.stroke();
-    lightCtx.beginPath(); lightCtx.moveTo(mx,h/2); lightCtx.lineTo(mx,h-60); lightCtx.stroke(); lightCtx.setLineDash([]);
-    const startX=100,startY=h/2+Math.tan(ang)*(mx-startX);
-    lightCtx.strokeStyle='#ffdd44'; lightCtx.lineWidth=6; lightCtx.shadowColor='#ffdd44'; lightCtx.shadowBlur=25;
-    lightCtx.beginPath(); lightCtx.moveTo(startX,h/2); lightCtx.lineTo(mx,startY); lightCtx.stroke();
-    lightCtx.strokeStyle='#ff9800'; lightCtx.shadowColor='#ff9800';
-    lightCtx.beginPath(); lightCtx.moveTo(mx,startY); lightCtx.lineTo(w-100,h/2); lightCtx.stroke(); lightCtx.shadowBlur=0;
-    lightCtx.fillStyle='#c0392b'; lightCtx.fillRect(startX-70,h/2-16,70,32);
-    lightCtx.strokeStyle='#7a1e18'; lightCtx.lineWidth=2; lightCtx.strokeRect(startX-70,h/2-16,70,32);
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('LASER',startX-62,h/2+5);
-    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 16px sans-serif'; lightCtx.fillText('INCOMING',startX+20,h/2-30);
-    lightCtx.fillStyle='#ff9800'; lightCtx.fillText('REFLECTED',mx+40,startY-15);
-    lightCtx.fillStyle='#66ddff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('NORMAL',mx+16,90);
-    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 22px sans-serif'; lightCtx.fillText('θ₁ = θ₂  ('+finalAngle.toFixed(0)+'°)',mx-100,h/2+60);
+  function setElement(sym) {
+    const el = ELEMENTS[sym] || ELEMENTS["C"];
+    atomElem = sym;
+    bohrP = el.p;
+    bohrN = el.n;
+    bohrE = el.e;
+    updateBohrReadout();
   }
-  else if(mode==='refract'){
-    const gx=430,gy=120,gw=300,gh=260;
-    lightCtx.fillStyle='rgba(120,200,255,.22)'; lightCtx.fillRect(gx,gy,gw,gh);
-    lightCtx.strokeStyle='#66c8ff'; lightCtx.lineWidth=3; lightCtx.strokeRect(gx,gy,gw,gh);
-    lightCtx.fillStyle='#a0dfff'; lightCtx.font='bold 24px sans-serif'; lightCtx.fillText('GLASS BLOCK',gx+55,gy+140);
-    lightCtx.strokeStyle='rgba(100,200,255,.6)'; lightCtx.setLineDash([6,6]); lightCtx.lineWidth=2;
-    lightCtx.beginPath(); lightCtx.moveTo(gx+gw/2,gy-30); lightCtx.lineTo(gx+gw/2,gy+gh+30); lightCtx.stroke(); lightCtx.setLineDash([]);
-    const sx=100,sy=h/2+70,ex=gx+gw/2,ey=gy+50;
-    lightCtx.strokeStyle='#ffdd44'; lightCtx.lineWidth=6; lightCtx.shadowColor='#ffdd44'; lightCtx.shadowBlur=25;
-    lightCtx.beginPath(); lightCtx.moveTo(sx,sy); lightCtx.lineTo(ex,ey); lightCtx.stroke();
-    const ix=gx+gw/2,iy=gy+gh-30;
-    lightCtx.strokeStyle='#ffe066'; lightCtx.shadowColor='#ffe066';
-    lightCtx.beginPath(); lightCtx.moveTo(ex,ey); lightCtx.lineTo(ix,iy); lightCtx.stroke();
-    lightCtx.strokeStyle='#ff9800'; lightCtx.shadowColor='#ff9800';
-    lightCtx.beginPath(); lightCtx.moveTo(ix,iy); lightCtx.lineTo(w-80,h/2+50); lightCtx.stroke(); lightCtx.shadowBlur=0;
-    lightCtx.fillStyle='#c0392b'; lightCtx.fillRect(sx-70,sy-16,70,32);
-    lightCtx.strokeStyle='#7a1e18'; lightCtx.lineWidth=2; lightCtx.strokeRect(sx-70,sy-16,70,32);
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('LASER',sx-62,sy+5);
-    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 16px sans-serif'; lightCtx.fillText('INCOMING',sx+20,sy-30);
-    lightCtx.fillStyle='#ffe066'; lightCtx.fillText('INSIDE GLASS',gx+gw/2+20,gy+170);
-    lightCtx.fillStyle='#ff9800'; lightCtx.fillText('EMERGENT',w-200,h/2+30);
-    lightCtx.fillStyle='#66ddff'; lightCtx.font='bold 14px sans-serif'; lightCtx.fillText('NORMAL',gx+gw/2+10,gy-35);
-    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('Angle: '+finalAngle.toFixed(0)+'°',gx+gw/2-50,gy+gh+70);
+
+  function updateBohrReadout() {
+    const el = ELEMENTS[atomElem] || { name: "Custom", sym: "X" };
+    const netQ = bohrP - bohrE;
+    const qStr = netQ === 0 ? "Neutral Atom" : netQ > 0 ? `+${netQ} Cation` : `${netQ} Anion`;
+    const shells = getShells(bohrE);
+    const shellsStr = shells.map((s, idx) => `Shell ${["K", "L", "M"][idx]}:${s}`).join(", ");
+    const stab = Math.abs(bohrP - bohrN) <= (bohrP <= 2 ? 1 : 3) ? "Stable Isotope" : "Unstable / Radioactive";
+    const ro = document.getElementById("atomReadout");
+    if (ro) {
+      ro.innerHTML = `${el.name.toUpperCase()} (${el.sym}-${bohrP + bohrN}) · ${qStr} <small>${bohrP} Protons · ${bohrN} Neutrons · ${bohrE} Electrons (${shellsStr}) · ${stab}</small>`;
+    }
   }
-  else{
-    const px=470,py=140,ps=120;
-    lightCtx.fillStyle='rgba(200,230,255,.2)'; lightCtx.strokeStyle='#ffffff'; lightCtx.lineWidth=4;
-    lightCtx.beginPath(); lightCtx.moveTo(px,py); lightCtx.lineTo(px+ps,py+2*ps); lightCtx.lineTo(px-ps,py+2*ps); lightCtx.closePath();
-    lightCtx.fill(); lightCtx.stroke();
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 24px sans-serif'; lightCtx.fillText('PRISM',px-40,py+180);
-    const beamY=240+(finalAngle-30)*0.5;
-    lightCtx.strokeStyle='#ffffff'; lightCtx.lineWidth=8; lightCtx.shadowColor='#fff'; lightCtx.shadowBlur=25;
-    lightCtx.beginPath(); lightCtx.moveTo(80,beamY); lightCtx.lineTo(px-15,beamY); lightCtx.stroke(); lightCtx.shadowBlur=0;
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 18px sans-serif'; lightCtx.fillText('WHITE LIGHT',80,beamY-25);
-    const spread=1+(finalAngle-30)*0.03;
-    const cs=[['#ff0000',-32],['#ff8800',-24],['#ffff00',-14],['#00ff00',-2],['#0088ff',12],['#4400ff',22],['#8800ff',32]];
-    cs.forEach(([col,dy])=>{
-      lightCtx.strokeStyle=col; lightCtx.lineWidth=6; lightCtx.shadowColor=col; lightCtx.shadowBlur=25;
-      lightCtx.beginPath(); lightCtx.moveTo(px+15,py+2*ps-40); lightCtx.lineTo(w-60,beamY+dy*4*spread); lightCtx.stroke(); lightCtx.shadowBlur=0;
+
+  // Draw Bohr Model on Canvas
+  function drawBohrAtom(ctx, w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
+
+    const bgGrad = ctx.createRadialGradient(cx, cy, 60, cx, cy, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0b1c38");
+    bgGrad.addColorStop(1, "#030814");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const shells = getShells(bohrE);
+    const baseR = 75;
+    const stepR = 55;
+    const shellNames = ["K (n=1)", "L (n=2)", "M (n=3)"];
+
+    shells.forEach((count, sIdx) => {
+      const r = baseR + sIdx * stepR;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([6, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "#7dd3fc";
+      ctx.font = "bold 11px monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(shellNames[sIdx] || `Shell ${sIdx + 1}`, cx + r + 6, cy - 4);
+
+      const dir = sIdx % 2 === 0 ? 1 : -1;
+      for (let e = 0; e < count; e++) {
+        const ang = bohrAngle * dir * (sIdx + 1) * 0.8 + (e * Math.PI * 2) / count;
+        const ex = cx + r * Math.cos(ang);
+        const ey = cy + r * Math.sin(ang);
+
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, ang - 0.25 * dir, ang);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(ex, ey, 6.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#38bdf8";
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        ctx.fillStyle = "#030814";
+        ctx.font = "bold 9px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("–", ex, ey);
+      }
     });
-    lightCtx.fillStyle='#fff'; lightCtx.font='bold 22px sans-serif'; lightCtx.fillText('SPECTRUM (ROYGBIV)',w-420,80);
-    const sw=['#ff0000','#ff8800','#ffff00','#00ff00','#0088ff','#4400ff','#8800ff'];
-    sw.forEach((col,i)=>{lightCtx.fillStyle=col;lightCtx.fillRect(w-420+i*30,100,24,18);});
-    lightCtx.fillStyle='#ffdd44'; lightCtx.font='bold 20px sans-serif'; lightCtx.fillText('Angle: '+finalAngle.toFixed(0)+'°',px-50,py+2*ps+50);
+
+    const nucRadius = Math.max(28, Math.min(50, 18 + Math.sqrt(bohrP + bohrN) * 5));
+    const nucGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, nucRadius + 15);
+    nucGrad.addColorStop(0, "rgba(239, 68, 68, 0.4)");
+    nucGrad.addColorStop(1, "transparent");
+    ctx.fillStyle = nucGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, nucRadius + 15, 0, Math.PI * 2);
+    ctx.fill();
+
+    const totalNucleons = bohrP + bohrN;
+    const nucleonList = [];
+    for (let i = 0; i < bohrP; i++) nucleonList.push("p");
+    for (let i = 0; i < bohrN; i++) nucleonList.push("n");
+
+    nucleonList.forEach((type, idx) => {
+      const phi = idx * 137.5 * (Math.PI / 180);
+      const dist = Math.min(nucRadius - 7, Math.sqrt(idx + 1) * (nucRadius / Math.sqrt(totalNucleons + 1)));
+      const nx = cx + dist * Math.cos(phi + bohrAngle * 0.1);
+      const ny = cy + dist * Math.sin(phi + bohrAngle * 0.1);
+
+      ctx.beginPath();
+      ctx.arc(nx, ny, 6, 0, Math.PI * 2);
+      ctx.fillStyle = type === "p" ? "#ef4444" : "#94a3b8";
+      ctx.fill();
+      ctx.strokeStyle = type === "p" ? "#fca5a5" : "#cbd5e1";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 7px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(type === "p" ? "+" : "0", nx, ny);
+    });
+
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.lineWidth = 1;
+    ctx.fillRect(cx - 50, cy + nucRadius + 8, 100, 22);
+    ctx.strokeRect(cx - 50, cy + nucRadius + 8, 100, 22);
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 10px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${bohrP}p⁺  ${bohrN}n⁰`, cx, cy + nucRadius + 19);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 210, 110);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 210, 110);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("⚛️ ATOM STRUCTURE", 32, 42);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px monospace";
+    ctx.fillText(`Atomic Number (Z): ${bohrP}`, 32, 64);
+    ctx.fillText(`Mass Number (A):   ${bohrP + bohrN}`, 32, 82);
+    ctx.fillText(`Net Charge:        ${bohrP - bohrE >= 0 ? "+" : ""}${bohrP - bohrE}`, 32, 100);
+    ctx.fillText(`Active Electrons:  ${bohrE}`, 32, 118);
   }
-}
-function lightLoop(){
-  if(!lightPaused && lightAuto) lightAngle+=0.04;
-  drawLight();
-  requestAnimationFrame(lightLoop);
-}
-document.getElementById('lightMode').addEventListener('change',drawLight);
-document.getElementById('lightAnimBtn').addEventListener('click',function(){lightPaused=!lightPaused;this.textContent=lightPaused?'▶ Play':'⏸ Pause';});
-document.getElementById('lightAngleBtn').addEventListener('click',()=>{lightManualOffset+=10;if(lightManualOffset>40)lightManualOffset=-40;drawLight();});
-document.getElementById('lightAutoBtn').addEventListener('click',function(){lightAuto=!lightAuto;this.textContent=lightAuto?'🔄 Auto-Sweep ON':'🔄 Auto-Sweep OFF';});
 
-/* ================================================================
-   SOUND SIMULATION
-   ================================================================ */
-let soundCtx,audioCtx=null,oscillator=null,gainNode=null,soundParticles=[],sTime=0;
+  // Draw 3D Molecule on Canvas
+  function draw3DMolecule(ctx, w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
 
-function initSoundParticles(){soundParticles=[];for(let i=0;i<120;i++)soundParticles.push({x:220+i*7,y:80+Math.random()*320,baseX:220+i*7,phase:Math.random()*6.28});}
-function soundLoop(){
-  const c=document.getElementById('soundCanvas'); if(!soundCtx||!c) return;
-  const w=c.width,h=c.height; soundCtx.clearRect(0,0,w,h);
-  soundCtx.fillStyle='#040e1a'; soundCtx.fillRect(0,0,w,h);
-  soundCtx.strokeStyle='rgba(255,255,255,.04)';
-  for(let x=0;x<w;x+=50){soundCtx.beginPath();soundCtx.moveTo(x,0);soundCtx.lineTo(x,h);soundCtx.stroke();}
-  for(let y=0;y<h;y+=50){soundCtx.beginPath();soundCtx.moveTo(0,y);soundCtx.lineTo(w,y);soundCtx.stroke();}
-  const f=+document.getElementById('freqRange').value;
-  const a=+document.getElementById('ampRange').value;
-  const disp=Math.sin(sTime*f*.15)*a*1.5;
-  const sx=50,sy=h/2-90,sw=150,sh=180;
-  soundCtx.fillStyle='#2a4a6a'; soundCtx.fillRect(sx,sy,sw,sh);
-  soundCtx.fillStyle='#1a3a5a'; soundCtx.fillRect(sx+15,sy+15,sw-30,sh-30);
-  const coneR=45+disp;
-  soundCtx.fillStyle='#0a1a2e'; soundCtx.beginPath(); soundCtx.arc(sx+sw/2,sy+sh/2,coneR,0,7); soundCtx.fill();
-  soundCtx.strokeStyle='#66c8ff'; soundCtx.lineWidth=4; soundCtx.shadowColor='#66c8ff'; soundCtx.shadowBlur=18;
-  soundCtx.beginPath(); soundCtx.arc(sx+sw/2,sy+sh/2,coneR,0,7); soundCtx.stroke(); soundCtx.shadowBlur=0;
-  soundCtx.fillStyle='#fff'; soundCtx.font='bold 18px sans-serif'; soundCtx.fillText('SPEAKER',sx+30,sy-10);
-  soundParticles.forEach((p,i)=>{
-    const wave=Math.sin(sTime*f*.15-i*.15)*a*2;
-    const nx=p.baseX+wave;
-    const intensity=Math.min(1,Math.abs(wave)/25);
-    const col=`rgba(${100+155*intensity},${200-50*intensity},255,${.5+.5*intensity})`;
-    soundCtx.fillStyle=col; soundCtx.shadowColor=col; soundCtx.shadowBlur=8;
-    soundCtx.beginPath(); soundCtx.arc(nx,p.y,4+intensity*3,0,7); soundCtx.fill(); soundCtx.shadowBlur=0;
+    const bgGrad = ctx.createRadialGradient(cx, cy, 60, cx, cy, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0e1f3d");
+    bgGrad.addColorStop(1, "#030814");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const m = MOLECULES[molKey] || MOLECULES["H2O"];
+    const cos = Math.cos(molRotAngle);
+    const sin = Math.sin(molRotAngle);
+
+    m.bonds.forEach(([i, j]) => {
+      const a1 = m.atoms[i];
+      const a2 = m.atoms[j];
+      const x1 = cx + (a1.x * cos - (a1.z || 0) * sin);
+      const y1 = cy + a1.y;
+      const x2 = cx + (a2.x * cos - (a2.z || 0) * sin);
+      const y2 = cy + a2.y;
+
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    });
+
+    const sortedAtoms = m.atoms.map((a, idx) => {
+      const rx = a.x * cos - (a.z || 0) * sin;
+      const rz = a.x * sin + (a.z || 0) * cos;
+      return { ...a, rx: cx + rx, ry: cy + a.y, rz, idx };
+    }).sort((a, b) => a.rz - b.rz);
+
+    sortedAtoms.forEach(a => {
+      const scale = 1 + (a.rz / 300) * 0.2;
+      const radius = a.r * scale;
+
+      const grad = ctx.createRadialGradient(a.rx - radius * 0.35, a.ry - radius * 0.35, radius * 0.1, a.rx, a.ry, radius);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.35, a.color);
+      grad.addColorStop(1, "#091224");
+
+      ctx.beginPath();
+      ctx.arc(a.rx, a.ry, radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.shadowColor = a.color;
+      ctx.shadowBlur = 14;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = a.sym === "H" ? "#030814" : "#ffffff";
+      ctx.font = `bold ${Math.round(13 * scale)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(a.sym, a.rx, a.ry);
+    });
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 280, 80);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 280, 80);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText(m.name, 32, 44);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px sans-serif";
+    ctx.fillText(m.desc, 32, 66);
+    ctx.fillText(`Atoms: ${m.atoms.length} · Bonds: ${m.bonds.length}`, 32, 84);
+  }
+
+  // Draw Matter Lattice & Phases on Canvas
+  function drawStatesMatter(ctx, w, h) {
+    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 80, w / 2, h / 2, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0c1e38");
+    bgGrad.addColorStop(1, "#030712");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const solid = stateKind === "solid";
+    const gas = stateKind === "gas";
+
+    stateParticles.forEach(p => {
+      if (solid) {
+        p.x = p.baseX + Math.sin(stateTime * 2.5 * stateHeat + p.baseY * 0.1) * 3 * stateHeat;
+        p.y = p.baseY + Math.cos(stateTime * 2.2 * stateHeat + p.baseX * 0.1) * 3 * stateHeat;
+      } else {
+        p.x += p.vx * (gas ? 3.0 : 1.3) * stateHeat;
+        p.y += p.vy * (gas ? 3.0 : 1.3) * stateHeat;
+        if (p.x < 35 || p.x > w - 35) p.vx *= -1;
+        if (p.y < 35 || p.y > h - 35) p.vy *= -1;
+        p.x = Math.max(35, Math.min(w - 35, p.x));
+        p.y = Math.max(35, Math.min(h - 35, p.y));
+      }
+    });
+
+    stateBonds.forEach(([i, j]) => {
+      if (i < stateParticles.length && j < stateParticles.length) {
+        const a = stateParticles[i];
+        const b = stateParticles[j];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        if (dist < 120) {
+          ctx.strokeStyle = `rgba(253, 224, 71, ${0.7 * (1 - dist / 120)})`;
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    });
+
+    stateParticles.forEach(p => {
+      const grad = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, p.r * 0.1, p.x, p.y, p.r);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.35, p.color);
+      grad.addColorStop(1, "#030712");
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = p.elem === "H" ? "#030814" : "#ffffff";
+      ctx.font = "bold 10px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(p.elem, p.x, p.y);
+    });
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 260, 60);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 260, 60);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText(`PHASE: ${stateKind.toUpperCase()}`, 32, 42);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px monospace";
+    ctx.fillText(`Thermal Energy: ${(stateHeat * 100).toFixed(0)}% · Molecules: ${stateParticles.length}`, 32, 62);
+  }
+
+  function atomLoop() {
+    const cv = document.getElementById("atomCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        if (atomMode === "bohr") {
+          drawBohrAtom(ctx, cv.width, cv.height);
+          bohrAngle += 0.025;
+        } else if (atomMode === "molecule") {
+          draw3DMolecule(ctx, cv.width, cv.height);
+          if (molAutoRotate) molRotAngle += 0.015;
+        } else {
+          drawStatesMatter(ctx, cv.width, cv.height);
+          stateTime += 0.04;
+        }
+      }
+    }
+    requestAnimationFrame(atomLoop);
+  }
+  atomLoop();
+
+  const btnModeBohr = document.getElementById("btnModeBohr");
+  const btnModeMolecule = document.getElementById("btnModeMolecule");
+  const btnModeStates = document.getElementById("btnModeStates");
+  const bohrGroup = document.getElementById("bohrControlsGroup");
+  const molGroup = document.getElementById("moleculeControlsGroup");
+  const statesGroup = document.getElementById("statesControlsGroup");
+
+  function setAtomMode(mode) {
+    atomMode = mode;
+    btnModeBohr.classList.toggle("active", mode === "bohr");
+    btnModeMolecule.classList.toggle("active", mode === "molecule");
+    btnModeStates.classList.toggle("active", mode === "states");
+
+    bohrGroup.style.display = mode === "bohr" ? "inline-flex" : "none";
+    molGroup.style.display = mode === "molecule" ? "inline-flex" : "none";
+    statesGroup.style.display = mode === "states" ? "inline-flex" : "none";
+
+    if (mode === "bohr") {
+      updateBohrReadout();
+      document.getElementById("atomInfo").textContent = "Glowing central nucleus with proton/neutron cluster, concentric quantized electron shells K & L, and active orbiting electrons.";
+    } else if (mode === "molecule") {
+      const m = MOLECULES[molKey];
+      document.getElementById("atomReadout").innerHTML = `${m.name.toUpperCase()} <small>${m.desc} · Covalent / Ionic Chemical Bonds</small>`;
+      document.getElementById("atomInfo").textContent = "3D space-filling molecule model with covalent/ionic cylindrical bonds rotating dynamically.";
+    } else {
+      document.getElementById("atomReadout").innerHTML = `${stateKind.toUpperCase()} (WATER / ICE / STEAM) <small>Particles vibrate in lattice (solid), slide past (liquid), or fly freely (gas)</small>`;
+      document.getElementById("atomInfo").textContent = "Matter particle simulation: heating increases molecular kinetic vibration and breaks crystalline bonds.";
+    }
+  }
+
+  btnModeBohr.addEventListener("click", () => setAtomMode("bohr"));
+  btnModeMolecule.addEventListener("click", () => setAtomMode("molecule"));
+  btnModeStates.addEventListener("click", () => setAtomMode("states"));
+
+  document.getElementById("atomElementSelect").addEventListener("change", e => setElement(e.target.value));
+  document.getElementById("atomAddProton").addEventListener("click", () => { bohrP = Math.min(20, bohrP + 1); updateBohrReadout(); });
+  document.getElementById("atomAddNeutron").addEventListener("click", () => { bohrN = Math.min(22, bohrN + 1); updateBohrReadout(); });
+  document.getElementById("atomAddElectron").addEventListener("click", () => { bohrE = Math.min(18, bohrE + 1); updateBohrReadout(); });
+
+  document.getElementById("molSelect").addEventListener("change", e => {
+    molKey = e.target.value;
+    const m = MOLECULES[molKey];
+    document.getElementById("atomReadout").innerHTML = `${m.name.toUpperCase()} <small>${m.desc} · Covalent / Ionic Chemical Bonds</small>`;
   });
-  soundCtx.strokeStyle='#66ffaa'; soundCtx.lineWidth=4; soundCtx.shadowColor='#66ffaa'; soundCtx.shadowBlur=22;
-  soundCtx.beginPath();
-  for(let i=0;i<=600;i++){const x=i*(w/600),y=h/2+Math.sin(i*.05*f)*a*1.8;i?soundCtx.lineTo(x,y):soundCtx.moveTo(x,y);}
-  soundCtx.stroke(); soundCtx.shadowBlur=0;
-  soundCtx.fillStyle='rgba(255,255,255,.85)'; soundCtx.font='bold 18px sans-serif';
-  soundCtx.fillText('Frequency: '+f+'   Amplitude: '+a,20,30);
-  sTime+=1; requestAnimationFrame(soundLoop);
-}
-document.getElementById('freqRange').addEventListener('input',()=>{const ro=document.getElementById('soundReadout');if(ro)ro.innerHTML='SOUND WAVE <small>Frequency: '+document.getElementById('freqRange').value+' · Amplitude: '+document.getElementById('ampRange').value+'</small>';});
-document.getElementById('ampRange').addEventListener('input',()=>{const ro=document.getElementById('soundReadout');if(ro)ro.innerHTML='SOUND WAVE <small>Frequency: '+document.getElementById('freqRange').value+' · Amplitude: '+document.getElementById('ampRange').value+'</small>';});
-document.getElementById('soundPresetLow').addEventListener('click',()=>{document.getElementById('freqRange').value=2;document.getElementById('freqRange').dispatchEvent(new Event('input'));});
-document.getElementById('soundPresetHigh').addEventListener('click',()=>{document.getElementById('freqRange').value=18;document.getElementById('freqRange').dispatchEvent(new Event('input'));});
-document.getElementById('soundPresetSoft').addEventListener('click',()=>{document.getElementById('ampRange').value=3;document.getElementById('ampRange').dispatchEvent(new Event('input'));});
-document.getElementById('soundPresetLoud').addEventListener('click',()=>{document.getElementById('ampRange').value=18;document.getElementById('ampRange').dispatchEvent(new Event('input'));});
-document.getElementById('soundPlayBtn').addEventListener('click',()=>{
-  const f=+document.getElementById('freqRange').value,a=+document.getElementById('ampRange').value;
-  if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  if(oscillator){oscillator.stop();oscillator=null;}
-  oscillator=audioCtx.createOscillator(); gainNode=audioCtx.createGain();
-  oscillator.type='sine'; oscillator.frequency.value=200+f*40; gainNode.gain.value=a/40;
-  oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-  oscillator.start(); oscillator.stop(audioCtx.currentTime+1.5);
-});
+  document.getElementById("molRotateBtn").addEventListener("click", () => { molAutoRotate = !molAutoRotate; });
 
-/* ================================================================
-   PRESSURE SIMULATION
-   ================================================================ */
-let pressCtx,pressParticles=[];
-function initPressureParticles(){pressParticles=[];for(let i=0;i<90;i++)pressParticles.push({x:280+Math.random()*560,y:220+Math.random()*200,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2,r:4+Math.random()*4});}
-function pressLoop(){
-  const c=document.getElementById('pressureCanvas'); if(!pressCtx||!c) return;
-  const w=c.width,h=c.height; pressCtx.clearRect(0,0,w,h);
-  pressCtx.fillStyle='#040e1a'; pressCtx.fillRect(0,0,w,h);
-  const f=+document.getElementById('forceRange').value,a=+document.getElementById('areaRange').value;
-  const cx=220,cy=100,cw=660,ch=320;
-  pressCtx.fillStyle='rgba(255,255,255,.03)'; pressCtx.fillRect(cx,cy,cw,ch);
-  pressCtx.strokeStyle='#1e3a5c'; pressCtx.lineWidth=2; pressCtx.strokeRect(cx,cy,cw,ch);
-  const pistonY=cy+30+(20-f)*6;
-  pressCtx.fillStyle='#2a4a6a'; pressCtx.fillRect(cx,pistonY,cw,28);
-  pressCtx.fillStyle='#1a3a5a'; pressCtx.fillRect(cx,pistonY+5,cw,18);
-  pressCtx.strokeStyle='#66c8ff'; pressCtx.lineWidth=2; pressCtx.strokeRect(cx,pistonY,cw,28);
-  pressCtx.fillStyle='#fff'; pressCtx.font='bold 16px sans-serif'; pressCtx.fillText('⬇ PISTON',cx+20,pistonY-12);
-  pressCtx.fillStyle='#ffdd44'; pressCtx.fillText('Force: '+f+' N',cx+220,pistonY-12);
-  pressParticles.forEach(p=>{
-    const speed=(f*.15+.5);
-    p.x+=p.vx*speed*.3; p.y+=p.vy*speed*.3;
-    if(p.x<cx+15||p.x>cx+cw-15)p.vx*=-1;
-    if(p.y<pistonY+32||p.y>cy+ch-15)p.vy*=-1;
-    p.x=Math.max(cx+15,Math.min(cx+cw-15,p.x)); p.y=Math.max(pistonY+32,Math.min(cy+ch-15,p.y));
-    const sp=Math.hypot(p.vx,p.vy);
-    const intensity=Math.min(1,sp/2.5);
-    const col=`rgba(${100+155*intensity},${180-80*intensity},255,${.6+.4*intensity})`;
-    pressCtx.fillStyle=col; pressCtx.shadowColor=col; pressCtx.shadowBlur=10;
-    pressCtx.beginPath(); pressCtx.arc(p.x,p.y,p.r,0,7); pressCtx.fill(); pressCtx.shadowBlur=0;
+  document.getElementById("atomState").addEventListener("change", e => {
+    initStateParticles(e.target.value);
+    document.getElementById("atomReadout").innerHTML = `${e.target.value.toUpperCase()} <small>Kinetic energy & molecular bonding dynamics</small>`;
   });
-  const aw=60+a*24,ax=cx+(cw-aw)/2;
-  pressCtx.fillStyle='rgba(255,200,100,.25)'; pressCtx.fillRect(ax,cy+ch-16,aw,10);
-  pressCtx.strokeStyle='#ff9800'; pressCtx.lineWidth=3; pressCtx.setLineDash([6,4]); pressCtx.strokeRect(ax,cy+ch-16,aw,10); pressCtx.setLineDash([]);
-  pressCtx.fillStyle='#ffb74d'; pressCtx.font='bold 16px sans-serif'; pressCtx.fillText('Contact Area: '+a+' cm²',ax,cy+ch+35);
-  pressCtx.fillStyle='#ffd54f'; pressCtx.font='bold 26px sans-serif'; pressCtx.fillText('Pressure = '+(f/a).toFixed(2)+' Pa',cx+20,cy+ch+80);
-  pressCtx.fillStyle='#fff'; pressCtx.font='bold 18px sans-serif'; pressCtx.fillText('PISTON PRESSES DOWN →',cx+20,cy-30);
-  requestAnimationFrame(pressLoop);
-}
-document.getElementById('forceRange').addEventListener('input',()=>{const ro=document.getElementById('pressureReadout');if(ro)ro.innerHTML='PRESSURE = '+(document.getElementById('forceRange').value/document.getElementById('areaRange').value).toFixed(2)+' Pa <small>Force '+document.getElementById('forceRange').value+' · Area '+document.getElementById('areaRange').value+'</small>';});
-document.getElementById('areaRange').addEventListener('input',()=>{const ro=document.getElementById('pressureReadout');if(ro)ro.innerHTML='PRESSURE = '+(document.getElementById('forceRange').value/document.getElementById('areaRange').value).toFixed(2)+' Pa <small>Force '+document.getElementById('forceRange').value+' · Area '+document.getElementById('areaRange').value+'</small>';});
-document.getElementById('pressureHigh').addEventListener('click',()=>{document.getElementById('forceRange').value=18;document.getElementById('areaRange').value=3;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
-document.getElementById('pressureLow').addEventListener('click',()=>{document.getElementById('forceRange').value=3;document.getElementById('areaRange').value=18;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
-document.getElementById('pressureReset').addEventListener('click',()=>{document.getElementById('forceRange').value=10;document.getElementById('areaRange').value=8;document.getElementById('forceRange').dispatchEvent(new Event('input'));});
+  document.getElementById("atomHeatBtn").addEventListener("click", () => { stateHeat = Math.min(2.5, stateHeat + 0.3); });
+  document.getElementById("atomCoolBtn").addEventListener("click", () => { stateHeat = Math.max(0.2, stateHeat - 0.3); });
+  document.getElementById("atomBondBtn").addEventListener("click", () => {
+    for (let i = 0; i < stateParticles.length; i++) {
+      const j = (i + 2) % stateParticles.length;
+      stateBonds.push([i, j]);
+    }
+  });
+  document.getElementById("atomResetBtn").addEventListener("click", () => {
+    setElement("C");
+    molKey = "H2O";
+    initStateParticles("liquid");
+    stateHeat = 1.0;
+  });
 
-/* ---------- LOAD ---------- */
-function initAllLabs(){
-  const ac=document.getElementById('atomCanvas'); if(ac){atomCtx=ac.getContext('2d');makeAtoms('liquid');updateAtomUI('liquid');atomLoop();}
-  const lc=document.getElementById('lightCanvas'); if(lc){lightCtx=lc.getContext('2d');lightLoop();}
-  const sc=document.getElementById('soundCanvas'); if(sc){soundCtx=sc.getContext('2d');initSoundParticles();soundLoop();}
-  const pc=document.getElementById('pressureCanvas'); if(pc){pressCtx=pc.getContext('2d');initPressureParticles();pressLoop();}
-}
 
-if(document.readyState==='complete'||document.readyState==='interactive'){
-  initAllLabs();
-} else {
-  window.addEventListener('DOMContentLoaded',initAllLabs);
-  window.addEventListener('load',initAllLabs);
-}
+  /* ==============================================================
+     2. LIGHT & OPTICS SIMULATION ENGINE
+     ============================================================== */
+  let lightMode = "reflect"; // "reflect", "refract", "lens", "spectrum"
+  let lightAngle = 45; // degrees
+  let lightAutoSweep = true;
+  let lightPaused = false;
+  let lightWavefronts = true;
+  let lightTime = 0;
+
+  function lightLoop() {
+    const cv = document.getElementById("lightCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        if (lightAutoSweep && !lightPaused) {
+          lightTime += 0.02;
+          lightAngle = 45 + Math.sin(lightTime) * 25;
+          const sl = document.getElementById("lightAngleSlider");
+          const vl = document.getElementById("valLightAngle");
+          if (sl) sl.value = Math.round(lightAngle);
+          if (vl) vl.textContent = Math.round(lightAngle) + "°";
+        }
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.06)";
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 50) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 50) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+
+        const rad = (lightAngle * Math.PI) / 180;
+
+        if (lightMode === "reflect") {
+          // REFLECTION (PLANE MIRROR)
+          const mx = w / 2;
+          const my = h / 2;
+
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(mx - 12, 60, 24, h - 120);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(mx - 12, 60, 24, h - 120);
+
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillRect(mx - 12, 60, 4, h - 120);
+
+          ctx.strokeStyle = "#475569";
+          ctx.lineWidth = 1.5;
+          for (let y = 70; y < h - 70; y += 20) {
+            ctx.beginPath(); ctx.moveTo(mx + 2, y); ctx.lineTo(mx + 12, y + 10); ctx.stroke();
+          }
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+          ctx.beginPath(); ctx.moveTo(mx - 200, my); ctx.lineTo(mx + 100, my); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = "#38bdf8";
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("NORMAL", mx - 120, my - 10);
+
+          const inX = mx - 280;
+          const inY = my - 280 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.lineWidth = 5;
+          ctx.shadowColor = "#facc15";
+          ctx.shadowBlur = 16;
+          ctx.beginPath(); ctx.moveTo(inX, inY); ctx.lineTo(mx - 12, my); ctx.stroke();
+
+          const refX = mx - 280;
+          const refY = my + 280 * Math.tan(rad);
+          ctx.strokeStyle = "#fb923c";
+          ctx.shadowColor = "#fb923c";
+          ctx.beginPath(); ctx.moveTo(mx - 12, my); ctx.lineTo(refX, refY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          if (lightWavefronts) {
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = 2;
+            for (let f = 0; f < 10; f++) {
+              const phase = ((lightTime * 4 + f * 30) % 280) / 280;
+              const px = inX + (mx - 12 - inX) * phase;
+              const py = inY + (my - inY) * phase;
+              ctx.beginPath();
+              ctx.moveTo(px - 10 * Math.sin(rad), py + 10 * Math.cos(rad));
+              ctx.lineTo(px + 10 * Math.sin(rad), py - 10 * Math.cos(rad));
+              ctx.stroke();
+
+              const rpx = (mx - 12) + (refX - (mx - 12)) * phase;
+              const rpy = my + (refY - my) * phase;
+              ctx.beginPath();
+              ctx.moveTo(rpx + 10 * Math.sin(rad), rpy + 10 * Math.cos(rad));
+              ctx.lineTo(rpx - 10 * Math.sin(rad), rpy - 10 * Math.cos(rad));
+              ctx.stroke();
+            }
+          }
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(mx - 12, my, 50, Math.PI, Math.PI + rad); ctx.stroke();
+          ctx.beginPath(); ctx.arc(mx - 12, my, 50, Math.PI - rad, Math.PI); ctx.stroke();
+
+          ctx.fillStyle = "#fde047";
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillText(`θ₁ = ${lightAngle.toFixed(0)}°`, mx - 110, my - 30);
+          ctx.fillStyle = "#fb923c";
+          ctx.fillText(`θ₂ = ${lightAngle.toFixed(0)}°`, mx - 110, my + 45);
+
+          drawLaserSource(ctx, inX, inY, rad);
+
+        } else if (lightMode === "refract") {
+          // REFRACTION (GLASS BLOCK)
+          const gx = w / 2 - 120;
+          const gy = 80;
+          const gw = 240;
+          const gh = h - 160;
+
+          ctx.fillStyle = "rgba(56, 189, 248, 0.15)";
+          ctx.fillRect(gx, gy, gw, gh);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(gx, gy, gw, gh);
+
+          ctx.fillStyle = "#7dd3fc";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("GLASS BLOCK (n = 1.52)", gx + 25, gy + 35);
+
+          const entryY = h / 2 - 30;
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath(); ctx.moveTo(gx - 80, entryY); ctx.lineTo(gx + 80, entryY); ctx.stroke();
+          ctx.setLineDash([]);
+
+          const rad2 = Math.asin(Math.sin(rad) / 1.52);
+          const deg2 = (rad2 * 180) / Math.PI;
+
+          const inX = gx - 200;
+          const inY = entryY - 200 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.lineWidth = 5;
+          ctx.shadowColor = "#facc15";
+          ctx.shadowBlur = 14;
+          ctx.beginPath(); ctx.moveTo(inX, inY); ctx.lineTo(gx, entryY); ctx.stroke();
+
+          const exitY = entryY + gw * Math.tan(rad2);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.shadowColor = "#38bdf8";
+          ctx.beginPath(); ctx.moveTo(gx, entryY); ctx.lineTo(gx + gw, exitY); ctx.stroke();
+
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath(); ctx.moveTo(gx + gw - 80, exitY); ctx.lineTo(gx + gw + 80, exitY); ctx.stroke();
+          ctx.setLineDash([]);
+
+          const outX = gx + gw + 200;
+          const outY = exitY + 200 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.shadowColor = "#facc15";
+          ctx.beginPath(); ctx.moveTo(gx + gw, exitY); ctx.lineTo(outX, outY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = "#facc15";
+          ctx.font = "bold 13px sans-serif";
+          ctx.fillText(`Air θ₁ = ${lightAngle.toFixed(0)}°`, gx - 160, entryY - 25);
+          ctx.fillStyle = "#38bdf8";
+          ctx.fillText(`Glass θ₂ = ${deg2.toFixed(1)}° (Bends toward normal)`, gx + 20, entryY + 45);
+
+          drawLaserSource(ctx, inX, inY, rad);
+
+        } else if (lightMode === "lens") {
+          // CONVEX LENS (FOCAL FOCUS)
+          const lx = w / 2;
+          const ly = h / 2;
+          const fDist = 220;
+
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.5)";
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([8, 8]);
+          ctx.beginPath(); ctx.moveTo(40, ly); ctx.lineTo(w - 40, ly); ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "#facc15";
+          ctx.beginPath(); ctx.arc(lx + fDist, ly, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("Focal Point F", lx + fDist - 30, ly + 25);
+
+          ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.ellipse(lx, ly, 30, 160, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          const rayOffsets = [-100, -50, 0, 50, 100];
+          rayOffsets.forEach((off, i) => {
+            const rayY = ly + off;
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 4;
+            ctx.shadowColor = "#facc15";
+            ctx.shadowBlur = 10;
+
+            ctx.beginPath(); ctx.moveTo(lx - 320, rayY); ctx.lineTo(lx, rayY); ctx.stroke();
+
+            ctx.strokeStyle = "#38bdf8";
+            ctx.beginPath(); ctx.moveTo(lx, rayY); ctx.lineTo(lx + fDist * 1.5, ly - off * 0.5); ctx.stroke();
+            ctx.shadowBlur = 0;
+          });
+
+          ctx.fillStyle = "#7dd3fc";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("BICONVEX OPTICAL LENS (Converging)", lx - 130, ly - 180);
+
+        } else if (lightMode === "spectrum") {
+          // PRISM SPECTRUM (ROYGBIV DISPERSION)
+          const px = w / 2 - 60;
+          const py = h / 2 - 80;
+          const pSize = 180;
+
+          ctx.fillStyle = "rgba(224, 242, 254, 0.18)";
+          ctx.strokeStyle = "#e0f2fe";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(px + pSize, py + pSize * 1.4);
+          ctx.lineTo(px - pSize, py + pSize * 1.4);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("DISPERSION PRISM", px - 70, py + pSize * 1.4 + 35);
+
+          const beamY = py + pSize * 0.8;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 10;
+          ctx.shadowColor = "#ffffff";
+          ctx.shadowBlur = 20;
+          ctx.beginPath(); ctx.moveTo(80, beamY); ctx.lineTo(px - pSize * 0.45, beamY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillText("WHITE LIGHT BEAM", 90, beamY - 16);
+
+          const colors = [
+            { name: "Red",    col: "#ef4444", dy: -40 },
+            { name: "Orange", col: "#f97316", dy: -20 },
+            { name: "Yellow", col: "#facc15", dy: 0 },
+            { name: "Green",  col: "#22c55e", dy: 20 },
+            { name: "Blue",   col: "#38bdf8", dy: 40 },
+            { name: "Indigo", col: "#6366f1", dy: 60 },
+            { name: "Violet", col: "#a855f7", dy: 80 }
+          ];
+
+          colors.forEach(c => {
+            ctx.strokeStyle = c.col;
+            ctx.lineWidth = 4.5;
+            ctx.shadowColor = c.col;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.moveTo(px + 20, beamY);
+            ctx.lineTo(w - 80, beamY + c.dy * 1.8);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = c.col;
+            ctx.font = "bold 11px monospace";
+            ctx.fillText(c.name, w - 70, beamY + c.dy * 1.8 + 4);
+          });
+        }
+      }
+    }
+    requestAnimationFrame(lightLoop);
+  }
+
+  function drawLaserSource(ctx, x, y, ang) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(ang);
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 2;
+    ctx.fillRect(-60, -16, 60, 32);
+    ctx.strokeRect(-60, -16, 60, 32);
+    ctx.fillStyle = "#ef4444";
+    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText("LASER", -52, 4);
+    ctx.restore();
+  }
+
+  lightLoop();
+
+  document.getElementById("lightMode").addEventListener("change", e => {
+    lightMode = e.target.value;
+    const ro = document.getElementById("lightReadout");
+    if (ro) {
+      if (lightMode === "reflect") ro.innerHTML = "REFLECTION (PLANE MIRROR) <small>Angle in θ₁ = Angle out θ₂</small>";
+      if (lightMode === "refract") ro.innerHTML = "REFRACTION (GLASS BLOCK) <small>Light bends towards normal in denser glass medium (Snell's Law)</small>";
+      if (lightMode === "lens") ro.innerHTML = "OPTICAL CONVEX LENS <small>Parallel incident rays refracted through Focal Point F</small>";
+      if (lightMode === "spectrum") ro.innerHTML = "PRISM SPECTRUM <small>White light dispersed into 7 constituent ROYGBIV wavelengths</small>";
+    }
+  });
+
+  const angleSlider = document.getElementById("lightAngleSlider");
+  if (angleSlider) {
+    angleSlider.addEventListener("input", e => {
+      lightAngle = parseFloat(e.target.value);
+      lightAutoSweep = false;
+      document.getElementById("lightAutoBtn").textContent = "🔄 Auto-Sweep OFF";
+      document.getElementById("valLightAngle").textContent = lightAngle.toFixed(0) + "°";
+    });
+  }
+
+  document.getElementById("lightAnimBtn").addEventListener("click", function() {
+    lightPaused = !lightPaused;
+    this.textContent = lightPaused ? "▶ Resume" : "⏸ Pause";
+  });
+  document.getElementById("lightAutoBtn").addEventListener("click", function() {
+    lightAutoSweep = !lightAutoSweep;
+    this.textContent = lightAutoSweep ? "🔄 Auto-Sweep ON" : "🔄 Auto-Sweep OFF";
+  });
+  document.getElementById("lightWavefrontsBtn").addEventListener("click", function() {
+    lightWavefronts = !lightWavefronts;
+    this.textContent = lightWavefronts ? "🌊 Wave Fronts: ON" : "🌊 Wave Fronts: OFF";
+  });
+
+
+  /* ==============================================================
+     3. SOUND WAVES & COMPRESSION ENGINE
+     ============================================================== */
+  let soundSource = "speaker";
+  let soundFreq = 8;
+  let soundAmp = 12;
+  let soundTime = 0;
+  let audioCtx = null;
+
+  const airParticles = [];
+  const COLS = 42;
+  const ROWS = 16;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      airParticles.push({
+        baseX: 230 + c * 20,
+        baseY: 60 + r * 18,
+        colIdx: c,
+        isIndicator: (r === 7 && (c === 8 || c === 20 || c === 32))
+      });
+    }
+  }
+
+  function soundLoop() {
+    const cv = document.getElementById("soundCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+
+        soundTime += 0.05 * (soundFreq * 0.4);
+
+        const k = 0.035 * soundFreq;
+        const omega = 1.8;
+        const ampPx = soundAmp * 1.5;
+
+        // 1. Draw Sound Source on the Left
+        if (soundSource === "speaker") {
+          const sx = 70;
+          const sy = 80;
+          const sw = 100;
+          const sh = 200;
+
+          ctx.fillStyle = "#1e293b";
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.fillRect(sx, sy, sw, sh);
+          ctx.strokeRect(sx, sy, sw, sh);
+
+          const coneVib = Math.sin(soundTime * omega) * (soundAmp * 0.6);
+          const coneX = sx + sw + coneVib;
+          const coneCenterY = sy + sh / 2;
+
+          ctx.fillStyle = "#0f172a";
+          ctx.beginPath();
+          ctx.moveTo(sx + 30, coneCenterY - 70);
+          ctx.lineTo(coneX, coneCenterY - 85);
+          ctx.lineTo(coneX, coneCenterY + 85);
+          ctx.lineTo(sx + 30, coneCenterY + 70);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(coneX - 6, coneCenterY, 20, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#f8fafc";
+          ctx.font = "bold 13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("SUBWOOFER", sx + sw / 2, sy - 14);
+
+        } else {
+          const fx = 120;
+          const fy = 90;
+          const forkVib = Math.sin(soundTime * omega * 2) * (soundAmp * 0.5);
+
+          ctx.strokeStyle = "#94a3b8";
+          ctx.lineWidth = 10;
+          ctx.lineCap = "round";
+
+          ctx.beginPath();
+          ctx.moveTo(fx, fy + 140);
+          ctx.lineTo(fx, fy + 220);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(fx, fy + 140, 24, 0, Math.PI);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(fx - 24, fy + 140);
+          ctx.lineTo(fx - 24 - forkVib, fy + 20);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(fx + 24, fy + 140);
+          ctx.lineTo(fx + 24 + forkVib, fy + 20);
+          ctx.stroke();
+
+          ctx.fillStyle = "#f8fafc";
+          ctx.font = "bold 13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("TUNING FORK (440 Hz)", fx, fy - 14);
+        }
+
+        // 2. Medium Air Compression & Rarefaction Particles
+        ctx.fillStyle = "rgba(14, 28, 54, 0.4)";
+        ctx.fillRect(210, 45, w - 240, 245);
+        ctx.strokeStyle = "#1e3a5f";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(210, 45, w - 240, 245);
+
+        airParticles.forEach(p => {
+          const disp = Math.sin(p.baseX * k - soundTime * omega) * ampPx;
+          const curX = p.baseX + disp;
+          const curY = p.baseY;
+
+          if (p.isIndicator) {
+            ctx.fillStyle = "#fde047";
+            ctx.beginPath();
+            ctx.arc(curX, curY, 6.5, 0, Math.PI * 2);
+            ctx.shadowColor = "#fde047";
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(p.baseX, curY);
+            ctx.lineTo(curX, curY);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = "#38bdf8";
+            ctx.beginPath();
+            ctx.arc(curX, curY, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        ctx.fillStyle = "#facc15";
+        ctx.font = "bold 11px monospace";
+        ctx.fillText("← HIGH DENSITY COMPRESSION →", w / 2 - 80, 40);
+        ctx.fillText("← LOW DENSITY RAREFACTION →", w / 2 + 160, 40);
+
+        // 3. Real-Time Oscilloscope Transverse Waveform Graph
+        const graphY = 380;
+
+        ctx.fillStyle = "#050f24";
+        ctx.fillRect(60, 310, w - 120, 140);
+        ctx.strokeStyle = "#1e3a5f";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(60, 310, w - 120, 140);
+
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(80, graphY);
+        ctx.lineTo(w - 80, graphY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.strokeStyle = "#22c55e";
+        ctx.lineWidth = 3.5;
+        ctx.shadowColor = "#22c55e";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        for (let x = 80; x <= w - 80; x += 4) {
+          const waveY = graphY - Math.sin((x - 80) * k - soundTime * omega) * (soundAmp * 3.2);
+          if (x === 80) ctx.moveTo(x, waveY);
+          else ctx.lineTo(x, waveY);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#4ade80";
+        ctx.font = "bold 12px monospace";
+        ctx.textAlign = "left";
+        ctx.fillText("OSCILLOSCOPE: PRESSURE WAVEFORM  P(x, t) = A·sin(kx – ωt)", 80, 330);
+        ctx.fillText(`Amplitude (A): ${soundAmp} · Frequency: ${soundFreq * 50} Hz · Wavelength (λ): ${(100 / soundFreq).toFixed(1)} cm`, 80, 348);
+      }
+    }
+    requestAnimationFrame(soundLoop);
+  }
+  soundLoop();
+
+  document.getElementById("soundSourceSelect").addEventListener("change", e => { soundSource = e.target.value; });
+  document.getElementById("freqRange").addEventListener("input", e => {
+    soundFreq = parseFloat(e.target.value);
+    document.getElementById("soundReadout").innerHTML = `LONGITUDINAL SOUND WAVE <small>Frequency: ${soundFreq} · Amplitude: ${soundAmp}</small>`;
+  });
+  document.getElementById("ampRange").addEventListener("input", e => {
+    soundAmp = parseFloat(e.target.value);
+    document.getElementById("soundReadout").innerHTML = `LONGITUDINAL SOUND WAVE <small>Frequency: ${soundFreq} · Amplitude: ${soundAmp}</small>`;
+  });
+
+  document.getElementById("soundPresetLow").addEventListener("click", () => {
+    soundFreq = 3; document.getElementById("freqRange").value = 3;
+    document.getElementById("soundReadout").innerHTML = `LOW PITCH <small>Frequency: 3 · Large Wavelength λ</small>`;
+  });
+  document.getElementById("soundPresetHigh").addEventListener("click", () => {
+    soundFreq = 18; document.getElementById("freqRange").value = 18;
+    document.getElementById("soundReadout").innerHTML = `HIGH PITCH <small>Frequency: 18 · Short Wavelength λ</small>`;
+  });
+  document.getElementById("soundPresetSoft").addEventListener("click", () => {
+    soundAmp = 4; document.getElementById("ampRange").value = 4;
+  });
+  document.getElementById("soundPresetLoud").addEventListener("click", () => {
+    soundAmp = 18; document.getElementById("ampRange").value = 18;
+  });
+
+  document.getElementById("soundPlayBtn").addEventListener("click", () => {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 150 + soundFreq * 35;
+    gain.gain.value = soundAmp / 40;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1.2);
+  });
+
+
+  /* ==============================================================
+     4. PRESSURE & GAS LAWS ENGINE
+     ============================================================== */
+  let pressForce = 12;
+  let pressArea = 8;
+  let pressTemp = 300;
+  let pressMolecules = [];
+
+  function initPressMolecules(count = 70) {
+    pressMolecules = [];
+    for (let i = 0; i < count; i++) {
+      const sp = Math.sqrt(pressTemp / 300) * 3.2;
+      const ang = Math.random() * Math.PI * 2;
+      pressMolecules.push({
+        x: 350 + Math.random() * 380,
+        y: 200 + Math.random() * 180,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp,
+        r: 4.5
+      });
+    }
+  }
+  initPressMolecules();
+
+  function pressureLoop() {
+    const cv = document.getElementById("pressureCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+
+        const calcP = (pressForce / pressArea) * (pressTemp / 300);
+
+        const cx = 320;
+        const maxH = 260;
+        const cw = 440;
+        const bottomY = 400;
+
+        const pistonDown = Math.min(160, (pressForce / 24) * 150);
+        const pistonY = bottomY - maxH + pistonDown;
+        const chamberH = bottomY - pistonY;
+
+        // 1. Draw Temperature Thermometer on Left
+        const tx = 140;
+        const thTop = 120;
+        const thH = 260;
+        const thW = 14;
+
+        ctx.fillStyle = "#0f172a";
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 2;
+        ctx.fillRect(tx - thW / 2, thTop, thW, thH);
+        ctx.strokeRect(tx - thW / 2, thTop, thW, thH);
+
+        ctx.beginPath();
+        ctx.arc(tx, thTop + thH + 8, 14, 0, Math.PI * 2);
+        ctx.fillStyle = "#ef4444";
+        ctx.shadowColor = "#ef4444";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.stroke();
+
+        const tFrac = Math.max(0.1, Math.min(0.95, (pressTemp - 150) / 450));
+        const mercH = thH * tFrac;
+        ctx.fillStyle = "#ef4444";
+        ctx.fillRect(tx - thW / 2 + 2, (thTop + thH) - mercH, thW - 4, mercH);
+
+        ctx.fillStyle = "#cbd5e1";
+        ctx.font = "bold 9px monospace";
+        ctx.textAlign = "right";
+        for (let k = 150; k <= 600; k += 100) {
+          const yPos = (thTop + thH) - thH * ((k - 150) / 450);
+          ctx.fillRect(tx - thW / 2 - 4, yPos, 4, 1.5);
+          ctx.fillText(`${k}K`, tx - thW / 2 - 6, yPos + 3);
+        }
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("THERMOMETER", tx, thTop - 15);
+        ctx.fillStyle = "#ef4444";
+        ctx.fillText(`${pressTemp} K (${(pressTemp - 273.15).toFixed(0)}°C)`, tx, thTop + thH + 34);
+
+        // 2. Draw Cylinder Chamber Body
+        ctx.fillStyle = "rgba(15, 23, 42, 0.55)";
+        ctx.fillRect(cx, pistonY, cw, chamberH);
+
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(cx, bottomY - maxH - 20);
+        ctx.lineTo(cx, bottomY);
+        ctx.lineTo(cx + cw, bottomY);
+        ctx.lineTo(cx + cw, bottomY - maxH - 20);
+        ctx.stroke();
+
+        // 3. Draw Movable Piston Head & Load Handle
+        const pHeight = 24;
+        ctx.fillStyle = "#64748b";
+        ctx.fillRect(cx + 2, pistonY - pHeight, cw - 4, pHeight);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx + 2, pistonY - pHeight, cw - 4, pHeight);
+
+        const rodW = 32;
+        ctx.fillStyle = "#475569";
+        ctx.fillRect(cx + cw / 2 - rodW / 2, pistonY - pHeight - 70, rodW, 70);
+        ctx.strokeRect(cx + cw / 2 - rodW / 2, pistonY - pHeight - 70, rodW, 70);
+
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 13px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`⬇ FORCE: ${pressForce} N`, cx + cw / 2, pistonY - pHeight - 80);
+
+        // 4. Update and Render Colliding Gas Particles with Real-Time Velocity Vectors
+        const currentSpeed = Math.sqrt(pressTemp / 300) * 3.2;
+        pressMolecules.forEach(p => {
+          const curSp = Math.hypot(p.vx, p.vy) || 1;
+          p.vx = (p.vx / curSp) * currentSpeed;
+          p.vy = (p.vy / curSp) * currentSpeed;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x - p.r <= cx + 6) { p.x = cx + 6 + p.r; p.vx = Math.abs(p.vx); }
+          else if (p.x + p.r >= cx + cw - 6) { p.x = cx + cw - 6 - p.r; p.vx = -Math.abs(p.vx); }
+
+          if (p.y - p.r <= pistonY + 4) { p.y = pistonY + 4 + p.r; p.vy = Math.abs(p.vy); }
+          else if (p.y + p.r >= bottomY - 6) { p.y = bottomY - 6 - p.r; p.vy = -Math.abs(p.vy); }
+
+          const vScale = 2.6;
+          const vxEnd = p.x + p.vx * vScale;
+          const vyEnd = p.y + p.vy * vScale;
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(vxEnd, vyEnd);
+          ctx.stroke();
+
+          const ang = Math.atan2(p.vy, p.vx);
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.moveTo(vxEnd, vyEnd);
+          ctx.lineTo(vxEnd - 4.5 * Math.cos(ang - 0.45), vyEnd - 4.5 * Math.sin(ang - 0.45));
+          ctx.lineTo(vxEnd - 4.5 * Math.cos(ang + 0.45), vyEnd - 4.5 * Math.sin(ang + 0.45));
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = pressTemp > 450 ? "#ef4444" : pressTemp < 250 ? "#38bdf8" : "#c084fc";
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        });
+
+        // 5. Draw Analog Dial Pressure Gauge on Right
+        const gx = 930;
+        const gy = 230;
+        const gr = 65;
+
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(cx + cw, bottomY - 80);
+        ctx.lineTo(gx - gr, bottomY - 80);
+        ctx.lineTo(gx - gr + 20, gy + gr - 10);
+        ctx.stroke();
+
+        ctx.fillStyle = "#0c182e";
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(gx, gy, gr, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        for (let i = 0; i <= 8; i++) {
+          const tAng = -Math.PI * 0.75 + (i / 8) * (Math.PI * 1.5);
+          const r1 = gr - 4;
+          const r2 = gr - (i % 2 === 0 ? 14 : 8);
+          ctx.strokeStyle = i >= 6 ? "#ef4444" : "#94a3b8";
+          ctx.lineWidth = i % 2 === 0 ? 2.5 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(gx + r1 * Math.cos(tAng), gy + r1 * Math.sin(tAng));
+          ctx.lineTo(gx + r2 * Math.cos(tAng), gy + r2 * Math.sin(tAng));
+          ctx.stroke();
+        }
+
+        const fracP = Math.min(1.0, calcP / 4.0);
+        const needleAng = -Math.PI * 0.75 + fracP * (Math.PI * 1.5);
+
+        ctx.strokeStyle = "#ef4444";
+        ctx.lineWidth = 3;
+        ctx.shadowColor = "#ef4444";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(gx, gy);
+        ctx.lineTo(gx + (gr - 12) * Math.cos(needleAng), gy + (gr - 12) * Math.sin(needleAng));
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.beginPath();
+        ctx.arc(gx, gy, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("MANOMETER", gx, gy - 20);
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "bold 16px monospace";
+        ctx.fillText(`${calcP.toFixed(2)} atm`, gx, gy + 32);
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "10px sans-serif";
+        ctx.fillText(`${(calcP * 101.3).toFixed(0)} kPa`, gx, gy + 46);
+      }
+    }
+    requestAnimationFrame(pressureLoop);
+  }
+  pressureLoop();
+
+  function updatePressureReadout() {
+    const calcP = (pressForce / pressArea) * (pressTemp / 300);
+    const ro = document.getElementById("pressureReadout");
+    if (ro) {
+      ro.innerHTML = `PRESSURE = ${calcP.toFixed(2)} atm (${(calcP * 101.3).toFixed(0)} kPa) <small>Force: ${pressForce} N · Area: ${pressArea} cm² · Temp: ${pressTemp} K · Colliding Molecules with Velocity Vectors</small>`;
+    }
+  }
+
+  document.getElementById("forceRange").addEventListener("input", e => {
+    pressForce = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+  document.getElementById("areaRange").addEventListener("input", e => {
+    pressArea = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+  document.getElementById("pressTempRange").addEventListener("input", e => {
+    pressTemp = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+
+  document.getElementById("pressureHigh").addEventListener("click", () => {
+    pressForce = 22; pressArea = 4; pressTemp = 450;
+    document.getElementById("forceRange").value = 22;
+    document.getElementById("areaRange").value = 4;
+    document.getElementById("pressTempRange").value = 450;
+    updatePressureReadout();
+  });
+  document.getElementById("pressureLow").addEventListener("click", () => {
+    pressForce = 4; pressArea = 18; pressTemp = 200;
+    document.getElementById("forceRange").value = 4;
+    document.getElementById("areaRange").value = 18;
+    document.getElementById("pressTempRange").value = 200;
+    updatePressureReadout();
+  });
+  document.getElementById("pressAddMol").addEventListener("click", () => {
+    initPressMolecules(pressMolecules.length + 20);
+  });
+  document.getElementById("pressureReset").addEventListener("click", () => {
+    pressForce = 12; pressArea = 8; pressTemp = 300;
+    document.getElementById("forceRange").value = 12;
+    document.getElementById("areaRange").value = 8;
+    document.getElementById("pressTempRange").value = 300;
+    initPressMolecules(70);
+    updatePressureReadout();
+  });
 
 })();
 </script>
 
-<script>
-/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
-</script>
-
-
-
-
-
 <!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
 <script id="genz-simulation-fullscreen-engine">
 (function() {
-  'use strict';
+  "use strict";
 
   function findSimulationRootContainer(triggerEl) {
     if (triggerEl) {
@@ -1412,11 +2155,6 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
           var targetByFs = document.getElementById(triggerEl.dataset.fs);
           if (targetByFs) return targetByFs;
         }
-        if (triggerEl.dataset && triggerEl.dataset.target) {
-          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
-          if (targetByData) return targetByData;
-        }
         var found = triggerEl.closest(
           ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
         );
@@ -1430,12 +2168,6 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
                     document.getElementById("simContainer") ||
                     document.getElementById("sim") ||
                     document.querySelector(".main-stage") ||
-                    document.querySelector(".stage") ||
-                    document.querySelector(".lab") ||
-                    document.querySelector(".card-board") ||
-                    document.querySelector(".simulation") ||
-                    document.querySelector(".sim") ||
-                    document.querySelector(".simulation-wrapper") ||
                     document.body;
     return candidate;
   }
@@ -1454,19 +2186,15 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
 
         if (container.requestFullscreen) {
           container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed on container:", err);
+            console.error("Fullscreen request failed:", err);
             if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-            } else if (document.body && document.body.requestFullscreen) {
-              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+              document.documentElement.requestFullscreen().catch(function(e) {});
             }
           });
         }
       } else {
         if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function(err) {
-            console.error("Exit fullscreen error:", err);
-          });
+          document.exitFullscreen().catch(function(err) {});
         }
       }
     } catch (err) {
@@ -1477,89 +2205,12 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
   window.toggleFullscreen = function(target) {
     toggleSimulationFullscreen(target || this);
   };
-  window.toggleSimFullscreen = function(boxId) {
-    var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el || boxId);
-  };
-  window.toggleFs = function() {
-    toggleSimulationFullscreen(this);
-  };
   window.openFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) {
-        ov.classList.remove("active");
-        ov.style.display = "none";
-      }
-      var clean = id.replace(/^fs-?/, "");
-      var target = document.getElementById(clean) ||
-                   document.getElementById(clean + "SimBox") ||
-                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
-                   document.getElementById("box" + clean) ||
-                   document.getElementById("simBox" + clean) ||
-                   document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
-                   document.getElementById(id);
-      toggleSimulationFullscreen(target || clean);
-      return;
-    }
-    toggleSimulationFullscreen(this);
-  };
-  window.launchFullscreen = function(topicId) {
-    window.openFullscreen(topicId);
-  };
-  window.closeFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) ov.classList.remove("active");
-    }
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-  window.exitSimFullscreen = function() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
+    toggleSimulationFullscreen(id || this);
   };
 
   function resizeAndRedrawSimulationCanvases() {
     window.dispatchEvent(new Event("resize"));
-
-    document.querySelectorAll("canvas").forEach(function(cv) {
-      try {
-        var rect = cv.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          if (cv.width === 0 || cv.height === 0) {
-            cv.width = rect.width;
-            cv.height = rect.height;
-          }
-        }
-      } catch(e) {}
-    });
-
-    var redrawFns = [
-      "resize", "onResize", "onWindowResize", "resizeCanvas",
-      "draw", "render", "animate", "redraw", "update", "drawCanvas",
-      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
-      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
-    ];
-    redrawFns.forEach(function(fn) {
-      if (typeof window[fn] === "function") {
-        try { window[fn](); } catch(e) {}
-      }
-    });
-
-    if (window.camera && window.renderer) {
-      try {
-        var rw = window.innerWidth;
-        var rh = window.innerHeight;
-        window.camera.aspect = rw / rh;
-        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
-        window.renderer.setSize(rw, rh);
-      } catch(e) {}
-    }
   }
 
   document.addEventListener("fullscreenchange", function() {
@@ -1582,12 +2233,9 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
     }
 
     var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+      "#atomFullscreenBtn, #lightFullscreenBtn, #soundFullscreenBtn, #pressureFullscreenBtn, .b-fs, .fs-btn, .btn-fs, .fullscreen-btn"
     );
     fsButtons.forEach(function(btn) {
-      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
-        return;
-      }
       if (isFs) {
         btn.innerHTML = "✕ Exit Fullscreen";
         btn.classList.add("is-fullscreen-active");
@@ -1600,14 +2248,13 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
     resizeAndRedrawSimulationCanvases();
     setTimeout(resizeAndRedrawSimulationCanvases, 50);
     setTimeout(resizeAndRedrawSimulationCanvases, 150);
-    setTimeout(resizeAndRedrawSimulationCanvases, 300);
   });
 
   window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
 
   document.addEventListener("click", function(e) {
     var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+      "button#atomFullscreenBtn, button#lightFullscreenBtn, button#soundFullscreenBtn, button#pressureFullscreenBtn, button.b-fs, button.fs-btn, button.btn-fs, button.fullscreen-btn"
     );
     if (btn) {
       e.preventDefault();

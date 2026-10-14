@@ -344,9 +344,14 @@
 }
 
 /* ==========================================================
-   FULLSCREEN PSEUDO-CLASS STYLING & ZERO SCROLLBARS ENGINE
-   Fix for fullscreen container, canvas aspect ratio, and pinned controls
+   FULLSCREEN PSEUDO-CLASS STYLING & NATURAL SCROLLBARS ENGINE
+   Responsive container, auto-scaled canvas, and flexible vertical scrolling
    ========================================================== */
+html, body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 :fullscreen, ::backdrop {
   background-color: #060e1d !important;
 }
@@ -362,48 +367,39 @@ body:fullscreen,
 [data-is-fullscreen="true"] {
   width: 100vw !important;
   max-width: 100vw !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
-  overflow: hidden !important;
+  min-height: 100vh !important;
   overflow-x: hidden !important;
-  overflow-y: hidden !important;
+  overflow-y: auto !important; /* Restore natural vertical scrolling so nothing is ever clipped */
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
+  justify-content: flex-start !important;
   align-items: stretch !important;
   background-color: #060e1d !important;
   position: fixed !important;
   inset: 0 !important;
   z-index: 999999 !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 10px 16px !important;
   box-sizing: border-box !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
 }
 
-html:has(:fullscreen),
-body:has(:fullscreen) {
-  overflow: hidden !important;
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+:fullscreen::-webkit-scrollbar,
+:-webkit-full-screen::-webkit-scrollbar {
+  display: block !important;
+  width: 8px !important;
 }
 
-:fullscreen *,
-:-webkit-full-screen * {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+:fullscreen::-webkit-scrollbar-track,
+:-webkit-full-screen::-webkit-scrollbar-track {
+  background: rgba(10, 15, 30, 0.7) !important;
 }
 
-:fullscreen *::-webkit-scrollbar,
-:-webkit-full-screen *::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+:fullscreen::-webkit-scrollbar-thumb,
+:-webkit-full-screen::-webkit-scrollbar-thumb {
+  background: #0284c7 !important;
+  border-radius: 4px !important;
 }
 
 .simulation-wrapper:fullscreen canvas,
@@ -413,17 +409,16 @@ body:has(:fullscreen) {
 :fullscreen iframe,
 :fullscreen svg {
   width: 100% !important;
-  height: 100% !important;
   max-width: 100% !important;
-  max-height: 100% !important;
+  max-height: 72vh !important;
+  min-height: 280px !important;
   object-fit: contain !important;
   display: block !important;
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
+  flex-shrink: 0 !important;
   margin: 0 auto !important;
 }
 
-/* Pinned & Visible Controls: toolbar docked with fixed auto-height (flex-shrink: 0) */
+/* Pinned & Visible Controls: toolbar docked with natural height */
 .simulation-wrapper:fullscreen .fullscreen-overlay-controls,
 .simulation-wrapper:fullscreen .ctl,
 .simulation-wrapper:fullscreen .controls,
@@ -449,4 +444,6 @@ body:has(:fullscreen) {
   flex-shrink: 0 !important;
   max-width: 100% !important;
   height: auto !important;
+  margin-top: 6px !important;
+  margin-bottom: 6px !important;
 }
