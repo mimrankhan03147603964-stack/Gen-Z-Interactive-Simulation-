@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { SimulationItem } from '../types';
 import { getSimTheme } from '../data/simTheme';
+import { getSimulationStandaloneUrl } from '../utils/navigation';
 import { 
   Maximize2, 
   RotateCcw, 
@@ -473,7 +474,7 @@ export const MainStage: React.FC<MainStageProps> = ({
 
             {/* 3D Indigo New Tab Button */}
             <a
-              href={activeSim.fileUrl}
+              href={getSimulationStandaloneUrl(activeSim)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-3d px-3 py-1.5 rounded-xl font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"

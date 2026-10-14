@@ -715,7 +715,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const handleCardClick = (sim: SimulationItem) => {
-    onSelectSim(sim);
+    openSimulationInNewTab(sim);
   };
 
   const matchesSearch = (sim: SimulationItem) => {
@@ -1011,7 +1011,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               return (
                 <div
                   key={sim.id}
-                  onClick={() => handleCardClick(sim)}
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest('button')) return;
+                    handleCardClick(sim);
+                  }}
                   className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
                     isActive ? 'scale-[1.01]' : ''
                   }`}
@@ -1038,8 +1041,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <div className="p-5 pb-3">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       {/* Realistic Visual Emblem */}
-                      <div 
-                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1"
+                      <a
+                        href={getSimulationStandaloneUrl(sim)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1 block"
                         style={{
                           backgroundColor: theme.badgeBg,
                           borderColor: theme.borderColor,
@@ -1047,13 +1056,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           borderStyle: 'solid',
                           boxShadow: `0 4px 14px ${theme.glowColor}`
                         }}
+                        title={`Open ${sim.title} in new tab`}
                       >
                         <TopicRealisticIcon 
                           indexNumber={sim.indexNumber}
                           simId={sim.id}
                           className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
                         />
-                      </div>
+                      </a>
 
                       {/* Badges: Lab / Concept & Grade */}
                       <div className="flex flex-col items-end gap-1.5">
@@ -1089,7 +1099,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       className="text-base font-black tracking-tight leading-snug line-clamp-2 group-hover:text-blue-500 transition-colors"
                       style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
                     >
-                      {sim.title}
+                      <a
+                        href={getSimulationStandaloneUrl(sim)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="hover:underline"
+                        title={`Open ${sim.title} in new tab`}
+                      >
+                        {sim.title}
+                      </a>
                     </h4>
 
                     {/* Subject & Sub-discipline */}
@@ -1154,17 +1175,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   >
                     <a
                       href={getSimulationStandaloneUrl(sim)}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={(e) => {
-                        e.preventDefault();
                         e.stopPropagation();
-                        onSelectSim(sim);
                       }}
                       className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
                       style={{
                         backgroundColor: theme.bgSolid,
                         boxShadow: `0 2px 6px ${theme.glowColor}`
                       }}
-                      title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide" : "Launch Detailed Simulation Lab"}
+                      title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
                     >
                       <ExternalLink className="w-3 h-3 text-white" />
                       <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>

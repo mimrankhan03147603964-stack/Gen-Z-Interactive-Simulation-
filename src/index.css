@@ -62,7 +62,7 @@
     font-family: var(--font-body);
     background-color: #f1f5f9;
     color: #0f172a;
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: auto;
     text-rendering: optimizeLegibility;

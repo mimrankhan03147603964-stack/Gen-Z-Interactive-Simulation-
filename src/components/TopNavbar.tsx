@@ -25,11 +25,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   return (
     <header 
-      className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-sm sticky top-0 z-30 transition-colors opacity-100"
+      className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-[1000] transition-colors opacity-100"
       style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
         backgroundColor: '#ffffff',
         borderBottom: '1px solid #e2e8f0',
-        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.05)',
+        boxShadow: '0 4px 20px 0 rgba(0, 0, 0, 0.08)',
         color: '#111827'
       }}
     >

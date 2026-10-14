@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { SimulationItem } from '../types';
 import { X, RotateCcw, ExternalLink, Sparkles, Maximize2, Minimize2 } from 'lucide-react';
 import { TopicRealisticIcon } from './TopicRealisticIcon';
+import { getSimulationStandaloneUrl } from '../utils/navigation';
 
 interface SimulationViewerModalProps {
   sim: SimulationItem | null;
@@ -148,7 +149,7 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
 
           {/* 3D Standalone Window Button */}
           <a
-            href={sim.fileUrl}
+            href={getSimulationStandaloneUrl(sim)}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-3d px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-black shadow-md"
@@ -161,7 +162,7 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
               color: '#ffffff',
               boxShadow: '0 4px 10px rgba(79, 70, 229, 0.35)'
             }}
-            title="Open Standalone Window"
+            title="Open Standalone Window in New Tab"
           >
             <ExternalLink className="w-3.5 h-3.5 text-white" />
             <span className="hidden sm:inline">New Tab</span>

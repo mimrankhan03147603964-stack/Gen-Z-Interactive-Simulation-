@@ -35,7 +35,7 @@ import {
   TestTube,
   Magnet
 } from 'lucide-react';
-import { openSimulationInNewTab } from '../utils/navigation';
+import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 
 interface SidebarProps {
@@ -193,11 +193,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           const theme = getSimTheme(sim.indexNumber);
 
           return (
-            <button
+            <a
               key={sim.id}
+              href={getSimulationStandaloneUrl(sim)}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => {
-                onSelectSim(sim);
+                onToggle();
               }}
+              title={`Open ${sim.title} in new tab`}
               style={
                 isActive
                   ? {
@@ -312,7 +316,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {sim.category.split(' ')[0]}
                 </div>
               )}
-            </button>
+            </a>
           );
         })}
 

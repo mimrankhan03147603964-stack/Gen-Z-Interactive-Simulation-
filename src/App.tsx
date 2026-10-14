@@ -111,18 +111,11 @@ export default function App() {
     };
   }, []);
 
-  // When a user selects a simulation from any card, topic, module, or drawer, smoothly transition to the detailed view
+  // When a user selects a simulation from any card, topic, module, or drawer, open in a new tab keeping portal intact
   const handleSelectSim = (sim: SimulationItem) => {
     setSelectedSubject(sim.category);
     setSidebarOpen(false);
-    setStandaloneLab(sim);
-    try {
-      const url = getSimulationStandaloneUrl(sim);
-      window.history.pushState({ lab: sim.indexNumber }, '', url);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch {
-      // History fallback
-    }
+    openSimulationInNewTab(sim);
   };
 
   // Back to Catalog: smoothly exits detailed simulation view and returns to the catalog

@@ -112,8 +112,11 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({
     >
       {/* 1. Dedicated Full-Screen Header Bar */}
       <header 
-        className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-40 transition-colors"
+        className="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 shadow-md sticky top-0 z-[1000] transition-colors"
         style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           backgroundColor: isDarkMode ? 'rgba(6, 15, 36, 0.94)' : 'rgba(10, 20, 44, 0.94)',

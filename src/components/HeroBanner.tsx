@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Sparkles, Layers, Play, Radio } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
+import { getSimulationStandaloneUrl } from '../utils/navigation';
 
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
@@ -275,10 +276,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               {/* Copy 1 of All Simulations */}
               <div className="flex items-center shrink-0">
                 {SIMULATIONS_LIST.map((sim) => (
-                  <div 
+                  <a 
                     key={`sim-ticker-1-${sim.id}`} 
-                    onClick={() => onSelectSim && onSelectSim(sim)}
-                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer"
+                    href={getSimulationStandaloneUrl(sim)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer text-inherit no-underline"
+                    title={`Open ${sim.title} in new tab`}
                   >
                     <span 
                       className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
@@ -293,17 +297,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                       ({sim.category}) &mdash; {sim.description}
                     </span>
                     <span className="text-cyan-400 font-bold mx-2">★</span>
-                  </div>
+                  </a>
                 ))}
               </div>
 
               {/* Copy 2 of All Simulations */}
               <div className="flex items-center shrink-0">
                 {SIMULATIONS_LIST.map((sim) => (
-                  <div 
+                  <a 
                     key={`sim-ticker-2-${sim.id}`} 
-                    onClick={() => onSelectSim && onSelectSim(sim)}
-                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer"
+                    href={getSimulationStandaloneUrl(sim)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer text-inherit no-underline"
+                    title={`Open ${sim.title} in new tab`}
                   >
                     <span 
                       className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
@@ -318,7 +325,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                       ({sim.category}) &mdash; {sim.description}
                     </span>
                     <span className="text-cyan-400 font-bold mx-2">★</span>
-                  </div>
+                  </a>
                 ))}
               </div>
 
