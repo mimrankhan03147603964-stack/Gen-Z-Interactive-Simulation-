@@ -152,21 +152,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Secondary & High School'
   },
   {
-    id: 'sim-photosynthesis',
-    slug: 'photosynthesis-lab',
-    indexNumber: '11',
-    title: 'Photosynthesis in Flowering Plants',
-    subject: 'Plant Biology & Biochemistry',
-    category: 'Biology & Life',
-    iconName: 'Leaf',
-    accentColor: '#84cc16', // Lime Green
-    description: 'High-detail biological model of a flowering rose plant demonstrating solar photon absorption, root xylem water transport, leaf stomata CO₂ uptake, and O₂/glucose production.',
-    fileUrl: '/simulations/photosynthesis-lab.html',
-    topics: ['Light-Dependent Reactions', 'Leaf Mesophyll & Chloroplasts', 'Root Xylem Transpiration Pull', 'Stomatal Gas Exchange'],
-    features: ['Solar Intensity Slider', 'Water & CO₂ Controls', 'Microscopic Leaf Cross-section', 'Chemical Reaction Readout'],
-    gradeLevel: 'Secondary & High School'
-  },
-  {
     id: 'sim-simple-machines',
     slug: 'simple-machines',
     indexNumber: '12',
@@ -645,21 +630,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Ideal Gas Law (PV = nRT)', 'Kinetic Molecular Theory & v_rms', 'Boyle, Charles & Gay-Lussac Laws', 'Molecular Collision Pressure Dynamics'],
     features: ['Interactive Adjustable Volume Piston Cylinder', 'Flame Burner & Ice Cooling Temperature Regulator', 'Live Manometer Gauge (atm & v_rms m/s)', 'Molecular Particle Pump & Vent Valves'],
     gradeLevel: 'Secondary & High School Chemistry'
-  },
-  {
-    id: 'sim-human-heart-circulation',
-    slug: 'human-heart-circulation',
-    indexNumber: '44',
-    title: 'Human Heart Anatomy & Double Blood Circulation',
-    subject: 'Human Anatomy & Cardiovascular Physiology',
-    category: 'Biology & Life',
-    iconName: 'Activity',
-    accentColor: '#e11d48', // Vibrant Rose Red
-    description: 'High-definition 60 FPS beating 4-chamber human heart. Follow double circulation pathways through pulmonary (deoxygenated to lungs) and systemic (oxygenated to body) circuits with live ECG electrocardiogram telemetry and valve kinematics.',
-    fileUrl: '/simulations/human-heart-circulation.html',
-    topics: ['4 Cardiac Chambers (Atria & Ventricles)', 'Double Blood Circulation (Pulmonary & Systemic)', 'Cardiac Cycle (Systole & Diastole)', 'Electrocardiogram (ECG P-QRS-T Waves)'],
-    features: ['Rhythmic 60 FPS Cardiac Contraction Engine', 'Interactive Heart Rate Regulator (40 to 180 BPM)', 'Live Synchronized ECG Telemetry Monitor', 'Deoxygenated & Oxygenated Flowing Blood Cell Streams'],
-    gradeLevel: 'Middle & High School Biology'
   },
   {
     id: 'sim-volcano-magma-dynamics',

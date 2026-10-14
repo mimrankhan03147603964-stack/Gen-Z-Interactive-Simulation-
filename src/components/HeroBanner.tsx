@@ -6,9 +6,10 @@ import { SIMULATIONS_LIST } from '../data/simulationsData';
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
   isDarkMode?: boolean;
+  onSelectSim?: (sim: SimulationItem) => void;
 }
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = false }) => {
+export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = false, onSelectSim }) => {
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
@@ -158,36 +159,39 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             </p>
           </div>
 
-          {/* Official Monogram Emblem Box with Glassmorphism Theme */}
-          <div 
-            className="shrink-0 rounded-2xl p-3 sm:p-4 border shadow-2xl flex items-center gap-3.5 transition-all hover:border-cyan-400/40"
-            style={{
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              backgroundColor: 'rgba(15, 23, 42, 0.75)',
-              borderColor: 'rgba(255, 255, 255, 0.14)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.55), 0 0 24px rgba(6, 182, 212, 0.12)'
-            }}
-          >
+          {/* Official Monogram Emblem: Modern 3D Depth & 360-Degree Dimensional Look (Centrally featured, zero adjacent text) */}
+          <div className="shrink-0 flex items-center justify-center monogram-3d-stage my-2 md:my-0 self-center">
             <div 
-              className="p-1.5 rounded-xl border flex items-center justify-center"
+              className="monogram-3d-card relative rounded-3xl p-4 sm:p-5 border flex items-center justify-center cursor-pointer transition-all"
               style={{
-                backgroundColor: 'rgba(2, 6, 23, 0.65)',
-                borderColor: 'rgba(255, 255, 255, 0.1)'
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(12, 20, 39, 0.88)',
+                borderColor: 'rgba(56, 189, 248, 0.45)',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(6, 182, 212, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.2)',
+                width: '160px',
+                height: '160px'
               }}
+              title="Gen Z EdTech Official Monogram - 3D Interactive Dimensional Emblem"
             >
-              <img 
-                src="/genz-edtech-monogram.svg" 
-                alt="Gen Z EdTech Interactive Monogram Logo" 
-                className="w-20 sm:w-24 h-auto object-contain drop-shadow-md" 
+              {/* Ambient Glow Background Pulse Behind Monogram */}
+              <div 
+                className="absolute inset-0 rounded-3xl pointer-events-none monogram-glow-ring"
+                style={{
+                  background: 'radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(168, 85, 247, 0.25) 50%, transparent 75%)'
+                }}
               />
-            </div>
-            <div className="hidden sm:block text-left pr-2">
-              <span className="block text-[10px] font-mono font-black text-cyan-400 uppercase tracking-wider">Official Monogram</span>
-              <span className="block text-sm font-black text-white leading-tight">Gen Z EdTech</span>
-              <span className="block text-[11px] font-semibold text-slate-400">Interactive Portal</span>
+
+              {/* The 3D Dimensional Monogram Element with 360-degree Dimensional Rotation and Floating Tilt */}
+              <div className="monogram-3d-element relative z-10 w-full h-full flex items-center justify-center">
+                <img 
+                  src="/genz-edtech-monogram.svg" 
+                  alt="Gen Z EdTech Official Monogram Logo" 
+                  className="w-28 sm:w-32 h-auto max-h-28 sm:max-h-32 object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -232,14 +236,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </a>
         </div>
 
-        {/* Continuous Right-to-Left Live Bulletin Ticker with Frosted Glass Styling */}
+        {/* Continuous Right-to-Left Live Bulletin Ticker with Frosted Glass Styling (Hover to Pause) */}
         <div 
-          className="relative z-10 mt-4 rounded-xl text-xs flex items-center overflow-hidden shadow-lg"
+          className="ticker-container group/ticker relative z-10 mt-4 rounded-xl text-xs flex items-center overflow-hidden shadow-lg select-none"
+          title="Live STEM Bulletin — Hover to pause scrolling, click any lab to open"
           style={{
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            backgroundColor: 'rgba(15, 23, 42, 0.8)',
-            borderColor: 'rgba(255, 255, 255, 0.12)',
+            backgroundColor: 'rgba(15, 23, 42, 0.85)',
+            borderColor: 'rgba(255, 255, 255, 0.14)',
             borderWidth: '1px',
             borderStyle: 'solid',
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
@@ -252,24 +257,29 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             style={{
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              backgroundColor: 'rgba(37, 99, 235, 0.92)',
+              backgroundColor: 'rgba(37, 99, 235, 0.95)',
               backgroundImage: 'linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(29, 78, 216, 0.95) 100%)',
-              borderRight: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRight: '1px solid rgba(255, 255, 255, 0.2)',
               color: '#ffffff'
             }}
           >
             <Radio className="w-3.5 h-3.5 animate-pulse text-yellow-300" />
             <span className="whitespace-nowrap">LIVE STEM BULLETIN</span>
+            <span className="hidden lg:inline text-[9px] font-normal tracking-normal text-blue-100 opacity-80">(HOVER PAUSES)</span>
           </div>
 
-          {/* Endless Seamless Marquee Viewport */}
-          <div className="flex-1 overflow-hidden relative py-2.5">
+          {/* Endless Seamless Marquee Viewport with Slow Reading Speed & Pause on Hover */}
+          <div className="flex-1 overflow-hidden relative py-2.5 cursor-pointer">
             <div className="animate-marquee-infinite flex items-center">
               
               {/* Copy 1 of All Simulations */}
               <div className="flex items-center shrink-0">
                 {SIMULATIONS_LIST.map((sim) => (
-                  <div key={`sim-ticker-1-${sim.id}`} className="flex items-center shrink-0 mr-8">
+                  <div 
+                    key={`sim-ticker-1-${sim.id}`} 
+                    onClick={() => onSelectSim && onSelectSim(sim)}
+                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer"
+                  >
                     <span 
                       className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
                       style={{ backgroundColor: sim.accentColor, color: '#ffffff' }}
@@ -290,7 +300,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               {/* Copy 2 of All Simulations */}
               <div className="flex items-center shrink-0">
                 {SIMULATIONS_LIST.map((sim) => (
-                  <div key={`sim-ticker-2-${sim.id}`} className="flex items-center shrink-0 mr-8">
+                  <div 
+                    key={`sim-ticker-2-${sim.id}`} 
+                    onClick={() => onSelectSim && onSelectSim(sim)}
+                    className="flex items-center shrink-0 mr-8 hover:opacity-85 transition-opacity cursor-pointer"
+                  >
                     <span 
                       className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black mr-2 shadow-xs"
                       style={{ backgroundColor: sim.accentColor, color: '#ffffff' }}

@@ -9,7 +9,7 @@ import { StandaloneLabPlayer } from './components/StandaloneLabPlayer';
 import { Footer } from './components/Footer';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
-import { openSimulationInNewTab } from './utils/navigation';
+import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
 
 export default function App() {
   // Check if current window was launched as a standalone simulation workspace via URL query parameter (e.g., ?lab=01 or ?lab=sim-01)
@@ -111,18 +111,30 @@ export default function App() {
     };
   }, []);
 
-  // When a user selects a simulation from the catalog or drawer, open it in a new browser tab/window
+  // When a user selects a simulation from any card, topic, module, or drawer, smoothly transition to the detailed view
   const handleSelectSim = (sim: SimulationItem) => {
     setSelectedSubject(sim.category);
     setSidebarOpen(false);
-    // Note: openSimulationInNewTab is also triggered by the card itself
+    setStandaloneLab(sim);
+    try {
+      const url = getSimulationStandaloneUrl(sim);
+      window.history.pushState({ lab: sim.indexNumber }, '', url);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      // History fallback
+    }
   };
 
-  // Back to Catalog: exits standalone tab mode if opened within the same tab
+  // Back to Catalog: smoothly exits detailed simulation view and returns to the catalog
   const handleBackToCatalog = () => {
     setStandaloneLab(null);
     const cleanUrl = window.location.origin + window.location.pathname;
-    window.history.pushState({}, '', cleanUrl);
+    try {
+      window.history.pushState({}, '', cleanUrl);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      // History fallback
+    }
   };
 
   // IF LOADED AS DEDICATED STANDALONE TAB/WINDOW (?lab=01):
@@ -191,6 +203,7 @@ export default function App() {
         {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs */}
         <HeroBanner 
           isDarkMode={isDarkMode}
+          onSelectSim={handleSelectSim}
         />
 
         {/* 2. STEM Catalog & Topic Cards Grid with Subject Filter Bar */}

@@ -715,8 +715,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const handleCardClick = (sim: SimulationItem) => {
-    // Open in separate new tab/window leaving main catalog portal completely clean & active
-    openSimulationInNewTab(sim);
     onSelectSim(sim);
   };
 
@@ -925,13 +923,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-center sm:justify-start gap-2 mb-1 flex-wrap">
                         <span 
-                          className="text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md"
+                          className="text-[10px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md"
                           style={{
                             backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.25)' : (isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)'),
                             color: isSelected ? '#ffffff' : (isDarkMode ? '#cbd5e1' : '#64748b')
                           }}
                         >
-                          {cat.colorName}
+                          {cat.shortLabel}
                         </span>
                       </div>
 
@@ -1156,9 +1154,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   >
                     <a
                       href={getSimulationStandaloneUrl(sim)}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         onSelectSim(sim);
                       }}
@@ -1167,7 +1164,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         backgroundColor: theme.bgSolid,
                         boxShadow: `0 2px 6px ${theme.glowColor}`
                       }}
-                      title={isConceptGuide ? "Open Concept Guide in Dedicated Tab" : "Open Lab in Dedicated New Tab"}
+                      title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide" : "Launch Detailed Simulation Lab"}
                     >
                       <ExternalLink className="w-3 h-3 text-white" />
                       <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>

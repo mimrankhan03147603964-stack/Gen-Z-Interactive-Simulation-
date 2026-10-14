@@ -196,7 +196,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={sim.id}
               onClick={() => {
-                openSimulationInNewTab(sim);
                 onSelectSim(sim);
               }}
               style={
