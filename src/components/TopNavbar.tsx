@@ -16,7 +16,7 @@ interface TopNavbarProps {
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSim,
-  totalSimulations = 33,
+  totalSimulations = 52,
   isDarkMode = false,
   onToggleTheme,
   onBackToCatalog
@@ -37,23 +37,23 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       }}
     >
       
-      {/* Left: 3D Glowing Brand Logo & Title */}
+      {/* Left: 3D Brand Logo & Title with Solid White Monogram Card */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div 
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shadow-md icon-tile-3d shrink-0 p-1 overflow-hidden"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shadow-md shrink-0 p-1.5 overflow-hidden transition-transform hover:scale-105"
             style={{
-              backgroundColor: '#f8fafc',
-              borderColor: '#38bdf8',
-              borderWidth: '1.5px',
+              backgroundColor: '#ffffff',
+              borderColor: '#e2e8f0',
+              borderWidth: '2px',
               borderStyle: 'solid',
-              boxShadow: '0 3px 10px rgba(2, 132, 199, 0.2)'
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
             }}
           >
             <img 
               src="/genz-edtech-symbol.svg" 
               alt="Gen Z EdTech Interactive Monogram" 
-              className="w-full h-full object-contain drop-shadow-xs" 
+              className="w-full h-full object-contain" 
             />
           </div>
           <div>

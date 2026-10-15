@@ -23,15 +23,11 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
         {/* 1. Brand Monogram & Portal Header */}
         <div className="space-y-2 text-center flex flex-col items-center">
           <div 
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-2 border shadow-lg overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-2.5 border-2 shadow-lg overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
             style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.85)' : 'rgba(255, 255, 255, 0.92)',
-              borderColor: '#38bdf8',
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(2, 132, 199, 0.22)'
+              backgroundColor: '#ffffff',
+              borderColor: '#e2e8f0',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)'
             }}
           >
             <img 

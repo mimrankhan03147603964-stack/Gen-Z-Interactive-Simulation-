@@ -30,7 +30,7 @@ interface MainStageProps {
 
 export const MainStage: React.FC<MainStageProps> = ({
   activeSim,
-  totalSimulations = 33,
+  totalSimulations = 52,
   onLaunchFullscreenModal,
   onBackToCatalog,
   isDarkMode = false
@@ -162,14 +162,25 @@ export const MainStage: React.FC<MainStageProps> = ({
   const handleReload = () => {
     setIsReloading(true);
     if (iframeRef.current) {
-      const src = iframeRef.current.src;
-      iframeRef.current.src = 'about:blank';
-      setTimeout(() => {
-        if (iframeRef.current) {
-          iframeRef.current.src = src;
-          setIsReloading(false);
-        }
-      }, 90);
+      if (activeSim.htmlContent) {
+        const content = activeSim.htmlContent;
+        iframeRef.current.srcdoc = '';
+        setTimeout(() => {
+          if (iframeRef.current) {
+            iframeRef.current.srcdoc = content;
+            setIsReloading(false);
+          }
+        }, 90);
+      } else {
+        const src = iframeRef.current.src;
+        iframeRef.current.src = 'about:blank';
+        setTimeout(() => {
+          if (iframeRef.current) {
+            iframeRef.current.src = src;
+            setIsReloading(false);
+          }
+        }, 90);
+      }
     } else {
       setIsReloading(false);
     }
@@ -337,13 +348,20 @@ export const MainStage: React.FC<MainStageProps> = ({
             <span>Target: {activeSim.gradeLevel}</span>
           </span>
           <span 
-            className="px-2 py-0.5 rounded font-mono text-xs font-black text-white shadow-xs"
+            className="px-2.5 py-0.5 rounded font-mono text-xs font-black text-white shadow-xs flex items-center gap-1"
             style={{
-              backgroundColor: theme.bgSolid,
-              boxShadow: `0 2px 6px ${theme.glowColor}`
+              backgroundColor: activeSim.isAiGenerated ? '#8b5cf6' : theme.bgSolid,
+              boxShadow: `0 2px 6px ${activeSim.isAiGenerated ? 'rgba(139, 92, 246, 0.4)' : theme.glowColor}`
             }}
           >
-            LAB {activeSim.indexNumber} OF {totalSimulations}
+            {activeSim.isAiGenerated ? (
+              <>
+                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <span>AI-GENERATED &bull; GEMINI</span>
+              </>
+            ) : (
+              <span>LAB {activeSim.indexNumber} OF {totalSimulations}</span>
+            )}
           </span>
         </div>
       </div>
@@ -662,7 +680,8 @@ export const MainStage: React.FC<MainStageProps> = ({
               <iframe
                 ref={iframeRef}
                 key={activeSim.id}
-                src={activeSim.fileUrl}
+                src={activeSim.htmlContent ? undefined : activeSim.fileUrl}
+                srcDoc={activeSim.htmlContent || undefined}
                 title={activeSim.title}
                 className="w-full border-0 block"
                 style={{

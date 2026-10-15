@@ -36,7 +36,11 @@ import {
   Dna,
   TestTube,
   Magnet,
-  ExternalLink
+  ExternalLink,
+  Wand2,
+  Loader2,
+  ArrowRight,
+  Lightbulb
 } from 'lucide-react';
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
@@ -48,6 +52,9 @@ interface SimulationCatalogGridProps {
   selectedCategory?: string;
   onSelectCategory?: (category: string) => void;
   onSelectSim: (sim: SimulationItem) => void;
+  onLaunchOnStage?: (sim: SimulationItem) => void;
+  onTriggerAiGeneration?: (topic: string) => void;
+  isGeneratingAi?: boolean;
   onLaunchFullscreenModal: (sim: SimulationItem) => void;
   isDarkMode?: boolean;
 }
@@ -697,6 +704,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   selectedCategory: controlledCategory,
   onSelectCategory,
   onSelectSim,
+  onLaunchOnStage,
+  onTriggerAiGeneration,
+  isGeneratingAi = false,
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
@@ -796,8 +806,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </p>
           </div>
 
-          {/* Quick Search Input */}
-          <div className="w-full lg:w-80 shrink-0">
+          {/* Quick Search Input with Auto-Open & AI Dynamic Generator */}
+          <div className="w-full lg:w-96 xl:w-[460px] shrink-0 space-y-2">
             <div 
               className="relative flex items-center rounded-xl border shadow-inner transition-all"
               style={{
@@ -812,9 +822,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <Search className="w-4 h-4 ml-3 shrink-0" style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }} />
               <input
                 type="text"
-                placeholder="Search labs (e.g., 01, Optics, Bohr, DNA)..."
+                placeholder="Search labs (e.g., Optics, DNA, Bohr) or query any topic..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const matches = simulations.filter(matchesSearch);
+                    if (matches.length > 0) {
+                      if (onLaunchOnStage) {
+                        onLaunchOnStage(matches[0]);
+                      }
+                    } else if (searchTerm.trim().length >= 2) {
+                      if (onTriggerAiGeneration) {
+                        onTriggerAiGeneration(searchTerm.trim());
+                      }
+                    }
+                  }
+                }}
                 className="w-full py-2.5 px-3 text-xs font-bold bg-transparent outline-none"
                 style={{
                   color: isDarkMode ? '#ffffff' : '#0f172a'
@@ -833,6 +858,113 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   &times;
                 </button>
               )}
+            </div>
+
+            {/* Smart Auto-Action Detection Banner */}
+            {searchTerm.trim().length >= 2 && (() => {
+              const currentMatches = simulations.filter(matchesSearch);
+              return (
+                <div className="text-xs transition-all">
+                  {currentMatches.length > 0 ? (
+                    <div 
+                      className="p-2.5 rounded-xl border flex items-center justify-between gap-2 shadow-md"
+                      style={{
+                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : '#eff6ff',
+                        borderColor: '#3b82f6',
+                        borderWidth: '1.5px',
+                        color: isDarkMode ? '#ffffff' : '#1e3a8a'
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5 truncate">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                        <span className="font-bold truncate text-[11px] sm:text-xs">
+                          Found: <strong>Lab {currentMatches[0].indexNumber} &bull; {currentMatches[0].title}</strong>
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => onLaunchOnStage && onLaunchOnStage(currentMatches[0])}
+                        className="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase text-white shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 shadow-sm"
+                        style={{
+                          backgroundColor: '#2563eb',
+                          backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                        }}
+                        title="Launch on Interactive Stage immediately"
+                      >
+                        <Play className="w-3 h-3 fill-current" />
+                        <span>Launch on Stage &crarr;</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div 
+                      className="p-2.5 rounded-xl border flex items-center justify-between gap-2 shadow-md"
+                      style={{
+                        backgroundColor: isDarkMode ? 'rgba(26, 16, 51, 0.95)' : '#faf5ff',
+                        borderColor: '#a855f7',
+                        borderWidth: '1.5px',
+                        color: isDarkMode ? '#ffffff' : '#581c87'
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5 truncate">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0 animate-spin-slow" />
+                        <span className="font-bold truncate text-[11px] sm:text-xs">
+                          New Topic &bull; <strong>Generate with Gemini AI</strong>
+                        </span>
+                      </div>
+                      <button
+                        disabled={isGeneratingAi}
+                        onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
+                        className="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase text-white shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 shadow-sm disabled:opacity-50"
+                        style={{
+                          backgroundColor: '#9333ea',
+                          backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)'
+                        }}
+                        title="Generate dynamic interactive simulation with Gemini AI"
+                      >
+                        {isGeneratingAi ? (
+                          <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span>Generating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="w-3 h-3" />
+                            <span>Generate Lab &crarr;</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* Quick Topic Prompts for AI Dynamic Generation */}
+            <div className="flex items-center gap-1.5 text-[10px] flex-wrap pt-0.5">
+              <span className="font-bold text-slate-400 flex items-center gap-1">
+                <Sparkles className="w-2.5 h-2.5 text-purple-400" />
+                <span>AI Prompt:</span>
+              </span>
+              {['Quantum Tunneling', 'Black Hole Dynamics', 'CRISPR Cas9', 'Bernoulli Fluid Lift'].map((topic) => (
+                <button
+                  key={topic}
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm(topic);
+                    if (onTriggerAiGeneration) {
+                      onTriggerAiGeneration(topic);
+                    }
+                  }}
+                  className="px-2 py-0.5 rounded-md font-bold transition-all hover:scale-105 cursor-pointer"
+                  style={{
+                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+                    color: isDarkMode ? '#cbd5e1' : '#475569',
+                    border: '1px solid rgba(168, 85, 247, 0.3)'
+                  }}
+                  title={`Generate interactive simulation for ${topic}`}
+                >
+                  +{topic}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -1290,39 +1422,91 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           })}
         </div>
 
-      {/* Empty State when Search Yields No Results */}
+      {/* Empty State / AI Dynamic Generator Banner when Search Yields No Catalog Results */}
       {simulations.filter(matchesSearch).length === 0 && (
         <div 
-          className="rounded-2xl p-12 text-center border shadow-md"
+          className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
           style={{
-            backgroundColor: isDarkMode ? '#0a1633' : '#ffffff',
-            borderColor: isDarkMode ? '#1e3a8a' : '#cbd5e1',
-            borderWidth: '1.5px',
-            borderStyle: 'solid'
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: '#a855f7',
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            boxShadow: '0 12px 40px rgba(168, 85, 247, 0.25)'
           }}
         >
-          <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center bg-blue-100 text-blue-600 mb-3">
-            <Search className="w-6 h-6" />
+          <div className="w-16 h-16 mx-auto rounded-3xl flex items-center justify-center bg-purple-500/20 text-purple-500 mb-4 shadow-lg border border-purple-500/30">
+            <Sparkles className="w-8 h-8 animate-pulse text-purple-400" />
           </div>
-          <h3 className="text-base font-black" style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
-            No simulations match &ldquo;{searchTerm}&rdquo;
+          <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 inline-block mb-2">
+            AI-Powered Dynamic Simulation Generator
+          </span>
+          <h3 className="text-xl sm:text-2xl font-black" style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
+            Generate Interactive Simulation for &ldquo;{searchTerm}&rdquo;
           </h3>
-          <p className="text-xs font-bold mt-1" style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>
-            Try searching for another keyword or clear your search input.
+          <p className="text-xs sm:text-sm font-bold mt-2 max-w-xl mx-auto leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}>
+            This STEM topic is not in our 52 pre-built catalog modules. Click below to dynamically synthesize and execute a complete 4K interactive physics canvas and controls on the fly using the Gemini API.
           </p>
-          <button
-            onClick={() => {
-              setSearchTerm('');
-            }}
-            className="btn-3d mt-4 px-4 py-2 rounded-xl text-xs font-black text-white"
-            style={{
-              backgroundColor: '#2563eb',
-              borderColor: '#60a5fa',
-              borderWidth: '1px'
-            }}
-          >
-            Clear Search
-          </button>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              disabled={isGeneratingAi}
+              onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
+              className="btn-3d px-6 py-3 rounded-xl text-sm font-black text-white cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl disabled:opacity-50"
+              style={{
+                backgroundColor: '#9333ea',
+                backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
+                borderColor: '#c084fc',
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                boxShadow: '0 6px 20px rgba(168, 85, 247, 0.4)'
+              }}
+            >
+              {isGeneratingAi ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Synthesizing Simulation with Gemini...</span>
+                </>
+              ) : (
+                <>
+                  <Wand2 className="w-4 h-4" />
+                  <span>⚡ Generate &amp; Launch &ldquo;{searchTerm}&rdquo; Simulation</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={() => setSearchTerm('')}
+              className="btn-3d px-4 py-3 rounded-xl text-xs font-black cursor-pointer transition-transform hover:scale-105"
+              style={{
+                backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
+                borderColor: isDarkMode ? '#334155' : '#cbd5e1',
+                borderWidth: '1px',
+                color: isDarkMode ? '#cbd5e1' : '#475569'
+              }}
+            >
+              Clear Search
+            </button>
+          </div>
+
+          <div className="mt-8 pt-6 border-t flex flex-wrap items-center justify-center gap-2 text-xs font-bold" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0' }}>
+            <span style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>Or try generating other advanced topics:</span>
+            {['Quantum Tunneling', 'Black Hole Dynamics', 'CRISPR Cas9', 'Bernoulli Fluid Lift', 'Superconductivity'].map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setSearchTerm(t);
+                  if (onTriggerAiGeneration) {
+                    onTriggerAiGeneration(t);
+                  }
+                }}
+                className="px-2.5 py-1 rounded-lg text-xs font-bold transition-transform hover:scale-105 cursor-pointer text-purple-400 bg-purple-500/10 border border-purple-500/30"
+              >
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </section>

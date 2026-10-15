@@ -737,69 +737,9 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Secondary & High School Physics'
   },
   {
-    id: 'sim-electrochemistry-galvanic-cell',
-    slug: 'electrochemistry-galvanic-voltaic-cell',
-    indexNumber: '52',
-    title: 'Electrochemistry & Galvanic Voltaic Cell Lab',
-    subject: 'Physical & Electro-Chemistry',
-    category: 'Chemistry & Matter',
-    iconName: 'Zap',
-    accentColor: '#9333ea', // Purple Orchid
-    description: 'Interactive Daniell galvanic cell simulator. Observe zinc anode oxidation and copper cathode reduction, animated electron flow through the external circuit, KNO₃ salt bridge ion migration, and calculate real-time cell potential using the Nernst equation.',
-    fileUrl: '/simulations/electrochemistry-galvanic-voltaic-cell.html',
-    topics: ['Galvanic Daniell Cell Architecture', 'Anode Oxidation & Cathode Reduction', 'Salt Bridge Ion Transport (K⁺ & NO₃⁻)', 'Nernst Equation & Cell Voltage (E° = +1.10V)'],
-    features: ['Voltmeter, Light Bulb & Motor Load Switcher', 'Live Electron & Ion Particle Flow Engine', 'Nernst Concentration & Temperature Sliders', 'Salt Bridge Toggle (Open vs Closed Circuit)'],
-    gradeLevel: 'Secondary & High School Chemistry'
-  },
-  {
-    id: 'sim-ocean-currents-coriolis-thermohaline',
-    slug: 'ocean-currents-coriolis-thermohaline',
-    indexNumber: '53',
-    title: 'Global Ocean Currents & Coriolis Dynamics Simulator',
-    subject: 'Oceanography & Geophysical Fluid Dynamics',
-    category: 'Earth & Space',
-    iconName: 'Globe',
-    accentColor: '#0284c7', // Sky Blue
-    description: 'Explore planetary ocean dynamics and planetary fluid flow. Investigate wind-driven oceanic gyres, Coriolis vector deflection in northern and southern hemispheres, and the deep ocean Thermohaline conveyor belt with warm surface and cold deep saline currents.',
-    fileUrl: '/simulations/ocean-currents-coriolis-thermohaline.html',
-    topics: ['Oceanic Surface Gyres & Gulf Stream', 'Coriolis Deflection Mechanics', 'Thermohaline Global Conveyor Belt', 'Sea Surface Temperature & Drifter Dynamics'],
-    features: ['Multi-Regime Fluid Simulation Engine', 'Animated Ocean Drifter Buoy Particle Engine', 'Planetary Earth Spin Speed Regulator', 'Warm Surface vs Cold Deep Current Filtering'],
-    gradeLevel: 'Middle, Secondary & High School Earth Science'
-  },
-  {
-    id: 'sim-fractals-mandelbrot-chaos-explorer',
-    slug: 'fractals-mandelbrot-chaos-explorer',
-    indexNumber: '54',
-    title: 'Fractals, Chaos Theory & Mandelbrot Complex Plane Explorer',
-    subject: 'Complex Analysis & Fractal Geometry',
-    category: 'Mathematics & Logic',
-    iconName: 'Shapes',
-    accentColor: '#f59e0b', // Amber / Gold
-    description: 'Interactive complex plane fractal generator. Explore the Mandelbrot set and morphing Julia sets governed by z_{n+1} = z_n² + c. Pan, zoom, adjust maximum escape iterations, and render dynamic mathematical self-similarity with cosmic, solar, and aurora palettes.',
-    fileUrl: '/simulations/fractals-mandelbrot-chaos-explorer.html',
-    topics: ['Mandelbrot Set Complex Coordinates (z_{n+1} = z_n² + c)', 'Julia Set Morphing Dynamics', 'Chaos Theory & Infinite Self-Similarity', 'Escape-Time Iteration Algorithms'],
-    features: ['Dual Mandelbrot & Julia Set Modes', 'Real-Time Deep Zoom & Canvas Pan Navigation', 'Dynamic Iteration Depth & Julia Constant Controls', 'Cosmic, Solar & Aurora Color Palettes'],
-    gradeLevel: 'Middle, High School & Advanced Mathematics'
-  },
-  {
-    id: 'sim-binary-search-tree-data-structure',
-    slug: 'binary-search-tree-data-structure',
-    indexNumber: '55',
-    title: 'Binary Search Tree (BST) & Tree Traversal Algorithm Workbench',
-    subject: 'Data Structures & Computational Algorithms',
-    category: 'Computer Science & IT',
-    iconName: 'Cpu',
-    accentColor: '#0d9488', // Emerald Teal
-    description: 'Interactive Computer Science data structures laboratory. Construct and modify Binary Search Trees with live node insertion, deletion, and search. Animate In-Order (sorted), Pre-Order, Post-Order, and Level-Order (BFS) tree traversals with visual comparison queues.',
-    fileUrl: '/simulations/binary-search-tree-data-structure.html',
-    topics: ['Binary Search Tree Invariant (< root <)', 'O(log N) Search, Insert & Delete Operations', 'In-Order, Pre-Order & Post-Order Traversals', 'Tree Balance Factor & Worst-Case Degeneracy'],
-    features: ['Real-Time Animated Spring-Physics Tree Layout', 'Step-by-Step Search Comparison Path Visualizer', 'Animated Traversal Sequences with Output Tape', 'Balanced, Random & Skewed Tree Presets'],
-    gradeLevel: 'Middle, High School & Introductory Computer Science'
-  },
-  {
     id: 'sim-active-passive-voice-tense-timeline',
     slug: 'active-passive-voice-tense-timeline',
-    indexNumber: '56',
+    indexNumber: '52',
     title: 'Active vs. Passive Voice & Verb Tenses Timeline Studio',
     subject: 'English Grammar, Voice & Tense Syntax',
     category: 'English & Grammar',
@@ -810,21 +750,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Active Voice (Subject Performs Action)', 'Passive Voice (Object Receives Action)', 'Auxiliary Verb "be" + Past Participle V3', '12 English Verb Tense Timeline Matrices'],
     features: ['Interactive Voice Shifter with Animated Swaps', '12-Tense Timeline Matrix Selector', 'Color-Coded Subject/Verb/Object Grammatical Tags', 'Curated Syntactic Sentence Examples & Explanations'],
     gradeLevel: 'Elementary, Middle & Secondary English'
-  },
-  {
-    id: 'sim-musical-animal-orchestra-rhythm-carnival',
-    slug: 'musical-animal-orchestra-rhythm-carnival',
-    indexNumber: '57',
-    title: 'Musical Animal Orchestra & Rainbow Rhythm Carnival',
-    subject: 'Early Music, Auditory Phonics & Sensory Rhythm (ECCE)',
-    category: 'Early Childhood (ECCE)',
-    iconName: 'Sparkles',
-    accentColor: '#ec4899', // Bright Pink
-    description: 'Joyful, colorful multi-sensory preschool musical carnival. Early learners play an 8-note chromatic rainbow xylophone (C-D-E-F-G-A-B-C) with authentic Web Audio synthesizer tones, direct animal orchestra musicians (Leo the Lion, Ellie the Elephant, Coco the Monkey, Freddy the Frog), and trigger cheerful confetti celebrations.',
-    fileUrl: '/simulations/musical-animal-orchestra-rhythm-carnival.html',
-    topics: ['8-Note Chromatic Solfège Scale (Do-Re-Mi-Fa-Sol-La-Ti)', 'Auditory Pitch & Frequency Discrimination', 'Rhythm, Beat & Instrument Tone Recognition', 'Positive Reinforcement Sensory Development'],
-    features: ['Interactive 8-Bar Rainbow Xylophone Keys', 'Real-Time Web Audio Tone Synthesizer', '4 Dancing Animated Animal Musicians', 'Celebratory Confetti & Particle Shower FX'],
-    gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
   }
 ];
 

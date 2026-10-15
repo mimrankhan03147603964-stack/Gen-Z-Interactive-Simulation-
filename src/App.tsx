@@ -7,9 +7,11 @@ import { WebsiteFeatures } from './components/WebsiteFeatures';
 import { SimulationViewerModal } from './components/SimulationViewerModal';
 import { StandaloneLabPlayer } from './components/StandaloneLabPlayer';
 import { Footer } from './components/Footer';
+import { MainStage } from './components/MainStage';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
+import { requestAiSimulation } from './utils/aiSimulationGenerator';
 
 function resolveSimulationFromUrl(): SimulationItem | null {
   try {
@@ -63,6 +65,12 @@ export default function App() {
   // Default active subject filter: "Physics & Motion" is the default initial discipline
   const [selectedSubject, setSelectedSubject] = useState<string>('Physics & Motion');
   
+  // Active stage simulation (auto-opened from search, catalog card, or AI generation)
+  const [activeStageSim, setActiveStageSim] = useState<SimulationItem | null>(null);
+  const [allSimulations, setAllSimulations] = useState<SimulationItem[]>(SIMULATIONS_LIST);
+  const [isGeneratingAi, setIsGeneratingAi] = useState(false);
+  const [aiGeneratingTopic, setAiGeneratingTopic] = useState<string>('');
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false); // Default to clean, bright, colorful Light Mode
@@ -134,8 +142,63 @@ export default function App() {
     openSimulationInNewTab(sim);
   };
 
+  // Launch a simulation directly onto the active interactive stage
+  const handleLaunchOnStage = (sim: SimulationItem) => {
+    setActiveStageSim(sim);
+    setSelectedSubject(sim.category);
+    setSidebarOpen(false);
+    setTimeout(() => {
+      const stageEl = document.getElementById('stage');
+      if (stageEl) {
+        stageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
+  // On-demand AI dynamic simulation generation workflow via Gemini API
+  const handleTriggerAiGeneration = async (topic: string) => {
+    if (!topic || isGeneratingAi) return;
+    setIsGeneratingAi(true);
+    setAiGeneratingTopic(topic);
+    try {
+      const result = await requestAiSimulation(topic);
+      const newSim: SimulationItem = {
+        id: `ai-${Date.now()}`,
+        slug: `ai-${encodeURIComponent(topic.toLowerCase().replace(/[^a-z0-9]+/g, '-'))}`,
+        indexNumber: 'AI',
+        title: result.title,
+        subject: result.category,
+        category: result.category,
+        iconName: 'Sparkles',
+        accentColor: '#8b5cf6',
+        description: result.description,
+        fileUrl: '',
+        htmlContent: result.htmlContent,
+        isAiGenerated: true,
+        topics: result.topics,
+        features: result.features,
+        gradeLevel: 'Advanced STEM Interactive'
+      };
+      setAllSimulations((prev) => [newSim, ...prev]);
+      setActiveStageSim(newSim);
+      setSelectedSubject(newSim.category);
+      setTimeout(() => {
+        const stageEl = document.getElementById('stage');
+        if (stageEl) {
+          stageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+    } catch (err) {
+      console.error('AI simulation generation failed:', err);
+    } finally {
+      setIsGeneratingAi(false);
+      setAiGeneratingTopic('');
+    }
+  };
+
   const handleBackToCatalog = () => {
     setStandaloneLab(null);
+    setActiveStageSim(null);
     try {
       window.history.pushState({}, '', '/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -164,7 +227,7 @@ export default function App() {
       
       {/* Top Website Header Navbar */}
       <TopNavbar
-        totalSimulations={SIMULATIONS_LIST.length}
+        totalSimulations={allSimulations.length}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         isDarkMode={isDarkMode}
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
@@ -173,7 +236,7 @@ export default function App() {
 
       {/* Slide-over Fast Navigation Drawer */}
       <Sidebar
-        simulations={SIMULATIONS_LIST}
+        simulations={allSimulations}
         onSelectSim={handleSelectSim}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -207,12 +270,57 @@ export default function App() {
           onSelectSim={handleSelectSim}
         />
 
-        {/* 2. STEM Catalog & Topic Cards Grid with Subject Filter Bar */}
+        {/* AI Generation In-Progress Ambient HUD Banner */}
+        {isGeneratingAi && (
+          <div 
+            className="p-6 rounded-2xl border shadow-2xl transition-all flex flex-col items-center justify-center text-center space-y-3"
+            style={{
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              backgroundColor: isDarkMode ? 'rgba(26, 16, 51, 0.95)' : 'rgba(250, 245, 255, 0.95)',
+              borderColor: '#a855f7',
+              borderWidth: '2px',
+              borderStyle: 'solid',
+              boxShadow: '0 10px 40px rgba(168, 85, 247, 0.35)'
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-4 h-4 rounded-full bg-purple-500 animate-ping" />
+              <span className="text-base sm:text-lg font-black text-purple-600 dark:text-purple-300">
+                Synthesizing &ldquo;{aiGeneratingTopic}&rdquo; Interactive Simulation with Gemini API...
+              </span>
+            </div>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 max-w-md">
+              Generating mathematical models, real-time Canvas 60 FPS physics, and interactive parameter sliders on the fly.
+            </p>
+            <div className="w-full max-w-md h-2 bg-purple-200 dark:bg-purple-950 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-pulse w-full" />
+            </div>
+          </div>
+        )}
+
+        {/* Interactive Simulation Stage (Mounted when selected from search auto-open, catalog card, or AI generation) */}
+        {activeStageSim && (
+          <div className="scroll-mt-24" id="stage">
+            <MainStage
+              activeSim={activeStageSim}
+              totalSimulations={allSimulations.length}
+              onBackToCatalog={() => setActiveStageSim(null)}
+              onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+              isDarkMode={isDarkMode}
+            />
+          </div>
+        )}
+
+        {/* 2. STEM Catalog & Topic Cards Grid with Enhanced Search Bar */}
         <SimulationCatalogGrid
-          simulations={SIMULATIONS_LIST}
+          simulations={allSimulations}
           selectedCategory={selectedSubject}
           onSelectCategory={(cat) => setSelectedSubject(cat)}
           onSelectSim={handleSelectSim}
+          onLaunchOnStage={handleLaunchOnStage}
+          onTriggerAiGeneration={handleTriggerAiGeneration}
+          isGeneratingAi={isGeneratingAi}
           onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
           isDarkMode={isDarkMode}
         />

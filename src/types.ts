@@ -15,6 +15,8 @@ export interface SimulationItem {
   topics: string[];
   features: string[];
   gradeLevel: string;
+  htmlContent?: string;
+  isAiGenerated?: boolean;
 }
 
 export type CategoryFilter = 'All Simulations' | 'Physics & Motion' | 'Chemistry & Matter' | 'Biology & Life' | 'Earth & Space' | 'Mathematics & Logic' | 'Computer Science & IT' | 'English & Grammar' | 'Early Childhood (ECCE)';
