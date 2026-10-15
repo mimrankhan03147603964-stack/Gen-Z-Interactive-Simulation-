@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
         {/* 1. Brand Monogram & Portal Header */}
         <div className="space-y-2 text-center flex flex-col items-center">
           <div 
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-2.5 border-2 shadow-lg overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-2.5 border-2 shadow-lg overflow-visible flex items-center justify-center transition-transform hover:scale-105"
             style={{
               backgroundColor: '#ffffff',
               borderColor: '#e2e8f0',

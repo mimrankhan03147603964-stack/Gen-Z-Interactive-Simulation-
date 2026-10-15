@@ -104,39 +104,39 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             </span>
           </div>
 
-          {/* Right Area: Crisp Frosted Glass Digital Clock Widget (Enlarged & High-Contrast) */}
+          {/* Right Area: Crisp Frosted Glass Digital Clock Widget (Original Compact Size) */}
           <div className="flex items-center gap-2 flex-wrap ml-auto sm:ml-0">
             <div 
-              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-2xl sm:rounded-full shadow-2xl flex items-center gap-2.5 sm:gap-4 transition-all"
+              className="px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full shadow-md flex items-center gap-2 sm:gap-2.5 transition-all"
               style={{
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                backgroundColor: 'rgba(11, 19, 38, 0.94)',
-                borderColor: 'rgba(56, 189, 248, 0.45)',
-                borderWidth: '1.5px',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                backgroundColor: 'rgba(11, 19, 38, 0.88)',
+                borderColor: 'rgba(56, 189, 248, 0.35)',
+                borderWidth: '1px',
                 borderStyle: 'solid',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.65), 0 0 25px rgba(56, 189, 248, 0.25)',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.45), 0 0 15px rgba(56, 189, 248, 0.15)',
                 color: '#ffffff'
               }}
             >
               <div 
-                className="flex items-center gap-2 font-mono font-black text-base sm:text-xl md:text-2xl tracking-wider"
+                className="flex items-center gap-1.5 font-mono font-bold text-xs sm:text-sm tracking-wide"
                 style={{ color: '#fef08a' }}
               >
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300 animate-pulse shrink-0 drop-shadow-xs" />
-                <span className="font-black text-amber-200 drop-shadow-sm">{time || '00:00:00'}</span>
+                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 animate-pulse shrink-0 drop-shadow-xs" />
+                <span className="font-bold text-amber-200">{time || '00:00:00'}</span>
               </div>
 
               <span 
-                className="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-black uppercase shadow-md font-mono"
+                className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase shadow-xs font-mono"
                 style={{ backgroundColor: '#ffffff', color: '#090d16' }}
               >
                 {period}
               </span>
 
-              <span className="text-emerald-400 font-black text-base sm:text-xl">|</span>
+              <span className="text-emerald-400 font-bold text-xs">|</span>
 
-              <span className="font-black whitespace-nowrap text-xs sm:text-sm md:text-base text-white tracking-wide drop-shadow-sm">
+              <span className="font-semibold whitespace-nowrap text-[11px] sm:text-xs text-white tracking-wide drop-shadow-xs">
                 {dateStr || 'Loading date...'}
               </span>
             </div>
@@ -161,26 +161,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
           </div>
 
           {/* Official Monogram Emblem: Solid White Background (#FFFFFF) with Proper Padding and Rounded Borders for Sharp Contrast */}
-          <div className="shrink-0 flex items-center justify-center monogram-3d-stage my-2 md:my-0 self-center">
+          <div className="shrink-0 flex items-center justify-center monogram-3d-stage my-2 md:my-0 self-center overflow-visible">
             <div 
-              className="monogram-3d-card relative rounded-3xl p-5 sm:p-6 flex items-center justify-center cursor-pointer transition-all"
+              className="monogram-3d-card relative rounded-3xl p-3 sm:p-4 flex items-center justify-center cursor-pointer transition-all overflow-visible shadow-xl"
               style={{
                 backgroundColor: '#FFFFFF',
                 borderColor: '#e2e8f0',
-                borderWidth: '2.5px',
+                borderWidth: '2px',
                 borderStyle: 'solid',
-                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(255, 255, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 1)',
-                width: '180px',
-                height: '180px'
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 255, 255, 0.3)',
+                width: '210px',
+                maxWidth: '100%',
+                height: '165px'
               }}
-              title="Gen Z EdTech Official Monogram - 3D Interactive Dimensional Emblem"
+              title="Gen Z EdTech Official Monogram - Interactive Dimensional Emblem"
             >
-              {/* The 3D Dimensional Monogram Element with 360-degree Dimensional Rotation and Floating Tilt */}
-              <div className="monogram-3d-element relative z-10 w-full h-full flex items-center justify-center">
+              {/* Dimensional Monogram Element */}
+              <div className="monogram-3d-element relative z-10 w-full h-full flex items-center justify-center overflow-visible">
                 <img 
                   src="/genz-edtech-monogram.svg" 
                   alt="Gen Z EdTech Official Monogram Logo" 
-                  className="w-32 sm:w-36 h-auto max-h-32 sm:max-h-36 object-contain"
+                  className="w-full h-full max-w-full max-h-full object-contain block mx-auto select-none"
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
             </div>

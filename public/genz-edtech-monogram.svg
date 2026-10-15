@@ -159,7 +159,7 @@
   <!-- ========================================================================= -->
   <g id="brand-text" transform="translate(270, 250)">
     <!-- Main "GenZ" Wordmark -->
-    <g transform="translate(-150, 0)">
+    <g transform="translate(-86, 0)">
       <!-- Left decorative geometric sparkles/chevrons -->
       <polygon points="-28,-8 -20,-14 -20,-2" fill="#00a8e8" />
       <polygon points="-28,14 -20,8 -20,20" fill="#f97316" />
