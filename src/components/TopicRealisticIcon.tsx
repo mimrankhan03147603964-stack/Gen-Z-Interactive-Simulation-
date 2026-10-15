@@ -1785,6 +1785,41 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    case 55:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="urduGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0d1a45" />
+              <stop offset="50%" stopColor="#1e1045" />
+              <stop offset="100%" stopColor="#2a0f4a" />
+            </linearGradient>
+            <linearGradient id="urduGradShield" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff3b5c" />
+              <stop offset="100%" stopColor="#be123c" />
+            </linearGradient>
+          </defs>
+          {/* Base Emblem */}
+          <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#urduGradBg)" stroke="#ffc247" strokeWidth="1.8" />
+          {/* Decorative Corner Ornaments */}
+          <path d="M12 18 L18 12 M46 12 L52 18 M12 46 L18 52 M52 46 L46 52" stroke="#ffc247" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+          {/* Center Book / Calligraphy Tablet */}
+          <path d="M16 20 C24 18 30 20 32 24 C34 20 40 18 48 20 L48 48 C40 46 34 48 32 50 C30 48 24 46 16 48 Z" fill="url(#urduGradShield)" stroke="#ffc247" strokeWidth="1.6" />
+          {/* Book Spine Center Line */}
+          <line x1="32" y1="24" x2="32" y2="50" stroke="#ffc247" strokeWidth="1.8" />
+          {/* Urdu Calligraphy / Characters */}
+          <text x="24" y="36" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', 'Urdu Typesetting', Arial, sans-serif">اردو</text>
+          <text x="40" y="36" fill="#ffc247" fontSize="10" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', 'Urdu Typesetting', Arial, sans-serif">قواعد</text>
+          {/* Badge Ribbon */}
+          <rect x="20" y="44" width="24" height="7" rx="3.5" fill="#ffc247" />
+          <text x="32" y="49.5" fill="#0d1a45" fontSize="4.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">GRAMMAR</text>
+          {/* Tiny glowing star dots */}
+          <circle cx="32" cy="13" r="1.8" fill="#ffc247" />
+          <circle cx="14" cy="32" r="1.2" fill="#ff3b5c" />
+          <circle cx="50" cy="32" r="1.2" fill="#ff3b5c" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

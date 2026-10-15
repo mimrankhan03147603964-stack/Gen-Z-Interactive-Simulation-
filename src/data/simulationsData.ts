@@ -780,6 +780,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['English_Grammar.html', '8 Parts of Speech (Noun, Pronoun, Verb, Adjective, Adverb, Preposition, Conjunction, Interjection)', 'Interactive 3D Perspective Tilt Cards', 'Syntactic Explanations, Examples & Key Rules'],
     features: ['100% Offline Standalone Chrome-Ready Lab', '3D Perspective Orbiting Polyhedra Animation', 'Interactive Card Hover 3D Tilt Mechanics', 'Comprehensive Grammar Classification & Rules'],
     gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-urdu-grammar',
+    slug: 'Urdu_Grammar.html',
+    indexNumber: '55',
+    title: 'Urdu_Grammar.html',
+    subject: 'Urdu Grammar (اردو گرامر) | GEN Z EDTECH INTERACTIVE',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#ff3b5c', // Coral Red & Deep Navy
+    description: 'Standalone interactive Urdu Grammar laboratory. Explore Ism (اسم), Zameer (ضمیر), Sifat (صفت), Fael (فعل), Haroof (حروف), Mutazad (الفاظ متضاد), Muzakkar Muannas (مذکر مونث), Wahid Jama (واحد جمع), and full-screen study modes.',
+    fileUrl: '/simulations/Urdu_Grammar.html',
+    topics: ['Urdu_Grammar.html', 'اسم، ضمیر، صفت، فعل، متعلق فعل', 'حروف، سابقے لاحقے، محاورات، ضرب الامثال', 'واحد جمع، الفاظ متضاد، الفاظ مترادف، مذکر مونث'],
+    features: ['100% Offline Standalone Chrome-Ready Lab', 'RTL Native Urdu Typography & Instant Search Filter', 'Color-Coded Interactive Badges with Grammatical Definitions', 'Full-Screen Interactive Reader & Study Mode'],
+    gradeLevel: 'Primary & Secondary Urdu Grammar'
   }
 ];
 
