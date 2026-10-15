@@ -771,7 +771,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     slug: 'English_Grammar.html',
     indexNumber: '54',
     title: 'English_Grammar.html',
-    subject: 'English Grammar | GEN Z EDTECH INTERACTIVE',
+    subject: 'English Grammar (Parts of Speech & Syntax)',
     category: 'English & Grammar',
     iconName: 'BookOpen',
     accentColor: '#00c6ff', // Vibrant Electric Cyan & Royal Gradient
@@ -786,7 +786,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     slug: 'Urdu_Grammar.html',
     indexNumber: '55',
     title: 'Urdu_Grammar.html',
-    subject: 'Urdu Grammar (اردو گرامر) | GEN Z EDTECH INTERACTIVE',
+    subject: 'Urdu Grammar (اردو گرامر)',
     category: 'English & Grammar',
     iconName: 'BookOpen',
     accentColor: '#ff3b5c', // Coral Red & Deep Navy

@@ -16,7 +16,7 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
 
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = `${sim.title} — Gen Z EdTech`;
+    document.title = sim.title;
     return () => {
       document.title = originalTitle;
     };
