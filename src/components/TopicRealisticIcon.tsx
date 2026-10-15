@@ -1746,6 +1746,45 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 54: English Grammar | GEN Z EDTECH INTERACTIVE (3D Cubes & Parts of Speech Studio)
+    case 54:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cubeGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#00c6ff" />
+              <stop offset="100%" stopColor="#0072ff" />
+            </linearGradient>
+            <linearGradient id="cubeGradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#8e44ad" />
+              <stop offset="100%" stopColor="#4a154b" />
+            </linearGradient>
+            <linearGradient id="cubeGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e74c3c" />
+              <stop offset="100%" stopColor="#c0392b" />
+            </linearGradient>
+          </defs>
+          {/* 3D Isometric Isometric Cube Representing Interactive 3D Architecture */}
+          {/* Top Face */}
+          <polygon points="32,8 52,19 32,30 12,19" fill="url(#cubeGradTop)" stroke="#ffe14d" strokeWidth="1.5" />
+          {/* Left Face */}
+          <polygon points="12,19 32,30 32,54 12,43" fill="url(#cubeGradLeft)" stroke="#ffe14d" strokeWidth="1.5" />
+          {/* Right Face */}
+          <polygon points="32,30 52,19 52,43 32,54" fill="url(#cubeGradRight)" stroke="#ffe14d" strokeWidth="1.5" />
+          {/* Inner Glowing Core */}
+          <circle cx="32" cy="30" r="4" fill="#ffe14d" opacity="0.9" />
+          {/* English Grammar Badges on faces */}
+          <text x="32" y="21" fill="#ffffff" fontSize="6" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">NOUN</text>
+          <text x="22" y="39" fill="#ffe14d" fontSize="6" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">VERB</text>
+          <text x="42" y="39" fill="#ffffff" fontSize="5.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ADJ</text>
+          {/* Tiny orbiting sparkle particles */}
+          <circle cx="10" cy="12" r="1.5" fill="#ffe14d" />
+          <circle cx="54" cy="14" r="1.8" fill="#00c6ff" />
+          <circle cx="48" cy="52" r="1.5" fill="#2ecc71" />
+          <circle cx="16" cy="50" r="1.5" fill="#f1c40f" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

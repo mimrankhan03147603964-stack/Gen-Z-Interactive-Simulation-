@@ -879,6 +879,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fffbeb',
     tagText: '#b45309',
     glowColor: 'rgba(245, 158, 11, 0.45)'
+  },
+  '54': {
+    id: '54',
+    name: 'English_Grammar.html',
+    bgSolid: '#00a8cc',
+    bgGradient: 'linear-gradient(135deg, #00c6ff 0%, #00758f 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0b3a78',
+    iconBorder: '#ffe14d',
+    iconColor: '#ffe14d',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0fdfa',
+    tagText: '#0e7490',
+    glowColor: 'rgba(0, 198, 255, 0.45)'
   }
 };
 

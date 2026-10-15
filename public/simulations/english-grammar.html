@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Grammar | GEN Z EDTECH INTERACTIVE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Trebuchet MS","Segoe UI",sans-serif;color:#fff;min-height:100vh;background:linear-gradient(135deg,#1b0a4a,#0b3a78,#0a6a6a,#5b0f6b);background-size:400% 400%;animation:bg 18s ease infinite;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.cubes{position:fixed;inset:0;pointer-events:none;perspective:900px;z-index:0}
+.cube{position:absolute;width:60px;height:60px;transform-style:preserve-3d;animation:spin 14s linear infinite}
+.cube i{position:absolute;inset:0;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.07)}
+.cube i:nth-child(1){transform:translateZ(30px)}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(30px)}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(30px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(30px)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(30px)}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(30px)}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}
+header,main,footer{position:relative;z-index:1}
+header{text-align:center;padding:26px 20px 8px;perspective:800px}
+.brand{font-size:30px;font-weight:900;letter-spacing:6px;color:#ffe14d;text-shadow:0 1px 0 #f39c12,0 2px 0 #e67e22,0 3px 0 #d35400,0 4px 0 #a04000,0 10px 20px rgba(0,0,0,.5);animation:sway 6s ease-in-out infinite}
+@keyframes sway{50%{transform:rotateX(14deg) rotateY(-8deg)}}
+h1{font-size:76px;line-height:1.1;margin-top:8px;font-weight:900;background:linear-gradient(90deg,#ff5e62,#ffb347,#ffe14d,#4cd964,#00c6ff,#b56cff,#ff5e62);background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite;filter:drop-shadow(0 6px 0 rgba(0,0,0,.35))}
+@keyframes flow{to{background-position:300% 0}}
+.sub{opacity:.85;font-size:18px;margin-top:4px}
+nav{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:22px 30px;perspective:900px}
+.tb{border:0;cursor:pointer;color:#fff;font:800 18px "Trebuchet MS",sans-serif;padding:14px 26px;border-radius:16px;background:var(--c);box-shadow:0 7px 0 var(--d),0 14px 22px rgba(0,0,0,.4);transition:transform .15s,box-shadow .15s;transform:rotateX(12deg)}
+.tb:hover{transform:rotateX(0) translateY(-5px) scale(1.06)}
+.tb:active,.tb.on{transform:translateY(6px);box-shadow:0 1px 0 var(--d),0 4px 8px rgba(0,0,0,.4)}
+.tb.on{outline:4px solid #fff}
+main{max-width:1280px;margin:0 auto;padding:0 30px 30px}
+.top{background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.3);border-radius:22px;padding:22px 28px;margin-bottom:26px;box-shadow:0 18px 40px rgba(0,0,0,.35);animation:pop .5s}
+@keyframes pop{from{opacity:0;transform:rotateX(-25deg) scale(.92)}}
+.top h2{font-size:38px}.top p{font-size:21px;margin-top:6px;line-height:1.5}
+.top .tag{margin-top:10px;font-style:italic;color:#ffe14d;font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px;perspective:1100px}
+.card{background:#fff;color:#222;border-radius:20px;padding:0 0 18px;overflow:hidden;transform-style:preserve-3d;transition:transform .12s ease-out,box-shadow .2s;box-shadow:0 14px 30px rgba(0,0,0,.4);animation:pop .5s backwards}
+.card:hover{box-shadow:0 26px 50px rgba(0,0,0,.55)}
+.btn{display:block;width:calc(100% - 28px);margin:14px;border:0;cursor:pointer;color:#fff;font:800 20px "Trebuchet MS",sans-serif;padding:14px;border-radius:14px;background:var(--c);box-shadow:0 6px 0 var(--d);transition:.15s;text-shadow:0 2px 2px rgba(0,0,0,.3)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--d)}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--d)}
+.card p{padding:0 18px;font-size:18px;line-height:1.5}
+.ex{padding:12px 18px 0;display:flex;flex-wrap:wrap;gap:8px}
+.ex b{width:100%;color:var(--d);font-size:16px}
+.ex span{background:var(--c);color:#fff;padding:5px 12px;border-radius:20px;font-size:16px;font-weight:700;box-shadow:0 3px 0 var(--d)}
+.card.hit{animation:hit .6s}
+@keyframes hit{50%{transform:rotateY(180deg) scale(1.05)}}
+.keys{margin-top:30px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.3);border-radius:22px;padding:22px 30px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.keys h3{font-size:30px;color:#ffe14d;margin-bottom:10px}
+.keys ol{padding-left:28px;font-size:19px;line-height:1.75}
+.keys li::marker{color:#ffe14d;font-weight:900}
+footer{text-align:center;padding:26px 14px 30px}
+.dev{display:inline-block;white-space:nowrap;font-size:20px;font-weight:800;color:#ffe14d;background:rgba(0,0,0,.35);padding:14px 30px;border-radius:40px;box-shadow:0 8px 0 rgba(0,0,0,.35)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="cubes" id="cubes"></div>
+<header>
+  <div class="brand">GEN Z EDTECH INTERACTIVE</div>
+  <h1>English Grammar</h1>
+  <div class="sub">Click a button. Learn the parts of speech with easy words and examples.</div>
+</header>
+<nav id="nav"></nav>
+<main>
+  <section class="top" id="top"></section>
+  <section class="grid" id="grid"></section>
+  <section class="keys" id="keys"></section>
+</main>
+<footer><div class="dev">MUHAMMAD IMRAN KHAN &nbsp;|&nbsp; MSc Computer Science &nbsp;|&nbsp; 03007603964 &nbsp;|&nbsp; 03147603964</div></footer>
+
+<script>
+const PAL=[["#e74c3c","#a93226"],["#e67e22","#a85a10"],["#f1c40f","#b7950b"],["#27ae60","#1b7a43"],["#16a085","#0e6655"],["#2980b9","#1b5a84"],["#8e44ad","#622c7a"],["#d63384","#9a1f60"],["#00a8cc","#00758f"]];
+const D=[
+{n:"Parts of Speech",c:5,def:"Parts of speech are groups of words. Each group is based on the work its words do in a sentence.",tag:"Different kinds of words work together to make meaning.",
+ t:[["Noun","Names a person, place, thing, animal or idea.","boy, girl, Lahore, book, dog, happiness, freedom"],["Pronoun","Used in place of a noun.","I, you, he, she, it, we, they, me, him, her, us, them"],["Verb","Shows an action, a state or an occurrence.","run, eat, write, is, are, was, happen, go, play"],["Adjective","Describes a noun or pronoun.","big, small, beautiful, happy, old, red, smart, kind, tall"],["Adverb","Describes a verb, an adjective, another adverb or a whole sentence.","quickly, slowly, very, well, hard, often, always, here, today"],["Preposition","Shows how a noun or pronoun is related to another word.","in, on, at, under, over, with, from, to, for, about"],["Conjunction","Joins words, phrases or clauses.","and, but, or, so, because, although, if, while, since"],["Interjection","Shows a sudden feeling or emotion.","oh, wow, hello, hi, ouch, alas, hurray, ugh"]],
+ k:["Parts of speech are groups of words based on the work they do in a sentence.","There are eight main parts of speech: noun, pronoun, verb, adjective, adverb, preposition, conjunction and interjection.","Nouns name things. Pronouns take the place of nouns.","Verbs show action, state or occurrence.","Adjectives describe nouns or pronouns. Adverbs describe verbs, adjectives, other adverbs or whole sentences.","Prepositions show how a noun or pronoun is related to another word.","Conjunctions join words, phrases or clauses.","Interjections show sudden feeling or emotion.","The same word can be a different part of speech in different sentences (e.g. \"light\" can be a noun, a verb or an adjective)."]},
+{n:"Noun",c:3,def:"A noun is the name of a person, place, thing, animal or idea.",tag:"Nouns are all around us!",
+ t:[["Proper Noun","The specific name of a person, place, thing or animal. It always begins with a capital letter.","Riya, London, Monday, Tesla, India, Simba"],["Common Noun","A general name for a person, place, thing or animal. It begins with a capital letter only at the start of a sentence.","girl, city, book, dog, teacher, river"],["Collective Noun","The name of a group of people, animals or things seen as one whole.","team, class, family, crowd, herd, bunch"],["Abstract Noun","The name of a feeling, quality, idea or state. We cannot see, touch, hear, smell or taste it.","love, courage, honesty, freedom, happiness, knowledge"],["Countable Noun","Can be counted. It has a singular and a plural form.","book → books, chair → chairs, apple → apples, student → students"],["Uncountable Noun","Cannot be counted. It usually has no plural form.","water, milk, rice, information, energy, advice, furniture"]],
+ k:["A noun is the name of a person, place, thing, animal or idea.","There are four main types of nouns: proper, common, collective and abstract.","Proper nouns are specific names and always begin with a capital letter.","Common nouns are general names and do not begin with a capital letter (unless they start a sentence).","Collective nouns name a group of people, animals or things.","Abstract nouns name a feeling, quality, idea or state that cannot be seen or touched.","Nouns can also be sorted by countability: countable or uncountable.","Countable nouns can be counted and have singular and plural forms.","Uncountable nouns cannot be counted and usually have no plural form."]},
+{n:"Pronoun",c:7,def:"A pronoun is a word used in place of a noun. It avoids repetition and makes sentences shorter and clearer.",tag:"Use a pronoun when the noun is already known.",
+ t:[["Personal Pronoun","Used in place of a specific person or thing.","I, you, he, she, it, we, they, me, him, her, us, them"],["Possessive Pronoun","Shows ownership and is used in place of a noun.","mine, yours, his, hers, ours, theirs"],["Reflexive Pronoun","Used when the subject and the object are the same person or thing.","myself, yourself, himself, herself, itself, ourselves, yourselves, themselves"],["Emphatic Pronoun","Gives extra emphasis to a noun or pronoun. It has the same form as a reflexive pronoun.","myself, yourself, himself, herself, itself, ourselves, themselves"],["Demonstrative Pronoun","Points to a particular person, thing or idea.","this, that, these, those"],["Relative Pronoun","Joins a relative clause to a main clause and refers to a noun.","who, whom, whose, which, that"],["Interrogative Pronoun","Used to ask questions.","who, whom, whose, which, what"],["Indefinite Pronoun","Refers to a person, thing or idea that is not specific.","someone, anyone, everyone, nobody, somebody, anything, nothing, everything, several, few, many"],["Distributive Pronoun","Refers to members of a group one by one.","each, either, neither"]],
+ k:["A pronoun is a word used in place of a noun.","Pronouns help us avoid repetition and make our writing and speaking clearer.","There are nine main types of pronouns.","Reflexive and emphatic pronouns have the same form but different uses.","Demonstrative pronouns point to a specific person, thing or idea.","Relative pronouns introduce a relative clause.","Indefinite pronouns do not refer to a specific person or thing.","A pronoun must agree in number (singular or plural), person (1st, 2nd, 3rd) and gender with the noun it replaces.","Note: my, your, his, her, its, our and their are possessive adjectives, not possessive pronouns."]},
+{n:"Verb",c:0,def:"A verb is a word that shows an action, a state or an occurrence.",tag:"Every sentence must have a verb.",
+ t:[["Main (Lexical) Verb","Shows the main action or state. It has meaning on its own.","play, read, write, eat, come, go, live, work, study, speak"],["Helping (Auxiliary) Verb","Helps the main verb to form tense, voice, mood or a question.","am, is, are, was, were, be, been, being, have, has, had, do, does, did"],["Modal Verb","A special kind of helping verb. It shows ability, permission, possibility, obligation or advice.","can, could, may, might, shall, should, will, would, must, ought to"],["Transitive Verb","Takes a direct object (someone or something).","eat, read, write, buy, see, call, help, find, visit, like, watch"],["Intransitive Verb","Does not take a direct object.","sleep, go, come, happen, arrive, fall, exist, die, rise, smile"],["Phrasal Verb","A main verb + a particle (adverb or preposition). Together they have a new meaning.","give up, look after, turn on, bring in, take off, put on, go through, come across"],["Regular Verb","Forms the past and past participle by adding -ed or -d.","work → worked → worked, play → played → played, watch → watched → watched"],["Irregular Verb","Forms the past and past participle in a different way.","go → went → gone, see → saw → seen, take → took → taken, write → wrote → written"]],
+ k:["A verb shows an action, a state or an occurrence.","Verbs can be grouped by job: main, helping, modal, transitive, intransitive and phrasal.","Modal verbs show ability, permission, possibility, obligation or advice.","Transitive verbs take a direct object, while intransitive verbs do not. Some verbs (like read and eat) can be both.","Regular verbs form the past and past participle by adding -ed or -d.","Irregular verbs have different forms for the past and past participle.","Modal verbs never change with -s, -ed or -ing. Helping verbs such as be, have and do do change (is/are/was, has/had).","Verbs are essential in a sentence. They tell what happens, what is, or what exists."]},
+{n:"Adjective",c:1,def:"An adjective is a word that describes or adds information about a noun or pronoun.",tag:"Adjectives add colour to our sentences!",
+ t:[["Descriptive Adjective","Describes the quality, colour, size, shape or other features of a noun or pronoun.","beautiful, tall, red, kind, brave, smart"],["Quantitative Adjective","Shows how much or how many of a noun.","some, much, little, enough, more, less, several"],["Numeral Adjective","Shows the exact number or the order of a noun.","one, two, three, first, second, third, fourth"],["Distributive Adjective","Refers to the members of a group one at a time.","each, every, either, neither"],["Interrogative Adjective","Used to ask a question about a noun.","which, what, whose"],["Possessive Adjective","Shows possession or ownership of a noun.","my, your, his, her, its, our, their"],["Demonstrative Adjective","Points to a particular noun.","this, that, these, those"],["Proper Adjective","Formed from a proper noun and used to describe a noun.","Indian, French, Victorian, Shakespearean"]],
+ k:["An adjective is a word that describes or adds information about a noun or pronoun.","There are eight main types of adjectives: descriptive, quantitative, numeral, distributive, interrogative, possessive, demonstrative and proper.","Descriptive adjectives tell us the quality, colour, size, shape or other features.","Quantitative adjectives show how much or how many.","Numeral adjectives show the exact number or the order.","Distributive adjectives refer to individual members of a group.","Interrogative adjectives are used to ask questions. They are followed by a noun.","Possessive adjectives show ownership.","Proper adjectives are formed from proper nouns and start with a capital letter."]},
+{n:"Adverb",c:4,def:"An adverb is a word that modifies a verb, an adjective, another adverb or sometimes a whole sentence.",tag:"Adverbs make our writing and speaking more interesting!",
+ t:[["Adverb of Manner","Tells us how something is done.","quickly, slowly, carefully, happily, angrily, well, badly, easily, loudly, quietly"],["Adverb of Place","Tells us where something happens or where someone is.","here, there, everywhere, nowhere, inside, outside, above, below, nearby, far away"],["Adverb of Time","Tells us when something happens or for how long.","now, then, today, yesterday, tomorrow, soon, later, early, recently"],["Adverb of Frequency","Tells us how often something happens.","always, usually, often, sometimes, rarely, hardly ever, never, frequently, occasionally"],["Adverb of Degree","Tells us to what extent or how much something happens or is true.","very, extremely, quite, rather, so, too, enough, almost, completely, nearly, highly"],["Interrogative Adverb","Used to ask questions.","how, when, where, why"],["Relative Adverb","Used to introduce relative clauses. Refers to time, place or reason.","when, where, why"],["Conjunctive Adverb","Used to connect ideas between sentences or clauses.","however, therefore, moreover, meanwhile, nevertheless"]],
+ k:["An adverb modifies a verb, an adjective, another adverb or sometimes a whole sentence.","Adverbs give extra information and make our meaning clearer and more interesting.","There are five main types of adverbs: manner, place, time, frequency and degree.","Adverbs can also be interrogative, relative or conjunctive.","Adverbs answer questions such as how, when, where, how often and to what extent.","Many adverbs end in -ly (quickly, happily), but not all do (well, fast, here).","Adverbs can modify verbs, adjectives, other adverbs or a whole sentence (e.g. Fortunately, it stopped raining).","Using adverbs correctly helps us write and speak more clearly, precisely and effectively."]},
+{n:"Preposition",c:6,def:"A preposition is a word that shows the relationship between a noun or pronoun and another word in a sentence.",tag:"Prepositions connect words in a sentence.",
+ t:[["Preposition of Place","Shows where something is located.","in, on, at, under, over, between, behind, in front of"],["Preposition of Time","Shows when something happens.","at, on, in, before, after, since, for, during, until, by"],["Preposition of Direction","Shows the direction or movement from one place to another.","to, into, onto, towards, through, across, along, from"],["Preposition of Manner","Shows how something is done or by what means.","by, with, like, without (e.g. by hand, with care, by bus)"],["Preposition of Cause","Shows why something happens.","because of, due to, owing to, from, out of"],["Preposition of Agent","Shows who or what performs an action or is used to do something.","by, with, via"]],
+ k:["A preposition shows the relationship between a noun or pronoun and another word in a sentence.","Prepositions tell us where, when, in which direction, how, why, or by whom something happens.","There are six main types: place, time, direction, manner, cause and agent/instrument.","A preposition is usually followed by a noun, a pronoun or a noun phrase.","The same preposition can belong to more than one type, depending on how it is used.","Prepositions make our sentences clearer and more precise.","Prepositions are small words, but they are very important for showing relationships between ideas."]},
+{n:"Conjunction",c:2,def:"A conjunction is a word that joins words, phrases or clauses.",tag:"A good sentence often uses conjunctions to link ideas.",
+ t:[["Coordinating Conjunction","Joins words, phrases or clauses of equal importance.","and, but, or, nor, for, so, yet"],["Subordinating Conjunction","Joins a dependent clause to an independent clause.","because, although, though, since, unless, until, when, while, if, after, before, as"],["Correlative Conjunction","Works in pairs to join words, phrases or clauses.","both … and, either … or, neither … nor, not only … but also, whether … or, just as … so"],["Conjunctive Adverb","NOT a conjunction. It is an adverb that connects ideas between clauses or sentences and shows contrast, result, addition or time.","however, therefore, moreover, nevertheless, meanwhile, otherwise"]],
+ k:["A conjunction is a word that joins words, phrases or clauses.","There are three main types of conjunctions: coordinating, subordinating and correlative.","Coordinating conjunctions join things of equal importance (and, but, or, nor, for, so, yet).","Subordinating conjunctions join a dependent clause to an independent clause (because, although, since, unless, until, when, while, if, after, before, as).","Correlative conjunctions work in pairs (both … and, either … or, neither … nor, not only … but also, whether … or).","Conjunctive adverbs are not conjunctions, but they connect ideas between clauses or sentences (however, therefore, moreover).","Conjunctions and conjunctive adverbs help us write clearer, more connected and more interesting sentences."]},
+{n:"Interjection",c:8,def:"An interjection is a word or short expression that shows a sudden feeling, emotion, reaction or call.",tag:"Interjections make our communication lively!",
+ t:[["Joy","Express happiness, pleasure, excitement or approval.","hurray!, yay!, bravo!, well done!"],["Surprise","Express sudden astonishment, amazement or wonder.","oh!, wow!, ah!, goodness!, really!"],["Sorrow","Express sadness, grief, regret or disappointment.","alas!, oh no!, dear me!, how sad!, what a pity!"],["Pain","Express physical pain, hurt or discomfort.","ouch!, ow!, that hurts!"],["Anger / Disgust","Express anger, annoyance, hatred or dislike.","ugh!, yuck!, darn!, bah!, shame!"],["Greeting / Calling Attention","Used to greet someone, get someone's attention or call out.","hello!, hi!, hey!, hush!, listen!"],["Other Common Ones","Many other short words are also interjections.","well!, aha!, indeed!, oops!, shh!, help!"]],
+ k:["An interjection is a word or short expression that shows a sudden feeling, emotion, reaction or call.","Interjections show our feelings and help us express emotions quickly.","There are many types: joy, surprise, sorrow, pain, anger/disgust, and greeting/calling attention.","Interjections are usually short and are often followed by an exclamation mark (!).","Interjections can be single words or short expressions.","They are used in spoken and written English, especially in informal situations.","Interjections make our communication more lively and expressive."]}
+];
+const $=id=>document.getElementById(id);
+const nav=$("nav");
+D.forEach((d,i)=>{const b=document.createElement("button");const p=PAL[d.c];b.className="tb";b.textContent=d.n;b.style.setProperty("--c",p[0]);b.style.setProperty("--d",p[1]);b.onclick=()=>show(i);nav.appendChild(b)});
+function show(i){
+  const d=D[i];
+  [...nav.children].forEach((b,j)=>b.classList.toggle("on",i===j));
+  $("top").style.animation="none";void $("top").offsetWidth;$("top").style.animation="";
+  $("top").innerHTML=`<h2>${d.n}</h2><p>${d.def}</p><div class="tag">${d.tag}</div>`;
+  $("grid").innerHTML=d.t.map((t,k)=>{const p=PAL[(d.c+k+1)%PAL.length];
+    return `<div class="card" style="--c:${p[0]};--d:${p[1]};animation-delay:${k*70}ms"><button class="btn">${t[0]}</button><p>${t[1]}</p><div class="ex"><b>Examples:</b>${t[2].split(/, (?![^(]*\))/).map(x=>`<span>${x}</span>`).join("")}</div></div>`}).join("");
+  $("keys").innerHTML=`<h3>Key Points</h3><ol>${d.k.map(x=>`<li>${x}</li>`).join("")}</ol>`;
+  document.querySelectorAll(".card").forEach(c=>{
+    c.onmousemove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateY(${x*16}deg) rotateX(${-y*16}deg) translateZ(14px)`};
+    c.onmouseleave=()=>c.style.transform="";
+    c.querySelector(".btn").onclick=()=>{c.classList.remove("hit");void c.offsetWidth;c.classList.add("hit")};
+  });
+}
+const cb=$("cubes");
+for(let i=0;i<14;i++){const c=document.createElement("div");c.className="cube";c.style.left=Math.random()*95+"%";c.style.top=Math.random()*90+"%";const s=.5+Math.random()*1.3;c.style.scale=s;c.style.animationDuration=10+Math.random()*16+"s";c.innerHTML="<i></i><i></i><i></i><i></i><i></i><i></i>";cb.appendChild(c)}
+show(0);
+</script>
+</body>
+</html>

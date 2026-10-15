@@ -765,6 +765,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Cambridge_Scholar_Parts_of_Speech_Lab.html', '8 Parts of Speech (Noun, Pronoun, Verb, Adj, Adv, Prep, Conj, Inter)', 'Urdu Meanings & Job Function Dissection', 'Phonics Audio Read Aloud & 40-Item Mastery Quiz'],
     features: ['Exact Offline Chrome Interactive HTML5 Lab', 'Click Any Word for Complete Syntax Breakdown', 'Bilingual English & Urdu Linguistic Explanations', '10-Question Random Quiz Challenge with Instant Scoring'],
     gradeLevel: 'Cambridge Scholar Grade 1–10 English'
+  },
+  {
+    id: 'sim-english-grammar',
+    slug: 'English_Grammar.html',
+    indexNumber: '54',
+    title: 'English_Grammar.html',
+    subject: 'English Grammar | GEN Z EDTECH INTERACTIVE',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#00c6ff', // Vibrant Electric Cyan & Royal Gradient
+    description: 'Interactive English Grammar 3D studio. Learn the 8 parts of speech with animated 3D cubes, interactive dynamic cards with 3D tilt effects, real-world examples, and key points.',
+    fileUrl: '/simulations/English_Grammar.html',
+    topics: ['English_Grammar.html', '8 Parts of Speech (Noun, Pronoun, Verb, Adjective, Adverb, Preposition, Conjunction, Interjection)', 'Interactive 3D Perspective Tilt Cards', 'Syntactic Explanations, Examples & Key Rules'],
+    features: ['100% Offline Standalone Chrome-Ready Lab', '3D Perspective Orbiting Polyhedra Animation', 'Interactive Card Hover 3D Tilt Mechanics', 'Comprehensive Grammar Classification & Rules'],
+    gradeLevel: 'Elementary, Middle & Secondary English'
   }
 ];
 
