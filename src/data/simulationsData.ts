@@ -750,6 +750,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Active Voice (Subject Performs Action)', 'Passive Voice (Object Receives Action)', 'Auxiliary Verb "be" + Past Participle V3', '12 English Verb Tense Timeline Matrices'],
     features: ['Interactive Voice Shifter with Animated Swaps', '12-Tense Timeline Matrix Selector', 'Color-Coded Subject/Verb/Object Grammatical Tags', 'Curated Syntactic Sentence Examples & Explanations'],
     gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-cambridge-scholar-parts-of-speech-lab',
+    slug: 'Cambridge_Scholar_Parts_of_Speech_Lab.html',
+    indexNumber: '53',
+    title: 'Cambridge_Scholar_Parts_of_Speech_Lab.html',
+    subject: 'Cambridge Scholar – Parts of Speech Lab',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#f59e0b', // Cambridge Gold & Deep Blue
+    description: 'Standalone Cambridge Scholar Parts of Speech interactive lab. Dissect sentences word-by-word with instant grammatical roles, Urdu meanings, syntax definitions, text-to-speech pronunciation, filter highlights, and an interactive 40-question mastery quiz.',
+    fileUrl: '/simulations/Cambridge_Scholar_Parts_of_Speech_Lab.html',
+    topics: ['Cambridge_Scholar_Parts_of_Speech_Lab.html', '8 Parts of Speech (Noun, Pronoun, Verb, Adj, Adv, Prep, Conj, Inter)', 'Urdu Meanings & Job Function Dissection', 'Phonics Audio Read Aloud & 40-Item Mastery Quiz'],
+    features: ['Exact Offline Chrome Interactive HTML5 Lab', 'Click Any Word for Complete Syntax Breakdown', 'Bilingual English & Urdu Linguistic Explanations', '10-Question Random Quiz Challenge with Instant Scoring'],
+    gradeLevel: 'Cambridge Scholar Grade 1–10 English'
   }
 ];
 

@@ -863,6 +863,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#e0e7ff',
     tagText: '#6366f1',
     glowColor: 'rgba(99, 102, 241, 0.45)'
+  },
+  '53': {
+    id: '53',
+    name: 'Cambridge_Scholar_Parts_of_Speech_Lab.html',
+    bgSolid: '#d97706',
+    bgGradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+    borderColor: '#fbbf24',
+    iconBg: '#002b4d',
+    iconBorder: '#ffc107',
+    iconColor: '#ffc107',
+    badgeBg: '#fef3c7',
+    badgeText: '#92400e',
+    badgeBorder: '#fde68a',
+    tagBg: '#fffbeb',
+    tagText: '#b45309',
+    glowColor: 'rgba(245, 158, 11, 0.45)'
   }
 };
 

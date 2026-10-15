@@ -1710,6 +1710,42 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 53: Cambridge Scholar – Parts of Speech Lab
+    case 53:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="csHeaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#002b4d" />
+              <stop offset="100%" stopColor="#001426" />
+            </linearGradient>
+            <linearGradient id="csGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffc107" />
+              <stop offset="100%" stopColor="#ff8f00" />
+            </linearGradient>
+          </defs>
+          {/* Cambridge Scholar Shield / Crest */}
+          <path d="M12 10 C24 10 32 6 32 6 C32 6 40 10 52 10 C52 28 46 48 32 58 C18 48 12 28 12 10 Z" fill="url(#csHeaderGrad)" stroke="url(#csGoldGrad)" strokeWidth="2.5" />
+          {/* Gold Banner Trim */}
+          <path d="M16 14 C26 14 32 10 32 10 C32 10 38 14 48 14" stroke="#ffc107" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Central Book / Lexicon */}
+          <path d="M22 28 C26 26 30 27 32 28 C34 27 38 26 42 28 V44 C38 42 34 43 32 44 C30 43 26 42 22 44 Z" fill="#ffffff" stroke="#ffc107" strokeWidth="1.5" />
+          <line x1="32" y1="28" x2="32" y2="44" stroke="#002b4d" strokeWidth="1.2" />
+          {/* Colorful 8 Parts of Speech dots representing the 8 building blocks */}
+          <circle cx="20" cy="20" r="2.2" fill="#4fc3f7" /> {/* Noun */}
+          <circle cx="28" cy="18" r="2.2" fill="#ff9800" /> {/* Pronoun */}
+          <circle cx="36" cy="18" r="2.2" fill="#ff5252" /> {/* Verb */}
+          <circle cx="44" cy="20" r="2.2" fill="#ffd54f" /> {/* Adj */}
+          <circle cx="18" cy="48" r="2.2" fill="#4caf50" /> {/* Adv */}
+          <circle cx="26" cy="51" r="2.2" fill="#ab47bc" /> {/* Prep */}
+          <circle cx="38" cy="51" r="2.2" fill="#26c6da" /> {/* Conj */}
+          <circle cx="46" cy="48" r="2.2" fill="#ec407a" /> {/* Inter */}
+          {/* Monogram A B C text on book */}
+          <text x="27" y="37" fill="#002b4d" fontSize="6.5" fontWeight="900" fontFamily="sans-serif">A</text>
+          <text x="37" y="37" fill="#002b4d" fontSize="6.5" fontWeight="900" fontFamily="sans-serif">B</text>
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

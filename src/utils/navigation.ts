@@ -6,6 +6,9 @@ import { SimulationItem } from '../types';
  * Vercel and static hosting "404 NOT_FOUND: This page doesn't exist" errors.
  */
 export function getSimulationStandaloneUrl(sim: SimulationItem): string {
+  if (sim.fileUrl) {
+    return sim.fileUrl;
+  }
   const origin = window.location.origin;
   return `${origin}/?sim=${encodeURIComponent(sim.indexNumber)}`;
 }
