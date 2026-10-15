@@ -864,25 +864,9 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#6366f1',
     glowColor: 'rgba(99, 102, 241, 0.45)'
   },
-  '53': {
-    id: '53',
-    name: 'Cambridge_Scholar_Parts_of_Speech_Lab.html',
-    bgSolid: '#d97706',
-    bgGradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
-    borderColor: '#fbbf24',
-    iconBg: '#002b4d',
-    iconBorder: '#ffc107',
-    iconColor: '#ffc107',
-    badgeBg: '#fef3c7',
-    badgeText: '#92400e',
-    badgeBorder: '#fde68a',
-    tagBg: '#fffbeb',
-    tagText: '#b45309',
-    glowColor: 'rgba(245, 158, 11, 0.45)'
-  },
   '54': {
     id: '54',
-    name: 'English_Grammar.html',
+    name: 'English Grammar',
     bgSolid: '#00a8cc',
     bgGradient: 'linear-gradient(135deg, #00c6ff 0%, #00758f 100%)',
     borderColor: '#38bdf8',
@@ -895,22 +879,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f0fdfa',
     tagText: '#0e7490',
     glowColor: 'rgba(0, 198, 255, 0.45)'
-  },
-  '55': {
-    id: '55',
-    name: 'Urdu_Grammar.html',
-    bgSolid: '#e11d48',
-    bgGradient: 'linear-gradient(135deg, #ff3b5c 0%, #be123c 100%)',
-    borderColor: '#fb7185',
-    iconBg: '#0d1a45',
-    iconBorder: '#ffc247',
-    iconColor: '#ffc247',
-    badgeBg: '#ffe4e6',
-    badgeText: '#9f1239',
-    badgeBorder: '#fecdd3',
-    tagBg: '#fff1f2',
-    tagText: '#be123c',
-    glowColor: 'rgba(255, 59, 92, 0.45)'
   }
 };
 

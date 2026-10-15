@@ -1710,43 +1710,7 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // 53: Cambridge Scholar – Parts of Speech Lab
-    case 53:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="csHeaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#002b4d" />
-              <stop offset="100%" stopColor="#001426" />
-            </linearGradient>
-            <linearGradient id="csGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffc107" />
-              <stop offset="100%" stopColor="#ff8f00" />
-            </linearGradient>
-          </defs>
-          {/* Cambridge Scholar Shield / Crest */}
-          <path d="M12 10 C24 10 32 6 32 6 C32 6 40 10 52 10 C52 28 46 48 32 58 C18 48 12 28 12 10 Z" fill="url(#csHeaderGrad)" stroke="url(#csGoldGrad)" strokeWidth="2.5" />
-          {/* Gold Banner Trim */}
-          <path d="M16 14 C26 14 32 10 32 10 C32 10 38 14 48 14" stroke="#ffc107" strokeWidth="1.5" strokeLinecap="round" />
-          {/* Central Book / Lexicon */}
-          <path d="M22 28 C26 26 30 27 32 28 C34 27 38 26 42 28 V44 C38 42 34 43 32 44 C30 43 26 42 22 44 Z" fill="#ffffff" stroke="#ffc107" strokeWidth="1.5" />
-          <line x1="32" y1="28" x2="32" y2="44" stroke="#002b4d" strokeWidth="1.2" />
-          {/* Colorful 8 Parts of Speech dots representing the 8 building blocks */}
-          <circle cx="20" cy="20" r="2.2" fill="#4fc3f7" /> {/* Noun */}
-          <circle cx="28" cy="18" r="2.2" fill="#ff9800" /> {/* Pronoun */}
-          <circle cx="36" cy="18" r="2.2" fill="#ff5252" /> {/* Verb */}
-          <circle cx="44" cy="20" r="2.2" fill="#ffd54f" /> {/* Adj */}
-          <circle cx="18" cy="48" r="2.2" fill="#4caf50" /> {/* Adv */}
-          <circle cx="26" cy="51" r="2.2" fill="#ab47bc" /> {/* Prep */}
-          <circle cx="38" cy="51" r="2.2" fill="#26c6da" /> {/* Conj */}
-          <circle cx="46" cy="48" r="2.2" fill="#ec407a" /> {/* Inter */}
-          {/* Monogram A B C text on book */}
-          <text x="27" y="37" fill="#002b4d" fontSize="6.5" fontWeight="900" fontFamily="sans-serif">A</text>
-          <text x="37" y="37" fill="#002b4d" fontSize="6.5" fontWeight="900" fontFamily="sans-serif">B</text>
-        </svg>
-      );
-
-    // 54: English Grammar | GEN Z EDTECH INTERACTIVE (3D Cubes & Parts of Speech Studio)
+    // 54: English Grammar (3D Cubes & Parts of Speech Studio)
     case 54:
       return (
         <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1782,41 +1746,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <circle cx="54" cy="14" r="1.8" fill="#00c6ff" />
           <circle cx="48" cy="52" r="1.5" fill="#2ecc71" />
           <circle cx="16" cy="50" r="1.5" fill="#f1c40f" />
-        </svg>
-      );
-
-    case 55:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="urduGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0d1a45" />
-              <stop offset="50%" stopColor="#1e1045" />
-              <stop offset="100%" stopColor="#2a0f4a" />
-            </linearGradient>
-            <linearGradient id="urduGradShield" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ff3b5c" />
-              <stop offset="100%" stopColor="#be123c" />
-            </linearGradient>
-          </defs>
-          {/* Base Emblem */}
-          <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#urduGradBg)" stroke="#ffc247" strokeWidth="1.8" />
-          {/* Decorative Corner Ornaments */}
-          <path d="M12 18 L18 12 M46 12 L52 18 M12 46 L18 52 M52 46 L46 52" stroke="#ffc247" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
-          {/* Center Book / Calligraphy Tablet */}
-          <path d="M16 20 C24 18 30 20 32 24 C34 20 40 18 48 20 L48 48 C40 46 34 48 32 50 C30 48 24 46 16 48 Z" fill="url(#urduGradShield)" stroke="#ffc247" strokeWidth="1.6" />
-          {/* Book Spine Center Line */}
-          <line x1="32" y1="24" x2="32" y2="50" stroke="#ffc247" strokeWidth="1.8" />
-          {/* Urdu Calligraphy / Characters */}
-          <text x="24" y="36" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', 'Urdu Typesetting', Arial, sans-serif">اردو</text>
-          <text x="40" y="36" fill="#ffc247" fontSize="10" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', 'Urdu Typesetting', Arial, sans-serif">قواعد</text>
-          {/* Badge Ribbon */}
-          <rect x="20" y="44" width="24" height="7" rx="3.5" fill="#ffc247" />
-          <text x="32" y="49.5" fill="#0d1a45" fontSize="4.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">GRAMMAR</text>
-          {/* Tiny glowing star dots */}
-          <circle cx="32" cy="13" r="1.8" fill="#ffc247" />
-          <circle cx="14" cy="32" r="1.2" fill="#ff3b5c" />
-          <circle cx="50" cy="32" r="1.2" fill="#ff3b5c" />
         </svg>
       );
 

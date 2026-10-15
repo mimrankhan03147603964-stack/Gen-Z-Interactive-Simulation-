@@ -728,19 +728,65 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     openSimulationInNewTab(sim);
   };
 
+  // Strictly remove deleted labs (LAB 53, LAB 55) entirely from the display grid
+  const activeSimulations = simulations.filter(s => {
+    if (s.indexNumber === '53' || s.indexNumber === '55' || s.id === 'sim-cambridge-scholar-parts-of-speech-lab' || s.id === 'sim-urdu-grammar') {
+      return false;
+    }
+    return true;
+  });
+
+  const cleanCardTitle = (title: string): string => {
+    return title
+      .replace(/\.html$/i, '')
+      .replace(/_/g, ' ')
+      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+      .trim();
+  };
+
+  const cleanCardTopic = (topic: string): string => {
+    return topic
+      .replace(/\.html$/i, '')
+      .replace(/_/g, ' ')
+      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+      .trim();
+  };
+
+  const cleanGradeBadge = (grade: string): string => {
+    return grade
+      .replace(/Cambridge\s+Scholar\s*/gi, '')
+      .trim();
+  };
+
+  const cleanCardSubject = (subject: string): string => {
+    return subject
+      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+      .replace(/\|\s*GEN\s+Z\s+EDTECH\s+INTERACTIVE/gi, '')
+      .trim();
+  };
+
+  const cleanCardDescription = (desc: string): string => {
+    return desc
+      .replace(/Cambridge\s+Scholar\s*/gi, '')
+      .trim();
+  };
+
   const matchesSearch = (sim: SimulationItem) => {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
+    const cleanT = cleanCardTitle(sim.title).toLowerCase();
+    const cleanS = cleanCardSubject(sim.subject).toLowerCase();
+    const cleanD = cleanCardDescription(sim.description).toLowerCase();
     return (
-      sim.title.toLowerCase().includes(term) ||
+      cleanT.includes(term) ||
       sim.indexNumber.includes(term) ||
-      sim.subject.toLowerCase().includes(term) ||
-      sim.description.toLowerCase().includes(term)
+      cleanS.includes(term) ||
+      cleanD.includes(term)
     );
   };
 
   const getCategoryCount = (categoryKey: string) => {
-    return simulations.filter(s => s.category === categoryKey).length;
+    return activeSimulations.filter(s => s.category === categoryKey).length;
   };
 
   const subjectCategories = getSubjectCategories(getCategoryCount);
@@ -788,7 +834,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                {simulations.length} Labs Available
+                {activeSimulations.length} Labs Available
               </span>
             </div>
 
@@ -828,7 +874,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
-                    const matches = simulations.filter(matchesSearch);
+                    const matches = activeSimulations.filter(matchesSearch);
                     if (matches.length > 0) {
                       if (onLaunchOnStage) {
                         onLaunchOnStage(matches[0]);
@@ -862,7 +908,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
             {/* Smart Auto-Action Detection Banner */}
             {searchTerm.trim().length >= 2 && (() => {
-              const currentMatches = simulations.filter(matchesSearch);
+              const currentMatches = activeSimulations.filter(matchesSearch);
               return (
                 <div className="text-xs transition-all">
                   {currentMatches.length > 0 ? (
@@ -1124,7 +1170,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           .filter(cat => cat.key !== 'All') // Only iterate over actual subjects for grouping
           .filter(cat => selectedCategory === 'All' || selectedCategory === cat.key) // Strict Filtering
           .map((cat) => {
-            const categorySims = simulations.filter(s => s.category === cat.key && matchesSearch(s));
+            const categorySims = activeSimulations.filter(s => s.category === cat.key && matchesSearch(s));
             if (categorySims.length === 0) return null;
 
             const isEcceCategory = cat.key === 'Early Childhood (ECCE)';
@@ -1139,6 +1185,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               const theme = getSimTheme(sim.indexNumber);
               const isActive = activeSim ? activeSim.id === sim.id : false;
               const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
+              const displayTitle = cleanCardTitle(sim.title);
+              const displayGrade = cleanGradeBadge(sim.gradeLevel);
+              const displaySubject = cleanCardSubject(sim.subject);
+              const displayDesc = cleanCardDescription(sim.description);
 
               return (
                 <div
@@ -1188,7 +1238,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           borderStyle: 'solid',
                           boxShadow: `0 4px 14px ${theme.glowColor}`
                         }}
-                        title={`Open ${sim.title} in new tab`}
+                        title={`Open ${displayTitle} in new tab`}
                       >
                         <TopicRealisticIcon 
                           indexNumber={sim.indexNumber}
@@ -1221,7 +1271,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                             borderStyle: 'solid'
                           }}
                         >
-                          {sim.gradeLevel}
+                          {displayGrade}
                         </span>
                       </div>
                     </div>
@@ -1239,9 +1289,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           e.stopPropagation();
                         }}
                         className="hover:underline"
-                        title={`Open ${sim.title} in new tab`}
+                        title={`Open ${displayTitle} in new tab`}
                       >
-                        {sim.title}
+                        {displayTitle}
                       </a>
                     </h4>
 
@@ -1250,7 +1300,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       className="text-xs font-bold mt-1 line-clamp-1"
                       style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
                     >
-                      {sim.subject}
+                      {displaySubject}
                     </p>
 
                     {/* Concept Description Intro */}
@@ -1258,7 +1308,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
                       style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
                     >
-                      {sim.description}
+                      {displayDesc}
                     </p>
 
                     {/* Topic Tags */}
@@ -1275,7 +1325,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                             borderStyle: 'solid'
                           }}
                         >
-                          {topic}
+                          {cleanCardTopic(topic)}
                         </span>
                       ))}
                       {sim.topics.length > 2 && (
@@ -1423,7 +1473,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
       {/* Empty State / AI Dynamic Generator Banner when Search Yields No Catalog Results */}
-      {simulations.filter(matchesSearch).length === 0 && (
+      {activeSimulations.filter(matchesSearch).length === 0 && (
         <div 
           className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
           style={{
