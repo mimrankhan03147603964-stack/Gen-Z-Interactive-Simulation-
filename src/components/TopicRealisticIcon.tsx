@@ -1690,7 +1690,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
 
     // 52: Active vs. Passive Voice & Verb Tenses Timeline Studio (English & Grammar)
     case 52:
-    case 56:
       return (
         <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
           {/* Circular Voice Transformation Ring */}
