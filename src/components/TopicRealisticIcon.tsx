@@ -1749,6 +1749,38 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 56: ECCE Learning World (Letters, Numbers, Urdu & Shapes)
+    case 56:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ecceBlock1" x1="10" y1="14" x2="28" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#ff758c" />
+              <stop offset="100%" stopColor="#ff4d6d" />
+            </linearGradient>
+            <linearGradient id="ecceBlock2" x1="34" y1="14" x2="52" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#60a5fa" />
+              <stop offset="100%" stopColor="#2563eb" />
+            </linearGradient>
+            <linearGradient id="ecceBlock3" x1="22" y1="34" x2="40" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#34d399" />
+              <stop offset="100%" stopColor="#059669" />
+            </linearGradient>
+          </defs>
+          <rect x="10" y="14" width="20" height="20" rx="4" fill="url(#ecceBlock1)" stroke="#ffe4e6" strokeWidth="1.5" />
+          <text x="20" y="29" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">A</text>
+          <rect x="34" y="14" width="20" height="20" rx="4" fill="url(#ecceBlock2)" stroke="#dbeafe" strokeWidth="1.5" />
+          <text x="44" y="29" fill="#ffffff" fontSize="11" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">1</text>
+          <rect x="22" y="34" width="20" height="20" rx="4" fill="url(#ecceBlock3)" stroke="#d1fae5" strokeWidth="1.5" />
+          <text x="32" y="49" fill="#ffffff" fontSize="14" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ا</text>
+          <polygon points="12,48 14,43 19,43 15,40 17,35 12,38 7,35 9,40 5,43 10,43" fill="#facc15" stroke="#f59e0b" strokeWidth="0.8" />
+          <circle cx="50" cy="44" r="5" fill="#f43f5e" />
+          <circle cx="48" cy="42" r="1.5" fill="#ffffff" />
+          <circle cx="53" cy="10" r="2.5" fill="#f59e0b" />
+          <circle cx="12" cy="10" r="2" fill="#38bdf8" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

@@ -765,6 +765,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Parts of Speech', '8 Core Word Classes', 'Interactive 3D Cards', 'Grammar Rules & Examples'],
     features: ['100% Offline Standalone Chrome-Ready Lab', '3D Perspective Orbiting Polyhedra Animation', 'Interactive Card Hover 3D Tilt Mechanics', 'Comprehensive Grammar Classification & Rules'],
     gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-ecce-learning-world',
+    slug: 'ecce-learning-world',
+    indexNumber: '56',
+    title: 'ECCE Learning World',
+    subject: 'Early Childhood Care & Education (Alphabet, Numbers, Urdu & Calendar)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Sparkles',
+    accentColor: '#ff4d6d',
+    description: 'Interactive ECCE learning academy for early childhood education. Features English Capital & Small Letters with phonics, Days of the Week, Months of the Year, Numbers 1 to 20 with tap-to-count items, Urdu Alphabet (اردو حروف تہجی), interactive drawing pad, and audio voice quiz game.',
+    fileUrl: '/simulations/ecce-learning-world.html',
+    topics: ['English Alphabet (Capital & Small Letters)', 'Urdu Alphabet (اردو حروف تہجی)', 'Numbers 1 to 20 & Item Counting', 'Days of the Week & Calendar Months', 'Interactive Tracing & Writing Pad', 'Voice Speech & Interactive Quiz Game'],
+    features: ['100% Offline Standalone Chrome-Ready Lab', 'Full English & Urdu Voice Pronunciation', 'Touch-Friendly Tracing & Drawing Canvas', 'Interactive 10-Question Audio Quiz with Star Rewards', 'Clean & Responsive 1280x720 Scaled Viewport'],
+    gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
   }
 ];
 
