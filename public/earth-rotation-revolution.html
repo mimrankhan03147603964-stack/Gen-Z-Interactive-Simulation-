@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Earth Rotation & Revolution Simulation</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#050c18; color:#f0f6fc; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-blue { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+.badge-emerald { background:#065f46; color:#ecfdf5; border:1px solid #34d399; }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0c1a30 0%, #040913 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.7); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#020610; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#0284c7; color:#fff; box-shadow:0 4px 12px rgba(2,132,199,0.35); }
+.btn-primary:hover { background:#0369a1; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#0284c7; width:110px; cursor:pointer; }
+
+.seasons-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+@media (max-width: 640px) { .seasons-row { grid-template-columns:repeat(2,1fr); } }
+.season-btn { background:#0d1e38; border:1.5px solid #1e3a5f; border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.season-btn:hover { border-color:#38bdf8; background:#13284a; }
+.season-btn.active { border-color:#38bdf8; background:#0369a1; color:#fff; box-shadow:0 4px 16px rgba(56,189,248,0.3); }
+.season-btn .s-name { font-weight:800; font-size:0.86rem; display:block; }
+.season-btn .s-date { font-size:0.75rem; color:#94a3b8; margin-top:2px; }
+.season-btn.active .s-date { color:#e0f2fe; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#38bdf8; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#38bdf8; font-family:monospace; }
+
+.legend-list { display:flex; flex-direction:column; gap:8px; font-size:0.84rem; }
+.legend-item { display:flex; align-items:center; gap:10px; }
+.legend-dot { width:12px; height:12px; border-radius:50%; shrink:0; }
+
+.tabs-nav { display:flex; gap:6px; margin-bottom:12px; background:#050c18; padding:4px; border-radius:10px; border:1px solid #1e3a5f; }
+.tab-link { flex:1; padding:7px; border:none; background:transparent; color:#94a3b8; font-weight:700; font-size:0.8rem; border-radius:8px; cursor:pointer; text-align:center; }
+.tab-link.active { background:#0284c7; color:#fff; }
+.tab-pane { display:none; font-size:0.86rem; line-height:1.6; color:#cbd5e1; }
+.tab-pane.active { display:block; }
+.tab-pane p { margin-bottom:8px; }
+.tab-pane strong { color:#38bdf8; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 14px; font-size:0.82rem; font-weight:700; cursor:pointer; z-index:10; transition:all 0.2s; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; border-color:#38bdf8; }
+
+:fullscreen, :-webkit-full-screen {
+  overflow: hidden !important;
+  background: #070d18 !important;
+}
+:fullscreen .container, :-webkit-full-screen .container {
+  max-width: 100% !important;
+  padding: 16px 24px 40px !important;
+}
+:fullscreen .main-grid, :-webkit-full-screen .main-grid {
+  grid-template-columns: 1fr 380px !important;
+}
+@media (max-width: 1024px) {
+  :fullscreen .main-grid, :-webkit-full-screen .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>🌍 Earth Rotation & Revolution Simulation</h1>
+      <p>Axial Tilt (23.5°), Diurnal Cycle, Orbital Ellipse, Solstices & Seasonal Dynamics</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-blue">Physics & Astronomy</span>
+      <span class="badge badge-emerald">365.25 Day Calendar</span>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <div class="sim-stage">
+      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
+      <div class="canvas-wrapper">
+        <canvas id="orbitCanvas" width="960" height="540"></canvas>
+
+<div class="ctl" id="ctlEarthRotation">
+  <div class="row">
+    <span>Actions</span>
+    <button class="btn b-play" onclick="document.getElementById('btnPlayPause')?.click()">⏸ Pause / Orbit</button>
+    <button class="btn b-in" onclick="if(window.setSeason)setSeason('summer')">☀️ Summer Solstice</button>
+    <button class="btn b-hold" onclick="if(window.setSeason)setSeason('winter')">❄️ Winter Solstice</button>
+    <button class="btn b-set" onclick="document.getElementById('btnReset')?.click()">↺ Reset Orbit</button>
+  </div>
+  <div class="row">
+    <span>Orbit Speed</span>
+    <button class="btn b-auto" onclick="var s=document.getElementById('speedSlider');if(s){s.value=0.5;s.dispatchEvent(new Event('input'))}">0.5x Slow</button>
+    <button class="btn b-play" onclick="var s=document.getElementById('speedSlider');if(s){s.value=1;s.dispatchEvent(new Event('input'))}">1x Normal</button>
+    <button class="btn b-out" onclick="var s=document.getElementById('speedSlider');if(s){s.value=2.5;s.dispatchEvent(new Event('input'))}">2.5x Fast</button>
+  </div>
+  <div class="row">
+    <span>Show / Options</span>
+    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 23.5° Axial Tilt & Rays</button>
+    
+  </div>
+</div>
+
+      </div>
+
+      <div class="seasons-row">
+        <div class="season-btn active" data-day="80">
+          <span class="s-name">🌸 Vernal Equinox</span>
+          <span class="s-date">March 21 (Equal Day/Night)</span>
+        </div>
+        <div class="season-btn" data-day="172">
+          <span class="s-name">☀️ Summer Solstice</span>
+          <span class="s-date">June 21 (Longest N Day)</span>
+        </div>
+        <div class="season-btn" data-day="266">
+          <span class="s-name">🍂 Autumnal Equinox</span>
+          <span class="s-date">Sept 23 (Equal Day/Night)</span>
+        </div>
+        <div class="season-btn" data-day="355">
+          <span class="s-name">❄️ Winter Solstice</span>
+          <span class="s-date">Dec 21 (Shortest N Day)</span>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
+          <button class="ctrl-btn btn-secondary" id="btnReset">↺ Reset</button>
+        </div>
+
+        <div class="slider-group">
+          <label>Rev Speed:</label>
+          <input type="range" id="speedSlider" min="0.1" max="4" step="0.1" value="1">
+          <span id="speedVal">1.0x</span>
+        </div>
+
+        <div class="slider-group">
+          <label>Tilt Angle:</label>
+          <input type="range" id="tiltSlider" min="0" max="45" step="0.5" value="23.5">
+          <span id="tiltVal">23.5°</span>
+        </div>
+
+        <div class="ctrl-group">
+          <label class="slider-group">
+            <input type="checkbox" id="chkOrbitRays" checked> Solar Rays
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="card">
+        <h3>📊 Real-time Orbital HUD</h3>
+        <div class="metrics-list">
+          <div class="metric-row">
+            <span class="m-label">Orbital Day:</span>
+            <span class="m-val" id="hudDay">Day 80 / 365</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Current Date:</span>
+            <span class="m-val" id="hudDate">March 21</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Sun Distance:</span>
+            <span class="m-val" id="hudDistance">149.6 M km</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">N Hemisphere:</span>
+            <span class="m-val" style="color:#34d399;" id="hudNorth">Spring (Equal)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">S Hemisphere:</span>
+            <span class="m-val" style="color:#fbbf24;" id="hudSouth">Autumn (Equal)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Axial Precession:</span>
+            <span class="m-val" id="hudTilt">23.5° Fixed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tabs-nav">
+          <button class="tab-link active" data-tab="tab-mech">Mechanics</button>
+          <button class="tab-link" data-tab="tab-seasons">Seasons</button>
+          <button class="tab-link" data-tab="tab-facts">Key Facts</button>
+        </div>
+
+        <div class="tab-pane active" id="tab-mech">
+          <p><strong>Rotation (24 Hours):</strong> Earth spins eastward on its axis once every 23 hours 56 minutes, creating diurnal day and night cycles.</p>
+          <p><strong>Revolution (365.25 Days):</strong> Earth orbits the Sun in a slightly elliptical orbit at an average orbital speed of <strong>29.78 km/s</strong> (107,200 km/h).</p>
+          <p><strong>Axial Tilt (23.44°):</strong> Earth's rotational axis points constantly towards Polaris (North Star) throughout the entire orbit.</p>
+        </div>
+
+        <div class="tab-pane" id="tab-seasons">
+          <p><strong>Why do we have seasons?</strong> Seasons are <em>not</em> caused by distance from the Sun! They are caused entirely by Earth's <strong>axial tilt</strong>.</p>
+          <p>When the Northern Hemisphere leans towards the Sun in June, sunlight strikes at a direct 90° angle, producing longer days and Summer.</p>
+          <p>Six months later in December, the Northern Hemisphere leans away, spreading solar rays over a wider surface area with fewer daylight hours.</p>
+        </div>
+
+        <div class="tab-pane" id="tab-facts">
+          <p>• <strong>Perihelion:</strong> Nearest to Sun (147.1 M km) occurs in early January during Northern Winter!</p>
+          <p>• <strong>Aphelion:</strong> Furthest from Sun (152.1 M km) occurs in early July.</p>
+          <p>• <strong>Midnight Sun:</strong> Regions above 66.5° N experience 24 hours of daylight around the June Solstice.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🗺️ Visual Legend</h3>
+        <div class="legend-list">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#fbbf24; box-shadow:0 0 8px #f59e0b;"></span>
+            <span>Sun (Central G-type Main Sequence)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#38bdf8;"></span>
+            <span>Earth (Blue Marble with Continents)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#f43f5e;"></span>
+            <span>Rotational Axis (23.5° North/South)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#334155; border:1px solid #64748b;"></span>
+            <span>Night Hemisphere (Terminator Shadow)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('orbitCanvas');
+const ctx = canvas.getContext('2d');
+
+let isRunning = true;
+let speedFactor = 1.0;
+let tiltAngleDeg = 23.5;
+let showRays = true;
+let currentDay = 80; // Start at Vernal Equinox
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const daysInMonths = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+function getFormattedDate(day) {
+  let d = Math.floor(day) % 365;
+  if (d <= 0) d = 1;
+  let monthIndex = 0;
+  let temp = d;
+  for (let i = 0; i < 12; i++) {
+    if (temp <= daysInMonths[i]) {
+      monthIndex = i;
+      break;
+    }
+    temp -= daysInMonths[i];
+  }
+  return `${months[monthIndex]} ${temp}`;
+}
+
+// Stars background
+const stars = [];
+for (let i = 0; i < 180; i++) {
+  stars.push({
+    x: Math.random() * 960,
+    y: Math.random() * 540,
+    r: Math.random() * 1.5 + 0.5,
+    alpha: Math.random() * 0.7 + 0.3
+  });
+}
+
+function updateHUD() {
+  document.getElementById('hudDay').textContent = `Day ${Math.floor(currentDay)} / 365`;
+  document.getElementById('hudDate').textContent = getFormattedDate(currentDay);
+
+  // Distance calculation based on eccentricity (e = 0.0167)
+  const theta = (currentDay / 365.25) * 2 * Math.PI;
+  const dist = 149.6 * (1 - 0.0167 * Math.cos(theta));
+  document.getElementById('hudDistance').textContent = `${dist.toFixed(1)} M km`;
+
+  // Northern & Southern seasons
+  const d = Math.floor(currentDay) % 365;
+  const nh = document.getElementById('hudNorth');
+  const sh = document.getElementById('hudSouth');
+
+  if (d >= 80 && d < 172) {
+    nh.textContent = 'Spring'; nh.style.color = '#34d399';
+    sh.textContent = 'Autumn'; sh.style.color = '#fbbf24';
+  } else if (d >= 172 && d < 266) {
+    nh.textContent = 'Summer (Long days)'; nh.style.color = '#f59e0b';
+    sh.textContent = 'Winter (Short days)'; sh.style.color = '#60a5fa';
+  } else if (d >= 266 && d < 355) {
+    nh.textContent = 'Autumn'; nh.style.color = '#fbbf24';
+    sh.textContent = 'Spring'; sh.style.color = '#34d399';
+  } else {
+    nh.textContent = 'Winter (Short days)'; nh.style.color = '#60a5fa';
+    sh.textContent = 'Summer (Long days)'; sh.style.color = '#f59e0b';
+  }
+}
+
+function drawScene() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 1. Draw Starfield
+  for (let s of stars) {
+    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const rx = 360; // Orbital semi-major axis
+  const ry = 190; // Orbital semi-minor axis (perspective tilt)
+
+  // 2. Draw Orbit Track
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = '#1e3a5f';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 3. Draw Solstice / Equinox Markers on Orbit
+  const markers = [
+    { day: 80, name: 'Vernal Equinox (Mar 21)', color: '#34d399' },
+    { day: 172, name: 'Summer Solstice (Jun 21)', color: '#f59e0b' },
+    { day: 266, name: 'Autumnal Equinox (Sep 23)', color: '#fbbf24' },
+    { day: 355, name: 'Winter Solstice (Dec 21)', color: '#60a5fa' }
+  ];
+
+  for (let m of markers) {
+    const mAngle = ((m.day - 80) / 365.25) * 2 * Math.PI;
+    const mx = cx + rx * Math.cos(mAngle);
+    const my = cy + ry * Math.sin(mAngle);
+
+    ctx.beginPath();
+    ctx.arc(mx, my, 4, 0, Math.PI * 2);
+    ctx.fillStyle = m.color;
+    ctx.fill();
+
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(m.name.split(' ')[0], mx, my + (my > cy ? 16 : -10));
+  }
+
+  // 4. Draw Sun at Center with Radiant Corona
+  const sunRad = 36;
+  const sunGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, sunRad * 2.2);
+  sunGrad.addColorStop(0, '#ffffff');
+  sunGrad.addColorStop(0.3, '#fef08a');
+  sunGrad.addColorStop(0.7, '#f59e0b');
+  sunGrad.addColorStop(1, 'rgba(234, 88, 12, 0)');
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad * 2.2, 0, Math.PI * 2);
+  ctx.fillStyle = sunGrad;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad, 0, Math.PI * 2);
+  ctx.fillStyle = '#f59e0b';
+  ctx.shadowColor = '#fbbf24';
+  ctx.shadowBlur = 24;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Sun Core Detail
+  ctx.fillStyle = '#fef08a';
+  ctx.beginPath();
+  ctx.arc(cx, cy, sunRad * 0.75, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 5. Calculate Earth Position
+  const orbitAngle = ((currentDay - 80) / 365.25) * 2 * Math.PI;
+  const ex = cx + rx * Math.cos(orbitAngle);
+  const ey = cy + ry * Math.sin(orbitAngle);
+
+  // 6. Draw Solar Light Rays towards Earth
+  if (showRays) {
+    ctx.strokeStyle = 'rgba(253, 224, 71, 0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // 7. Draw Earth
+  const earthRadius = 24;
+  const tiltRad = (tiltAngleDeg * Math.PI) / 180;
+
+  // Draw Axial Rod passing through Earth (Fixed pointing up-right relative to space)
+  const rodLen = 42;
+  const tiltX = Math.sin(tiltRad) * rodLen;
+  const tiltY = -Math.cos(tiltRad) * rodLen;
+
+  ctx.strokeStyle = '#f43f5e';
+  ctx.lineWidth = 3.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(ex - tiltX, ey - tiltY);
+  ctx.lineTo(ex + tiltX, ey + tiltY);
+  ctx.stroke();
+
+  // Axis Pole Labels
+  ctx.font = 'bold 10px monospace';
+  ctx.fillStyle = '#f43f5e';
+  ctx.textAlign = 'center';
+  ctx.fillText('N', ex + tiltX + Math.sign(tiltX) * 8, ey + tiltY - 4);
+  ctx.fillText('S', ex - tiltX - Math.sign(tiltX) * 8, ey - tiltY + 12);
+
+  // Earth Sphere
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(ex, ey, earthRadius, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Ocean Base
+  ctx.fillStyle = '#0284c7';
+  ctx.fillRect(ex - earthRadius, ey - earthRadius, earthRadius * 2, earthRadius * 2);
+
+  // Continents Pattern (rotating with currentDay * 15)
+  const rotAngle = (currentDay * 20) % 360;
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(tiltRad); // Tilted with axis
+
+  ctx.fillStyle = '#22c55e';
+  // Continents mock shapes
+  const shift = (rotAngle / 180) * earthRadius;
+  ctx.beginPath();
+  ctx.ellipse(((shift) % 48) - 24, -4, 12, 10, 0.4, 0, Math.PI * 2);
+  ctx.ellipse(((shift + 24) % 48) - 24, 6, 14, 8, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Polar Ice Caps
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(-earthRadius, -earthRadius, earthRadius * 2, 5);
+  ctx.fillRect(-earthRadius, earthRadius - 5, earthRadius * 2, 5);
+
+  ctx.restore();
+
+  // Day / Night Shadow Overlay
+  // Angle of light from Sun to Earth
+  const lightAngle = Math.atan2(ey - cy, ex - cx);
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(lightAngle + Math.PI / 2);
+
+  // Shadow half
+  ctx.fillStyle = 'rgba(3, 7, 18, 0.85)';
+  ctx.beginPath();
+  ctx.rect(-earthRadius, 0, earthRadius * 2, earthRadius);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.restore(); // Restore clip
+
+  // Atmosphere Outer Glow
+  ctx.beginPath();
+  ctx.arc(ex, ey, earthRadius + 2, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 8. Equator Line indicator
+  ctx.save();
+  ctx.translate(ex, ey);
+  ctx.rotate(tiltRad + Math.PI / 2);
+  ctx.strokeStyle = '#fbbf24';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(-earthRadius, 0);
+  ctx.lineTo(earthRadius, 0);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Earth Label
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Earth', ex, ey + earthRadius + 16);
+}
+
+function animate() {
+  if (isRunning) {
+    currentDay = (currentDay + 0.25 * speedFactor) % 365.25;
+    updateHUD();
+  }
+  drawScene();
+  requestAnimationFrame(animate);
+}
+
+// Event Listeners
+document.getElementById('btnPlayPause').addEventListener('click', (e) => {
+  isRunning = !isRunning;
+  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  currentDay = 80;
+  speedFactor = 1.0;
+  tiltAngleDeg = 23.5;
+  document.getElementById('speedSlider').value = 1;
+  document.getElementById('speedVal').textContent = '1.0x';
+  document.getElementById('tiltSlider').value = 23.5;
+  document.getElementById('tiltVal').textContent = '23.5°';
+  updateHUD();
+});
+
+document.getElementById('speedSlider').addEventListener('input', (e) => {
+  speedFactor = parseFloat(e.target.value);
+  document.getElementById('speedVal').textContent = `${speedFactor.toFixed(1)}x`;
+});
+
+document.getElementById('tiltSlider').addEventListener('input', (e) => {
+  tiltAngleDeg = parseFloat(e.target.value);
+  document.getElementById('tiltVal').textContent = `${tiltAngleDeg.toFixed(1)}°`;
+  document.getElementById('hudTilt').textContent = `${tiltAngleDeg.toFixed(1)}°`;
+});
+
+document.getElementById('chkOrbitRays').addEventListener('change', (e) => {
+  showRays = e.target.checked;
+});
+
+// Season Shortcut Buttons
+document.querySelectorAll('.season-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDay = parseFloat(btn.getAttribute('data-day'));
+    updateHUD();
+  });
+});
+
+// Tab Navigation
+document.querySelectorAll('.tab-link').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+  });
+});
+
+// Fullscreen
+document.getElementById('btnFullscreen').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    (document.documentElement || document.body).requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  document.getElementById('btnFullscreen').textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+});
+
+updateHUD();
+animate();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

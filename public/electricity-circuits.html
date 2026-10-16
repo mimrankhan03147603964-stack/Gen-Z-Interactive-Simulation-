@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Electricity & Circuits Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.container { max-width:1400px; margin:0 auto; padding:18px 20px 24px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; background:#0f2440; border-radius:14px; padding:8px 12px; justify-content:center; }
+.tab-btn { padding:12px 24px; border:none; border-radius:40px; font-size:1.02rem; font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer; transition:all .25s; flex:1 0 auto; }
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45); }
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:22px 24px 26px; margin-bottom:20px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.85rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:1rem; color:#a8c4e0; margin-bottom:18px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab { padding:8px 16px; border:none; border-radius:30px; font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active{display:block}
+.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.8rem; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; } .grid-item p{font-size:.92rem;color:#b8d4f0}
+.sim-box { background:#06121f; border-radius:18px; padding:18px 16px 16px; margin-top:8px; border:1px solid #1e3a5c; position:relative; }
+.sim-controls { display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; justify-content:center; margin-bottom:14px; background:#0a1a2e; padding:12px 18px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:8px; font-weight:600; color:#90b8e0; font-size:.9rem; }
+.sim-controls input[type=range]{width:125px;accent-color:#ff9800;cursor:pointer}
+.sim-controls select,.sim-controls button { padding:8px 16px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem; }
+.sim-controls button { background:#1976d2; color:#fff; }
+.sim-controls button:hover{transform:scale(1.05);filter:brightness(1.2)}
+.sim-controls button.danger { background:#c62828; }
+.sim-controls button.success { background:#2e7d32; }
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout{text-align:center;font-size:1.35rem;font-weight:700;color:#ffd54f;margin:14px 0 6px}
+.sim-readout small{display:block;font-size:.9rem;color:#7a9cc0;font-weight:400}
+.sim-info{background:#0a1a2e;padding:11px 16px;border-radius:36px;margin-top:12px;text-align:center;font-size:.92rem;color:#a8c8e8;border:1px solid #1a3550}
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:12px 16px; margin-top:12px; font-size:.9rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+
+/* ---- FULLSCREEN BUTTON ---- */
+.fs-btn {
+  display:block;
+  margin:0 auto 14px;
+  padding:11px 26px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(135deg,#7b1fa2,#9c27b0);
+  color:#fff;
+  font-weight:800;
+  font-size:.95rem;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(156,39,176,.5);
+  transition:.25s;
+  letter-spacing:.5px;
+}
+.fs-btn:hover { transform:scale(1.05); filter:brightness(1.15); }
+.fs-btn .icon { margin-right:8px; }
+
+/* ---- FULLSCREEN MODE ---- */
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen,
+.sim-box:-moz-full-screen,
+.sim-box:-ms-fullscreen {
+  width:100vw; height:100vh;
+  border-radius:0; border:none;
+  padding:8px 12px 10px;
+  display:flex; flex-direction:column;
+  background:#06121f;
+  overflow:hidden;
+}
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn { display:none; }
+.sim-box:fullscreen .sim-info,
+.sim-box:-webkit-full-screen .sim-info { display:none; }
+.sim-box:fullscreen .teacher-note,
+.sim-box:-webkit-full-screen .teacher-note { display:none; }
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  flex-shrink:0;
+  margin-bottom:6px;
+  padding:8px 14px;
+  border-radius:20px;
+  gap:8px 14px;
+}
+.sim-box:fullscreen .sim-readout,
+.sim-box:-webkit-full-screen .sim-readout {
+  flex-shrink:0; margin:4px 0; font-size:1rem;
+}
+.sim-box:fullscreen canvas,
+.sim-box:-webkit-full-screen canvas {
+  flex:1 1 auto;
+  width:100%;
+  height:auto;
+  max-height:calc(100vh - 150px);
+  object-fit:contain;
+  border-radius:8px;
+}
+.fs-extra-controls {
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:6px;
+  padding:8px 12px;
+  background:#0a1a2e;
+  border-radius:20px;
+  border:1px solid #1e3a5c;
+  flex-shrink:0;
+}
+.sim-box:fullscreen .fs-extra-controls,
+.sim-box:-webkit-full-screen .fs-extra-controls { display:flex; }
+.fs-extra-controls button {
+  padding:8px 16px;
+  border-radius:24px;
+  border:none;
+  font-weight:800;
+  font-size:.85rem;
+  cursor:pointer;
+  transition:.2s;
+  color:#fff;
+}
+.fs-extra-controls button:hover { transform:scale(1.06); filter:brightness(1.2); }
+.fs-extra-controls .fs-switch-on { background:linear-gradient(135deg,#2e7d32,#43a047); }
+.fs-extra-controls .fs-switch-off { background:linear-gradient(135deg,#c62828,#e53935); }
+.fs-extra-controls .fs-flow { background:linear-gradient(135deg,#1976d2,#42a5f5); }
+.fs-extra-controls .fs-reset { background:linear-gradient(135deg,#ef6c00,#f57c00); }
+.fs-extra-controls .fs-exit { background:linear-gradient(135deg,#6a1b9a,#8e24aa); }
+
+@media(max-width:800px){.tab-btn{font-size:.85rem;padding:10px 12px}.card{padding:14px}}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="tabs" id="topicTabs">
+<button class="tab-btn active" data-topic="electricity"><span class="icon">⚡</span> Electricity & Circuits</button>
+</div>
+
+<!-- ================= ELECTRICITY ================= -->
+<div class="topic active" id="topic-electricity"><div class="card">
+<h2>⚡ Electricity <small>circuits, bulbs, switches & batteries</small></h2>
+<div class="desc">Build a real circuit with a battery, a switch, wires, and a bulb. Choose series or parallel. Watch electrons flow and the bulb glow.</div>
+
+<div class="section-tabs" data-topic="electricity">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="types">Types</button>
+<button class="section-tab active" data-section="sim">Simulation</button>
+</div>
+
+<!-- DEFINITION -->
+<div class="panel" id="electricity-def"><h3>📖 Definition</h3>
+<p><strong>Electricity</strong> is the flow of electric charge (electrons) through a conductor. A <strong>circuit</strong> is a closed loop that lets electrons flow from the battery, through the wires, and back.</p>
+<ul>
+<li><strong>Battery:</strong> Pushes electrons (voltage).</li>
+<li><strong>Wire:</strong> Path for electrons (copper).</li>
+<li><strong>Switch:</strong> Opens or closes the circuit.</li>
+<li><strong>Bulb:</strong> Glows when electrons pass through it.</li>
+</ul>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Just like water flows in a pipe only when the tap is open, electrons flow only when the circuit is <em>closed</em> (switch ON).</div>
+</div>
+
+<!-- EXPLANATION -->
+<div class="panel" id="electricity-exp"><h3>💡 Explanation</h3>
+<p>Electrons need a complete path. If the switch is open, the path is broken and no current flows — the bulb stays off. Close the switch → electrons flow → bulb glows.</p>
+<ul>
+<li><strong>Voltage (V):</strong> The push from the battery. Unit = volt.</li>
+<li><strong>Current (I):</strong> The flow of electrons. Unit = ampere (A).</li>
+<li><strong>Resistance (R):</strong> Opposition to flow. Unit = ohm (Ω).</li>
+<li><strong>Ohm's Law:</strong> V = I × R.</li>
+</ul>
+</div>
+
+<!-- TYPES -->
+<div class="panel" id="electricity-types"><h3>🧩 Types of Circuits</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Series Circuit</h4><p>One single path. If one bulb breaks, all go off. Same current through all.</p></div>
+<div class="grid-item"><h4>Parallel Circuit</h4><p>Multiple paths. If one bulb breaks, others still glow. Same voltage across all.</p></div>
+<div class="grid-item"><h4>Open Circuit</h4><p>Switch OFF — path is broken. No current flows.</p></div>
+<div class="grid-item"><h4>Closed Circuit</h4><p>Switch ON — complete loop. Current flows freely.</p></div>
+<div class="grid-item"><h4>Short Circuit</h4><p>Wire bypasses the bulb — dangerous, no glow.</p></div>
+<div class="grid-item"><h4>Battery</h4><p>Provides voltage. More cells = more push.</p></div>
+</div>
+</div>
+
+<!-- SIMULATION -->
+<div class="panel active" id="electricity-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box" id="simBox">
+
+<button class="fs-btn" id="fullscreenBtn"><span class="icon">⛶</span> Fullscreen Simulation</button>
+
+<div class="sim-controls">
+<label>Circuit:
+<select id="circuitType">
+<option value="simple">Simple Circuit (1 bulb)</option>
+<option value="series">Series (2 bulbs)</option>
+<option value="parallel">Parallel (2 bulbs)</option>
+</select></label>
+
+<label>Cells:
+<select id="cellCount">
+<option value="1">1 Cell (1.5 V)</option>
+<option value="2" selected>2 Cells (3.0 V)</option>
+<option value="3">3 Cells (4.5 V)</option>
+<option value="4">4 Cells (6.0 V)</option>
+</select></label>
+
+<label>Resistance: <input type="range" id="resistanceRange" min="1" max="20" value="6"></label>
+
+<button id="switchBtn" class="danger">🔌 Switch: OFF</button>
+<button id="flowBtn" class="success">⚡ Show Electrons</button>
+<button id="resetElecBtn">⟳ Reset</button>
+</div>
+
+<!-- Extra fullscreen control bar -->
+<div class="fs-extra-controls" id="fsExtraControls">
+  <button class="fs-switch-off" id="fsSwitchBtn">🔌 Switch OFF</button>
+  <button class="fs-flow" id="fsFlowBtn">⚡ Hide Electrons</button>
+  <button class="fs-reset" id="fsResetBtn">⟳ Reset</button>
+  <button class="fs-exit" id="fsExitBtn">✕ Exit Fullscreen</button>
+</div>
+
+<div class="sim-readout" id="elecReadout">CIRCUIT OPEN <small>Switch is OFF — no current flows</small></div>
+
+<canvas id="elecCanvas" width="1100" height="520"></canvas>
+
+
+
+
+<div class="sim-info" id="elecInfo">Battery pushes electrons. Wires carry them. Switch controls flow. Bulb glows when current passes.</div>
+
+<div class="teacher-note"><strong>Real-Life:</strong> A torch light is a simple circuit. Home lights use parallel circuits so one bulb can turn off without affecting others. Flip the switch and watch the electrons move!</div>
+</div>
+</div>
+
+</div></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---- SECTION TABS ---- */
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+/* ---- FULLSCREEN ---- */
+const simBox = document.getElementById('simBox');
+const fsBtn = document.getElementById('fullscreenBtn');
+
+function enterFullscreen(el){
+ if(el.requestFullscreen) return el.requestFullscreen();
+ if(el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+ if(el.mozRequestFullScreen) return el.mozRequestFullScreen();
+ if(el.msRequestFullscreen) return el.msRequestFullscreen();
+}
+function exitFullscreen(){
+ if(document.exitFullscreen) return document.exitFullscreen();
+ if(document.webkitExitFullscreen) return document.webkitExitFullscreen();
+ if(document.mozCancelFullScreen) return document.mozCancelFullScreen();
+ if(document.msExitFullscreen) return document.msExitFullscreen();
+}
+function isFullscreen(){
+ return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+}
+
+fsBtn.addEventListener('click', ()=>{
+ if(!isFullscreen()){
+  enterFullscreen(simBox).catch(()=>{});
+ } else {
+  exitFullscreen().catch(()=>{});
+ }
+});
+
+['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>{
+ document.addEventListener(evt, ()=>{
+  if(isFullscreen()){
+   fsBtn.innerHTML = '<span class="icon">✕</span> Exit Fullscreen';
+   document.getElementById('fsSwitchBtn').textContent = switchOn ? '🔌 Switch ON' : '🔌 Switch OFF';
+   document.getElementById('fsFlowBtn').textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+   setTimeout(()=>{ resizeCanvas(); }, 200);
+  } else {
+   fsBtn.innerHTML = '<span class="icon">⛶</span> Fullscreen Simulation';
+   setTimeout(()=>{ resizeCanvas(); }, 200);
+  }
+ });
+});
+
+/* ---- CANVAS RESIZE FOR FULLSCREEN ---- */
+function resizeCanvas(){
+ const ec = document.getElementById('elecCanvas');
+ if(!ec) return;
+ if(isFullscreen()){
+  const box = simBox;
+  const controlsH = box.querySelector('.sim-controls')?.offsetHeight || 0;
+  const extraH = box.querySelector('.fs-extra-controls')?.offsetHeight || 0;
+  const readoutH = box.querySelector('.sim-readout')?.offsetHeight || 0;
+  const availH = window.innerHeight - controlsH - extraH - readoutH - 50;
+  const availW = window.innerWidth - 30;
+  const ratio = 1100/520;
+  let newW = availW;
+  let newH = newW / ratio;
+  if(newH > availH){ newH = availH; newW = newH * ratio; }
+  ec.style.width = newW + 'px';
+  ec.style.height = newH + 'px';
+  ec.style.maxHeight = availH + 'px';
+ } else {
+  ec.style.width = '100%';
+  ec.style.height = 'auto';
+  ec.style.maxHeight = '';
+ }
+}
+window.addEventListener('resize', resizeCanvas);
+
+/* =========================================================
+   ELECTRICITY SIMULATION
+   ========================================================= */
+const ec=document.getElementById('elecCanvas');
+const ectx=ec.getContext('2d');
+let elecTime=0;
+let switchOn=false;
+let showFlow=true;
+let electrons=[];
+let bulbFlicker=0;
+
+function getVoltage(){
+ const cells=+document.getElementById('cellCount').value;
+ return cells*1.5;
+}
+function getResistance(){
+ return +document.getElementById('resistanceRange').value;
+}
+function getCurrent(){
+ const V=getVoltage(),R=getResistance();
+ return V/R;
+}
+
+function drawBattery(ctx,x,y,cells,vertical){
+ const cellW=64,cellH=105;
+ if(vertical){
+  for(let i=0;i<cells;i++){
+   const oy=y + i*(cellH+16);
+   // Outer drop shadow
+   ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=16;ctx.shadowOffsetY=8;
+   // Dual-tone Metallic Alkaline Battery Casing (Electric Blue & Crimson Red)
+   const g=ctx.createLinearGradient(x-cellW/2,oy,x+cellW/2,oy);
+   g.addColorStop(0,'#1e3a8a');g.addColorStop(0.2,'#3b82f6');g.addColorStop(0.5,'#60a5fa');g.addColorStop(0.8,'#2563eb');g.addColorStop(1,'#1e3a8a');
+   ctx.fillStyle=g;
+   ctx.beginPath();ctx.roundRect(x-cellW/2,oy,cellW,cellH,10);ctx.fill();
+   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+
+   // Red top collar (Crimson Energy Band)
+   const redG=ctx.createLinearGradient(x-cellW/2,oy,x+cellW/2,oy);
+   redG.addColorStop(0,'#991b1b');redG.addColorStop(0.4,'#ef4444');redG.addColorStop(0.7,'#f87171');redG.addColorStop(1,'#7f1d1d');
+   ctx.fillStyle=redG;
+   ctx.beginPath();ctx.roundRect(x-cellW/2,oy,cellW,28,[10,10,0,0]);ctx.fill();
+
+   // Gold-plated Positive (+) Terminal Cap
+   const gold=ctx.createLinearGradient(x-14,oy-16,x+14,oy-16);
+   gold.addColorStop(0,'#b45309');gold.addColorStop(0.3,'#fde047');gold.addColorStop(0.7,'#f59e0b');gold.addColorStop(1,'#78350f');
+   ctx.fillStyle=gold;
+   ctx.beginPath();ctx.roundRect(x-14,oy-16,28,18,5);ctx.fill();
+   // Specular sheen on terminal
+   ctx.fillStyle='rgba(255,255,255,0.7)';ctx.fillRect(x-6,oy-15,4,14);
+
+   // Negative Base Plate (Polished Nickel)
+   const baseG=ctx.createLinearGradient(x-22,oy+cellH-3,x+22,oy+cellH-3);
+   baseG.addColorStop(0,'#64748b');baseG.addColorStop(0.5,'#cbd5e1');baseG.addColorStop(1,'#475569');
+   ctx.fillStyle=baseG;
+   ctx.beginPath();ctx.roundRect(x-22,oy+cellH-2,44,8,3);ctx.fill();
+
+   // Battery Brand Badge & Label
+   ctx.fillStyle='#ffffff';ctx.font='bold 22px system-ui,sans-serif';ctx.textAlign='center';
+   ctx.fillText('+',x,oy+22);
+   ctx.fillStyle='#fef08a';ctx.font='black 13px system-ui,sans-serif';
+   ctx.fillText('ALKALINE',x,oy+52);
+   ctx.fillStyle='#ffffff';ctx.font='bold 16px monospace';
+   ctx.fillText('1.5V',x,oy+76);
+   ctx.textAlign='left';
+  }
+  // On-screen component badge
+  ctx.fillStyle='#0f172a';ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(x-55,y-42,110,24,6);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#60a5fa';ctx.font='bold 11px system-ui,sans-serif';ctx.textAlign='center';
+  ctx.fillText('⚡ POWER CELL (DC)',x,y-26);ctx.textAlign='left';
+ }
+}
+
+function drawSwitch(ctx,x,y,on,label){
+ const w=140,h=60;
+ // Polished mahogany insulated wood base block with 3D bevel
+ const wood=ctx.createLinearGradient(x-16,y-16,x+w+16,y+h+16);
+ wood.addColorStop(0,'#78350f');wood.addColorStop(0.5,'#92400e');wood.addColorStop(1,'#451a03');
+ ctx.fillStyle=wood;
+ ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=16;ctx.shadowOffsetY=6;
+ ctx.beginPath();ctx.roundRect(x-16,y-16,w+32,h+32,14);ctx.fill();
+ ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+ ctx.strokeStyle='#b45309';ctx.lineWidth=2;ctx.stroke();
+
+ // Polished Brass Binding Posts (Terminals)
+ const brass=ctx.createRadialGradient(x,y+h/2,2,x,y+h/2,12);
+ brass.addColorStop(0,'#fef08a');brass.addColorStop(0.5,'#f59e0b');brass.addColorStop(1,'#b45309');
+ ctx.fillStyle=brass;
+ ctx.beginPath();ctx.arc(x,y+h/2,12,0,7);ctx.fill();
+ ctx.strokeStyle='#78350f';ctx.lineWidth=2;ctx.stroke();
+
+ ctx.beginPath();ctx.arc(x+w,y+h/2,12,0,7);ctx.fill();
+ ctx.strokeStyle='#78350f';ctx.lineWidth=2;ctx.stroke();
+
+ // Heavy Bronze Knife Switch Blade
+ ctx.strokeStyle=on?'#22c55e':'#ef4444';
+ ctx.lineWidth=12;ctx.lineCap='round';
+ ctx.shadowColor=on?'#22c55e':'#ef4444';ctx.shadowBlur=on?22:8;
+ ctx.beginPath();
+ ctx.moveTo(x,y+h/2);
+ if(on){
+   ctx.lineTo(x+w,y+h/2);
+ } else {
+   ctx.lineTo(x+w-14,y-24);
+   // Insulated handle knob on tip
+   ctx.fillStyle='#dc2626';ctx.shadowBlur=0;
+   ctx.beginPath();ctx.arc(x+w-14,y-24,10,0,7);ctx.fill();
+ }
+ ctx.stroke();
+ ctx.shadowBlur=0;ctx.lineCap='butt';
+
+ // Switch Name & Status Badge
+ ctx.fillStyle='#0f172a';ctx.strokeStyle=on?'#22c55e':'#ef4444';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.roundRect(x+w/2-56,y-48,112,24,6);ctx.fill();ctx.stroke();
+ ctx.fillStyle=on?'#4ade80':'#f87171';ctx.font='black 11px system-ui,sans-serif';ctx.textAlign='center';
+ ctx.fillText(on?'KNIFE SWITCH: CLOSED (ON)':'KNIFE SWITCH: OPEN (OFF)',x+w/2,y-32);
+ ctx.textAlign='left';
+}
+
+function drawBulb(ctx,x,y,intensity){
+ const r=50;
+ // Luminous ambient halo projection (Video-grade radial aura)
+ if(intensity>0.05){
+  const halo=ctx.createRadialGradient(x,y,10,x,y,r*6);
+  halo.addColorStop(0,`rgba(255,255,220,${0.98*intensity})`);
+  halo.addColorStop(0.15,`rgba(255,235,100,${0.85*intensity})`);
+  halo.addColorStop(0.4,`rgba(251,191,36,${0.5*intensity})`);
+  halo.addColorStop(0.7,`rgba(245,158,11,${0.18*intensity})`);
+  halo.addColorStop(1,'rgba(217,119,6,0)');
+  ctx.fillStyle=halo;
+  ctx.beginPath();ctx.arc(x,y,r*6,0,7);ctx.fill();
+ }
+
+ // Brass & Metal Screw Base with Realistic Thread Ribs
+ const baseY = y + r - 4;
+ const screwG=ctx.createLinearGradient(x-24,baseY,x+24,baseY);
+ screwG.addColorStop(0,'#92400e');screwG.addColorStop(0.3,'#fde047');screwG.addColorStop(0.7,'#d97706');screwG.addColorStop(1,'#78350f');
+ ctx.fillStyle=screwG;
+ ctx.beginPath();ctx.roundRect(x-22,baseY,44,16,4);ctx.fill();
+ // Thread indents
+ ctx.strokeStyle='#451a03';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(x-22,baseY+5);ctx.lineTo(x+22,baseY+5);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(x-22,baseY+11);ctx.lineTo(x+22,baseY+11);ctx.stroke();
+ // Black insulation contact base
+ ctx.fillStyle='#1e293b';ctx.beginPath();ctx.roundRect(x-14,baseY+16,28,12,3);ctx.fill();
+
+ // High-clarity 3D Translucent Glass Envelope with reflections
+ const glassGrad=ctx.createRadialGradient(x-16,y-20,4,x,y,r);
+ if(intensity>0.05){
+  glassGrad.addColorStop(0,`rgba(255,255,255,${0.95+0.05*intensity})`);
+  glassGrad.addColorStop(0.3,`rgba(254,240,138,${0.85+0.15*intensity})`);
+  glassGrad.addColorStop(0.7,`rgba(251,191,36,${0.75+0.25*intensity})`);
+  glassGrad.addColorStop(1,`rgba(217,119,6,0.95)`);
+ } else {
+  glassGrad.addColorStop(0,'rgba(241,245,249,0.7)');
+  glassGrad.addColorStop(0.4,'rgba(203,213,225,0.45)');
+  glassGrad.addColorStop(0.8,'rgba(148,163,184,0.35)');
+  glassGrad.addColorStop(1,'rgba(100,116,139,0.6)');
+ }
+ ctx.fillStyle=glassGrad;
+ ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+ ctx.strokeStyle=intensity>0.05?'#fef08a':'#94a3b8';
+ ctx.lineWidth=3.5;ctx.stroke();
+
+ // Specular curved gloss reflection (Light highlight on glass surface)
+ ctx.fillStyle='rgba(255,255,255,0.45)';
+ ctx.beginPath();
+ ctx.ellipse(x-18,y-18,14,24,-Math.PI/6,0,7);
+ ctx.fill();
+
+ // Glowing Coiled Tungsten Filament
+ ctx.strokeStyle=intensity>0.05?'#ffffff':'#64748b';
+ ctx.lineWidth=3;
+ ctx.shadowColor='#fef08a';
+ ctx.shadowBlur=intensity>0.05?30*intensity:0;
+ ctx.beginPath();
+ ctx.moveTo(x-14,y+r-12);ctx.lineTo(x-14,y-6);
+ ctx.moveTo(x+14,y+r-12);ctx.lineTo(x+14,y-6);
+ // Coiled filament bridge
+ ctx.moveTo(x-14,y-6);ctx.lineTo(x-8,y+10);ctx.lineTo(x,y-12);ctx.lineTo(x+8,y+10);ctx.lineTo(x+14,y-6);
+ ctx.stroke();
+ ctx.shadowBlur=0;
+
+ // Component Identification Badge
+ ctx.fillStyle='#0f172a';ctx.strokeStyle=intensity>0.05?'#fbbf24':'#64748b';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.roundRect(x-65,y-r-36,130,24,6);ctx.fill();ctx.stroke();
+ ctx.fillStyle=intensity>0.05?'#fef08a':'#94a3b8';
+ ctx.font='bold 11px system-ui,sans-serif';ctx.textAlign='center';
+ ctx.fillText(intensity>0.05?'💡 TUNGSTEN BULB (LIT)':'💡 TUNGSTEN BULB (OFF)',x,y-r-20);
+ ctx.textAlign='left';
+}
+
+function elecLoop(){
+ const w=ec.width,h=ec.height;
+ ectx.clearRect(0,0,w,h);
+
+ const bg=ectx.createRadialGradient(w/2,h/2,100,w/2,h/2,700);
+ bg.addColorStop(0,'#0a1f33');bg.addColorStop(1,'#040c16');
+ ectx.fillStyle=bg;ectx.fillRect(0,0,w,h);
+
+ ectx.strokeStyle='rgba(255,255,255,.035)';ectx.lineWidth=1;
+ for(let x=0;x<w;x+=50){ectx.beginPath();ectx.moveTo(x,0);ectx.lineTo(x,h);ectx.stroke();}
+ for(let y=0;y<h;y+=50){ectx.beginPath();ectx.moveTo(0,y);ectx.lineTo(w,y);ectx.stroke();}
+
+ const mode=document.getElementById('circuitType').value;
+ const cells=+document.getElementById('cellCount').value;
+ const R=getResistance();
+ const V=getVoltage();
+ const I=getCurrent();
+
+ const intensity=switchOn? Math.min(1, I/3.5) : 0;
+ bulbFlicker = 0.9 + 0.1*Math.sin(elecTime*0.6);
+
+ let pathPoints=null;
+
+ if(mode==='simple'){
+  const batteryX=120, batteryY=380;
+  const switchX=470, switchY=380;
+  const bulbX=820, bulbY=210;
+  const railY=210;
+  const bottomY=440;
+  const leftX=120;
+  const rightX=980;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,railY);
+  ectx.lineTo(bulbX-60,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(bulbX+60,railY);
+  ectx.lineTo(rightX,railY);
+  ectx.lineTo(rightX,bottomY);
+  ectx.lineTo(switchX+130,bottomY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(switchX,bottomY);
+  ectx.lineTo(leftX,bottomY);
+  ectx.lineTo(leftX,batteryY+45);
+  ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:railY},{x:bulbX-60,y:railY},
+   {x:bulbX+60,y:railY},{x:rightX,y:railY},{x:rightX,y:bottomY},
+   {x:switchX+130,y:bottomY},{x:switchX,y:bottomY},{x:leftX,y:bottomY},
+   {x:leftX,y:batteryY+45},{x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  drawSwitch(ectx,switchX,switchY,switchOn,'SWITCH');
+  drawBulb(ectx,bulbX,bulbY,intensity*bulbFlicker);
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('SWITCH',switchX+10,switchY-40);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('Current I = '+I.toFixed(2)+' A',540,60);
+   ectx.fillStyle='#ffd54f';
+   ectx.fillText('Voltage V = '+V.toFixed(1)+' V',540,90);
+   ectx.fillStyle='#ff8f66';
+   ectx.fillText('Resistance R = '+R+' Ω',540,120);
+  }
+ }
+ else if(mode==='series'){
+  const leftX=120;
+  const railY=170;
+  const bottomY=460;
+  const rightX=980;
+  const batteryY=400;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,railY);
+  ectx.lineTo(360,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(520,railY);
+  ectx.lineTo(680,railY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(840,railY);
+  ectx.lineTo(rightX,railY);
+  ectx.lineTo(rightX,bottomY);
+  ectx.lineTo(600,bottomY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(480,bottomY);
+  ectx.lineTo(leftX,bottomY);
+  ectx.lineTo(leftX,batteryY+45);
+  ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:railY},{x:360,y:railY},
+   {x:520,y:railY},{x:680,y:railY},{x:840,y:railY},
+   {x:rightX,y:railY},{x:rightX,y:bottomY},{x:600,y:bottomY},
+   {x:480,y:bottomY},{x:leftX,y:bottomY},{x:leftX,y:batteryY+45},
+   {x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  const iPerBulb = switchOn ? Math.min(1, I/5) : 0;
+  drawBulb(ectx,440,railY+50,iPerBulb*bulbFlicker);
+  drawBulb(ectx,760,railY+50,iPerBulb*bulbFlicker);
+  drawSwitch(ectx,480,bottomY,switchOn,'SWITCH');
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('SERIES CIRCUIT — one path, same current',340,50);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('I = '+I.toFixed(2)+' A (same in both bulbs)',360,90);
+  }
+ }
+ else {
+  const leftX=120;
+  const topY=150;
+  const midY=330;
+  const bottomY=480;
+  const rightX=980;
+  const batteryY=410;
+
+  ectx.strokeStyle='#8b6f1c';ectx.lineWidth=12;ectx.lineCap='round';
+  ectx.shadowColor='#ffcc66';ectx.shadowBlur=10;
+
+  ectx.beginPath();
+  ectx.moveTo(leftX,batteryY-45);
+  ectx.lineTo(leftX,topY);
+  ectx.lineTo(rightX,topY);
+  ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(450,topY);ectx.lineTo(450,midY);ectx.stroke();
+  ectx.beginPath();
+  ectx.moveTo(800,topY);ectx.lineTo(800,midY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(350,midY);ectx.lineTo(900,midY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(350,midY);ectx.lineTo(300,midY);ectx.lineTo(300,bottomY);ectx.stroke();
+
+  ectx.beginPath();
+  ectx.moveTo(300,bottomY);ectx.lineTo(180,bottomY);ectx.stroke();
+  ectx.beginPath();
+  ectx.moveTo(120,bottomY);ectx.lineTo(leftX,bottomY);ectx.lineTo(leftX,batteryY+45);ectx.stroke();
+  ectx.shadowBlur=0;
+
+  pathPoints=[
+   {x:leftX,y:batteryY-45},{x:leftX,y:topY},{x:450,y:topY},
+   {x:450,y:midY},{x:800,y:midY},{x:800,y:topY},{x:rightX,y:topY},
+   {x:rightX,y:topY},{x:800,y:topY},{x:800,y:midY},{x:450,y:midY},
+   {x:450,y:topY},{x:leftX,y:topY},{x:leftX,y:batteryY-45}
+  ];
+
+  drawBattery(ectx,leftX,batteryY,cells,true);
+  const iPerBulb = switchOn ? Math.min(1, I/4) : 0;
+  drawBulb(ectx,450,midY-70,iPerBulb*bulbFlicker);
+  drawBulb(ectx,800,midY-70,iPerBulb*bulbFlicker);
+
+  drawSwitch(ectx,180,bottomY-30,switchOn,'SWITCH');
+
+  ectx.fillStyle='#ffd54f';ectx.font='bold 22px sans-serif';
+  ectx.fillText('BATTERY',leftX-70,batteryY-160);
+  ectx.fillText('PARALLEL CIRCUIT — two paths, same voltage',340,50);
+
+  if(switchOn){
+   ectx.fillStyle='#66ff99';ectx.font='bold 20px sans-serif';
+   ectx.fillText('V = '+V.toFixed(1)+' V across each bulb',360,90);
+   ectx.fillText('I = '+I.toFixed(2)+' A total',360,118);
+  }
+ }
+
+ if(switchOn && showFlow && pathPoints){
+  let totalLen=0;
+  const segs=[];
+  for(let i=0;i<pathPoints.length-1;i++){
+   const a=pathPoints[i],b=pathPoints[i+1];
+   const d=Math.hypot(b.x-a.x,b.y-a.y);
+   segs.push({a,b,d});
+   totalLen+=d;
+  }
+  if(electrons.length===0 || electrons[0].pathLen!==totalLen){
+   electrons=[];
+   const count=70;
+   for(let i=0;i<count;i++){
+    electrons.push({t:i/count,speed:0.9+Math.random()*0.3,off:(Math.random()-0.5)*10,size:4+Math.random()*2,pathLen:totalLen});
+   }
+  }
+  electrons.forEach(e=>{
+   e.t += 0.004*e.speed*(0.5+I);
+   if(e.t>1)e.t-=1;
+   let dist=e.t*totalLen;
+   for(const s of segs){
+    if(dist<=s.d){
+     const k=dist/s.d;
+     const x=s.a.x+(s.b.x-s.a.x)*k;
+     const y=s.a.y+(s.b.y-s.a.y)*k;
+     const dx=s.b.x-s.a.x,dy=s.b.y-s.a.y;
+     const len=Math.hypot(dx,dy)||1;
+     const px=-dy/len,py=dx/len;
+     const fx=x+px*e.off,fy=y+py*e.off;
+     ectx.fillStyle='#7effff';
+     ectx.shadowColor='#00e5ff';ectx.shadowBlur=20;
+     ectx.beginPath();ectx.arc(fx,fy,e.size,0,7);ectx.fill();
+     ectx.shadowBlur=0;
+     ectx.fillStyle='rgba(255,255,255,.95)';
+     ectx.beginPath();ectx.arc(fx-e.size*.3,fy-e.size*.3,e.size*.45,0,7);ectx.fill();
+     ectx.fillStyle='#003';
+     ectx.font='bold 9px sans-serif';ectx.textAlign='center';
+     ectx.fillText('−',fx,fy+3);
+     ectx.textAlign='left';
+     break;
+    }
+    dist-=s.d;
+   }
+  });
+ }
+
+ elecTime++;
+ requestAnimationFrame(elecLoop);
+}
+
+function toggleSwitch(){
+ switchOn=!switchOn;
+ const btn=document.getElementById('switchBtn');
+ btn.textContent = switchOn ? '🔌 Switch: ON' : '🔌 Switch: OFF';
+ btn.classList.toggle('danger',!switchOn);
+ btn.classList.toggle('success',switchOn);
+ const fsBtn2=document.getElementById('fsSwitchBtn');
+ if(fsBtn2){
+  fsBtn2.textContent = switchOn ? '🔌 Switch ON' : '🔌 Switch OFF';
+  fsBtn2.className = switchOn ? 'fs-switch-on' : 'fs-switch-off';
+ }
+ if(switchOn){
+  document.getElementById('elecReadout').innerHTML='CIRCUIT CLOSED <small>Switch is ON — current is flowing</small>';
+  document.getElementById('elecInfo').textContent='Electrons are flowing! The bulb glows brighter with more voltage or less resistance.';
+ } else {
+  document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+  document.getElementById('elecInfo').textContent='Switch is open. Electrons cannot flow. The bulb is off.';
+ }
+}
+document.getElementById('switchBtn').addEventListener('click',toggleSwitch);
+document.getElementById('fsSwitchBtn').addEventListener('click',toggleSwitch);
+
+function toggleFlow(){
+ showFlow=!showFlow;
+ const btn=document.getElementById('flowBtn');
+ btn.textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+ btn.classList.toggle('success',!showFlow);
+ const fsBtn2=document.getElementById('fsFlowBtn');
+ if(fsBtn2){
+  fsBtn2.textContent = showFlow ? '⚡ Hide Electrons' : '⚡ Show Electrons';
+ }
+}
+document.getElementById('flowBtn').addEventListener('click',toggleFlow);
+document.getElementById('fsFlowBtn').addEventListener('click',toggleFlow);
+
+function resetElec(){
+ switchOn=false;
+ showFlow=true;
+ electrons=[];
+ const sw=document.getElementById('switchBtn');
+ sw.textContent='🔌 Switch: OFF';
+ sw.classList.add('danger');
+ sw.classList.remove('success');
+ const fl=document.getElementById('flowBtn');
+ fl.textContent='⚡ Show Electrons';
+ fl.classList.add('success');
+ const fsSw=document.getElementById('fsSwitchBtn');
+ if(fsSw){fsSw.textContent='🔌 Switch OFF';fsSw.className='fs-switch-off';}
+ const fsFl=document.getElementById('fsFlowBtn');
+ if(fsFl){fsFl.textContent='⚡ Hide Electrons';}
+ document.getElementById('cellCount').value='2';
+ document.getElementById('resistanceRange').value=6;
+ document.getElementById('circuitType').value='simple';
+ document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+ document.getElementById('elecInfo').textContent='Battery pushes electrons. Wires carry them. Switch controls flow. Bulb glows when current passes.';
+}
+document.getElementById('resetElecBtn').addEventListener('click',resetElec);
+document.getElementById('fsResetBtn').addEventListener('click',resetElec);
+document.getElementById('fsExitBtn').addEventListener('click',()=>{ exitFullscreen().catch(()=>{}); });
+
+['cellCount','resistanceRange','circuitType'].forEach(id=>{
+ document.getElementById(id).addEventListener('change',updateElecReadout);
+ document.getElementById(id).addEventListener('input',updateElecReadout);
+});
+function updateElecReadout(){
+ const V=getVoltage(),R=getResistance(),I=getCurrent();
+ if(switchOn){
+  document.getElementById('elecReadout').innerHTML='CURRENT = '+I.toFixed(2)+' A <small>Voltage '+V.toFixed(1)+' V · Resistance '+R+' Ω</small>';
+ } else {
+  document.getElementById('elecReadout').innerHTML='CIRCUIT OPEN <small>Switch is OFF — no current flows</small>';
+ }
+}
+
+function initElec(){
+ elecLoop();
+ updateElecReadout();
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+ initElec();
+} else {
+ window.addEventListener('DOMContentLoaded',initElec);
+ window.addEventListener('load',initElec);
+}
+})();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

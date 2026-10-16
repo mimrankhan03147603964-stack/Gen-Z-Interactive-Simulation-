@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cambridge Scholar – Parts of Speech Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:radial-gradient(ellipse at top,#0d1f35 0%,#050b14 70%);
+  color:#e8f4ff; min-height:100vh; overflow-x:hidden;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(79,195,247,.10) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(255,143,0,.09) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(171,71,188,.06) 0%, transparent 55%);
+  animation:bgPulse 14s ease-in-out infinite alternate;
+}
+@keyframes bgPulse {
+  0%   { transform:scale(1); opacity:.75; }
+  100% { transform:scale(1.1); opacity:1; }
+}
+
+/* ===== HEADER ===== */
+.main-header {
+  position:relative; z-index:2; width:100%;
+  background:linear-gradient(135deg,#001a33 0%,#003d66 50%,#006699 100%);
+  padding:32px 30px 24px; text-align:center;
+  border-bottom:5px solid #ffc107;
+  box-shadow:0 14px 45px rgba(0,0,0,.75);
+}
+.main-header::after {
+  content:''; position:absolute; left:0; right:0; bottom:-5px; height:5px;
+  background:linear-gradient(90deg,#ffc107,#ff8f00,#ffc107,#ff8f00,#ffc107);
+  background-size:200% 100%; animation:slide 4s linear infinite;
+}
+@keyframes slide { 0%{background-position:0% 0} 100%{background-position:200% 0} }
+.main-header h1 {
+  font-size:2.35rem; font-weight:900; color:#fff; letter-spacing:1.5px;
+  text-shadow:0 0 30px rgba(255,193,7,.55), 0 5px 15px rgba(0,0,0,.85);
+}
+.main-header .sub { font-size:1.05rem; color:#a8d8ff; margin-top:8px; letter-spacing:.6px; }
+
+/* ===== CONTAINER ===== */
+.container { position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:26px 20px; }
+
+/* ===== TOP TABS ===== */
+.tabs {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;
+  background:rgba(15,36,64,.78); backdrop-filter:blur(12px);
+  border-radius:16px; padding:8px 12px; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 30px rgba(0,0,0,.55);
+}
+.tab-btn {
+  padding:13px 22px; border:none; border-radius:40px; font-size:1rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .28s cubic-bezier(.4,0,.2,1); flex:1 0 auto; position:relative;
+}
+.tab-btn:hover { background:rgba(255,255,255,.08); color:#fff; transform:translateY(-2px); }
+.tab-btn.active {
+  background:linear-gradient(135deg,#ff8f00,#ff6f00);
+  color:#0a1628; box-shadow:0 8px 24px rgba(255,143,0,.5);
+  transform:translateY(-2px);
+}
+.tab-btn .icon { margin-right:8px; }
+
+/* ===== TOPIC ===== */
+.topic { display:none; } .topic.active { display:block; animation:fadeIn .5s ease; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(15px)} to{opacity:1; transform:translateY(0)} }
+
+/* ===== CARD ===== */
+.card {
+  background:linear-gradient(160deg,rgba(18,42,68,.95),rgba(10,30,52,.98));
+  border-radius:24px; padding:26px 28px 30px; margin-bottom:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.78), inset 0 1px 0 rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
+}
+.card h2 { font-size:1.95rem; font-weight:800; margin-bottom:8px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc {
+  font-size:1rem; color:#a8c4e0; margin-bottom:20px;
+  border-left:5px solid #ffc107; padding:12px 18px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.75;
+}
+
+/* ===== SECTION TABS ===== */
+.section-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0 16px; }
+.section-tab {
+  padding:10px 20px; border:none; border-radius:30px; font-weight:700;
+  font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer;
+  transition:all .25s; border:1px solid transparent;
+}
+.section-tab:hover { background:#234468; color:#fff; transform:translateY(-2px); }
+.section-tab.active {
+  background:linear-gradient(135deg,#1976d2,#42a5f5); color:#fff;
+  box-shadow:0 6px 18px rgba(25,118,210,.5);
+}
+
+/* ===== PANELS ===== */
+.panel { display:none; padding:18px 0 8px; animation:fadeIn .4s ease; }
+.panel.active { display:block; }
+.panel h3 { font-size:1.5rem; font-weight:700; color:#ffd54f; margin-bottom:14px; }
+.panel p, .panel li { font-size:1rem; line-height:1.8; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:9px 0 9px 36px; position:relative; }
+.panel ul li::before {
+  content:'✓'; position:absolute; left:0; top:9px; width:24px; height:24px;
+  border-radius:50%; background:linear-gradient(135deg,#ffc107,#ff8f00);
+  color:#0a1628; font-weight:900; text-align:center; line-height:24px;
+  font-size:.85rem; box-shadow:0 3px 10px rgba(255,193,7,.5);
+}
+
+/* ===== GRID ===== */
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:12px; }
+.grid-item {
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  padding:16px; border-radius:16px; border-left:5px solid #ff9800;
+  transition:transform .25s, box-shadow .25s;
+}
+.grid-item:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(255,152,0,.25); }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:6px; }
+.grid-item p { font-size:.94rem; color:#b8d4f0; line-height:1.6; }
+
+/* ===== SIM BOX ===== */
+.sim-box {
+  background:linear-gradient(160deg,#06121f,#040e1a);
+  border-radius:20px; padding:22px 18px 18px; margin-top:10px;
+  border:1px solid #1e3a5c; box-shadow:inset 0 0 40px rgba(0,0,0,.5);
+}
+
+/* ===== CONTROLS ===== */
+.sim-controls {
+  display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center;
+  justify-content:center; margin-bottom:14px; background:rgba(10,26,46,.85);
+  padding:14px 18px; border-radius:20px; border:1px solid #1e3a5c;
+  backdrop-filter:blur(8px);
+}
+.sim-controls label {
+  display:flex; align-items:center; gap:10px; font-weight:600;
+  color:#90b8e0; font-size:.92rem;
+}
+.sim-controls select, .sim-controls button {
+  padding:9px 18px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:all .22s;
+  font-size:.88rem;
+}
+.sim-controls button { background:linear-gradient(135deg,#1976d2,#2196f3); color:#fff; }
+.sim-controls button:hover { transform:translateY(-2px) scale(1.04); filter:brightness(1.18); box-shadow:0 8px 22px rgba(33,150,243,.4); }
+.sim-controls button:active { transform:translateY(0) scale(.98); }
+.sim-controls button.green  { background:linear-gradient(135deg,#00c853,#00e676); color:#002200; }
+.sim-controls button.green:hover  { box-shadow:0 8px 22px rgba(0,200,83,.5); }
+.sim-controls button.red    { background:linear-gradient(135deg,#d32f2f,#f44336); color:#fff; }
+.sim-controls button.red:hover    { box-shadow:0 8px 22px rgba(244,67,54,.5); }
+.sim-controls button.purple { background:linear-gradient(135deg,#7b1fa2,#9c27b0); color:#fff; }
+.sim-controls button.purple:hover { box-shadow:0 8px 22px rgba(156,39,176,.5); }
+.sim-controls button.orange { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; }
+.sim-controls button.orange:hover { box-shadow:0 8px 22px rgba(255,143,0,.5); }
+
+/* ===== READOUT ===== */
+.sim-readout {
+  text-align:center; font-size:1.5rem; font-weight:800; color:#ffd54f;
+  margin:16px 0 8px; text-shadow:0 0 20px rgba(255,213,79,.55);
+  letter-spacing:1px;
+}
+.sim-readout small { display:block; font-size:.95rem; color:#7a9cc0; font-weight:400; margin-top:5px; letter-spacing:0; }
+
+/* ===== CANVAS ===== */
+canvas {
+  width:100%; height:auto; background:#040e1a; border-radius:16px;
+  border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.65), 0 8px 30px rgba(0,0,0,.55);
+  cursor:pointer;
+}
+
+/* ===== INFO BOX ===== */
+.sim-info {
+  background:rgba(10,26,46,.9); padding:14px 20px; border-radius:20px;
+  margin-top:14px; text-align:center; font-size:.98rem; color:#a8c8e8;
+  border:1px solid #1a3550; line-height:1.65;
+}
+
+/* ===== WORD DETAIL BOX (very rich) ===== */
+.word-detail {
+  background:linear-gradient(135deg,rgba(0,26,51,.95),rgba(0,61,102,.85));
+  border-radius:18px; padding:20px 24px; margin-top:16px;
+  border:2px solid rgba(255,193,7,.35);
+  box-shadow:inset 0 0 40px rgba(255,193,7,.08), 0 8px 30px rgba(0,0,0,.5);
+  min-height:180px;
+  transition:all .3s;
+}
+.word-detail.empty {
+  display:flex; align-items:center; justify-content:center;
+  color:#5a7a9a; font-style:italic; font-size:1.05rem;
+}
+.word-detail .wd-word {
+  font-size:2rem; font-weight:900; color:#ffd54f;
+  text-shadow:0 0 25px rgba(255,213,79,.6);
+  margin-bottom:6px;
+  font-family:'Courier New',monospace;
+}
+.word-detail .wd-type {
+  display:inline-block; padding:6px 18px; border-radius:30px;
+  font-size:1rem; font-weight:800; margin-bottom:12px;
+  text-transform:uppercase; letter-spacing:1.5px;
+  box-shadow:0 4px 15px rgba(0,0,0,.4);
+}
+.word-detail .wd-row {
+  display:flex; gap:12px; margin:8px 0; align-items:flex-start;
+}
+.word-detail .wd-label {
+  min-width:130px; font-weight:800; color:#4fc3f7;
+  font-size:.92rem; text-transform:uppercase; letter-spacing:.5px;
+}
+.word-detail .wd-value {
+  flex:1; color:#e8f4ff; font-size:1rem; line-height:1.65;
+}
+
+/* ===== TEACHER NOTE ===== */
+.teacher-note {
+  background:linear-gradient(135deg,rgba(13,32,24,.95),rgba(10,26,20,.95));
+  border-left:5px solid #4caf50; border-radius:0 16px 16px 0;
+  padding:16px 20px; margin-top:16px; font-size:.95rem;
+  color:#b8e6c8; line-height:1.8; box-shadow:0 6px 20px rgba(0,0,0,.4);
+}
+.teacher-note strong { color:#66bb6a; }
+
+/* ===== COPY BUTTON ===== */
+.copy-btn {
+  position:fixed; top:16px; left:16px; z-index:1000; padding:11px 22px;
+  border-radius:30px; border:none;
+  background:linear-gradient(135deg,#00c853,#00e676); color:#002200;
+  font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,200,80,.5); transition:all .2s;
+}
+.copy-btn:hover { transform:translateY(-2px) scale(1.05); }
+.copy-btn.copied { background:linear-gradient(135deg,#ffc107,#ff8f00); color:#0a1628; }
+
+/* ===== LEGEND ===== */
+.legend {
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:14px 0;
+  padding:12px 18px; background:rgba(10,26,46,.85); border-radius:16px;
+  border:1px solid #1e3a5c; font-size:.88rem;
+}
+.legend span { display:flex; align-items:center; gap:7px; color:#c8ddf0; }
+.legend .dot {
+  width:16px; height:16px; border-radius:50%; display:inline-block;
+  box-shadow:0 0 10px currentColor;
+}
+
+/* ===== QUIZ PANEL ===== */
+.quiz-box {
+  background:linear-gradient(135deg,rgba(20,0,40,.9),rgba(40,0,80,.7));
+  border-radius:18px; padding:22px 24px; margin-top:14px;
+  border:2px solid rgba(171,71,188,.5);
+  box-shadow:0 10px 35px rgba(156,39,176,.3);
+}
+.quiz-q {
+  font-size:1.25rem; font-weight:700; color:#fff;
+  margin-bottom:16px; line-height:1.6;
+}
+.quiz-q .quiz-word {
+  color:#ffd54f; font-family:'Courier New',monospace;
+  font-size:1.4rem; padding:0 6px;
+}
+.quiz-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+.quiz-opt {
+  padding:14px 18px; border-radius:14px; border:2px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05); color:#e8f4ff; font-weight:700;
+  font-size:.98rem; cursor:pointer; transition:all .25s;
+}
+.quiz-opt:hover:not(:disabled) {
+  background:rgba(255,255,255,.12); transform:translateY(-2px);
+  border-color:#4fc3f7;
+}
+.quiz-opt.correct { background:linear-gradient(135deg,#00c853,#00e676); color:#002200; border-color:#00e676; }
+.quiz-opt.wrong   { background:linear-gradient(135deg,#d32f2f,#f44336); color:#fff; border-color:#f44336; }
+.quiz-score {
+  text-align:center; font-size:1.15rem; font-weight:700; color:#ffd54f;
+  margin-top:14px;
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+  position:relative; z-index:2; width:100%; background:#00101f;
+  padding:20px 30px; text-align:center; border-top:3px solid #ffc107;
+  color:#6a8ca8; font-size:.92rem; margin-top:24px;
+}
+.main-footer .highlight { color:#ffc107; font-weight:700; }
+
+/* ===== ANIMATED WORD TOKENS (canvas fallback also) ===== */
+@keyframes tokenPop {
+  0%   { transform:scale(.85); opacity:.4; }
+  60%  { transform:scale(1.12); opacity:1; }
+  100% { transform:scale(1); opacity:1; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:800px){
+  .main-header h1 { font-size:1.35rem; }
+  .tab-btn { font-size:.82rem; padding:10px 12px; }
+  .card { padding:16px; }
+  .copy-btn { top:10px; left:10px; padding:8px 14px; font-size:.75rem; }
+  .sim-readout { font-size:1.15rem; }
+  .word-detail .wd-word { font-size:1.5rem; }
+  .word-detail .wd-label { min-width:100px; font-size:.8rem; }
+}
+</style>
+</head>
+<body>
+
+<button class="copy-btn" id="copyCodeBtn">📋 Copy Code</button>
+
+<header class="main-header">
+<h1>🔤 CAMBRIDGE SCHOLAR PARTS OF SPEECH LAB</h1>
+<div class="sub">Click Any Word · See Full Detail · Hear Pronunciation · Take Quiz</div>
+</header>
+
+<div class="container">
+
+<!-- ================= MAIN TABS ================= -->
+<div class="tabs" id="topicTabs">
+  <button class="tab-btn active" data-topic="overview"><span class="icon">📖</span> Overview</button>
+  <button class="tab-btn" data-topic="lab"><span class="icon">🎮</span> Sentence Lab</button>
+  <button class="tab-btn" data-topic="explorer"><span class="icon">🔍</span> Word Explorer</button>
+  <button class="tab-btn" data-topic="quiz"><span class="icon">🏆</span> Quiz Challenge</button>
+</div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 1: OVERVIEW ========================== -->
+<!-- ============================================================= -->
+<div class="topic active" id="topic-overview"><div class="card">
+<h2>📖 Parts of Speech <small>the 8 building blocks of English</small></h2>
+<div class="desc">Every single word in the English language belongs to one of 8 categories called <strong>Parts of Speech</strong>. Learning them is the foundation of grammar, writing, and communication.</div>
+
+<div class="section-tabs" data-topic="overview">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">The 8 Types</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="role">Why It Matters</button>
+</div>
+
+<div class="panel active" id="overview-def">
+  <h3>📘 What is a Part of Speech?</h3>
+  <p>A <strong>Part of Speech</strong> is a category into which a word is placed based on its <strong>function</strong> in a sentence — not just its meaning. The same word can belong to different categories depending on how it is used.</p>
+
+  <div class="grid-3" style="margin-top:18px;">
+    <div class="grid-item">
+      <h4>🔹 Example 1</h4>
+      <p><em>"I <strong>run</strong> every morning."</em><br>→ <strong>run</strong> is a <strong>Verb</strong> (action)</p>
+    </div>
+    <div class="grid-item">
+      <h4>🔹 Example 2</h4>
+      <p><em>"I went for a <strong>run</strong>."</em><br>→ <strong>run</strong> is a <strong>Noun</strong> (thing)</p>
+    </div>
+    <div class="grid-item">
+      <h4>🔹 Example 3</h4>
+      <p><em>"The <strong>run</strong> route is long."</em><br>→ <strong>run</strong> is an <strong>Adjective</strong> (describes route)</p>
+    </div>
+  </div>
+
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Never teach parts of speech as "word meanings". Teach them as <strong>jobs</strong> that words do in a sentence. A word can have multiple jobs!</div>
+</div>
+
+<div class="panel" id="overview-exp">
+  <h3>💡 The 8 Parts of Speech</h3>
+  <div class="grid-3">
+    <div class="grid-item" style="border-left-color:#4fc3f7;">
+      <h4 style="color:#4fc3f7;">1. Noun 🔵</h4>
+      <p>Names a person, place, thing, or idea.<br><em>Ahmed, Lahore, book, love</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#ff9800;">
+      <h4 style="color:#ff9800;">2. Pronoun 🟠</h4>
+      <p>Replaces a noun to avoid repetition.<br><em>he, she, it, they, we, I</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#ff5252;">
+      <h4 style="color:#ff5252;">3. Verb 🔴</h4>
+      <p>Shows action or state of being.<br><em>run, is, think, jump, seem</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#ffd54f;">
+      <h4 style="color:#ffd54f;">4. Adjective 🟡</h4>
+      <p>Describes a noun or pronoun.<br><em>big, red, happy, three</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#4caf50;">
+      <h4 style="color:#4caf50;">5. Adverb 🟢</h4>
+      <p>Describes a verb, adjective, or adverb.<br><em>quickly, very, well, here</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#ab47bc;">
+      <h4 style="color:#ab47bc;">6. Preposition 🟣</h4>
+      <p>Shows relationship of a noun to another word.<br><em>in, on, at, under, between</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#26c6da;">
+      <h4 style="color:#26c6da;">7. Conjunction 🩵</h4>
+      <p>Joins words, phrases, or clauses.<br><em>and, but, or, because, so</em></p>
+    </div>
+    <div class="grid-item" style="border-left-color:#ec407a;">
+      <h4 style="color:#ec407a;">8. Interjection 🩷</h4>
+      <p>Expresses sudden emotion or feeling.<br><em>wow, oh, alas, hurray, oops</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="overview-types">
+  <h3>🧩 Sentence with All 8 Types</h3>
+  <p style="font-size:1.15rem; text-align:center; padding:20px; background:rgba(0,0,0,.35); border-radius:14px; line-height:2.2;">
+    <span style="color:#ec407a; font-weight:900;">Wow!</span>
+    <span style="color:#ff9800; font-weight:900;">She</span>
+    <span style="color:#4caf50; font-weight:900;">quickly</span>
+    <span style="color:#ff5252; font-weight:900;">ran</span>
+    <span style="color:#ab47bc; font-weight:900;">into</span>
+    <span style="color:#4fc3f7; font-weight:900;">the garden</span>
+    <span style="color:#26c6da; font-weight:900;">because</span>
+    <span style="color:#ffd54f; font-weight:900;">happy</span>
+    <span style="color:#ff9800; font-weight:900;">she</span>
+    <span style="color:#ff5252; font-weight:900;">was</span>.
+  </p>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Interjection</h4><p>Wow!</p></div>
+    <div class="grid-item"><h4>Pronoun</h4><p>She / she</p></div>
+    <div class="grid-item"><h4>Adverb</h4><p>quickly</p></div>
+    <div class="grid-item"><h4>Verb</h4><p>ran / was</p></div>
+    <div class="grid-item"><h4>Preposition</h4><p>into</p></div>
+    <div class="grid-item"><h4>Noun</h4><p>garden</p></div>
+    <div class="grid-item"><h4>Conjunction</h4><p>because</p></div>
+    <div class="grid-item"><h4>Adjective</h4><p>happy</p></div>
+  </div>
+</div>
+
+<div class="panel" id="overview-role">
+  <h3>🎯 Why Parts of Speech Matter</h3>
+  <ul>
+    <li><strong>Better Writing:</strong> Choosing the right word type improves clarity.</li>
+    <li><strong>Grammar Rules:</strong> Punctuation, tense, and sentence structure all depend on it.</li>
+    <li><strong>Vocabulary:</strong> Learn one root word → use it as noun, verb, adjective, adverb.</li>
+    <li><strong>Exam Success:</strong> Every English test checks parts of speech.</li>
+    <li><strong>Communication:</strong> Understand what others say more precisely.</li>
+    <li><strong>Translation:</strong> Urdu/English translation becomes much more accurate.</li>
+  </ul>
+
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>beauty (Noun)</h4><p>Her beauty is famous.</p></div>
+    <div class="grid-item"><h4>beautify (Verb)</h4><p>They beautify the city.</p></div>
+    <div class="grid-item"><h4>beautiful (Adjective)</h4><p>A beautiful flower.</p></div>
+    <div class="grid-item"><h4>beautifully (Adverb)</h4><p>She sings beautifully.</p></div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 2: SENTENCE LAB ====================== -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-lab"><div class="card">
+<h2>🎮 Sentence Lab <small>click any word for complete analysis</small></h2>
+<div class="desc">Choose a sentence, then click any word to see its part of speech, meaning, function, example, and hear how it sounds. Every word is fully analyzed!</div>
+
+<div class="section-tabs" data-topic="lab">
+  <button class="section-tab active" data-section="info">How to Use</button>
+  <button class="section-tab" data-section="sim">Interactive Simulator</button>
+</div>
+
+<div class="panel active" id="lab-info">
+  <h3>📋 How to Use This Lab</h3>
+  <ul>
+    <li>Choose a sentence from the dropdown menu (or write your own)</li>
+    <li>Click any word in the sentence below</li>
+    <li>See the full analysis: part of speech, Urdu meaning, function, example</li>
+    <li>Use the filter buttons to highlight only one type of speech at a time</li>
+    <li>Turn on <strong>Animate Words</strong> to see them pop one by one</li>
+    <li>Click <strong>Read Aloud</strong> to hear the whole sentence</li>
+  </ul>
+  <div class="teacher-note"><strong>Classroom Tip:</strong> Project this on the board, let students click words themselves. Ask them to guess the part of speech before clicking!</div>
+</div>
+
+<div class="panel active" id="lab-sim">
+  <h3>🎮 Interactive Sentence Highlighter</h3>
+  <div class="sim-box">
+
+    <!-- SENTENCE CHOOSER -->
+    <div class="sim-controls">
+      <label>📝 Choose a sentence:
+        <select id="posSentence">
+          <option value="0">The quick brown fox jumps over the lazy dog.</option>
+          <option value="1">She happily sang a beautiful song at the concert.</option>
+          <option value="2">Wow! The brave knight fought the dragon fiercely.</option>
+          <option value="3">My brother and I walked to the market yesterday.</option>
+          <option value="4">Alas! The old house collapsed during the storm.</option>
+          <option value="5">They will visit the ancient museum tomorrow morning.</option>
+          <option value="6">The teacher explained the lesson clearly and patiently.</option>
+          <option value="7">Oh no! A tiny kitten is hiding under the wooden table.</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- FILTER BUTTONS -->
+    <div class="sim-controls">
+      <button id="posShowAll" class="green">🎨 Show All</button>
+      <button id="posShowNoun" class="orange">🔵 Noun</button>
+      <button id="posShowPronoun" class="orange">🟠 Pronoun</button>
+      <button id="posShowVerb" class="red">🔴 Verb</button>
+      <button id="posShowAdj" class="purple">🟡 Adjective</button>
+      <button id="posShowAdv" class="green">🟢 Adverb</button>
+      <button id="posShowPrep" class="purple">🟣 Preposition</button>
+      <button id="posShowConj" class="green">🩵 Conjunction</button>
+      <button id="posShowInter" class="red">🩷 Interjection</button>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="sim-controls">
+      <button id="posAnimate" class="purple">✨ Animate Words</button>
+      <button id="posReadAloud" class="orange">🔊 Read Aloud</button>
+      <button id="posSlowRead" class="green">🐢 Slow Read</button>
+      <button id="posShowLegend" class="purple">🎨 Toggle Legend</button>
+      <button id="posShowLabels" class="orange">🏷️ Toggle Labels</button>
+      <button id="posZoomIn" class="purple">🔍 Zoom In</button>
+      <button id="posZoomOut" class="purple">🔍 Zoom Out</button>
+      <button id="posReset" class="red">⟳ Reset</button>
+    </div>
+
+    <div class="sim-readout" id="posReadout">THE QUICK BROWN FOX... <small>Click any word to see full analysis</small></div>
+
+    <canvas id="posCanvas" width="1100" height="360"></canvas>
+
+    <!-- WORD DETAIL PANEL -->
+    <div class="word-detail empty" id="wordDetail">
+      👆 Click any word in the sentence above to see complete details here
+    </div>
+
+    <div class="legend" id="posLegend">
+      <span><span class="dot" style="background:#4fc3f7"></span> Noun</span>
+      <span><span class="dot" style="background:#ff9800"></span> Pronoun</span>
+      <span><span class="dot" style="background:#ff5252"></span> Verb</span>
+      <span><span class="dot" style="background:#ffd54f"></span> Adjective</span>
+      <span><span class="dot" style="background:#4caf50"></span> Adverb</span>
+      <span><span class="dot" style="background:#ab47bc"></span> Preposition</span>
+      <span><span class="dot" style="background:#26c6da"></span> Conjunction</span>
+      <span><span class="dot" style="background:#ec407a"></span> Interjection</span>
+    </div>
+
+    <div class="sim-info" id="posInfo">Each word is fully analyzed — click to explore its role, meaning, and usage.</div>
+
+    <div class="teacher-note"><strong>Teaching Tip:</strong> Have students color-code a paragraph on paper using the same color scheme. This builds grammar awareness very quickly.</div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 3: WORD EXPLORER ==================== -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-explorer"><div class="card">
+<h2>🔍 Word Explorer <small>learn each part of speech in depth</small></h2>
+<div class="desc">Explore every part of speech in complete detail — definitions, types, examples, rules, and common mistakes.</div>
+
+<div class="section-tabs" data-topic="explorer">
+  <button class="section-tab active" data-section="noun">Noun</button>
+  <button class="section-tab" data-section="pronoun">Pronoun</button>
+  <button class="section-tab" data-section="verb">Verb</button>
+  <button class="section-tab" data-section="adjective">Adjective</button>
+  <button class="section-tab" data-section="adverb">Adverb</button>
+  <button class="section-tab" data-section="preposition">Preposition</button>
+  <button class="section-tab" data-section="conjunction">Conjunction</button>
+  <button class="section-tab" data-section="interjection">Interjection</button>
+</div>
+
+<!-- NOUN -->
+<div class="panel active" id="explorer-noun">
+  <h3 style="color:#4fc3f7;">🔵 NOUN — Names a person, place, thing, or idea</h3>
+  <p><strong>Definition:</strong> A noun is a word that names a person, place, thing, animal, or abstract idea. Nouns are the most common type of word in English.</p>
+  <ul>
+    <li><strong>Common Noun:</strong> General name — <em>boy, city, book</em></li>
+    <li><strong>Proper Noun:</strong> Specific name, always capitalized — <em>Ahmed, Lahore, Quran</em></li>
+    <li><strong>Concrete Noun:</strong> Physical, can be touched — <em>table, apple, dog</em></li>
+    <li><strong>Abstract Noun:</strong> Idea or feeling — <em>love, courage, freedom</em></li>
+    <li><strong>Countable Noun:</strong> Can be counted — <em>two books, three chairs</em></li>
+    <li><strong>Uncountable Noun:</strong> Cannot be counted — <em>water, rice, milk</em></li>
+    <li><strong>Collective Noun:</strong> Group of things — <em>team, family, flock</em></li>
+    <li><strong>Material Noun:</strong> Substance — <em>gold, wood, iron</em></li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Proper</h4><p><strong>Pakistan</strong> is beautiful.</p></div>
+    <div class="grid-item"><h4>Common</h4><p>The <strong>boy</strong> is playing.</p></div>
+    <div class="grid-item"><h4>Abstract</h4><p><strong>Honesty</strong> is the best policy.</p></div>
+    <div class="grid-item"><h4>Collective</h4><p>A <strong>flock</strong> of birds flew.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Students often capitalize every noun. Only <strong>proper nouns</strong> take a capital letter.</div>
+</div>
+
+<!-- PRONOUN -->
+<div class="panel" id="explorer-pronoun">
+  <h3 style="color:#ff9800;">🟠 PRONOUN — Replaces a noun</h3>
+  <p><strong>Definition:</strong> A pronoun is a word used in place of a noun to avoid repetition and make sentences smoother.</p>
+  <ul>
+    <li><strong>Personal:</strong> I, you, he, she, it, we, they</li>
+    <li><strong>Possessive:</strong> mine, yours, his, hers, ours, theirs</li>
+    <li><strong>Reflexive:</strong> myself, yourself, himself, herself</li>
+    <li><strong>Demonstrative:</strong> this, that, these, those</li>
+    <li><strong>Interrogative:</strong> who, whom, whose, which, what</li>
+    <li><strong>Relative:</strong> who, whom, whose, which, that</li>
+    <li><strong>Indefinite:</strong> someone, anybody, everything, none</li>
+    <li><strong>Reciprocal:</strong> each other, one another</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Personal</h4><p><strong>She</strong> is my sister.</p></div>
+    <div class="grid-item"><h4>Possessive</h4><p>That book is <strong>mine</strong>.</p></div>
+    <div class="grid-item"><h4>Reflexive</h4><p>He hurt <strong>himself</strong>.</p></div>
+    <div class="grid-item"><h4>Demonstrative</h4><p><strong>This</strong> is my pen.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Confusing "its" (possessive) with "it's" (it is). Also "their / there / they're".</div>
+</div>
+
+<!-- VERB -->
+<div class="panel" id="explorer-verb">
+  <h3 style="color:#ff5252;">🔴 VERB — Action or state of being</h3>
+  <p><strong>Definition:</strong> A verb is a word that shows an action, occurrence, or state of being. Every complete sentence must have a verb.</p>
+  <ul>
+    <li><strong>Action Verb:</strong> run, jump, write, eat</li>
+    <li><strong>State Verb:</strong> is, am, are, was, seem, appear</li>
+    <li><strong>Transitive Verb:</strong> Takes an object — "She <em>reads</em> a book."</li>
+    <li><strong>Intransitive Verb:</strong> No object — "He <em>sleeps</em>."</li>
+    <li><strong>Linking Verb:</strong> Connects subject to description — "She <em>is</em> happy."</li>
+    <li><strong>Auxiliary (Helping) Verb:</strong> be, have, do, will, can, must</li>
+    <li><strong>Modal Verb:</strong> can, could, may, might, shall, should, will, would, must</li>
+    <li><strong>Phrasal Verb:</strong> Verb + preposition — "give up", "look after"</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Action</h4><p>She <strong>writes</strong> a letter.</p></div>
+    <div class="grid-item"><h4>Linking</h4><p>He <strong>is</strong> a doctor.</p></div>
+    <div class="grid-item"><h4>Modal</h4><p>You <strong>must</strong> study.</p></div>
+    <div class="grid-item"><h4>Phrasal</h4><p>Please <strong>look after</strong> the baby.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Missing the verb entirely. Every sentence needs one!</div>
+</div>
+
+<!-- ADJECTIVE -->
+<div class="panel" id="explorer-adjective">
+  <h3 style="color:#ffd54f;">🟡 ADJECTIVE — Describes a noun</h3>
+  <p><strong>Definition:</strong> An adjective is a word that describes, modifies, or gives more information about a noun or pronoun.</p>
+  <ul>
+    <li><strong>Descriptive:</strong> big, red, beautiful, tall</li>
+    <li><strong>Quantitative:</strong> some, many, few, several</li>
+    <li><strong>Numeral:</strong> one, two, first, second</li>
+    <li><strong>Demonstrative:</strong> this, that, these, those</li>
+    <li><strong>Possessive:</strong> my, your, his, her, our, their</li>
+    <li><strong>Interrogative:</strong> which, what, whose</li>
+    <li><strong>Distributive:</strong> each, every, either, neither</li>
+    <li><strong>Proper:</strong> Pakistani, English, French</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Descriptive</h4><p>A <strong>beautiful</strong> flower.</p></div>
+    <div class="grid-item"><h4>Possessive</h4><p><strong>My</strong> house is big.</p></div>
+    <div class="grid-item"><h4>Quantitative</h4><p><strong>Many</strong> students came.</p></div>
+    <div class="grid-item"><h4>Numeral</h4><p><strong>Three</strong> cats are sleeping.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Adjective order — opinion, size, age, shape, colour, origin, material, purpose: <em>"a lovely big old round brown Italian wooden table"</em>.</div>
+</div>
+
+<!-- ADVERB -->
+<div class="panel" id="explorer-adverb">
+  <h3 style="color:#4caf50;">🟢 ADVERB — Describes verb, adjective, or adverb</h3>
+  <p><strong>Definition:</strong> An adverb is a word that modifies a verb, an adjective, or another adverb — telling us how, when, where, why, or to what degree.</p>
+  <ul>
+    <li><strong>Manner (how):</strong> quickly, slowly, well, badly</li>
+    <li><strong>Time (when):</strong> now, yesterday, soon, later</li>
+    <li><strong>Place (where):</strong> here, there, everywhere, outside</li>
+    <li><strong>Frequency (how often):</strong> always, often, never, sometimes</li>
+    <li><strong>Degree (how much):</strong> very, quite, extremely, too</li>
+    <li><strong>Reason (why):</strong> therefore, thus, hence</li>
+    <li><strong>Interrogative:</strong> when, where, why, how</li>
+    <li><strong>Relative:</strong> when, where, why</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Manner</h4><p>He runs <strong>quickly</strong>.</p></div>
+    <div class="grid-item"><h4>Time</h4><p>I will come <strong>tomorrow</strong>.</p></div>
+    <div class="grid-item"><h4>Frequency</h4><p>She <strong>always</strong> smiles.</p></div>
+    <div class="grid-item"><h4>Degree</h4><p>It is <strong>very</strong> hot.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Using adjective instead of adverb — "She sings <em>beautiful</em>" ✗ → "She sings <em>beautifully</em>" ✓.</div>
+</div>
+
+<!-- PREPOSITION -->
+<div class="panel" id="explorer-preposition">
+  <h3 style="color:#ab47bc;">🟣 PREPOSITION — Shows relationship</h3>
+  <p><strong>Definition:</strong> A preposition is a word that shows the relationship between a noun (or pronoun) and another word in the sentence — often indicating place, time, or direction.</p>
+  <ul>
+    <li><strong>Place:</strong> in, on, at, under, over, behind, between, near</li>
+    <li><strong>Time:</strong> at, on, in, before, after, during, since</li>
+    <li><strong>Direction:</strong> to, from, into, onto, towards, through</li>
+    <li><strong>Agent:</strong> by, with</li>
+    <li><strong>Instrument:</strong> with, by</li>
+    <li><strong>Possession:</strong> of, with</li>
+    <li><strong>Phrase:</strong> in front of, next to, because of, on behalf of</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Place</h4><p>The cat is <strong>on</strong> the table.</p></div>
+    <div class="grid-item"><h4>Time</h4><p>We met <strong>at</strong> 5 pm.</p></div>
+    <div class="grid-item"><h4>Direction</h4><p>She walked <strong>into</strong> the room.</p></div>
+    <div class="grid-item"><h4>Phrase</h4><p>He sat <strong>next to</strong> me.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Urdu speakers often say "discuss about" ✗ — correct is "discuss" ✓ (no preposition).</div>
+</div>
+
+<!-- CONJUNCTION -->
+<div class="panel" id="explorer-conjunction">
+  <h3 style="color:#26c6da;">🩵 CONJUNCTION — Joins words or clauses</h3>
+  <p><strong>Definition:</strong> A conjunction is a word that connects words, phrases, or clauses together.</p>
+  <ul>
+    <li><strong>Coordinating:</strong> FANBOYS — for, and, nor, but, or, yet, so</li>
+    <li><strong>Subordinating:</strong> because, although, since, unless, when, while, if</li>
+    <li><strong>Correlative:</strong> either…or, neither…nor, both…and, not only…but also</li>
+    <li><strong>Conjunctive Adverb:</strong> however, therefore, moreover, nevertheless</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Coordinating</h4><p>I like tea <strong>and</strong> coffee.</p></div>
+    <div class="grid-item"><h4>Subordinating</h4><p>She cried <strong>because</strong> she failed.</p></div>
+    <div class="grid-item"><h4>Correlative</h4><p><strong>Either</strong> you <strong>or</strong> I must go.</p></div>
+    <div class="grid-item"><h4>Conjunctive</h4><p>He was tired; <strong>however</strong>, he continued.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Memory Trick:</strong> FANBOYS = For, And, Nor, But, Or, Yet, So.</div>
+</div>
+
+<!-- INTERJECTION -->
+<div class="panel" id="explorer-interjection">
+  <h3 style="color:#ec407a;">🩷 INTERJECTION — Shows sudden emotion</h3>
+  <p><strong>Definition:</strong> An interjection is a word or short phrase that expresses sudden emotion or feeling. It is usually followed by an exclamation mark (!).</p>
+  <ul>
+    <li><strong>Joy:</strong> Hurray! Yay! Wow!</li>
+    <li><strong>Sorrow:</strong> Alas! Oh no!</li>
+    <li><strong>Surprise:</strong> Oh! What! Really!</li>
+    <li><strong>Pain:</strong> Ouch! Ah!</li>
+    <li><strong>Greeting:</strong> Hello! Hi! Hey!</li>
+    <li><strong>Annoyance:</strong> Ugh! Phew!</li>
+    <li><strong>Attention:</strong> Hey! Look! Listen!</li>
+    <li><strong>Mild:</strong> well, oh, ah (usually followed by comma)</li>
+  </ul>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="grid-item"><h4>Joy</h4><p><strong>Hurray!</strong> We won!</p></div>
+    <div class="grid-item"><h4>Sorrow</h4><p><strong>Alas!</strong> He failed.</p></div>
+    <div class="grid-item"><h4>Surprise</h4><p><strong>Wow!</strong> What a view!</p></div>
+    <div class="grid-item"><h4>Pain</h4><p><strong>Ouch!</strong> That hurt.</p></div>
+  </div>
+  <div class="teacher-note"><strong>Common Mistake:</strong> Using too many interjections in formal writing. Keep them for creative or conversational writing only.</div>
+</div>
+
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 4: QUIZ ============================= -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-quiz"><div class="card">
+<h2>🏆 Quiz Challenge <small>test your knowledge</small></h2>
+<div class="desc">Answer questions about parts of speech. Each correct answer earns a point. Track your score and see how well you know your grammar!</div>
+
+<div class="section-tabs" data-topic="quiz">
+  <button class="section-tab active" data-section="info">Instructions</button>
+  <button class="section-tab" data-section="sim">Start Quiz</button>
+</div>
+
+<div class="panel active" id="quiz-info">
+  <h3>📋 Quiz Instructions</h3>
+  <ul>
+    <li>The quiz has <strong>10 questions</strong> randomly chosen from a pool of 40.</li>
+    <li>Each question shows a <strong>sentence</strong> with a <strong>highlighted word</strong>.</li>
+    <li>Choose the correct <strong>part of speech</strong> from four options.</li>
+    <li>Correct answers turn <strong>green</strong>, wrong answers turn <strong>red</strong>.</li>
+    <li>Your score updates after each question.</li>
+    <li>Click <strong>Next Question</strong> to continue.</li>
+    <li>At the end, you'll see your final score and a grade.</li>
+  </ul>
+  <div class="teacher-note"><strong>Classroom Idea:</strong> Split the class into teams and project this quiz. First team to answer correctly gets a point!</div>
+</div>
+
+<div class="panel active" id="quiz-sim">
+  <h3>🏆 Quiz Challenge</h3>
+  <div class="sim-box">
+    <div class="sim-controls">
+      <button id="quizStart" class="green">▶ Start Quiz</button>
+      <button id="quizNext" class="orange" disabled>⏭ Next Question</button>
+      <button id="quizRestart" class="purple">🔄 Restart</button>
+      <button id="quizHint" class="purple">💡 Hint</button>
+      <button id="quizShowAnswer" class="orange">👁️ Show Answer</button>
+    </div>
+
+    <div class="quiz-box" id="quizBox">
+      <div class="quiz-q" id="quizQuestion">
+        Click <strong>Start Quiz</strong> to begin your challenge! 🎯
+      </div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-score" id="quizScore">Score: 0 / 0</div>
+    </div>
+
+    <div class="sim-info" id="quizInfo">10 questions · 4 options each · Instant feedback</div>
+
+    <div class="teacher-note"><strong>Tip for students:</strong> Read the whole sentence before choosing. The role of a word depends on how it is used, not just its meaning.</div>
+  </div>
+</div>
+</div></div>
+
+</div>
+
+
+
+<script>
+(function(){
+'use strict';
+
+/* =================================================================
+   COPY BUTTON
+   ================================================================= */
+document.getElementById('copyCodeBtn').addEventListener('click',function(){
+  const code=document.documentElement.outerHTML;
+  navigator.clipboard.writeText(code).then(()=>{
+    this.textContent='✅ Copied!';this.classList.add('copied');
+    setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=code;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    this.textContent='✅ Copied!';this.classList.add('copied');
+    setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
+  });
+});
+
+/* =================================================================
+   TABS
+   ================================================================= */
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={
+  overview:document.getElementById('topic-overview'),
+  lab:document.getElementById('topic-lab'),
+  explorer:document.getElementById('topic-explorer'),
+  quiz:document.getElementById('topic-quiz')
+};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+  topicTabs.forEach(b=>b.classList.remove('active'));
+  this.classList.add('active');
+  const topic=this.dataset.topic;
+  Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+  if(topic==='lab')setTimeout(()=>{drawSentence();},80);
+}));
+
+document.querySelectorAll('.section-tabs').forEach(group=>{
+  const topic=group.dataset.topic;
+  const btns=group.querySelectorAll('.section-tab');
+  btns.forEach(btn=>btn.addEventListener('click',function(){
+    btns.forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const section=this.dataset.section;
+    const parent=this.closest('.card');
+    parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+    if(topic==='lab'&&section==='sim')setTimeout(()=>drawSentence(),80);
+  }));
+});
+
+/* =================================================================
+   COLOR MAP FOR PARTS OF SPEECH
+   ================================================================= */
+const POS_COLORS={
+  noun:'#4fc3f7',
+  pronoun:'#ff9800',
+  verb:'#ff5252',
+  adjective:'#ffd54f',
+  adverb:'#4caf50',
+  preposition:'#ab47bc',
+  conjunction:'#26c6da',
+  interjection:'#ec407a'
+};
+const POS_NAMES={
+  noun:'NOUN', pronoun:'PRONOUN', verb:'VERB', adjective:'ADJECTIVE',
+  adverb:'ADVERB', preposition:'PREPOSITION', conjunction:'CONJUNCTION',
+  interjection:'INTERJECTION'
+};
+
+/* =================================================================
+   SENTENCE DATABASE (with full word analysis)
+   ================================================================= */
+const SENTENCES=[
+  // 0
+  [
+    {word:'The',   type:'adjective',   urdu:'وہ (اشارہ)',          function:'Article / definite article used before a noun.', example:'The sun is bright.'},
+    {word:'quick', type:'adjective',   urdu:'تیز',                 function:'Describes the noun "fox" (how it is).', example:'A quick runner wins.'},
+    {word:'brown', type:'adjective',   urdu:'بھورا',               function:'Describes the colour of the noun "fox".', example:'She has brown hair.'},
+    {word:'fox',   type:'noun',        urdu:'لومڑی',               function:'Common noun — names an animal.', example:'The fox is clever.'},
+    {word:'jumps', type:'verb',        urdu:'چھلانگ لگاتا ہے',      function:'Action verb — shows what the fox does.', example:'He jumps high.'},
+    {word:'over',  type:'preposition', urdu:'اوپر سے',              function:'Shows the relationship of place between fox and dog.', example:'The plane flew over the city.'},
+    {word:'the',   type:'adjective',   urdu:'وہ (اشارہ)',          function:'Article — points to a specific noun.', example:'The book is mine.'},
+    {word:'lazy',  type:'adjective',   urdu:'سست',                 function:'Describes the noun "dog".', example:'A lazy cat sleeps all day.'},
+    {word:'dog',   type:'noun',        urdu:'کتا',                 function:'Common noun — names an animal.', example:'The dog barks.'},
+  ],
+  // 1
+  [
+    {word:'She',    type:'pronoun',     urdu:'وہ (لڑکی)',           function:'Personal pronoun — replaces a female noun.', example:'She is my sister.'},
+    {word:'happily',type:'adverb',      urdu:'خوشی سے',             function:'Adverb of manner — describes HOW she sang.', example:'They danced happily.'},
+    {word:'sang',   type:'verb',        urdu:'گایا',                function:'Action verb (past tense of sing).', example:'She sang a song.'},
+    {word:'a',      type:'adjective',   urdu:'ایک',                 function:'Article — indefinite article.', example:'A boy is here.'},
+    {word:'beautiful',type:'adjective', urdu:'خوبصورت',             function:'Describes the noun "song".', example:'A beautiful flower.'},
+    {word:'song',   type:'noun',        urdu:'گیت',                 function:'Common noun — names a thing.', example:'This song is nice.'},
+    {word:'at',     type:'preposition', urdu:'پر (جگہ)',            function:'Shows relationship of place — where she sang.', example:'Meet me at the park.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Article — definite article.', example:'The moon is bright.'},
+    {word:'concert',type:'noun',        urdu:'کنسرٹ',               function:'Common noun — names an event.', example:'The concert was great.'},
+  ],
+  // 2
+  [
+    {word:'Wow',    type:'interjection',urdu:'واہ!',                function:'Expresses surprise or excitement.', example:'Wow! What a view!'},
+    {word:'The',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The car is red.'},
+    {word:'brave',  type:'adjective',   urdu:'بہادر',               function:'Describes the knight.', example:'A brave soldier.'},
+    {word:'knight', type:'noun',        urdu:'شورویر',              function:'Common noun — names a person.', example:'The knight rode a horse.'},
+    {word:'fought', type:'verb',        urdu:'لڑا',                 function:'Action verb (past tense of fight).', example:'They fought bravely.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The lion roared.'},
+    {word:'dragon', type:'noun',        urdu:'اژدھا',               function:'Common noun — names a creature.', example:'The dragon breathes fire.'},
+    {word:'fiercely',type:'adverb',     urdu:'شدت سے',              function:'Adverb of manner — HOW he fought.', example:'She spoke fiercely.'},
+  ],
+  // 3
+  [
+    {word:'My',     type:'adjective',   urdu:'میرا',                function:'Possessive adjective — shows ownership.', example:'My book is new.'},
+    {word:'brother',type:'noun',        urdu:'بھائی',               function:'Common noun — names a person.', example:'My brother is tall.'},
+    {word:'and',    type:'conjunction', urdu:'اور',                 function:'Joining word — connects brother and I.', example:'Tea and coffee.'},
+    {word:'I',      type:'pronoun',     urdu:'میں',                 function:'Personal pronoun — first person.', example:'I am happy.'},
+    {word:'walked', type:'verb',        urdu:'چلے',                 function:'Action verb (past tense).', example:'We walked home.'},
+    {word:'to',     type:'preposition', urdu:'کی طرف',              function:'Shows direction — where they walked.', example:'Go to school.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The road is long.'},
+    {word:'market', type:'noun',        urdu:'بازار',               function:'Common noun — names a place.', example:'The market is busy.'},
+    {word:'yesterday',type:'adverb',    urdu:'کل',                  function:'Adverb of time — WHEN they walked.', example:'I met him yesterday.'},
+  ],
+  // 4
+  [
+    {word:'Alas',   type:'interjection',urdu:'افسوس!',              function:'Expresses sorrow or regret.', example:'Alas! He lost the game.'},
+    {word:'The',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The sky is blue.'},
+    {word:'old',    type:'adjective',   urdu:'پرانا',               function:'Describes the noun "house".', example:'An old man walked by.'},
+    {word:'house',  type:'noun',        urdu:'گھر',                 function:'Common noun — names a place.', example:'My house is big.'},
+    {word:'collapsed',type:'verb',      urdu:'گر گیا',              function:'Action verb (past tense).', example:'The bridge collapsed.'},
+    {word:'during', type:'preposition', urdu:'دوران',               function:'Shows time relationship.', example:'During the rain.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The storm was fierce.'},
+    {word:'storm',  type:'noun',        urdu:'طوفان',               function:'Common noun — names a natural event.', example:'The storm destroyed crops.'},
+  ],
+  // 5
+  [
+    {word:'They',   type:'pronoun',     urdu:'وہ (جمع)',            function:'Personal pronoun — third person plural.', example:'They are friends.'},
+    {word:'will',   type:'verb',        urdu:'گے (مستقبل)',          function:'Auxiliary / modal verb — shows future tense.', example:'I will help you.'},
+    {word:'visit',  type:'verb',        urdu:'دیکھنے جائیں گے',      function:'Action verb — the main action.', example:'We visit the museum.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The museum is huge.'},
+    {word:'ancient',type:'adjective',   urdu:'قدیم',                function:'Describes the noun "museum".', example:'An ancient temple.'},
+    {word:'museum', type:'noun',        urdu:'میوزیم',              function:'Common noun — names a place.', example:'The museum opens at 9.'},
+    {word:'tomorrow',type:'adverb',     urdu:'کل (آئندہ)',           function:'Adverb of time — WHEN they will visit.', example:'See you tomorrow.'},
+    {word:'morning',type:'noun',        urdu:'صبح',                 function:'Common noun — names a time of day.', example:'Good morning!'},
+  ],
+  // 6
+  [
+    {word:'The',      type:'adjective',  urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The teacher is kind.'},
+    {word:'teacher',  type:'noun',       urdu:'استاد',              function:'Common noun — names a person.', example:'Our teacher is wise.'},
+    {word:'explained',type:'verb',       urdu:'سمجھایا',            function:'Action verb (past tense).', example:'She explained the rule.'},
+    {word:'the',      type:'adjective',  urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The lesson was long.'},
+    {word:'lesson',   type:'noun',       urdu:'سبق',                function:'Common noun — names a thing.', example:'The lesson is easy.'},
+    {word:'clearly',  type:'adverb',     urdu:'واضح طور پر',         function:'Adverb of manner — HOW she explained.', example:'Speak clearly.'},
+    {word:'and',      type:'conjunction',urdu:'اور',                 function:'Joining word — connects two adverbs.', example:'Fast and furious.'},
+    {word:'patiently',type:'adverb',     urdu:'صبر سے',              function:'Adverb of manner — HOW she explained.', example:'Wait patiently.'},
+  ],
+  // 7
+  [
+    {word:'Oh',     type:'interjection',urdu:'اوہ!',                function:'Expresses surprise or alarm.', example:'Oh! What happened?'},
+    {word:'no',     type:'interjection',urdu:'نہیں!',               function:'Expresses concern or denial.', example:'Oh no! We are late.'},
+    {word:'A',      type:'adjective',   urdu:'ایک',                 function:'Indefinite article.', example:'A cat sat here.'},
+    {word:'tiny',   type:'adjective',   urdu:'چھوٹا سا',            function:'Describes the noun "kitten".', example:'A tiny bird.'},
+    {word:'kitten', type:'noun',        urdu:'بلی کا بچہ',          function:'Common noun — names an animal.', example:'The kitten is playful.'},
+    {word:'is',     type:'verb',        urdu:'ہے',                  function:'Linking verb — state of being.', example:'She is happy.'},
+    {word:'hiding', type:'verb',        urdu:'چھپا رہا ہے',         function:'Action verb (present continuous).', example:'He is hiding.'},
+    {word:'under',  type:'preposition', urdu:'نیچے',                function:'Shows place — where it is hiding.', example:'Under the bed.'},
+    {word:'the',    type:'adjective',   urdu:'وہ (اشارہ)',          function:'Definite article.', example:'The table is wooden.'},
+    {word:'wooden', type:'adjective',   urdu:'لکڑی کا',             function:'Describes the material of the table.', example:'A wooden chair.'},
+    {word:'table',  type:'noun',        urdu:'میز',                 function:'Common noun — names a thing.', example:'The table is clean.'},
+  ],
+];
+
+/* =================================================================
+   STATE
+   ================================================================= */
+let posCtx;
+let currentSentenceIdx=0;
+let currentWords=[]; // {word,type,urdu,function,example}
+let wordBoxes=[];    // x,y,w,h,wordIndex
+let activeFilter='all';
+let showLegend=true;
+let showLabels=true;
+let zoom=1;
+let animationProgress=0; // for animate mode
+let animating=false;
+let selectedWordIndex=-1;
+
+/* =================================================================
+   SENTENCE LAB: DRAW
+   ================================================================= */
+function loadSentence(idx){
+  currentSentenceIdx=+idx;
+  currentWords=SENTENCES[currentSentenceIdx].map(w=>({...w}));
+  selectedWordIndex=-1;
+  animationProgress=currentWords.length;
+  animating=false;
+  activeFilter='all';
+  // Update readout
+  document.getElementById('posReadout').innerHTML=
+    currentWords.map(w=>w.word).join(' ').toUpperCase()+
+    ' <small>Click any word to see full analysis</small>';
+  // Reset detail panel
+  const det=document.getElementById('wordDetail');
+  det.className='word-detail empty';
+  det.textContent='👆 Click any word in the sentence above to see complete details here';
+  drawSentence();
+}
+
+function drawSentence(){
+  const c=document.getElementById('posCanvas');
+  posCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  posCtx.clearRect(0,0,w,h);
+
+  // Background
+  const bg=posCtx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#040e1a');
+  bg.addColorStop(1,'#06121f');
+  posCtx.fillStyle=bg;
+  posCtx.fillRect(0,0,w,h);
+
+  // Grid
+  posCtx.strokeStyle='rgba(255,255,255,.035)';
+  posCtx.lineWidth=1;
+  for(let x=0;x<w;x+=40){posCtx.beginPath();posCtx.moveTo(x,0);posCtx.lineTo(x,h);posCtx.stroke();}
+  for(let y=0;y<h;y+=40){posCtx.beginPath();posCtx.moveTo(0,y);posCtx.lineTo(w,y);posCtx.stroke();}
+
+  // Title
+  posCtx.fillStyle='#4fc3f7';
+  posCtx.font='900 18px sans-serif';
+  posCtx.textAlign='left';
+  posCtx.fillText('SENTENCE '+ (currentSentenceIdx+1) +' OF '+SENTENCES.length, 24, 30);
+
+  // Instruction
+  posCtx.fillStyle='#7a9cc0';
+  posCtx.font='14px sans-serif';
+  posCtx.textAlign='right';
+  posCtx.fillText('Click any word → full analysis', w-24, 30);
+  posCtx.textAlign='left';
+
+  // Layout words
+  const baseFontSize=34*zoom;
+  posCtx.font='900 '+baseFontSize+'px "Segoe UI", sans-serif';
+  const padX=24;
+  const startY=h/2+baseFontSize/3;
+  const gap=18*zoom;
+  const maxLineWidth=w-padX*2;
+
+  // measure and wrap
+  let lines=[];
+  let line=[];
+  let lineWidth=0;
+  currentWords.forEach((wObj,i)=>{
+    const wordText=wObj.word;
+    const metrics=posCtx.measureText(wordText);
+    const wordW=metrics.width+gap*2;
+    if(lineWidth+wordW>maxLineWidth && line.length>0){
+      lines.push(line);
+      line=[];
+      lineWidth=0;
+    }
+    line.push({idx:i,text:wordText,w:wordW});
+    lineWidth+=wordW;
+  });
+  if(line.length)lines.push(line);
+
+  const lineHeight=baseFontSize*1.9;
+  const totalH=lines.length*lineHeight;
+  let startYAll=h/2-totalH/2+lineHeight/2;
+
+  wordBoxes=[];
+  lines.forEach((ln,li)=>{
+    // total width
+    const totalW=ln.reduce((s,a)=>s+a.w,0);
+    let x=w/2-totalW/2;
+    const y=startYAll+li*lineHeight;
+    ln.forEach(item=>{
+      const idx=item.idx;
+      const wObj=currentWords[idx];
+      // animation reveal
+      const reveal=animationProgress;
+      const visible=idx<reveal;
+      const alpha=visible?1:0;
+      const scale=visible?1:0.5;
+
+      // highlight filter
+      let dim=false;
+      if(activeFilter!=='all' && wObj.type!==activeFilter)dim=true;
+
+      const isSelected=(idx===selectedWordIndex);
+
+      const boxX=x;
+      const boxW=item.w;
+
+      // token background
+      const color=POS_COLORS[wObj.type];
+
+      posCtx.save();
+      posCtx.globalAlpha=alpha;
+
+      // rounded rect background
+      const radius=12;
+      const yTop=y-baseFontSize*1.05;
+      const yBot=y+baseFontSize*0.4;
+
+      // shadow/glow
+      posCtx.shadowColor=color;
+      posCtx.shadowBlur=isSelected?30:15;
+
+      // Fill
+      if(dim){
+        posCtx.fillStyle='rgba(255,255,255,.04)';
+      } else {
+        posCtx.fillStyle=color+'33';
+      }
+      roundRect(posCtx,boxX+4,yTop,boxW-8,yBot-yTop,radius);
+      posCtx.fill();
+
+      // stroke
+      if(dim){
+        posCtx.strokeStyle='rgba(255,255,255,.08)';
+        posCtx.lineWidth=2;
+      } else {
+        posCtx.strokeStyle=color;
+        posCtx.lineWidth=isSelected?5:2.5;
+      }
+      roundRect(posCtx,boxX+4,yTop,boxW-8,yBot-yTop,radius);
+      posCtx.stroke();
+
+      posCtx.shadowBlur=0;
+
+      // text
+      posCtx.textAlign='center';
+      posCtx.textBaseline='middle';
+      posCtx.font='900 '+baseFontSize+'px "Segoe UI", sans-serif';
+      posCtx.fillStyle=dim?'#5a7a9a':'#ffffff';
+      posCtx.fillText(wObj.word, boxX+boxW/2, y-baseFontSize*0.35);
+
+      // small label above
+      if(showLabels && !dim){
+        posCtx.font='700 11px sans-serif';
+        posCtx.fillStyle=color;
+        posCtx.fillText(POS_NAMES[wObj.type], boxX+boxW/2, yTop-8);
+      }
+
+      posCtx.restore();
+      posCtx.textAlign='left';
+      posCtx.textBaseline='alphabetic';
+
+      // store box
+      wordBoxes.push({
+        idx:idx,
+        x:boxX,
+        y:yTop,
+        w:boxW,
+        h:yBot-yTop
+      });
+
+      x+=item.w;
+    });
+  });
+
+  // Animation loop
+  if(animating && animationProgress<currentWords.length){
+    animationProgress+=0.15;
+    requestAnimationFrame(drawSentence);
+  } else if(animationProgress>=currentWords.length){
+    animating=false;
+  }
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y+x,y,r);
+  ctx.closePath();
+}
+
+/* =================================================================
+   CANVAS CLICK HANDLER
+   ================================================================= */
+document.getElementById('posCanvas').addEventListener('click',function(e){
+  const rect=this.getBoundingClientRect();
+  const scaleX=this.width/rect.width;
+  const scaleY=this.height/rect.height;
+  const mx=(e.clientX-rect.left)*scaleX;
+  const my=(e.clientY-rect.top)*scaleY;
+
+  for(const box of wordBoxes){
+    if(mx>=box.x && mx<=box.x+box.w && my>=box.y && my<=box.y+box.h){
+      selectWord(box.idx);
+      return;
+    }
+  }
+});
+
+function selectWord(idx){
+  selectedWordIndex=idx;
+  const wObj=currentWords[idx];
+  const det=document.getElementById('wordDetail');
+  const color=POS_COLORS[wObj.type];
+
+  det.className='word-detail';
+  det.innerHTML=`
+    <div class="wd-word">"${wObj.word}"</div>
+    <div class="wd-type" style="background:${color}; color:${['#ffd54f','#4fc3f7','#4caf50','#26c6da','#ff9800'].includes(color)?'#0a1628':'#fff'};">${POS_NAMES[wObj.type]}</div>
+    <div class="wd-row"><div class="wd-label">Position</div><div class="wd-value">Word ${idx+1} of ${currentWords.length} in this sentence</div></div>
+    <div class="wd-row"><div class="wd-label">Urdu Meaning</div><div class="wd-value" style="font-size:1.25rem; direction:rtl; text-align:right;">${wObj.urdu}</div></div>
+    <div class="wd-row"><div class="wd-label">Function Here</div><div class="wd-value">${wObj.function}</div></div>
+    <div class="wd-row"><div class="wd-label">Example</div><div class="wd-value"><em>"${wObj.example}"</em></div></div>
+    <div class="wd-row"><div class="wd-label">Why It Matters</div><div class="wd-value">Every ${POS_NAMES[wObj.type].toLowerCase()} plays a unique role. Learn it → master English.</div></div>
+  `;
+
+  // Update readout with word info
+  document.getElementById('posReadout').innerHTML=
+    `"${wObj.word}" <small>${POS_NAMES[wObj.type]} · ${wObj.urdu}</small>`;
+
+  // update info line
+  document.getElementById('posInfo').innerHTML=
+    `<strong style="color:${color}">${wObj.word}</strong> is a <strong>${POS_NAMES[wObj.type]}</strong>. ${wObj.function}`;
+
+  // Speak
+  speak(wObj.word);
+
+  // redraw for selection ring
+  drawSentence();
+}
+
+/* =================================================================
+   SPEECH SYNTHESIS
+   ================================================================= */
+function speak(text,rate){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US';
+  utt.rate=rate||0.95;
+  utt.pitch=1;
+  window.speechSynthesis.speak(utt);
+}
+
+/* =================================================================
+   SENTENCE LAB CONTROLS
+   ================================================================= */
+document.getElementById('posSentence').addEventListener('change',e=>{
+  loadSentence(e.target.value);
+});
+
+// Filters
+function setFilter(type){
+  activeFilter=type;
+  drawSentence();
+  const name=type==='all'?'all parts of speech':POS_NAMES[type];
+  document.getElementById('posInfo').textContent='Filter: showing only '+name+'.';
+}
+document.getElementById('posShowAll').addEventListener('click',()=>setFilter('all'));
+document.getElementById('posShowNoun').addEventListener('click',()=>setFilter('noun'));
+document.getElementById('posShowPronoun').addEventListener('click',()=>setFilter('pronoun'));
+document.getElementById('posShowVerb').addEventListener('click',()=>setFilter('verb'));
+document.getElementById('posShowAdj').addEventListener('click',()=>setFilter('adjective'));
+document.getElementById('posShowAdv').addEventListener('click',()=>setFilter('adverb'));
+document.getElementById('posShowPrep').addEventListener('click',()=>setFilter('preposition'));
+document.getElementById('posShowConj').addEventListener('click',()=>setFilter('conjunction'));
+document.getElementById('posShowInter').addEventListener('click',()=>setFilter('interjection'));
+
+// Animate words
+document.getElementById('posAnimate').addEventListener('click',()=>{
+  animationProgress=0;
+  animating=true;
+  drawSentence();
+});
+
+// Read aloud
+document.getElementById('posReadAloud').addEventListener('click',()=>{
+  const text=currentWords.map(w=>w.word).join(' ');
+  speak(text,0.95);
+});
+document.getElementById('posSlowRead').addEventListener('click',()=>{
+  const text=currentWords.map(w=>w.word).join(' ');
+  speak(text,0.65);
+});
+
+// Toggle legend
+document.getElementById('posShowLegend').addEventListener('click',()=>{
+  showLegend=!showLegend;
+  document.getElementById('posLegend').style.display=showLegend?'flex':'none';
+});
+
+// Toggle labels
+document.getElementById('posShowLabels').addEventListener('click',()=>{
+  showLabels=!showLabels;
+  drawSentence();
+});
+
+// Zoom
+document.getElementById('posZoomIn').addEventListener('click',()=>{
+  zoom=Math.min(1.6,zoom+0.1);drawSentence();
+});
+document.getElementById('posZoomOut').addEventListener('click',()=>{
+  zoom=Math.max(0.7,zoom-0.1);drawSentence();
+});
+
+// Reset
+document.getElementById('posReset').addEventListener('click',()=>{
+  zoom=1;showLabels=true;showLegend=true;activeFilter='all';
+  document.getElementById('posLegend').style.display='flex';
+  loadSentence(0);
+  document.getElementById('posSentence').value='0';
+});
+
+/* =================================================================
+   QUIZ
+   ================================================================= */
+const QUIZ_POOL=[];
+// Generate quiz pool from all sentences
+SENTENCES.forEach((sentence,sIdx)=>{
+  sentence.forEach((w,wIdx)=>{
+    // Build 4 options: correct + 3 wrong
+    const correct=w.type;
+    const allTypes=['noun','pronoun','verb','adjective','adverb','preposition','conjunction','interjection'];
+    const wrongs=allTypes.filter(t=>t!==correct).sort(()=>Math.random()-0.5).slice(0,3);
+    const options=[correct,...wrongs].sort(()=>Math.random()-0.5);
+    QUIZ_POOL.push({
+      sentence:sentence.map(x=>x.word).join(' '),
+      targetWord:w.word,
+      correct:correct,
+      options:options,
+      wordIndex:wIdx
+    });
+  });
+});
+
+let quizState={
+  questions:[],
+  current:0,
+  score:0,
+  answered:0,
+  active:false
+};
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+document.getElementById('quizStart').addEventListener('click',startQuiz);
+document.getElementById('quizRestart').addEventListener('click',startQuiz);
+document.getElementById('quizNext').addEventListener('click',nextQuizQuestion);
+
+function startQuiz(){
+  quizState.questions=shuffle(QUIZ_POOL).slice(0,10);
+  quizState.current=0;
+  quizState.score=0;
+  quizState.answered=0;
+  quizState.active=true;
+  document.getElementById('quizNext').disabled=true;
+  document.getElementById('quizScore').textContent='Score: 0 / 0';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const q=quizState.questions[quizState.current];
+  if(!q){endQuiz();return;}
+
+  const qBox=document.getElementById('quizQuestion');
+  // Build sentence with target word highlighted
+  const words=q.sentence.split(' ');
+  const html=words.map((w,i)=>i===q.wordIndex
+    ?`<span class="quiz-word">${w}</span>`
+    :w).join(' ');
+
+  qBox.innerHTML=`<div style="color:#a8c8e8; font-size:.92rem; margin-bottom:8px;">Question ${quizState.current+1} of ${quizState.questions.length}</div>${html}<div style="margin-top:12px; color:#7a9cc0; font-size:.95rem;">What part of speech is the highlighted word?</div>`;
+
+  const opts=document.getElementById('quizOptions');
+  opts.innerHTML='';
+  q.options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-opt';
+    btn.textContent=POS_NAMES[opt];
+    btn.style.borderColor=POS_COLORS[opt];
+    btn.addEventListener('click',()=>answerQuiz(opt,btn));
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('quizNext').disabled=true;
+}
+
+function answerQuiz(choice,btn){
+  if(btn.disabled)return;
+  const q=quizState.questions[quizState.current];
+  const allBtns=document.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===POS_NAMES[q.correct]){
+      b.classList.add('correct');
+    }
+  });
+  if(choice===q.correct){
+    btn.classList.add('correct');
+    quizState.score++;
+    document.getElementById('quizInfo').textContent='✅ Correct! Well done.';
+  }else{
+    btn.classList.add('wrong');
+    document.getElementById('quizInfo').textContent='❌ Wrong. Correct answer: '+POS_NAMES[q.correct];
+  }
+  quizState.answered++;
+  document.getElementById('quizScore').textContent='Score: '+quizState.score+' / '+quizState.answered;
+  document.getElementById('quizNext').disabled=false;
+}
+
+function nextQuizQuestion(){
+  quizState.current++;
+  if(quizState.current>=quizState.questions.length){
+    endQuiz();
+    return;
+  }
+  renderQuizQuestion();
+  document.getElementById('quizInfo').textContent='Choose the correct part of speech.';
+}
+
+function endQuiz(){
+  const total=quizState.questions.length;
+  const score=quizState.score;
+  const pct=Math.round(score/total*100);
+  let grade='📚 Keep practicing!';
+  if(pct>=90)grade='🏆 Outstanding!';
+  else if(pct>=75)grade='🌟 Excellent!';
+  else if(pct>=60)grade='👍 Good job!';
+  else if(pct>=40)grade='📖 Keep going!';
+  document.getElementById('quizQuestion').innerHTML=
+    `<div style="font-size:1.5rem;">🎯 Quiz Complete!</div>
+     <div style="font-size:2.8rem; color:#ffd54f; margin:14px 0;">${score} / ${total}</div>
+     <div style="font-size:1.15rem; color:#4fc3f7;">${pct}%</div>
+     <div style="font-size:1.1rem; color:#4caf50; margin-top:12px;">${grade}</div>`;
+  document.getElementById('quizOptions').innerHTML='';
+  document.getElementById('quizNext').disabled=true;
+  document.getElementById('quizInfo').textContent='Click "Restart" to try again.';
+}
+
+document.getElementById('quizHint').addEventListener('click',()=>{
+  const q=quizState.questions[quizState.current];
+  if(!q){alert('Start the quiz first!');return;}
+  alert('💡 Hint: Think about what this word is DOING in the sentence, not just what it means.');
+});
+document.getElementById('quizShowAnswer').addEventListener('click',()=>{
+  const q=quizState.questions[quizState.current];
+  if(!q){alert('Start the quiz first!');return;}
+  alert('Answer: '+POS_NAMES[q.correct]);
+});
+
+/* =================================================================
+   INIT
+   ================================================================= */
+window.addEventListener('load',()=>{
+  posCtx=document.getElementById('posCanvas').getContext('2d');
+  loadSentence(0);
+});
+})();
+</script>
+</body>
+</html>

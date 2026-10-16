@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solar System & Planetary Motion (Kepler's Laws)</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#070d1a; color:#f1f5f9; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#818cf8; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-indigo { background:#3730a3; color:#e0e7ff; border:1px solid #818cf8; }
+.badge-cyan { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+
+.laws-tabs { display:flex; gap:10px; margin-bottom:18px; background:#0f172a; padding:6px; border-radius:14px; border:1px solid #1e293b; }
+.law-btn { flex:1; padding:12px 18px; border:none; border-radius:10px; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; color:#94a3b8; background:transparent; }
+.law-btn.active { background:linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color:#fff; box-shadow:0 6px 20px rgba(79,70,229,0.4); }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0d152a 0%, #030611 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.8); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#02050f; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,0.35); }
+.btn-primary:hover { background:#4338ca; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#818cf8; width:110px; cursor:pointer; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#818cf8; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#818cf8; font-family:monospace; }
+
+.planets-table { width:100%; border-collapse:collapse; font-size:0.78rem; text-align:left; margin-top:8px; }
+.planets-table th { color:#94a3b8; padding:6px; border-bottom:1px solid #1e3a5f; }
+.planets-table td { padding:6px; border-bottom:1px solid #0f1d36; color:#e2e8f0; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 14px; font-size:0.82rem; font-weight:700; cursor:pointer; z-index:10; transition:all 0.2s; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; border-color:#818cf8; }
+
+:fullscreen, :-webkit-full-screen {
+  overflow: hidden !important;
+  background: #070d18 !important;
+}
+:fullscreen .container, :-webkit-full-screen .container {
+  max-width: 100% !important;
+  padding: 16px 24px 40px !important;
+}
+:fullscreen .main-grid, :-webkit-full-screen .main-grid {
+  grid-template-columns: 1fr 380px !important;
+}
+@media (max-width: 1024px) {
+  :fullscreen .main-grid, :-webkit-full-screen .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>🪐 Kepler's Laws & Planetary Motion</h1>
+      <p>Astrophysics Simulation: Elliptical Orbits, Equal Areas Law, and Orbital Harmonics (T² = a³)</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-indigo">Gravitational Mechanics</span>
+      <span class="badge badge-cyan">Kepler (1571–1630)</span>
+    </div>
+  </header>
+
+  <nav class="laws-tabs">
+    <button class="law-btn active" data-law="1">
+      📐 1st Law: Ellipses & Foci
+    </button>
+    <button class="law-btn" data-law="2">
+      ⏱️ 2nd Law: Equal Areas in Equal Times
+    </button>
+    <button class="law-btn" data-law="3">
+      ⚖️ 3rd Law: Harmonies (T² ∝ a³)
+    </button>
+  </nav>
+
+  <div class="main-grid">
+    <div class="sim-stage">
+      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
+
+      <div class="canvas-wrapper">
+        <canvas id="keplerCanvas" width="960" height="540"></canvas>
+
+<div class="ctl" id="ctlKepler">
+  <div class="row">
+    <span>Kepler Laws</span>
+    <button class="btn b-in" onclick="if(window.setLaw)setLaw(1)">📐 1st Law (Ellipses)</button>
+    <button class="btn b-play" onclick="if(window.setLaw)setLaw(2)">⏱️ 2nd Law (Equal Areas)</button>
+    <button class="btn b-out" onclick="if(window.setLaw)setLaw(3)">⚖️ 3rd Law (Harmonies)</button>
+    <button class="btn b-set" onclick="document.getElementById('btnReset')?.click()">↺ Reset Orbit</button>
+  </div>
+  <div class="row">
+    <span>Eccentricity</span>
+    <button class="btn b-hold" onclick="var s=document.getElementById('sliderE');if(s){s.value=0;s.dispatchEvent(new Event('input'))}">Circle (e=0)</button>
+    <button class="btn b-auto" onclick="var s=document.getElementById('sliderE');if(s){s.value=0.2;s.dispatchEvent(new Event('input'))}">Mars (e=0.2)</button>
+    <button class="btn b-play" onclick="var s=document.getElementById('sliderE');if(s){s.value=0.6;s.dispatchEvent(new Event('input'))}">Comet (e=0.6)</button>
+  </div>
+  <div class="row">
+    <span>Show / Options</span>
+    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Vectors & Swept Areas</button>
+    
+  </div>
+</div>
+
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
+          <button class="ctrl-btn btn-secondary" id="btnReset">↺ Reset</button>
+        </div>
+
+        <div class="slider-group">
+          <label>Eccentricity (e):</label>
+          <input type="range" id="sliderE" min="0" max="0.75" step="0.02" value="0.5">
+          <span id="valE">0.50</span>
+        </div>
+
+        <div class="slider-group">
+          <label>Speed Warp:</label>
+          <input type="range" id="sliderSpeed" min="0.2" max="3" step="0.1" value="1">
+          <span id="valSpeed">1.0x</span>
+        </div>
+
+        <div class="ctrl-group">
+          <label class="slider-group">
+            <input type="checkbox" id="chkVectors" checked> Velocity Vector
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="card">
+        <h3>📊 Orbital Mechanics Telemetry</h3>
+        <div class="metrics-list">
+          <div class="metric-row">
+            <span class="m-label">Active Focus:</span>
+            <span class="m-val" style="color:#fbbf24;">Sun at Focus 1</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Current Velocity:</span>
+            <span class="m-val" id="hudVelocity">38.4 km/s</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Sun Distance:</span>
+            <span class="m-val" id="hudRadius">1.12 AU</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Perihelion Distance:</span>
+            <span class="m-val" id="hudPerihelion">0.75 AU</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Aphelion Distance:</span>
+            <span class="m-val" id="hudAphelion">2.25 AU</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📜 Kepler's Active Law Law Info</h3>
+        <div id="lawInfoBox" style="font-size:0.86rem; line-height:1.6; color:#cbd5e1;">
+          <p><strong>1st Law (Law of Ellipses):</strong> The orbit of a planet is an ellipse with the Sun located at one of the two foci. The degree of stretching is given by eccentricity $e = c/a$.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🪐 Solar System Harmonics (T² / a³)</h3>
+        <table class="planets-table">
+          <thead>
+            <tr><th>Planet</th><th>a (AU)</th><th>T (Years)</th><th>T² / a³</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mercury</td><td>0.39</td><td>0.24</td><td>1.00</td></tr>
+            <tr><td>Venus</td><td>0.72</td><td>0.62</td><td>1.00</td></tr>
+            <tr><td>Earth</td><td>1.00</td><td>1.00</td><td>1.00</td></tr>
+            <tr><td>Mars</td><td>1.52</td><td>1.88</td><td>1.00</td></tr>
+            <tr><td>Jupiter</td><td>5.20</td><td>11.86</td><td>1.00</td></tr>
+            <tr><td>Saturn</td><td>9.58</td><td>29.45</td><td>1.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('keplerCanvas');
+const ctx = canvas.getContext('2d');
+
+let activeLaw = 1;
+let isRunning = true;
+let eccentricity = 0.5;
+let speedMult = 1.0;
+let showVectors = true;
+let orbitTheta = 0;
+
+// Starfield
+const stars = [];
+for (let i = 0; i < 160; i++) {
+  stars.push({ x: Math.random() * 960, y: Math.random() * 540, r: Math.random() * 1.5 + 0.5 });
+}
+
+// Swept sectors for 2nd law
+const sectors = [
+  { start: 0, end: 0.4, color: 'rgba(99, 102, 241, 0.35)' },
+  { start: Math.PI - 0.7, end: Math.PI + 0.7, color: 'rgba(234, 88, 12, 0.35)' }
+];
+
+const lawDescriptions = {
+  1: '<p><strong>1st Law (Law of Ellipses):</strong> The orbit of a planet is an ellipse with the Sun located at one of the two foci. The degree of stretching is given by eccentricity $e = c/a$. When $e=0$, the ellipse is a circle.</p>',
+  2: '<p><strong>2nd Law (Law of Equal Areas):</strong> A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time ($dA/dt = \\text{const}$). The planet travels fastest at <em>Perihelion</em> and slowest at <em>Aphelion</em>.</p>',
+  3: '<p><strong>3rd Law (Law of Harmonies):</strong> The square of the orbital period $T$ of a planet is directly proportional to the cube of the semi-major axis $a$ of its orbit: $T^2 / a^3 = 1.00$ for all bodies orbiting the Sun.</p>'
+};
+
+function updateHUD(r, v, a) {
+  document.getElementById('hudVelocity').textContent = `${(v * 30).toFixed(1)} km/s`;
+  document.getElementById('hudRadius').textContent = `${(r / 150).toFixed(2)} AU`;
+  const peri = (a * (1 - eccentricity)) / 150;
+  const aph = (a * (1 + eccentricity)) / 150;
+  document.getElementById('hudPerihelion').textContent = `${peri.toFixed(2)} AU`;
+  document.getElementById('hudAphelion').textContent = `${aph.toFixed(2)} AU`;
+}
+
+function drawScene() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  // Stars
+  ctx.fillStyle = '#ffffff';
+  for (let s of stars) {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Ellipse parameters
+  const a = 240; // Semi-major axis
+  const b = a * Math.sqrt(Math.max(0.01, 1 - eccentricity * eccentricity)); // Semi-minor axis
+  const c = a * eccentricity; // Focal distance
+
+  // Focus 1 (Sun) and Focus 2 (Empty)
+  const f1x = cx - c;
+  const f1y = cy;
+  const f2x = cx + c;
+  const f2y = cy;
+
+  // 1. Draw 2nd Law Swept Sectors if in Law 2 mode
+  if (activeLaw === 2) {
+    for (let sec of sectors) {
+      ctx.fillStyle = sec.color;
+      ctx.beginPath();
+      ctx.moveTo(f1x, f1y);
+      for (let th = sec.start; th <= sec.end; th += 0.05) {
+        const px = cx + a * Math.cos(th);
+        const py = cy + b * Math.sin(th);
+        ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  // 2. Draw Ellipse Orbit Track
+  ctx.strokeStyle = '#4338ca';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, a, b, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Major Axis Line
+  ctx.strokeStyle = '#1e3a5f';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cx - a, cy);
+  ctx.lineTo(cx + a, cy);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 3. Draw Foci
+  // Empty Focus 2
+  ctx.fillStyle = '#64748b';
+  ctx.beginPath();
+  ctx.arc(f2x, f2y, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.font = '10px monospace';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Focus 2 (Empty)', f2x - 30, f2y + 16);
+
+  // Focus 1: Sun with Corona
+  const sunR = 26;
+  const sunGrad = ctx.createRadialGradient(f1x, f1y, 4, f1x, f1y, sunR * 2);
+  sunGrad.addColorStop(0, '#fff');
+  sunGrad.addColorStop(0.3, '#fde047');
+  sunGrad.addColorStop(0.8, '#ea580c');
+  sunGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = sunGrad;
+  ctx.beginPath();
+  ctx.arc(f1x, f1y, sunR * 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.arc(f1x, f1y, sunR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fef08a';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('Sun (Focus 1)', f1x - 36, f1y + sunR + 16);
+
+  // Perihelion and Aphelion Labels
+  ctx.fillStyle = '#34d399';
+  ctx.fillText('Perihelion (Closest)', cx - a - 40, cy - 12);
+  ctx.fillStyle = '#f87171';
+  ctx.fillText('Aphelion (Furthest)', cx + a - 40, cy - 12);
+
+  // 4. Calculate Planet Position
+  const px = cx + a * Math.cos(orbitTheta);
+  const py = cy + b * Math.sin(orbitTheta);
+
+  // Distance from Sun (f1)
+  const dx = px - f1x;
+  const dy = py - f1y;
+  const r = Math.sqrt(dx * dx + dy * dy);
+
+  // Kepler's 2nd Law speed variation: v proportional to 1/r
+  const v = Math.sqrt(2 / r - 1 / a) * 12;
+
+  // Radius vector from Sun to Planet
+  ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(f1x, f1y);
+  ctx.lineTo(px, py);
+  ctx.stroke();
+
+  // 5. Draw Velocity Vector Arrow
+  if (showVectors) {
+    const tangentX = -a * Math.sin(orbitTheta);
+    const tangentY = b * Math.cos(orbitTheta);
+    const tLen = Math.sqrt(tangentX * tangentX + tangentY * tangentY);
+    const vx = (tangentX / tLen) * v * 3.5;
+    const vy = (tangentY / tLen) * v * 3.5;
+
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px + vx, py + vy);
+    ctx.stroke();
+    // Arrowhead
+    ctx.fillStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.arc(px + vx, py + vy, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 6. Draw Planet (Cyan orb)
+  ctx.fillStyle = '#06b6d4';
+  ctx.beginPath();
+  ctx.arc(px, py, 12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(px - 3, py - 3, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('Planet', px - 18, py + 24);
+
+  updateHUD(r, v, a);
+}
+
+function loop() {
+  if (isRunning) {
+    // Angular velocity step according to Kepler: dTheta / dt = h / r^2
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const a = 240;
+    const b = a * Math.sqrt(Math.max(0.01, 1 - eccentricity * eccentricity));
+    const c = a * eccentricity;
+    const px = cx + a * Math.cos(orbitTheta);
+    const py = cy + b * Math.sin(orbitTheta);
+    const r = Math.sqrt((px - (cx - c)) ** 2 + (py - cy) ** 2);
+
+    const dTheta = (1400 / (r * r)) * 0.25 * speedMult;
+    orbitTheta = (orbitTheta + dTheta) % (Math.PI * 2);
+  }
+  drawScene();
+  requestAnimationFrame(loop);
+}
+
+// Event Listeners
+document.querySelectorAll('.law-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.law-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeLaw = parseInt(btn.getAttribute('data-law'));
+    document.getElementById('lawInfoBox').innerHTML = lawDescriptions[activeLaw];
+  });
+});
+
+document.getElementById('btnPlayPause').addEventListener('click', (e) => {
+  isRunning = !isRunning;
+  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  orbitTheta = 0;
+  eccentricity = 0.5;
+  speedMult = 1.0;
+  document.getElementById('sliderE').value = 0.5;
+  document.getElementById('valE').textContent = '0.50';
+  document.getElementById('sliderSpeed').value = 1;
+  document.getElementById('valSpeed').textContent = '1.0x';
+});
+
+document.getElementById('sliderE').addEventListener('input', (e) => {
+  eccentricity = parseFloat(e.target.value);
+  document.getElementById('valE').textContent = eccentricity.toFixed(2);
+});
+
+document.getElementById('sliderSpeed').addEventListener('input', (e) => {
+  speedMult = parseFloat(e.target.value);
+  document.getElementById('valSpeed').textContent = `${speedMult.toFixed(1)}x`;
+});
+
+document.getElementById('chkVectors').addEventListener('change', (e) => {
+  showVectors = e.target.checked;
+});
+
+// Fullscreen
+document.getElementById('btnFullscreen').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    (document.documentElement || document.body).requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  document.getElementById('btnFullscreen').textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+});
+
+loop();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

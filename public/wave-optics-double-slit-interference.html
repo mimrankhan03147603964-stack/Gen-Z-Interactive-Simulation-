@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Optics & Double-Slit Interference Lab</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #030712; font-family: system-ui, -apple-system, sans-serif; color: #f9fafb; }
+    .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 45%, #0a192f 0%, #030712 100%); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ctl {
+      flex-shrink: 0;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(8, 15, 35, 0.98) 0%, rgba(3, 7, 18, 0.99) 100%);
+      border-top: 2px solid rgba(56, 189, 248, 0.6);
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(24px);
+      z-index: 20;
+      box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.8), 0 0 25px rgba(2, 132, 199, 0.35);
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+    .row span.lbl {
+      font-size: 11px;
+      font-weight: 900;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      min-width: 95px;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.65);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn {
+      padding: 9px 18px;
+      font-size: 12px;
+      font-weight: 900;
+      border-radius: 14px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.04); filter: brightness(1.22); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.6); }
+    .btn:active { transform: translateY(1px) scale(0.97); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); }
+    
+    /* Intensely Colorful Glossy Buttons */
+    .b-laser-red { background: linear-gradient(135deg, #ff1744 0%, #b71c1c 100%); border-color: #fca5a5; box-shadow: 0 4px 16px rgba(255, 23, 68, 0.55); }
+    .b-laser-amb { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); border-color: #fde68a; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.55); }
+    .b-laser-grn { background: linear-gradient(135deg, #10b981 0%, #047857 100%); border-color: #86efac; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.55); }
+    .b-laser-blu { background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%); border-color: #93c5fd; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.55); }
+    .b-laser-vio { background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%); border-color: #e9d5ff; box-shadow: 0 4px 16px rgba(168, 85, 247, 0.55); }
+    
+    .b-mode { background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%); border-color: #7dd3fc; }
+    .b-mode.active { background: linear-gradient(135deg, #00f5ff 0%, #0284c7 100%); border-color: #ffffff; color: #04102a; text-shadow: none; box-shadow: 0 0 20px rgba(0, 245, 255, 0.85), inset 0 1px 3px #ffffff; }
+    
+    .b-slit { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); border-color: #a5b4fc; }
+    .b-slit.active { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #a7f3d0; box-shadow: 0 0 18px rgba(16, 185, 129, 0.8), inset 0 1px 3px #ffffff; }
+
+    .b-photon { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); border-color: #c4b5fd; }
+    .b-photon.active { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); border-color: #fbcfe8; box-shadow: 0 0 20px rgba(236, 72, 153, 0.85); }
+    
+    .b-reset { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); border-color: #fda4af; box-shadow: 0 4px 16px rgba(244, 63, 94, 0.55); }
+    .b-fs { background: linear-gradient(135deg, #fbbf24 0%, #ea580c 100%); border-color: #fef08a; margin-left: auto; box-shadow: 0 4px 18px rgba(245, 158, 11, 0.55); color: #0f172a; text-shadow: none; font-weight: 900; }
+    
+    .slider-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #e0f2fe;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    input[type=range] {
+      accent-color: #00f5ff;
+      width: 120px;
+      cursor: pointer;
+      height: 6px;
+      border-radius: 3px;
+    }
+    .hud {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      background: linear-gradient(135deg, rgba(8, 15, 35, 0.94) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.55);
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 12px;
+      line-height: 1.65;
+      pointer-events: none;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.7), 0 0 15px rgba(56, 189, 248, 0.25);
+    }
+    .hud b { color: #38bdf8; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+    .hud .stat-pill { display: inline-block; padding: 2px 8px; border-radius: 6px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-weight: 800; margin-left: 4px; }
+    :fullscreen .sim, :-webkit-full-screen .sim { width: 100vw; height: 100vh; }
+  </style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+  <div class="sim" id="simContainer">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud" id="hud">
+        <b>Young's Double-Slit Experiment</b><br/>
+        Wavelength &lambda;: <span id="hudLambda">532 nm (Green)</span><br/>
+        Slit Sep. d: <span id="hudD">180 &mu;m</span> | Screen Dist. D: <span id="hudDist">1.2 m</span><br/>
+        Fringe Width &Delta;y = (&lambda;D)/d: <span id="hudFringe" style="color:#fde047;">3.55 mm</span>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="row">
+        <span class="lbl">🔬 Laser Wavelength</span>
+        <button class="btn b-laser-red" id="bLzRed" onclick="setLaser(650, '#ff2a4b', 'Red 650nm')">🔴 650 nm Ruby</button>
+        <button class="btn b-laser-amb" id="bLzAmb" onclick="setLaser(589, '#f59e0b', 'Amber 589nm')">🟡 589 nm Sodium</button>
+        <button class="btn b-laser-grn" id="bLzGrn" onclick="setLaser(532, '#00e676', 'Green 532nm')">🟢 532 nm Emerald</button>
+        <button class="btn b-laser-blu" id="bLzBlu" onclick="setLaser(450, '#00b0ff', 'Blue 450nm')">🔵 450 nm Sapphire</button>
+        <button class="btn b-laser-vio" id="bLzVio" onclick="setLaser(405, '#c084fc', 'Violet 405nm')">🟣 405 nm Violet</button>
+        <button class="btn b-mode active" id="btnWave" onclick="setMode('wave')">🌊 Continuous Wave</button>
+        <button class="btn b-photon" id="btnPhoton" onclick="setMode('photons')">⚛️ Quantum Photons</button>
+        <button class="btn b-reset" onclick="resetSim()">🔄 Reset Lab</button>
+        <button class="btn b-fs" id="bFs" onclick="toggleFs()">⛶ Full Screen</button>
+      </div>
+      <div class="row">
+        <span class="lbl">⚙️ Slits & Setup</span>
+        <div class="slider-box">
+          <span>Slits:</span>
+          <button class="btn b-slit" id="btnSlit1" onclick="setSlits(1)">▎Single Slit</button>
+          <button class="btn b-slit active" id="btnSlit2" onclick="setSlits(2)">⏸️ Double Slit</button>
+        </div>
+        <div class="slider-box">
+          <span>Slit Separation (d):</span>
+          <input type="range" id="rngD" min="60" max="360" value="180" oninput="updateVars()" />
+          <span id="valD" style="color:#38bdf8; min-width:55px;">180 &mu;m</span>
+        </div>
+        <div class="slider-box">
+          <span>Slit Width (a):</span>
+          <input type="range" id="rngA" min="15" max="80" value="35" oninput="updateVars()" />
+          <span id="valA" style="color:#a7f3d0; min-width:48px;">35 &mu;m</span>
+        </div>
+        <div class="slider-box">
+          <span>Screen Dist (D):</span>
+          <input type="range" id="rngDist" min="0.5" max="2.5" step="0.1" value="1.2" oninput="updateVars()" />
+          <span id="valDist" style="color:#fde047; min-width:42px;">1.2 m</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let width = 1200, height = 700;
+    let lambda = 532, colorHex = '#00e676', colorName = 'Green 532nm';
+    let slitSep = 180, slitWidth = 35, screenDist = 1.2, slitCount = 2;
+    let mode = 'wave';
+    let t = 0;
+    const photons = [];
+    const screenHits = new Array(350).fill(0);
+    let totalPhotonsHit = 0;
+
+    function resize() {
+      const rect = cv.parentElement.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = cv.width = Math.floor(rect.width * dpr);
+      height = cv.height = Math.floor(rect.height * dpr);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function setLaser(nm, hex, name) {
+      lambda = nm; colorHex = hex; colorName = name;
+      updateVars();
+      screenHits.fill(0);
+      photons.length = 0;
+      totalPhotonsHit = 0;
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('btnWave').classList.toggle('active', m === 'wave');
+      document.getElementById('btnPhoton').classList.toggle('active', m === 'photons');
+      screenHits.fill(0);
+      photons.length = 0;
+      totalPhotonsHit = 0;
+    }
+
+    function setSlits(n) {
+      slitCount = n;
+      document.getElementById('btnSlit1').classList.toggle('active', n === 1);
+      document.getElementById('btnSlit2').classList.toggle('active', n === 2);
+      screenHits.fill(0);
+      photons.length = 0;
+      totalPhotonsHit = 0;
+      updateVars();
+    }
+
+    function updateVars() {
+      slitSep = parseFloat(document.getElementById('rngD').value);
+      slitWidth = parseFloat(document.getElementById('rngA').value);
+      screenDist = parseFloat(document.getElementById('rngDist').value);
+      document.getElementById('valD').innerHTML = slitSep + ' &mu;m';
+      document.getElementById('valA').innerHTML = slitWidth + ' &mu;m';
+      document.getElementById('valDist').textContent = screenDist + ' m';
+      
+      const fringeMm = ((lambda * 1e-9 * screenDist) / (slitSep * 1e-6)) * 1000;
+      document.getElementById('hud').innerHTML = `
+        <b><span style="color:${colorHex}">●</span> Young's Double-Slit Optical Bench</b><br/>
+        Wavelength: <span class="stat-pill" style="color:${colorHex}">${lambda} nm (${colorName})</span> | 
+        Slits: <span class="stat-pill" style="color:#67e8f9">${slitCount === 2 ? 'Double Slit (d = ' + slitSep + ' μm)' : 'Single Slit (a = ' + slitWidth + ' μm)'}</span><br/>
+        Screen Distance D: <span class="stat-pill" style="color:#fde047">${screenDist} m</span> | 
+        Fringe Spacing &Delta;y = &lambda;D/d: <span class="stat-pill" style="color:#4ade80">${slitCount === 2 ? fringeMm.toFixed(2) + ' mm' : 'Diffraction central peak'}</span>
+        ${mode === 'photons' ? ' | Hits: <span class="stat-pill" style="color:#f472b6">' + totalPhotonsHit + '</span>' : ''}
+      `;
+    }
+
+    function resetSim() {
+      setLaser(532, '#00e676', 'Green 532nm');
+      document.getElementById('rngD').value = 180;
+      document.getElementById('rngA').value = 35;
+      document.getElementById('rngDist').value = 1.2;
+      setSlits(2);
+      setMode('wave');
+    }
+
+    function loop() {
+      t += 0.09;
+      ctx.clearRect(0, 0, width, height);
+      const barrierX = width * 0.35;
+      const screenX = width * 0.78;
+      const cy = height * 0.5;
+
+      // Realistic Optical Bench Track along bottom
+      const trackY = height * 0.88;
+      const benchGrad = ctx.createLinearGradient(0, trackY, 0, trackY + 28);
+      benchGrad.addColorStop(0, '#1e293b');
+      benchGrad.addColorStop(0.3, '#475569');
+      benchGrad.addColorStop(0.7, '#64748b');
+      benchGrad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = benchGrad;
+      ctx.fillRect(width * 0.03, trackY, width * 0.94, 22);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(width * 0.03, trackY, width * 0.94, 22);
+      
+      // Metric ticks on bench
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px monospace';
+      let cm = 0;
+      for (let tx = width * 0.04; tx < width * 0.95; tx += 28) {
+        ctx.beginPath();
+        ctx.moveTo(tx, trackY + 1);
+        ctx.lineTo(tx, trackY + 8);
+        ctx.stroke();
+        if (cm % 2 === 0) {
+          ctx.fillText(cm * 10 + 'cm', tx - 10, trackY + 18);
+        }
+        cm++;
+      }
+
+      // Draw Laser Source Chassis (High-tech Brushed Titanium Finish)
+      const laserX = width * 0.06;
+      const lzGrad = ctx.createLinearGradient(laserX - 45, cy - 36, laserX + 35, cy + 36);
+      lzGrad.addColorStop(0, '#64748b');
+      lzGrad.addColorStop(0.2, '#1e293b');
+      lzGrad.addColorStop(0.8, '#334155');
+      lzGrad.addColorStop(1, '#090d16');
+      ctx.fillStyle = lzGrad;
+      ctx.beginPath();
+      ctx.roundRect(laserX - 45, cy - 36, 80, 72, 10);
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Optical Laser Aperture Collar & Coated Lens
+      const collarGrad = ctx.createLinearGradient(laserX + 35, cy - 22, laserX + 50, cy + 22);
+      collarGrad.addColorStop(0, '#e2e8f0');
+      collarGrad.addColorStop(0.5, '#94a3b8');
+      collarGrad.addColorStop(1, '#475569');
+      ctx.fillStyle = collarGrad;
+      ctx.fillRect(laserX + 35, cy - 20, 16, 40);
+      ctx.strokeStyle = '#f8fafc';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(laserX + 35, cy - 20, 16, 40);
+
+      // Status indicator light
+      ctx.fillStyle = colorHex;
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(laserX - 25, cy - 20, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Laser Warning Badge
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.moveTo(laserX - 10, cy - 18);
+      ctx.lineTo(laserX + 10, cy - 18);
+      ctx.lineTo(laserX, cy);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 9px system-ui';
+      ctx.fillText('▲', laserX - 4, cy - 6);
+
+      // Coherent Laser Beam (Volumetric glow + pure core)
+      const gradBeam = ctx.createLinearGradient(laserX + 50, cy, barrierX, cy);
+      gradBeam.addColorStop(0, colorHex);
+      gradBeam.addColorStop(0.6, colorHex);
+      gradBeam.addColorStop(1, '#ffffff');
+      ctx.strokeStyle = gradBeam;
+      ctx.lineWidth = 16;
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 24;
+      ctx.beginPath();
+      ctx.moveTo(laserX + 50, cy);
+      ctx.lineTo(barrierX, cy);
+      ctx.stroke();
+
+      // Pure White Core of Beam
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 4;
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.moveTo(laserX + 50, cy);
+      ctx.lineTo(barrierX, cy);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Double-Slit Optical Diaphragm Stand
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(barrierX - 12, height * 0.04, 24, height * 0.84);
+      const slitMountGrad = ctx.createLinearGradient(barrierX - 12, 0, barrierX + 12, 0);
+      slitMountGrad.addColorStop(0, '#334155');
+      slitMountGrad.addColorStop(0.5, '#94a3b8');
+      slitMountGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = slitMountGrad;
+      ctx.fillRect(barrierX - 10, height * 0.08, 20, height * 0.78);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(barrierX - 10, height * 0.08, 20, height * 0.78);
+
+      // Slit positions
+      const sHalf = (slitSep * 0.38) * (height / 800);
+      const sW = Math.max(3.5, (slitWidth * 0.25) * (height / 800));
+      const slitY1 = slitCount === 2 ? cy - sHalf : cy;
+      const slitY2 = slitCount === 2 ? cy + sHalf : cy;
+
+      // Clear slits in barrier with luminous aperture glows
+      ctx.clearRect(barrierX - 11, slitY1 - sW, 22, sW * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = colorHex;
+      ctx.shadowBlur = 16;
+      ctx.fillRect(barrierX - 3, slitY1 - sW, 6, sW * 2);
+      if (slitCount === 2) {
+        ctx.clearRect(barrierX - 11, slitY2 - sW, 22, sW * 2);
+        ctx.fillRect(barrierX - 3, slitY2 - sW, 6, sW * 2);
+      }
+      ctx.shadowBlur = 0;
+
+      // Render Interference Waves (Smooth, high-contrast wavefront rings)
+      if (mode === 'wave') {
+        const numRings = 24;
+        const ringStep = (screenX - barrierX) / numRings;
+        const maxDist = screenX - barrierX;
+
+        ctx.save();
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = colorHex;
+        ctx.shadowBlur = 8;
+
+        for (let r = 0; r < maxDist; r += ringStep) {
+          const waveRadius = (r + (t * 22) % ringStep);
+          if (waveRadius > maxDist) continue;
+          const alpha = Math.max(0, 1 - (waveRadius / maxDist) * 0.8);
+
+          // Slit 1 wavefront
+          ctx.strokeStyle = colorHex;
+          ctx.globalAlpha = alpha * 0.45;
+          ctx.beginPath();
+          ctx.arc(barrierX, slitY1, waveRadius, -Math.PI / 2.3, Math.PI / 2.3);
+          ctx.stroke();
+
+          // Slit 2 wavefront
+          if (slitCount === 2) {
+            ctx.beginPath();
+            ctx.arc(barrierX, slitY2, waveRadius, -Math.PI / 2.3, Math.PI / 2.3);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+
+        // Constructive interference ray beams (Bright beams pointing toward maxima)
+        ctx.save();
+        const betaFactor = (Math.PI * slitSep * 0.005) / (lambda * 0.005);
+        for (let m = -3; m <= 3; m++) {
+          if (slitCount === 1 && m !== 0) continue;
+          const sinTheta = (m * (lambda * 1e-9)) / (slitSep * 1e-6);
+          if (Math.abs(sinTheta) <= 0.6) {
+            const destY = cy + Math.tan(Math.asin(sinTheta)) * (screenX - barrierX) * 1.8;
+            const rayGrad = ctx.createLinearGradient(barrierX, cy, screenX, destY);
+            rayGrad.addColorStop(0, colorHex);
+            rayGrad.addColorStop(0.3, colorHex);
+            rayGrad.addColorStop(1, 'rgba(255,255,255,0.9)');
+            ctx.strokeStyle = rayGrad;
+            ctx.globalAlpha = m === 0 ? 0.35 : 0.22;
+            ctx.lineWidth = m === 0 ? 5 : 3;
+            ctx.beginPath();
+            ctx.moveTo(barrierX, cy);
+            ctx.lineTo(screenX, destY);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+
+      } else {
+        // Quantum Single Photon Particle Mode
+        if (photons.length < 25) {
+          const s = (slitCount === 2 && Math.random() > 0.5) ? slitY2 : slitY1;
+          // Quantum probability distribution angle sampling
+          const theta = (Math.random() - 0.5) * 1.1;
+          photons.push({
+            x: barrierX + 2,
+            y: s,
+            vx: Math.cos(theta) * 9,
+            vy: Math.sin(theta) * 9,
+            life: 1.0
+          });
+        }
+
+        ctx.save();
+        for (let i = photons.length - 1; i >= 0; i--) {
+          const p = photons[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Glowing photon bullet
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = colorHex;
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (p.x >= screenX) {
+            const bin = Math.floor(((p.y - height * 0.06) / (height * 0.8)) * screenHits.length);
+            if (bin >= 0 && bin < screenHits.length) {
+              screenHits[bin] += 1;
+              totalPhotonsHit++;
+            }
+            photons.splice(i, 1);
+          }
+        }
+        ctx.restore();
+
+        // Draw accumulated photon hits on detector screen
+        ctx.save();
+        for (let b = 0; b < screenHits.length; b++) {
+          const hits = screenHits[b];
+          if (hits > 0) {
+            const hy = height * 0.06 + (b / screenHits.length) * (height * 0.8);
+            const intensityAlpha = Math.min(1, hits * 0.12);
+            ctx.fillStyle = colorHex;
+            ctx.shadowColor = colorHex;
+            ctx.shadowBlur = 6;
+            ctx.globalAlpha = intensityAlpha;
+            ctx.fillRect(screenX + 2, hy, 24, 2);
+          }
+        }
+        ctx.restore();
+      }
+
+      // Detection Screen Plate (Curved High-Contrast Phosphor Surface)
+      const screenGrad = ctx.createLinearGradient(screenX, 0, screenX + 28, 0);
+      screenGrad.addColorStop(0, '#090d16');
+      screenGrad.addColorStop(0.5, '#1e293b');
+      screenGrad.addColorStop(1, '#020617');
+      ctx.fillStyle = screenGrad;
+      ctx.beginPath();
+      ctx.roundRect(screenX, height * 0.05, 28, height * 0.82, 8);
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Live Intensity Fringe Pattern on Phosphor Screen
+      const betaFactor = (Math.PI * slitSep * 0.005) / (lambda * 0.005);
+      const alphaFactor = (Math.PI * slitWidth * 0.002) / (lambda * 0.005);
+
+      if (mode === 'wave') {
+        for (let y = height * 0.06; y < height * 0.86; y += 2) {
+          const dy = (y - cy) / (height * 0.38);
+          const theta = Math.atan(dy / screenDist);
+          const beta = betaFactor * Math.sin(theta);
+          const alpha = alphaFactor * Math.sin(theta);
+          const diff = alpha === 0 ? 1 : Math.sin(alpha) / alpha;
+          const interf = slitCount === 2 ? Math.cos(beta) : 1;
+          const I = Math.pow(diff * interf, 2);
+
+          // Screen color fringe with glowing bloom
+          ctx.fillStyle = colorHex;
+          ctx.globalAlpha = Math.min(1, I * 1.5);
+          ctx.fillRect(screenX + 2, y, 24, 2);
+          ctx.globalAlpha = 1.0;
+
+          // Dynamic filled intensity curve to the right of the screen
+          const plotX = screenX + 44 + I * (width * 0.13);
+          ctx.fillStyle = colorHex;
+          ctx.fillRect(plotX, y, 3, 2);
+
+          // Fill area under curve
+          ctx.fillStyle = colorHex;
+          ctx.globalAlpha = 0.25 * I;
+          ctx.fillRect(screenX + 44, y, plotX - (screenX + 44), 2);
+          ctx.globalAlpha = 1.0;
+        }
+      }
+
+      // Intensity curve baseline
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(screenX + 44, height * 0.05);
+      ctx.lineTo(screenX + 44, height * 0.87);
+      ctx.stroke();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 11px system-ui';
+      ctx.fillText('INTENSITY I(&theta;)', screenX + 48, height * 0.08);
+      ctx.fillText('Phosphor Screen', screenX - 25, height * 0.04);
+
+      requestAnimationFrame(loop);
+    }
+
+    function toggleFs() {
+      const container = document.getElementById('simContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '✕ Exit full screen';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '⛶ Full Screen';
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      document.getElementById('bFs').innerHTML = isFs ? '✕ Exit full screen' : '⛶ Full Screen';
+      setTimeout(resize, 100);
+    });
+
+    updateVars();
+    requestAnimationFrame(loop);
+  </script>
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

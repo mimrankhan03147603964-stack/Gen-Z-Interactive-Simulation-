@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Light & Shadows — Interactive Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;font-family:'Segoe UI',Arial,Helvetica,sans-serif;background:#060d22;color:#eaf2ff;overflow-x:hidden}
+body{min-height:100vh}
+
+.hero{position:relative;padding:36px 6% 30px;display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;overflow:hidden;background:linear-gradient(135deg,#0d1b52,#172d78 45%,#4a1468)}
+.hero:before{content:"";position:absolute;inset:0;background:
+ radial-gradient(circle at 8% 12%,rgba(0,215,255,.30),transparent 26%),
+ radial-gradient(circle at 92% 10%,rgba(255,85,180,.28),transparent 26%),
+ radial-gradient(circle at 50% 110%,rgba(255,200,60,.22),transparent 40%)}
+.hero>*{position:relative;z-index:2}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:linear-gradient(90deg,#00d9ff,#845bff,#ff4fa3);font-size:11px;font-weight:900;letter-spacing:1.1px;text-transform:uppercase}
+h1{font-size:clamp(32px,5vw,60px);line-height:.95;margin:14px 0;text-shadow:0 6px 30px rgba(0,0,0,.4)}
+h1 span{background:linear-gradient(90deg,#ffe27a,#ff9de0,#8be9ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{font-size:clamp(14px,1.6vw,18px);line-height:1.55;color:#d9e7ff;max-width:640px}
+.definition{margin-top:18px;padding:14px 18px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);line-height:1.6;font-size:14.5px}
+.definition strong{color:#70eaff}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cta{padding:12px 22px;border:0;border-radius:14px;cursor:pointer;color:#fff;font-size:14px;font-weight:900;background:linear-gradient(135deg,#ff4fa3,#795cff,#00c8ff);box-shadow:0 12px 34px rgba(0,0,0,.35);transition:.25s}
+.cta:hover{transform:translateY(-3px)}
+
+.hero-art{position:relative;width:min(440px,90vw);aspect-ratio:1/.92;margin:auto;border-radius:26px;overflow:hidden;border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 90px rgba(0,0,0,.45);background:linear-gradient(#0a1746 0 62%,#2d7a4d 62%)}
+.ha-sun{position:absolute;left:10%;top:12%;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fff9c4,#ffcc33 55%,#ff9d2e);box-shadow:0 0 40px #ffd54a,0 0 100px rgba(255,190,60,.5);animation:pulse 3s ease-in-out infinite}
+.ha-beam{position:absolute;left:24%;top:20%;width:56%;height:44%;background:linear-gradient(90deg,rgba(255,244,140,.65),rgba(255,246,168,.05));clip-path:polygon(0 22%,100% 0,100% 100%,0 78%);animation:flicker 2.6s ease-in-out infinite}
+.ha-tree{position:absolute;left:58%;bottom:26%;width:86px;height:130px;border-radius:50% 50% 42% 42%;background:radial-gradient(circle at 32% 28%,#63c46f,#2c7a3e 60%,#164a26)}
+.ha-trunk{position:absolute;left:66.5%;bottom:24%;width:14px;height:58px;border-radius:6px;background:linear-gradient(90deg,#8a5a34,#432a13)}
+.ha-shadow{position:absolute;left:44%;bottom:19%;width:230px;height:30px;background:rgba(0,0,0,.55);filter:blur(7px);border-radius:50%;animation:shadowMove 5s ease-in-out infinite;transform-origin:left center}
+@keyframes pulse{50%{transform:scale(1.09)}}
+@keyframes flicker{50%{opacity:.55}}
+@keyframes shadowMove{50%{transform:scaleX(.6)}}
+
+section.block{padding:36px 5%;max-width:1300px;margin:0 auto}
+.section-title{text-align:center;font-size:clamp(22px,3.2vw,36px);margin:0 0 10px}
+.section-title span{background:linear-gradient(90deg,#7ee8ff,#b79bff,#ff8ec7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.section-intro{text-align:center;color:#b9cbe9;max-width:860px;margin:0 auto 24px;font-size:15px;line-height:1.65}
+
+.lab-shell{background:linear-gradient(160deg,rgba(20,32,80,.9),rgba(9,16,44,.95));border:1px solid rgba(255,255,255,.13);border-radius:24px;padding:18px;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.lab-wrap{position:relative;width:100%;aspect-ratio:16/9;min-height:280px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#0a1230;cursor:grab;touch-action:none}
+.lab-wrap:active{cursor:grabbing}
+canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}
+.chip{padding:6px 10px;border-radius:999px;background:rgba(4,10,30,.65);border:1px solid rgba(255,255,255,.18);font-size:11px;font-weight:800;backdrop-filter:blur(8px)}
+.chip b{color:#7ee8ff}
+.insight{margin-top:12px;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(0,200,255,.13),rgba(255,80,170,.11));border:1px solid rgba(255,255,255,.14);font-size:14px;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.insight .ic{font-size:18px;line-height:1}
+
+.controls{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:12px}
+.ctl{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#eaf2ff;border-radius:11px;padding:9px 13px;font-weight:800;font-size:12.5px;cursor:pointer;transition:.2s;white-space:nowrap}
+.ctl:hover{background:rgba(0,205,255,.22);transform:translateY(-2px)}
+.ctl.on{background:linear-gradient(135deg,#00c8ff,#7a5bff);border-color:transparent;box-shadow:0 6px 18px rgba(0,150,255,.35)}
+.ctl.warm{background:linear-gradient(135deg,#ff8a3d,#ff4fa3);border-color:transparent}
+.ctl.fs{background:linear-gradient(135deg,#00c853,#00a844);border-color:transparent;font-size:13px;padding:9px 16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:10px}
+.slider-box{display:flex;align-items:center;gap:8px;padding:8px 13px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);font-size:12.5px;font-weight:700}
+input[type=range]{width:130px;accent-color:#00d9ff;cursor:pointer}
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px}
+.readout{padding:11px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);text-align:center}
+.readout small{display:block;color:#9fb5d8;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;font-weight:800}
+.readout b{font-size:17px;color:#7ee8ff}
+.help{text-align:center;color:#a9bede;font-size:13px;margin:12px 0 0;line-height:1.6}
+
+body.fs-mode .hero,
+body.fs-mode .block:not(#labSection),
+body.fs-mode .insight,
+body.fs-mode .readouts,
+body.fs-mode .help{display:none!important}
+body.fs-mode{overflow:hidden;background:#000}
+body.fs-mode #labSection{padding:0;max-width:none;height:100vh;display:flex;flex-direction:column}
+body.fs-mode .lab-shell{border-radius:0;padding:0;height:100vh;display:flex;flex-direction:column;background:#000;border:none;box-shadow:none}
+body.fs-mode .lab-wrap{flex:1;border-radius:0;border:none;min-height:0;aspect-ratio:auto}
+body.fs-mode .section-title{display:none}
+body.fs-mode .section-intro{display:none}
+body.fs-mode .controls{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(3,8,26,.92);backdrop-filter:blur(12px);padding:8px 10px;margin:0;border-bottom:1px solid rgba(255,255,255,.15);gap:5px}
+body.fs-mode .row{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(3,8,26,.92);backdrop-filter:blur(12px);padding:8px 10px;margin:0;border-top:1px solid rgba(255,255,255,.15)}
+body.fs-mode .ctl{font-size:11px;padding:7px 10px}
+body.fs-mode .slider-box{font-size:11px;padding:6px 10px}
+body.fs-mode input[type=range]{width:100px}
+body.fs-mode .hud{top:56px}
+body.fs-mode .fs-toggle{display:flex!important}
+
+.fs-toggle{display:none;position:fixed;top:0;right:0;z-index:200;background:linear-gradient(135deg,#ff4fa3,#795cff);border:none;color:#fff;font-weight:900;font-size:12px;padding:10px 16px;border-radius:0 0 0 14px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+
+.buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px}
+.btn{border:0;cursor:pointer;color:#fff;font-weight:800;font-size:13px;padding:11px 16px;border-radius:12px;background:linear-gradient(135deg,#00a9e8,#6b55e8);box-shadow:0 8px 22px rgba(0,0,0,.28);transition:.25s}
+.btn:hover{transform:translateY(-3px)}
+.btn.active{background:linear-gradient(135deg,#ff4fa3,#ff8b3d)}
+.panel{max-width:1050px;margin:auto;padding:24px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);min-height:200px}
+.panel h3{font-size:clamp(19px,2.5vw,28px);margin:0 0 10px}
+.panel p{font-size:16px;line-height:1.7;color:#d8e5f8;margin:0}
+.example{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+.card{padding:16px;border-radius:16px;background:linear-gradient(145deg,rgba(0,195,255,.13),rgba(255,74,171,.10));border:1px solid rgba(255,255,255,.12);line-height:1.55;font-size:14px;color:#d8e5f8}
+.card b{display:block;font-size:15.5px;margin-bottom:6px;color:#fff}
+
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.ex-card{position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));transition:.3s}
+.ex-card:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(0,0,0,.45)}
+.ex-art{height:120px;position:relative;overflow:hidden;display:grid;place-items:center;font-size:48px}
+.ex-art.a{background:linear-gradient(#123a86,#f0a04b)}
+.ex-art.b{background:linear-gradient(#0d2b6b,#4fa3e3)}
+.ex-art.c{background:linear-gradient(#1a1140,#5a2c8a)}
+.ex-art.d{background:linear-gradient(#20263f,#6b4a2a)}
+.ex-art.e{background:linear-gradient(#0c2b52,#3f7fbf)}
+.ex-art.f{background:linear-gradient(#2a1546,#c2553f)}
+.ex-body{padding:14px 16px 18px}
+.ex-body h4{margin:0 0 7px;font-size:16px}
+.ex-body p{margin:0;font-size:13.5px;line-height:1.6;color:#c2d3ee}
+
+@media(max-width:880px){
+  .hero{grid-template-columns:1fr;text-align:center;padding-top:24px}
+  .subtitle{margin:auto}
+  .definition{text-align:left}
+  .hero-actions{justify-content:center}
+  .lab-wrap{aspect-ratio:4/3}
+}
+@media(max-width:520px){
+  .lab-shell{padding:10px;border-radius:16px}
+  .chip{font-size:10px;padding:4px 8px}
+  .readouts{grid-template-columns:repeat(2,1fr)}
+  .ctl{font-size:11.5px;padding:8px 11px}
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div>
+    <span class="badge">Science • Interactive Simulation</span>
+    <h1>Light &amp; <span>Shadows</span></h1>
+    <p class="subtitle">Move a real light source across the sky and watch how a tree, a person or a house casts its shadow on the ground — exactly like in real life.</p>
+    <div class="definition"><strong>Definition:</strong><br>
+      A shadow is a dark area formed when an <b>opaque object</b> blocks light from reaching a surface. Light always travels in <b>straight lines</b>.</div>
+    <div class="hero-actions">
+      <button class="cta" onclick="scrollToLab()">▶ Start the Simulation</button>
+    </div>
+  </div>
+
+  <div class="hero-art">
+    <div class="ha-sun"></div>
+    <div class="ha-beam"></div>
+    <div class="ha-tree"></div>
+    <div class="ha-trunk"></div>
+    <div class="ha-shadow"></div>
+  </div>
+</section>
+
+<section class="block" id="labSection">
+  <h2 class="section-title">🔬 <span>Interactive Light &amp; Shadow Lab</span></h2>
+  <p class="section-intro">Drag the <b>light source</b> or the <b>object</b> with your finger or mouse. Every ray of light is drawn exactly as it travels — when a ray hits the object it stops, and a shadow appears on the other side.</p>
+
+  <div class="lab-shell">
+    <div class="lab-wrap" id="labWrap">
+      <canvas id="scene"></canvas>
+
+
+
+      <div class="hud">
+        <div class="chip">Light Source</div>
+        <div class="chip">Object</div>
+        <div class="chip">Shadow</div>
+      </div>
+    </div>
+
+    <div class="insight" id="insight">
+      <span class="ic">💡</span>
+      <span id="insightText">Drag the sun to a different height and watch the shadow change.</span>
+    </div>
+
+    <div class="controls">
+      <button class="ctl on" id="btnRays" onclick="toggle('rays')">Light Rays</button>
+      <button class="ctl on" id="btnSoft" onclick="toggle('soft')">Soft Shadow</button>
+      <button class="ctl on" id="btnMeasure" onclick="toggle('measure')">Measurements</button>
+      <button class="ctl" id="btnSource" onclick="toggleSource()">Torch Mode</button>
+      <button class="ctl warm" id="btnAuto" onclick="autoExplore()">Animate the Sun</button>
+      <button class="ctl" onclick="preset('morning')">Morning</button>
+      <button class="ctl" onclick="preset('noon')">Noon</button>
+      <button class="ctl" onclick="preset('evening')">Evening</button>
+      <button class="ctl fs" onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
+
+    <div class="row">
+      <div class="slider-box">Height
+        <input id="heightSlider" type="range" min="0" max="100" value="30" oninput="setHeight(this.value)">
+      </div>
+      <div class="slider-box">Object:
+        <select id="objSelect" class="ctl" style="padding:7px 10px" onchange="setObject(this.value)">
+          <option value="tree">Tree</option>
+          <option value="person">Person</option>
+          <option value="house">House</option>
+          <option value="pole">Flag Pole</option>
+          <option value="ball">Ball</option>
+        </select>
+      </div>
+      <button class="ctl" onclick="resetLab()">Reset</button>
+    </div>
+
+    <div class="readouts">
+      <div class="readout"><small>Shadow</small><b id="rShadow">FORMED</b></div>
+      <div class="readout"><small>Length</small><b id="rLength">0.0 m</b></div>
+      <div class="readout"><small>Direction</small><b id="rDir">Right</b></div>
+      <div class="readout"><small>Light Height</small><b id="rAngle">0°</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 class="section-title">📚 <span>Explore the Concept</span></h2>
+  <div class="buttons">
+    <button class="btn active" onclick="showTopic('shadow',this)">What is a Shadow?</button>
+    <button class="btn" onclick="showTopic('light',this)">Light Source</button>
+    <button class="btn" onclick="showTopic('object',this)">Opaque Object</button>
+    <button class="btn" onclick="showTopic('position',this)">Position &amp; Size</button>
+    <button class="btn" onclick="showTopic('transparent',this)">Transparent vs Opaque</button>
+  </div>
+
+  <div id="panel" class="panel">
+    <h3>What is a Shadow?</h3>
+    <p>A shadow appears when an object blocks light. The shadow is always formed on the side of the object that is <b>away from the light source</b>.</p>
+    <div class="example">
+      <div class="card"><b>Light</b>Light travels from a source in straight lines and illuminates objects.</div>
+      <div class="card"><b>Object</b>An opaque object does not let light pass through it.</div>
+      <div class="card"><b>Shadow</b>A dark region appears behind the object, on the ground or on a wall.</div>
+    </div>
+  </div>
+</section>
+
+<button class="fs-toggle" onclick="toggleFullscreen()">Exit Fullscreen</button>
+
+<script>
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp  = (a,b,t)=>a+(b-a)*t;
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function mixHex(a,b,t){const A=hexToRgb(a),B=hexToRgb(b);
+  return `rgb(${Math.round(lerp(A[0],B[0],t))},${Math.round(lerp(A[1],B[1],t))},${Math.round(lerp(A[2],B[2],t))})`;}
+
+const wrap = document.getElementById('labWrap');
+const cv   = document.getElementById('scene');
+const ctx  = cv.getContext('2d');
+let W=0,H=0,DPR=1;
+
+const OBJECTS = {
+  tree  : {h:215, w:135, label:'Tree'},
+  person: {h:152, w:54,  label:'Person'},
+  house : {h:190, w:175, label:'House'},
+  pole  : {h:250, w:70,  label:'Flag Pole'},
+  ball  : {h:55,  w:55,  label:'Ball'}
+};
+const PX_PER_M = 85;
+
+const state = {
+  lx: 0.17, ly: 0.20,
+  objX: 0.62,
+  objType: 'tree',
+  rays: true,
+  soft: true,
+  measure: true,
+  source: 'sun',
+  animating: false,
+  phase: 0.20,
+  dir: 1,
+  t: 0
+};
+
+const SKY_STOPS = [
+  {e:0,  c:['#0e1b47','#8d3a29','#ff9a4d']},
+  {e:6,  c:['#16306b','#c25a33','#ffbc6b']},
+  {e:15, c:['#1e4f9e','#7fb6e6','#ffd9a0']},
+  {e:35, c:['#1c66c6','#5aa9ec','#cfe7ff']},
+  {e:90, c:['#1559bd','#4f9fe8','#dcefff']}
+];
+function skyAt(elev){
+  let a=SKY_STOPS[0], b=SKY_STOPS[SKY_STOPS.length-1];
+  if(elev<=SKY_STOPS[0].e){a=b=SKY_STOPS[0];}
+  else if(elev>=SKY_STOPS[SKY_STOPS.length-1].e){a=b=SKY_STOPS[SKY_STOPS.length-1];}
+  else{
+    for(let i=0;i<SKY_STOPS.length-1;i++){
+      if(elev>=SKY_STOPS[i].e && elev<=SKY_STOPS[i+1].e){a=SKY_STOPS[i];b=SKY_STOPS[i+1];break;}
+    }
+  }
+  const t = (a===b)?0:(elev-a.e)/(b.e-a.e);
+  return [mixHex(a.c[0],b.c[0],t), mixHex(a.c[1],b.c[1],t), mixHex(a.c[2],b.c[2],t)];
+}
+
+const stars = Array.from({length:100},()=>({
+  x:Math.random(), y:Math.random()*0.58, r:Math.random()*1.2+0.4, p:Math.random()*6.28
+}));
+const clouds = [
+  {x:0.10,y:0.10,s:1.00,sp:0.0035},
+  {x:0.55,y:0.06,s:0.72,sp:0.0052},
+  {x:0.85,y:0.16,s:1.20,sp:0.0028},
+  {x:0.32,y:0.20,s:0.62,sp:0.0044}
+];
+const grass = Array.from({length:100},()=>({
+  x:Math.random(), h:6+Math.random()*14, s:0.6+Math.random()*0.9, p:Math.random()*6.28
+}));
+const bushes = Array.from({length:9},(_,i)=>({
+  x:0.03+i*0.115+Math.random()*0.03, s:0.5+Math.random()*0.6
+}));
+
+function geom(){
+  const horizonY = H*0.60;
+  const groundY  = H*0.82;
+  const S        = clamp(H/620, 0.45, 1.9);
+  return {horizonY, groundY, S};
+}
+
+function resize(){
+  const r = wrap.getBoundingClientRect();
+  if(r.width<10) return;
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = r.width; H = r.height;
+  cv.width  = Math.round(W*DPR);
+  cv.height = Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+new ResizeObserver(resize).observe(wrap);
+window.addEventListener('resize', resize);
+
+function rayBox(px,py,dx,dy,bx,by,bw,bh){
+  let tmin=0, tmax=1;
+  const axes = [[px,dx,bx,bx+bw],[py,dy,by,by+bh]];
+  for(const [p,d,mn,mx] of axes){
+    if(Math.abs(d)<1e-8){
+      if(p<mn||p>mx) return null;
+    }else{
+      let t1=(mn-p)/d, t2=(mx-p)/d;
+      if(t1>t2){const tmp=t1;t1=t2;t2=tmp;}
+      tmin=Math.max(tmin,t1); tmax=Math.min(tmax,t2);
+      if(tmin>tmax) return null;
+    }
+  }
+  return tmin;
+}
+
+function hitBoxes(type,x,baseY,S){
+  const o=OBJECTS[type], h=o.h*S, w=o.w*S;
+  if(type==='tree') return [
+    {x:x-w/2,      y:baseY-h,       w:w,          h:h*0.70},
+    {x:x-8*S,      y:baseY-h*0.46,  w:16*S,       h:h*0.46}
+  ];
+  if(type==='pole') return [
+    {x:x-w*0.06,   y:baseY-h,       w:w*0.12,     h:h},
+    {x:x,          y:baseY-h,       w:w*0.90,     h:h*0.20}
+  ];
+  if(type==='ball') return [{x:x-w*0.45, y:baseY-h*0.9, w:w*0.9, h:h*0.9}];
+  return [{x:x-w/2, y:baseY-h, w:w, h:h}];
+}
+
+function drawLabelBox(text, x, y, bg, fg, fontSize){
+  fontSize = fontSize || 12;
+  ctx.save();
+  ctx.font = '800 ' + fontSize + 'px "Segoe UI", Arial, sans-serif';
+  const metrics = ctx.measureText(text);
+  const textW = metrics.width;
+  const padX = 10;
+  const padY = 6;
+  const boxW = textW + padX*2;
+  const boxH = fontSize + padY*2;
+
+  ctx.fillStyle = bg;
+  ctx.beginPath();
+  ctx.roundRect(x - boxW/2, y - boxH/2, boxW, boxH, 7);
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255,255,255,.35)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  ctx.fillStyle = fg;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y + 1);
+  ctx.restore();
+}
+
+function drawCalloutLine(fromX, fromY, toX, toY){
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,.5)';
+  ctx.lineWidth = 1.3;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.lineTo(toX, toY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,.8)';
+  ctx.beginPath();
+  ctx.arc(toX, toY, 2.5, 0, 6.283);
+  ctx.fill();
+  ctx.restore();
+}
+
+function render(){
+  if(!W||!H) return;
+  const {horizonY,groundY,S} = geom();
+  const L = {x:state.lx*W, y:state.ly*H};
+
+  const obj     = OBJECTS[state.objType];
+  const baseX   = state.objX*W;
+  const objH    = obj.h*S;
+  const objW    = obj.w*S;
+  const topY    = groundY - objH;
+  const litFrom = (L.x >= baseX) ? 1 : -1;
+
+  const dxE = Math.abs(L.x-baseX);
+  const dyE = Math.max(groundY-L.y,1);
+  const elev = Math.atan2(dyE, Math.max(dxE,1))*180/Math.PI;
+  const warmth  = clamp(1-elev/55,0,1);
+  const nightF  = (state.source==='torch') ? 1 : clamp((7-elev)/7,0,1);
+
+  let skyTop,skyMid,skyBot;
+  if(state.source==='torch'){
+    skyTop='#03061a'; skyMid='#081130'; skyBot='#101c44';
+  }else{
+    [skyTop,skyMid,skyBot] = skyAt(elev);
+  }
+  const sg = ctx.createLinearGradient(0,0,0,horizonY);
+  sg.addColorStop(0, skyTop);
+  sg.addColorStop(0.55, skyMid);
+  sg.addColorStop(1, skyBot);
+  ctx.fillStyle = sg;
+  ctx.fillRect(0,0,W,horizonY+2);
+
+  if(nightF>0.03){
+    for(const st of stars){
+      const tw = 0.45+0.55*Math.sin(state.t*2+st.p);
+      ctx.globalAlpha = nightF*tw*0.95;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(st.x*W, st.y*horizonY, st.r, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  if(state.source==='torch'){
+    const mx = W*0.82, my = horizonY*0.22, mr = 26*S;
+    const mg = ctx.createRadialGradient(mx,my,mr*0.3,mx,my,mr*4);
+    mg.addColorStop(0,'rgba(200,220,255,.35)');
+    mg.addColorStop(1,'rgba(200,220,255,0)');
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mx,my,mr*4,0,6.283); ctx.fill();
+    ctx.fillStyle = '#e8eeff';
+    ctx.beginPath(); ctx.arc(mx,my,mr,0,6.283); ctx.fill();
+  }
+
+  if(state.source!=='torch'){
+    for(const c of clouds){
+      const cx = ((c.x + state.t*c.sp) % 1.25 - 0.12) * W;
+      const cy = c.y*horizonY;
+      const sc = c.s*S;
+      const alpha = 0.55*(1-nightF) + 0.05;
+      drawCloud(cx,cy,sc,alpha,warmth);
+    }
+  }
+
+  drawHills(horizonY,S,nightF,warmth);
+
+  const gg = ctx.createLinearGradient(0,horizonY,0,H);
+  if(state.source==='torch'){
+    gg.addColorStop(0,'#16301f');
+    gg.addColorStop(1,'#08170f');
+  }else{
+    gg.addColorStop(0, mixHex('#4f9b58','#1d4a2c',nightF*0.85));
+    gg.addColorStop(0.45, mixHex('#3d8a4b','#153a22',nightF*0.85));
+    gg.addColorStop(1, mixHex('#226237','#0a2015',nightF*0.85));
+  }
+  ctx.fillStyle = gg;
+  ctx.fillRect(0,horizonY,W,H-horizonY);
+
+  if(state.source==='sun' && elev>4){
+    const pool = ctx.createRadialGradient(L.x,groundY,10,L.x,groundY,W*0.55);
+    pool.addColorStop(0,'rgba(255,235,150,0.16)');
+    pool.addColorStop(1,'rgba(255,235,150,0)');
+    ctx.fillStyle = pool;
+    ctx.fillRect(0,horizonY,W,H-horizonY);
+  }
+
+  for(const b of bushes){
+    const bx = b.x*W, by = horizonY+8*S, br = 16*S*b.s;
+    ctx.fillStyle = state.source==='torch' ? 'rgba(12,40,24,.9)' : 'rgba(28,80,44,.85)';
+    ctx.beginPath();
+    ctx.ellipse(bx,by,br*1.5,br,0,0,6.283);
+    ctx.fill();
+  }
+
+  for(const g of grass){
+    const gx = g.x*W;
+    const gy = horizonY + (H-horizonY)*(0.25+g.s*0.7);
+    if(gy>H) continue;
+    const sway = Math.sin(state.t*1.4+g.p)*2.2;
+    ctx.strokeStyle = state.source==='torch'
+      ? 'rgba(30,90,55,.55)'
+      : `rgba(${Math.round(60+40*(1-nightF))},${Math.round(150-40*nightF)},${Math.round(80-20*nightF)},.55)`;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(gx,gy);
+    ctx.quadraticCurveTo(gx+sway, gy-g.h*0.6, gx+sway*2, gy-g.h);
+    ctx.stroke();
+  }
+
+  const shadowInfo = drawShadow(L, baseX, groundY, topY, objW, S, nightF);
+
+  if(state.rays) drawRays(L, baseX, groundY, objH, objW, S, nightF);
+
+  ctx.save();
+  if(state.soft && 'filter' in ctx) ctx.filter = `blur(${4*S}px)`;
+  ctx.fillStyle = 'rgba(0,0,0,0.42)';
+  ctx.beginPath();
+  ctx.ellipse(baseX, groundY+2*S, objW*0.55, 7*S, 0, 0, 6.283);
+  ctx.fill();
+  ctx.filter = 'none';
+  ctx.restore();
+
+  drawObject(state.objType, baseX, groundY, S, litFrom, nightF);
+
+  if(state.source==='sun') drawSun(L,S,warmth,elev);
+  else drawTorch(L,S);
+
+  const lightLabelY = Math.max(L.y - 60*S - 25, 22);
+  drawLabelBox(
+    state.source==='sun' ? 'LIGHT SOURCE (SUN)' : 'LIGHT SOURCE (TORCH)',
+    L.x, lightLabelY, 'rgba(4,10,30,.9)', '#ffe58a', 12
+  );
+  drawCalloutLine(L.x, lightLabelY + 13, L.x, L.y - 12*S);
+
+  const objLabelY = Math.max(topY - 40*S, 60);
+  drawLabelBox(
+    'OBJECT: ' + obj.label.toUpperCase(),
+    baseX, objLabelY, 'rgba(4,10,30,.9)', '#b8f0c4', 12
+  );
+  drawCalloutLine(baseX, objLabelY + 13, baseX, topY - 8*S);
+
+  const shadowMidX = (baseX + shadowInfo.endX) / 2;
+  const shadowLabelY = groundY + 55*S;
+  if(shadowLabelY < H - 8) {
+    drawLabelBox(
+      'SHADOW',
+      shadowMidX, shadowLabelY, 'rgba(4,10,30,.9)', '#ffb3d9', 12
+    );
+    drawCalloutLine(shadowMidX, shadowLabelY - 13, shadowMidX, groundY + 14*S);
+  }
+
+  if(state.measure){
+    drawMeasurements(L, baseX, groundY, topY, shadowInfo, S, elev);
+  }
+
+  drawLabelBox(
+    'GROUND (Surface)',
+    W*0.13, groundY + 32*S, 'rgba(4,10,30,.8)', '#a8e6b8', 11
+  );
+
+  updateReadouts(shadowInfo, elev, baseX, L, S);
+}
+
+function drawCloud(x,y,s,alpha,warmth){
+  ctx.save();
+  ctx.globalAlpha = clamp(alpha,0,1);
+  const tint = mixHex('#ffffff','#ffc98a',warmth*0.8);
+  const r = 30*s;
+  const g = ctx.createRadialGradient(x,y,r*0.2,x,y,r*2.2);
+  g.addColorStop(0,tint);
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  const puffs=[[0,0,1.0],[-r*0.9,6*s,0.72],[r*0.9,5*s,0.78],[-r*0.3,-10*s,0.62],[r*0.45,-8*s,0.6]];
+  for(const [ox,oy,k] of puffs){
+    ctx.beginPath();
+    ctx.ellipse(x+ox,y+oy,r*k,r*k*0.62,0,0,6.283);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawHills(horizonY,S,nightF,warmth){
+  const base = mixHex('#2f5f7a','#122a3c',nightF*0.9);
+  ctx.save();
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = base;
+  ctx.beginPath();
+  ctx.moveTo(0,horizonY+2);
+  ctx.quadraticCurveTo(W*0.12,horizonY-52*S, W*0.28,horizonY+2);
+  ctx.quadraticCurveTo(W*0.42,horizonY-70*S, W*0.58,horizonY+2);
+  ctx.quadraticCurveTo(W*0.74,horizonY-46*S, W*0.9,horizonY+2);
+  ctx.lineTo(W,horizonY+2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawSun(L,S,warmth,elev){
+  const r = (22+10*(1-warmth))*S;
+  const glow = ctx.createRadialGradient(L.x,L.y,r*0.35,L.x,L.y,r*11);
+  glow.addColorStop(0,'rgba(255,238,160,0.60)');
+  glow.addColorStop(0.18,'rgba(255,214,110,0.28)');
+  glow.addColorStop(0.5,'rgba(255,180,80,0.09)');
+  glow.addColorStop(1,'rgba(255,170,70,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(L.x,L.y,r*11,0,6.283); ctx.fill();
+
+  const core = ctx.createRadialGradient(L.x-r*0.3,L.y-r*0.3,r*0.15,L.x,L.y,r);
+  core.addColorStop(0,'#fffdf0');
+  core.addColorStop(0.5, mixHex('#fff3b0','#ffb44a',warmth));
+  core.addColorStop(1, mixHex('#ffd75e','#ff8b28',warmth));
+  ctx.fillStyle = core;
+  ctx.beginPath(); ctx.arc(L.x,L.y,r,0,6.283); ctx.fill();
+}
+
+function drawTorch(L,S){
+  const r = 9*S;
+  const glow = ctx.createRadialGradient(L.x,L.y,r*0.3,L.x,L.y,r*14);
+  glow.addColorStop(0,'rgba(255,236,170,0.75)');
+  glow.addColorStop(0.16,'rgba(255,200,110,0.35)');
+  glow.addColorStop(0.5,'rgba(255,170,80,0.10)');
+  glow.addColorStop(1,'rgba(255,160,60,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(L.x,L.y,r*14,0,6.283); ctx.fill();
+
+  const core = ctx.createRadialGradient(L.x-r*0.3,L.y-r*0.3,r*0.15,L.x,L.y,r);
+  core.addColorStop(0,'#fffbe8');
+  core.addColorStop(0.55,'#ffe27a');
+  core.addColorStop(1,'#ffb02e');
+  ctx.fillStyle = core;
+  ctx.beginPath(); ctx.arc(L.x,L.y,r,0,6.283); ctx.fill();
+}
+
+function drawRays(L, baseX, groundY, objH, objW, S, nightF){
+  const boxes = hitBoxes(state.objType, baseX, groundY, S);
+  const n = Math.round(clamp(W/68, 10, 28));
+  const rayColor = state.source==='torch'
+    ? ['rgba(255,225,150,0.85)','rgba(255,210,120,0.05)']
+    : ['rgba(255,246,175,0.80)','rgba(255,240,150,0.05)'];
+
+  ctx.save();
+  ctx.lineCap='round';
+  for(let i=0;i<=n;i++){
+    const tx = (i/n)*(W*1.12) - W*0.06;
+    const dx = tx - L.x;
+    const dy = groundY - L.y;
+    const len = Math.hypot(dx,dy);
+    if(len<1) continue;
+
+    let hitT = null;
+    for(const b of boxes){
+      const t = rayBox(L.x,L.y,dx,dy,b.x,b.y,b.w,b.h);
+      if(t!==null && (hitT===null || t<hitT)) hitT = t;
+    }
+    const ex = (hitT!==null) ? L.x + dx*hitT : tx;
+    const ey = (hitT!==null) ? L.y + dy*hitT : groundY;
+
+    const g = ctx.createLinearGradient(L.x,L.y,ex,ey);
+    g.addColorStop(0, rayColor[0]);
+    g.addColorStop(1, rayColor[1]);
+    ctx.strokeStyle = g;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(L.x,L.y);
+    ctx.lineTo(ex,ey);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawShadow(L, baseX, baseY, topY, objW, S, nightF){
+  let t = (baseY - L.y) / (topY - L.y);
+  let endX;
+
+  if(!isFinite(t) || t<=0){
+    const dir = (baseX - L.x) >= 0 ? 1 : -1;
+    endX = baseX + dir*W*1.6;
+  }else{
+    endX = L.x + t*(baseX - L.x);
+  }
+  endX = clamp(endX, -W*0.6, W*1.6);
+
+  const len = Math.abs(endX - baseX);
+  const dir = Math.sign(endX - baseX) || 1;
+
+  const nearW = clamp(objW*0.42, 9*S, 46*S);
+  const farW  = Math.max(nearW*0.40, nearW*(1 - Math.min(len/(W*1.35), 0.62)));
+
+  ctx.save();
+  if(state.soft && 'filter' in ctx) ctx.filter = `blur(${(5+7*S).toFixed(1)}px)`;
+
+  ctx.beginPath();
+  ctx.moveTo(baseX, baseY - nearW);
+  ctx.lineTo(endX,  baseY - farW);
+  ctx.quadraticCurveTo(endX + dir*farW*1.25, baseY, endX, baseY + farW);
+  ctx.lineTo(baseX, baseY + nearW);
+  ctx.quadraticCurveTo(baseX - dir*nearW*0.85, baseY, baseX, baseY - nearW);
+  ctx.closePath();
+
+  const g = ctx.createLinearGradient(baseX,0,endX,0);
+  const dark = 0.68 - nightF*0.18;
+  g.addColorStop(0,    `rgba(4,9,18,${dark})`);
+  g.addColorStop(0.45, `rgba(4,9,18,${dark*0.66})`);
+  g.addColorStop(1,    'rgba(4,9,18,0.04)');
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+
+  return {endX, len, dir};
+}
+
+function drawObject(type,x,baseY,S,litFrom,nightF){
+  ctx.save();
+  const shade = 1 - nightF*0.55;
+  if(type==='tree')      drawTree(x,baseY,S,litFrom,shade);
+  else if(type==='person') drawPerson(x,baseY,S,litFrom,shade);
+  else if(type==='house')  drawHouse(x,baseY,S,litFrom,shade);
+  else if(type==='pole')   drawPole(x,baseY,S,litFrom,shade);
+  else                     drawBall(x,baseY,S,litFrom,shade);
+  ctx.restore();
+}
+
+function drawTree(x,baseY,S,litFrom,shade){
+  const h = 215*S;
+  const trunkH = h*0.44, trunkW = 15*S;
+
+  const tg = ctx.createLinearGradient(x-trunkW/2,0,x+trunkW/2,0);
+  tg.addColorStop(0,'#3a2411'); tg.addColorStop(1,'#a4703c');
+  ctx.fillStyle = tg;
+  ctx.fillRect(x-trunkW/2, baseY-trunkH, trunkW, trunkH);
+
+  const cy = baseY - h*0.70;
+  const R  = h*0.32;
+  ctx.fillStyle = '#2c7a3e';
+  ctx.beginPath(); ctx.arc(x, cy, R, 0, 6.283); ctx.fill();
+  ctx.fillStyle = '#43a047';
+  ctx.beginPath(); ctx.arc(x-R*0.35, cy-R*0.2, R*0.6, 0, 6.283); ctx.fill();
+}
+
+function drawPerson(x,baseY,S,litFrom,shade){
+  const h = 152*S;
+  const headR = h*0.092;
+  const headY = baseY - h + headR;
+
+  ctx.fillStyle = '#25344f';
+  ctx.fillRect(x-12*S, baseY-h*0.44, 10*S, h*0.44);
+  ctx.fillRect(x+2*S, baseY-h*0.44, 10*S, h*0.44);
+
+  ctx.fillStyle = '#1d47a0';
+  ctx.fillRect(x-14*S, baseY-h*0.80, 28*S, h*0.38);
+
+  ctx.fillStyle = '#f7d3a8';
+  ctx.beginPath(); ctx.arc(x, headY, headR, 0, 6.283); ctx.fill();
+}
+
+function drawHouse(x,baseY,S,litFrom,shade){
+  const h = 190*S, w = 175*S;
+  const wallH = h*0.62;
+  const wallTop = baseY-wallH;
+
+  ctx.fillStyle = '#e3d2ab';
+  ctx.fillRect(x-w/2, wallTop, w, wallH);
+
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath();
+  ctx.moveTo(x-w/2-8*S, wallTop);
+  ctx.lineTo(x, wallTop-h*0.38);
+  ctx.lineTo(x+w/2+8*S, wallTop);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#6b4423';
+  ctx.fillRect(x-w*0.11, baseY-h*0.30, w*0.22, h*0.30);
+}
+
+function drawPole(x,baseY,S,litFrom,shade){
+  const h = 250*S;
+  ctx.fillStyle = '#98a3b8';
+  ctx.fillRect(x-4*S, baseY-h, 8*S, h);
+
+  ctx.fillStyle = '#e0453d';
+  ctx.fillRect(x+4*S, baseY-h+10*S, 70*S, 45*S);
+}
+
+function drawBall(x,baseY,S,litFrom,shade){
+  const h = 55*S, r = h/2;
+  ctx.fillStyle = '#f39c12';
+  ctx.beginPath(); ctx.arc(x, baseY-r, r, 0, 6.283); ctx.fill();
+}
+
+function drawMeasurements(L, baseX, groundY, topY, shadowInfo, S, elev){
+  const {endX, len} = shadowInfo;
+  const y = groundY + 42*S;
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,.75)';
+  ctx.lineWidth = 1.4;
+  ctx.setLineDash([6,5]);
+  ctx.beginPath();
+  ctx.moveTo(baseX, groundY+10*S);
+  ctx.lineTo(baseX, y+8);
+  ctx.moveTo(endX, groundY+10*S);
+  ctx.lineTo(endX, y+8);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(baseX, y);
+  ctx.lineTo(endX, y);
+  ctx.stroke();
+  ctx.restore();
+
+  const metres = (len / (PX_PER_M*S));
+  const mid = (baseX+endX)/2;
+  drawLabelBox('LENGTH: ' + metres.toFixed(1) + ' m', mid, y + 24*S, 'rgba(4,10,30,.9)', '#8be9ff', 12);
+  drawLabelBox('ANGLE: ' + Math.round(elev) + '°', L.x, Math.max(L.y - 30*S, 55), 'rgba(4,10,30,.85)', '#ffd166', 11);
+}
+
+function updateReadouts(info, elev, baseX, L, S){
+  const metres = (info.len/(PX_PER_M*S));
+  document.getElementById('rShadow').textContent = info.len < 8 ? 'UNDER OBJECT' : (info.len > W*0.75 ? 'VERY LONG' : 'FORMED');
+  document.getElementById('rLength').textContent = metres.toFixed(1) + ' m';
+  document.getElementById('rDir').textContent    = (info.endX >= baseX) ? 'Right' : 'Left';
+  document.getElementById('rAngle').textContent  = Math.round(elev) + '°';
+
+  let msg;
+  if(elev < 14){ msg = 'Light is very low — the shadow is extremely long (like sunrise or sunset).'; }
+  else if(elev < 35){ msg = 'Light is at medium height — shadow is longer than the object.'; }
+  else if(elev < 62){ msg = 'Light is fairly high — shadow is getting shorter.'; }
+  else { msg = 'Light is almost directly above — shadow is short and underneath the object.'; }
+  document.getElementById('insightText').textContent = msg;
+}
+
+let lastT = performance.now();
+function loop(now){
+  const dt = Math.min((now-lastT)/1000, 0.05);
+  lastT = now;
+  state.t += dt;
+
+  if(state.animating){
+    state.phase += dt*0.085*state.dir;
+    if(state.phase >= 1){ state.phase = 1; state.dir = -1; }
+    if(state.phase <= 0){ state.phase = 0; state.dir = 1; }
+    sunFromPhase(state.phase);
+    syncHeightSlider();
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+function sunFromPhase(p){
+  const {horizonY} = geom();
+  const a = Math.PI*(1-p);
+  const x = W*0.5 + Math.cos(a)*W*0.45;
+  const y = horizonY*0.10 + (1-Math.sin(a))*(horizonY*0.80);
+  state.lx = clamp(x/W, 0.02, 0.98);
+  state.ly = clamp(y/H, 0.02, 0.58);
+}
+
+let dragMode = null;
+function pointerPos(e){
+  const r = cv.getBoundingClientRect();
+  return {x:e.clientX-r.left, y:e.clientY-r.top};
+}
+
+cv.addEventListener('pointerdown', e=>{
+  e.preventDefault();
+  const p = pointerPos(e);
+  const {groundY,S} = geom();
+  const obj = OBJECTS[state.objType];
+  const bx = state.objX*W, bw = obj.w*S, bh = obj.h*S;
+  const inObjBox = p.x > bx-bw/2-24 && p.x < bx+bw/2+24 && p.y > groundY-bh-24 && p.y < groundY+24;
+
+  dragMode = inObjBox ? 'obj' : 'light';
+  state.animating = false;
+  document.getElementById('btnAuto').textContent = 'Animate the Sun';
+  cv.setPointerCapture(e.pointerId);
+
+  if(dragMode==='light'){
+    const {horizonY} = geom();
+    state.lx = clamp(p.x/W, 0.02, 0.98);
+    state.ly = clamp(p.y/H, 0.02, horizonY/H - 0.015);
+    syncHeightSlider();
+  }
+});
+
+cv.addEventListener('pointermove', e=>{
+  if(!dragMode) return;
+  const p = pointerPos(e);
+  const {horizonY} = geom();
+  if(dragMode==='light'){
+    state.lx = clamp(p.x/W, 0.02, 0.98);
+    state.ly = clamp(p.y/H, 0.02, horizonY/H - 0.015);
+    syncHeightSlider();
+  }else{
+    state.objX = clamp(p.x/W, 0.10, 0.92);
+  }
+});
+
+['pointerup','pointercancel','pointerleave'].forEach(ev=>
+  cv.addEventListener(ev, ()=>{ dragMode = null; })
+);
+
+function syncHeightSlider(){
+  const {horizonY} = geom();
+  const maxLy = horizonY/H - 0.015;
+  const v = (state.ly - 0.02)/(maxLy-0.02);
+  document.getElementById('heightSlider').value = Math.round(clamp(v,0,1)*100);
+}
+
+function setHeight(v){
+  const {horizonY} = geom();
+  const maxLy = horizonY/H - 0.015;
+  state.ly = lerp(0.02, maxLy, v/100);
+  state.animating = false;
+  document.getElementById('btnAuto').textContent = 'Animate the Sun';
+}
+
+function setObject(v){ 
+  if(OBJECTS[v]){ state.objType = v; }
+}
+
+function toggle(key){
+  state[key] = !state[key];
+  const map = {rays:'btnRays', soft:'btnSoft', measure:'btnMeasure'};
+  document.getElementById(map[key]).classList.toggle('on', state[key]);
+}
+
+function toggleSource(){
+  state.source = (state.source==='sun') ? 'torch' : 'sun';
+  document.getElementById('btnSource').classList.toggle('on', state.source==='torch');
+  document.getElementById('btnSource').textContent =
+    state.source==='torch' ? 'Sun Mode' : 'Torch Mode';
+  if(state.source==='torch'){
+    state.lx = 0.16; state.ly = 0.42;
+    syncHeightSlider();
+  }else{
+    preset('noon');
+  }
+}
+
+function autoExplore(){
+  state.animating = !state.animating;
+  document.getElementById('btnAuto').textContent =
+    state.animating ? 'Pause the Sun' : 'Animate the Sun';
+  if(state.animating && state.source==='torch'){ toggleSource(); }
+}
+
+function preset(name){
+  state.animating = false;
+  document.getElementById('btnAuto').textContent = 'Animate the Sun';
+  if(state.source==='torch'){ toggleSource(); }
+  if(name==='morning'){ state.lx = 0.14; state.ly = 0.47; state.objX = 0.62; }
+  if(name==='noon')   { state.lx = 0.56; state.ly = 0.10; state.objX = 0.62; }
+  if(name==='evening'){ state.lx = 0.86; state.ly = 0.50; state.objX = 0.44; }
+  syncHeightSlider();
+}
+
+function resetLab(){
+  state.animating = false;
+  document.getElementById('btnAuto').textContent = 'Animate the Sun';
+  state.source = 'sun';
+  document.getElementById('btnSource').classList.remove('on');
+  document.getElementById('btnSource').textContent = 'Torch Mode';
+  state.lx = 0.17; state.ly = 0.20; state.objX = 0.62;
+  state.objType = 'tree';
+  document.getElementById('objSelect').value = 'tree';
+  state.rays = true; state.soft = true; state.measure = true;
+  document.getElementById('btnRays').classList.add('on');
+  document.getElementById('btnSoft').classList.add('on');
+  document.getElementById('btnMeasure').classList.add('on');
+  syncHeightSlider();
+}
+
+function scrollToLab(){
+  document.getElementById('labSection').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function toggleFullscreen(){
+  document.body.classList.toggle('fs-mode');
+  setTimeout(resize, 100);
+  if(document.body.classList.contains('fs-mode')){
+    if(document.documentElement.requestFullscreen){
+      document.documentElement.requestFullscreen().catch(()=>{});
+    }
+  }else{
+    if(document.exitFullscreen && document.fullscreenElement){
+      document.exitFullscreen().catch(()=>{});
+    }
+  }
+}
+
+document.addEventListener('fullscreenchange', ()=>{
+  if(!document.fullscreenElement && document.body.classList.contains('fs-mode')){
+    document.body.classList.remove('fs-mode');
+    setTimeout(resize, 100);
+  }
+});
+
+const topics = {
+  shadow:["What is a Shadow?",
+    "A shadow appears when an object blocks light. The shadow is always formed on the side of the object that is away from the light source.",
+    [["Light","Light travels from a source in straight lines."],
+     ["Object","An opaque object does not let light pass through it."],
+     ["Shadow","A dark region appears behind the object."]]],
+  light:["Light Source",
+    "A light source gives off light (e.g. the Sun, torch, lamp).",
+    [["Sun","Natural source."],["Lamp","Artificial source."],["Torch","Point source."]]],
+  object:["Opaque Object",
+    "Blocks all light from passing through (e.g. wood, person, stone).",
+    [["Opaque","Blocks all light."],["Transparent","Lets light pass."],["Translucent","Scatters light."]]],
+  position:["Position & Size",
+    "Low light gives long shadow. High light gives short shadow.",
+    [["Low","Long shadow."],["High","Short shadow."],["Direct","Shadow under object."]]],
+  transparent:["Transparent vs Opaque",
+    "Transparent = no shadow. Opaque = strong dark shadow.",
+    [["Glass","No shadow."],["Wood","Dark shadow."]]]
+};
+
+function showTopic(k, btn){
+  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = topics[k];
+  document.getElementById('panel').innerHTML =
+    '<h3>'+t[0]+'</h3><p>'+t[1]+'</p><div class="example">'+
+    t[2].map(c=>'<div class="card"><b>'+c[0]+'</b>'+c[1]+'</div>').join('')+'</div>';
+}
+
+resize();
+syncHeightSlider();
+requestAnimationFrame(loop);
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

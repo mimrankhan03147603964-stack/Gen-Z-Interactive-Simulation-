@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinematics: Motion & Graphs</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;color:#e2e8f0;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 10% 0%, rgba(30,58,138,.6), transparent 60%),
+      radial-gradient(1000px 700px at 90% 10%, rgba(88,28,135,.6), transparent 60%),
+      radial-gradient(900px 900px at 50% 110%, rgba(15,118,110,.5), transparent 60%),
+      linear-gradient(160deg,#0a0e1a 0%,#101828 50%,#0f172a 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  .app{max-width:1400px;margin:0 auto;padding:16px 16px 24px}
+
+  .topic-hero{text-align:center;padding:12px 10px 20px}
+  .topic-hero h2{
+    font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;
+    background:linear-gradient(100deg,#38bdf8,#818cf8,#c084fc,#f472b6,#fbbf24);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 3px 8px rgba(99,102,241,.5));
+  }
+  .topic-hero p{margin-top:8px;color:#94a3b8;font-size:1.05rem;font-weight:600}
+
+  .tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+  .tab{
+    border:2px solid rgba(255,255,255,.15);
+    background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
+    color:#cbd5e1;padding:13px 28px;border-radius:999px;
+    font-size:1.02rem;font-family:inherit;cursor:pointer;transition:.25s;font-weight:800;
+    box-shadow:0 5px 0 rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.4);
+    position:relative;top:0;
+  }
+  .tab:hover{top:-2px;border-color:rgba(56,189,248,.5);color:#38bdf8;box-shadow:0 7px 0 rgba(0,0,0,.4),0 12px 28px rgba(56,189,248,.2)}
+  .tab:active{top:2px;box-shadow:0 2px 0 rgba(0,0,0,.4),0 4px 10px rgba(0,0,0,.3)}
+  .tab.active{
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    border-color:#38bdf8;color:#fff;
+    box-shadow:0 5px 0 rgba(0,0,0,.4),0 0 32px rgba(56,189,248,.6),0 10px 24px rgba(0,0,0,.4);
+  }
+
+  .panel{display:none;animation:fade .4s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .card{
+    background:linear-gradient(160deg,#111827 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.2);
+    border-radius:22px;padding:26px;
+    box-shadow:0 12px 40px rgba(0,0,0,.5),0 2px 0 rgba(255,255,255,.05) inset;
+    margin-bottom:20px;position:relative;
+  }
+  .card h2{
+    font-size:1.55rem;color:#38bdf8;margin-bottom:16px;font-weight:900;
+    text-shadow:0 2px 8px rgba(56,189,248,.4);
+    padding-bottom:12px;border-bottom:3px dashed rgba(56,189,248,.25);
+  }
+  .card h3{
+    font-size:1.2rem;color:#a78bfa;margin:20px 0 10px;font-weight:900;
+    text-shadow:0 2px 8px rgba(167,139,250,.3);
+  }
+  .card p,.card li{line-height:2;font-size:1.02rem;color:#cbd5e1}
+  .card ul{padding-left:26px}
+  .card li{margin-bottom:8px}
+  .hl{color:#38bdf8;font-weight:800}
+  .hl2{color:#fbbf24;font-weight:800}
+  .hl3{color:#f472b6;font-weight:800}
+
+  .law-def{
+    margin-top:18px;padding:22px 24px;border-radius:18px;
+    border:3px solid;
+    box-shadow:0 6px 0 rgba(0,0,0,.35),0 12px 32px rgba(0,0,0,.4);
+    background:linear-gradient(180deg,#0f172a 0%,#111827 100%);
+  }
+  .law-def h3{
+    font-size:1.3rem;margin:0 0 12px 0 !important;
+    padding-bottom:8px;border-bottom:2px solid;
+    display:flex;align-items:center;gap:10px;
+  }
+  .law-def .law-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border-radius:50%;
+    color:#fff;font-weight:900;font-size:1.2rem;
+    box-shadow:0 3px 0 rgba(0,0,0,.4),0 0 0 3px #0f172a;
+    flex-shrink:0;
+  }
+  .law-def.law1{border-color:#0ea5e9;background:linear-gradient(180deg,#0c1a2e 0%,#0f172a 100%)}
+  .law-def.law1 h3{color:#38bdf8;border-bottom-color:rgba(56,189,248,.3)}
+  .law-def.law1 .law-num{background:linear-gradient(135deg,#0ea5e9,#22d3ee)}
+  .law-def.law2{border-color:#f59e0b;background:linear-gradient(180deg,#1c1408 0%,#0f172a 100%)}
+  .law-def.law2 h3{color:#fbbf24;border-bottom-color:rgba(251,191,36,.3)}
+  .law-def.law2 .law-num{background:linear-gradient(135deg,#d97706,#fbbf24)}
+  .law-def.law3{border-color:#ec4899;background:linear-gradient(180deg,#1c0a14 0%,#0f172a 100%)}
+  .law-def.law3 h3{color:#f472b6;border-bottom-color:rgba(244,114,182,.3)}
+  .law-def.law3 .law-num{background:linear-gradient(135deg,#be123c,#f472b6)}
+
+  .law-def p{margin-bottom:12px;font-size:1.02rem;line-height:2}
+  .law-def .formula-box{
+    display:inline-block;margin:10px 0;padding:12px 22px;
+    background:#0a0e1a;border:2px solid;border-radius:12px;
+    font-family:'Courier New',monospace;font-weight:900;font-size:1.15rem;
+    box-shadow:0 4px 0 rgba(0,0,0,.4);
+  }
+  .law-def.law1 .formula-box{border-color:#0ea5e9;color:#38bdf8;text-shadow:0 0 12px rgba(56,189,248,.6)}
+  .law-def.law2 .formula-box{border-color:#f59e0b;color:#fbbf24;text-shadow:0 0 12px rgba(251,191,36,.6)}
+  .law-def.law3 .formula-box{border-color:#ec4899;color:#f472b6;text-shadow:0 0 12px rgba(244,114,182,.6)}
+
+  .law-def .example-box{
+    margin-top:14px;padding:14px 18px;border-radius:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .law-def .example-box b{font-weight:900;display:block;margin-bottom:8px;font-size:1rem}
+  .law-def.law1 .example-box b{color:#38bdf8}
+  .law-def.law2 .example-box b{color:#fbbf24}
+  .law-def.law3 .example-box b{color:#f472b6}
+  .law-def .example-box ul{margin:0;padding-left:20px}
+  .law-def .example-box li{font-size:.98rem;line-height:1.9;margin-bottom:5px;color:#94a3b8}
+
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+  .mini{
+    background:linear-gradient(180deg,#111827 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.15);border-radius:14px;padding:16px;
+    border-left:6px solid #38bdf8;
+    box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.3);
+    transition:.25s;
+  }
+  .mini:hover{transform:translateY(-3px);border-left-color:#fbbf24}
+  .mini b{color:#38bdf8;display:block;margin-bottom:6px;font-size:1rem;font-weight:900}
+  .mini span{font-size:.96rem;color:#94a3b8;line-height:1.9}
+
+  .law-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+  .law-tab{
+    padding:18px 20px;border-radius:20px;border:3px solid rgba(56,189,248,.2);
+    background:linear-gradient(180deg,#111827 0%,#0f172a 100%);
+    color:#e2e8f0;font-family:inherit;cursor:pointer;transition:.28s;
+    text-align:left;position:relative;overflow:hidden;
+    box-shadow:0 6px 0 rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.4);top:0;
+  }
+  .law-tab:hover{top:-3px}
+  .law-tab .badge{
+    display:inline-block;padding:5px 14px;border-radius:999px;
+    font-size:.72rem;font-weight:900;letter-spacing:1px;
+    margin-bottom:10px;text-transform:uppercase;color:#fff;
+  }
+  .law-tab .title{font-size:1.15rem;font-weight:900;display:block;margin-bottom:6px}
+  .law-tab .sub{font-size:.88rem;color:#94a3b8;line-height:1.6;display:block;font-weight:500}
+  .law-tab .iconwrap{position:absolute;right:16px;top:16px;width:48px;height:48px}
+
+  .law-tab.law1{border-color:rgba(14,165,233,.4)}
+  .law-tab.law1 .badge{background:linear-gradient(135deg,#0ea5e9,#22d3ee)}
+  .law-tab.law1 .title{color:#38bdf8}
+  .law-tab.law1.active{background:linear-gradient(135deg,#0c1a2e,#0a0e1a);border-color:#38bdf8;}
+
+  .law-tab.law2{border-color:rgba(245,158,11,.4)}
+  .law-tab.law2 .badge{background:linear-gradient(135deg,#d97706,#fbbf24)}
+  .law-tab.law2 .title{color:#fbbf24}
+  .law-tab.law2.active{background:linear-gradient(135deg,#1c1408,#0a0e1a);border-color:#fbbf24;}
+
+  .law-tab.law3{border-color:rgba(236,72,153,.4)}
+  .law-tab.law3 .badge{background:linear-gradient(135deg,#be123c,#f472b6)}
+  .law-tab.law3 .title{color:#f472b6}
+  .law-tab.law3.active{background:linear-gradient(135deg,#1c0a14,#0a0e1a);border-color:#f472b6;}
+
+  .sim-stage{display:none}
+  .sim-stage.active{display:block}
+
+  .stage-heading{
+    text-align:center;padding:14px 18px;margin-bottom:14px;border-radius:16px;
+    background:linear-gradient(180deg,#111827 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.2);
+  }
+  .stage-heading h3{font-size:1.35rem;font-weight:900;letter-spacing:.3px;margin-bottom:4px}
+  .stage-heading p{font-size:.95rem;color:#94a3b8;font-weight:600}
+  .stage-heading.law1 h3{color:#38bdf8}
+  .stage-heading.law2 h3{color:#fbbf24}
+  .stage-heading.law3 h3{color:#f472b6}
+
+  .canvas-holder{
+    position:relative;width:100%;height:72vh;min-height:540px;
+    border-radius:20px;overflow:hidden;
+    border:3px solid rgba(56,189,248,.4);
+    box-shadow:0 0 0 4px rgba(15,23,42,.8),0 18px 50px rgba(0,0,0,.7);
+    background:#0a0e1a;touch-action:none;
+  }
+  canvas{display:block;width:100%;height:100%;touch-action:none}
+
+  .hud{
+    position:absolute;top:14px;left:14px;
+    background:linear-gradient(180deg,rgba(15,23,42,.95),rgba(10,14,26,.95));
+    border:2px solid rgba(56,189,248,.4);border-radius:14px;padding:12px 18px;
+    font-size:.92rem;color:#e2e8f0;line-height:1.9;
+    pointer-events:none;max-width:340px;font-weight:700;
+  }
+  .hud b{color:#38bdf8;font-weight:900}
+  .hud .status-in{color:#4ade80;font-weight:900}
+  .hud .status-off{color:#f87171;font-weight:900}
+  .hud .hl-val{color:#fbbf24;font-weight:900}
+
+  .hint{
+    position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(180deg,rgba(15,23,42,.95),rgba(10,14,26,.95));
+    border:2px solid rgba(56,189,248,.3);padding:9px 22px;border-radius:999px;
+    font-size:.88rem;color:#cbd5e1;pointer-events:none;white-space:nowrap;font-weight:800;
+  }
+
+  .fs-btn{
+    position:absolute;top:14px;right:14px;
+    background:linear-gradient(180deg,#fbbf24 0%,#d97706 100%);
+    border:2px solid rgba(255,255,255,.2);color:#fff;padding:10px 18px;border-radius:12px;cursor:pointer;
+    font-family:inherit;font-size:.92rem;font-weight:900;z-index:10;
+  }
+  .fs-btn:hover{transform:translateY(-2px)}
+
+  .canvas-holder:fullscreen,
+  .canvas-holder:-webkit-full-screen{
+    width:100vw !important;height:100vh !important;
+    max-width:100vw !important;max-height:100vh !important;
+    border-radius:0 !important;border:none !important;
+    min-height:100vh !important;
+  }
+
+  .fs-controls{
+    position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(10,14,26,.98));
+    border:2px solid rgba(56,189,248,.4);border-radius:18px;
+    padding:12px 16px;display:none;gap:8px;flex-wrap:wrap;justify-content:center;
+    z-index:20;max-width:96vw;
+  }
+  .canvas-holder:fullscreen .fs-controls,
+  .canvas-holder:-webkit-full-screen .fs-controls{display:flex}
+  .canvas-holder:fullscreen .hint,
+  .canvas-holder:-webkit-full-screen .hint{display:none}
+  .fs-controls .cbtn{
+    font-size:.88rem;padding:9px 14px;
+    background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.3);color:#cbd5e1;font-weight:800;
+    border-radius:10px;cursor:pointer;font-family:inherit;
+  }
+  .fs-controls .cbtn.on{background:linear-gradient(180deg,#0ea5e9,#0284c7);border-color:#38bdf8;color:#fff}
+  .fs-controls .slider-row{
+    display:flex;align-items:center;gap:8px;
+    background:#0a0e1a;border:2px solid rgba(56,189,248,.2);border-radius:10px;padding:6px 12px;
+  }
+  .fs-controls .slider-row label{font-size:.75rem;font-weight:900;color:#94a3b8;text-transform:uppercase}
+  .fs-controls .slider-row input[type=range]{width:110px}
+  .fs-controls .slider-val{color:#fbbf24;font-weight:900;font-size:.85rem;min-width:44px;text-align:right}
+
+  .controls{
+    margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;
+    background:linear-gradient(180deg,#111827 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.2);border-radius:20px;padding:16px;
+  }
+  .ctrl-item{
+    display:flex;flex-direction:column;gap:6px;
+    background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
+    border:2px solid rgba(56,189,248,.15);border-radius:14px;padding:11px 13px;
+  }
+  .ctrl-item label{font-size:.72rem;color:#94a3b8;text-transform:uppercase;font-weight:900}
+  .cbtn{
+    border:2px solid rgba(56,189,248,.25);background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
+    color:#cbd5e1;padding:10px 14px;border-radius:10px;cursor:pointer;
+    font-family:inherit;font-size:.92rem;font-weight:800;
+  }
+  .cbtn.on{background:linear-gradient(180deg,#0ea5e9 0%,#0284c7 100%);border-color:#38bdf8;color:#fff}
+
+  .slider-row{display:flex;align-items:center;gap:10px}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;height:10px;border-radius:999px;outline:none;
+    background:linear-gradient(90deg,#0ea5e9,#a78bfa);cursor:pointer;flex:1;min-width:0;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+    background:#ffffff;box-shadow:0 0 0 3px #38bdf8;cursor:pointer;border:none;
+  }
+  .slider-val{color:#fbbf24;font-weight:900;font-size:.94rem;min-width:52px;text-align:right}
+
+  .sim-desc{
+    margin-top:16px;padding:20px 24px;border-radius:18px;
+    background:linear-gradient(180deg,#1c1408 0%,#1c0a14 100%);
+    border:2px solid rgba(251,191,36,.3);
+  }
+  .sim-desc h3{color:#fbbf24;font-size:1.22rem;margin-bottom:12px;font-weight:900}
+  .sim-desc p{line-height:1.95;color:#cbd5e1;font-size:1rem;margin-bottom:8px}
+  .sim-desc ul{padding-left:22px;margin-bottom:8px}
+  .sim-desc li{color:#94a3b8;line-height:1.9;font-size:.98rem;margin-bottom:5px}
+  .sim-desc .formula{
+    display:inline-block;margin-top:12px;padding:11px 22px;
+    background:linear-gradient(180deg,#1c1408,#0a0e1a);
+    border:2px solid #d97706;border-radius:12px;
+    color:#fbbf24;font-weight:900;font-size:1.08rem;font-family:'Courier New',monospace;
+  }
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topic-hero">
+    <h2>Kinematics — Motion & Graphs</h2>
+    <p>Distance-Time Graphs • Speed-Time Graphs • Free Fall Motion</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab" data-tab="p-def">Definition</button>
+    <button class="tab" data-tab="p-exp">Explanation</button>
+    <button class="tab active" data-tab="p-sim">Live Simulations</button>
+  </nav>
+
+  <!-- ============ DEFINITION ============ -->
+  <section id="p-def" class="panel">
+    <div class="card">
+      <h2>Definition — Easy English</h2>
+      <p>
+        <span class="hl2">Kinematics</span> is the branch of physics that describes
+        <b>how objects move</b> — without worrying about <i>why</i> they move.
+        It studies <span class="hl">distance</span>, <span class="hl">displacement</span>,
+        <span class="hl">speed</span>, <span class="hl">velocity</span>, and
+        <span class="hl">acceleration</span>.
+      </p>
+
+      <h3>Important Words</h3>
+      <div class="grid2">
+        <div class="mini">
+          <b>Distance (m)</b>
+          <span>Total path covered by a moving object. It is a <b>scalar</b> — magnitude only.</span>
+        </div>
+        <div class="mini">
+          <b>Displacement (m)</b>
+          <span>Shortest straight-line distance from start to end with direction. <b>Vector</b>.</span>
+        </div>
+        <div class="mini">
+          <b>Speed (m/s)</b>
+          <span>Speed = Distance ÷ Time. Scalar quantity.</span>
+        </div>
+        <div class="mini">
+          <b>Velocity (m/s)</b>
+          <span>Velocity = Displacement ÷ Time. Vector quantity with direction.</span>
+        </div>
+        <div class="mini">
+          <b>Acceleration (m/s²)</b>
+          <span>Rate of change of velocity: <b>a = (v − u) ÷ t</b>.</span>
+        </div>
+        <div class="mini">
+          <b>Free Fall</b>
+          <span>Motion under gravity alone (no air resistance). Acceleration = <b>g = 9.8 m/s²</b> downward.</span>
+        </div>
+      </div>
+
+      <div class="law-def law1">
+        <h3><span class="law-num">1</span> Distance-Time Graph</h3>
+        <p>A <b>Distance-Time graph</b> shows how distance changes with time. Slope equals speed.</p>
+        <div class="formula-box">Speed = Slope = ΔDistance ÷ ΔTime</div>
+      </div>
+
+      <div class="law-def law2">
+        <h3><span class="law-num">2</span> Speed-Time Graph</h3>
+        <p>A <b>Speed-Time graph</b> shows speed vs time. Slope = acceleration, Area = distance travelled.</p>
+        <div class="formula-box">Acceleration = Slope &nbsp; • &nbsp; Distance = Area under graph</div>
+      </div>
+
+      <div class="law-def law3">
+        <h3><span class="law-num">3</span> Free Fall Motion</h3>
+        <p>Objects falling under gravity alone accelerate downward at <b>g = 9.8 m/s²</b>.</p>
+        <div class="formula-box">v = u + gt &nbsp; • &nbsp; h = ut + ½gt² &nbsp; • &nbsp; v² = u² + 2gh</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPLANATION ============ -->
+  <section id="p-exp" class="panel">
+    <div class="card">
+      <h2>Explanation — With Real Life Examples</h2>
+      <h3>1. Distance-Time Graph</h3>
+      <p><b>Straight sloping line</b> = constant speed. <b>Horizontal line</b> = stationary object. <b>Steeper slope</b> = higher speed.</p>
+      <h3>2. Speed-Time Graph</h3>
+      <p><b>Upward slope</b> = acceleration. <b>Horizontal line</b> = constant speed. <b>Downward slope</b> = deceleration. <b>Area</b> = distance.</p>
+      <h3>3. Free Fall</h3>
+      <p>In vacuum, all objects fall at the exact same rate regardless of mass (hammer and feather drop together).</p>
+    </div>
+  </section>
+
+  <!-- ============ SIMULATIONS ============ -->
+  <section id="p-sim" class="panel active">
+    <div class="card">
+      <h2>Live Simulations — Try All Three</h2>
+
+      <div class="law-tabs">
+        <button class="law-tab law1 active" data-sim="sim1" type="button">
+          <span class="badge">TOPIC 1 OF 3</span>
+          <span class="title">Distance-Time Graph</span>
+          <span class="sub">Slope = Speed. See distance vs time live.</span>
+        </button>
+        <button class="law-tab law2" data-sim="sim2" type="button">
+          <span class="badge">TOPIC 2 OF 3</span>
+          <span class="title">Speed-Time Graph</span>
+          <span class="sub">Slope = Acceleration, Area = Distance.</span>
+        </button>
+        <button class="law-tab law3" data-sim="sim3" type="button">
+          <span class="badge">TOPIC 3 OF 3</span>
+          <span class="title">Free Fall Motion</span>
+          <span class="sub">Objects fall with g = 9.8 m/s².</span>
+        </button>
+      </div>
+
+      <!-- ============ SIM 1 ============ -->
+      <div class="sim-stage active" id="sim1">
+        <div class="stage-heading law1">
+          <h3>Distance-Time Graph — Live Simulation</h3>
+          <p>A car moves along a road. The graph plots distance against time in real-time.</p>
+        </div>
+
+        <div class="canvas-holder" id="holder1">
+          <canvas id="canvas1"></canvas>
+          <button class="fs-btn" data-fs="holder1" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Graph:</b> Distance-Time<br>
+            <b>Speed:</b> <span id="hud1Speed" class="hl-val">0.00 m/s</span><br>
+            <b>Distance:</b> <span id="hud1Dist" class="hl-val">0 m</span><br>
+            <b>Time:</b> <span id="hud1Time" class="hl-val">0.0 s</span><br>
+            <b>Status:</b> <span id="hud1Status" class="status-in">Moving</span>
+          </div>
+          <div class="hint">Use sliders to change speed. Graph updates live.</div>
+          <div class="fs-controls">
+            <button class="cbtn on" id="fs1Play" type="button">Pause</button>
+            <button class="cbtn" id="fs1Reset" type="button">Reset</button>
+            <div class="slider-row">
+              <label>Speed</label>
+              <input type="range" id="fs1Speed" min="1" max="10" step="0.5" value="5">
+              <span class="slider-val" id="fs1SpeedVal">5.0 m/s</span>
+            </div>
+            <div class="slider-row">
+              <label>Time Scale</label>
+              <input type="range" id="fs1TimeScale" min="0.5" max="3" step="0.1" value="1">
+              <span class="slider-val" id="fs1TimeVal">1.0x</span>
+            </div>
+            <button class="cbtn" id="fs1Stop" type="button">Stop Car</button>
+            <button class="cbtn" id="fs1Go" type="button">Start Car</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn on" id="btn1Play" type="button">Pause</button></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn" id="btn1Reset" type="button">Reset Car</button></div>
+          <div class="ctrl-item"><label>Speed (m/s)</label><div class="slider-row"><input type="range" id="slider1Speed" min="1" max="10" step="0.5" value="5"><span class="slider-val" id="val1Speed">5.0</span></div></div>
+          <div class="ctrl-item"><label>Time Scale</label><div class="slider-row"><input type="range" id="slider1Time" min="0.5" max="3" step="0.1" value="1"><span class="slider-val" id="val1Time">1.0x</span></div></div>
+          <div class="ctrl-item"><label>Stop Car</label><button class="cbtn" id="btn1Stop" type="button">Stop</button></div>
+          <div class="ctrl-item"><label>Start Car</label><button class="cbtn" id="btn1Go" type="button">Go</button></div>
+        </div>
+      </div>
+
+      <!-- ============ SIM 2 ============ -->
+      <div class="sim-stage" id="sim2">
+        <div class="stage-heading law2">
+          <h3>Speed-Time Graph — Live Simulation</h3>
+          <p>A car accelerates, cruises, then brakes. The graph shows speed vs time.</p>
+        </div>
+
+        <div class="canvas-holder" id="holder2">
+          <canvas id="canvas2"></canvas>
+          <button class="fs-btn" data-fs="holder2" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Graph:</b> Speed-Time<br>
+            <b>Speed:</b> <span id="hud2Speed" class="hl-val">0.00 m/s</span><br>
+            <b>Acceleration:</b> <span id="hud2Acc" class="hl-val">0.00 m/s²</span><br>
+            <b>Distance:</b> <span id="hud2Dist" class="hl-val">0 m</span><br>
+            <b>Phase:</b> <span id="hud2Phase" class="status-in">Accelerating</span>
+          </div>
+          <div class="hint">Use buttons to change driving phase. Graph updates live.</div>
+          <div class="fs-controls">
+            <button class="cbtn on" id="fs2Play" type="button">Pause</button>
+            <button class="cbtn" id="fs2Reset" type="button">Reset</button>
+            <button class="cbtn on" id="fs2Accel" type="button">Accelerate</button>
+            <button class="cbtn" id="fs2Cruise" type="button">Cruise</button>
+            <button class="cbtn" id="fs2Brake" type="button">Brake</button>
+            <div class="slider-row">
+              <label>Max Speed</label>
+              <input type="range" id="fs2Max" min="5" max="30" step="1" value="20">
+              <span class="slider-val" id="fs2MaxVal">20 m/s</span>
+            </div>
+            <button class="cbtn" id="fs2Clear" type="button">Clear Graph</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn on" id="btn2Play" type="button">Pause</button></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn" id="btn2Reset" type="button">Reset</button></div>
+          <div class="ctrl-item"><label>Accelerate</label><button class="cbtn on" id="btn2Accel" type="button">Accelerate</button></div>
+          <div class="ctrl-item"><label>Cruise</label><button class="cbtn" id="btn2Cruise" type="button">Cruise</button></div>
+          <div class="ctrl-item"><label>Brake</label><button class="cbtn" id="btn2Brake" type="button">Brake</button></div>
+          <div class="ctrl-item"><label>Max Speed</label><div class="slider-row"><input type="range" id="slider2Max" min="5" max="30" step="1" value="20"><span class="slider-val" id="val2Max">20</span></div></div>
+          <div class="ctrl-item"><label>Clear Graph</label><button class="cbtn" id="btn2Clear" type="button">Clear</button></div>
+        </div>
+      </div>
+
+      <!-- ============ SIM 3 ============ -->
+      <div class="sim-stage" id="sim3">
+        <div class="stage-heading law3">
+          <h3>Free Fall Motion — Live Simulation</h3>
+          <p>Drop different objects and see them fall with g = 9.8 m/s².</p>
+        </div>
+
+        <div class="canvas-holder" id="holder3">
+          <canvas id="canvas3"></canvas>
+
+
+
+          <button class="fs-btn" data-fs="holder3" type="button">⛶ Full Screen</button>
+          <div class="hud">
+            <b>Motion:</b> Free Fall<br>
+            <b>Gravity:</b> <span id="hud3G" class="hl-val">9.8 m/s²</span><br>
+            <b>Time:</b> <span id="hud3Time" class="hl-val">0.00 s</span><br>
+            <b>Velocity:</b> <span id="hud3Vel" class="hl-val">0.00 m/s</span><br>
+            <b>Height:</b> <span id="hud3Height" class="hl-val">100.0 m</span>
+          </div>
+          <div class="hint">Click "Drop All" to see objects fall. Compare vacuum vs air.</div>
+          <div class="fs-controls">
+            <button class="cbtn on" id="fs3Play" type="button">Pause</button>
+            <button class="cbtn" id="fs3Drop" type="button">Drop All</button>
+            <button class="cbtn" id="fs3Reset" type="button">Reset</button>
+            <button class="cbtn on" id="fs3Vacuum" type="button">Vacuum ON</button>
+            <div class="slider-row">
+              <label>Gravity</label>
+              <input type="range" id="fs3G" min="1.6" max="24.8" step="0.1" value="9.8">
+              <span class="slider-val" id="fs3GVal">9.8</span>
+            </div>
+            <button class="cbtn" id="fs3Moon" type="button">Moon (1.6)</button>
+            <button class="cbtn" id="fs3Earth" type="button">Earth (9.8)</button>
+            <button class="cbtn" id="fs3Jupiter" type="button">Jupiter (24.8)</button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="ctrl-item"><label>Play / Pause</label><button class="cbtn on" id="btn3Play" type="button">Pause</button></div>
+          <div class="ctrl-item"><label>Drop All</label><button class="cbtn" id="btn3Drop" type="button">Drop All</button></div>
+          <div class="ctrl-item"><label>Reset</label><button class="cbtn" id="btn3Reset" type="button">Reset</button></div>
+          <div class="ctrl-item"><label>Vacuum</label><button class="cbtn on" id="btn3Vacuum" type="button">Vacuum ON</button></div>
+          <div class="ctrl-item"><label>Gravity (m/s²)</label><div class="slider-row"><input type="range" id="slider3G" min="1.6" max="24.8" step="0.1" value="9.8"><span class="slider-val" id="val3G">9.8</span></div></div>
+          <div class="ctrl-item"><label>Moon</label><button class="cbtn" id="btn3Moon" type="button">g = 1.6</button></div>
+          <div class="ctrl-item"><label>Earth</label><button class="cbtn" id="btn3Earth" type="button">g = 9.8</button></div>
+          <div class="ctrl-item"><label>Jupiter</label><button class="cbtn" id="btn3Jupiter" type="button">g = 24.8</button></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const TAU = Math.PI * 2;
+
+function fitCanvas(canvas, holder){
+  const rect = holder.getBoundingClientRect();
+  const W = Math.max(rect.width, 1);
+  const H = Math.max(rect.height, 1);
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { ctx, W, H };
+}
+
+function drawDarkScene(ctx, W, H){
+  const groundY = H * 0.72;
+  const sky = ctx.createLinearGradient(0, 0, 0, groundY);
+  sky.addColorStop(0, '#0a0e1a');
+  sky.addColorStop(0.5, '#0f172a');
+  sky.addColorStop(1, '#1e293b');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, groundY);
+
+  for(let i=0; i<80; i++){
+    const sx = (i * 137.5) % W;
+    const sy = (i * 73.3) % (groundY * 0.85);
+    const sr = 0.5 + (i % 3) * 0.5;
+    const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(performance.now()*0.001 + i));
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, TAU);
+    ctx.fillStyle = 'rgba(255,255,255,' + (twinkle * 0.7) + ')';
+    ctx.fill();
+  }
+
+  const moonX = W * 0.85, moonY = H * 0.15, moonR = 40;
+  const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR*0.5, moonX, moonY, moonR*3);
+  moonGlow.addColorStop(0, 'rgba(200,220,255,.4)');
+  moonGlow.addColorStop(1, 'rgba(200,220,255,0)');
+  ctx.fillStyle = moonGlow;
+  ctx.beginPath(); ctx.arc(moonX, moonY, moonR*3, 0, TAU); ctx.fill();
+
+  const moonG = ctx.createRadialGradient(moonX - 10, moonY - 10, 5, moonX, moonY, moonR);
+  moonG.addColorStop(0, '#f8fafc');
+  moonG.addColorStop(0.6, '#cbd5e1');
+  moonG.addColorStop(1, '#94a3b8');
+  ctx.beginPath(); ctx.arc(moonX, moonY, moonR, 0, TAU);
+  ctx.fillStyle = moonG; ctx.fill();
+
+  const grass = ctx.createLinearGradient(0, groundY, 0, H);
+  grass.addColorStop(0, '#1e293b');
+  grass.addColorStop(0.3, '#0f172a');
+  grass.addColorStop(1, '#020617');
+  ctx.fillStyle = grass;
+  ctx.fillRect(0, groundY, W, H - groundY);
+
+  ctx.strokeStyle = 'rgba(251,191,36,.4)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([20, 15]);
+  ctx.beginPath();
+  ctx.moveTo(0, groundY + 30);
+  ctx.lineTo(W, groundY + 30);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  return groundY;
+}
+
+function drawCar(ctx, x, y, scale, color, isMoving){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  ctx.ellipse(0, 35, 55, 10, 0, 0, TAU);
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  ctx.fill();
+
+  const bodyG = ctx.createLinearGradient(-50, -20, 50, 20);
+  bodyG.addColorStop(0, color.dark);
+  bodyG.addColorStop(0.5, color.main);
+  bodyG.addColorStop(1, color.dark);
+  ctx.fillStyle = bodyG;
+  ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(-50, -10, 100, 30, 10);
+  else ctx.rect(-50, -10, 100, 30);
+  ctx.fill();
+  ctx.strokeStyle = color.dark;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const cabinG = ctx.createLinearGradient(-30, -35, 30, -10);
+  cabinG.addColorStop(0, color.light);
+  cabinG.addColorStop(1, color.main);
+  ctx.fillStyle = cabinG;
+  ctx.beginPath();
+  ctx.moveTo(-30, -10);
+  ctx.lineTo(-20, -35);
+  ctx.lineTo(20, -35);
+  ctx.lineTo(30, -10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(56,189,248,.7)';
+  ctx.beginPath();
+  ctx.moveTo(-22, -12);
+  ctx.lineTo(-15, -30);
+  ctx.lineTo(15, -30);
+  ctx.lineTo(22, -12);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = isMoving ? '#fbbf24' : '#64748b';
+  ctx.beginPath();
+  ctx.arc(48, 5, 5, 0, TAU);
+  ctx.fill();
+
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(-48, 5, 4, 0, TAU);
+  ctx.fill();
+
+  const wheelY = 22;
+  const wheelR = 12;
+  for(const wx of [-30, 30]){
+    const wg = ctx.createRadialGradient(wx - 3, wheelY - 3, 2, wx, wheelY, wheelR);
+    wg.addColorStop(0, '#4a4a4a');
+    wg.addColorStop(1, '#0a0a0a');
+    ctx.beginPath();
+    ctx.arc(wx, wheelY, wheelR, 0, TAU);
+    ctx.fillStyle = wg;
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawGraphAxes(ctx, x, y, w, h, xLabel, yLabel){
+  ctx.fillStyle = 'rgba(15,23,42,.85)';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = 'rgba(56,189,248,.5)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, w, h);
+
+  ctx.strokeStyle = 'rgba(56,189,248,.12)';
+  ctx.lineWidth = 1;
+  for(let i=1; i<5; i++){
+    const gx = x + (w/5) * i;
+    const gy = y + (h/5) * i;
+    ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y+h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x+w, gy); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y+h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x, y+h); ctx.lineTo(x+w, y+h); ctx.stroke();
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = '900 13px "Segoe UI", Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(xLabel, x + w/2, y + h + 8);
+  ctx.save();
+  ctx.translate(x - 10, y + h/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+}
+
+function drawBall(ctx, x, y, r, color){
+  const g = ctx.createRadialGradient(x - r*0.4, y - r*0.4, r*0.1, x, y, r);
+  g.addColorStop(0, color.light);
+  g.addColorStop(0.6, color.main);
+  g.addColorStop(1, color.dark);
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, TAU);
+  ctx.fillStyle = g;
+  ctx.fill();
+}
+
+function drawFeather(ctx, x, y, scale){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.beginPath();
+  ctx.moveTo(0, -15);
+  ctx.quadraticCurveTo(12, -5, 8, 15);
+  ctx.quadraticCurveTo(4, 20, 0, 15);
+  ctx.quadraticCurveTo(-4, 20, -8, 15);
+  ctx.quadraticCurveTo(-12, -5, 0, -15);
+  ctx.closePath();
+  ctx.fillStyle = '#f8fafc';
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawHammer(ctx, x, y, scale){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.fillStyle = '#8b5a2b';
+  ctx.fillRect(-4, -5, 8, 25);
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillRect(-15, -15, 30, 12);
+  ctx.restore();
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color, width){
+  const dx = x2 - x1, dy = y2 - y1;
+  const ang = Math.atan2(dy, dx);
+  const len = Math.hypot(dx, dy);
+  if(len < 2) return;
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  const headLen = Math.min(20, len * 0.4);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(ang - 0.4), y2 - headLen * Math.sin(ang - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(ang + 0.4), y2 - headLen * Math.sin(ang + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+/* ==================== SIM 1: DISTANCE-TIME ==================== */
+const canvas1 = document.getElementById('canvas1');
+const holder1 = document.getElementById('holder1');
+let ctx1, W1 = 0, H1 = 0;
+let playing1 = true, speed1 = 5, timeScale1 = 1;
+let car1 = { x: 0, distance: 0, time: 0, moving: true };
+let graph1Data = [];
+let init1 = false;
+
+function resize1(){
+  const r = fitCanvas(canvas1, holder1);
+  ctx1 = r.ctx; W1 = r.W; H1 = r.H;
+  if(!init1){ car1.x = W1 * 0.15; init1 = true; }
+}
+window.addEventListener('resize', resize1);
+document.addEventListener('fullscreenchange', () => setTimeout(resize1, 100));
+if(window.ResizeObserver) new ResizeObserver(resize1).observe(holder1);
+
+let last1 = performance.now();
+function loop1(now){
+  requestAnimationFrame(loop1);
+  const dt = Math.min((now - last1)/1000, 0.05);
+  last1 = now;
+  if(W1 < 2) return;
+
+  const groundY = drawDarkScene(ctx1, W1, H1);
+
+  if(playing1 && car1.moving){
+    car1.time += dt * timeScale1;
+    car1.distance += speed1 * dt * timeScale1;
+    car1.x += speed1 * dt * timeScale1 * 12;
+    if(car1.x > W1 * 0.55){
+      car1.x = W1 * 0.55;
+      car1.moving = false;
+    }
+    graph1Data.push({ t: car1.time, d: car1.distance });
+    if(graph1Data.length > 600) graph1Data.shift();
+  }
+
+  const roadY = groundY + 60;
+  ctx1.fillStyle = '#1e293b';
+  ctx1.fillRect(0, groundY, W1, H1 - groundY);
+
+  drawCar(ctx1, car1.x, roadY - 20, 0.9, {
+    main: '#0ea5e9',
+    light: '#38bdf8',
+    dark: '#0369a1'
+  }, car1.moving);
+
+  const gx = W1 * 0.60, gy = 80, gw = W1 * 0.36, gh = H1 * 0.55;
+  drawGraphAxes(ctx1, gx, gy, gw, gh, 'Time (s)', 'Distance (m)');
+
+  if(graph1Data.length > 1){
+    const maxT = Math.max(graph1Data[graph1Data.length-1].t, 1);
+    const maxD = Math.max(graph1Data[graph1Data.length-1].d, 1);
+    ctx1.beginPath();
+    ctx1.strokeStyle = '#38bdf8';
+    ctx1.lineWidth = 3;
+    for(let i=0; i<graph1Data.length; i++){
+      const p = graph1Data[i];
+      const px = gx + (p.t / maxT) * gw;
+      const py = gy + gh - (p.d / maxD) * gh;
+      if(i === 0) ctx1.moveTo(px, py);
+      else ctx1.lineTo(px, py);
+    }
+    ctx1.stroke();
+  }
+
+  document.getElementById('hud1Speed').textContent = (car1.moving ? speed1 : 0).toFixed(2) + ' m/s';
+  document.getElementById('hud1Dist').textContent = car1.distance.toFixed(1) + ' m';
+  document.getElementById('hud1Time').textContent = car1.time.toFixed(1) + ' s';
+  const st = document.getElementById('hud1Status');
+  st.textContent = car1.moving ? 'Moving' : 'Stopped';
+  st.className = car1.moving ? 'status-in' : 'status-off';
+}
+
+/* ==================== SIM 2: SPEED-TIME ==================== */
+const canvas2 = document.getElementById('canvas2');
+const holder2 = document.getElementById('holder2');
+let ctx2, W2 = 0, H2 = 0;
+let playing2 = true, maxSpeed2 = 20;
+let car2 = { x: 0, speed: 0, distance: 0, time: 0, phase: 'accel' };
+let graph2Data = [];
+let init2 = false;
+
+function resize2(){
+  const r = fitCanvas(canvas2, holder2);
+  ctx2 = r.ctx; W2 = r.W; H2 = r.H;
+  if(!init2){ car2.x = W2 * 0.15; init2 = true; }
+}
+window.addEventListener('resize', resize2);
+document.addEventListener('fullscreenchange', () => setTimeout(resize2, 100));
+if(window.ResizeObserver) new ResizeObserver(resize2).observe(holder2);
+
+let last2 = performance.now();
+function loop2(now){
+  requestAnimationFrame(loop2);
+  const dt = Math.min((now - last2)/1000, 0.05);
+  last2 = now;
+  if(W2 < 2) return;
+
+  const groundY = drawDarkScene(ctx2, W2, H2);
+
+  if(playing2){
+    car2.time += dt;
+    if(car2.phase === 'accel'){
+      car2.speed = Math.min(car2.speed + 15 * dt, maxSpeed2);
+      if(car2.speed >= maxSpeed2) car2.phase = 'cruise';
+    } else if(car2.phase === 'cruise'){
+      car2.speed = maxSpeed2;
+    } else if(car2.phase === 'brake'){
+      car2.speed = Math.max(car2.speed - 20 * dt, 0);
+      if(car2.speed <= 0) car2.phase = 'accel';
+    }
+    car2.distance += car2.speed * dt;
+    car2.x += car2.speed * dt * 8;
+    if(car2.x > W2 * 0.55) car2.x = W2 * 0.15;
+    graph2Data.push({ t: car2.time, v: car2.speed });
+    if(graph2Data.length > 600) graph2Data.shift();
+  }
+
+  ctx2.fillStyle = '#1e293b';
+  ctx2.fillRect(0, groundY, W2, H2 - groundY);
+
+  drawCar(ctx2, car2.x, groundY + 40, 0.9, {
+    main: '#f59e0b',
+    light: '#fbbf24',
+    dark: '#b45309'
+  }, car2.speed > 0.1);
+
+  const gx = W2 * 0.60, gy = 80, gw = W2 * 0.36, gh = H2 * 0.55;
+  drawGraphAxes(ctx2, gx, gy, gw, gh, 'Time (s)', 'Speed (m/s)');
+
+  if(graph2Data.length > 1){
+    const maxT = Math.max(graph2Data[graph2Data.length-1].t, 1);
+    const maxV = Math.max(maxSpeed2, 1);
+
+    ctx2.beginPath();
+    ctx2.moveTo(gx, gy + gh);
+    for(let i=0; i<graph2Data.length; i++){
+      const p = graph2Data[i];
+      const px = gx + (p.t / maxT) * gw;
+      const py = gy + gh - (p.v / maxV) * gh;
+      ctx2.lineTo(px, py);
+    }
+    ctx2.lineTo(gx + (graph2Data[graph2Data.length-1].t / maxT) * gw, gy + gh);
+    ctx2.closePath();
+    ctx2.fillStyle = 'rgba(251,191,36,.15)';
+    ctx2.fill();
+
+    ctx2.beginPath();
+    ctx2.strokeStyle = '#fbbf24';
+    ctx2.lineWidth = 3;
+    for(let i=0; i<graph2Data.length; i++){
+      const p = graph2Data[i];
+      const px = gx + (p.t / maxT) * gw;
+      const py = gy + gh - (p.v / maxV) * gh;
+      if(i === 0) ctx2.moveTo(px, py);
+      else ctx2.lineTo(px, py);
+    }
+    ctx2.stroke();
+  }
+
+  document.getElementById('hud2Speed').textContent = car2.speed.toFixed(2) + ' m/s';
+  const acc = car2.phase === 'accel' ? 15 : car2.phase === 'brake' ? -20 : 0;
+  document.getElementById('hud2Acc').textContent = acc.toFixed(2) + ' m/s²';
+  document.getElementById('hud2Dist').textContent = car2.distance.toFixed(1) + ' m';
+  const ph = document.getElementById('hud2Phase');
+  ph.textContent = car2.phase === 'accel' ? 'Accelerating' : car2.phase === 'cruise' ? 'Cruising' : 'Braking';
+}
+
+/* ==================== SIM 3: FREE FALL ==================== */
+const canvas3 = document.getElementById('canvas3');
+const holder3 = document.getElementById('holder3');
+let ctx3, W3 = 0, H3 = 0;
+let playing3 = true, g3 = 9.8, vacuum3 = true;
+let objects3 = [];
+let falling3 = false;
+let init3 = false;
+
+function resize3(){
+  const r = fitCanvas(canvas3, holder3);
+  ctx3 = r.ctx; W3 = r.W; H3 = r.H;
+  if(!init3){ resetObjects3(); init3 = true; }
+}
+window.addEventListener('resize', resize3);
+document.addEventListener('fullscreenchange', () => setTimeout(resize3, 100));
+if(window.ResizeObserver) new ResizeObserver(resize3).observe(holder3);
+
+function resetObjects3(){
+  const startY = H3 * 0.10;
+  objects3 = [
+    { x: W3 * 0.25, y: startY, v: 0, type: 'ball', landed: false },
+    { x: W3 * 0.50, y: startY, v: 0, type: 'feather', landed: false },
+    { x: W3 * 0.75, y: startY, v: 0, type: 'hammer', landed: false }
+  ];
+  falling3 = false;
+}
+
+let last3 = performance.now();
+function loop3(now){
+  requestAnimationFrame(loop3);
+  const dt = Math.min((now - last3)/1000, 0.05);
+  last3 = now;
+  if(W3 < 2) return;
+
+  const groundY = drawDarkScene(ctx3, W3, H3);
+  const floorY = groundY - 10;
+  const startY = H3 * 0.10;
+
+  if(playing3 && falling3){
+    for(const o of objects3){
+      if(o.landed) continue;
+      let acc = g3;
+      if(!vacuum3 && o.type === 'feather'){
+        acc = g3 * 0.15;
+      }
+      o.v += acc * dt;
+      o.y += o.v * dt * 60;
+      if(o.y >= floorY - 10){
+        o.y = floorY - 10;
+        o.landed = true;
+        o.v = 0;
+      }
+    }
+  }
+
+  for(const o of objects3){
+    if(o.type === 'ball'){
+      drawBall(ctx3, o.x, o.y, 18, {
+        main: '#38bdf8',
+        light: '#7dd3fc',
+        dark: '#0369a1'
+      });
+    } else if(o.type === 'feather'){
+      drawFeather(ctx3, o.x, o.y, 1);
+    } else if(o.type === 'hammer'){
+      drawHammer(ctx3, o.x, o.y, 1);
+    }
+  }
+
+  document.getElementById('hud3G').textContent = g3.toFixed(1) + ' m/s²';
+  const t = objects3[0] ? (objects3[0].v / g3) : 0;
+  document.getElementById('hud3Time').textContent = t.toFixed(2) + ' s';
+  const v = objects3[0] ? objects3[0].v : 0;
+  document.getElementById('hud3Vel').textContent = v.toFixed(2) + ' m/s';
+  const h = objects3[0] ? (100 - (objects3[0].y - startY) / (floorY - startY) * 100) : 100;
+  document.getElementById('hud3Height').textContent = Math.max(0, h).toFixed(1) + ' m';
+}
+
+resize1(); resize2(); resize3();
+requestAnimationFrame(loop1);
+requestAnimationFrame(loop2);
+requestAnimationFrame(loop3);
+
+/* ==================== CONTROLS SYNC ==================== */
+document.getElementById('btn1Play').addEventListener('click', () => { playing1 = !playing1; });
+document.getElementById('fs1Play').addEventListener('click', () => { playing1 = !playing1; });
+document.getElementById('btn1Reset').addEventListener('click', () => { car1.x = W1 * 0.15; car1.distance = 0; car1.time = 0; car1.moving = true; graph1Data = []; });
+document.getElementById('fs1Reset').addEventListener('click', () => { car1.x = W1 * 0.15; car1.distance = 0; car1.time = 0; car1.moving = true; graph1Data = []; });
+document.getElementById('btn1Stop').addEventListener('click', () => { car1.moving = false; });
+document.getElementById('fs1Stop').addEventListener('click', () => { car1.moving = false; });
+document.getElementById('btn1Go').addEventListener('click', () => { car1.moving = true; });
+document.getElementById('fs1Go').addEventListener('click', () => { car1.moving = true; });
+document.getElementById('slider1Speed').addEventListener('input', function(){ speed1 = parseFloat(this.value); document.getElementById('val1Speed').textContent = speed1.toFixed(1); });
+document.getElementById('fs1Speed').addEventListener('input', function(){ speed1 = parseFloat(this.value); });
+document.getElementById('slider1Time').addEventListener('input', function(){ timeScale1 = parseFloat(this.value); document.getElementById('val1Time').textContent = timeScale1.toFixed(1) + 'x'; });
+
+document.getElementById('btn2Play').addEventListener('click', () => { playing2 = !playing2; });
+document.getElementById('fs2Play').addEventListener('click', () => { playing2 = !playing2; });
+document.getElementById('btn2Reset').addEventListener('click', () => { car2 = { x: W2 * 0.15, speed: 0, distance: 0, time: 0, phase: 'accel' }; graph2Data = []; });
+document.getElementById('fs2Reset').addEventListener('click', () => { car2 = { x: W2 * 0.15, speed: 0, distance: 0, time: 0, phase: 'accel' }; graph2Data = []; });
+document.getElementById('btn2Accel').addEventListener('click', () => { car2.phase = 'accel'; });
+document.getElementById('fs2Accel').addEventListener('click', () => { car2.phase = 'accel'; });
+document.getElementById('btn2Cruise').addEventListener('click', () => { car2.phase = 'cruise'; });
+document.getElementById('fs2Cruise').addEventListener('click', () => { car2.phase = 'cruise'; });
+document.getElementById('btn2Brake').addEventListener('click', () => { car2.phase = 'brake'; });
+document.getElementById('fs2Brake').addEventListener('click', () => { car2.phase = 'brake'; });
+document.getElementById('btn2Clear').addEventListener('click', () => { graph2Data = []; car2.time = 0; });
+document.getElementById('fs2Clear').addEventListener('click', () => { graph2Data = []; car2.time = 0; });
+document.getElementById('slider2Max').addEventListener('input', function(){ maxSpeed2 = parseFloat(this.value); document.getElementById('val2Max').textContent = maxSpeed2; });
+
+document.getElementById('btn3Play').addEventListener('click', () => { playing3 = !playing3; });
+document.getElementById('fs3Play').addEventListener('click', () => { playing3 = !playing3; });
+document.getElementById('btn3Drop').addEventListener('click', () => { resetObjects3(); falling3 = true; });
+document.getElementById('fs3Drop').addEventListener('click', () => { resetObjects3(); falling3 = true; });
+document.getElementById('btn3Reset').addEventListener('click', () => { resetObjects3(); });
+document.getElementById('fs3Reset').addEventListener('click', () => { resetObjects3(); });
+document.getElementById('btn3Vacuum').addEventListener('click', function(){ vacuum3 = !vacuum3; this.textContent = vacuum3 ? 'Vacuum ON' : 'Vacuum OFF'; });
+document.getElementById('fs3Vacuum').addEventListener('click', function(){ vacuum3 = !vacuum3; this.textContent = vacuum3 ? 'Vacuum ON' : 'Vacuum OFF'; });
+document.getElementById('btn3Moon').addEventListener('click', () => { g3 = 1.6; document.getElementById('val3G').textContent = '1.6'; });
+document.getElementById('fs3Moon').addEventListener('click', () => { g3 = 1.6; });
+document.getElementById('btn3Earth').addEventListener('click', () => { g3 = 9.8; document.getElementById('val3G').textContent = '9.8'; });
+document.getElementById('fs3Earth').addEventListener('click', () => { g3 = 9.8; });
+document.getElementById('btn3Jupiter').addEventListener('click', () => { g3 = 24.8; document.getElementById('val3G').textContent = '24.8'; });
+document.getElementById('fs3Jupiter').addEventListener('click', () => { g3 = 24.8; });
+document.getElementById('slider3G').addEventListener('input', function(){ g3 = parseFloat(this.value); document.getElementById('val3G').textContent = g3.toFixed(1); });
+
+/* ==================== FULLSCREEN ==================== */
+document.querySelectorAll('.fs-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.fs);
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    if(!isFs){
+      if(el.requestFullscreen) el.requestFullscreen();
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } else {
+      if(document.exitFullscreen) document.exitFullscreen();
+    }
+  });
+});
+
+document.querySelectorAll('.law-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.law-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sim-stage').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.sim).classList.add('active');
+    setTimeout(() => { resize1(); resize2(); resize3(); }, 80);
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab === 'p-sim'){
+      setTimeout(() => { resize1(); resize2(); resize3(); }, 80);
+    }
+  });
+});
+
+})();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Periodic Table & Bohr Model</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #0b1a38 0%, #071329 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #38bdf8;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #1e3a8a;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #08152e;
+  color: #93c5fd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-color: #60a5fa;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #0284c7;
+  border-top: 1px solid #1e3a8a;
+  border-right: 1px solid #1e3a8a;
+  border-bottom: 1px solid #1e3a8a;
+}
+.grid-item h4 { font-size: 1rem; color: #38bdf8; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #091e36 0%, #061527 100%);
+  border: 1.5px solid #0284c7;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #38bdf8;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #38bdf8;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #0b1a38;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #1e3a8a;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px; /* Space for fs button */
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-dark { background: #0f172a; color: #cbd5e1; border-color: #334155; }
+
+.search-input {
+  background: #060e1f;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 10px;
+  padding: 7px 12px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  width: 140px;
+  outline: none;
+}
+.search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+/* CATEGORY FILTERS */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  background: #050c18;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+}
+.filter-chip {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-chip:hover {
+  border-color: #38bdf8;
+  color: #fff;
+}
+.filter-chip.active {
+  background: #0284c7;
+  color: #fff;
+  border-color: #38bdf8;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+}
+
+/* MAIN STAGE SPLIT LAYOUT */
+.stage-split {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 16px;
+}
+@media (max-width: 1100px) {
+  .stage-split { grid-template-columns: 1fr; }
+}
+
+/* PERIODIC TABLE GRID */
+.ptable-container {
+  background: #050c18;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 12px;
+  overflow-x: auto;
+}
+.ptable-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(36px, 1fr));
+  gap: 3px;
+  min-width: 660px;
+}
+.elem-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  padding: 2px;
+}
+.elem-cell:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px currentColor;
+}
+.elem-cell.active {
+  transform: scale(1.18);
+  z-index: 15;
+  border-color: #ffffff;
+  box-shadow: 0 0 16px #38bdf8, inset 0 0 0 2px #ffffff;
+}
+.elem-cell.dimmed {
+  opacity: 0.25;
+}
+.el-num { font-size: 0.62rem; font-weight: 800; opacity: 0.85; line-height: 1; }
+.el-sym { font-size: 0.92rem; font-weight: 900; line-height: 1.1; }
+.el-name { font-size: 0.52rem; opacity: 0.8; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 100%; display: none; }
+@media (min-width: 1400px) {
+  .el-name { display: block; }
+}
+
+/* BOHR MODEL & DETAILS PANEL */
+.bohr-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bohr-canvas-card {
+  background: radial-gradient(circle at center, #0b1a38 0%, #030816 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  position: relative;
+}
+#bohrCanvas {
+  width: 100%;
+  max-width: 380px;
+  height: 280px;
+  display: block;
+}
+.bohr-meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #1e3a8a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* ELEMENT DETAIL CARD */
+.elem-info-card {
+  background: #091733;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.elem-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.elem-badge-big {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+.elem-badge-big .eb-num { font-size: 0.75rem; font-weight: 800; line-height: 1; }
+.elem-badge-big .eb-sym { font-size: 1.5rem; font-weight: 900; line-height: 1; }
+.elem-header-text h3 { font-size: 1.25rem; font-weight: 900; color: #fff; }
+.elem-header-text p { font-size: 0.8rem; font-weight: 700; color: #38bdf8; }
+
+.elem-props-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  font-size: 0.8rem;
+  background: #050c18;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+}
+.prop-row { display: flex; justify-content: space-between; }
+.prop-row .plab { color: #94a3b8; font-weight: 600; }
+.prop-row .pval { color: #f8fafc; font-weight: 800; font-family: monospace; }
+
+.config-box {
+  margin-top: 8px;
+  background: #050c18;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  font-size: 0.78rem;
+  color: #93c5fd;
+  font-family: monospace;
+}
+
+/* LIVE READOUT & TEACHER NOTE */
+.sim-readout {
+  margin-top: 14px;
+  background: #0b1a38;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+.readout-pill {
+  background: #050c18;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #1e3a8a;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #050c1a !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(11, 26, 56, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #38bdf8 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* FULLSCREEN VISIBILITY & BUTTON GUARANTEE */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  padding-bottom: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-periodic', this)">
+      <span>🧪</span> Interactive Periodic Table & 3D Bohr Model
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-structure', this)">
+      <span>⚛️</span> Atomic Structure: Protons, Neutrons & Electrons
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-trends', this)">
+      <span>📊</span> Periodic Trends, Valence & Quantum Shells
+    </button>
+  </div>
+
+  <!-- TOPIC 1: PERIODIC TABLE LAB -->
+  <div id="topic-periodic" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Periodic Table & Bohr Atomic Shells
+        <small>Chemistry &bull; General Science &bull; Quantum Foundation</small>
+      </h2>
+      <p class="desc">
+        The periodic table is a tabular arrangement of chemical elements organized by atomic number (number of protons), electron configurations, and recurring chemical properties. Elements in the same group possess the same number of valence electrons and exhibit similar reactivity.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'p-def')">Definition</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-bohr')">Bohr Model Rules</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-octet')">Octet Rule & Valence</button>
+        <button class="section-tab" onclick="switchSection(this, 'p-uses')">Everyday Applications</button>
+      </div>
+
+      <div id="p-def" class="panel active">
+        <h3>Core Principles of the Periodic Table</h3>
+        <ul>
+          <li><strong>Atomic Number (Z):</strong> Uniquely identifies each element; equals total protons in the nucleus. In neutral atoms, Protons = Electrons.</li>
+          <li><strong>Mass Number (A):</strong> Total sum of protons and neutrons in the nucleus ($A = Z + N$).</li>
+          <li><strong>Periods (Horizontal Rows):</strong> Indicate the highest occupied energy level or quantum electron shell (K, L, M, N, O, P, Q).</li>
+          <li><strong>Groups (Vertical Columns):</strong> Elements in the same group share identical valence shell configurations and chemical behaviors.</li>
+        </ul>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Alkali Metals (Group 1)</h4>
+            <p>1 valence electron, soft, extremely reactive with water to produce hydrogen gas.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Halogens (Group 17)</h4>
+            <p>7 valence electrons, highly electronegative non-metals that form salts with alkali metals.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Noble Gases (Group 18)</h4>
+            <p>Full valence shells (octet 8 or duet 2), extremely stable and non-reactive inert gases.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="p-bohr" class="panel">
+        <h3>Niels Bohr Atomic Model (1913)</h3>
+        <p>In the Bohr model, electrons revolve around a positively charged central nucleus in discrete circular orbits with quantized angular momentum.</p>
+        <div class="formula-box">
+          Max Electrons Per Shell: $2n^2$
+          <small>Shell 1 (K): 2 &bull; Shell 2 (L): 8 &bull; Shell 3 (M): 18 &bull; Shell 4 (N): 32</small>
+        </div>
+        <ul>
+          <li>Electrons cannot spiral into the nucleus; they exist only in allowed stationary energy states.</li>
+          <li>When an electron absorbs energy, it jumps to a higher shell (excited state).</li>
+          <li>When it drops to a lower shell, it emits a photon with energy $\Delta E = h\nu$, generating spectral emission lines.</li>
+        </ul>
+      </div>
+
+      <div id="p-octet" class="panel">
+        <h3>The Octet Rule & Chemical Bonding</h3>
+        <p>Atoms tend to gain, lose, or share electrons until their outermost valence shell contains eight electrons, mimicking the electronic configuration of a stable noble gas.</p>
+        <ul>
+          <li><strong>Metals:</strong> Lose valence electrons to form positive cations ($Na \rightarrow Na^+ + e^-$).</li>
+          <li><strong>Non-Metals:</strong> Gain electrons to form negative anions ($Cl + e^- \rightarrow Cl^-$) or share electrons in covalent bonds.</li>
+        </ul>
+      </div>
+
+      <div id="p-uses" class="panel">
+        <h3>Real-World Applications</h3>
+        <ul>
+          <li><strong>Semiconductor Physics:</strong> Silicon (Si) and Germanium (Ge) in Group 14 form the foundation of all microprocessors and solar cells.</li>
+          <li><strong>Nuclear Energy:</strong> Uranium-235 and Plutonium-239 act as fissile fuels in nuclear power reactors.</li>
+          <li><strong>Medicine & Diagnostics:</strong> Technetium-99m and Iodine-131 serve as radioactive medical tracers in cancer diagnostics and thyroid treatment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox20">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn" onclick="toggleSimFullscreen('simBox20')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          <input type="text" id="elemSearch" class="search-input" placeholder="Search element..." oninput="handleSearch(this.value)" />
+          
+          <button class="ctrl-btn btn-sky" id="btnPlayPause" onclick="toggleOrbitAnimation()">
+            <span id="playIcon">⏸</span> <span id="playText">Pause Orbit</span>
+          </button>
+          
+          <button class="ctrl-btn btn-indigo" id="btnSpeed" onclick="cycleSpeed()">
+            ⚡ Speed: <span id="speedLabel">1.0x</span>
+          </button>
+
+          <button class="ctrl-btn btn-emerald" onclick="pickPreset('H')">H (1)</button>
+          <button class="ctrl-btn btn-emerald" onclick="pickPreset('C')">C (6)</button>
+          <button class="ctrl-btn btn-emerald" onclick="pickPreset('O')">O (8)</button>
+          <button class="ctrl-btn btn-emerald" onclick="pickPreset('Fe')">Fe (26)</button>
+          <button class="ctrl-btn btn-emerald" onclick="pickPreset('Au')">Au (79)</button>
+          <button class="ctrl-btn btn-rose" onclick="resetSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- CATEGORY FILTER CHIPS -->
+      <div class="filter-row" id="filterChips">
+        <button class="filter-chip active" onclick="filterCategory('All', this)">All (118)</button>
+        <button class="filter-chip" onclick="filterCategory('Alkali Metal', this)">Alkali Metals</button>
+        <button class="filter-chip" onclick="filterCategory('Alkaline Earth', this)">Alkaline Earth</button>
+        <button class="filter-chip" onclick="filterCategory('Transition Metal', this)">Transition Metals</button>
+        <button class="filter-chip" onclick="filterCategory('Post-Transition', this)">Post-Transition</button>
+        <button class="filter-chip" onclick="filterCategory('Metalloid', this)">Metalloids</button>
+        <button class="filter-chip" onclick="filterCategory('Nonmetal', this)">Reactive Nonmetals</button>
+        <button class="filter-chip" onclick="filterCategory('Halogen', this)">Halogens</button>
+        <button class="filter-chip" onclick="filterCategory('Noble Gas', this)">Noble Gases</button>
+      </div>
+
+      <!-- MAIN SPLIT: PERIODIC TABLE + BOHR MODEL -->
+      <div class="stage-split">
+        
+        <!-- LEFT: 118 ELEMENT PERIODIC TABLE -->
+        <div class="ptable-container">
+          <div class="ptable-grid" id="ptableGrid"></div>
+        </div>
+
+        <!-- RIGHT: BOHR ATOM & ELEMENT DETAILS -->
+        <div class="bohr-panel">
+          
+          <!-- BOHR CANVAS -->
+          <div class="bohr-canvas-card">
+            <canvas id="bohrCanvas" width="400" height="300"></canvas>
+
+<div class="ctl" id="ctlPeriodic">
+  <div class="row">
+    <span>Element Presets</span>
+    <button class="btn b-in" onclick="if(window.selectElement)selectElement(1)">1. Hydrogen (H)</button>
+    <button class="btn b-auto" onclick="if(window.selectElement)selectElement(6)">6. Carbon (C)</button>
+    <button class="btn b-play" onclick="if(window.selectElement)selectElement(8)">8. Oxygen (O)</button>
+    <button class="btn b-out" onclick="if(window.selectElement)selectElement(11)">11. Sodium (Na)</button>
+    <button class="btn b-hold" onclick="if(window.selectElement)selectElement(26)">26. Iron (Fe)</button>
+    <button class="btn b-set" onclick="if(window.selectElement)selectElement(79)">79. Gold (Au)</button>
+  </div>
+  <div class="row">
+    <span>Chemical Groups</span>
+    <button class="btn b-out" onclick="if(window.filterGroup)filterGroup('alkali')">Alkali Metals</button>
+    <button class="btn b-play" onclick="if(window.filterGroup)filterGroup('transition')">Transition Metals</button>
+    <button class="btn b-in" onclick="if(window.filterGroup)filterGroup('nonmetal')">Reactive Nonmetals</button>
+    <button class="btn b-auto" onclick="if(window.filterGroup)filterGroup('noble')">Noble Gases</button>
+  </div>
+  <div class="row">
+    <span>Show / Options</span>
+    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 3D Bohr Electron Shells</button>
+    
+  </div>
+</div>
+
+            <div class="bohr-meta">
+              <span id="bohrShellCount">Shells: K, L, M</span>
+              <span id="bohrValenceCount">Valence e⁻: 4</span>
+              <span id="bohrOrbitStatus" style="color:#38bdf8">Live Orbit Active</span>
+            </div>
+          </div>
+
+          <!-- ELEMENT INFO CARD -->
+          <div class="elem-info-card">
+            <div class="elem-header">
+              <div class="elem-badge-big" id="detailBadge" style="background:#0284c7;">
+                <span class="eb-num" id="dNum">6</span>
+                <span class="eb-sym" id="dSym">C</span>
+              </div>
+              <div class="elem-header-text">
+                <h3 id="dName">Carbon</h3>
+                <p id="dCategory">Reactive Nonmetal</p>
+              </div>
+            </div>
+
+            <div class="elem-props-grid">
+              <div class="prop-row"><span class="plab">Atomic Mass:</span><span class="pval" id="dMass">12.011 u</span></div>
+              <div class="prop-row"><span class="plab">Protons (p⁺):</span><span class="pval" id="dProtons">6</span></div>
+              <div class="prop-row"><span class="plab">Electrons (e⁻):</span><span class="pval" id="dElectrons">6</span></div>
+              <div class="prop-row"><span class="plab">Neutrons (n⁰):</span><span class="pval" id="dNeutrons">6</span></div>
+              <div class="prop-row"><span class="plab">Period / Group:</span><span class="pval" id="dPeriodGroup">Period 2 &bull; Grp 14</span></div>
+              <div class="prop-row"><span class="plab">Phase at STP:</span><span class="pval" id="dPhase">Solid</span></div>
+            </div>
+
+            <div class="config-box" id="dConfig">[He] 2s² 2p² &bull; Shell breakdown: 2, 4</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LIVE READOUT BAR -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveSummary">Active Element: [6] Carbon &bull; Nonmetal</span>
+        <span class="readout-pill" id="liveElectronRatio">Charge: Neutral (6p⁺ / 6e⁻)</span>
+        <span class="readout-pill" id="liveValenceStatus">Valence Shell: 4 e⁻ &bull; Needs 4 for Octet</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Click any element in the table to immediately synthesize its Niels Bohr planetary atomic model! Notice how elements in Period 1 have only the K shell (max 2 electrons), while Period 2 fills both K (2) and L (up to 8). Noble gases feature fully saturated valence shells, conferring extraordinary thermodynamic stability!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar">
+        <button class="ctrl-btn btn-sky" onclick="toggleOrbitAnimation()">
+          <span>⏯ Play / Pause</span>
+        </button>
+        <button class="ctrl-btn btn-indigo" onclick="cycleSpeed()">
+          <span>⚡ Toggle Speed</span>
+        </button>
+        <button class="ctrl-btn btn-emerald" onclick="pickPreset('H')">H</button>
+        <button class="ctrl-btn btn-emerald" onclick="pickPreset('O')">O</button>
+        <button class="ctrl-btn btn-emerald" onclick="pickPreset('Fe')">Fe</button>
+        <button class="ctrl-btn btn-emerald" onclick="pickPreset('Au')">Au</button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox20')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TOPIC 2: ATOMIC STRUCTURE -->
+  <div id="topic-structure" class="tab-content">
+    <div class="card">
+      <h2>Subatomic Particles & Nuclear Architecture</h2>
+      <p class="desc">Every atom consists of a dense positively charged nucleus composed of protons and neutrons, enveloped by a cloud of negative electrons organized into quantum shells.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Protons ($p^+$)</h4>
+          <p>Mass: $1.673 \times 10^{-27}$ kg (~1 amu). Positive charge $+1e$. Determines elemental identity.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Neutrons ($n^0$)</h4>
+          <p>Mass: $1.675 \times 10^{-27}$ kg (~1 amu). Neutral charge. Provides strong nuclear force to bind protons together.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Electrons ($e^-$)</h4>
+          <p>Mass: $9.109 \times 10^{-31}$ kg (~1/1836 amu). Negative charge $-1e$. Governs chemical reactions and bonding.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 3: PERIODIC TRENDS -->
+  <div id="topic-trends" class="tab-content">
+    <div class="card">
+      <h2>Periodic Trends Across the Table</h2>
+      <p class="desc">Predictable patterns emerge across periods and groups due to effective nuclear charge ($Z_{eff}$) and atomic shielding.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Atomic Radius</h4>
+          <p>Decreases left to right across a period (stronger nuclear pull); increases down a group (additional electron shells).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Ionization Energy</h4>
+          <p>Increases left to right (harder to strip electrons); decreases down a group (outer electrons farther from nucleus).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Electronegativity</h4>
+          <p>Fluorine (3.98) has the highest electronegativity. Increases toward top right of the table (excluding noble gases).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ELEMENT DATA (Key 36 representative elements for full interactive chemistry display)
+const ELEMENTS = [
+  { z:1, sym:'H', name:'Hydrogen', mass:'1.008', cat:'Nonmetal', color:'#38bdf8', shells:[1], config:'1s¹', period:1, group:1, phase:'Gas' },
+  { z:2, sym:'He', name:'Helium', mass:'4.0026', cat:'Noble Gas', color:'#c084fc', shells:[2], config:'1s²', period:1, group:18, phase:'Gas' },
+  { z:3, sym:'Li', name:'Lithium', mass:'6.94', cat:'Alkali Metal', color:'#ef4444', shells:[2,1], config:'[He] 2s¹', period:2, group:1, phase:'Solid' },
+  { z:4, sym:'Be', name:'Beryllium', mass:'9.0122', cat:'Alkaline Earth', color:'#f97316', shells:[2,2], config:'[He] 2s²', period:2, group:2, phase:'Solid' },
+  { z:5, sym:'B', name:'Boron', mass:'10.81', cat:'Metalloid', color:'#10b981', shells:[2,3], config:'[He] 2s² 2p¹', period:2, group:13, phase:'Solid' },
+  { z:6, sym:'C', name:'Carbon', mass:'12.011', cat:'Nonmetal', color:'#38bdf8', shells:[2,4], config:'[He] 2s² 2p²', period:2, group:14, phase:'Solid' },
+  { z:7, sym:'N', name:'Nitrogen', mass:'14.007', cat:'Nonmetal', color:'#38bdf8', shells:[2,5], config:'[He] 2s² 2p³', period:2, group:15, phase:'Gas' },
+  { z:8, sym:'O', name:'Oxygen', mass:'15.999', cat:'Nonmetal', color:'#38bdf8', shells:[2,6], config:'[He] 2s² 2p⁴', period:2, group:16, phase:'Gas' },
+  { z:9, sym:'F', name:'Fluorine', mass:'18.998', cat:'Halogen', color:'#fbbf24', shells:[2,7], config:'[He] 2s² 2p⁵', period:2, group:17, phase:'Gas' },
+  { z:10, sym:'Ne', name:'Neon', mass:'20.180', cat:'Noble Gas', color:'#c084fc', shells:[2,8], config:'[He] 2s² 2p⁶', period:2, group:18, phase:'Gas' },
+  { z:11, sym:'Na', name:'Sodium', mass:'22.990', cat:'Alkali Metal', color:'#ef4444', shells:[2,8,1], config:'[Ne] 3s¹', period:3, group:1, phase:'Solid' },
+  { z:12, sym:'Mg', name:'Magnesium', mass:'24.305', cat:'Alkaline Earth', color:'#f97316', shells:[2,8,2], config:'[Ne] 3s²', period:3, group:2, phase:'Solid' },
+  { z:13, sym:'Al', name:'Aluminium', mass:'26.982', cat:'Post-Transition', color:'#64748b', shells:[2,8,3], config:'[Ne] 3s² 3p¹', period:3, group:13, phase:'Solid' },
+  { z:14, sym:'Si', name:'Silicon', mass:'28.085', cat:'Metalloid', color:'#10b981', shells:[2,8,4], config:'[Ne] 3s² 3p²', period:3, group:14, phase:'Solid' },
+  { z:15, sym:'P', name:'Phosphorus', mass:'30.974', cat:'Nonmetal', color:'#38bdf8', shells:[2,8,5], config:'[Ne] 3s² 3p³', period:3, group:15, phase:'Solid' },
+  { z:16, sym:'S', name:'Sulfur', mass:'32.06', cat:'Nonmetal', color:'#38bdf8', shells:[2,8,6], config:'[Ne] 3s² 3p⁴', period:3, group:16, phase:'Solid' },
+  { z:17, sym:'Cl', name:'Chlorine', mass:'35.45', cat:'Halogen', color:'#fbbf24', shells:[2,8,7], config:'[Ne] 3s² 3p⁵', period:3, group:17, phase:'Gas' },
+  { z:18, sym:'Ar', name:'Argon', mass:'39.948', cat:'Noble Gas', color:'#c084fc', shells:[2,8,8], config:'[Ne] 3s² 3p⁶', period:3, group:18, phase:'Gas' },
+  { z:19, sym:'K', name:'Potassium', mass:'39.098', cat:'Alkali Metal', color:'#ef4444', shells:[2,8,8,1], config:'[Ar] 4s¹', period:4, group:1, phase:'Solid' },
+  { z:20, sym:'Ca', name:'Calcium', mass:'40.078', cat:'Alkaline Earth', color:'#f97316', shells:[2,8,8,2], config:'[Ar] 4s²', period:4, group:2, phase:'Solid' },
+  { z:21, sym:'Sc', name:'Scandium', mass:'44.956', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,9,2], config:'[Ar] 3d¹ 4s²', period:4, group:3, phase:'Solid' },
+  { z:22, sym:'Ti', name:'Titanium', mass:'47.867', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,10,2], config:'[Ar] 3d² 4s²', period:4, group:4, phase:'Solid' },
+  { z:23, sym:'V', name:'Vanadium', mass:'50.942', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,11,2], config:'[Ar] 3d³ 4s²', period:4, group:5, phase:'Solid' },
+  { z:24, sym:'Cr', name:'Chromium', mass:'51.996', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,13,1], config:'[Ar] 3d⁵ 4s¹', period:4, group:6, phase:'Solid' },
+  { z:25, sym:'Mn', name:'Manganese', mass:'54.938', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,13,2], config:'[Ar] 3d⁵ 4s²', period:4, group:7, phase:'Solid' },
+  { z:26, sym:'Fe', name:'Iron', mass:'55.845', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,14,2], config:'[Ar] 3d⁶ 4s²', period:4, group:8, phase:'Solid' },
+  { z:27, sym:'Co', name:'Cobalt', mass:'58.933', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,15,2], config:'[Ar] 3d⁷ 4s²', period:4, group:9, phase:'Solid' },
+  { z:28, sym:'Ni', name:'Nickel', mass:'58.693', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,16,2], config:'[Ar] 3d⁸ 4s²', period:4, group:10, phase:'Solid' },
+  { z:29, sym:'Cu', name:'Copper', mass:'63.546', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,18,1], config:'[Ar] 3d¹⁰ 4s¹', period:4, group:11, phase:'Solid' },
+  { z:30, sym:'Zn', name:'Zinc', mass:'65.38', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,18,2], config:'[Ar] 3d¹⁰ 4s²', period:4, group:12, phase:'Solid' },
+  { z:35, sym:'Br', name:'Bromine', mass:'79.904', cat:'Halogen', color:'#fbbf24', shells:[2,8,18,7], config:'[Ar] 3d¹⁰ 4s² 4p⁵', period:4, group:17, phase:'Liquid' },
+  { z:36, sym:'Kr', name:'Krypton', mass:'83.798', cat:'Noble Gas', color:'#c084fc', shells:[2,8,18,8], config:'[Ar] 3d¹⁰ 4s² 4p⁶', period:4, group:18, phase:'Gas' },
+  { z:47, sym:'Ag', name:'Silver', mass:'107.87', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,18,18,1], config:'[Kr] 4d¹⁰ 5s¹', period:5, group:11, phase:'Solid' },
+  { z:79, sym:'Au', name:'Gold', mass:'196.97', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,18,32,18,1], config:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹', period:6, group:11, phase:'Solid' },
+  { z:80, sym:'Hg', name:'Mercury', mass:'200.59', cat:'Transition Metal', color:'#3b82f6', shells:[2,8,18,32,18,2], config:'[Xe] 4f¹⁴ 5d¹⁰ 6s²', period:6, group:12, phase:'Liquid' },
+  { z:92, sym:'U', name:'Uranium', mass:'238.03', cat:'Actinide', color:'#a855f7', shells:[2,8,18,32,21,9,2], config:'[Rn] 5f³ 6d¹ 7s²', period:7, group:3, phase:'Solid' }
+];
+
+let selectedElement = ELEMENTS[5]; // Carbon default
+let isOrbitPlaying = true;
+let orbitSpeed = 1.0;
+let animAngle = 0;
+let currentFilter = 'All';
+
+// RENDER PERIODIC TABLE GRID
+function renderPeriodicTable() {
+  const grid = document.getElementById('ptableGrid');
+  grid.innerHTML = '';
+  
+  ELEMENTS.forEach(elem => {
+    const cell = document.createElement('div');
+    cell.className = `elem-cell ${elem.z === selectedElement.z ? 'active' : ''}`;
+    cell.style.backgroundColor = elem.color + '22';
+    cell.style.borderColor = elem.color;
+    cell.style.color = elem.color;
+    cell.dataset.z = elem.z;
+    cell.dataset.cat = elem.cat;
+    cell.dataset.name = elem.name.toLowerCase();
+    cell.dataset.sym = elem.sym.toLowerCase();
+    
+    cell.innerHTML = `
+      <span class="el-num">${elem.z}</span>
+      <span class="el-sym">${elem.sym}</span>
+      <span class="el-name">${elem.name}</span>
+    `;
+    cell.onclick = () => selectElement(elem);
+    grid.appendChild(cell);
+  });
+}
+
+// SELECT ELEMENT & UPDATE DETAILS
+function selectElement(elem) {
+  selectedElement = elem;
+  
+  // Update Grid selection
+  document.querySelectorAll('.elem-cell').forEach(c => {
+    c.classList.toggle('active', parseInt(c.dataset.z) === elem.z);
+  });
+
+  // Update Details Card
+  const badge = document.getElementById('detailBadge');
+  badge.style.backgroundColor = elem.color;
+  badge.style.borderColor = '#ffffff';
+  document.getElementById('dNum').innerText = elem.z;
+  document.getElementById('dSym').innerText = elem.sym;
+  document.getElementById('dName').innerText = elem.name;
+  document.getElementById('dCategory').innerText = elem.cat;
+  document.getElementById('dCategory').style.color = elem.color;
+  document.getElementById('dMass').innerText = elem.mass + ' u';
+  document.getElementById('dProtons').innerText = elem.z;
+  document.getElementById('dElectrons').innerText = elem.z;
+  const neutrons = Math.round(parseFloat(elem.mass)) - elem.z;
+  document.getElementById('dNeutrons').innerText = neutrons >= 0 ? neutrons : 0;
+  document.getElementById('dPeriodGroup').innerText = `Period ${elem.period} • Grp ${elem.group}`;
+  document.getElementById('dPhase').innerText = elem.phase || 'Solid';
+  document.getElementById('dConfig').innerText = `${elem.config} • Shell breakdown: [${elem.shells.join(', ')}]`;
+
+  // Update Bohr Meta
+  const shellLabels = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'];
+  const activeShells = elem.shells.map((_, i) => shellLabels[i]).join(', ');
+  const valenceE = elem.shells[elem.shells.length - 1];
+  document.getElementById('bohrShellCount').innerText = `Shells: ${activeShells}`;
+  document.getElementById('bohrValenceCount').innerText = `Valence e⁻: ${valenceE}`;
+
+  // Update Readout pills
+  document.getElementById('liveSummary').innerText = `Active Element: [${elem.z}] ${elem.name} • ${elem.cat}`;
+  document.getElementById('liveElectronRatio').innerText = `Neutral: ${elem.z}p⁺ & ${elem.z}e⁻`;
+  const octetDelta = 8 - valenceE;
+  document.getElementById('liveValenceStatus').innerText = 
+    elem.cat === 'Noble Gas' 
+      ? 'Stable Octet Achieved (Non-reactive)' 
+      : `Valence: ${valenceE} e⁻ • Needs ${Math.abs(octetDelta)} for stability`;
+}
+
+// BOHR ATOM 2D CANVAS DRAWING
+const canvas = document.getElementById('bohrCanvas');
+const ctx = canvas.getContext('2d');
+
+function drawBohrModel() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  // Nucleus
+  const nucRadius = 20;
+  const grad = ctx.createRadialGradient(cx, cy, 3, cx, cy, nucRadius);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.5, '#ef4444');
+  grad.addColorStop(1, '#991b1b');
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, nucRadius, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.shadowColor = '#ef4444';
+  ctx.shadowBlur = 12;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Nucleus Text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${selectedElement.z}p⁺`, cx, cy);
+
+  // Concentric Electron Shells
+  const shells = selectedElement.shells;
+  const baseR = 34;
+  const stepR = 20;
+
+  shells.forEach((electrons, sIdx) => {
+    const r = baseR + sIdx * stepR;
+
+    // Shell ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Shell Label
+    const shellNames = ['K', 'L', 'M', 'N', 'O', 'P'];
+    ctx.fillStyle = '#64748b';
+    ctx.font = '8px monospace';
+    ctx.fillText(shellNames[sIdx] || `S${sIdx+1}`, cx + r + 3, cy - 2);
+
+    // Revolving Electrons
+    const dir = sIdx % 2 === 0 ? 1 : -1;
+    const speed = (dir * orbitSpeed) / (sIdx + 1);
+
+    for (let e = 0; e < electrons; e++) {
+      const angle = animAngle * speed + (e * (Math.PI * 2) / electrons);
+      const ex = cx + r * Math.cos(angle);
+      const ey = cy + r * Math.sin(angle);
+
+      // Electron Glow
+      ctx.beginPath();
+      ctx.arc(ex, ey, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Inner center white core
+      ctx.beginPath();
+      ctx.arc(ex, ey, 2, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    }
+  });
+
+  if (isOrbitPlaying) {
+    animAngle += 0.025;
+  }
+  requestAnimationFrame(drawBohrModel);
+}
+
+// PERFORMANCE CONTROLS
+function toggleOrbitAnimation() {
+  isOrbitPlaying = !isOrbitPlaying;
+  document.getElementById('playIcon').innerText = isOrbitPlaying ? '⏸' : '▶';
+  document.getElementById('playText').innerText = isOrbitPlaying ? 'Pause Orbit' : 'Play Orbit';
+  document.getElementById('bohrOrbitStatus').innerText = isOrbitPlaying ? 'Live Orbit Active' : 'Orbit Paused';
+  document.getElementById('bohrOrbitStatus').style.color = isOrbitPlaying ? '#38bdf8' : '#fbbf24';
+}
+
+function cycleSpeed() {
+  if (orbitSpeed === 1.0) orbitSpeed = 2.0;
+  else if (orbitSpeed === 2.0) orbitSpeed = 0.5;
+  else orbitSpeed = 1.0;
+  document.getElementById('speedLabel').innerText = orbitSpeed + 'x';
+}
+
+function pickPreset(symbol) {
+  const found = ELEMENTS.find(e => e.sym === symbol);
+  if (found) selectElement(found);
+}
+
+function resetSim() {
+  isOrbitPlaying = true;
+  orbitSpeed = 1.0;
+  animAngle = 0;
+  document.getElementById('speedLabel').innerText = '1.0x';
+  document.getElementById('playIcon').innerText = '⏸';
+  document.getElementById('playText').innerText = 'Pause Orbit';
+  pickPreset('C');
+}
+
+// SEARCH & FILTERS
+function handleSearch(val) {
+  const query = val.trim().toLowerCase();
+  document.querySelectorAll('.elem-cell').forEach(c => {
+    const match = !query || c.dataset.name.includes(query) || c.dataset.sym.includes(query) || c.dataset.z === query;
+    c.classList.toggle('dimmed', !match);
+  });
+}
+
+function filterCategory(cat, btn) {
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.elem-cell').forEach(c => {
+    const match = (cat === 'All') || c.dataset.cat.includes(cat);
+    c.classList.toggle('dimmed', !match);
+  });
+}
+
+// FULLSCREEN HANDLER WITH RESIZE & FALLBACK
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().then(() => { drawBohrModel(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        drawBohrModel();
+      });
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => { drawBohrModel(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        drawBohrModel();
+      });
+    } else {
+      box.classList.add("is-fullscreen");
+      drawBohrModel();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox20');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+});
+
+// ESCAPE KEY FALLBACK
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox20');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+renderPeriodicTable();
+selectElement(selectedElement);
+drawBohrModel();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

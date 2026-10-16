@@ -214,6 +214,25 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
         <text x="5" y="53" fill="#ffffff" fontSize="11" fontWeight="900">A</text>
       </svg>
     )
+  },
+  {
+    key: 'Urdu & Linguistics',
+    shortLabel: 'Urdu & Linguistics',
+    fullTitle: 'Urdu Language & Linguistics (اردو زبان و قواعد)',
+    iconBg: 'rgba(16, 185, 129, 0.16)',
+    iconBorder: '#10b981',
+    activeBorder: '#6ee7b7',
+    glowColor: 'rgba(16, 185, 129, 0.45)',
+    renderIcon: ({ isSelected, className }) => (
+      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
+        <path d="M12 20 C22 18 34 18 36 24 C38 18 50 18 60 20 V54 C50 52 38 52 36 57 C34 52 22 52 12 54 Z" 
+          fill={isSelected ? '#064e3b' : '#065f46'} 
+          stroke={isSelected ? '#ffffff' : '#34d399'} 
+          strokeWidth="2.2" 
+        />
+        <text x="36" y="42" fill="#fbbf24" fontSize="14" fontWeight="900" textAnchor="middle">اردو</text>
+      </svg>
+    )
   }
 ];
 
@@ -252,20 +271,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // All active simulation labs including standalone uploaded modules
   const activeSimulations = simulations;
 
-  const cleanCardTitle = (title: string): string => {
-    return title
+  const cleanCardTitle = (title: string, category?: string): string => {
+    let clean = title
       .replace(/\.html$/i, '')
       .replace(/_/g, ' ')
       .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
       .trim();
+    // Enforce English titles for all subjects except Urdu
+    if (category !== 'Urdu & Linguistics') {
+      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
+    }
+    return clean;
   };
 
-  const cleanCardTopic = (topic: string): string => {
-    return topic
+  const cleanCardTopic = (topic: string, category?: string): string => {
+    let clean = topic
       .replace(/\.html$/i, '')
       .replace(/_/g, ' ')
       .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
       .trim();
+    if (category !== 'Urdu & Linguistics') {
+      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
+    }
+    return clean;
   };
 
   const cleanGradeBadge = (grade: string): string => {
@@ -274,18 +302,27 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       .trim();
   };
 
-  const cleanCardSubject = (subject: string): string => {
-    return subject
+  const cleanCardSubject = (subject: string, category?: string): string => {
+    let clean = subject
       .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
       .replace(/\|\s*GEN\s+Z\s+EDTECH\s+INTERACTIVE/gi, '')
       .trim();
+    if (category !== 'Urdu & Linguistics') {
+      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
+    }
+    return clean;
   };
 
-  const cleanCardDescription = (desc: string): string => {
-    return desc
+  const cleanCardDescription = (desc: string, category?: string): string => {
+    let clean = desc
       .replace(/Cambridge\s+Scholar\s*/gi, '')
       .trim();
+    if (category !== 'Urdu & Linguistics') {
+      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
+    }
+    return clean;
   };
+
 
   const matchesSearch = (sim: SimulationItem) => {
     if (!searchTerm) return true;
@@ -326,10 +363,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     const theme = getSimTheme(sim.indexNumber);
     const isActive = activeSim ? activeSim.id === sim.id : false;
     const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
-    const displayTitle = cleanCardTitle(sim.title);
+    const displayTitle = cleanCardTitle(sim.title, sim.category);
     const displayGrade = cleanGradeBadge(sim.gradeLevel);
-    const displaySubject = cleanCardSubject(sim.subject);
-    const displayDesc = cleanCardDescription(sim.description);
+    const displaySubject = cleanCardSubject(sim.subject, sim.category);
+    const displayDesc = cleanCardDescription(sim.description, sim.category);
 
     return (
       <div
@@ -466,7 +503,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   borderStyle: 'solid'
                 }}
               >
-                {cleanCardTopic(topic)}
+                {cleanCardTopic(topic, sim.category)}
               </span>
             ))}
             {sim.topics.length > 2 && (

@@ -11,15 +11,27 @@ interface HeroBannerProps {
   onSelectSim?: (sim: SimulationItem) => void;
 }
 
-const cleanTopicTitle = (title: string): string => {
-  return title
+const cleanTopicTitle = (title: string, category?: string): string => {
+  let clean = title
     .replace(/\.html$/i, '')
     .replace(/_/g, ' ')
     .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
     .trim();
+  if (category !== 'Urdu & Linguistics') {
+    clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
+  }
+  return clean;
 };
 
 const getCategoryStyle = (category: string, isDark: boolean) => {
+  if (category.includes('Urdu')) {
+    return {
+      name: 'Urdu Language',
+      bg: isDark ? 'rgba(16, 185, 129, 0.25)' : 'rgba(236, 253, 245, 0.95)',
+      color: isDark ? '#6ee7b7' : '#065f46',
+      border: isDark ? '#10b981' : '#a7f3d0'
+    };
+  }
   if (category.includes('Physics')) {
     return {
       name: 'Physics',
@@ -165,7 +177,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
 
   const renderTopicItem = (sim: SimulationItem) => {
     const catStyle = getCategoryStyle(sim.category, isDarkMode);
-    const cleanTitle = cleanTopicTitle(sim.title);
+    const cleanTitle = cleanTopicTitle(sim.title, sim.category);
 
     return (
       <div 

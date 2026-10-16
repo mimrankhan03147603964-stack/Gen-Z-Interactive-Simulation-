@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Computer Parts, Hardware Architecture & System Components Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #040e24;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #091a3e;
+  border: 1.5px solid #0284c7;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #7dd3fc;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(2, 132, 199, 0.18);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #0a2046 0%, #05142e 100%);
+  border: 1.5px solid #0284c7;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #38bdf8;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #0369a1;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #091a38;
+  color: #bae6fd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #0284c7;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(10, 32, 70, 0.5);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #38bdf8;
+  border-top: 1px solid #0369a1;
+  border-right: 1px solid #0369a1;
+  border-bottom: 1px solid #0369a1;
+}
+.grid-item h4 { font-size: 1rem; color: #7dd3fc; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #091a38 0%, #040e20 100%);
+  border: 1.5px solid #38bdf8;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #bae6fd;
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #051433;
+  border: 1.5px solid #0284c7;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #38bdf8;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #081d42;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #0369a1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-purple { background: #7c3aed; color: #fff; border-color: #c4b5fd; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #071e47 0%, #030d22 100%);
+  border: 1.5px solid #0369a1;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+}
+#compCanvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #081d42;
+  border: 1.5px solid #0369a1;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #7dd3fc;
+}
+.readout-pill {
+  background: #04122d;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #0369a1;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #030d22 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  padding-bottom: 8px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-holder,
+.sim-box:fullscreen .canvas-holder,
+.sim-box:-webkit-full-screen .canvas-holder {
+  flex: 1 !important;
+  height: calc(100vh - 170px) !important;
+}
+.sim-box.is-fullscreen #compCanvas,
+.sim-box:fullscreen #compCanvas,
+.sim-box:-webkit-full-screen #compCanvas {
+  height: 100% !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(8, 29, 66, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #38bdf8 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-arch', this)">
+      <span>🖥️</span> Motherboard & Hardware Bus Architecture
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-von', this)">
+      <span>⚡</span> Von Neumann Architecture & Fetch-Decode-Execute
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-hierarchy', this)">
+      <span>💾</span> Memory & Storage Hierarchy (Cache, RAM, SSD)
+    </button>
+  </div>
+
+  <!-- TAB 1: HARDWARE INTERACTIVE LAB -->
+  <div id="topic-arch" class="tab-content active">
+
+    <!-- STEP 2: DEFINITION & EXPLANATION CARD -->
+    <div class="card">
+      <h2>
+        Computer System Architecture & Hardware Components
+        <small>Computer Science &bull; Form Factor &bull; High-Speed Bus Communication</small>
+      </h2>
+      <p class="desc">
+        A computer system is composed of hardware components working in synchrony: the CPU (Central Processing Unit) computes operations, RAM provides volatile high-speed execution space, the Motherboard connects all units via high-frequency PCIe and data buses, and storage devices retain permanent data.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'c-cpu')">CPU (Central Processing Unit)</button>
+        <button class="section-tab" onclick="switchSection(this, 'c-ram')">RAM (Primary Memory)</button>
+        <button class="section-tab" onclick="switchSection(this, 'c-gpu')">GPU (Graphics Card)</button>
+        <button class="section-tab" onclick="switchSection(this, 'c-storage')">SSD & Storage</button>
+        <button class="section-tab" onclick="switchSection(this, 'c-motherboard')">Motherboard & Power</button>
+      </div>
+
+      <div id="c-cpu" class="panel active">
+        <h3>Central Processing Unit (CPU)</h3>
+        <p>The "Brain" of the computer containing the ALU (Arithmetic Logic Unit), Control Unit (CU), and ultra-fast L1/L2/L3 on-die Registers and Caches.</p>
+        <div class="formula-box">
+          Clock Cycle & Throughput: $f = rac{1}{T}$ &bull; $	ext{Instructions Per Second} = 	ext{Clock Speed} 	imes 	ext{IPC}$
+          <small>Modern multi-core processors execute billions of instructions per second per thread.</small>
+        </div>
+      </div>
+
+      <div id="c-ram" class="panel">
+        <h3>Random Access Memory (RAM)</h3>
+        <p>High-speed volatile semiconductor memory that holds code and variables currently executed by active OS processes. Data is lost upon power loss.</p>
+        <ul>
+          <li><strong>DDR5 Bus Speeds:</strong> Exceeds 6400 MT/s offering over 50 GB/s bandwidth per channel.</li>
+          <li><strong>Byte-Addressable:</strong> Each memory cell holds 8 bits (1 byte) identified by a 64-bit hexadecimal address.</li>
+        </ul>
+      </div>
+
+      <div id="c-gpu" class="panel">
+        <h3>Graphics Processing Unit (GPU)</h3>
+        <p>Massively parallel computing chip with thousands of stream cores designed for matrix multiplication, 3D polygon shaders, and AI/tensor computation.</p>
+      </div>
+
+      <div id="c-storage" class="panel">
+        <h3>Non-Volatile Storage (NVMe SSD / HDD)</h3>
+        <p>Permanent storage utilizing NAND flash transistors arranged in 3D TLC/QLC cell blocks, connected directly to CPU lanes via PCIe Gen 4/5 NVMe protocol.</p>
+      </div>
+
+      <div id="c-motherboard" class="panel">
+        <h3>Motherboard & Power Supply (PSU)</h3>
+        <p>The main printed circuit board (PCB) featuring the chipset, VRMs (Voltage Regulator Modules), clock generator, BIOS/UEFI ROM, and standard expansion slots.</p>
+      </div>
+    </div>
+
+    <!-- STEP 3: INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox26">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn26" onclick="toggleSimFullscreen('simBox26')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-sky" onclick="inspectPart('CPU')">🧠 CPU (Processor)</button>
+          <button class="ctrl-btn btn-emerald" onclick="inspectPart('RAM')">⚡ RAM (Memory)</button>
+          <button class="ctrl-btn btn-purple" onclick="inspectPart('GPU')">🎮 GPU (Graphics)</button>
+          <button class="ctrl-btn btn-amber" onclick="inspectPart('SSD')">💾 NVMe SSD</button>
+          <button class="ctrl-btn btn-sky" onclick="inspectPart('PSU')">🔌 Power Supply</button>
+          <button class="ctrl-btn btn-emerald" onclick="inspectPart('COOLER')">❄️ CPU Cooler</button>
+          
+          <button class="ctrl-btn btn-purple" id="btnDataFlow" onclick="toggleDataBus()">
+            🔄 Toggle Data Bus Stream
+          </button>
+          <button class="ctrl-btn btn-rose" onclick="resetCompSim()">↺ Reset Architecture</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="compCanvas" width="1200" height="520"></canvas>
+
+
+
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="livePartName">Inspected: CPU (Intel/AMD x86-64 Microprocessor)</span>
+        <span class="readout-pill" id="liveClockVal">Active Clock: 4.80 GHz &bull; 16 Cores / 32 Threads</span>
+        <span class="readout-pill" id="liveBusStatus" style="color:#38bdf8">PCIe 5.0 Bus: 128 GB/s Full Duplex</span>
+        <span class="readout-pill" id="liveTempStatus" style="color:#34d399">T_Junction: 42°C (Optimal Thermal)</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Click any of the hardware component buttons to illuminate its precise socket on the motherboard and trace the animated electronic pulses traveling along the high-frequency system bus! Notice how RAM and GPU communicate directly with the CPU over ultra-low-latency PCIe and memory channels!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar26">
+        <button class="ctrl-btn btn-sky" onclick="inspectPart('CPU')"><span>🧠 CPU</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="inspectPart('RAM')"><span>⚡ RAM</span></button>
+        <button class="ctrl-btn btn-purple" onclick="inspectPart('GPU')"><span>🎮 GPU</span></button>
+        <button class="ctrl-btn btn-amber" onclick="inspectPart('SSD')"><span>💾 SSD</span></button>
+        <button class="ctrl-btn btn-purple" onclick="toggleDataBus()"><span>🔄 Bus Pulse</span></button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox26')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: VON NEUMANN ARCHITECTURE -->
+  <div id="topic-von" class="tab-content">
+    <div class="card">
+      <h2>Von Neumann Architecture (1945)</h2>
+      <p class="desc">The universal model of modern digital computers where program instructions and data share the same addressable memory.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>1. Fetch</h4>
+          <p>The Control Unit fetches instruction word from memory at Program Counter (PC) address into Instruction Register (IR).</p>
+        </div>
+        <div class="grid-item">
+          <h4>2. Decode</h4>
+          <p>Opcode decoder determines required operation, ALU inputs, and register operand pointers.</p>
+        </div>
+        <div class="grid-item">
+          <h4>3. Execute & Writeback</h4>
+          <p>ALU performs integer/float computation and writes outcome into accumulator or registers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MEMORY HIERARCHY -->
+  <div id="topic-hierarchy" class="tab-content">
+    <div class="card">
+      <h2>Computer Memory & Storage Hierarchy</h2>
+      <p class="desc">Balancing extreme speed, bandwidth cost, and persistence across modern memory tiers.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>L1/L2 Cache (~1 ns)</h4>
+          <p>SRAM cells inside core, zero latency for current loop counters.</p>
+        </div>
+        <div class="grid-item">
+          <h4>RAM (~50-80 ns)</h4>
+          <p>DRAM capacitor banks, 16-64 GB active memory capacity.</p>
+        </div>
+        <div class="grid-item">
+          <h4>NVMe SSD (~20-50 µs)</h4>
+          <p>3D NAND flash memory, terabytes of non-volatile file storage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('compCanvas');
+const ctx = canvas.getContext('2d');
+
+let selectedPart = 'CPU';
+let busAnim = true;
+let busTick = 0;
+
+const PARTS = {
+  'CPU': {
+    name: 'Central Processing Unit (CPU)',
+    specs: '4.80 GHz &bull; 16 Cores / 32 Threads &bull; 32MB L3 Cache',
+    bus: 'PCIe 5.0 Direct Lanes &bull; Dual-Channel Memory Controller',
+    temp: '42°C (Optimal Operating Thermals)',
+    color: '#0284c7',
+    accent: '#38bdf8',
+    desc: 'Processes instructions, executes binary arithmetic, coordinates all system operations.'
+  },
+  'RAM': {
+    name: 'DDR5 System Memory (RAM)',
+    specs: '32 GB Dual-Channel &bull; 6000 MT/s CL30 &bull; 1.35V',
+    bus: '128-bit High-Speed Memory Bus &bull; 96 GB/s Peak Bandwidth',
+    temp: '38°C (Passive Aluminum Heatspreader)',
+    color: '#059669',
+    accent: '#34d399',
+    desc: 'Ultra-fast volatile temporary storage for active operating system code and apps.'
+  },
+  'GPU': {
+    name: 'Discrete Graphics Processing Unit (GPU)',
+    specs: '16GB GDDR6X &bull; 9728 CUDA / Stream Cores &bull; 2.5 GHz Boost',
+    bus: 'PCIe 4.0 x16 Slot &bull; 64 GB/s Bi-Directional Throughput',
+    temp: '54°C (Triple-Fan Axial Vapor Chamber)',
+    color: '#7c3aed',
+    accent: '#c4b5fd',
+    desc: 'Massively parallel matrix processing for 3D games, video rendering, and deep learning.'
+  },
+  'SSD': {
+    name: 'M.2 NVMe PCIe 4.0 Solid State Drive',
+    specs: '2 TB Capacity &bull; 7300 MB/s Sequential Read &bull; 1,000,000 IOPS',
+    bus: 'PCIe 4.0 x4 M.2 Key-M Socket',
+    temp: '45°C (Motherboard Heatsink Cover)',
+    color: '#d97706',
+    accent: '#fcd34d',
+    desc: 'Non-volatile 3D TLC NAND storage holding the operating system, games, and user files.'
+  },
+  'PSU': {
+    name: 'Modular Power Supply Unit (PSU)',
+    specs: '850W 80-Plus Gold Certified &bull; 12V High-Amperage Single Rail',
+    bus: 'ATX 24-Pin + EPS 8-Pin CPU + 12VHPWR PCIe Cables',
+    temp: '32°C (Zero-RPM Silent Mode Active)',
+    color: '#0284c7',
+    accent: '#38bdf8',
+    desc: 'Converts high-voltage AC wall power into clean regulated +12V, +5V, and +3.3V DC power.'
+  },
+  'COOLER': {
+    name: 'Liquid All-in-One CPU Cooler (360mm Radiator)',
+    specs: 'Copper Cold Plate &bull; Ceramic Impeller Pump &bull; 3x120mm PWM Fans',
+    bus: '4-Pin PWM Header + ARGB 5V Motherboard Sync',
+    temp: 'Liquid Temp: 28°C &bull; Pump Speed: 2400 RPM',
+    color: '#059669',
+    accent: '#34d399',
+    desc: 'Dissipates heat from the CPU lid to keep silicon within safe operational temperatures.'
+  }
+};
+
+function resizeCompCanvas() {
+  const holder = canvas.parentElement;
+  if (!holder) return;
+  const w = holder.clientWidth || 1200;
+  const h = holder.clientHeight || 520;
+  canvas.width = w;
+  canvas.height = Math.max(480, h);
+}
+window.addEventListener('resize', () => { resizeCompCanvas(); drawComputer(); });
+
+function inspectPart(partKey) {
+  selectedPart = partKey;
+  const p = PARTS[partKey];
+  document.getElementById('livePartName').innerText = `Inspected: ${p.name}`;
+  document.getElementById('liveClockVal').innerHTML = p.specs;
+  document.getElementById('liveBusStatus').innerHTML = p.bus;
+  document.getElementById('liveTempStatus').innerHTML = p.temp;
+  drawComputer();
+}
+
+function toggleDataBus() {
+  busAnim = !busAnim;
+}
+
+function resetCompSim() {
+  inspectPart('CPU');
+  busAnim = true;
+}
+
+function drawComputer() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Background Grid / Circuit lines
+  ctx.strokeStyle = 'rgba(2, 132, 199, 0.08)';
+  ctx.lineWidth = 1;
+  const gridStep = 40;
+  for (let x = 0; x < w; x += gridStep) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += gridStep) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Draw Motherboard PCB Board
+  const mbX = 60;
+  const mbY = 30;
+  const mbW = w - 120;
+  const mbH = h - 60;
+
+  // PCB Board Shadow & Body
+  ctx.fillStyle = '#031024';
+  ctx.beginPath();
+  ctx.roundRect(mbX, mbY, mbW, mbH, 18);
+  ctx.fill();
+  ctx.strokeStyle = '#0284c7';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // PCB Traces (Buses)
+  drawBusTraces(mbX, mbY, mbW, mbH);
+
+  // Components Layout
+  // 1. CPU Socket (Center-Left)
+  const cpuX = mbX + mbW * 0.28;
+  const cpuY = mbY + mbH * 0.38;
+  const cpuSize = 110;
+  drawCPU(cpuX, cpuY, cpuSize, selectedPart === 'CPU');
+
+  // 2. RAM Slots (Right of CPU)
+  const ramX = cpuX + cpuSize / 2 + 50;
+  const ramY = cpuY - 30;
+  drawRAM(ramX, ramY, 4, selectedPart === 'RAM');
+
+  // 3. GPU Slot (PCIe slot lower half)
+  const gpuX = mbX + mbW * 0.15;
+  const gpuY = cpuY + cpuSize / 2 + 65;
+  const gpuW = mbW * 0.65;
+  const gpuH = 68;
+  drawGPU(gpuX, gpuY, gpuW, gpuH, selectedPart === 'GPU');
+
+  // 4. M.2 NVMe SSD (Between CPU and GPU)
+  const ssdX = cpuX - 30;
+  const ssdY = gpuY - 42;
+  drawSSD(ssdX, ssdY, 130, 26, selectedPart === 'SSD');
+
+  // 5. Power Supply & 24-Pin ATX (Far Right)
+  const psuX = mbX + mbW - 140;
+  const psuY = mbY + 40;
+  drawPSU(psuX, psuY, 110, mbH - 80, selectedPart === 'PSU');
+
+  // 6. CPU Cooler Indicator (Overlay over CPU)
+  if (selectedPart === 'COOLER') {
+    drawCoolerAIO(cpuX, cpuY, cpuSize);
+  }
+
+  // Draw Animated Data Packets along Bus Traces
+  if (busAnim) {
+    busTick = (busTick + 2) % 1000;
+    drawDataPackets(cpuX, cpuY, ramX, ramY, gpuX, gpuY, ssdX, ssdY);
+  }
+
+  // Component Tooltip / Inspection Card on Canvas
+  drawInspectOverlay(mbX + 20, mbY + 20);
+
+  if (busAnim) {
+    requestAnimationFrame(drawComputer);
+  }
+}
+
+function drawBusTraces(mbX, mbY, mbW, mbH) {
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+  ctx.lineWidth = 2;
+
+  // CPU to RAM bus lines
+  for (let i = -20; i <= 20; i += 8) {
+    ctx.beginPath();
+    ctx.moveTo(mbX + mbW * 0.28 + 55, mbY + mbH * 0.38 + i);
+    ctx.lineTo(mbX + mbW * 0.28 + 105, mbY + mbH * 0.38 + i);
+    ctx.stroke();
+  }
+
+  // CPU to PCIe bus lines
+  for (let i = -30; i <= 30; i += 12) {
+    ctx.beginPath();
+    ctx.moveTo(mbX + mbW * 0.28 + i, mbY + mbH * 0.38 + 55);
+    ctx.lineTo(mbX + mbW * 0.28 + i, mbY + mbH * 0.38 + 115);
+    ctx.stroke();
+  }
+}
+
+function drawCPU(cx, cy, size, isSelected) {
+  const x = cx - size / 2;
+  const y = cy - size / 2;
+
+  // Socket base
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(x - 10, y - 10, size + 20, size + 20);
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x - 10, y - 10, size + 20, size + 20);
+
+  // CPU Integrated Heat Spreader (IHS) Metal
+  const grad = ctx.createLinearGradient(x, y, x + size, y + size);
+  if (isSelected) {
+    grad.addColorStop(0, '#0284c7');
+    grad.addColorStop(0.5, '#38bdf8');
+    grad.addColorStop(1, '#0369a1');
+  } else {
+    grad.addColorStop(0, '#94a3b8');
+    grad.addColorStop(0.5, '#e2e8f0');
+    grad.addColorStop(1, '#64748b');
+  }
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.roundRect(x, y, size, size, 12);
+  ctx.fill();
+
+  ctx.strokeStyle = isSelected ? '#ffffff': '#334155';
+  ctx.lineWidth = isSelected ? 3 : 1.5;
+  ctx.stroke();
+
+  // Chip Engravings
+  ctx.fillStyle = isSelected ? '#0f172a': '#1e293b';
+  ctx.font = 'bold 14px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('x86-64 CPU', cx, cy - 14);
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText('3.8 - 5.4 GHz', cx, cy + 4);
+  ctx.font = 'bold 10px monospace';
+  ctx.fillText('16 CORES / 32T', cx, cy + 22);
+
+  // Gold Triangle Alignment Corner
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.moveTo(x + 4, y + 4);
+  ctx.lineTo(x + 16, y + 4);
+  ctx.lineTo(x + 4, y + 16);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawRAM(rx, ry, numSlots, isSelected) {
+  const slotW = 16;
+  const slotH = 150;
+  const gap = 8;
+
+  for (let i = 0; i < numSlots; i++) {
+    const x = rx + i * (slotW + gap);
+    const y = ry;
+
+    // Slot retention brackets
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(x - 2, y - 6, slotW + 4, slotH + 12);
+    ctx.strokeStyle = isSelected ? '#34d399': '#1e293b';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x - 2, y - 6, slotW + 4, slotH + 12);
+
+    // RAM Stick PCB & Heatspreader
+    ctx.fillStyle = isSelected ? '#059669': '#1e3a5f';
+    ctx.fillRect(x, y, slotW, slotH);
+
+    // Memory chip modules (IC chips)
+    ctx.fillStyle = '#020617';
+    for (let c = 0; c < 4; c++) {
+      ctx.fillRect(x + 2, y + 14 + c * 32, slotW - 4, 22);
+    }
+
+    // Top RGB / Heatsink fin
+    ctx.fillStyle = isSelected ? '#6ee7b7': '#38bdf8';
+    ctx.fillRect(x, y, slotW, 6);
+  }
+
+  // Label
+  ctx.fillStyle = isSelected ? '#34d399': '#94a3b8';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('DDR5 RAM (4x8GB)', rx + (numSlots * (slotW + gap)) / 2 - 4, ry + slotH + 20);
+}
+
+function drawGPU(gx, gy, gw, gh, isSelected) {
+  // PCIe Slot on Motherboard
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(gx, gy - 12, gw, 14);
+  ctx.strokeStyle = isSelected ? '#c4b5fd': '#334155';
+  ctx.strokeRect(gx, gy - 12, gw, 14);
+
+  // GPU Card Body
+  ctx.fillStyle = isSelected ? '#4c1d95': '#0f172a';
+  ctx.beginPath();
+  ctx.roundRect(gx, gy, gw, gh, 10);
+  ctx.fill();
+  ctx.strokeStyle = isSelected ? '#a78bfa': '#475569';
+  ctx.lineWidth = isSelected ? 3 : 1.5;
+  ctx.stroke();
+
+  // Fans on GPU
+  const fanRadius = 24;
+  const numFans = 3;
+  const fanSpacing = gw / (numFans + 1);
+  for (let i = 1; i <= numFans; i++) {
+    const fx = gx + i * fanSpacing;
+    const fy = gy + gh / 2;
+    ctx.fillStyle = '#020617';
+    ctx.beginPath();
+    ctx.arc(fx, fy, fanRadius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = isSelected ? '#c4b5fd': '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Center hub
+    ctx.fillStyle = isSelected ? '#a78bfa': '#0284c7';
+    ctx.beginPath();
+    ctx.arc(fx, fy, 8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // GPU Label
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('PCIe 4.0 x16 &bull; DISCRETE GPU 16GB GDDR6X', gx + 16, gy + gh - 10);
+}
+
+function drawSSD(sx, sy, sw, sh, isSelected) {
+  // M.2 Standoff & Screw
+  ctx.fillStyle = '#94a3b8';
+  ctx.beginPath();
+  ctx.arc(sx + sw, sy + sh / 2, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // SSD Stick PCB
+  ctx.fillStyle = isSelected ? '#b45309': '#064e3b';
+  ctx.fillRect(sx, sy, sw, sh);
+  ctx.strokeStyle = isSelected ? '#fcd34d': '#34d399';
+  ctx.lineWidth = isSelected ? 2.5 : 1;
+  ctx.strokeRect(sx, sy, sw, sh);
+
+  // NAND Flash & Controller
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(sx + 10, sy + 4, 30, sh - 8);
+  ctx.fillRect(sx + 50, sy + 4, 32, sh - 8);
+  ctx.fillRect(sx + 90, sy + 4, 32, sh - 8);
+
+  ctx.fillStyle = '#fef08a';
+  ctx.font = 'bold 9px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('NVMe M.2 2TB', sx + sw / 2, sy + sh + 12);
+}
+
+function drawPSU(px, py, pw, ph, isSelected) {
+  ctx.fillStyle = isSelected ? '#0369a1': '#020617';
+  ctx.fillRect(px, py, pw, ph);
+  ctx.strokeStyle = isSelected ? '#38bdf8': '#334155';
+  ctx.lineWidth = isSelected ? 2.5 : 1.5;
+  ctx.strokeRect(px, py, pw, ph);
+
+  // Grill mesh pattern
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 1;
+  for (let y = py + 20; y < py + ph - 20; y += 12) {
+    ctx.beginPath();
+    ctx.moveTo(px + 10, y);
+    ctx.lineTo(px + pw - 10, y);
+    ctx.stroke();
+  }
+
+  // Label
+  ctx.fillStyle = '#fde047';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('850W PSU', px + pw / 2, py + ph / 2 - 8);
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 9px sans-serif';
+  ctx.fillText('80+ GOLD', px + pw / 2, py + ph / 2 + 10);
+}
+
+function drawCoolerAIO(cx, cy, size) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(5, 150, 105, 0.4)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#34d399';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Pump ring
+  ctx.strokeStyle = '#a7f3d0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.45, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('LIQUID COOLER PUMP', cx, cy + 4);
+  ctx.restore();
+}
+
+function drawDataPackets(cpuX, cpuY, ramX, ramY, gpuX, gpuY, ssdX, ssdY) {
+  const t = (busTick % 100) / 100;
+
+  // CPU to RAM packet
+  const ramPx = (cpuX + 55) + t * (ramX - (cpuX + 55));
+  ctx.fillStyle = '#38bdf8';
+  ctx.beginPath();
+  ctx.arc(ramPx, cpuY, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // CPU to GPU packet
+  const gpuPy = (cpuY + 55) + t * (gpuY - (cpuY + 55));
+  ctx.fillStyle = '#c4b5fd';
+  ctx.beginPath();
+  ctx.arc(cpuX, gpuPy, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // CPU to SSD packet
+  const ssdPy = (cpuY + 55) + t * (ssdY - (cpuY + 55));
+  ctx.fillStyle = '#fcd34d';
+  ctx.beginPath();
+  ctx.arc(ssdX + 20, ssdPy, 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawInspectOverlay(x, y) {
+  const p = PARTS[selectedPart];
+  ctx.fillStyle = 'rgba(4, 18, 45, 0.85)';
+  ctx.fillRect(x, y, 320, 80);
+  ctx.strokeStyle = p.color;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(x, y, 320, 80);
+
+  ctx.fillStyle = p.accent;
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(p.name, x + 12, y + 22);
+
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = '10px sans-serif';
+  ctx.fillText(p.desc, x + 12, y + 42, 296);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 9px monospace';
+  ctx.fillText(p.specs, x + 12, y + 64, 296);
+}
+
+// FULLSCREEN HANDLER WITH POSTMESSAGE TO PARENT
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().then(() => { resizeCompCanvas(); drawComputer(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeCompCanvas();
+        drawComputer();
+      });
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => { resizeCompCanvas(); drawComputer(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeCompCanvas();
+        drawComputer();
+      });
+    } else {
+      box.classList.add("is-fullscreen");
+      resizeCompCanvas();
+      drawComputer();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove("is-fullscreen");
+  setTimeout(() => { resizeCompCanvas(); drawComputer(); }, 100);
+}
+
+document.addEventListener("fullscreenchange", () => {
+  const box = document.getElementById("simBox26");
+  if (!document.fullscreenElement) {
+    box.classList.remove("is-fullscreen");
+  }
+  setTimeout(() => { resizeCompCanvas(); drawComputer(); }, 100);
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    exitSimFullscreen("simBox26");
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(topicId).classList.add("active");
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest(".card");
+  card.querySelectorAll(".section-tab").forEach(b => b.classList.remove("active"));
+  card.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(panelId).classList.add("active");
+}
+
+// INIT
+resizeCompCanvas();
+inspectPart("CPU");
+drawComputer();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

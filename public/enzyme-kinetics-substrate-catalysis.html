@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enzyme Kinetics & Catalytic Action Lab</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #021a12; font-family: system-ui, -apple-system, sans-serif; color: #f0fdf4; }
+    .sim { display: flex; flex-direction: column; width: 100%; height: 100%; position: relative; }
+    .stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 40% 45%, #064e3b 0%, #022c22 70%, #02130e 100%); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ctl {
+      flex-shrink: 0;
+      width: 100%;
+      background: rgba(2, 26, 18, 0.96);
+      border-top: 1.5px solid rgba(52, 211, 153, 0.45);
+      padding: 10px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(16px);
+      z-index: 20;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+    .row span.lbl { font-size: 11px; font-weight: 800; color: #6ee7b7; text-transform: uppercase; letter-spacing: 0.05em; min-width: 90px; }
+    .btn {
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      color: #fff;
+    }
+    .btn:hover { transform: translateY(-1.5px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .b-enz { background: #065f46; border-color: #10b981; }
+    .b-enz.active { background: #059669; border-color: #6ee7b7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
+    .b-inhibitor { background: #7f1d1d; border-color: #ef4444; }
+    .b-inhibitor.active { background: #b91c1c; border-color: #fca5a5; }
+    .b-reset { background: #374151; border-color: #6b7280; }
+    .b-fs { background: linear-gradient(135deg, #10b981, #06b6d4); border-color: #67e8f9; margin-left: auto; }
+    .slider-box { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: #a7f3d0; }
+    input[type=range] { accent-color: #34d399; width: 110px; cursor: pointer; }
+    .hud { position: absolute; top: 12px; left: 14px; background: rgba(2, 44, 34, 0.88); border: 1px solid rgba(52, 211, 153, 0.4); border-radius: 12px; padding: 10px 14px; font-size: 11px; line-height: 1.5; pointer-events: none; backdrop-filter: blur(8px); }
+    .hud b { color: #6ee7b7; }
+  </style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+  <div class="sim" id="simContainer">
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud">
+        <b>Enzyme Catalysis & Michaelis-Menten Kinetics</b><br/>
+        Enzyme + Substrate &harr; ES Complex &rarr; Enzyme + Products<br/>
+        Velocity: <span id="hudV" style="color:#fde047; font-weight:900;">0.84 &mu;mol/s</span> |
+        Active Enzyme: <span id="hudState" style="color:#34d399; font-weight:900;">Active Conformation</span><br/>
+        Products Formed: <span id="hudProd" style="color:#67e8f9; font-weight:900;">0</span>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="row">
+        <span class="lbl">Enzyme Model</span>
+        <button class="btn b-enz active" id="btnAmy" onclick="setEnzyme('Amylase')">🥖 Salivary Amylase</button>
+        <button class="btn b-enz" id="btnCat" onclick="setEnzyme('Catalase')">🧪 Liver Catalase</button>
+        <button class="btn b-enz" id="btnPep" onclick="setEnzyme('Pepsin')">🥩 Stomach Pepsin</button>
+        <button class="btn b-inhibitor" id="btnInhib" onclick="toggleInhibitor()">🚫 Competitive Inhibitor: OFF</button>
+        <button class="btn b-reset" onclick="resetSim()">⟳ Reset Reaction</button>
+        <button class="btn b-fs" id="bFs" onclick="toggleFs()">⛶ Full Screen</button>
+      </div>
+      <div class="row">
+        <span class="lbl">Kinetics</span>
+        <div class="slider-box">
+          [S] Substrate Conc:
+          <input type="range" id="rngS" min="10" max="150" value="60" oninput="updateVars()" />
+          <span id="valS">60 mM</span>
+        </div>
+        <div class="slider-box">
+          Temp (&deg;C):
+          <input type="range" id="rngTemp" min="5" max="75" value="37" oninput="updateVars()" />
+          <span id="valTemp">37&deg;C (Body Temp)</span>
+        </div>
+        <div class="slider-box">
+          pH Level:
+          <input type="range" id="rngPH" min="1" max="12" step="0.5" value="7.0" oninput="updateVars()" />
+          <span id="valPH">pH 7.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cv = document.getElementById('cv');
+    const ctx = cv.getContext('2d');
+    let width, height;
+    let enzymeName = 'Amylase';
+    let optPH = 7.0, optTemp = 37.0;
+    let subConc = 60, tempC = 37, pH = 7.0;
+    let hasInhibitor = false;
+    let productCount = 0;
+    let t = 0;
+
+    const substrates = [];
+    const products = [];
+    const inhibitors = [];
+
+    function resize() {
+      const rect = cv.parentElement.getBoundingClientRect();
+      width = cv.width = rect.width * (window.devicePixelRatio || 1);
+      height = cv.height = rect.height * (window.devicePixelRatio || 1);
+      spawnSubstrates();
+    }
+    window.addEventListener('resize', resize);
+
+    function setEnzyme(name) {
+      enzymeName = name;
+      if (name === 'Amylase') { optPH = 7.0; optTemp = 37.0; }
+      else if (name === 'Catalase') { optPH = 7.4; optTemp = 37.0; }
+      else if (name === 'Pepsin') { optPH = 2.0; optTemp = 37.0; }
+      document.getElementById('btnAmy').classList.toggle('active', name === 'Amylase');
+      document.getElementById('btnCat').classList.toggle('active', name === 'Catalase');
+      document.getElementById('btnPep').classList.toggle('active', name === 'Pepsin');
+      updateVars();
+    }
+
+    function toggleInhibitor() {
+      hasInhibitor = !hasInhibitor;
+      const b = document.getElementById('btnInhib');
+      b.classList.toggle('active', hasInhibitor);
+      b.textContent = hasInhibitor ? '🚫 Competitive Inhibitor: ACTIVE' : '🚫 Competitive Inhibitor: OFF';
+      spawnSubstrates();
+    }
+
+    function calcVelocity() {
+      // Temperature factor (denatures past 48C)
+      let tempFactor = 1.0;
+      if (tempC <= optTemp) {
+        tempFactor = Math.pow(2, (tempC - optTemp) / 10);
+      } else {
+        tempFactor = Math.max(0, 1.0 - (tempC - optTemp) / 18);
+      }
+
+      // pH bell curve
+      const pHDist = Math.abs(pH - optPH);
+      const pHFactor = Math.max(0, 1.0 - Math.pow(pHDist / 3.0, 2));
+
+      // Michaelis-Menten v = (Vmax * [S]) / (Km + [S])
+      const Vmax = 2.4;
+      const Km = hasInhibitor ? 90 : 35; // competitive inhibitor increases Km
+      const v = (Vmax * subConc) / (Km + subConc) * tempFactor * pHFactor;
+      return Math.max(0, v);
+    }
+
+    function spawnSubstrates() {
+      substrates.length = 0;
+      for (let i = 0; i < subConc; i++) {
+        substrates.push({
+          x: Math.random() * width * 0.55 + width * 0.05,
+          y: Math.random() * height * 0.75 + height * 0.12,
+          vx: (Math.random() - 0.5) * 3,
+          vy: (Math.random() - 0.5) * 3
+        });
+      }
+      inhibitors.length = 0;
+      if (hasInhibitor) {
+        for (let i = 0; i < 30; i++) {
+          inhibitors.push({
+            x: Math.random() * width * 0.55 + width * 0.05,
+            y: Math.random() * height * 0.75 + height * 0.12,
+            vx: (Math.random() - 0.5) * 3,
+            vy: (Math.random() - 0.5) * 3
+          });
+        }
+      }
+    }
+
+    function updateVars() {
+      subConc = parseInt(document.getElementById('rngS').value);
+      tempC = parseFloat(document.getElementById('rngTemp').value);
+      pH = parseFloat(document.getElementById('rngPH').value);
+      document.getElementById('valS').textContent = subConc + ' mM';
+      document.getElementById('valTemp').textContent = `${tempC}°C`;
+      document.getElementById('valPH').textContent = `pH ${pH.toFixed(1)}`;
+      const v = calcVelocity();
+      document.getElementById('hudV').textContent = v.toFixed(2) + ' μmol/s';
+      document.getElementById('hudState').textContent = (tempC > 52) ? 'Denatured (Inactive)' : (v > 0.1 ? 'Active Conformation' : 'Inhibited / Sub-optimal');
+      document.getElementById('hudState').style.color = (tempC > 52) ? '#ef4444' : '#34d399';
+    }
+
+    function resetSim() {
+      document.getElementById('rngS').value = 60;
+      document.getElementById('rngTemp').value = 37;
+      document.getElementById('rngPH').value = 7.0;
+      hasInhibitor = false;
+      document.getElementById('btnInhib').classList.remove('active');
+      document.getElementById('btnInhib').textContent = '🚫 Competitive Inhibitor: OFF';
+      productCount = 0;
+      document.getElementById('hudProd').textContent = '0';
+      setEnzyme('Amylase');
+      updateVars();
+      spawnSubstrates();
+    }
+
+    function loop() {
+      t += 0.03;
+      ctx.clearRect(0, 0, width, height);
+      const v = calcVelocity();
+
+      const enzX = width * 0.32;
+      const enzY = height * 0.50;
+      const isDenatured = tempC > 52;
+
+      // Draw Giant Enzyme Molecule in Center
+      ctx.save();
+      ctx.translate(enzX, enzY);
+      if (isDenatured) {
+        // Distorted denatured blob
+        ctx.fillStyle = '#475569';
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 95 + Math.sin(t*8)*10, 50 + Math.cos(t*8)*8, Math.sin(t)*0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        // Healthy globular 3D enzyme with Active Site Pocket
+        const gradEnz = ctx.createRadialGradient(-20, -20, 10, 0, 0, 110);
+        gradEnz.addColorStop(0, '#34d399');
+        gradEnz.addColorStop(0.6, '#059669');
+        gradEnz.addColorStop(1, '#022c22');
+        ctx.fillStyle = gradEnz;
+        ctx.strokeStyle = '#6ee7b7';
+        ctx.lineWidth = 3.5;
+
+        // Globular boundary with concave active site notch at top
+        ctx.beginPath();
+        ctx.arc(0, 20, 85, 0.25 * Math.PI, 0.75 * Math.PI, true);
+        ctx.arc(0, -35, 30, Math.PI, 0, false); // Active Site Pocket
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText(enzymeName, 0, 35);
+        ctx.font = '10px system-ui';
+        ctx.fillStyle = '#a7f3d0';
+        ctx.fillText('Active Site Pocket', 0, -42);
+      }
+      ctx.restore();
+
+      // Update & Draw Substrate Molecules (Triangles)
+      ctx.fillStyle = '#f59e0b';
+      ctx.strokeStyle = '#fde68a';
+      ctx.lineWidth = 1.5;
+      substrates.forEach(s => {
+        s.x += s.vx * (tempC / 30);
+        s.y += s.vy * (tempC / 30);
+        if (s.x < width * 0.05 || s.x > width * 0.60) s.vx *= -1;
+        if (s.y < height * 0.10 || s.y > height * 0.88) s.vy *= -1;
+
+        // Collision with Active site
+        const dist = Math.hypot(s.x - enzX, s.y - (enzY - 35));
+        if (dist < 32 && !isDenatured && v > 0.05) {
+          // Catalyzed into 2 products
+          s.x = width * 0.08 + Math.random() * 50;
+          products.push({ x: enzX, y: enzY - 35, vx: (Math.random() - 0.5) * 5, vy: -Math.random() * 5 - 2 });
+          productCount++;
+          document.getElementById('hudProd').textContent = productCount;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y - 7);
+        ctx.lineTo(s.x + 7, s.y + 7);
+        ctx.lineTo(s.x - 7, s.y + 7);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      // Inhibitors (Red squares blocking active site)
+      if (hasInhibitor) {
+        ctx.fillStyle = '#ef4444';
+        ctx.strokeStyle = '#fca5a5';
+        inhibitors.forEach(inh => {
+          inh.x += inh.vx;
+          inh.y += inh.vy;
+          if (inh.x < width * 0.05 || inh.x > width * 0.60) inh.vx *= -1;
+          if (inh.y < height * 0.10 || inh.y > height * 0.88) inh.vy *= -1;
+          ctx.fillRect(inh.x - 6, inh.y - 6, 12, 12);
+          ctx.strokeRect(inh.x - 6, inh.y - 6, 12, 12);
+        });
+      }
+
+      // Products (Cyan circles emerging)
+      ctx.fillStyle = '#38bdf8';
+      for (let i = products.length - 1; i >= 0; i--) {
+        const p = products[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        if (p.y < 0 || p.x > width) products.splice(i, 1);
+      }
+
+      // Michaelis-Menten Graph on Right Screen
+      const gX = width * 0.66;
+      const gY = height * 0.18;
+      const gW = width * 0.28;
+      const gH = height * 0.64;
+
+      ctx.fillStyle = 'rgba(2, 44, 34, 0.85)';
+      ctx.fillRect(gX, gY, gW, gH);
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(gX, gY, gW, gH);
+
+      // Axes
+      ctx.strokeStyle = '#6ee7b7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(gX + 35, gY + 20);
+      ctx.lineTo(gX + 35, gY + gH - 35);
+      ctx.lineTo(gX + gW - 15, gY + gH - 35);
+      ctx.stroke();
+
+      ctx.fillStyle = '#a7f3d0';
+      ctx.font = 'bold 10px system-ui';
+      ctx.fillText('v (Rate)', gX + 10, gY + 18);
+      ctx.fillText('[S] Substrate Conc', gX + gW - 100, gY + gH - 15);
+
+      // Plot Michaelis-Menten hyperbolic curve
+      ctx.strokeStyle = hasInhibitor ? '#f87171' : '#34d399';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let s = 0; s <= 150; s += 2) {
+        const curKm = hasInhibitor ? 90 : 35;
+        const curRate = (2.4 * s) / (curKm + s);
+        const px = gX + 35 + (s / 150) * (gW - 55);
+        const py = (gY + gH - 35) - (curRate / 2.6) * (gH - 60);
+        if (s === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Current operating point on curve
+      const ptX = gX + 35 + (subConc / 150) * (gW - 55);
+      const curKm = hasInhibitor ? 90 : 35;
+      const curRate = (2.4 * subConc) / (curKm + subConc);
+      const ptY = (gY + gH - 35) - (curRate / 2.6) * (gH - 60);
+
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(ptX, ptY, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+
+      requestAnimationFrame(loop);
+    }
+
+    function toggleFs() {
+      const container = document.getElementById('simContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '✕ Exit full screen';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        document.getElementById('bFs').innerHTML = '⛶ Full Screen';
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      document.getElementById('bFs').innerHTML = isFs ? '✕ Exit full screen' : '⛶ Full Screen';
+      setTimeout(resize, 100);
+    });
+
+    resize();
+    updateVars();
+    requestAnimationFrame(loop);
+  </script>
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Harmonic Motion & Pendulum Energy Conservation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #071330 0%, #030712 100%);
+      color: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    header {
+      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .title-box { display: flex; align-items: center; gap: 10px; }
+    .badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    h1 { font-size: 16px; font-weight: 800; color: #e0f2fe; }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #94a3b8;
+    }
+    .stats-bar span b { color: #38bdf8; }
+    .main-stage {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    canvas:active { cursor: grabbing; }
+    .side-metrics {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 220px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .energy-bar-wrap {
+      margin-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+    }
+    .ebar-label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; margin-bottom: 2px; }
+    .ebar-bg { height: 7px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
+    .ebar-fill { height: 100%; border-radius: 4px; transition: width 0.05s linear; }
+    .dock {
+      padding: 10px 16px;
+      background: rgba(10, 18, 38, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(56, 189, 248, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ctrl-group label { color: #94a3b8; font-size: 11px; }
+    input[type="range"] {
+      width: 80px;
+      accent-color: #38bdf8;
+      cursor: pointer;
+    }
+    .btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.15); }
+    .btn:active { transform: translateY(1px); }
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.85);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #cbd5e1;
+      box-shadow: none;
+    }
+    select {
+      background: #0f172a;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+  </style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="title-box">
+      <span class="badge">LAB 42</span>
+      <h1>Simple Harmonic Motion & Pendulum Conservation</h1>
+    </div>
+    <div class="stats-bar">
+      <span>θ: <b id="statAngle">0.0°</b></span>
+      <span>ω: <b id="statOmega">0.00 rad/s</b></span>
+      <span>Period (T): <b id="statPeriod">1.42 s</b></span>
+      <span>Total E: <b id="statEnergy">14.7 J</b></span>
+    </div>
+  </header>
+
+  <div class="main-stage">
+    <canvas id="simCanvas"></canvas>
+    
+    <div class="side-metrics">
+      <div style="font-size: 11px; font-weight: 800; color: #38bdf8; margin-bottom: 8px; text-transform: uppercase;">
+        ⚡ Live Energy Monitor
+      </div>
+      <div class="energy-bar-wrap">
+        <div class="ebar-label"><span style="color: #4ade80;">Kinetic (Ek)</span><span id="txtEk">0.0 J</span></div>
+        <div class="ebar-bg"><div class="ebar-fill" id="barEk" style="background: #22c55e; width: 0%;"></div></div>
+
+        <div class="ebar-label"><span style="color: #60a5fa;">Potential (Ep)</span><span id="txtEp">0.0 J</span></div>
+        <div class="ebar-bg"><div class="ebar-fill" id="barEp" style="background: #3b82f6; width: 0%;"></div></div>
+
+        <div class="ebar-label"><span style="color: #facc15;">Mechanical (Et)</span><span id="txtEt">0.0 J</span></div>
+        <div class="ebar-bg"><div class="ebar-fill" id="barEt" style="background: #eab308; width: 100%;"></div></div>
+      </div>
+      <div style="margin-top: 10px; font-size: 10px; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px;">
+        💡 Click and drag the glowing bob to release at any angle!
+      </div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <button class="btn" id="btnPlayPause">⏸ Pause</button>
+    <button class="btn btn-secondary" id="btnReset">⟳ Reset Angle</button>
+
+    <div class="ctrl-group">
+      <label>Length (L):</label>
+      <input type="range" id="rngLength" min="0.5" max="2.0" step="0.1" value="1.2">
+      <span id="lblLength" style="color:#38bdf8;">1.2m</span>
+    </div>
+
+    <div class="ctrl-group">
+      <label>Mass (m):</label>
+      <input type="range" id="rngMass" min="0.5" max="5.0" step="0.5" value="1.5">
+      <span id="lblMass" style="color:#38bdf8;">1.5kg</span>
+    </div>
+
+    <div class="ctrl-group">
+      <label>Gravity:</label>
+      <select id="selGravity">
+        <option value="9.8">Earth (9.8 m/s²)</option>
+        <option value="1.62">Moon (1.62 m/s²)</option>
+        <option value="3.71">Mars (3.71 m/s²)</option>
+        <option value="24.79">Jupiter (24.79 m/s²)</option>
+        <option value="0">Zero-G (0.0 m/s²)</option>
+      </select>
+    </div>
+
+    <div class="ctrl-group">
+      <label>Friction:</label>
+      <input type="range" id="rngDamping" min="0" max="0.15" step="0.01" value="0.01">
+      <span id="lblDamping" style="color:#38bdf8;">Low</span>
+    </div>
+
+    <button class="btn btn-secondary" id="btnVectors">Vectors: ON</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let isPlaying = true;
+    let showVectors = true;
+    let lengthMeters = 1.2;
+    let massKg = 1.5;
+    let gravity = 9.8;
+    let damping = 0.01;
+
+    let angle = Math.PI / 4; // 45 deg
+    let angularVel = 0;
+    let angularAcc = 0;
+
+    let isDragging = false;
+    let originX = 0;
+    let originY = 60;
+    let pixelScale = 160;
+
+    const trail = [];
+
+    function resize() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      originX = canvas.width / 2;
+      originY = Math.max(50, canvas.height * 0.12);
+      pixelScale = Math.min(canvas.width, canvas.height) * 0.38;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function getBobPos() {
+      const armLength = lengthMeters * pixelScale;
+      return {
+        x: originX + armLength * Math.sin(angle),
+        y: originY + armLength * Math.cos(angle)
+      };
+    }
+
+    // Pointer events for dragging
+    canvas.addEventListener('pointerdown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const bob = getBobPos();
+      const dist = Math.hypot(mx - bob.x, my - bob.y);
+      if (dist < 35) {
+        isDragging = true;
+        angularVel = 0;
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      angle = Math.atan2(mx - originX, my - originY);
+      angularVel = 0;
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDragging = false;
+    });
+
+    // Controls
+    document.getElementById('btnPlayPause').addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      document.getElementById('btnPlayPause').textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      angle = Math.PI / 4;
+      angularVel = 0;
+      angularAcc = 0;
+      trail.length = 0;
+    });
+
+    document.getElementById('rngLength').addEventListener('input', (e) => {
+      lengthMeters = parseFloat(e.target.value);
+      document.getElementById('lblLength').textContent = lengthMeters.toFixed(1) + 'm';
+    });
+
+    document.getElementById('rngMass').addEventListener('input', (e) => {
+      massKg = parseFloat(e.target.value);
+      document.getElementById('lblMass').textContent = massKg.toFixed(1) + 'kg';
+    });
+
+    document.getElementById('selGravity').addEventListener('change', (e) => {
+      gravity = parseFloat(e.target.value);
+    });
+
+    document.getElementById('rngDamping').addEventListener('input', (e) => {
+      damping = parseFloat(e.target.value);
+      document.getElementById('lblDamping').textContent = damping === 0 ? 'None' : (damping > 0.06 ? 'High' : 'Low');
+    });
+
+    document.getElementById('btnVectors').addEventListener('click', () => {
+      showVectors = !showVectors;
+      document.getElementById('btnVectors').textContent = showVectors ? 'Vectors: ON' : 'Vectors: OFF';
+    });
+
+    let lastTime = performance.now();
+
+    function loop(now) {
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      if (isPlaying && !isDragging) {
+        // Physics integration (Euler-Cromer)
+        angularAcc = -(gravity / lengthMeters) * Math.sin(angle) - damping * angularVel;
+        angularVel += angularAcc * dt;
+        angle += angularVel * dt;
+      }
+
+      const bob = getBobPos();
+
+      // Energy calculations
+      const armLength = lengthMeters;
+      const h = armLength * (1 - Math.cos(angle));
+      const v = armLength * angularVel;
+      const Ep = massKg * gravity * h;
+      const Ek = 0.5 * massKg * v * v;
+      const Et = Ep + Ek;
+
+      // Update UI stats
+      document.getElementById('statAngle').textContent = (angle * 180 / Math.PI).toFixed(1) + '°';
+      document.getElementById('statOmega').textContent = angularVel.toFixed(2) + ' rad/s';
+      const period = gravity > 0 ? (2 * Math.PI * Math.sqrt(lengthMeters / gravity)).toFixed(2) + ' s' : '∞';
+      document.getElementById('statPeriod').textContent = period;
+      document.getElementById('statEnergy').textContent = Et.toFixed(1) + ' J';
+
+      document.getElementById('txtEk').textContent = Ek.toFixed(1) + ' J';
+      document.getElementById('txtEp').textContent = Ep.toFixed(1) + ' J';
+      document.getElementById('txtEt').textContent = Et.toFixed(1) + ' J';
+
+      const maxE = Math.max(Et, 10);
+      document.getElementById('barEk').style.width = Math.min(100, (Ek / maxE) * 100) + '%';
+      document.getElementById('barEp').style.width = Math.min(100, (Ep / maxE) * 100) + '%';
+
+      // Record trail
+      trail.push({ x: bob.x, y: bob.y, age: 1.0 });
+      if (trail.length > 50) trail.shift();
+      trail.forEach(t => t.age -= 0.02);
+
+      // Render
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw subtle background grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      // Draw equilibrium vertical guide
+      ctx.save();
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.lineTo(originX, originY + lengthMeters * pixelScale + 30);
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw Angle Arc
+      if (Math.abs(angle) > 0.05) {
+        ctx.beginPath();
+        const arcRadius = 50;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.arc(originX, originY, arcRadius, Math.PI / 2, Math.PI / 2 + angle, angle < 0);
+        ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(`${(angle * 180 / Math.PI).toFixed(0)}°`, originX + (angle > 0 ? 25 : -40), originY + 60);
+      }
+
+      // Draw Trail
+      ctx.beginPath();
+      for (let i = 0; i < trail.length; i++) {
+        const pt = trail[i];
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Draw Pendulum Rod
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.lineTo(bob.x, bob.y);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Draw Pivot Mount
+      ctx.fillStyle = '#334155';
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(originX, originY, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw Bob Glow
+      const bobRadius = 14 + massKg * 3.5;
+      const grad = ctx.createRadialGradient(bob.x, bob.y, 2, bob.x, bob.y, bobRadius);
+      grad.addColorStop(0, '#67e8f9');
+      grad.addColorStop(0.4, '#0284c7');
+      grad.addColorStop(1, '#0c4a6e');
+
+      ctx.save();
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(bob.x, bob.y, bobRadius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.strokeStyle = '#e0f2fe';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+
+      // Vectors (Force and Velocity)
+      if (showVectors) {
+        // Velocity Vector (Green)
+        const vScale = 22;
+        const vx = -Math.cos(angle) * (v * vScale);
+        const vy = Math.sin(angle) * (v * vScale);
+        drawArrow(bob.x, bob.y, bob.x + vx, bob.y + vy, '#22c55e', 'v');
+
+        // Gravity Force mg (Red)
+        const gScale = 3.5;
+        drawArrow(bob.x, bob.y, bob.x, bob.y + gravity * gScale, '#ef4444', 'mg');
+
+        // Tension Force T (Cyan)
+        const tensionMag = (massKg * gravity * Math.cos(angle) + massKg * (v * v) / lengthMeters) * 1.5;
+        const tx = -Math.sin(angle) * tensionMag;
+        const ty = -Math.cos(angle) * tensionMag;
+        drawArrow(bob.x, bob.y, bob.x + tx, bob.y + ty, '#38bdf8', 'T');
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    function drawArrow(x1, y1, x2, y2, color, label) {
+      const headLen = 8;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.hypot(dx, dy);
+      if (len < 5) return;
+      const angle = Math.atan2(dy, dx);
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+
+      if (label) {
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(label, x2 + 6, y2 + 4);
+      }
+      ctx.restore();
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

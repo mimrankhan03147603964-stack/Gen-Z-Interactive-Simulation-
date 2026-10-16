@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keyboard Shortcuts & System Hotkeys Interactive Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #090317;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #170b33;
+  border: 1.5px solid #7c3aed;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #c4b5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(124, 58, 237, 0.2);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #1f0d3d 0%, #0e051d 100%);
+  border: 1.5px solid #7c3aed;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #c4b5fd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #a78bfa;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(167, 139, 250, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #5b21b6;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #1e1038;
+  color: #ddd6fe;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #7c3aed;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #ffffff;
+  border-color: #a78bfa;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(35, 15, 65, 0.5);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #a78bfa;
+  border-top: 1px solid #5b21b6;
+  border-right: 1px solid #5b21b6;
+  border-bottom: 1px solid #5b21b6;
+}
+.grid-item h4 { font-size: 1rem; color: #c4b5fd; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #0f0724;
+  border: 1.5px solid #7c3aed;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #a78bfa;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #170b33;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #5b21b6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-purple { background: #7c3aed; color: #fff; border-color: #a78bfa; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+
+/* VIRTUAL KEYBOARD STYLING */
+.keyboard-layout {
+  background: #080314;
+  border: 2px solid #5b21b6;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: inset 0 4px 16px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.5);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.kb-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  justify-content: center;
+  min-width: 900px;
+}
+.key {
+  height: 48px;
+  min-width: 44px;
+  padding: 4px 8px;
+  background: #180d30;
+  border: 1.5px solid #3b1d6e;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 #0c051a, 0 5px 8px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+.key:hover {
+  background: #28164d;
+  border-color: #7c3aed;
+  transform: translateY(-1px);
+}
+.key:active, .key.pressed {
+  background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+  color: #ffffff;
+  border-color: #c4b5fd;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0c051a, 0 0 12px rgba(167, 139, 250, 0.8);
+}
+.key.modifier {
+  background: #120924;
+  color: #a78bfa;
+  font-weight: 800;
+}
+.key.key-wide { min-width: 70px; }
+.key.key-wider { min-width: 95px; }
+.key.key-space { min-width: 320px; }
+
+/* SHORTCUT DISPLAY CARD */
+.shortcut-hero {
+  background: linear-gradient(135deg, #1c0b3d 0%, #100624 100%);
+  border: 1.5px solid #7c3aed;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.shortcut-tag {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.badge-key {
+  background: #2a1354;
+  border: 1.5px solid #a78bfa;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #170b33;
+  border: 1.5px solid #5b21b6;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #c4b5fd;
+}
+.readout-pill {
+  background: #0d051e;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #5b21b6;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #080314 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  padding-bottom: 8px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .keyboard-layout,
+.sim-box:fullscreen .keyboard-layout,
+.sim-box:-webkit-full-screen .keyboard-layout {
+  flex: 1 !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(23, 11, 51, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #a78bfa !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(167, 139, 250, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-shortcuts', this)">
+      <span>⌨️</span> Interactive Keyboard & Shortcut Explorer
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-os', this)">
+      <span>🪟</span> Windows & Mac OS Productivity Shortcuts
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-app', this)">
+      <span>📄</span> Office, Browser & Code Editor Shortcuts
+    </button>
+  </div>
+
+  <!-- TAB 1: KEYBOARD INTERACTIVE LAB -->
+  <div id="topic-shortcuts" class="tab-content active">
+
+    <!-- STEP 2: DEFINITION & EXPLANATION CARD -->
+    <div class="card">
+      <h2>
+        Computer Keyboard Shortcuts & System Hotkeys
+        <small>Computer Science &bull; Ergonomics &bull; Rapid Workflow Automation</small>
+      </h2>
+      <p class="desc">
+        A keyboard shortcut is a key or combination of keys (using modifiers like Ctrl, Alt, Shift, and Win/Cmd) providing quick access to software functions otherwise reachable only through nested mouse menus, increasing user productivity up to 10-fold.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'k-edit')">Editing Shortcuts (Ctrl+C, V, Z)</button>
+        <button class="section-tab" onclick="switchSection(this, 'k-nav')">Navigation & Tabs (Alt+Tab, Ctrl+T)</button>
+        <button class="section-tab" onclick="switchSection(this, 'k-sys')">System Commands (Win+L, Ctrl+Shift+Esc)</button>
+        <button class="section-tab" onclick="switchSection(this, 'k-format')">Formatting & Text Manipulation</button>
+      </div>
+
+      <div id="k-edit" class="panel active">
+        <h3>Universal Clipboard & History Operations</h3>
+        <p>Essential across all word processors, file managers, code editors, and browsers:</p>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Ctrl + C / Ctrl + X</h4>
+            <p>Copy selection to clipboard memory or cut (remove and copy) active content.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Ctrl + V</h4>
+            <p>Paste buffer contents into the current insertion cursor position.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Ctrl + Z / Ctrl + Y</h4>
+            <p>Undo last buffer mutation or redo previous reverted operation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="k-nav" class="panel">
+        <h3>Multitasking & Window Management</h3>
+        <ul>
+          <li><strong>Alt + Tab:</strong> Task Switcher - cycle through active application windows.</li>
+          <li><strong>Win + D:</strong> Show Desktop - minimize/restore all open application windows immediately.</li>
+          <li><strong>Ctrl + W:</strong> Close active browser tab or document without terminating application.</li>
+        </ul>
+      </div>
+
+      <div id="k-sys" class="panel">
+        <h3>Operating System Diagnostic Hotkeys</h3>
+        <ul>
+          <li><strong>Ctrl + Shift + Esc:</strong> Directly launches Windows Task Manager.</li>
+          <li><strong>Win + L:</strong> Immediately locks the workstation and protects user session.</li>
+          <li><strong>Win + Shift + S:</strong> Launches interactive Snipping Tool for region screenshot captures.</li>
+        </ul>
+      </div>
+
+      <div id="k-format" class="panel">
+        <h3>Typography & Document Formatting</h3>
+        <ul>
+          <li><strong>Ctrl + B:</strong> Toggle Bold emphasis on selected text.</li>
+          <li><strong>Ctrl + I:</strong> Toggle Italic font slant.</li>
+          <li><strong>Ctrl + U:</strong> Toggle Underline decoration.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 3: INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox27">
+
+
+
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn27" onclick="toggleSimFullscreen('simBox27')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          <span style="font-size:0.8rem; font-weight:800; color:#c4b5fd;">Quick Presets:</span>
+          <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'C', 'Copy Selected Text/Files')">Ctrl + C</button>
+          <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'V', 'Paste from Clipboard')">Ctrl + V</button>
+          <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'Z', 'Undo Last Action')">Ctrl + Z</button>
+          <button class="ctrl-btn btn-emerald" onclick="playShortcut('Ctrl', 'S', 'Save Active Document')">Ctrl + S</button>
+          <button class="ctrl-btn btn-emerald" onclick="playShortcut('Ctrl', 'A', 'Select All Items')">Ctrl + A</button>
+          <button class="ctrl-btn btn-sky" onclick="playShortcut('Alt', 'Tab', 'Switch Open Windows')">Alt + Tab</button>
+          <button class="ctrl-btn btn-amber" onclick="playShortcut('Win', 'D', 'Show / Hide Desktop')">Win + D</button>
+          <button class="ctrl-btn btn-rose" onclick="clearKeys()">↺ Reset Keys</button>
+        </div>
+      </div>
+
+      <!-- SHORTCUT HERO BANNER -->
+      <div class="shortcut-hero">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider" style="color:#a78bfa;">Active Triggered Shortcut:</span>
+          <div class="shortcut-tag mt-1" id="activeKeyCombo">
+            <span class="badge-key">Ctrl</span>
+            <span style="font-size:1.2rem; font-weight:900; color:#c4b5fd;">+</span>
+            <span class="badge-key">C</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-black uppercase tracking-wider" style="color:#34d399;">Action & Function:</span>
+          <div style="font-size:1.15rem; font-weight:900; color:#ffffff;" id="activeActionDesc">Copy Selected Text or Item to Clipboard</div>
+        </div>
+      </div>
+
+      <!-- VIRTUAL KEYBOARD -->
+      <div class="keyboard-layout mt-4" id="virtualKb">
+        <!-- Row 1: Function Keys -->
+        <div class="kb-row">
+          <div class="key modifier" data-key="Escape">Esc</div>
+          <div class="key" data-key="F1">F1</div>
+          <div class="key" data-key="F2">F2</div>
+          <div class="key" data-key="F3">F3</div>
+          <div class="key" data-key="F4">F4</div>
+          <div class="key" data-key="F5">F5</div>
+          <div class="key" data-key="F6">F6</div>
+          <div class="key" data-key="F7">F7</div>
+          <div class="key" data-key="F8">F8</div>
+          <div class="key" data-key="F9">F9</div>
+          <div class="key" data-key="F10">F10</div>
+          <div class="key" data-key="F11">F11</div>
+          <div class="key" data-key="F12">F12</div>
+        </div>
+
+        <!-- Row 2: Numbers -->
+        <div class="kb-row">
+          <div class="key" data-key="`">` ~</div>
+          <div class="key" data-key="1">1 !</div>
+          <div class="key" data-key="2">2 @</div>
+          <div class="key" data-key="3">3 #</div>
+          <div class="key" data-key="4">4 $</div>
+          <div class="key" data-key="5">5 %</div>
+          <div class="key" data-key="6">6 ^</div>
+          <div class="key" data-key="7">7 &</div>
+          <div class="key" data-key="8">8 *</div>
+          <div class="key" data-key="9">9 (</div>
+          <div class="key" data-key="0">0 )</div>
+          <div class="key" data-key="-">- _</div>
+          <div class="key" data-key="=">= +</div>
+          <div class="key key-wide modifier" data-key="Backspace">⌫ Backspace</div>
+        </div>
+
+        <!-- Row 3: QWERTY -->
+        <div class="kb-row">
+          <div class="key key-wide modifier" data-key="Tab">⇥ Tab</div>
+          <div class="key" data-key="Q">Q</div>
+          <div class="key" data-key="W">W</div>
+          <div class="key" data-key="E">E</div>
+          <div class="key" data-key="R">R</div>
+          <div class="key" data-key="T">T</div>
+          <div class="key" data-key="Y">Y</div>
+          <div class="key" data-key="U">U</div>
+          <div class="key" data-key="I">I</div>
+          <div class="key" data-key="O">O</div>
+          <div class="key" data-key="P">P</div>
+          <div class="key" data-key="[">[ {</div>
+          <div class="key" data-key="]">] }</div>
+          <div class="key" data-key="\\">\\ |</div>
+        </div>
+
+        <!-- Row 4: ASDF -->
+        <div class="kb-row">
+          <div class="key key-wider modifier" data-key="CapsLock">Caps Lock</div>
+          <div class="key" data-key="A">A</div>
+          <div class="key" data-key="S">S</div>
+          <div class="key" data-key="D">D</div>
+          <div class="key" data-key="F">F</div>
+          <div class="key" data-key="G">G</div>
+          <div class="key" data-key="H">H</div>
+          <div class="key" data-key="J">J</div>
+          <div class="key" data-key="K">K</div>
+          <div class="key" data-key="L">L</div>
+          <div class="key" data-key=";">; :</div>
+          <div class="key" data-key="'">' "</div>
+          <div class="key key-wider modifier" data-key="Enter" style="background:#4338ca;">↵ Enter</div>
+        </div>
+
+        <!-- Row 5: ZXCV -->
+        <div class="kb-row">
+          <div class="key key-wider modifier" data-key="Shift">⇧ Shift</div>
+          <div class="key" data-key="Z">Z</div>
+          <div class="key" data-key="X">X</div>
+          <div class="key" data-key="C">C</div>
+          <div class="key" data-key="V">V</div>
+          <div class="key" data-key="B">B</div>
+          <div class="key" data-key="N">N</div>
+          <div class="key" data-key="M">M</div>
+          <div class="key" data-key=",">, <</div>
+          <div class="key" data-key=".">. ></div>
+          <div class="key" data-key="/">/ ?</div>
+          <div class="key key-wider modifier" data-key="ShiftRight">⇧ Shift</div>
+        </div>
+
+        <!-- Row 6: Space & Modifiers -->
+        <div class="kb-row">
+          <div class="key modifier key-wide" data-key="Ctrl" id="kCtrl">Ctrl</div>
+          <div class="key modifier" data-key="Win" id="kWin">⊞ Win</div>
+          <div class="key modifier" data-key="Alt" id="kAlt">Alt</div>
+          <div class="key key-space" data-key="Space">Space Bar</div>
+          <div class="key modifier" data-key="AltRight">Alt</div>
+          <div class="key modifier" data-key="Fn">Fn</div>
+          <div class="key modifier key-wide" data-key="CtrlRight">Ctrl</div>
+        </div>
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="livePressedCount">Active Pressed Keys: 0</span>
+        <span class="readout-pill" id="liveCategoryTag">Classification: Global System Hotkey</span>
+        <span class="readout-pill" id="liveKeystrokeSpeed" style="color:#34d399">Real-Time Keyboard Polling: 1000 Hz</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Press any physical keys on your physical laptop keyboard or click the interactive virtual keys above! Watch the virtual switches animate with mechanical key-travel and observe the educational action feedback explaining what that combination accomplishes across Windows, Mac, Linux, Word, Excel, and Browsers!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar27">
+        <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'C', 'Copy')"><span>Ctrl + C</span></button>
+        <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'V', 'Paste')"><span>Ctrl + V</span></button>
+        <button class="ctrl-btn btn-purple" onclick="playShortcut('Ctrl', 'Z', 'Undo')"><span>Ctrl + Z</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="playShortcut('Ctrl', 'S', 'Save')"><span>Ctrl + S</span></button>
+        <button class="ctrl-btn btn-sky" onclick="playShortcut('Alt', 'Tab', 'Switch Windows')"><span>Alt + Tab</span></button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox27')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: OS PRODUCTIVITY -->
+  <div id="topic-os" class="tab-content">
+    <div class="card">
+      <h2>Operating System Shortcuts (Windows & Mac)</h2>
+      <p class="desc">Speed up desktop navigation without touching the mouse.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Win + E</h4>
+          <p>Launches File Explorer directly to Quick Access / This PC.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Win + Arrows</h4>
+          <p>Snap active window to Left, Right, Top (Maximize), or Bottom.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Win + . (Period)</h4>
+          <p>Opens the Windows Emoji, Symbol, and Kaomoji Picker.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: APP SHORTCUTS -->
+  <div id="topic-app" class="tab-content">
+    <div class="card">
+      <h2>Web Browser & Office Productivity</h2>
+      <p class="desc">Every second saved on repetitive tasks compounds into hours over workweeks.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Ctrl + T / Ctrl + W</h4>
+          <p>Open a new browser tab / close current browser tab.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Ctrl + Shift + T</h4>
+          <p>Re-opens the last closed browser tab (Emergency restore).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Ctrl + F</h4>
+          <p>Find on page / search document text occurrences instantly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SHORTCUTS_DICT = {
+  "ctrl+c": { name: "Copy", desc: "Copies selected text, images, or files into clipboard memory.", cat: "Universal Clipboard" },
+  "ctrl+v": { name: "Paste", desc: "Pastes copied clipboard contents into active focus location.", cat: "Universal Clipboard" },
+  "ctrl+x": { name: "Cut", desc: "Removes selection and transfers it to clipboard.", cat: "Universal Clipboard" },
+  "ctrl+z": { name: "Undo", desc: "Reverts the immediate previous mutation or typing input.", cat: "History Management" },
+  "ctrl+y": { name: "Redo", desc: "Re-applies the action previously undone.", cat: "History Management" },
+  "ctrl+s": { name: "Save", desc: "Saves changes in the active document or file to persistent disk storage.", cat: "File Operations" },
+  "ctrl+a": { name: "Select All", desc: "Selects all text, shapes, or files in the current container.", cat: "Selection Tool" },
+  "ctrl+p": { name: "Print", desc: "Opens system print dialog or export to PDF.", cat: "Document Output" },
+  "ctrl+f": { name: "Find", desc: "Invokes search bar to locate keywords on current page.", cat: "Search & Navigation" },
+  "ctrl+t": { name: "New Tab", desc: "Opens a fresh browser tab.", cat: "Browser Navigation" },
+  "ctrl+w": { name: "Close Tab", desc: "Closes active browser tab or document.", cat: "Browser Navigation" },
+  "alt+tab": { name: "Task Switcher", desc: "Cycles through open background application windows.", cat: "Multitasking" },
+  "win+d": { name: "Show Desktop", desc: "Minimizes all windows to display desktop icons.", cat: "Desktop Management" },
+  "win+l": { name: "Lock PC", desc: "Instantly locks screen to protect private data.", cat: "Security & Access" }
+};
+
+let activeKeys = new Set();
+
+// Click Virtual Key
+document.querySelectorAll("#virtualKb .key").forEach(keyEl => {
+  keyEl.addEventListener("click", () => {
+    const k = keyEl.dataset.key;
+    highlightKey(k);
+    updateDisplayForSingleKey(k);
+  });
+});
+
+function highlightKey(keyName) {
+  document.querySelectorAll("#virtualKb .key").forEach(el => {
+    if (el.dataset.key && el.dataset.key.toLowerCase() === keyName.toLowerCase()) {
+      el.classList.add("pressed");
+      setTimeout(() => el.classList.remove("pressed"), 400);
+    }
+  });
+}
+
+function playShortcut(mod, key, desc) {
+  clearKeys();
+  highlightKey(mod);
+  highlightKey(key);
+
+  const comboHtml = `<span class="badge-key">${mod}</span><span style="font-size:1.2rem; font-weight:900; color:#c4b5fd;">+</span><span class="badge-key">${key}</span>`;
+  document.getElementById("activeKeyCombo").innerHTML = comboHtml;
+  document.getElementById("activeActionDesc").innerText = desc;
+  document.getElementById("livePressedCount").innerText = "Active Pressed Keys: 2";
+  document.getElementById("liveCategoryTag").innerText = "Classification: Standard Productivity Hotkey";
+}
+
+function clearKeys() {
+  document.querySelectorAll("#virtualKb .key").forEach(el => el.classList.remove("pressed"));
+  activeKeys.clear();
+  document.getElementById("livePressedCount").innerText = "Active Pressed Keys: 0";
+}
+
+function updateDisplayForSingleKey(k) {
+  document.getElementById("activeKeyCombo").innerHTML = `<span class="badge-key">${k}</span>`;
+  document.getElementById("activeActionDesc").innerText = `Key Pressed: ${k}`;
+  document.getElementById("livePressedCount").innerText = "Active Pressed Keys: 1";
+}
+
+// Physical Keyboard Event Handling
+window.addEventListener("keydown", (e) => {
+  let k = e.key;
+  if (k === "Control") k = "Ctrl";
+  if (k === "Meta") k = "Win";
+  if (k === " " || k === "Spacebar") k = "Space";
+  
+  activeKeys.add(k.toUpperCase());
+  highlightKey(k);
+
+  // Check combo
+  const isCtrl = e.ctrlKey;
+  const isAlt = e.altKey;
+  const isMeta = e.metaKey;
+
+  let combo = "";
+  if (isCtrl) combo += "ctrl+";
+  if (isAlt) combo += "alt+";
+  if (isMeta) combo += "win+";
+  if (e.key.length === 1) combo += e.key.toLowerCase();
+  else if (e.key === "Tab") combo += "tab";
+
+  if (SHORTCUTS_DICT[combo]) {
+    const s = SHORTCUTS_DICT[combo];
+    document.getElementById("activeActionDesc").innerText = `${s.name}: ${s.desc}`;
+    document.getElementById("liveCategoryTag").innerText = `Classification: ${s.cat}`;
+  }
+
+  document.getElementById("livePressedCount").innerText = `Active Pressed Keys: ${activeKeys.size}`;
+});
+
+window.addEventListener("keyup", (e) => {
+  let k = e.key;
+  if (k === "Control") k = "Ctrl";
+  if (k === "Meta") k = "Win";
+  activeKeys.delete(k.toUpperCase());
+  document.getElementById("livePressedCount").innerText = `Active Pressed Keys: ${activeKeys.size}`;
+});
+
+// FULLSCREEN HANDLER WITH POSTMESSAGE
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => box.classList.add("is-fullscreen"));
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().catch(() => box.classList.add("is-fullscreen"));
+    } else {
+      box.classList.add("is-fullscreen");
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove("is-fullscreen");
+}
+
+document.addEventListener("fullscreenchange", () => {
+  const box = document.getElementById("simBox27");
+  if (!document.fullscreenElement) {
+    box.classList.remove("is-fullscreen");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    exitSimFullscreen("simBox27");
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(topicId).classList.add("active");
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest(".card");
+  card.querySelectorAll(".section-tab").forEach(b => b.classList.remove("active"));
+  card.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(panelId).classList.add("active");
+}
+
+// INIT
+playShortcut("Ctrl", "C", "Copy Selected Text or Item to Clipboard");
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

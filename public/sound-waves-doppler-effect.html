@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sound Waves, Frequency, Amplitude & Doppler Effect Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #092026 0%, #06151f 100%);
+  border: 1.5px solid #0d9488;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #2dd4bf;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #2dd4bf;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(45, 212, 191, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #134e4a;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #042f2e;
+  color: #5eead4;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #0d9488;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  border-color: #2dd4bf;
+  box-shadow: 0 2px 10px rgba(13, 148, 136, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0d9488;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(4, 47, 46, 0.4);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #2dd4bf;
+  border-top: 1px solid #134e4a;
+  border-right: 1px solid #134e4a;
+  border-bottom: 1px solid #134e4a;
+}
+.grid-item h4 { font-size: 1rem; color: #5eead4; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #042f2e 0%, #02201f 100%);
+  border: 1.5px solid #2dd4bf;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #2dd4bf;
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #05161f;
+  border: 1.5px solid #0d9488;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #2dd4bf;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.6);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #092026;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #134e4a;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-teal { background: #0d9488; color: #fff; border-color: #2dd4bf; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+
+.slider-unit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.slider-unit input[type="range"] {
+  accent-color: #2dd4bf;
+  width: 110px;
+  cursor: pointer;
+}
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #071e24 0%, #030c12 100%);
+  border: 1.5px solid #134e4a;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+#soundCanvas {
+  width: 100%;
+  height: 480px;
+  display: block;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #092026;
+  border: 1.5px solid #134e4a;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2dd4bf;
+}
+.readout-pill {
+  background: #042426;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #134e4a;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #030e14 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen #soundCanvas,
+.sim-box:fullscreen #soundCanvas,
+.sim-box:-webkit-full-screen #soundCanvas {
+  height: calc(100vh - 170px) !important;
+  flex: 1 !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(9, 32, 38, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #2dd4bf !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(45, 212, 191, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* FULLSCREEN VISIBILITY & BUTTON GUARANTEE */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  padding-bottom: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-sound', this)">
+      <span>🔊</span> Sound Waves & Doppler Effect Lab
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-waves', this)">
+      <span>〰️</span> Longitudinal Compression & Transverse Waves
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-audio', this)">
+      <span>🎼</span> Frequency, Pitch & Human Hearing
+    </button>
+  </div>
+
+  <!-- TAB 1: SOUND WAVES & DOPPLER EFFECT -->
+  <div id="topic-sound" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Sound Waves & Doppler Shift Dynamics
+        <small>Acoustics &bull; Wave Mechanics &bull; Sonic Phenomena</small>
+      </h2>
+      <p class="desc">
+        Sound is a mechanical longitudinal wave produced by vibrating objects that propagates through a medium (gas, liquid, or solid) via alternating compressions and rarefactions. When a sound source moves relative to an observer, the observed wave frequency changes—this is the Doppler Effect.
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 's-def')">Definition & Mechanics</button>
+        <button class="section-tab" onclick="switchSection(this, 's-doppler')">Doppler Equation</button>
+        <button class="section-tab" onclick="switchSection(this, 's-speed')">Speed of Sound in Air</button>
+        <button class="section-tab" onclick="switchSection(this, 's-uses')">Practical Uses</button>
+      </div>
+
+      <div id="s-def" class="panel active">
+        <h3>How Sound Waves Propagate</h3>
+        <ul>
+          <li><strong>Compression:</strong> Regions of high particle density and elevated pressure where air molecules are pushed together.</li>
+          <li><strong>Rarefaction:</strong> Regions of low particle density where air molecules spread apart.</li>
+          <li><strong>Wavelength ($\lambda$):</strong> Distance between successive compressions ($\lambda = v / f$).</li>
+          <li><strong>Amplitude:</strong> Maximum displacement of air particles; corresponds directly to loudness and decibel intensity ($dB$).</li>
+        </ul>
+      </div>
+
+      <div id="s-doppler" class="panel">
+        <h3>The Doppler Shift Formula</h3>
+        <p>As an emitting vehicle approaches, wave crests are compressed together, yielding a higher observed pitch ($f' > f$). As it recedes, wave crests spread out, lowering the perceived pitch ($f' < f$).</p>
+        <div class="formula-box">
+          $f' = f \left( \frac{v \pm v_o}{v \mp v_s} \right)$
+          <small>$v = 343\text{ m/s}$ (Speed of Sound) &bull; $v_s$ (Source velocity) &bull; $v_o$ (Observer velocity)</small>
+        </div>
+      </div>
+
+      <div id="s-speed" class="panel">
+        <h3>Acoustic Velocity in Media</h3>
+        <ul>
+          <li><strong>Air (20°C):</strong> ~343 m/s (~1235 km/h). Sound cannot travel through a vacuum because there are no particles to collide.</li>
+          <li><strong>Water:</strong> ~1480 m/s (~4.3x faster than air due to greater bulk modulus).</li>
+          <li><strong>Steel:</strong> ~5960 m/s (~17x faster than air due to high elastic rigidity).</li>
+        </ul>
+      </div>
+
+      <div id="s-uses" class="panel">
+        <h3>Everyday Applications</h3>
+        <ul>
+          <li><strong>Radar & Police Speed Guns:</strong> Doppler radar bounces microwave radio waves off moving automobiles to calculate speed.</li>
+          <li><strong>Echocardiography:</strong> Medical Doppler ultrasound visualizes arterial blood flow velocity in real-time.</li>
+          <li><strong>Astrophysics (Redshift):</strong> Light waves from distant galaxies exhibit Doppler red-shifting, proving cosmic expansion.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox21">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn21" onclick="toggleSimFullscreen('simBox21')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          
+          <button class="ctrl-btn btn-teal" id="btnPlayPause21" onclick="toggleWavePlay()">
+            <span id="wavePlayIcon">⏸</span> <span id="wavePlayText">Pause Wave</span>
+          </button>
+
+          <button class="ctrl-btn btn-indigo" id="btnVehicle21" onclick="toggleVehicleMotion()">
+            🚑 <span id="vehMoveText">Vehicle: Moving</span>
+          </button>
+
+          <button class="ctrl-btn btn-amber" id="btnAudioTone" onclick="toggleAudioSynthesis()">
+            🎵 <span id="audioToneText">Tone: OFF</span>
+          </button>
+
+          <div class="slider-unit">
+            <span>Freq (f):</span>
+            <input type="range" id="freqSlider" min="200" max="1000" step="10" value="440" oninput="updateFrequency(this.value)" />
+            <span id="freqVal">440 Hz</span>
+          </div>
+
+          <div class="slider-unit">
+            <span>Speed (vₛ):</span>
+            <input type="range" id="speedSlider" min="0" max="220" step="10" value="80" oninput="updateSpeed(this.value)" />
+            <span id="speedVal">80 m/s</span>
+          </div>
+
+          <button class="ctrl-btn btn-emerald" onclick="toggleParticleMode()">
+            ⚛ Particle View
+          </button>
+
+          <button class="ctrl-btn btn-rose" onclick="resetSoundSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="soundCanvas" width="1200" height="480"></canvas>
+
+<div class="ctl" id="ctlSoundWaves">
+  <div class="row">
+    <span>Source Velocity</span>
+    <button class="btn b-auto" onclick="var s=document.getElementById('speedSlider');if(s){s.value=0;s.dispatchEvent(new Event('input'))}">🔊 At Rest (v = 0)</button>
+    <button class="btn b-play" onclick="var s=document.getElementById('speedSlider');if(s){s.value=0.5;s.dispatchEvent(new Event('input'))}">🚗 Subsonic (v = 0.5c)</button>
+    <button class="btn b-out" onclick="var s=document.getElementById('speedSlider');if(s){s.value=1.0;s.dispatchEvent(new Event('input'))}">⚡ Mach 1 (v = 1.0c Barrier)</button>
+    <button class="btn b-set" onclick="var s=document.getElementById('speedSlider');if(s){s.value=1.4;s.dispatchEvent(new Event('input'))}">✈️ Supersonic Shockwave</button>
+  </div>
+  <div class="row">
+    <span>Frequency & Pitch</span>
+    <button class="btn b-in" onclick="var s=document.getElementById('freqSlider');if(s){s.value=250;s.dispatchEvent(new Event('input'))}">🎵 250 Hz Low Pitch</button>
+    <button class="btn b-play" onclick="var s=document.getElementById('freqSlider');if(s){s.value=440;s.dispatchEvent(new Event('input'))}">🎼 440 Hz Concert A</button>
+    <button class="btn b-out" onclick="var s=document.getElementById('freqSlider');if(s){s.value=880;s.dispatchEvent(new Event('input'))}">🔊 880 Hz High Pitch</button>
+  </div>
+  <div class="row">
+    <span>Show / Options</span>
+    <button class="btn tg on" onclick="this.classList.toggle('on')">〰️ Compression Wavefronts</button>
+    
+  </div>
+</div>
+
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveFreqStatus">Base Pitch: 440 Hz (Concert A)</span>
+        <span class="readout-pill" id="liveApproachingPitch">Approaching Pitch (f'): 574 Hz (+30%)</span>
+        <span class="readout-pill" id="liveRecedingPitch">Receding Pitch (f'): 356 Hz (-19%)</span>
+        <span class="readout-pill" id="liveWavelength">Wavelength (λ): 0.78 m</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Notice the compressed wavefronts ahead of the ambulance! Because the vehicle travels toward the right observer, wave crests are squeezed closer together ($\lambda' < \lambda$), causing an elevated perceived frequency and higher pitch. Behind the vehicle, wavefronts expand, resulting in a deeper, lower-frequency acoustic sound!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar21">
+        <button class="ctrl-btn btn-teal" onclick="toggleWavePlay()">
+          <span>⏯ Play / Pause</span>
+        </button>
+        <button class="ctrl-btn btn-indigo" onclick="toggleVehicleMotion()">
+          <span>🚑 Toggle Vehicle</span>
+        </button>
+        <button class="ctrl-btn btn-amber" onclick="toggleAudioSynthesis()">
+          <span>🎵 Audio Tone</span>
+        </button>
+        <button class="ctrl-btn btn-emerald" onclick="toggleParticleMode()">
+          <span>⚛ Particle View</span>
+        </button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox21')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: LONGITUDINAL VS TRANSVERSE WAVES -->
+  <div id="topic-waves" class="tab-content">
+    <div class="card">
+      <h2>Longitudinal vs. Transverse Wave Geometry</h2>
+      <p class="desc">Waves transmit energy through disturbances without bulk transport of the medium matter.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Longitudinal Waves</h4>
+          <p>Particles vibrate parallel to the direction of wave propagation (e.g. sound waves, seismic P-waves).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Transverse Waves</h4>
+          <p>Particles oscillate perpendicular to wave travel direction (e.g. light waves, ocean ripples, guitar strings).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Standing Waves</h4>
+          <p>Interference between identical waves traveling in opposite directions creates stationary nodes and antinodes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: HUMAN AUDITORY RANGE -->
+  <div id="topic-audio" class="tab-content">
+    <div class="card">
+      <h2>Human Auditory Spectrum</h2>
+      <p class="desc">The human auditory system perceives frequencies between 20 Hz and 20,000 Hz (20 kHz).</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Infrasound (< 20 Hz)</h4>
+          <p>Below human hearing threshold; produced by earthquakes, volcanoes, and used by elephants for long-distance seismic communication.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Audible Range (20 Hz - 20 kHz)</h4>
+          <p>Concert pitch A4 is standardized at 440 Hz. Speech typically spans 250 Hz to 4000 Hz.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Ultrasound (> 20 kHz)</h4>
+          <p>Above human perception; utilized by bats and dolphins for echolocation navigation, and in medical imaging.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let isWaveRunning = true;
+let isVehicleMoving = true;
+let showParticles = true;
+let audioEnabled = false;
+let baseFreq = 440;
+let vehicleSpeedMs = 80; // m/s
+const speedOfSound = 343; // m/s in air
+
+let vehicleX = 150;
+let vehicleDir = 1;
+let wavefronts = [];
+let animTime = 0;
+let audioCtx = null;
+let oscNode = null;
+let gainNode = null;
+
+const canvas = document.getElementById('soundCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const holder = canvas.parentElement;
+  canvas.width = Math.max(900, (holder && holder.clientWidth) || 1200);
+  canvas.height = Math.max(480, (holder && holder.clientHeight) || 480);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// WAVE ANIMATION LOOP
+function renderSoundStage() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+  const cy = h / 2;
+
+  // Background Grid
+  ctx.strokeStyle = 'rgba(19, 78, 74, 0.25)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+
+  // Observers (Left & Right)
+  drawObserver(60, cy, 'Left Observer (Receding)');
+  drawObserver(w - 60, cy, 'Right Observer (Approaching)');
+
+  // Emit Wavefronts from vehicle position
+  if (isWaveRunning && animTime % 6 === 0) {
+    wavefronts.push({
+      x: vehicleX,
+      y: cy,
+      r: 4,
+      alpha: 1.0
+    });
+  }
+
+  // Update and draw wavefronts
+  for (let i = wavefronts.length - 1; i >= 0; i--) {
+    const wf = wavefronts[i];
+    if (isWaveRunning) {
+      wf.r += 3.2;
+      wf.alpha -= 0.007;
+    }
+
+    if (wf.alpha <= 0 || wf.r > w * 1.2) {
+      wavefronts.splice(i, 1);
+      continue;
+    }
+
+    ctx.beginPath();
+    ctx.arc(wf.x, wf.y, wf.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(45, 212, 191, ${wf.alpha * 0.75})`;
+    ctx.lineWidth = 2.2;
+    ctx.stroke();
+  }
+
+  // Particle Mode Simulation (Longitudinal air compressions)
+  if (showParticles) {
+    drawParticleCompressions(w, h);
+  }
+
+  // Move vehicle
+  if (isWaveRunning && isVehicleMoving) {
+    vehicleX += (vehicleSpeedMs / 30) * vehicleDir;
+    if (vehicleX > w - 160) {
+      vehicleDir = -1;
+    } else if (vehicleX < 160) {
+      vehicleDir = 1;
+    }
+  }
+
+  // Draw Ambulance Vehicle
+  drawAmbulance(vehicleX, cy);
+
+  if (isWaveRunning) {
+    animTime++;
+  }
+
+  requestAnimationFrame(renderSoundStage);
+}
+
+// DRAW OBSERVER
+function drawObserver(x, y, label) {
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.arc(x, y - 18, 12, 0, Math.PI * 2); // Head
+  ctx.fill();
+
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(x, y - 6);
+  ctx.lineTo(x, y + 24); // Body
+  ctx.lineTo(x - 12, y + 44); // Leg L
+  ctx.moveTo(x, y + 24);
+  ctx.lineTo(x + 12, y + 44); // Leg R
+  ctx.stroke();
+
+  // Label
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x, y + 62);
+}
+
+// DRAW VEHICLE
+function drawAmbulance(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Siren pulse glow
+  ctx.fillStyle = animTime % 10 < 5 ? '#ef4444' : '#38bdf8';
+  ctx.shadowColor = ctx.fillStyle;
+  ctx.shadowBlur = 18;
+  ctx.beginPath();
+  ctx.arc(0, -32, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Ambulance Body
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(-45, -20, 90, 36);
+
+  // Red stripe & cross
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(-45, -6, 90, 8);
+  ctx.fillRect(-6, -16, 12, 28);
+  ctx.fillRect(-14, -8, 28, 12);
+
+  // Windows
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(vehicleDir === 1 ? 16 : -38, -18, 22, 12);
+
+  // Wheels
+  ctx.fillStyle = '#334155';
+  ctx.beginPath();
+  ctx.arc(-26, 18, 10, 0, Math.PI * 2);
+  ctx.arc(26, 18, 10, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Speed Vector Arrow
+  if (isVehicleMoving && vehicleSpeedMs > 0) {
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    const arrowLen = (vehicleSpeedMs / 220) * 45 * vehicleDir;
+    ctx.beginPath();
+    ctx.moveTo(0, -42);
+    ctx.lineTo(arrowLen, -42);
+    ctx.lineTo(arrowLen - (8 * vehicleDir), -47);
+    ctx.moveTo(arrowLen, -42);
+    ctx.lineTo(arrowLen - (8 * vehicleDir), -37);
+    ctx.stroke();
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 10px monospace';
+    ctx.fillText(`${vehicleSpeedMs} m/s`, arrowLen / 2, -50);
+  }
+
+  ctx.restore();
+}
+
+// PARTICLE COMPRESSIONS & REAL-TIME WAVEFORM GRAPH
+function drawParticleCompressions(w, h) {
+  // 1. Medium Air Particles (Longitudinal oscillation)
+  for (let px = 30; px < w - 30; px += 24) {
+    const distFromVehicle = px - vehicleX;
+    // Doppler compressed wavelength on approaching side, stretched on receding side
+    const kEffective = (distFromVehicle > 0 ? 0.08 * (speedOfSound / Math.max(50, speedOfSound - vehicleSpeedMs)) : 0.08 * (speedOfSound / (speedOfSound + vehicleSpeedMs)));
+    const offset = Math.sin((distFromVehicle * kEffective) - (animTime * 0.12)) * 10;
+
+    for (let py = 50; py < h - 90; py += 26) {
+      const isIndicator = (Math.abs(py - (h / 2 - 50)) < 15 && px % 120 < 25);
+      if (isIndicator) {
+        // Glowing indicator particle with motion vector arrow
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.arc(px + offset, py, 4.5, 0, Math.PI * 2);
+        ctx.shadowColor = '#fde047';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(px + offset, py);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.65)';
+        ctx.beginPath();
+        ctx.arc(px + offset, py, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // 2. Real-Time Oscilloscope Waveform Graph at bottom
+  const graphY = h - 45;
+  ctx.fillStyle = 'rgba(6, 14, 34, 0.85)';
+  ctx.fillRect(40, h - 80, w - 80, 70);
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(40, h - 80, w - 80, 70);
+
+  // Centerline
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(50, graphY);
+  ctx.lineTo(w - 50, graphY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Wave curve
+  ctx.strokeStyle = '#22c55e';
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = '#22c55e';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  for (let x = 50; x <= w - 50; x += 4) {
+    const dist = x - vehicleX;
+    const kEff = (dist > 0 ? 0.05 * (speedOfSound / Math.max(50, speedOfSound - vehicleSpeedMs)) : 0.05 * (speedOfSound / (speedOfSound + vehicleSpeedMs)));
+    const yVal = graphY - Math.sin((dist * kEff) - animTime * 0.12) * 22;
+    if (x === 50) ctx.moveTo(x, yVal);
+    else ctx.lineTo(x, yVal);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = '#4ade80';
+  ctx.font = 'bold 10px monospace';
+  ctx.fillText('OSCILLOSCOPE: PRESSURE WAVEFORM  P(x, t) · Green = Acoustic Pressure vs Distance', 55, h - 66);
+}
+
+// CONTROLS & STATE UPDATERS
+function toggleWavePlay() {
+  isWaveRunning = !isWaveRunning;
+  document.getElementById('wavePlayIcon').innerText = isWaveRunning ? '⏸' : '▶';
+  document.getElementById('wavePlayText').innerText = isWaveRunning ? 'Pause Wave' : 'Resume Wave';
+}
+
+function toggleVehicleMotion() {
+  isVehicleMoving = !isVehicleMoving;
+  document.getElementById('vehMoveText').innerText = isVehicleMoving ? 'Vehicle: Moving' : 'Vehicle: Stationary';
+}
+
+function toggleParticleMode() {
+  showParticles = !showParticles;
+}
+
+function updateFrequency(val) {
+  baseFreq = parseInt(val);
+  document.getElementById('freqVal').innerText = `${baseFreq} Hz`;
+  updateReadouts();
+  if (audioEnabled && oscNode) {
+    oscNode.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+  }
+}
+
+function updateSpeed(val) {
+  vehicleSpeedMs = parseInt(val);
+  document.getElementById('speedVal').innerText = `${vehicleSpeedMs} m/s`;
+  updateReadouts();
+}
+
+function updateReadouts() {
+  const lambda = (speedOfSound / baseFreq).toFixed(2);
+  const fApp = Math.round(baseFreq * (speedOfSound / (speedOfSound - vehicleSpeedMs)));
+  const fRec = Math.round(baseFreq * (speedOfSound / (speedOfSound + vehicleSpeedMs)));
+
+  document.getElementById('liveFreqStatus').innerText = `Base Pitch: ${baseFreq} Hz`;
+  document.getElementById('liveApproachingPitch').innerText = `Approaching (f'): ${fApp} Hz (+${Math.round(((fApp - baseFreq)/baseFreq)*100)}%)`;
+  document.getElementById('liveRecedingPitch').innerText = `Receding (f'): ${fRec} Hz (${Math.round(((fRec - baseFreq)/baseFreq)*100)}%)`;
+  document.getElementById('liveWavelength').innerText = `Wavelength (λ): ${lambda} m`;
+}
+
+// WEB AUDIO SYNTHESIZER
+function toggleAudioSynthesis() {
+  if (!audioEnabled) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      oscNode = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      oscNode.type = 'sine';
+      oscNode.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+
+      oscNode.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscNode.start();
+
+      audioEnabled = true;
+      document.getElementById('audioToneText').innerText = 'Tone: ON';
+    } catch(e) {
+      console.warn('AudioContext not allowed without gesture');
+    }
+  } else {
+    if (oscNode) {
+      oscNode.stop();
+      oscNode.disconnect();
+    }
+    audioEnabled = false;
+    document.getElementById('audioToneText').innerText = 'Tone: OFF';
+  }
+}
+
+function resetSoundSim() {
+  isWaveRunning = true;
+  isVehicleMoving = true;
+  showParticles = false;
+  baseFreq = 440;
+  vehicleSpeedMs = 80;
+  vehicleX = 150;
+  vehicleDir = 1;
+  wavefronts = [];
+  document.getElementById('freqSlider').value = 440;
+  document.getElementById('speedSlider').value = 80;
+  document.getElementById('freqVal').innerText = '440 Hz';
+  document.getElementById('speedVal').innerText = '80 m/s';
+  document.getElementById('wavePlayIcon').innerText = '⏸';
+  document.getElementById('wavePlayText').innerText = 'Pause Wave';
+  document.getElementById('vehMoveText').innerText = 'Vehicle: Moving';
+  updateReadouts();
+}
+
+// FULLSCREEN HANDLER
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().then(() => { resizeCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeCanvas();
+      });
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => { resizeCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeCanvas();
+      });
+    } else {
+      box.classList.add("is-fullscreen");
+      resizeCanvas();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+  setTimeout(resizeCanvas, 100);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox21');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(resizeCanvas, 100);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox21');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+updateReadouts();
+renderSoundStage();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

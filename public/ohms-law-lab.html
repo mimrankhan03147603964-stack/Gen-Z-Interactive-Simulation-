@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ohm's Law Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.container { max-width:1400px; margin:0 auto; padding:18px 18px 24px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; background:#0f2440; border-radius:14px; padding:8px 12px; }
+.tab-btn { padding:11px 20px; border:none; border-radius:40px; font-size:.95rem; font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer; transition:all .25s; flex:1 0 auto; }
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45); }
+.tab-btn .icon { margin-right:6px; }
+
+.topic { display:none; } .topic.active { display:block; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:22px 24px 26px; margin-bottom:20px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:1rem; color:#a8c4e0; margin-bottom:16px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 12px; }
+.section-tab { padding:8px 16px; border:none; border-radius:30px; font-weight:700; font-size:.85rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:linear-gradient(135deg,#1976d2,#42a5f5); color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
+.panel h3 { font-size:1.4rem; font-weight:700; color:#ffd54f; margin-bottom:10px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:6px 0 6px 30px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:6px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.8rem; }
+
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:12px 14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.1rem; color:#ffb74d; margin-bottom:4px; } .grid-item p { font-size:.9rem; color:#b8d4f0; }
+
+.formula-box { background:linear-gradient(135deg,#0d2a1f,#0a3a2a); border:2px solid #00e676; border-radius:16px; padding:16px 20px; margin:12px 0; text-align:center; font-size:1.6rem; font-weight:900; color:#00e676; }
+.formula-box small { display:block; font-size:.85rem; color:#7a9cc0; font-weight:400; margin-top:8px; }
+
+.sim-box { background:#06121f; border-radius:18px; padding:18px 14px 14px; margin-top:8px; border:1px solid #1e3a5c; position:relative; }
+.fs-btn { position:absolute; top:12px; right:16px; z-index:10; padding:8px 16px; border-radius:30px; border:none; background:#ffc107; color:#0a1628; font-weight:800; font-size:.85rem; cursor:pointer; }
+.fs-btn:hover { background:#ffd54f; }
+
+.sim-controls { display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; justify-content:center; margin-bottom:14px; background:#0a1a2e; padding:12px 18px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:8px; font-weight:600; color:#90b8e0; font-size:.9rem; }
+.sim-controls input[type=range] { width:140px; accent-color:#ff9800; cursor:pointer; }
+.sim-controls select,.sim-controls button { padding:8px 16px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; font-size:.85rem; }
+.btn-red { background:linear-gradient(135deg,#d32f2f,#f44336) !important; color:#fff !important; }
+.btn-green { background:linear-gradient(135deg,#00c853,#00e676) !important; color:#002200 !important; }
+.btn-blue { background:linear-gradient(135deg,#1976d2,#42a5f5) !important; color:#fff !important; }
+.btn-purple { background:linear-gradient(135deg,#7b1fa2,#9c27b0) !important; color:#fff !important; }
+.btn-orange { background:linear-gradient(135deg,#ff8f00,#ff6f00) !important; color:#0a1628 !important; }
+
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+
+.sim-readout { text-align:center; font-size:1.3rem; font-weight:700; color:#ffd54f; margin:12px 0 4px; }
+.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
+.sim-info { background:#0a1a2e; padding:10px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:12px 16px; margin-top:12px; font-size:.9rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+
+.legend { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:8px 0; padding:8px 14px; background:#0a1a2e; border-radius:14px; border:1px solid #1e3a5c; font-size:.88rem; }
+.legend span { display:flex; align-items:center; gap:6px; color:#c8ddf0; }
+.legend .dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
+
+.sim-box.fullscreen {
+  position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
+  z-index: 99999 !important; background: #06121f !important; border-radius: 0 !important;
+  padding: 8px 14px !important; overflow: hidden !important;
+  display: flex !important; flex-direction: column !important; align-items: center !important; gap: 10px !important;
+}
+.sim-box.fullscreen canvas { flex: 0 0 auto !important; max-height: 100% !important; }
+.sim-box.fullscreen .legend, .sim-box.fullscreen .sim-info { display: flex !important; }
+.sim-box.fullscreen .fs-btn { position: fixed !important; top: 12px !important; right: 16px !important; background: #ef4444 !important; color: #fff !important; }
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="tabs" id="topicTabs">
+<button class="tab-btn active" data-topic="basics"><span class="icon">⚡</span> Ohm's Law Basics</button>
+<button class="tab-btn" data-topic="circuit"><span class="icon">🔌</span> Circuit Simulator</button>
+<button class="tab-btn" data-topic="graph"><span class="icon">📈</span> V‑I Graph</button>
+<button class="tab-btn" data-topic="series"><span class="icon">🔗</span> Series &amp; Parallel</button>
+<button class="tab-btn" data-topic="power"><span class="icon">💡</span> Power &amp; Energy</button>
+</div>
+
+<!-- ================= BASICS ================= -->
+<div class="topic active" id="topic-basics"><div class="card">
+<h2>⚡ Ohm's Law Basics <small>definition, formula &amp; explanation</small></h2>
+<div class="desc">Understand voltage, current, and resistance. See how they relate with a live interactive triangle.</div>
+<div class="section-tabs" data-topic="basics">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="formula">Formula Triangle</button>
+<button class="section-tab" data-section="example">Worked Examples</button>
+<button class="section-tab active" data-section="sim">Interactive Demo</button>
+</div>
+
+<div class="panel" id="basics-def"><h3>📖 Definition</h3>
+<p><strong>Ohm's Law</strong> states that the current flowing through a conductor is <strong>directly proportional to the voltage</strong> across it and <strong>inversely proportional to its resistance</strong>, provided the temperature remains constant.</p>
+<div class="formula-box">V = I × R<small>Voltage (V) = Current (I) × Resistance (R)</small></div>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Formulated by Georg Simon Ohm (1827). It is the fundamental relationship in electrical circuits.</div>
+</div>
+
+<div class="panel" id="basics-exp"><h3>💡 Explanation</h3>
+<p>Three quantities work together in every circuit:</p>
+<ul>
+<li><strong>Voltage (V)</strong> — measured in <strong>Volts (V)</strong>: The electrical potential push that moves electrons.</li>
+<li><strong>Current (I)</strong> — measured in <strong>Amperes (A)</strong>: The flow rate of electric charge.</li>
+<li><strong>Resistance (R)</strong> — measured in <strong>Ohms (Ω)</strong>: The opposition to electron flow.</li>
+</ul>
+</div>
+
+<div class="panel" id="basics-formula"><h3>🔺 Formula Triangle</h3>
+<div class="sim-box" id="fs-triangle">
+<button class="fs-btn" data-target="fs-triangle">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Solve for:
+<select id="triangleSolve">
+<option value="V">Voltage (V = I × R)</option>
+<option value="I">Current (I = V ÷ R)</option>
+<option value="R">Resistance (R = V ÷ I)</option>
+</select></label>
+</div>
+<canvas id="triangleCanvas" width="1100" height="480"></canvas>
+<div class="sim-info" id="triangleInfo">Select a variable to view the algebraic rearrangement.</div>
+</div>
+</div>
+
+<div class="panel" id="basics-example"><h3>📝 Worked Examples</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Example 1 — Find V</h4><p>I = 2 A, R = 5 Ω<br>V = I × R = <strong>10 V</strong></p></div>
+<div class="grid-item"><h4>Example 2 — Find I</h4><p>V = 12 V, R = 4 Ω<br>I = V ÷ R = <strong>3 A</strong></p></div>
+<div class="grid-item"><h4>Example 3 — Find R</h4><p>V = 9 V, I = 3 A<br>R = V ÷ I = <strong>3 Ω</strong></p></div>
+</div>
+</div>
+
+<div class="panel active" id="basics-sim"><h3>🎮 Interactive Demo — Feel the Law</h3>
+<div class="sim-box" id="fs-basics">
+<button class="fs-btn" data-target="fs-basics">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Voltage (V): <input type="range" id="basicsV" min="1" max="24" value="12"><span id="basicsVVal" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">12 V</span></label>
+<label>Resistance (Ω): <input type="range" id="basicsR" min="1" max="40" value="6"><span id="basicsRVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">6 Ω</span></label>
+<button id="basicsPreset1" class="btn-blue">Low R (2 Ω)</button>
+<button id="basicsPreset2" class="btn-orange">High R (30 Ω)</button>
+<button id="basicsReset" class="btn-red">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="basicsReadout">CURRENT = 2.00 A <small>V = 12 V, R = 6 Ω → I = V/R = 2.00 A</small></div>
+<canvas id="basicsCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Voltage Source</span>
+<span><span class="dot" style="background:#ffd54f"></span> Current Flow</span>
+<span><span class="dot" style="background:#4fc3f7"></span> Resistor</span>
+</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= CIRCUIT SIMULATOR ================= -->
+<div class="topic" id="topic-circuit"><div class="card">
+<h2>🔌 Circuit Simulator <small>build &amp; measure</small></h2>
+<div class="desc">A complete working circuit with battery, resistor, ammeter, and voltmeter. Change values and watch the meters update live.</div>
+<div class="section-tabs" data-topic="circuit">
+<button class="section-tab" data-section="def">How to Use</button>
+<button class="section-tab" data-section="exp">Components</button>
+<button class="section-tab active" data-section="sim">Live Circuit</button>
+</div>
+
+<div class="panel" id="circuit-def"><h3>📖 How to Use</h3>
+<p>Adjust voltage and resistance sliders to see how live current responds in real time.</p>
+</div>
+
+<div class="panel" id="circuit-exp"><h3>🔧 Circuit Components</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>🔋 Battery</h4><p>Provides DC voltage.</p></div>
+<div class="grid-item"><h4>💡 Resistor</h4><p>Limits current flow.</p></div>
+<div class="grid-item"><h4>🅰️ Ammeter</h4><p>Measures current (in series).</p></div>
+</div>
+</div>
+
+<div class="panel active" id="circuit-sim"><h3>🎮 Live Circuit Simulation</h3>
+<div class="sim-box" id="fs-circuit">
+<button class="fs-btn" data-target="fs-circuit">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Voltage: <input type="range" id="circV" min="1" max="24" value="12"><span id="circVVal" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">12 V</span></label>
+<label>Resistance: <input type="range" id="circR" min="1" max="100" value="10"><span id="circRVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">10 Ω</span></label>
+<button id="circSwitch" class="btn-red">🔘 Open Switch</button>
+<button id="circReset" class="btn-green">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="circReadout">CIRCUIT CLOSED <small>I = 1.20 A · V = 12 V · R = 10 Ω</small></div>
+<canvas id="circCanvas" width="1100" height="480"></canvas>
+</div>
+</div>
+</div></div>
+
+<!-- ================= V-I GRAPH ================= -->
+<div class="topic" id="topic-graph"><div class="card">
+<h2>📈 V‑I Graph <small>voltage vs current</small></h2>
+<div class="desc">Plot voltage against current for different resistors. See how the gradient equals resistance.</div>
+<div class="section-tabs" data-topic="graph">
+<button class="section-tab" data-section="def">Explanation</button>
+<button class="section-tab active" data-section="sim">Plot &amp; Explore</button>
+</div>
+<div class="panel" id="graph-def"><h3>📖 Explanation</h3>
+<p>For an ohmic conductor, plotting Voltage against Current yields a straight line through the origin whose gradient equals resistance (R = V / I).</p>
+</div>
+<div class="panel active" id="graph-sim"><h3>🎮 Plot &amp; Explore</h3>
+<div class="sim-box" id="fs-graph">
+<button class="fs-btn" data-target="fs-graph">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Resistance: <input type="range" id="graphR" min="2" max="40" value="10"><span id="graphRVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">10 Ω</span></label>
+<label>Max Voltage: <input type="range" id="graphVmax" min="6" max="24" value="12"><span id="graphVmaxVal" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">12 V</span></label>
+<button id="graphPlot" class="btn-green">📊 Plot Data</button>
+<button id="graphCompare" class="btn-purple">🔀 Compare 3 Resistors</button>
+<button id="graphClear" class="btn-red">🗑️ Clear</button>
+</div>
+<div class="sim-readout" id="graphReadout">V‑I GRAPH <small>Gradient = Resistance</small></div>
+<canvas id="graphCanvas" width="1100" height="480"></canvas>
+</div>
+</div>
+</div></div>
+
+<!-- ================= SERIES & PARALLEL ================= -->
+<div class="topic" id="topic-series"><div class="card">
+<h2>🔗 Series &amp; Parallel <small>combined resistance</small></h2>
+<div class="desc">See how resistors combine in series and parallel circuits. Compare total resistance, current, and voltage.</div>
+<div class="section-tabs" data-topic="series">
+<button class="section-tab" data-section="def">Formulas</button>
+<button class="section-tab active" data-section="sim">Interactive Comparison</button>
+</div>
+<div class="panel" id="series-def"><h3>📖 Formulas</h3>
+<p><strong>Series:</strong> R_total = R₁ + R₂<br><strong>Parallel:</strong> 1/R_total = 1/R₁ + 1/R₂</p>
+</div>
+<div class="panel active" id="series-sim"><h3>🎮 Interactive Comparison</h3>
+<div class="sim-box" id="fs-series">
+<button class="fs-btn" data-target="fs-series">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Mode:
+<select id="seriesMode">
+<option value="series">Series</option>
+<option value="parallel">Parallel</option>
+</select></label>
+<label>Battery: <input type="range" id="seriesV" min="3" max="24" value="12"><span id="seriesVVal" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">12 V</span></label>
+<label>R₁: <input type="range" id="seriesR1" min="2" max="40" value="10"><span id="seriesR1Val" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">10 Ω</span></label>
+<label>R₂: <input type="range" id="seriesR2" min="2" max="40" value="20"><span id="seriesR2Val" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">20 Ω</span></label>
+<button id="seriesReset" class="btn-orange">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="seriesReadout">SERIES <small>R total = 30 Ω, I = 0.40 A</small></div>
+<canvas id="seriesCanvas" width="1100" height="480"></canvas>
+</div>
+</div>
+</div></div>
+
+<!-- ================= POWER & ENERGY ================= -->
+<div class="topic" id="topic-power"><div class="card">
+<h2>💡 Power &amp; Energy <small>P = VI = I²R = V²/R</small></h2>
+<div class="desc">Calculate electrical power (watts) and energy (joules &amp; kWh).</div>
+<div class="section-tabs" data-topic="power">
+<button class="section-tab" data-section="def">Formulas</button>
+<button class="section-tab active" data-section="sim">Power Calculator</button>
+</div>
+<div class="panel" id="power-def"><h3>📖 Formulas</h3>
+<p>P = V × I = I² × R = V² / R (Watts)</p>
+</div>
+<div class="panel active" id="power-sim"><h3>🎮 Power Calculator</h3>
+<div class="sim-box" id="fs-power">
+<button class="fs-btn" data-target="fs-power">⛶ Full‑Screen</button>
+<div class="sim-controls">
+<label>Voltage: <input type="range" id="powV" min="3" max="240" value="230"><span id="powVVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">230 V</span></label>
+<label>Resistance: <input type="range" id="powR" min="5" max="500" value="230"><span id="powRVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">230 Ω</span></label>
+<label>Time (h): <input type="range" id="powT" min="1" max="24" value="5"><span id="powTVal" style="color:#ffd54f;font-weight:700;width:35px;display:inline-block;">5 h</span></label>
+</div>
+<div class="sim-readout" id="powReadout">POWER = 230 W <small>I = 1.00 A · Energy = 1.15 kWh</small></div>
+<canvas id="powCanvas" width="1100" height="480"></canvas>
+
+
+
+</div>
+</div>
+</div></div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+document.querySelectorAll('.fs-btn').forEach(btn=>{
+ btn.addEventListener('click',function(e){
+  e.stopPropagation();
+  const targetId=this.dataset.target;
+  const box=document.getElementById(targetId);
+  if(!box) return;
+
+  if(box.classList.contains('fullscreen')){
+   if(document.fullscreenElement){document.exitFullscreen().catch(()=>{});}
+   box.classList.remove('fullscreen');
+   this.textContent='⛶ Full‑Screen';
+  } else {
+   if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{});}
+   document.querySelectorAll('.sim-box.fullscreen').forEach(b=>{
+    b.classList.remove('fullscreen');
+    const otherBtn=b.querySelector('.fs-btn');if(otherBtn) otherBtn.textContent='⛶ Full‑Screen';
+   });
+   box.classList.add('fullscreen');
+   this.textContent='✕ Exit Full‑Screen';
+  }
+ });
+});
+
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={basics:document.getElementById('topic-basics'),circuit:document.getElementById('topic-circuit'),graph:document.getElementById('topic-graph'),series:document.getElementById('topic-series'),power:document.getElementById('topic-power')};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+ topicTabs.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+ const topic=this.dataset.topic;Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+}));
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+let basicsCtx,basicsAnim=0;
+function drawBasics(){
+ const c=document.getElementById('basicsCanvas');if(!c) return;
+ basicsCtx=c.getContext('2d');const w=c.width,h=c.height;
+ basicsCtx.clearRect(0,0,w,h);basicsCtx.fillStyle='#040e1a';basicsCtx.fillRect(0,0,w,h);
+ const V=+document.getElementById('basicsV').value;const R=+document.getElementById('basicsR').value;const I=V/R;
+ const cx=170,cy=110,cw=760,ch=280;
+ basicsCtx.strokeStyle='#4caf50';basicsCtx.lineWidth=6;
+ basicsCtx.beginPath();basicsCtx.moveTo(cx,cy);basicsCtx.lineTo(cx+cw,cy);basicsCtx.lineTo(cx+cw,cy+ch);basicsCtx.lineTo(cx,cy+ch);basicsCtx.closePath();basicsCtx.stroke();
+ const bx=cx,by=cy+ch/2;
+ basicsCtx.fillStyle='#ff5252';basicsCtx.fillRect(bx-18,by-45,36,90);
+ basicsCtx.fillStyle='#fff';basicsCtx.font='bold 22px sans-serif';basicsCtx.textAlign='center';basicsCtx.fillText('+',bx,by-20);basicsCtx.fillText('−',bx,by+35);
+ basicsCtx.font='bold 16px sans-serif';basicsCtx.fillStyle='#ffd54f';basicsCtx.fillText(V+' V',bx,by+70);
+ const rx=cx+cw/2,ry=cy;
+ basicsCtx.fillStyle='#4fc3f7';basicsCtx.fillRect(rx-80,ry-22,160,44);
+ basicsCtx.fillStyle='#001a33';basicsCtx.font='bold 20px sans-serif';basicsCtx.fillText(R+' Ω',rx,ry+8);
+
+ const numDots=30;const speed=I*3+1;basicsAnim=(basicsAnim+speed*0.5)%numDots;
+ for(let i=0;i<numDots;i++){
+  const t=((i+basicsAnim)%numDots)/numDots;const per=2*(cw+ch);let d=t*per;let x,y;
+  if(d<cw){x=cx+d;y=cy}
+  else if(d<cw+ch){x=cx+cw;y=cy+(d-cw)}
+  else if(d<2*cw+ch){x=cx+cw-(d-cw-ch);y=cy+ch}
+  else{x=cx;y=cy+ch-(d-2*cw-ch)}
+  basicsCtx.fillStyle='#ffd54f';
+  basicsCtx.beginPath();basicsCtx.arc(x,y,7,0,7);basicsCtx.fill();
+ }
+ basicsCtx.fillStyle='#ffd54f';basicsCtx.font='bold 22px sans-serif';basicsCtx.textAlign='center';basicsCtx.fillText('Current I = '+I.toFixed(2)+' A',cx+cw/2,cy+ch/2+10);
+ const readout=document.getElementById('basicsReadout');
+ if(readout) readout.innerHTML='CURRENT = '+I.toFixed(2)+' A <small>V = '+V+' V, R = '+R+' Ω → I = V/R = '+I.toFixed(2)+' A</small>';
+}
+function basicsLoop(){drawBasics();requestAnimationFrame(basicsLoop)}
+
+let triangleCtx;
+function drawTriangle(){
+ const c=document.getElementById('triangleCanvas');if(!c) return;
+ triangleCtx=c.getContext('2d');const w=c.width,h=c.height;
+ triangleCtx.clearRect(0,0,w,h);triangleCtx.fillStyle='#040e1a';triangleCtx.fillRect(0,0,w,h);
+ const solve=document.getElementById('triangleSolve').value;
+ const cx=w/2,cy=h/2+40;const size=200;
+ const V={x:cx,y:cy-size};const I={x:cx-size,y:cy+size*0.6};const R={x:cx+size,y:cy+size*0.6};
+ triangleCtx.fillStyle='rgba(79,195,247,.12)';triangleCtx.strokeStyle='#4fc3f7';triangleCtx.lineWidth=6;
+ triangleCtx.beginPath();triangleCtx.moveTo(V.x,V.y);triangleCtx.lineTo(I.x,I.y);triangleCtx.lineTo(R.x,R.y);triangleCtx.closePath();triangleCtx.fill();triangleCtx.stroke();
+ triangleCtx.beginPath();triangleCtx.moveTo(cx,cy+size*0.6);triangleCtx.lineTo(cx,cy-size);triangleCtx.stroke();
+ triangleCtx.textAlign='center';
+ triangleCtx.fillStyle=solve==='V'?'#ff5252':'#ffd54f';triangleCtx.font='bold 80px sans-serif';triangleCtx.fillText('V',V.x,V.y+90);
+ triangleCtx.fillStyle=solve==='I'?'#ff5252':'#ffd54f';triangleCtx.font='bold 80px sans-serif';triangleCtx.fillText('I',I.x+60,I.y+10);
+ triangleCtx.fillStyle=solve==='R'?'#ff5252':'#ffd54f';triangleCtx.font='bold 80px sans-serif';triangleCtx.fillText('R',R.x-60,R.y+10);
+}
+
+let circCtx,circAnim=0,circClosed=true;
+function drawCircuit(){
+ const c=document.getElementById('circCanvas');if(!c) return;
+ circCtx=c.getContext('2d');const w=c.width,h=c.height;
+ circCtx.clearRect(0,0,w,h);circCtx.fillStyle='#040e1a';circCtx.fillRect(0,0,w,h);
+ const V=+document.getElementById('circV').value;const R=+document.getElementById('circR').value;const I=circClosed?V/R:0;
+ const cx=170,cy=100,cw=760,ch=280;
+ circCtx.strokeStyle=circClosed?'#4caf50':'#666';circCtx.lineWidth=6;
+ circCtx.beginPath();circCtx.moveTo(cx,cy);circCtx.lineTo(cx+cw,cy);circCtx.lineTo(cx+cw,cy+ch);circCtx.lineTo(cx,cy+ch);circCtx.closePath();circCtx.stroke();
+ const bx=cx,by=cy+ch/2;
+ circCtx.fillStyle='#ff5252';circCtx.fillRect(bx-20,by-50,40,100);
+ circCtx.fillStyle='#fff';circCtx.font='bold 24px sans-serif';circCtx.textAlign='center';circCtx.fillText('+',bx,by-22);circCtx.fillText('−',bx,by+35);
+ const rx=cx+cw/2,ry=cy;
+ circCtx.fillStyle='#4fc3f7';circCtx.fillRect(rx-70,ry-20,140,40);
+ circCtx.fillStyle='#001a33';circCtx.font='bold 20px sans-serif';circCtx.fillText(R+' Ω',rx,ry+8);
+
+ if(circClosed){
+  const numDots=36;const speed=I*4+1;circAnim=(circAnim+speed*0.4)%numDots;
+  for(let i=0;i<numDots;i++){
+   const t=((i+circAnim)%numDots)/numDots;const per=2*(cw+ch);let d=t*per;let x,y;
+   if(d<cw){x=cx+d;y=cy}
+   else if(d<cw+ch){x=cx+cw;y=cy+(d-cw)}
+   else if(d<2*cw+ch){x=cx+cw-(d-cw-ch);y=cy+ch}
+   else{x=cx;y=cy+ch-(d-2*cw-ch)}
+   circCtx.fillStyle='#ffd54f';
+   circCtx.beginPath();circCtx.arc(x,y,7,0,7);circCtx.fill();
+  }
+ }
+}
+function circLoop(){drawCircuit();requestAnimationFrame(circLoop)}
+
+let graphCtx,graphLines=[];
+function drawGraph(){
+ const c=document.getElementById('graphCanvas');if(!c) return;
+ graphCtx=c.getContext('2d');const w=c.width,h=c.height;
+ graphCtx.clearRect(0,0,w,h);graphCtx.fillStyle='#040e1a';graphCtx.fillRect(0,0,w,h);
+ const pad=90;const gx=pad,gy=pad,gw=w-pad*2,gh=h-pad*2;
+ graphCtx.strokeStyle='#fff';graphCtx.lineWidth=3;
+ graphCtx.beginPath();graphCtx.moveTo(gx,gy);graphCtx.lineTo(gx,gy+gh);graphCtx.lineTo(gx+gw,gy+gh);graphCtx.stroke();
+ graphCtx.fillStyle='#4fc3f7';graphCtx.font='bold 20px sans-serif';graphCtx.textAlign='center';
+ graphCtx.fillText('Current I (A)',gx+gw/2,gy+gh+50);
+ graphCtx.save();graphCtx.translate(gx-50,gy+gh/2);graphCtx.rotate(-Math.PI/2);graphCtx.fillText('Voltage V (V)',0,0);graphCtx.restore();
+
+ graphLines.forEach((line)=>{
+  graphCtx.strokeStyle=line.color;graphCtx.lineWidth=5;
+  graphCtx.beginPath();const Vmax=line.Vmax;const R=line.R;const N=40;
+  for(let i=0;i<=N;i++){const V=i*Vmax/N;const I=V/R;
+   const px=gx+Math.min(10,I/30*10)*gw/10;const py=gy+gh-Math.min(10,V/30*10)*gh/10;
+   i?graphCtx.lineTo(px,py):graphCtx.moveTo(px,py);}
+  graphCtx.stroke();
+ });
+}
+
+let seriesCtx,seriesAnim=0;
+function drawSeries(){
+ const c=document.getElementById('seriesCanvas');if(!c) return;
+ seriesCtx=c.getContext('2d');const w=c.width,h=c.height;
+ seriesCtx.clearRect(0,0,w,h);seriesCtx.fillStyle='#040e1a';seriesCtx.fillRect(0,0,w,h);
+ const mode=document.getElementById('seriesMode').value;const V=+document.getElementById('seriesV').value;
+ const R1=+document.getElementById('seriesR1').value;const R2=+document.getElementById('seriesR2').value;
+ let Rtotal,I;
+ if(mode==='series'){Rtotal=R1+R2;I=V/Rtotal;}
+ else{Rtotal=(R1*R2)/(R1+R2);I=V/Rtotal;}
+ const cx=170,cy=110,cw=760,ch=280;
+ seriesCtx.strokeStyle='#4caf50';seriesCtx.lineWidth=6;
+ seriesCtx.beginPath();seriesCtx.moveTo(cx,cy);seriesCtx.lineTo(cx+cw,cy);seriesCtx.lineTo(cx+cw,cy+ch);seriesCtx.lineTo(cx,cy+ch);seriesCtx.closePath();seriesCtx.stroke();
+
+ seriesCtx.fillStyle='#ffd54f';seriesCtx.font='bold 20px sans-serif';seriesCtx.textAlign='center';
+ seriesCtx.fillText('R_total = ' + Rtotal.toFixed(2) + ' Ω | I = ' + I.toFixed(2) + ' A', cx + cw/2, cy + ch + 50);
+}
+function seriesLoop(){drawSeries();requestAnimationFrame(seriesLoop)}
+
+let powCtx;
+function drawPower(){
+ const c=document.getElementById('powCanvas');if(!c) return;
+ powCtx=c.getContext('2d');const w=c.width,h=c.height;
+ powCtx.clearRect(0,0,w,h);powCtx.fillStyle='#040e1a';powCtx.fillRect(0,0,w,h);
+ const V=+document.getElementById('powV').value;const R=+document.getElementById('powR').value;const T=+document.getElementById('powT').value;
+ const I=V/R;const P=V*I;const kWh=(P/1000)*T;
+ powCtx.fillStyle='#4fc3f7';powCtx.font='bold 44px sans-serif';powCtx.textAlign='center';
+ powCtx.fillText(P.toFixed(1)+' W',w/2,h/2 - 20);
+ powCtx.fillStyle='#ffd54f';powCtx.font='bold 22px sans-serif';
+ powCtx.fillText('Energy = ' + kWh.toFixed(2) + ' kWh (' + T + ' hrs)',w/2,h/2 + 30);
+}
+function powLoop(){drawPower();requestAnimationFrame(powLoop)}
+
+function initOhmsLab(){
+ const bc=document.getElementById('basicsCanvas');if(bc){basicsCtx=bc.getContext('2d');basicsLoop();}
+ const tc=document.getElementById('triangleCanvas');if(tc){triangleCtx=tc.getContext('2d');drawTriangle();}
+ const cc=document.getElementById('circCanvas');if(cc){circCtx=cc.getContext('2d');circLoop();}
+ const gc=document.getElementById('graphCanvas');if(gc){graphCtx=gc.getContext('2d');drawGraph();}
+ const sc=document.getElementById('seriesCanvas');if(sc){seriesCtx=sc.getContext('2d');seriesLoop();}
+ const pc=document.getElementById('powCanvas');if(pc){powCtx=pc.getContext('2d');powLoop();}
+
+ document.getElementById('triangleSolve')?.addEventListener('change',drawTriangle);
+ document.getElementById('basicsV')?.addEventListener('input',e=>{const el=document.getElementById('basicsVVal');if(el)el.textContent=e.target.value+' V';});
+ document.getElementById('basicsR')?.addEventListener('input',e=>{const el=document.getElementById('basicsRVal');if(el)el.textContent=e.target.value+' Ω';});
+ document.getElementById('basicsPreset1')?.addEventListener('click',()=>{
+  const r=document.getElementById('basicsR');if(r){r.value=2;const el=document.getElementById('basicsRVal');if(el)el.textContent='2 Ω';}
+ });
+ document.getElementById('basicsPreset2')?.addEventListener('click',()=>{
+  const r=document.getElementById('basicsR');if(r){r.value=30;const el=document.getElementById('basicsRVal');if(el)el.textContent='30 Ω';}
+ });
+ document.getElementById('basicsReset')?.addEventListener('click',()=>{
+  const v=document.getElementById('basicsV'),r=document.getElementById('basicsR');
+  if(v){v.value=12;const el=document.getElementById('basicsVVal');if(el)el.textContent='12 V';}
+  if(r){r.value=6;const el=document.getElementById('basicsRVal');if(el)el.textContent='6 Ω';}
+ });
+
+ document.getElementById('circV')?.addEventListener('input',e=>{const el=document.getElementById('circVVal');if(el)el.textContent=e.target.value+' V';});
+ document.getElementById('circR')?.addEventListener('input',e=>{const el=document.getElementById('circRVal');if(el)el.textContent=e.target.value+' Ω';});
+ document.getElementById('circSwitch')?.addEventListener('click',function(){circClosed=!circClosed;this.textContent=circClosed?'🔘 Open Switch':'🔘 Close Switch';this.className=circClosed?'btn-red':'btn-green';});
+ document.getElementById('circReset')?.addEventListener('click',()=>{
+  const v=document.getElementById('circV'),r=document.getElementById('circR');
+  if(v){v.value=12;const el=document.getElementById('circVVal');if(el)el.textContent='12 V';}
+  if(r){r.value=10;const el=document.getElementById('circRVal');if(el)el.textContent='10 Ω';}
+  circClosed=true;
+  const sw=document.getElementById('circSwitch');if(sw){sw.textContent='🔘 Open Switch';sw.className='btn-red';}
+ });
+
+ document.getElementById('graphPlot')?.addEventListener('click',()=>{const R=+document.getElementById('graphR').value;const Vmax=+document.getElementById('graphVmax').value;graphLines=[{R:parseFloat(R),Vmax:parseFloat(Vmax),color:'#00e676'}];drawGraph();});
+ document.getElementById('graphCompare')?.addEventListener('click',()=>{graphLines=[{R:5,Vmax:20,color:'#ff5252'},{R:10,Vmax:20,color:'#ffd54f'},{R:20,Vmax:20,color:'#4fc3f7'}];drawGraph();});
+ document.getElementById('graphClear')?.addEventListener('click',()=>{graphLines=[];drawGraph();});
+
+ document.getElementById('seriesMode')?.addEventListener('change',drawSeries);
+ document.getElementById('seriesV')?.addEventListener('input',e=>{const el=document.getElementById('seriesVVal');if(el)el.textContent=e.target.value+' V';});
+ document.getElementById('seriesR1')?.addEventListener('input',e=>{const el=document.getElementById('seriesR1Val');if(el)el.textContent=e.target.value+' Ω';});
+ document.getElementById('seriesR2')?.addEventListener('input',e=>{const el=document.getElementById('seriesR2Val');if(el)el.textContent=e.target.value+' Ω';});
+ document.getElementById('seriesReset')?.addEventListener('click',()=>{
+  const m=document.getElementById('seriesMode'),v=document.getElementById('seriesV'),r1=document.getElementById('seriesR1'),r2=document.getElementById('seriesR2');
+  if(m)m.value='series';
+  if(v){v.value=12;const el=document.getElementById('seriesVVal');if(el)el.textContent='12 V';}
+  if(r1){r1.value=10;const el=document.getElementById('seriesR1Val');if(el)el.textContent='10 Ω';}
+  if(r2){r2.value=20;const el=document.getElementById('seriesR2Val');if(el)el.textContent='20 Ω';}
+  drawSeries();
+ });
+
+ document.getElementById('powV')?.addEventListener('input',e=>{const el=document.getElementById('powVVal');if(el)el.textContent=e.target.value+' V';});
+ document.getElementById('powR')?.addEventListener('input',e=>{const el=document.getElementById('powRVal');if(el)el.textContent=e.target.value+' Ω';});
+ document.getElementById('powT')?.addEventListener('input',e=>{const el=document.getElementById('powTVal');if(el)el.textContent=e.target.value+' h';});
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+ initOhmsLab();
+} else {
+ window.addEventListener('DOMContentLoaded',initOhmsLab);
+ window.addEventListener('load',initOhmsLab);
+}
+})();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

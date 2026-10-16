@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Earth & Space Lab — Water Cycle & Day/Night</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.container { max-width:1400px; margin:0 auto; padding:18px 20px 24px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; background:#0f2440; border-radius:14px; padding:8px 12px; }
+.tab-btn { padding:12px 24px; border:none; border-radius:40px; font-size:1.02rem; font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer; transition:all .25s; flex:1 0 auto; }
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45); }
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:22px 24px 26px; margin-bottom:20px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.85rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:1rem; color:#a8c4e0; margin-bottom:18px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab { padding:8px 16px; border:none; border-radius:30px; font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active{display:block}
+.panel h3 { font-size:1.45rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.8rem; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; } .grid-item p{font-size:.92rem;color:#b8d4f0}
+.sim-box { background:#06121f; border-radius:18px; padding:18px 16px 16px; margin-top:8px; border:1px solid #1e3a5c; position:relative; }
+.sim-controls { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; justify-content:center; margin-bottom:14px; background:#0a1a2e; padding:12px 16px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:8px; font-weight:600; color:#90b8e0; font-size:.85rem; }
+.sim-controls select { padding:8px 14px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; font-size:.85rem; }
+.sim-controls button { padding:8px 16px; border-radius:28px; border:none; font-weight:700; background:#1976d2; color:#fff; cursor:pointer; transition:.2s; font-size:.85rem; }
+.sim-controls button:hover{transform:scale(1.05);filter:brightness(1.2)}
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout{text-align:center;font-size:1.2rem;font-weight:700;color:#ffd54f;margin:12px 0 6px}
+.sim-readout small{display:block;font-size:.9rem;color:#7a9cc0;font-weight:400}
+.sim-info{background:#0a1a2e;padding:11px 16px;border-radius:36px;margin-top:12px;text-align:center;font-size:.92rem;color:#a8c8e8;border:1px solid #1a3550;line-height:1.5}
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:12px 16px; margin-top:12px; font-size:.9rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+.step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.step-dot{width:32px;height:32px;border-radius:50%;background:#1a3550;color:#6a8ca8;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;border:2px solid #2a4a6a;}
+.step-dot.done{background:#00c853;color:#002200;border-color:#00e676}
+.step-dot.current{background:#ff8f00;color:#0a1628;border-color:#ffc107;transform:scale(1.15)}
+.fullscreen-btn{position:absolute;top:12px;right:12px;z-index:10;padding:8px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;}
+.fullscreen-btn:hover{background:rgba(56,189,248,.35);color:#fff;}
+
+:fullscreen, :-webkit-full-screen {
+  overflow: hidden !important;
+  background: #0a1628 !important;
+}
+:fullscreen .container, :-webkit-full-screen .container {
+  max-width: 100% !important;
+  padding: 16px 24px 40px !important;
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="tabs" id="topicTabs">
+<button class="tab-btn active" data-topic="water"><span class="icon">💧</span> Water Cycle</button>
+<button class="tab-btn" data-topic="daynight"><span class="icon">🌍</span> Day & Night</button>
+</div>
+
+<!-- ================= WATER CYCLE ================= -->
+<div class="topic active" id="topic-water"><div class="card">
+<h2>💧 Water Cycle <small>continuous circulation of water</small></h2>
+<div class="desc">Ocean → Evaporation → Condensation → Precipitation → Runoff → Collection.</div>
+<div class="section-tabs" data-topic="water">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="types">Stages</button>
+<button class="section-tab active" data-section="sim">Simulation</button>
+</div>
+<div class="panel" id="water-def"><h3>📖 Definition</h3>
+<p>The <strong>Water Cycle</strong> describes the continuous movement of water on, above, and below the surface of the Earth, driven by solar energy and gravity.</p>
+</div>
+<div class="panel" id="water-exp"><h3>💡 Explanation</h3>
+<p>Solar heating causes ocean water evaporation. Vapor ascends, cools, and undergoes condensation into clouds. Droplets precipitate as rain, returning via river runoff and underground infiltration.</p>
+</div>
+<div class="panel" id="water-types"><h3>🌊 The Seven Stages</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>1. Evaporation</h4><p>Liquid water becomes vapor.</p></div>
+<div class="grid-item"><h4>2. Condensation</h4><p>Vapor forms cloud droplets.</p></div>
+<div class="grid-item"><h4>3. Precipitation</h4><p>Water falls as rain or snow.</p></div>
+<div class="grid-item"><h4>4. Collection</h4><p>Water returns to oceans and lakes.</p></div>
+</div>
+</div>
+<div class="panel active" id="water-sim"><h3>🎮 Interactive Simulation – Step-by-Step</h3>
+<div class="sim-box" id="waterSimBox">
+<button class="fullscreen-btn" id="waterFsBtn">⛶ Fullscreen</button>
+<div class="step-indicator" id="waterSteps">
+<span class="step-dot current" data-step="1">1</span>
+<span class="step-dot" data-step="2">2</span>
+<span class="step-dot" data-step="3">3</span>
+<span class="step-dot" data-step="4">4</span>
+</div>
+<div class="sim-controls">
+<button id="wStep1">☀️ Evaporation</button>
+<button id="wStep2">☁️ Condensation</button>
+<button id="wStep3">🌧️ Precipitation</button>
+<button id="wStep4">🌊 Collection</button>
+<button id="waterResetBtn" style="background:#c62828">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="waterReadout">STEP 1: EVAPORATION <small>Click the buttons to trigger each stage of the cycle</small></div>
+<canvas id="waterCanvas" width="1400" height="700"></canvas>
+<div class="sim-info" id="waterInfo">Press "Evaporation" to begin. Water vapor ascends from the ocean surface.</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= DAY & NIGHT ================= -->
+<div class="topic" id="topic-daynight"><div class="card">
+<h2>🌍 Day & Night <small>Earth's rotation</small></h2>
+<div class="desc">The Earth rotates on its axis once every 24 hours relative to the Sun.</div>
+<div class="section-tabs" data-topic="dn">
+<button class="section-tab" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab active" data-section="sim">Simulation</button>
+</div>
+<div class="panel" id="dn-def"><h3>📖 Definition</h3>
+<p><strong>Day and Night</strong> occur as a spherical planet rotates on its polar axis in sunlight. The sunlit hemisphere experiences daytime; the shadow hemisphere experiences nighttime.</p>
+</div>
+<div class="panel" id="dn-exp"><h3>💡 Explanation</h3>
+<p>Earth rotates eastward on its 23.5°-tilted axis every 24 hours. The boundary separating day and night is called the terminator line.</p>
+</div>
+<div class="panel active" id="dn-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box" id="dnSimBox">
+<button class="fullscreen-btn" id="dnFsBtn">⛶ Fullscreen</button>
+<div class="sim-controls">
+<label>Speed:
+<select id="dnSpeed">
+<option value="0.3">Slow</option>
+<option value="0.8" selected>Normal</option>
+<option value="1.8">Fast</option>
+</select></label>
+<button id="dnRotateBtn">▶ Rotate Earth</button>
+<button id="dnLightsBtn">🏙️ City Lights</button>
+<button id="dnResetBtn" style="background:#c62828">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="dnReadout">EARTH ROTATION <small>One full rotation = 24 hours</small></div>
+<canvas id="dnCanvas" width="1400" height="620"></canvas>
+
+
+
+<div class="sim-info" id="dnInfo">Click "Rotate Earth" to simulate diurnal cycle rotation.</div>
+</div>
+</div>
+</div></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={water:document.getElementById('topic-water'),daynight:document.getElementById('topic-daynight')};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+ topicTabs.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+ const topic=this.dataset.topic;Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+}));
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+function toggleFs(){
+ if(!document.fullscreenElement){ (document.documentElement||document.body).requestFullscreen().catch(()=>{}); }
+ else { document.exitFullscreen().catch(()=>{}); }
+}
+document.getElementById('waterFsBtn').addEventListener('click',toggleFs);
+document.getElementById('dnFsBtn').addEventListener('click',toggleFs);
+
+document.addEventListener('fullscreenchange',()=>{
+ const isFs = !!document.fullscreenElement;
+ const txt = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+ document.getElementById('waterFsBtn').textContent = txt;
+ document.getElementById('dnFsBtn').textContent = txt;
+});
+
+/* WATER CYCLE */
+let waterCtx, waterFrame=0, currentStep=1, vapours=[], drops=[], runoffs=[];
+let stepComplete={1:true,2:false,3:false,4:false};
+
+function initWater(){
+ vapours=[];drops=[];runoffs=[];
+ currentStep=1;stepComplete={1:true,2:false,3:false,4:false};
+ updateStepUI();
+}
+
+function updateStepUI(){
+ document.querySelectorAll('#waterSteps .step-dot').forEach(dot=>{
+  const s=+dot.dataset.step;
+  dot.classList.remove('current','done');
+  if(stepComplete[s]) dot.classList.add('done');
+  if(s===currentStep) dot.classList.add('current');
+ });
+ const msgs=[
+   '',
+   'STEP 1: EVAPORATION — Solar thermal energy vaporizes ocean water into rising vapor.',
+   'STEP 2: CONDENSATION — Cooling water vapor forms cloud droplets in the atmosphere.',
+   'STEP 3: PRECIPITATION — Heavy water droplets fall back to the ground as rain.',
+   'STEP 4: COLLECTION & RUNOFF — Rivers and streams carry water back to oceans and lakes.'
+ ];
+ const info=document.getElementById('waterInfo');
+ if(info && msgs[currentStep]) info.textContent=msgs[currentStep];
+ const ro=document.getElementById('waterReadout');
+ if(ro) ro.innerHTML='STAGE '+currentStep+': '+(currentStep===1?'EVAPORATION':currentStep===2?'CONDENSATION':currentStep===3?'PRECIPITATION':'COLLECTION & RUNOFF')+' <small>Click any step to activate its animation</small>';
+}
+
+function startStep(n){
+ currentStep=n;
+ stepComplete[n]=true;
+ updateStepUI();
+}
+
+document.getElementById('wStep1').addEventListener('click',()=>startStep(1));
+document.getElementById('wStep2').addEventListener('click',()=>startStep(2));
+document.getElementById('wStep3').addEventListener('click',()=>startStep(3));
+document.getElementById('wStep4').addEventListener('click',()=>startStep(4));
+document.getElementById('waterResetBtn').addEventListener('click',initWater);
+
+function waterLoop(){
+ const c=document.getElementById('waterCanvas');if(!waterCtx||!c)return;
+ const w=c.width,h=c.height;
+ waterCtx.clearRect(0,0,w,h);
+ waterFrame++;
+
+ const sky=waterCtx.createLinearGradient(0,0,0,h*0.72);
+ sky.addColorStop(0,'#0d2a5a'); sky.addColorStop(1,'#87ceeb');
+ waterCtx.fillStyle=sky; waterCtx.fillRect(0,0,w,h*0.72);
+
+ const sunX=1250,sunY=100,sunR=52;
+ const sunGlow=waterCtx.createRadialGradient(sunX,sunY,10,sunX,sunY,140);
+ sunGlow.addColorStop(0,'rgba(255,235,59,0.9)');
+ sunGlow.addColorStop(0.3,'rgba(255,183,77,0.4)');
+ sunGlow.addColorStop(1,'rgba(255,152,0,0)');
+ waterCtx.fillStyle=sunGlow;
+ waterCtx.beginPath(); waterCtx.arc(sunX,sunY,140,0,7); waterCtx.fill();
+
+ waterCtx.fillStyle='#fff176';
+ waterCtx.beginPath(); waterCtx.arc(sunX,sunY,sunR,0,7); waterCtx.fill();
+
+ // Mountains
+ waterCtx.fillStyle='#37474f';
+ waterCtx.beginPath();
+ waterCtx.moveTo(0,470); waterCtx.lineTo(260,250); waterCtx.lineTo(540,470); waterCtx.lineTo(840,300); waterCtx.lineTo(1400,470);
+ waterCtx.lineTo(1400,h); waterCtx.lineTo(0,h); waterCtx.closePath(); waterCtx.fill();
+
+ // Mountain snow caps
+ waterCtx.fillStyle='#eceff1';
+ waterCtx.beginPath();
+ waterCtx.moveTo(260,250); waterCtx.lineTo(220,290); waterCtx.lineTo(260,280); waterCtx.lineTo(300,290); waterCtx.closePath(); waterCtx.fill();
+ waterCtx.beginPath();
+ waterCtx.moveTo(840,300); waterCtx.lineTo(800,340); waterCtx.lineTo(840,330); waterCtx.lineTo(880,340); waterCtx.closePath(); waterCtx.fill();
+
+ // Plains & ground
+ const groundGrad=waterCtx.createLinearGradient(0,470,0,h);
+ groundGrad.addColorStop(0,'#2e7d32');
+ groundGrad.addColorStop(0.3,'#1b5e20');
+ groundGrad.addColorStop(1,'#3e2723');
+ waterCtx.fillStyle=groundGrad;
+ waterCtx.beginPath();
+ waterCtx.moveTo(0,470); waterCtx.lineTo(800,490); waterCtx.lineTo(800,h); waterCtx.lineTo(0,h); waterCtx.closePath(); waterCtx.fill();
+
+ // Ocean with waves
+ const oceanGrad=waterCtx.createLinearGradient(800,490,800,h);
+ oceanGrad.addColorStop(0,'#0288d1');
+ oceanGrad.addColorStop(0.4,'#01579b');
+ oceanGrad.addColorStop(1,'#002f6c');
+ waterCtx.fillStyle=oceanGrad;
+ waterCtx.fillRect(800,490,600,h-490);
+
+ // Ocean surface shimmer
+ waterCtx.fillStyle='rgba(255,255,255,0.4)';
+ for(let i=0;i<6;i++){
+   const wx = 830 + ((waterFrame*1.5 + i*110)%540);
+   const wy = 505 + (i*16);
+   waterCtx.fillRect(wx, wy, 45, 3);
+ }
+
+ // Labels on scenery
+ waterCtx.font='bold 16px "Segoe UI",sans-serif';
+ waterCtx.fillStyle='#ffffff';
+ waterCtx.fillText('🏔️ High Mountains', 180, 230);
+ waterCtx.fillText('🌊 Ocean Reservoir', 1050, 560);
+ waterCtx.fillText('☀️ Solar Energy Source', sunX-170, sunY+20);
+
+ // STEP 1: Evaporation vapours rising from ocean
+ if(currentStep===1 || stepComplete[1]){
+  if(waterFrame%3===0 && vapours.length<70){
+   vapours.push({x:840+Math.random()*460, y:490, vy:-1.8-Math.random()*0.8, r:3+Math.random()*3});
+  }
+  waterCtx.fillStyle='#fff';
+  waterCtx.fillText('↑ EVAPORATION (Warm vapor ascends)', 880, 420);
+ }
+ vapours.forEach((v,i)=>{
+  v.y += v.vy;
+  waterCtx.fillStyle='rgba(255,255,255,0.75)';
+  waterCtx.beginPath(); waterCtx.arc(v.x, v.y, v.r, 0, 7); waterCtx.fill();
+  if(v.y < 160) vapours.splice(i,1);
+ });
+
+ // STEP 2: Condensation clouds
+ if(currentStep>=2 || stepComplete[2]){
+  // Render dense puffy clouds
+  waterCtx.fillStyle='#f5f5f5';
+  waterCtx.beginPath();
+  waterCtx.arc(420,150,55,0,7);
+  waterCtx.arc(490,130,70,0,7);
+  waterCtx.arc(570,140,65,0,7);
+  waterCtx.arc(630,160,50,0,7);
+  waterCtx.fill();
+
+  waterCtx.fillStyle='#e0e0e0';
+  waterCtx.beginPath();
+  waterCtx.arc(520,165,55,0,7);
+  waterCtx.arc(580,160,50,0,7);
+  waterCtx.fill();
+
+  waterCtx.fillStyle='#ffd54f';
+  waterCtx.font='bold 16px "Segoe UI",sans-serif';
+  waterCtx.fillText('☁️ CONDENSATION (Clouds form)', 430, 95);
+ }
+
+ // STEP 3: Precipitation
+ if(currentStep===3 || stepComplete[3]){
+  if(waterFrame%2===0){
+   for(let k=0;k<3;k++){
+     drops.push({x:380+Math.random()*280, y:190, vy:5.5+Math.random()*2});
+   }
+  }
+  waterCtx.fillStyle='#64b5f6';
+  waterCtx.font='bold 16px "Segoe UI",sans-serif';
+  waterCtx.fillText('🌧️ PRECIPITATION (Rainfall)', 430, 240);
+ }
+ drops.forEach((d,i)=>{
+  d.y += d.vy;
+  waterCtx.strokeStyle='rgba(100,181,246,0.85)'; waterCtx.lineWidth=2.5;
+  waterCtx.beginPath(); waterCtx.moveTo(d.x, d.y); waterCtx.lineTo(d.x-1, d.y+12); waterCtx.stroke();
+  if(d.y > 470) drops.splice(i,1);
+ });
+
+ // STEP 4: Collection & River Runoff
+ if(currentStep===4 || stepComplete[4]){
+  // Render animated flowing river winding down to the ocean
+  waterCtx.strokeStyle='#00e5ff'; waterCtx.lineWidth=14; waterCtx.lineCap='round';
+  waterCtx.beginPath();
+  waterCtx.moveTo(320,460);
+  waterCtx.quadraticCurveTo(500,480,620,510);
+  waterCtx.quadraticCurveTo(720,530,810,540);
+  waterCtx.stroke();
+
+  // River surface streaks
+  waterCtx.strokeStyle='#ffffff'; waterCtx.lineWidth=4;
+  for(let r=0;r<4;r++){
+    const t=((waterFrame*0.02 + r*0.25)%1);
+    const rx = 320 + t*(810-320);
+    const ry = 460 + t*(540-460) + Math.sin(t*Math.PI)*15;
+    waterCtx.beginPath();
+    waterCtx.moveTo(rx,ry);
+    waterCtx.lineTo(rx+15,ry+3);
+    waterCtx.stroke();
+  }
+
+  // Groundwater percolation arrows
+  waterCtx.fillStyle='#80d8ff';
+  waterCtx.font='bold 15px "Segoe UI",sans-serif';
+  waterCtx.fillText('🌊 COLLECTION: River & Groundwater Runoff → Ocean', 280, 560);
+ }
+
+ requestAnimationFrame(waterLoop);
+}
+
+/* DAY & NIGHT SIMULATION */
+let dnCtx, dnAngle=0, dnSpeed=0.8, dnRotating=true, dnShowLights=true;
+
+function dnLoop(){
+ const c=document.getElementById('dnCanvas');if(!dnCtx||!c)return;
+ const w=c.width,h=c.height;
+ dnCtx.clearRect(0,0,w,h);
+
+ // Deep space background with twinkling stars
+ dnCtx.fillStyle='#02040f';
+ dnCtx.fillRect(0,0,w,h);
+
+ dnCtx.fillStyle='rgba(255,255,255,0.7)';
+ for(let i=0;i<50;i++){
+   const sx=(i*73+17)%w, sy=(i*47+29)%h;
+   dnCtx.fillRect(sx,sy,1.5,1.5);
+ }
+
+ const sunX=160, sunY=h/2, sunR=85;
+ const sunGlow=dnCtx.createRadialGradient(sunX,sunY,20,sunX,sunY,sunR*2.5);
+ sunGlow.addColorStop(0,'rgba(255,238,88,1)');
+ sunGlow.addColorStop(0.4,'rgba(255,167,38,0.5)');
+ sunGlow.addColorStop(1,'rgba(255,112,67,0)');
+ dnCtx.fillStyle=sunGlow;
+ dnCtx.beginPath(); dnCtx.arc(sunX,sunY,sunR*2.5,0,7); dnCtx.fill();
+
+ dnCtx.fillStyle='#fff9c4';
+ dnCtx.beginPath(); dnCtx.arc(sunX,sunY,sunR,0,7); dnCtx.fill();
+
+ // Sunlight beams spreading toward Earth
+ const sunBeam=dnCtx.createLinearGradient(sunX,sunY,850,sunY);
+ sunBeam.addColorStop(0,'rgba(255,245,157,0.22)');
+ sunBeam.addColorStop(1,'rgba(255,245,157,0.03)');
+ dnCtx.fillStyle=sunBeam;
+ dnCtx.beginPath();
+ dnCtx.moveTo(sunX,sunY-sunR);
+ dnCtx.lineTo(850,sunY-220);
+ dnCtx.lineTo(850,sunY+220);
+ dnCtx.lineTo(sunX,sunY+sunR);
+ dnCtx.closePath();
+ dnCtx.fill();
+
+ const ex=850, ey=h/2, er=180;
+
+ // Atmospheric blue glow ring
+ const atmoGlow=dnCtx.createRadialGradient(ex,ey,er,ex,ey,er+25);
+ atmoGlow.addColorStop(0,'rgba(66,165,245,0.6)');
+ atmoGlow.addColorStop(1,'rgba(66,165,245,0)');
+ dnCtx.fillStyle=atmoGlow;
+ dnCtx.beginPath(); dnCtx.arc(ex,ey,er+25,0,7); dnCtx.fill();
+
+ // Earth base ocean globe
+ const oceanGrad=dnCtx.createRadialGradient(ex-er*0.35,ey-er*0.2,er*0.1,ex,ey,er);
+ oceanGrad.addColorStop(0,'#42a5f5');
+ oceanGrad.addColorStop(0.6,'#1565c0');
+ oceanGrad.addColorStop(1,'#0d47a1');
+ dnCtx.fillStyle=oceanGrad;
+ dnCtx.beginPath(); dnCtx.arc(ex,ey,er,0,7); dnCtx.fill();
+
+ // Clip to sphere for continents & rotation
+ dnCtx.save();
+ dnCtx.beginPath(); dnCtx.arc(ex,ey,er,0,7); dnCtx.clip();
+
+ // Render rotating continents (wrapped longitude)
+ const continents = [
+   { name: 'Africa/Europe', lon: 0, lat: 0, w: 90, h: 140, col: '#2e7d32' },
+   { name: 'Eurasia', lon: 45, lat: 50, w: 120, h: 80, col: '#388e3c' },
+   { name: 'Americas', lon: 180, lat: 10, w: 100, h: 160, col: '#2e7d32' },
+   { name: 'Australia', lon: 110, lat: -45, w: 60, h: 50, col: '#689f38' }
+ ];
+
+ continents.forEach(cont=>{
+   const effectiveLon = (cont.lon + (dnAngle * 180 / Math.PI)) % 360;
+   // Project longitude across globe (-90 to +90 visible hemisphere)
+   const rad = (effectiveLon - 90) * Math.PI / 180;
+   const xOffset = Math.sin(rad) * er * 0.95;
+   const isFront = Math.cos(rad) > -0.2;
+
+   if(isFront){
+     const cx = ex + xOffset;
+     const cy = ey - (cont.lat * er / 180);
+     const squash = Math.max(0.2, Math.cos(rad));
+     dnCtx.fillStyle=cont.col;
+     dnCtx.beginPath();
+     dnCtx.ellipse(cx, cy, (cont.w/2)*squash, cont.h/2, 0.1, 0, 7);
+     dnCtx.fill();
+
+     // Polar ice caps
+     dnCtx.fillStyle='rgba(255,255,255,0.85)';
+     dnCtx.beginPath();
+     dnCtx.ellipse(ex, ey-er+15, er*0.45*squash, 14, 0, 0, 7);
+     dnCtx.fill();
+     dnCtx.beginPath();
+     dnCtx.ellipse(ex, ey+er-15, er*0.35*squash, 12, 0, 0, 7);
+     dnCtx.fill();
+   }
+ });
+
+ // Night Shadow Terminator
+ const nightGrad=dnCtx.createLinearGradient(ex-er*0.1,0,ex+er,0);
+ nightGrad.addColorStop(0,'rgba(0,0,10,0)');
+ nightGrad.addColorStop(0.25,'rgba(0,0,12,0.65)');
+ nightGrad.addColorStop(0.65,'rgba(0,0,18,0.92)');
+ nightGrad.addColorStop(1,'rgba(0,0,25,0.98)');
+ dnCtx.fillStyle=nightGrad;
+ dnCtx.fillRect(ex-er,ey-er,er*2,er*2);
+
+ // City Lights on Shadow Side
+ if(dnShowLights){
+   const cityClusters = [
+     { lon: 0, lat: 20 }, { lon: 15, lat: 35 }, { lon: 35, lat: 10 },
+     { lon: 170, lat: 25 }, { lon: 190, lat: 30 }, { lon: 200, lat: -15 },
+     { lon: 110, lat: -25 }
+   ];
+   cityClusters.forEach(city=>{
+     const effLon = (city.lon + (dnAngle * 180 / Math.PI)) % 360;
+     const rad = (effLon - 90) * Math.PI / 180;
+     const xOffset = Math.sin(rad) * er * 0.95;
+     const cx = ex + xOffset;
+     const cy = ey - (city.lat * er / 180);
+     // Only show if in night hemisphere (cx > ex)
+     if(cx > ex + 20 && Math.cos(rad) > -0.2){
+       dnCtx.fillStyle='#ffe082';
+       dnCtx.beginPath();
+       dnCtx.arc(cx, cy, 3.5, 0, 7);
+       dnCtx.fill();
+       dnCtx.fillStyle='rgba(255,202,40,0.4)';
+       dnCtx.beginPath();
+       dnCtx.arc(cx, cy, 7, 0, 7);
+       dnCtx.fill();
+     }
+   });
+ }
+
+ dnCtx.restore();
+
+ // 23.5 Degree Earth Axis Line
+ dnCtx.strokeStyle='rgba(255,255,255,0.45)';
+ dnCtx.lineWidth=2;
+ dnCtx.setLineDash([6,6]);
+ dnCtx.beginPath();
+ dnCtx.moveTo(ex - Math.sin(0.41)*er*1.2, ey - Math.cos(0.41)*er*1.2);
+ dnCtx.lineTo(ex + Math.sin(0.41)*er*1.2, ey + Math.cos(0.41)*er*1.2);
+ dnCtx.stroke();
+ dnCtx.setLineDash([]);
+
+ // Axis Labels
+ dnCtx.font='bold 13px "Segoe UI",sans-serif';
+ dnCtx.fillStyle='#90caf9';
+ dnCtx.fillText('North Pole (23.5° Tilt)', ex-70, ey-er-20);
+ dnCtx.fillText('South Pole', ex+20, ey+er+30);
+
+ // Labels
+ dnCtx.font='bold 22px "Segoe UI",sans-serif';
+ dnCtx.fillStyle='#fff59d';
+ dnCtx.fillText('☀️ DAY (Sunlit)', ex-150, ey+er-30);
+ dnCtx.fillStyle='#b0bec5';
+ dnCtx.fillText('🌙 NIGHT (In Shadow)', ex+30, ey+er-30);
+
+ if(dnRotating) dnAngle += 0.012 * dnSpeed;
+ requestAnimationFrame(dnLoop);
+}
+
+document.getElementById('dnSpeed').addEventListener('change',e=>{dnSpeed=+e.target.value});
+document.getElementById('dnRotateBtn').addEventListener('click',function(){
+ dnRotating=!dnRotating;
+ this.textContent=dnRotating?'⏹ Stop':'▶ Rotate Earth';
+});
+document.getElementById('dnLightsBtn').addEventListener('click',function(){
+ dnShowLights=!dnShowLights;
+ this.textContent=dnShowLights?'🏙️ City Lights ON':'🏙️ City Lights OFF';
+});
+document.getElementById('dnResetBtn').addEventListener('click',()=>{ dnAngle=0; dnRotating=true; document.getElementById('dnRotateBtn').textContent='⏹ Stop'; });
+
+function initAll(){
+ const wc=document.getElementById('waterCanvas'); if(wc){ waterCtx=wc.getContext('2d'); initWater(); waterLoop(); }
+ const dc=document.getElementById('dnCanvas'); if(dc){ dnCtx=dc.getContext('2d'); dnLoop(); }
+}
+
+if(document.readyState==='complete'||document.readyState==='interactive'){
+ initAll();
+} else {
+ window.addEventListener('DOMContentLoaded',initAll);
+ window.addEventListener('load',initAll);
+}
+})();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

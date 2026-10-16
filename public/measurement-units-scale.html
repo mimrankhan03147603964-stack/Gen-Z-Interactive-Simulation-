@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Measurement, Scale & Units Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITION & EXPLANATION CARD */
+.card {
+  background: linear-gradient(160deg, #09241b 0%, #05140e 100%);
+  border: 1.5px solid #059669;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #34d399;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(52, 211, 153, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #064e3b;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #022c22;
+  color: #6ee7b7;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #059669;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  border-color: #34d399;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #059669;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(2, 44, 34, 0.4);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #34d399;
+  border-top: 1px solid #064e3b;
+  border-right: 1px solid #064e3b;
+  border-bottom: 1px solid #064e3b;
+}
+.grid-item h4 { font-size: 1rem; color: #6ee7b7; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+.formula-box {
+  background: linear-gradient(135deg, #022c22 0%, #011a14 100%);
+  border: 1.5px solid #34d399;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #34d399;
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.2);
+}
+.formula-box small {
+  display: block;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* INTERACTIVE SIMULATION BOX */
+.sim-box {
+  background: #051813;
+  border: 1.5px solid #059669;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* TOP FULLSCREEN BUTTON */
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #34d399;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.6);
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+}
+
+/* SIMULATION CONTROLS & PERFORMANCE BAR */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #0a261c;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #064e3b;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+
+/* STAGE CANVAS CONTAINER */
+.canvas-holder {
+  background: radial-gradient(circle at center, #09291e 0%, #03120d 100%);
+  border: 1.5px solid #064e3b;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+}
+#measureCanvas {
+  display: block;
+  width: 100%;
+  height: 480px;
+}
+
+/* READOUT BAR */
+.sim-readout {
+  margin-top: 14px;
+  background: #0a261c;
+  border: 1.5px solid #064e3b;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #34d399;
+}
+.readout-pill {
+  background: #021c14;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #064e3b;
+  color: #f1f5f9;
+}
+
+.teacher-note {
+  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
+  border-left: 4px solid #10b981;
+  border-radius: 0 14px 14px 0;
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+.teacher-note strong { color: #34d399; }
+
+/* FULLSCREEN IMMERSION STYLES */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #03120d !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .canvas-holder,
+.sim-box:fullscreen .canvas-holder,
+.sim-box:-webkit-full-screen .canvas-holder {
+  flex: 1 !important;
+  height: calc(100vh - 170px) !important;
+}
+.sim-box.is-fullscreen #measureCanvas,
+.sim-box:fullscreen #measureCanvas,
+.sim-box:-webkit-full-screen #measureCanvas {
+  height: 100% !important;
+}
+
+/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
+.fs-bar {
+  display: none;
+}
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(10, 38, 28, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #34d399 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(52, 211, 153, 0.3) !important;
+  z-index: 1000000 !important;
+  max-width: 95vw !important;
+  flex-wrap: wrap !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* FULLSCREEN VISIBILITY & BUTTON GUARANTEE */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  padding-bottom: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.sim-box.is-fullscreen .sim-controls,
+.sim-box:fullscreen .sim-controls,
+.sim-box:-webkit-full-screen .sim-controls {
+  display: flex !important;
+  position: relative !important;
+  z-index: 100 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+}
+.sim-box.is-fullscreen .fs-btn,
+.sim-box:fullscreen .fs-btn,
+.sim-box:-webkit-full-screen .fs-btn {
+  display: inline-flex !important;
+  z-index: 101 !important;
+}
+
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-ruler', this)">
+      <span>📏</span> Calibrated Ruler & Precision Measurement
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-balance', this)">
+      <span>⚖️</span> Digital Mass Balance & Tare Lab
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-volume', this)">
+      <span>🧪</span> Volume by Water Displacement & Density ($\rho = m/V$)
+    </button>
+  </div>
+
+  <!-- TAB 1: RULER & SCALE -->
+  <div id="topic-ruler" class="tab-content active">
+
+    <!-- DEFINITION CARD -->
+    <div class="card">
+      <h2>
+        Measurement, Calibrated Scales & Scientific Units
+        <small>Applied Mathematics &bull; Metrology &bull; SI Metric Standards</small>
+      </h2>
+      <p class="desc">
+        Measurement is the quantification of physical attributes (length, mass, time, volume) by comparison against standardized units. The International System of Units (SI) establishes the meter (m), kilogram (kg), and liter (L).
+      </p>
+
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'u-def')">SI Metric Standards</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-prec')">Precision & Parallax</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-dens')">Density Equation</button>
+        <button class="section-tab" onclick="switchSection(this, 'u-uses')">Everyday Applications</button>
+      </div>
+
+      <div id="u-def" class="panel active">
+        <h3>SI Base Units of Measurement</h3>
+        <ul>
+          <li><strong>Length (Meter):</strong> Standard metric scale with centimeter ($1\text{ cm} = 0.01\text{ m}$) and millimeter ($1\text{ mm} = 0.001\text{ m}$) divisions.</li>
+          <li><strong>Mass (Gram / Kilogram):</strong> Measure of total matter content, invariant across different gravitational fields.</li>
+          <li><strong>Volume (Liter / Milliliter):</strong> $1\text{ mL} = 1\text{ cm}^3 = 1\text{ cc}$. Water has a calibrated density of $1.0\text{ g/cm}^3$ at 4°C.</li>
+        </ul>
+      </div>
+
+      <div id="u-prec" class="panel">
+        <h3>Precision & Avoiding Parallax Error</h3>
+        <p>Always view measuring scale markings perpendicular to the sight-line to prevent viewing-angle optical distortion (parallax error).</p>
+      </div>
+
+      <div id="u-dens" class="panel">
+        <h3>Density & Water Displacement (Archimedes' Principle)</h3>
+        <div class="formula-box">
+          Density: $\rho = \frac{\text{Mass}}{\text{Volume}} = \frac{m}{\Delta V}\text{ (g/cm}^3\text{)}$
+          <small>Displaced volume $\Delta V = V_{\text{final}} - V_{\text{initial}}$ precisely equals the solid object's volume.</small>
+        </div>
+      </div>
+
+      <div id="u-uses" class="panel">
+        <h3>Real-World Utility</h3>
+        <ul>
+          <li><strong>Aerospace & Manufacturing:</strong> Micrometer calibration down to microns ($\mu\text{m}$) ensures turbine engine airfoils fit with zero tolerance drift.</li>
+          <li><strong>Pharmaceutical Dosing:</strong> Precise milligram ($mg$) active drug compounding protects patient clinical safety.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATION BOX -->
+    <div class="sim-box" id="simBox25">
+      
+      <!-- PROMINENT FULLSCREEN BUTTON -->
+      <button class="fs-btn" id="fsToggleBtn25" onclick="toggleSimFullscreen('simBox25')">
+        <span>⛶</span> Full Screen Display
+      </button>
+
+      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Pencil')">✏️ Pencil</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Key')">🔑 Key</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Phone')">📱 Phone</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Coin')">🪙 Coin</button>
+          <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Gold')">🥇 Gold Bar</button>
+
+          <button class="ctrl-btn btn-indigo" id="btnUnitToggle" onclick="toggleUnits()">
+            📏 Unit: Metric (cm)
+          </button>
+
+          <button class="ctrl-btn btn-sky" onclick="tareDigitalScale()">
+            ⚖️ Tare Scale (0.00g)
+          </button>
+
+          <button class="ctrl-btn btn-rose" onclick="resetMeasureSim()">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION CANVAS -->
+      <div class="canvas-holder">
+        <canvas id="measureCanvas" width="1200" height="480"></canvas>
+
+
+
+      </div>
+
+      <!-- LIVE METRIC READOUT -->
+      <div class="sim-readout">
+        <span class="readout-pill" id="liveObjName">Selected Item: Pencil</span>
+        <span class="readout-pill" id="liveLengthVal">Length: 14.2 cm (142 mm)</span>
+        <span class="readout-pill" id="liveMassVal">Digital Mass: 8.50 g</span>
+        <span class="readout-pill" id="liveDensityVal">Computed Density: 0.65 g/cm³</span>
+      </div>
+
+      <div class="teacher-note">
+        <strong>💡 Laboratory Observation:</strong> Click the different specimen buttons to inspect items against the high-precision metric ruler, digital strain-gauge scale, and graduated displacement cylinder! Notice how gold's extraordinary density ($\rho = 19.3\text{ g/cm}^3$) causes a small volume to register enormous gravitational mass!
+      </div>
+
+      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
+      <div class="fs-bar" id="fsFloatingBar25">
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Pencil')"><span>✏️ Pencil</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Key')"><span>🔑 Key</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Phone')"><span>📱 Phone</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Coin')"><span>🪙 Coin</span></button>
+        <button class="ctrl-btn btn-emerald" onclick="selectTestObject('Gold')"><span>🥇 Gold</span></button>
+        <button class="ctrl-btn btn-indigo" onclick="toggleUnits()"><span>📏 Toggle Units</span></button>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox25')">
+          ✖ Exit Fullscreen [Esc]
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: MASS BALANCE -->
+  <div id="topic-balance" class="tab-content">
+    <div class="card">
+      <h2>Digital Strain-Gauge Balance Physics</h2>
+      <p class="desc">A digital laboratory balance measures mass using electrical resistance strain gauges that deflect micro-millimeters under applied gravity.</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Tare Function</h4>
+          <p>Zeros out the weight of containers or weighing boats before sample deposition.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Mass vs. Weight</h4>
+          <p>Mass is scalar matter ($kg$). Weight is downward gravitational force ($W = mg$ in Newtons).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Analytical Sensitivity</h4>
+          <p>Laboratory scales measure down to $0.0001\text{ g}$ ($0.1\text{ mg}$) with draft shields.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: WATER DISPLACEMENT -->
+  <div id="topic-volume" class="tab-content">
+    <div class="card">
+      <h2>Archimedes Water Displacement</h2>
+      <p class="desc">Irregular objects submerge and displace an equivalent volume of liquid ($V_{\text{object}} = V_{\text{displaced}}$).</p>
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Meniscus Reading</h4>
+          <p>Read transparent water at the bottom of the concave meniscus curve at eye level.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Sink vs. Float</h4>
+          <p>Objects sink if $\rho_{\text{object}} > \rho_{\text{fluid}}$ ($1.0\text{ g/cm}^3$ for water).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Specific Gravity</h4>
+          <p>Dimensionless ratio of material density compared directly to pure water.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// OBJECT REPOSITORY
+const OBJECTS = {
+  Pencil: { name: 'Pencil', lenCm: 14.2, massG: 8.50, volMl: 13.0, color: '#eab308' },
+  Key: { name: 'Brass Key', lenCm: 5.5, massG: 16.20, volMl: 1.9, color: '#f59e0b' },
+  Phone: { name: 'Smartphone', lenCm: 15.8, massG: 182.00, volMl: 88.0, color: '#38bdf8' },
+  Coin: { name: 'Nickel Coin', lenCm: 2.1, massG: 5.00, volMl: 0.6, color: '#94a3b8' },
+  Gold: { name: 'Gold Ingot', lenCm: 8.0, massG: 480.00, volMl: 24.8, color: '#facc15' }
+};
+
+let currentObject = OBJECTS.Pencil;
+let isMetric = true;
+let tareOffset = 0;
+
+const canvas = document.getElementById('measureCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeMeasureCanvas() {
+  const holder = canvas.parentElement;
+  canvas.width = holder.clientWidth || 1200;
+  canvas.height = holder.clientHeight || 480;
+  drawApparatus();
+}
+window.addEventListener('resize', resizeMeasureCanvas);
+
+// CONTROLS
+function selectTestObject(key) {
+  if (OBJECTS[key]) {
+    currentObject = OBJECTS[key];
+    updateReadouts();
+    drawApparatus();
+  }
+}
+
+function toggleUnits() {
+  isMetric = !isMetric;
+  document.getElementById('btnUnitToggle').innerText = `📏 Unit: ${isMetric ? 'Metric (cm)' : 'Imperial (in)'}`;
+  updateReadouts();
+  drawApparatus();
+}
+
+function tareDigitalScale() {
+  tareOffset = currentObject.massG;
+  updateReadouts();
+  drawApparatus();
+}
+
+function resetMeasureSim() {
+  tareOffset = 0;
+  selectTestObject('Pencil');
+}
+
+function updateReadouts() {
+  const obj = currentObject;
+  const lenStr = isMetric 
+    ? `${obj.lenCm} cm (${Math.round(obj.lenCm * 10)} mm)` 
+    : `${(obj.lenCm / 2.54).toFixed(2)} inches`;
+  
+  const displayMass = Math.max(0, obj.massG - tareOffset).toFixed(2);
+  const density = (obj.massG / obj.volMl).toFixed(2);
+
+  document.getElementById('liveObjName').innerText = `Selected: ${obj.name}`;
+  document.getElementById('liveLengthVal').innerText = `Length: ${lenStr}`;
+  document.getElementById('liveMassVal').innerText = `Digital Mass: ${displayMass} g`;
+  document.getElementById('liveDensityVal').innerText = `Density: ${density} g/cm³`;
+}
+
+// DRAW MEASURING APPARATUS
+function drawApparatus() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Background Grid
+  ctx.strokeStyle = 'rgba(6, 78, 59, 0.25)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+
+  // Draw 1: CALIBRATED RULER (Top Section)
+  drawRuler(w * 0.05, 50, w * 0.9, 90);
+
+  // Draw Object under the ruler
+  drawObjectUnderRuler(w * 0.05 + 40, 160);
+
+  // Draw 2: DIGITAL STRAIN GAUGE SCALE (Bottom Left)
+  drawDigitalScale(w * 0.15, h - 140, 260, 90);
+
+  // Draw 3: GRADUATED CYLINDER (Bottom Right)
+  drawGraduatedCylinder(w * 0.75, h - 220, 90, 180);
+}
+
+// DRAW RULER
+function drawRuler(x, y, rulerW, rulerH) {
+  // Wood / Acrylic Ruler Body
+  const rGrad = ctx.createLinearGradient(x, y, x, y + rulerH);
+  rGrad.addColorStop(0, '#fef08a');
+  rGrad.addColorStop(1, '#ca8a04');
+  ctx.fillStyle = rGrad;
+  ctx.fillRect(x, y, rulerW, rulerH);
+
+  ctx.strokeStyle = '#854d0e';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, rulerW, rulerH);
+
+  // Calibrated Marks
+  const numMajorTicks = 20; // 0 to 20 cm
+  const tickSpacing = (rulerW - 40) / numMajorTicks;
+  const startMarkX = x + 20;
+
+  ctx.fillStyle = '#1e293b';
+  ctx.strokeStyle = '#1e293b';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+
+  for (let i = 0; i <= numMajorTicks; i++) {
+    const tx = startMarkX + i * tickSpacing;
+    
+    // Major tick
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(tx, y + rulerH);
+    ctx.lineTo(tx, y + rulerH - 24);
+    ctx.stroke();
+
+    // Number
+    const label = isMetric ? `${i}` : `${(i * 0.39).toFixed(1)}`;
+    ctx.fillText(label, tx, y + rulerH - 28);
+
+    // Minor millimeter ticks
+    if (i < numMajorTicks) {
+      ctx.lineWidth = 1;
+      for (let m = 1; m < 10; m++) {
+        const subX = tx + (m * (tickSpacing / 10));
+        const subH = m === 5 ? 16 : 9;
+        ctx.beginPath();
+        ctx.moveTo(subX, y + rulerH);
+        ctx.lineTo(subX, y + rulerH - subH);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Unit Stamp
+  ctx.fillStyle = '#713f12';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillText(isMetric ? 'CENTIMETERS (cm)' : 'INCHES (in)', x + rulerW / 2, y + 26);
+}
+
+// DRAW SPECIMEN OBJECT
+function drawObjectUnderRuler(startX, startY) {
+  const rulerW = canvas.width * 0.9;
+  const tickSpacing = (rulerW - 40) / 20;
+  const pixelLen = currentObject.lenCm * tickSpacing;
+
+  ctx.fillStyle = currentObject.color;
+  ctx.fillRect(startX, startY, pixelLen, 24);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(startX, startY, pixelLen, 24);
+
+  // Object text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${currentObject.name} (${currentObject.lenCm} cm)`, startX + pixelLen / 2, startY + 12);
+}
+
+// DRAW DIGITAL SCALE
+function drawDigitalScale(x, y, sw, sh) {
+  // Scale Platform
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(x, y, sw, sh);
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, sw, sh);
+
+  // Digital LED Display Window
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(x + 20, y + 24, sw - 40, 42);
+  ctx.strokeStyle = '#059669';
+  ctx.strokeRect(x + 20, y + 24, sw - 40, 42);
+
+  // Green LED readout text
+  const displayMass = Math.max(0, currentObject.massG - tareOffset).toFixed(2);
+  ctx.fillStyle = '#34d399';
+  ctx.font = 'bold 24px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${displayMass} g`, x + sw / 2, y + 45);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.fillText('HIGH PRECISION 0.01g DIGITAL SCALE', x + sw / 2, y + 78);
+}
+
+// DRAW GRADUATED CYLINDER
+function drawGraduatedCylinder(x, y, cw, ch) {
+  // Glass body
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.fillRect(x, y, cw, ch);
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(x, y, cw, ch);
+
+  // Liquid Column
+  const baseWaterLevel = ch * 0.45;
+  const displacedRise = Math.min(ch * 0.4, (currentObject.volMl / 100) * (ch * 0.45));
+  const totalWaterH = baseWaterLevel + displacedRise;
+
+  const wGrad = ctx.createLinearGradient(x, y + ch - totalWaterH, x, y + ch);
+  wGrad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
+  wGrad.addColorStop(1, 'rgba(2, 132, 199, 0.85)');
+  ctx.fillStyle = wGrad;
+  ctx.fillRect(x + 2, y + ch - totalWaterH, cw - 4, totalWaterH);
+
+  // Meniscus curve
+  ctx.beginPath();
+  ctx.ellipse(x + cw / 2, y + ch - totalWaterH, cw / 2 - 2, 4, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fill();
+
+  // Calibration tick marks on cylinder
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#ffffff';
+  ctx.font = 'bold 8px monospace';
+  ctx.textAlign = 'left';
+
+  for (let ml = 0; ml <= 100; ml += 10) {
+    const my = y + ch - (ml / 100) * ch;
+    ctx.beginPath();
+    ctx.moveTo(x + 2, my);
+    ctx.lineTo(x + 14, my);
+    ctx.stroke();
+    ctx.fillText(`${ml}mL`, x + 16, my + 3);
+  }
+
+  // Label
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`ΔV = ${currentObject.volMl} mL`, x + cw / 2, y + ch + 20);
+}
+
+// FULLSCREEN HANDLER
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().then(() => { resizeMeasureCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeMeasureCanvas();
+      });
+    } else if (box.requestFullscreen) {
+      box.requestFullscreen().then(() => { resizeMeasureCanvas(); }).catch(() => {
+        box.classList.add("is-fullscreen");
+        resizeMeasureCanvas();
+      });
+    } else {
+      box.classList.add("is-fullscreen");
+      resizeMeasureCanvas();
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  box.classList.remove('is-fullscreen');
+  setTimeout(resizeMeasureCanvas, 100);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const box = document.getElementById('simBox25');
+  if (!document.fullscreenElement) {
+    box.classList.remove('is-fullscreen');
+  }
+  setTimeout(resizeMeasureCanvas, 100);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    exitSimFullscreen('simBox25');
+  }
+});
+
+// TOP TABS NAVIGATION
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+resizeMeasureCanvas();
+updateReadouts();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

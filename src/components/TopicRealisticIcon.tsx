@@ -1847,6 +1847,252 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 57: Human Heart Anatomy & Circulation
+    case 57:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f87171" />
+              <stop offset="50%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#991b1b" />
+            </linearGradient>
+            <linearGradient id="aortaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+          </defs>
+          {/* Superior Vena Cava / Aorta Arches */}
+          <path d="M24 10 C24 6 30 6 30 14" stroke="#ef4444" strokeWidth="4.5" strokeLinecap="round" />
+          <path d="M34 8 C34 4 42 4 42 14" stroke="#38bdf8" strokeWidth="4" strokeLinecap="round" />
+          {/* Main Anatomical Heart Mass */}
+          <path d="M32 54 C18 42 12 32 12 24 C12 16 20 12 28 17 C32 19 32 19 32 19 C32 19 32 19 36 17 C44 12 52 16 52 24 C52 32 46 42 32 54 Z" fill="url(#heartGrad)" stroke="#fecaca" strokeWidth="1.5" />
+          {/* Coronary blood vessel branches */}
+          <path d="M26 26 Q32 34 30 46" stroke="#fee2e2" strokeWidth="1.5" fill="none" opacity="0.8" />
+          <path d="M30 34 Q36 38 40 44" stroke="#bae6fd" strokeWidth="1.2" fill="none" opacity="0.8" />
+          {/* Pulse wave overlay */}
+          <path d="M16 34 L23 34 L26 27 L30 41 L34 31 L37 34 L48 34" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+
+    // 58: Structure of the Human Eye
+    case 58:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#0891b2" />
+              <stop offset="60%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#164e63" />
+            </radialGradient>
+            <linearGradient id="scleraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#e2e8f0" />
+            </linearGradient>
+          </defs>
+          {/* Sclera Eyeball Contour */}
+          <ellipse cx="32" cy="32" rx="26" ry="17" fill="url(#scleraGrad)" stroke="#0284c7" strokeWidth="2" />
+          {/* Iris */}
+          <circle cx="32" cy="32" r="12" fill="url(#irisGrad)" stroke="#22d3ee" strokeWidth="1.5" />
+          {/* Pupil */}
+          <circle cx="32" cy="32" r="5.5" fill="#0f172a" />
+          {/* Cornea Light Reflection Glint */}
+          <circle cx="29" cy="29" r="2.2" fill="#ffffff" />
+          <circle cx="35" cy="34" r="1.2" fill="#ffffff" opacity="0.7" />
+          {/* Optical Ray Cone */}
+          <path d="M8 26 L24 32 L8 38" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="2 2" />
+          {/* Optic Nerve Stub */}
+          <path d="M57 30 Q62 32 57 34" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 59: My ABC Book with Real Objects
+    case 59:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bookCover" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#d97706" />
+            </linearGradient>
+          </defs>
+          {/* Open Book Base */}
+          <path d="M10 46 C20 42 30 42 32 46 C34 42 44 42 54 46 V18 C44 14 34 14 32 18 C30 14 20 14 10 18 Z" fill="url(#bookCover)" stroke="#fde68a" strokeWidth="2" />
+          {/* Book Spine */}
+          <line x1="32" y1="18" x2="32" y2="46" stroke="#78350f" strokeWidth="1.8" />
+          {/* Left Page Letters: A B C */}
+          <text x="21" y="28" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">A B</text>
+          <text x="21" y="39" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">C</text>
+          {/* Right Page Real Object Graphic: Apple */}
+          <circle cx="43" cy="28" r="6" fill="#ef4444" stroke="#fecaca" strokeWidth="1" />
+          <path d="M43 22 Q45 18 43 16" stroke="#15803d" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse cx="45" cy="20" rx="2" ry="1" fill="#22c55e" />
+          {/* Friendly Star */}
+          <polygon points="50,12 51.5,8 55,8 52,6 53,2 50,4.5 47,2 48,6 45,8 48.5,8" fill="#facc15" />
+        </svg>
+      );
+
+    // 60: Enzyme Kinetics & Substrate Catalysis
+    case 60:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="enzymeBody" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#047857" />
+            </linearGradient>
+            <linearGradient id="substrateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#d97706" />
+            </linearGradient>
+          </defs>
+          {/* Large Enzyme Molecule with Keyhole Active Site */}
+          <path d="M12 28 C12 18 20 14 30 14 C32 14 34 20 38 20 C42 20 44 14 46 14 C54 14 58 22 58 34 C58 46 48 52 34 52 C20 52 12 44 12 28 Z" fill="url(#enzymeBody)" stroke="#6ee7b7" strokeWidth="2" />
+          {/* Active Site Notch Detail */}
+          <rect x="33" y="18" width="8" height="8" rx="2" fill="#064e3b" stroke="#34d399" strokeWidth="1" strokeDasharray="1 1" />
+          {/* Substrate Key Fitting in from Top */}
+          <rect x="34" y="8" width="6" height="7" rx="1.5" fill="url(#substrateGrad)" stroke="#fef08a" strokeWidth="1.2" />
+          {/* Catalytic Energy Sparks */}
+          <circle cx="28" cy="18" r="2" fill="#facc15" />
+          <circle cx="44" cy="18" r="1.5" fill="#facc15" />
+          <path d="M18 40 Q32 36 46 42" stroke="#d1fae5" strokeWidth="1.5" strokeDasharray="2 2" />
+        </svg>
+      );
+
+    // 61: Digital Logic Gates & Boolean Workbench
+    case 61:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#6366f1" />
+              <stop offset="100%" stopColor="#4338ca" />
+            </linearGradient>
+          </defs>
+          {/* Circuit Board Grid Background Lines */}
+          <line x1="8" y1="24" x2="22" y2="24" stroke="#818cf8" strokeWidth="2" />
+          <line x1="8" y1="40" x2="22" y2="40" stroke="#818cf8" strokeWidth="2" />
+          <line x1="48" y1="32" x2="58" y2="32" stroke="#34d399" strokeWidth="2.5" />
+          {/* AND/NAND Gate Body */}
+          <path d="M22 16 H34 C44 16 48 24 48 32 C48 40 44 48 34 48 H22 Z" fill="url(#gateGrad)" stroke="#a5b4fc" strokeWidth="2" />
+          {/* Gate Inversion Bubble (NOT bubble) */}
+          <circle cx="51" cy="32" r="3" fill="#0f172a" stroke="#34d399" strokeWidth="1.5" />
+          {/* Output LED Node */}
+          <circle cx="58" cy="32" r="2" fill="#34d399" />
+          {/* Binary labels */}
+          <text x="14" y="21" fill="#c7d2fe" fontSize="7" fontWeight="bold">1</text>
+          <text x="14" y="47" fill="#c7d2fe" fontSize="7" fontWeight="bold">1</text>
+          <text x="33" y="35" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle">AND</text>
+        </svg>
+      );
+
+    // 62: Photosynthesis in Flowering Plants Lab
+    case 62:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4ade80" />
+              <stop offset="100%" stopColor="#15803d" />
+            </linearGradient>
+          </defs>
+          {/* Sun / Solar Radiation */}
+          <circle cx="16" cy="16" r="6" fill="#facc15" stroke="#f59e0b" strokeWidth="1.5" />
+          <line x1="22" y1="20" x2="28" y2="25" stroke="#fef08a" strokeWidth="2" strokeDasharray="1.5 1.5" />
+          {/* Chloroplast Leaf Anatomy */}
+          <path d="M20 50 C20 30 36 20 52 20 C52 38 42 54 20 50 Z" fill="url(#leafGrad)" stroke="#86efac" strokeWidth="2" />
+          {/* Main Leaf Vein */}
+          <path d="M20 50 Q34 36 52 20" stroke="#dcfce7" strokeWidth="1.8" fill="none" />
+          {/* Secondary Veins */}
+          <path d="M30 42 Q36 38 40 40" stroke="#dcfce7" strokeWidth="1.2" fill="none" />
+          <path d="M38 34 Q44 30 48 32" stroke="#dcfce7" strokeWidth="1.2" fill="none" />
+          {/* Oxygen Bubbles Released (O2) */}
+          <circle cx="48" cy="14" r="3" fill="#38bdf8" fillOpacity="0.8" stroke="#bae6fd" strokeWidth="1" />
+          <circle cx="56" cy="18" r="2" fill="#38bdf8" fillOpacity="0.8" stroke="#bae6fd" strokeWidth="1" />
+          <text x="48" y="16.5" fill="#ffffff" fontSize="4.5" fontWeight="900" textAnchor="middle">O₂</text>
+        </svg>
+      );
+
+    // 63: Solar System Celestial Orbits Simulation
+    case 63:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="sunRadial" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="40%" stopColor="#fef08a" />
+              <stop offset="80%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#ea580c" />
+            </radialGradient>
+          </defs>
+          {/* Elliptical Planetary Orbital Rings */}
+          <ellipse cx="32" cy="32" rx="26" ry="12" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="2 2" opacity="0.6" />
+          <ellipse cx="32" cy="32" rx="19" ry="8.5" stroke="#818cf8" strokeWidth="1" strokeDasharray="2 2" opacity="0.7" />
+          <ellipse cx="32" cy="32" rx="12" ry="5.5" stroke="#fcd34d" strokeWidth="0.8" opacity="0.8" />
+          {/* Glowing Central Star (Sun) */}
+          <circle cx="32" cy="32" r="6.5" fill="url(#sunRadial)" stroke="#fef08a" strokeWidth="1" />
+          {/* Inner Planet: Earth */}
+          <circle cx="42" cy="28" r="2.5" fill="#0284c7" stroke="#7dd3fc" strokeWidth="0.8" />
+          {/* Ringed Giant: Saturn */}
+          <ellipse cx="14" cy="37" rx="4.5" ry="1.5" stroke="#fde68a" strokeWidth="1" transform="rotate(-15 14 37)" />
+          <circle cx="14" cy="37" r="2.8" fill="#d97706" />
+        </svg>
+      );
+
+    // 64: Plate Tectonics & Moon Phases
+    case 64:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="crustGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#22c55e" />
+              <stop offset="30%" stopColor="#78350f" />
+              <stop offset="70%" stopColor="#ea580c" />
+              <stop offset="100%" stopColor="#b91c1c" />
+            </linearGradient>
+          </defs>
+          {/* Earth Crust Section */}
+          <path d="M8 32 C18 28 28 34 32 32 C36 30 46 34 56 32 V52 H8 Z" fill="url(#crustGrad)" stroke="#fef08a" strokeWidth="1.5" />
+          {/* Fault Line / Subduction Trench */}
+          <path d="M30 32 L36 46" stroke="#fef08a" strokeWidth="2" strokeDasharray="2 1" />
+          {/* Magma Plume Arrow */}
+          <path d="M32 50 L32 40 M29 43 L32 39 L35 43" stroke="#facc15" strokeWidth="1.8" strokeLinecap="round" />
+          {/* Moon Phases in the Sky */}
+          <circle cx="20" cy="16" r="6" fill="#fef08a" />
+          <circle cx="44" cy="16" r="6" fill="#1e293b" stroke="#fde68a" strokeWidth="1.2" />
+          <path d="M44 10 A6 6 0 0 1 44 22 A3 6 0 0 0 44 10" fill="#fef08a" />
+        </svg>
+      );
+
+    // 65: ECCE Discovery Academy Studio
+    case 65:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ecceAcad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f472b6" />
+              <stop offset="100%" stopColor="#db2777" />
+            </linearGradient>
+            <linearGradient id="ecceAcad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+          </defs>
+          {/* Block 1 */}
+          <rect x="10" y="24" width="20" height="20" rx="4" fill="url(#ecceAcad1)" stroke="#fbcfe8" strokeWidth="1.5" />
+          <text x="20" y="39" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">1</text>
+          {/* Block 2 */}
+          <rect x="34" y="24" width="20" height="20" rx="4" fill="url(#ecceAcad2)" stroke="#bae6fd" strokeWidth="1.5" />
+          <text x="44" y="39" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">2</text>
+          {/* Stacked Triangle Shape */}
+          <polygon points="32,8 20,22 44,22" fill="#facc15" stroke="#fde047" strokeWidth="1.5" />
+          <circle cx="32" cy="17" r="2.5" fill="#ffffff" />
+          {/* Bottom Star & Heart Badge */}
+          <polygon points="14,50 16,46 20,46 17,44 18,40 14,42 10,40 11,44 8,46 12,46" fill="#fbbf24" />
+          <circle cx="50" cy="48" r="4" fill="#ef4444" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

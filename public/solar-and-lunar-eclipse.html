@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solar & Lunar Eclipse Simulator</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#060a14; color:#f1f5f9; min-height:100vh; overflow-x:hidden; }
+.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
+
+.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
+.title-group h1 { font-size:1.8rem; font-weight:800; color:#fb923c; display:flex; align-items:center; gap:10px; }
+.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
+.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
+.badge-orange { background:#9a3412; color:#fff7ed; border:1px solid #fb923c; }
+.badge-blue { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
+
+/* Mode Switcher Tabs */
+.mode-tabs { display:flex; gap:10px; margin-bottom:18px; background:#0f172a; padding:6px; border-radius:14px; border:1px solid #1e293b; }
+.mode-btn { flex:1; padding:12px 20px; border:none; border-radius:10px; font-weight:800; font-size:0.95rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; color:#94a3b8; background:transparent; }
+.mode-btn.active { background:linear-gradient(135deg, #ea580c 0%, #c2410c 100%); color:#fff; box-shadow:0 6px 20px rgba(234,88,12,0.4); }
+
+.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
+
+.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0d1527 0%, #030712 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.8); }
+.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#02050e; }
+canvas { display:block; width:100%; height:auto; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:14px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
+.ctrl-group { display:flex; align-items:center; gap:10px; }
+.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#ea580c; color:#fff; box-shadow:0 4px 12px rgba(234,88,12,0.35); }
+.btn-primary:hover { background:#c2410c; transform:translateY(-1px); }
+.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+.btn-secondary:hover { background:#334155; color:#fff; }
+
+.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
+.slider-group input[type="range"] { accent-color:#ea580c; width:120px; cursor:pointer; }
+
+.side-panel { display:flex; flex-direction:column; gap:16px; }
+.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.card h3 { font-size:1.1rem; font-weight:800; color:#fb923c; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.metrics-list { display:flex; flex-direction:column; gap:10px; }
+.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
+.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
+.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#fb923c; font-family:monospace; }
+
+.sky-view-box { text-align:center; padding:12px; background:#050c18; border-radius:12px; border:1px solid #1e3a5f; }
+#skyCanvas { margin:0 auto; border-radius:50%; border:2px solid #ea580c; background:#000; display:block; }
+
+.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 14px; font-size:0.82rem; font-weight:700; cursor:pointer; z-index:10; transition:all 0.2s; }
+.fullscreen-btn:hover { background:#1e293b; color:#fff; border-color:#fb923c; }
+
+:fullscreen, :-webkit-full-screen {
+  overflow: hidden !important;
+  background: #070d18 !important;
+}
+:fullscreen .container, :-webkit-full-screen .container {
+  max-width: 100% !important;
+  padding: 16px 24px 40px !important;
+}
+:fullscreen .main-grid, :-webkit-full-screen .main-grid {
+  grid-template-columns: 1fr 380px !important;
+}
+@media (max-width: 1024px) {
+  :fullscreen .main-grid, :-webkit-full-screen .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header-bar">
+    <div class="title-group">
+      <h1>☀️ Solar & 🌕 Lunar Eclipse Simulator</h1>
+      <p>Ray-traced Umbra, Penumbra & Antumbra shadow cones, Earth observer sky view, and 5.14° orbital inclination</p>
+    </div>
+    <div class="top-badges">
+      <span class="badge badge-orange">Celestial Optics</span>
+      <span class="badge badge-blue">Syzygy Alignment</span>
+    </div>
+  </header>
+
+  <nav class="mode-tabs">
+    <button class="mode-btn active" id="btnModeSolar">
+      ☀️ Solar Eclipse (Sun ➔ Moon ➔ Earth)
+    </button>
+    <button class="mode-btn" id="btnModeLunar">
+      🌕 Lunar Eclipse (Sun ➔ Earth ➔ Moon)
+    </button>
+  </nav>
+
+  <div class="main-grid">
+    <div class="sim-stage">
+      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
+
+      <div class="canvas-wrapper">
+        <canvas id="spaceCanvas" width="960" height="540"></canvas>
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
+          <button class="ctrl-btn btn-secondary" id="btnCenterEclipse">🎯 Center Eclipse</button>
+        </div>
+
+        <div class="slider-group">
+          <label>Orbital Alignment:</label>
+          <input type="range" id="sliderAlign" min="-100" max="100" step="1" value="0">
+          <span id="valAlign">0%</span>
+        </div>
+
+        <div class="slider-group">
+          <label>5° Tilt Offset:</label>
+          <input type="range" id="sliderTilt" min="0" max="5.14" step="0.1" value="0">
+          <span id="valTilt">0.0° (Node)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel">
+      <div class="card">
+        <h3>🔭 Earth Observer Sky View</h3>
+        <div class="sky-view-box">
+          <canvas id="skyCanvas" width="160" height="160"></canvas>
+
+<div class="ctl" id="ctlEclipse">
+  <div class="row">
+    <span>Eclipse Mode</span>
+    <button class="btn b-play" onclick="document.getElementById('btnModeSolar')?.click()">☀️ Solar Eclipse</button>
+    <button class="btn b-out" onclick="document.getElementById('btnModeLunar')?.click()">🌕 Lunar Eclipse</button>
+    <button class="btn b-auto" onclick="document.getElementById('btnCenterEclipse')?.click()">🎯 Center Alignment</button>
+    <button class="btn b-set" onclick="document.getElementById('btnPlayPause')?.click()">⏸ Pause / Resume</button>
+  </div>
+  <div class="row">
+    <span>Alignment</span>
+    <button class="btn b-hold" onclick="var s=document.getElementById('sliderAlign');if(s){s.value=0;s.dispatchEvent(new Event('input'))}">Exact Syzygy (0°)</button>
+    <button class="btn b-in" onclick="var s=document.getElementById('sliderAlign');if(s){s.value=2;s.dispatchEvent(new Event('input'))}">Partial (2°)</button>
+  </div>
+  <div class="row">
+    <span>Show / Options</span>
+    <button class="btn tg on" onclick="this.classList.toggle('on')">🏷 Umbra & Penumbra Cones</button>
+    
+  </div>
+</div>
+
+          <p id="skyLabel" style="margin-top:8px; font-size:0.85rem; font-weight:700; color:#fb923c;">Total Solar Eclipse (Corona Visible)</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 Eclipse Telemetry</h3>
+        <div class="metrics-list">
+          <div class="metric-row">
+            <span class="m-label">Eclipse Type:</span>
+            <span class="m-val" id="hudEclipseType" style="color:#f97316;">Total Solar</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Shadow Zone:</span>
+            <span class="m-val" id="hudShadowZone">Umbra (100% Dark)</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Obscuration:</span>
+            <span class="m-val" id="hudObscuration">100.0%</span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">Node Crossing:</span>
+            <span class="m-val" id="hudNode">Exact Alignment</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📖 Ray Optics & Key Concepts</h3>
+        <div style="font-size:0.86rem; line-height:1.6; color:#cbd5e1;">
+          <p>• <strong>Umbra:</strong> The inner darkest cone of the shadow where sunlight is completely blocked.</p>
+          <p>• <strong>Penumbra:</strong> The outer partial shadow where only a portion of the solar disk is obscured.</p>
+          <p>• <strong>Blood Moon:</strong> During a lunar eclipse, Earth's atmosphere bends red wavelengths into the shadow via Rayleigh scattering, casting a coppery red glow onto the Moon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const spaceCanvas = document.getElementById('spaceCanvas');
+const sCtx = spaceCanvas.getContext('2d');
+const skyCanvas = document.getElementById('skyCanvas');
+const kCtx = skyCanvas.getContext('2d');
+
+let mode = 'solar'; // 'solar' or 'lunar'
+let isRunning = true;
+let alignOffset = 0; // -100 to 100
+let orbitTiltDeg = 0; // 0 to 5.14
+let animStep = 0;
+
+// Starfield
+const stars = [];
+for (let i = 0; i < 150; i++) {
+  stars.push({ x: Math.random() * 960, y: Math.random() * 540, r: Math.random() * 1.5 + 0.5 });
+}
+
+function updateHUD() {
+  const absOffset = Math.abs(alignOffset) + (orbitTiltDeg * 15);
+  let type = '';
+  let shadow = '';
+  let obsc = Math.max(0, 100 - absOffset * 1.6).toFixed(1) + '%';
+
+  if (mode === 'solar') {
+    if (absOffset < 8) {
+      type = 'Total Solar Eclipse';
+      shadow = 'Umbra Core (100%)';
+      document.getElementById('skyLabel').textContent = 'Total Eclipse: Solar Corona';
+    } else if (absOffset < 45) {
+      type = 'Partial Solar Eclipse';
+      shadow = 'Penumbra';
+      document.getElementById('skyLabel').textContent = 'Partial Eclipse (Crescent Sun)';
+    } else {
+      type = 'No Eclipse (Passes North/South)';
+      shadow = 'None (Direct Sun)';
+      obsc = '0.0%';
+      document.getElementById('skyLabel').textContent = 'Normal Daytime Sun';
+    }
+  } else {
+    if (absOffset < 15) {
+      type = 'Total Lunar Eclipse';
+      shadow = 'Blood Moon Umbra';
+      document.getElementById('skyLabel').textContent = 'Blood Moon (Rayleigh Refraction)';
+    } else if (absOffset < 50) {
+      type = 'Partial Lunar Eclipse';
+      shadow = 'Penumbra into Umbra';
+      document.getElementById('skyLabel').textContent = 'Partial Lunar Bite';
+    } else {
+      type = 'Normal Full Moon';
+      shadow = 'None';
+      obsc = '0.0%';
+      document.getElementById('skyLabel').textContent = 'Fully Illuminated Moon';
+    }
+  }
+
+  document.getElementById('hudEclipseType').textContent = type;
+  document.getElementById('hudShadowZone').textContent = shadow;
+  document.getElementById('hudObscuration').textContent = obsc;
+  document.getElementById('hudNode').textContent = orbitTiltDeg < 0.5 ? 'Exact Node Alignment' : 'Tilted ➔ Missed Alignment';
+}
+
+function drawSpaceScene() {
+  sCtx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+  const w = spaceCanvas.width;
+  const h = spaceCanvas.height;
+
+  // Starfield
+  sCtx.fillStyle = '#ffffff';
+  for (let s of stars) {
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sCtx.fill();
+  }
+
+  const cy = h / 2;
+  const sunX = 100;
+  const sunR = 60;
+
+  // Draw Sun
+  const sunGrad = sCtx.createRadialGradient(sunX, cy, 10, sunX, cy, sunR * 1.8);
+  sunGrad.addColorStop(0, '#ffffff');
+  sunGrad.addColorStop(0.4, '#fde047');
+  sunGrad.addColorStop(0.8, '#ea580c');
+  sunGrad.addColorStop(1, 'transparent');
+  sCtx.fillStyle = sunGrad;
+  sCtx.beginPath();
+  sCtx.arc(sunX, cy, sunR * 1.8, 0, Math.PI * 2);
+  sCtx.fill();
+
+  sCtx.fillStyle = '#f59e0b';
+  sCtx.beginPath();
+  sCtx.arc(sunX, cy, sunR, 0, Math.PI * 2);
+  sCtx.fill();
+
+  // Celestial bodies configuration based on mode
+  if (mode === 'solar') {
+    // Sun -> Moon (center) -> Earth (right)
+    const moonX = 520;
+    const moonY = cy + alignOffset * 1.2 + orbitTiltDeg * 14;
+    const moonR = 16;
+
+    const earthX = 800;
+    const earthY = cy;
+    const earthR = 36;
+
+    // Draw Shadow Ray Cones from Sun edges past Moon to Earth
+    // Umbra (dark cone)
+    sCtx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    sCtx.beginPath();
+    sCtx.moveTo(moonX, moonY - moonR);
+    sCtx.lineTo(earthX, moonY - moonR * 0.3);
+    sCtx.lineTo(earthX, moonY + moonR * 0.3);
+    sCtx.lineTo(moonX, moonY + moonR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Penumbra (lighter cone)
+    sCtx.fillStyle = 'rgba(30, 41, 59, 0.4)';
+    sCtx.beginPath();
+    sCtx.moveTo(moonX, moonY - moonR);
+    sCtx.lineTo(earthX, moonY - moonR * 3.5);
+    sCtx.lineTo(earthX, moonY + moonR * 3.5);
+    sCtx.lineTo(moonX, moonY + moonR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Light ray lines
+    sCtx.strokeStyle = 'rgba(253, 224, 71, 0.3)';
+    sCtx.lineWidth = 1.5;
+    sCtx.beginPath();
+    sCtx.moveTo(sunX, cy - sunR);
+    sCtx.lineTo(earthX, moonY - moonR * 3.5);
+    sCtx.moveTo(sunX, cy + sunR);
+    sCtx.lineTo(earthX, moonY + moonR * 3.5);
+    sCtx.stroke();
+
+    // Draw Moon
+    sCtx.fillStyle = '#cbd5e1';
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+    sCtx.fill();
+    // Night side facing earth
+    sCtx.fillStyle = '#0f172a';
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, -Math.PI / 2, Math.PI / 2, false);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 12px sans-serif';
+    sCtx.fillText('Moon', moonX - 16, moonY + 28);
+
+    // Draw Earth
+    sCtx.fillStyle = '#0284c7';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+    sCtx.fill();
+    sCtx.fillStyle = '#22c55e';
+    sCtx.beginPath();
+    sCtx.ellipse(earthX - 4, earthY - 4, 14, 10, 0.3, 0, Math.PI * 2);
+    sCtx.fill();
+
+    // Umbra Shadow Spot hitting Earth surface
+    if (Math.abs(moonY - earthY) < 30) {
+      sCtx.fillStyle = '#020617';
+      sCtx.beginPath();
+      sCtx.ellipse(earthX - earthR + 3, moonY, 6, 8, 0, 0, Math.PI * 2);
+      sCtx.fill();
+      sCtx.strokeStyle = '#ef4444';
+      sCtx.lineWidth = 2;
+      sCtx.stroke();
+    }
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 13px sans-serif';
+    sCtx.fillText('Earth', earthX - 16, earthY + earthR + 20);
+
+  } else {
+    // Lunar Eclipse: Sun -> Earth (center) -> Moon (right)
+    const earthX = 480;
+    const earthY = cy;
+    const earthR = 36;
+
+    const moonX = 820;
+    const moonY = cy + alignOffset * 1.2 + orbitTiltDeg * 14;
+    const moonR = 16;
+
+    // Earth Shadow Umbra Cone past Earth
+    sCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    sCtx.beginPath();
+    sCtx.moveTo(earthX, earthY - earthR);
+    sCtx.lineTo(moonX + 60, cy - earthR * 0.4);
+    sCtx.lineTo(moonX + 60, cy + earthR * 0.4);
+    sCtx.lineTo(earthX, earthY + earthR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Penumbra
+    sCtx.fillStyle = 'rgba(30, 41, 59, 0.45)';
+    sCtx.beginPath();
+    sCtx.moveTo(earthX, earthY - earthR);
+    sCtx.lineTo(moonX + 60, cy - earthR * 2.5);
+    sCtx.lineTo(moonX + 60, cy + earthR * 2.5);
+    sCtx.lineTo(earthX, earthY + earthR);
+    sCtx.closePath();
+    sCtx.fill();
+
+    // Draw Earth
+    sCtx.fillStyle = '#0284c7';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+    sCtx.fill();
+    sCtx.fillStyle = '#22c55e';
+    sCtx.beginPath();
+    sCtx.ellipse(earthX - 4, earthY - 4, 14, 10, 0.3, 0, Math.PI * 2);
+    sCtx.fill();
+    // Night half
+    sCtx.fillStyle = 'rgba(2, 6, 23, 0.7)';
+    sCtx.beginPath();
+    sCtx.arc(earthX, earthY, earthR, -Math.PI / 2, Math.PI / 2, false);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 13px sans-serif';
+    sCtx.fillText('Earth', earthX - 16, earthY + earthR + 20);
+
+    // Draw Moon
+    const inUmbra = Math.abs(moonY - cy) < 22;
+    if (inUmbra) {
+      sCtx.fillStyle = '#b91c1c'; // Blood Moon red!
+    } else {
+      sCtx.fillStyle = '#cbd5e1';
+    }
+    sCtx.beginPath();
+    sCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+    sCtx.fill();
+
+    sCtx.fillStyle = '#f8fafc';
+    sCtx.font = 'bold 12px sans-serif';
+    sCtx.fillText('Moon', moonX - 16, moonY + 28);
+  }
+}
+
+function drawSkyView() {
+  kCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+  const cx = 80;
+  const cy = 80;
+  const r = 50;
+
+  const absOffset = Math.abs(alignOffset) + (orbitTiltDeg * 15);
+
+  if (mode === 'solar') {
+    // Solar Eclipse Sky View
+    if (absOffset < 8) {
+      // Totality! Black disk with radiant white solar corona
+      kCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      kCtx.lineWidth = 14;
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+      kCtx.stroke();
+
+      kCtx.fillStyle = '#020617';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Diamond ring sparkle
+      kCtx.fillStyle = '#ffffff';
+      kCtx.beginPath();
+      kCtx.arc(cx + r, cy - 8, 5, 0, Math.PI * 2);
+      kCtx.fill();
+    } else {
+      // Partial or Full Sun
+      kCtx.fillStyle = '#f59e0b';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Moon bite offset
+      const biteX = cx + (alignOffset * 0.8);
+      kCtx.fillStyle = '#020617';
+      kCtx.beginPath();
+      kCtx.arc(biteX, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+    }
+  } else {
+    // Lunar Eclipse Sky View
+    if (absOffset < 15) {
+      // Blood Moon! Copper red
+      kCtx.fillStyle = '#b91c1c';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+      // Subtle rim glow
+      kCtx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+      kCtx.lineWidth = 3;
+      kCtx.stroke();
+    } else {
+      // Moon disk
+      kCtx.fillStyle = '#e2e8f0';
+      kCtx.beginPath();
+      kCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      kCtx.fill();
+
+      // Earth shadow bite
+      if (absOffset < 50) {
+        kCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        kCtx.beginPath();
+        kCtx.arc(cx + (alignOffset * 0.9), cy, r * 1.5, 0, Math.PI * 2);
+        kCtx.fill();
+      }
+    }
+  }
+}
+
+function loop() {
+  if (isRunning) {
+    animStep += 0.02;
+    alignOffset = Math.sin(animStep) * 60;
+    document.getElementById('sliderAlign').value = alignOffset;
+    document.getElementById('valAlign').textContent = `${Math.round(alignOffset)}%`;
+  }
+  updateHUD();
+  drawSpaceScene();
+  drawSkyView();
+  requestAnimationFrame(loop);
+}
+
+// Mode Buttons
+document.getElementById('btnModeSolar').addEventListener('click', (e) => {
+  mode = 'solar';
+  document.getElementById('btnModeSolar').classList.add('active');
+  document.getElementById('btnModeLunar').classList.remove('active');
+});
+
+document.getElementById('btnModeLunar').addEventListener('click', (e) => {
+  mode = 'lunar';
+  document.getElementById('btnModeLunar').classList.add('active');
+  document.getElementById('btnModeSolar').classList.remove('active');
+});
+
+document.getElementById('btnPlayPause').addEventListener('click', (e) => {
+  isRunning = !isRunning;
+  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btnCenterEclipse').addEventListener('click', () => {
+  alignOffset = 0;
+  orbitTiltDeg = 0;
+  isRunning = false;
+  document.getElementById('btnPlayPause').textContent = '▶ Play';
+  document.getElementById('sliderAlign').value = 0;
+  document.getElementById('valAlign').textContent = '0%';
+  document.getElementById('sliderTilt').value = 0;
+  document.getElementById('valTilt').textContent = '0.0° (Node)';
+});
+
+document.getElementById('sliderAlign').addEventListener('input', (e) => {
+  alignOffset = parseFloat(e.target.value);
+  document.getElementById('valAlign').textContent = `${Math.round(alignOffset)}%`;
+  isRunning = false;
+  document.getElementById('btnPlayPause').textContent = '▶ Play';
+});
+
+document.getElementById('sliderTilt').addEventListener('input', (e) => {
+  orbitTiltDeg = parseFloat(e.target.value);
+  document.getElementById('valTilt').textContent = `${orbitTiltDeg.toFixed(1)}°`;
+});
+
+// Fullscreen
+document.getElementById('btnFullscreen').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    (document.documentElement || document.body).requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  document.getElementById('btnFullscreen').textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+});
+
+loop();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

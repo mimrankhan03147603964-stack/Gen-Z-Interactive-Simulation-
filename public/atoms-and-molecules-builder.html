@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atoms &amp; Molecules Chemistry Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #060e1f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 16px;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+/* TOP NAVIGATION TABS */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: #0a1630;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #93c5fd;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DEFINITIONS & CARDS */
+.card {
+  background: linear-gradient(160deg, #0b1a38 0%, #071329 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 10px 0 16px;
+  border-left: 4px solid #38bdf8;
+  padding-left: 14px;
+  line-height: 1.6;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 0 10px 10px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.section-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 14px;
+}
+.section-tab {
+  padding: 7px 16px;
+  border: 1px solid #1e3a8a;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #08152e;
+  color: #93c5fd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.section-tab:hover {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+.section-tab.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-color: #60a5fa;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+.panel { display: none; padding: 10px 0; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
+.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+.panel ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: center;
+  line-height: 18px;
+  font-size: 0.72rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.grid-item {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #0284c7;
+  border-top: 1px solid #1e3a8a;
+  border-right: 1px solid #1e3a8a;
+  border-bottom: 1px solid #1e3a8a;
+}
+.grid-item h4 { font-size: 1rem; color: #38bdf8; margin-bottom: 4px; font-weight: 800; }
+.grid-item p { font-size: 0.85rem; color: #94a3b8; }
+
+/* SIMULATION BOX */
+.sim-box {
+  background: #071329;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+.fs-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 30;
+  padding: 9px 18px;
+  border-radius: 30px;
+  border: 1.5px solid #38bdf8;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.fs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+}
+
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  background: #0b1a38;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1.5px solid #1e3a8a;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  padding-right: 180px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
+.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
+.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
+.btn-indigo { background: #4f46e5; color: #fff; border-color: #818cf8; }
+.btn-purple { background: #7c3aed; color: #fff; border-color: #a78bfa; }
+.btn-dark { background: #0f172a; color: #cbd5e1; border-color: #334155; }
+
+/* STAGE SPLIT */
+.stage-split {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 16px;
+}
+@media (max-width: 1100px) {
+  .stage-split { grid-template-columns: 1fr; }
+}
+
+.canvas-card {
+  background: radial-gradient(circle at center, #0b1a38 0%, #030816 100%);
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  position: relative;
+}
+.canvas-card canvas {
+  width: 100%;
+  max-width: 600px;
+  height: 380px;
+  display: block;
+}
+
+/* SIDE PANEL */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.info-card {
+  background: #091733;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.particle-counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: #050c18;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+}
+.counter-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.counter-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.counter-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.counter-btn:hover { transform: scale(1.08); }
+.counter-val {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+  font-family: monospace;
+}
+
+/* MOLECULES GRID */
+.molecules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+/* FULLSCREEN STYLING */
+.sim-box.is-fullscreen,
+.sim-box:fullscreen,
+.sim-box:-webkit-full-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: #050c1a !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+.fs-bar { display: none; }
+.sim-box.is-fullscreen .fs-bar,
+.sim-box:fullscreen .fs-bar,
+.sim-box:-webkit-full-screen .fs-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(11, 26, 56, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 2px solid #38bdf8 !important;
+  border-radius: 40px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  z-index: 1000000 !important;
+}
+.fs-exit-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #fb7185 !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TOPIC TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic-builder', this)">
+      <span>⚛️</span> Interactive Atom Builder &amp; Subatomic Shells
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-molecules', this)">
+      <span>🔬</span> Molecules &amp; Chemical Compounds Explorer
+    </button>
+    <button class="tab-btn" onclick="switchTopic('topic-theory', this)">
+      <span>📖</span> Atoms vs Molecules &amp; Atomic & Molecular Theory
+    </button>
+  </div>
+
+  <!-- TOPIC 1: ATOM BUILDER -->
+  <div id="topic-builder" class="tab-content active">
+    <div class="card">
+      <h2>
+        <span>⚛️</span> Interactive Atom Builder
+        <small>Construct Elements with Protons, Neutrons &amp; Electrons</small>
+      </h2>
+      <p class="desc">
+        Add or remove subatomic particles to build stable or unstable atoms, discover element identities, calculate net electrical charge, and observe quantum electron shell configurations.
+      </p>
+      
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSection(this, 'b-overview')">Overview</button>
+        <button class="section-tab" onclick="switchSection(this, 'b-shells')">Bohr Shell Rules</button>
+        <button class="section-tab" onclick="switchSection(this, 'b-stability')">Nuclear Stability</button>
+      </div>
+
+      <div id="b-overview" class="panel active">
+        <h3>Subatomic Architecture</h3>
+        <p>Protons define atomic number (Z). Neutrons supply binding nuclear force. Electrons (e⁻) fill shells (2, 8, 8, 18) according to the Pauli exclusion principle.</p>
+      </div>
+      <div id="b-shells" class="panel">
+        <h3>Shell Capacities</h3>
+        <ul>
+          <li><strong>K-Shell (n=1):</strong> Maximum 2 electrons</li>
+          <li><strong>L-Shell (n=2):</strong> Maximum 8 electrons</li>
+          <li><strong>M-Shell (n=3):</strong> Maximum 8 electrons (for elements up to Argon)</li>
+        </ul>
+      </div>
+      <div id="b-stability" class="panel">
+        <h3>Stability &amp; Charge</h3>
+        <p>An atom is electrically <strong>neutral</strong> when protons equal electrons. If electrons are gained or lost, an <strong>ion</strong> is formed (+ cation or − anion).</p>
+      </div>
+    </div>
+
+    <!-- SIMULATION BOX -->
+    <div class="sim-box" id="atomSimBox">
+      <button class="fs-btn" onclick="toggleSimFullscreen('atomSimBox')">
+        ⛶ Fullscreen Stage
+      </button>
+
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          <span style="font-size:0.8rem; font-weight:800; color:#94a3b8;">PRESETS:</span>
+          <button class="ctrl-btn btn-sky" onclick="setAtomPreset(1, 0, 1)">H (Hydrogen)</button>
+          <button class="ctrl-btn btn-emerald" onclick="setAtomPreset(2, 2, 2)">He (Helium)</button>
+          <button class="ctrl-btn btn-amber" onclick="setAtomPreset(6, 6, 6)">C (Carbon)</button>
+          <button class="ctrl-btn btn-rose" onclick="setAtomPreset(7, 7, 7)">N (Nitrogen)</button>
+          <button class="ctrl-btn btn-sky" onclick="setAtomPreset(8, 8, 8)">O (Oxygen)</button>
+          <button class="ctrl-btn btn-purple" onclick="setAtomPreset(11, 12, 11)">Na (Sodium)</button>
+          <button class="ctrl-btn btn-indigo" onclick="setAtomPreset(17, 18, 17)">Cl (Chlorine)</button>
+        </div>
+        <div class="ctrl-group">
+          <button class="ctrl-btn btn-dark" onclick="resetAtomBuilder()">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="stage-split">
+        <div class="canvas-card">
+          <canvas id="atomCanvas" width="600" height="380"></canvas>
+          <div style="display:flex; justify-content:space-between; width:100%; margin-top:8px; font-size:0.82rem; color:#94a3b8;">
+            <span id="atomStatusTxt">Element: Carbon-12 (Stable)</span>
+            <span id="atomChargeTxt">Net Charge: 0 (Neutral Atom)</span>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="info-card">
+            <h3 style="font-size:1.1rem; color:#38bdf8; margin-bottom:12px; font-weight:800;">Particle Controls</h3>
+            
+            <!-- Protons -->
+            <div class="particle-counter-row">
+              <div class="counter-label" style="color:#ef4444;">
+                <span>🔴</span> Protons (p⁺)
+              </div>
+              <div class="counter-actions">
+                <button class="counter-btn" style="background:#ef4444; color:#fff;" onclick="changeParticle('p', -1)">−</button>
+                <span class="counter-val" id="valProtons">6</span>
+                <button class="counter-btn" style="background:#ef4444; color:#fff;" onclick="changeParticle('p', 1)">+</button>
+              </div>
+            </div>
+
+            <!-- Neutrons -->
+            <div class="particle-counter-row">
+              <div class="counter-label" style="color:#94a3b8;">
+                <span>⚪</span> Neutrons (n⁰)
+              </div>
+              <div class="counter-actions">
+                <button class="counter-btn" style="background:#64748b; color:#fff;" onclick="changeParticle('n', -1)">−</button>
+                <span class="counter-val" id="valNeutrons">6</span>
+                <button class="counter-btn" style="background:#64748b; color:#fff;" onclick="changeParticle('n', 1)">+</button>
+              </div>
+            </div>
+
+            <!-- Electrons -->
+            <div class="particle-counter-row">
+              <div class="counter-label" style="color:#38bdf8;">
+                <span>🔵</span> Electrons (e⁻)
+              </div>
+              <div class="counter-actions">
+                <button class="counter-btn" style="background:#0284c7; color:#fff;" onclick="changeParticle('e', -1)">−</button>
+                <span class="counter-val" id="valElectrons">6</span>
+                <button class="counter-btn" style="background:#0284c7; color:#fff;" onclick="changeParticle('e', 1)">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3 style="font-size:1.1rem; color:#38bdf8; margin-bottom:10px; font-weight:800;">Atomic Identity</h3>
+            <div style="font-size:0.85rem; line-height:1.8; color:#cbd5e1;">
+              <div><strong>Symbol &amp; Name:</strong> <span id="dispName" style="color:#38bdf8; font-weight:800;">Carbon (C)</span></div>
+              <div><strong>Atomic Number (Z):</strong> <span id="dispZ" style="font-family:monospace; font-weight:800;">6</span></div>
+              <div><strong>Mass Number (A):</strong> <span id="dispMass" style="font-family:monospace; font-weight:800;">12</span></div>
+              <div><strong>Electron Shells:</strong> <span id="dispShells" style="font-family:monospace; font-weight:800;">K: 2, L: 4</span></div>
+              <div><strong>Nuclear Status:</strong> <span id="dispStability" style="color:#34d399; font-weight:800;">Stable Isotope</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fs-bar">
+        <span style="color:#fff; font-weight:800;">Atom Builder Mode</span>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('atomSimBox')">✕ Exit Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 2: MOLECULES EXPLORER -->
+  <div id="topic-molecules" class="tab-content">
+    <div class="card">
+      <h2>
+        <span>🔬</span> Molecules &amp; Compounds 3D Lab
+        <small>Covalent Bonding &amp; Chemical Formulas</small>
+      </h2>
+      <p class="desc">
+        Molecules consist of two or more chemically bonded atoms. Explore elemental diatomic molecules (O₂, H₂, N₂) and compounds (H₂O, CO₂, CH₄, NH₃, NaCl).
+      </p>
+    </div>
+
+    <div class="sim-box" id="moleculeSimBox">
+      <button class="fs-btn" onclick="toggleSimFullscreen('moleculeSimBox')">
+        ⛶ Fullscreen Stage
+      </button>
+
+      <div class="stage-split">
+        <div class="canvas-card">
+          <canvas id="moleculeCanvas" width="600" height="380"></canvas>
+
+
+
+          <div style="display:flex; justify-content:space-between; width:100%; margin-top:8px; font-size:0.82rem; color:#94a3b8;">
+            <span id="molFormulaDisplay">Formula: Water (H₂O)</span>
+            <span>Rotating 3D Ball-and-Stick Model</span>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="info-card">
+            <h3 style="font-size:1.1rem; color:#38bdf8; margin-bottom:10px; font-weight:800;">Select Molecule</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <button class="ctrl-btn btn-sky" onclick="selectMolecule('H2O')">Water (H₂O)</button>
+              <button class="ctrl-btn btn-rose" onclick="selectMolecule('CO2')">Carbon Dioxide (CO₂)</button>
+              <button class="ctrl-btn btn-emerald" onclick="selectMolecule('CH4')">Methane (CH₄)</button>
+              <button class="ctrl-btn btn-amber" onclick="selectMolecule('NH3')">Ammonia (NH₃)</button>
+              <button class="ctrl-btn btn-indigo" onclick="selectMolecule('O2')">Oxygen (O₂)</button>
+              <button class="ctrl-btn btn-purple" onclick="selectMolecule('NaCl')">Table Salt (NaCl)</button>
+            </div>
+          </div>
+
+          <div class="info-card" id="molDetailsCard">
+            <h3 style="font-size:1.1rem; color:#38bdf8; margin-bottom:10px; font-weight:800;" id="molDetailTitle">Water (H₂O)</h3>
+            <p style="font-size:0.88rem; color:#cbd5e1; line-height:1.6;" id="molDetailDesc">
+              Composed of 2 Hydrogen atoms sharing electrons covalently with 1 Oxygen atom at a 104.5° bent bond angle. Essential for all biological life.
+            </p>
+            <div style="margin-top:10px; font-size:0.82rem; color:#94a3b8;" id="molDetailStats">
+              <strong>Total Atoms:</strong> 3 &nbsp;•&nbsp; <strong>Bond Type:</strong> Polar Covalent
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fs-bar">
+        <span style="color:#fff; font-weight:800;">Molecule Viewer Mode</span>
+        <button class="fs-exit-btn" onclick="exitSimFullscreen('moleculeSimBox')">✕ Exit Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 3: THEORY & CAMBRIDGE CURRICULUM -->
+  <div id="topic-theory" class="tab-content">
+    <div class="card">
+      <h2>
+        <span>📖</span> Atoms, Molecules &amp; Matter Theory
+        <small>Interactive Chemistry Simulation</small>
+      </h2>
+      <p class="desc">
+        Comprehensive conceptual foundation connecting atomic structure, periodic organization, and compound formation.
+      </p>
+
+      <div class="grid-3">
+        <div class="grid-item">
+          <h4>Atoms</h4>
+          <p>The fundamental building blocks of all chemical elements. Smallest particle retaining elemental properties.</p>
+        </div>
+        <div class="grid-item">
+          <h4>Molecules</h4>
+          <p>Two or more atoms bonded covalently. Can be homonuclear (O₂) or heteronuclear compounds (H₂O).</p>
+        </div>
+        <div class="grid-item">
+          <h4>Compounds vs Mixtures</h4>
+          <p>Compounds have fixed chemical ratios with chemical bonds. Mixtures are physical combinations without fixed proportions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ELEMENT DATA (1 to 18)
+const ATOM_NAMES = {
+  1: { name: 'Hydrogen', sym: 'H', mass: 1 },
+  2: { name: 'Helium', sym: 'He', mass: 4 },
+  3: { name: 'Lithium', sym: 'Li', mass: 7 },
+  4: { name: 'Beryllium', sym: 'Be', mass: 9 },
+  5: { name: 'Boron', sym: 'B', mass: 11 },
+  6: { name: 'Carbon', sym: 'C', mass: 12 },
+  7: { name: 'Nitrogen', sym: 'N', mass: 14 },
+  8: { name: 'Oxygen', sym: 'O', mass: 16 },
+  9: { name: 'Fluorine', sym: 'F', mass: 19 },
+  10: { name: 'Neon', sym: 'Ne', mass: 20 },
+  11: { name: 'Sodium', sym: 'Na', mass: 23 },
+  12: { name: 'Magnesium', sym: 'Mg', mass: 24 },
+  13: { name: 'Aluminium', sym: 'Al', mass: 27 },
+  14: { name: 'Silicon', sym: 'Si', mass: 28 },
+  15: { name: 'Phosphorus', sym: 'P', mass: 31 },
+  16: { name: 'Sulfur', sym: 'S', mass: 32 },
+  17: { name: 'Chlorine', sym: 'Cl', mass: 35 },
+  18: { name: 'Argon', sym: 'Ar', mass: 40 }
+};
+
+let pCount = 6;
+let nCount = 6;
+let eCount = 6;
+let animAngle = 0;
+
+const atomCanvas = document.getElementById('atomCanvas');
+const atomCtx = atomCanvas.getContext('2d');
+
+function changeParticle(type, delta) {
+  if (type === 'p') pCount = Math.max(1, Math.min(18, pCount + delta));
+  if (type === 'n') nCount = Math.max(0, Math.min(22, nCount + delta));
+  if (type === 'e') eCount = Math.max(0, Math.min(18, eCount + delta));
+  updateAtomUI();
+}
+
+function setAtomPreset(p, n, e) {
+  pCount = p;
+  nCount = n;
+  eCount = e;
+  updateAtomUI();
+}
+
+function resetAtomBuilder() {
+  setAtomPreset(6, 6, 6);
+}
+
+function getElectronShells(count) {
+  const shells = [];
+  let remaining = count;
+  const caps = [2, 8, 8];
+  for (let cap of caps) {
+    if (remaining <= 0) break;
+    const inShell = Math.min(remaining, cap);
+    shells.push(inShell);
+    remaining -= inShell;
+  }
+  return shells;
+}
+
+function updateAtomUI() {
+  document.getElementById('valProtons').innerText = pCount;
+  document.getElementById('valNeutrons').innerText = nCount;
+  document.getElementById('valElectrons').innerText = eCount;
+
+  const info = ATOM_NAMES[pCount] || { name: 'Element ' + pCount, sym: 'X', mass: pCount + nCount };
+  const mass = pCount + nCount;
+  const charge = pCount - eCount;
+  const shells = getElectronShells(eCount);
+
+  document.getElementById('dispName').innerText = `${info.name} (${info.sym})`;
+  document.getElementById('dispZ').innerText = pCount;
+  document.getElementById('dispMass').innerText = mass;
+  document.getElementById('dispShells').innerText = shells.map((s, idx) => `Shell ${idx+1}: ${s}`).join(', ') || 'None';
+
+  let chargeText = 'Net Charge: 0 (Neutral Atom)';
+  if (charge > 0) chargeText = `Net Charge: +${charge} (Cation)`;
+  else if (charge < 0) chargeText = `Net Charge: ${charge} (Anion)`;
+  document.getElementById('atomChargeTxt').innerText = chargeText;
+
+  let stab = 'Stable Isotope';
+  if (Math.abs(nCount - pCount) > 4 && pCount > 2) stab = 'Unstable (Radioactive)';
+  document.getElementById('dispStability').innerText = stab;
+  document.getElementById('atomStatusTxt').innerText = `Element: ${info.name}-${mass} (${stab})`;
+}
+
+function drawAtom() {
+  atomCtx.clearRect(0, 0, atomCanvas.width, atomCanvas.height);
+  const cx = atomCanvas.width / 2;
+  const cy = atomCanvas.height / 2;
+
+  // Nucleus
+  const nucRadius = 26;
+  const grad = atomCtx.createRadialGradient(cx, cy, 4, cx, cy, nucRadius);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.5, '#ef4444');
+  grad.addColorStop(1, '#991b1b');
+
+  atomCtx.beginPath();
+  atomCtx.arc(cx, cy, nucRadius, 0, Math.PI * 2);
+  atomCtx.fillStyle = grad;
+  atomCtx.shadowColor = '#ef4444';
+  atomCtx.shadowBlur = 14;
+  atomCtx.fill();
+  atomCtx.shadowBlur = 0;
+
+  atomCtx.fillStyle = '#ffffff';
+  atomCtx.font = 'bold 10px sans-serif';
+  atomCtx.textAlign = 'center';
+  atomCtx.textBaseline = 'middle';
+  atomCtx.fillText(`${pCount}p⁺ ${nCount}n⁰`, cx, cy);
+
+  // Concentric Electron Shells
+  const shells = getElectronShells(eCount);
+  const baseR = 45;
+  const stepR = 30;
+
+  shells.forEach((electrons, sIdx) => {
+    const r = baseR + sIdx * stepR;
+
+    atomCtx.beginPath();
+    atomCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    atomCtx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+    atomCtx.lineWidth = 1.5;
+    atomCtx.setLineDash([4, 4]);
+    atomCtx.stroke();
+    atomCtx.setLineDash([]);
+
+    const shellNames = ['K', 'L', 'M'];
+    atomCtx.fillStyle = '#64748b';
+    atomCtx.font = '9px monospace';
+    atomCtx.fillText(shellNames[sIdx] || `S${sIdx+1}`, cx + r + 4, cy - 2);
+
+    const dir = sIdx % 2 === 0 ? 1 : -1;
+    for (let e = 0; e < electrons; e++) {
+      const angle = animAngle * dir * (1 / (sIdx + 1)) + (e * 2 * Math.PI / electrons);
+      const ex = cx + r * Math.cos(angle);
+      const ey = cy + r * Math.sin(angle);
+
+      atomCtx.beginPath();
+      atomCtx.arc(ex, ey, 5.5, 0, Math.PI * 2);
+      atomCtx.fillStyle = '#38bdf8';
+      atomCtx.shadowColor = '#38bdf8';
+      atomCtx.shadowBlur = 8;
+      atomCtx.fill();
+      atomCtx.shadowBlur = 0;
+
+      atomCtx.strokeStyle = '#ffffff';
+      atomCtx.lineWidth = 1;
+      atomCtx.stroke();
+    }
+  });
+
+  animAngle += 0.025;
+  requestAnimationFrame(drawAtom);
+}
+
+// MOLECULES 3D-STYLE VIEWER
+const molCanvas = document.getElementById('moleculeCanvas');
+const molCtx = molCanvas.getContext('2d');
+
+const MOLECULES_DATA = {
+  'H2O': {
+    name: 'Water (H₂O)',
+    desc: 'Composed of 2 Hydrogen atoms bonded covalently to 1 Oxygen atom at a 104.5° bent angle.',
+    stats: 'Total Atoms: 3 • Bond: Polar Covalent',
+    atoms: [
+      { sym: 'O', color: '#ef4444', r: 24, x: 0, y: -15 },
+      { sym: 'H', color: '#e2e8f0', r: 15, x: -50, y: 35 },
+      { sym: 'H', color: '#e2e8f0', r: 15, x: 50, y: 35 }
+    ],
+    bonds: [[0, 1], [0, 2]]
+  },
+  'CO2': {
+    name: 'Carbon Dioxide (CO₂)',
+    desc: 'Linear non-polar molecule with two double bonds between central Carbon and two Oxygen atoms (O=C=O).',
+    stats: 'Total Atoms: 3 • Bond: Double Covalent (Linear)',
+    atoms: [
+      { sym: 'C', color: '#64748b', r: 22, x: 0, y: 0 },
+      { sym: 'O', color: '#ef4444', r: 22, x: -75, y: 0 },
+      { sym: 'O', color: '#ef4444', r: 22, x: 75, y: 0 }
+    ],
+    bonds: [[0, 1], [0, 2]]
+  },
+  'CH4': {
+    name: 'Methane (CH₄)',
+    desc: 'Tetrahedral geometry with Carbon in center bonded to four Hydrogen atoms at 109.5° angles.',
+    stats: 'Total Atoms: 5 • Bond: Covalent Hydrocarbon',
+    atoms: [
+      { sym: 'C', color: '#64748b', r: 24, x: 0, y: 0 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: 0, y: -65 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: -60, y: 40 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: 60, y: 40 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: -35, y: -30 }
+    ],
+    bonds: [[0, 1], [0, 2], [0, 3], [0, 4]]
+  },
+  'NH3': {
+    name: 'Ammonia (NH₃)',
+    desc: 'Trigonal pyramidal shape with Nitrogen possessing a lone pair and bonded to three Hydrogens.',
+    stats: 'Total Atoms: 4 • Bond: Polar Covalent',
+    atoms: [
+      { sym: 'N', color: '#3b82f6', r: 23, x: 0, y: -20 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: -55, y: 35 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: 55, y: 35 },
+      { sym: 'H', color: '#e2e8f0', r: 14, x: 0, y: 50 }
+    ],
+    bonds: [[0, 1], [0, 2], [0, 3]]
+  },
+  'O2': {
+    name: 'Oxygen Molecule (O₂)',
+    desc: 'Diatomic homonuclear molecule held by a double covalent bond essential for aerobic respiration.',
+    stats: 'Total Atoms: 2 • Bond: Double Covalent',
+    atoms: [
+      { sym: 'O', color: '#ef4444', r: 24, x: -45, y: 0 },
+      { sym: 'O', color: '#ef4444', r: 24, x: 45, y: 0 }
+    ],
+    bonds: [[0, 1]]
+  },
+  'NaCl': {
+    name: 'Sodium Chloride (NaCl)',
+    desc: 'Ionic crystal lattice unit where Na loses an electron to Cl forming electrostatic ionic bond.',
+    stats: 'Total Ions: 2 • Bond: Ionic (Electrostatic)',
+    atoms: [
+      { sym: 'Na⁺', color: '#a855f7', r: 20, x: -45, y: 0 },
+      { sym: 'Cl⁻', color: '#10b981', r: 28, x: 45, y: 0 }
+    ],
+    bonds: [[0, 1]]
+  }
+};
+
+let currentMolKey = 'H2O';
+let molAngle = 0;
+
+function selectMolecule(key) {
+  currentMolKey = key;
+  const m = MOLECULES_DATA[key];
+  document.getElementById('molFormulaDisplay').innerText = `Formula: ${m.name}`;
+  document.getElementById('molDetailTitle').innerText = m.name;
+  document.getElementById('molDetailDesc').innerText = m.desc;
+  document.getElementById('molDetailStats').innerHTML = `<strong>Stats:</strong> ${m.stats}`;
+}
+
+function drawMolecule() {
+  molCtx.clearRect(0, 0, molCanvas.width, molCanvas.height);
+  const cx = molCanvas.width / 2;
+  const cy = molCanvas.height / 2;
+  const m = MOLECULES_DATA[currentMolKey];
+
+  const cos = Math.cos(molAngle);
+  const sin = Math.sin(molAngle);
+
+  // Draw Bonds
+  m.bonds.forEach(([i, j]) => {
+    const a1 = m.atoms[i];
+    const a2 = m.atoms[j];
+
+    const x1 = cx + (a1.x * cos - a1.y * sin * 0.3);
+    const y1 = cy + (a1.x * sin * 0.3 + a1.y);
+    const x2 = cx + (a2.x * cos - a2.y * sin * 0.3);
+    const y2 = cy + (a2.x * sin * 0.3 + a2.y);
+
+    molCtx.beginPath();
+    molCtx.moveTo(x1, y1);
+    molCtx.lineTo(x2, y2);
+    molCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    molCtx.lineWidth = 6;
+    molCtx.lineCap = 'round';
+    molCtx.stroke();
+  });
+
+  // Draw Atoms
+  m.atoms.forEach(a => {
+    const rx = cx + (a.x * cos - a.y * sin * 0.3);
+    const ry = cy + (a.x * sin * 0.3 + a.y);
+
+    const grad = molCtx.createRadialGradient(rx - 4, ry - 4, 2, rx, ry, a.r);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.4, a.color);
+    grad.addColorStop(1, '#050c18');
+
+    molCtx.beginPath();
+    molCtx.arc(rx, ry, a.r, 0, Math.PI * 2);
+    molCtx.fillStyle = grad;
+    molCtx.shadowColor = a.color;
+    molCtx.shadowBlur = 10;
+    molCtx.fill();
+    molCtx.shadowBlur = 0;
+
+    molCtx.fillStyle = '#ffffff';
+    molCtx.font = 'bold 12px sans-serif';
+    molCtx.textAlign = 'center';
+    molCtx.textBaseline = 'middle';
+    molCtx.fillText(a.sym, rx, ry);
+  });
+
+  molAngle += 0.015;
+  requestAnimationFrame(drawMolecule);
+}
+
+// FULLSCREEN HANDLERS
+function toggleSimFullscreen(boxId) {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
+    }
+  } catch(e) {}
+  const box = document.getElementById(boxId);
+  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
+    const el = document.documentElement || box;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => { box.classList.add("is-fullscreen"); });
+    } else {
+      box.classList.add("is-fullscreen");
+    }
+  } else {
+    exitSimFullscreen(boxId);
+  }
+}
+
+function exitSimFullscreen(boxId) {
+  const box = document.getElementById(boxId);
+  box.classList.remove("is-fullscreen");
+  if (document.fullscreenElement && document.exitFullscreen) {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+function switchTopic(topicId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(topicId).classList.add('active');
+}
+
+function switchSection(btn, panelId) {
+  const card = btn.closest('.card');
+  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// INIT
+updateAtomUI();
+drawAtom();
+selectMolecule('H2O');
+drawMolecule();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

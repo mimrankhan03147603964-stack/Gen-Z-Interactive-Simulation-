@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Electromagnetic Induction &amp; Faraday's Law Lab</title>
+<style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow-x:hidden; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:#0a1628; color:#e8f4ff; min-height:100vh;
+  display:flex; flex-direction:column;
+}
+.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
+
+/* TOP TABS */
+.tabs {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
+  background:#0f2440; border-radius:14px; padding:8px 12px;
+}
+.tab-btn {
+  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .25s; flex:1 0 auto;
+}
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active {
+  background:linear-gradient(135deg,#06b6d4,#0284c7);
+  color:#ffffff; box-shadow:0 6px 20px rgba(6,182,212,.45);
+}
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+
+/* EDUCATIONAL CARD */
+.card {
+  background:linear-gradient(160deg,#122a44,#0a1e34);
+  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
+  box-shadow:0 14px 40px rgba(0,0,0,.7);
+  border:1px solid rgba(255,255,255,.05);
+}
+.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; color:#38bdf8; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc {
+  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
+  border-left:5px solid #06b6d4; padding-left:14px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.6;
+}
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
+.section-tab {
+  padding:8px 16px; border:none; border-radius:30px;
+  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
+  cursor:pointer; transition:.2s;
+}
+.section-tab:hover { background:#234468; color:#fff; }
+.section-tab.active { background:#0284c7; color:#fff; }
+.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
+.panel h3 { font-size:1.45rem; font-weight:700; color:#7dd3fc; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before {
+  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
+  border-radius:50%; background:#06b6d4; color:#0a1628; font-weight:900;
+  text-align:center; line-height:20px; font-size:.8rem;
+}
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #0284c7; }
+.grid-item h4 { font-size:1.15rem; color:#7dd3fc; margin-bottom:4px; }
+.grid-item p { font-size:.92rem; color:#b8d4f0; }
+
+/* SIMULATION BOX */
+.sim-box {
+  background:#06121f; border-radius:18px; padding:18px 16px 16px;
+  margin-top:8px; border:1px solid #1e3a5c; position:relative;
+}
+.sim-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; margin-bottom:14px;
+  background:#0a1a2e; padding:12px 18px; border-radius:36px;
+  border:1px solid #1e3a5c;
+}
+.sim-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.9rem;
+}
+.sim-controls input[type=range] { width:125px; accent-color:#06b6d4; cursor:pointer; }
+.sim-controls select,.sim-controls button {
+  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
+}
+.sim-controls button { background:#0284c7; color:#fff; }
+.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
+.sim-controls .btn-accent { background:linear-gradient(135deg,#06b6d4,#0284c7); color:#fff; }
+.sim-controls .btn-fs { background:linear-gradient(135deg,#0284c7,#4338ca); color:#fff; }
+
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#7dd3fc; margin:14px 0 6px; }
+.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
+.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
+.teacher-note {
+  background:linear-gradient(135deg,#0d2018,#0a1a14);
+  border-left:5px solid #06b6d4; border-radius:0 14px 14px 0;
+  padding:12px 16px; margin-top:12px; font-size:.9rem;
+  color:#b8e6c8; line-height:1.7;
+}
+.teacher-note strong { color:#38bdf8; }
+
+/* PRESET CHIPS */
+.preset-chips {
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  margin:12px 0 16px;
+}
+.chip-btn {
+  padding:8px 14px; border-radius:24px; border:1.5px solid #1e3a5c;
+  background:#0a1a2e; color:#cbd5e1; font-weight:800; font-size:0.9rem;
+  cursor:pointer; transition:all 0.15s;
+}
+.chip-btn:hover { background:#1a3550; color:#fff; transform:translateY(-1px); }
+.chip-btn.active {
+  background:linear-gradient(135deg,#06b6d4,#0284c7);
+  color:#ffffff; border-color:#38bdf8; box-shadow:0 4px 12px rgba(6,182,212,0.4);
+}
+
+/* FULLSCREEN OVERLAY */
+.fs-overlay {
+  position:fixed; inset:0; background:#040e1a; z-index:99999;
+  display:none; flex-direction:column; padding:10px 16px 12px;
+  overflow:hidden;
+}
+.fs-overlay.active { display:flex; }
+.fs-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:4px 4px 10px; flex-shrink:0;
+}
+.fs-topbar h2 {
+  font-size:1.45rem; font-weight:800; color:#7dd3fc;
+  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.fs-close-btn {
+  padding:9px 24px; border-radius:30px; border:none;
+  background:linear-gradient(135deg,#ff5252,#d32f2f);
+  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
+  flex-shrink:0;
+}
+.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
+.fs-canvas-area {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  min-height:0; padding:6px 0;
+}
+.fs-canvas-area canvas {
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
+}
+.fs-controls {
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  justify-content:center; padding:10px 16px;
+  background:#0a1a2e; border-radius:40px; border:1px solid #1e3a5c;
+  flex-shrink:0;
+}
+.fs-controls label {
+  display:flex; align-items:center; gap:8px; font-weight:600;
+  color:#90b8e0; font-size:.88rem;
+}
+.fs-controls input[type=range] { width:110px; accent-color:#06b6d4; cursor:pointer; }
+.fs-controls select, .fs-controls button {
+  padding:7px 14px; border-radius:24px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; font-size:.85rem;
+}
+.fs-controls button { background:#0284c7; color:#fff; }
+
+/* QUIZ STYLES */
+.quiz-card {
+  background:#0c1d33; border-radius:16px; padding:18px; margin-bottom:14px;
+  border:1px solid #1e3a5c;
+}
+.quiz-q { font-weight:700; font-size:1.1rem; color:#bae6fd; margin-bottom:12px; }
+.quiz-opt {
+  display:block; width:100%; text-align:left; padding:10px 16px;
+  margin-bottom:8px; border-radius:10px; border:1px solid #1e3a5c;
+  background:#132a48; color:#cbd5e1; font-weight:600; cursor:pointer;
+  transition:all 0.15s;
+}
+.quiz-opt:hover { background:#1e3e6b; color:#fff; }
+.quiz-opt.correct { background:#065f46; border-color:#10b981; color:#fff; }
+.quiz-opt.incorrect { background:#7f1d1d; border-color:#ef4444; color:#fff; }
+.quiz-feedback { margin-top:8px; font-size:0.95rem; font-weight:600; padding:8px 12px; border-radius:8px; display:none; }
+.quiz-feedback.show { display:block; }
+
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTopic('topic1')"><span class="icon">🧲</span>Faraday's Induction &amp; Lenz's Law</button>
+    <button class="tab-btn" onclick="switchTopic('topic2')"><span class="icon">🧭</span>Magnetic Field &amp; Compass Array</button>
+    <button class="tab-btn" onclick="switchTopic('topic3')"><span class="icon">⚡</span>AC Transformer &amp; Mutual Induction</button>
+    <button class="tab-btn" onclick="switchTopic('topic4')"><span class="icon">⚛️</span>Lorentz Force Deflection</button>
+    <button class="tab-btn" onclick="switchTopic('topic5')"><span class="icon">📝</span>Knowledge Check Quiz</button>
+  </div>
+
+  <!-- TOPIC 1: FARADAY'S LAW & LENZ'S LAW -->
+  <div id="topic1" class="topic active">
+    <div class="card">
+      <h2>Faraday's Law of Electromagnetic Induction &amp; Lenz's Law <small>Physics &amp; Electromagnetism</small></h2>
+      <div class="desc">
+        A changing magnetic flux through a conductor loop induces an electromotive force (EMF / voltage). Lenz's Law establishes that the induced current flows in a direction such that its magnetic field opposes the change in flux that created it: <strong>&Epsilon; = -N &middot; (d&Phi; / dt)</strong>.
+      </div>
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSec('sec1-def','topic1')">Scientific Principles</button>
+        <button class="section-tab" onclick="switchSec('sec1-math','topic1')">Mathematical Formula</button>
+        <button class="section-tab" onclick="switchSec('sec1-apps','topic1')">Modern Engineering</button>
+      </div>
+      <div id="sec1-def" class="panel active">
+        <h3>Fundamental Concepts</h3>
+        <ul>
+          <li><strong>Magnetic Flux (&Phi; = B &middot; A &middot; cos &theta;):</strong> The measure of total magnetic field lines passing perpendicular through the cross-sectional area of a loop.</li>
+          <li><strong>Electromotive Force (&Epsilon;):</strong> The potential difference generated across the terminals of the coil when flux changes over time.</li>
+          <li><strong>Lenz's Law Negative Sign:</strong> Conservation of energy ensures that the induced magnetic field resists the motion of the approaching or receding magnet.</li>
+        </ul>
+      </div>
+      <div id="sec1-math" class="panel">
+        <h3>Mathematical Derivation &amp; Variables</h3>
+        <p><strong>&Epsilon; = -N &times; (&Delta;&Phi; / &Delta;t) = -N &times; A &times; (&Delta;B / &Delta;t)</strong></p>
+        <p style="margin-top:8px;">Where <strong>N</strong> is the number of coil turns, <strong>&Phi;</strong> is magnetic flux (Weber, Wb), <strong>t</strong> is time in seconds, and <strong>&Epsilon;</strong> is induced voltage (Volts). Faster motion generates higher peak voltage!</p>
+      </div>
+      <div id="sec1-apps" class="panel">
+        <h3>Everyday Applications</h3>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Electric Power Generators</h4>
+            <p>Giant hydroelectric and wind turbines rotate wire coils inside magnetic fields to generate the alternating current powering civilization.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Induction Cooktops</h4>
+            <p>High-frequency alternating magnetic fields induce circular eddy currents in ferrous cookware bottoms, heating food directly via Joule heating.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Guitar Pickups</h4>
+            <p>Vibrating steel strings modulate the magnetic flux through a copper pickup coil, generating audio electrical signals sent to an amplifier.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRESET CHIPS -->
+    <div class="preset-chips">
+      <button class="chip-btn active" onclick="setFaradayPreset('normal')">Standard Coil (N=4)</button>
+      <button class="chip-btn" onclick="setFaradayPreset('dense')">High-Density Coil (N=8)</button>
+      <button class="chip-btn" onclick="setFaradayPreset('strong')">Super Neodymium Magnet</button>
+      <button class="chip-btn" onclick="setFaradayPreset('fast')">Rapid Auto-Oscillation</button>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-controls">
+        <label>Magnet Position: <input type="range" id="fMagPos" min="-220" max="220" value="-150" oninput="updateFaradayManual()"></label>
+        <label>Coil Turns (N): <input type="range" id="fTurns" min="1" max="8" value="4" oninput="updateFaradayParams()"><span id="fTurnsVal">4 turns</span></label>
+        <label>Magnet Strength (B): <input type="range" id="fMagStr" min="20" max="100" value="60" oninput="updateFaradayParams()"><span id="fMagStrVal">60%</span></label>
+        <label>Magnet Pole: 
+          <select id="fPole" onchange="flipFaradayPole()">
+            <option value="NS">North In Front (N-S)</option>
+            <option value="SN">South In Front (S-N)</option>
+          </select>
+        </label>
+        <button id="fAutoBtn" class="btn-accent" onclick="toggleFaradayAuto()">▶ Auto-Oscillate</button>
+        <button onclick="resetFaraday()">↺ Reset</button>
+        <button class="btn-fs" onclick="launchFullscreen('topic1')">⛶ Fullscreen</button>
+      </div>
+
+      <canvas id="faradayCanvas" width="940" height="420"></canvas>
+
+      <div class="sim-readout">
+        Induced Voltage (&Epsilon;): <span id="fVoltReadout" style="color:#38bdf8;">0.00 V</span> &nbsp;|&nbsp; 
+        Magnetic Flux (&Phi;): <span id="fFluxReadout" style="color:#fbbf24;">0.00 mWb</span> &nbsp;|&nbsp; 
+        Lamp Glow: <span id="fLampReadout" style="color:#fde047;">0%</span>
+        <small id="fLenzReadout">Magnet is stationary &mdash; No induced current (&Delta;&Phi;/&Delta;t = 0)</small>
+      </div>
+
+      <div class="sim-info">
+        Tip: Drag the slider or click <strong>Auto-Oscillate</strong> to thrust the bar magnet through the copper coil. Notice how moving into the coil deflects the galvanometer needle in one direction, while pulling it out reverses the needle!
+      </div>
+      <div class="teacher-note">
+        <strong>Lenz's Law Observation:</strong> As the North pole enters the coil from the left, the coil induces a counter-current that creates an opposing North pole at its left face to repel the incoming magnet. When pulled away, it induces a South pole to attract it back!
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 2: MAGNETIC FIELD LINES & COMPASS ARRAY -->
+  <div id="topic2" class="topic">
+    <div class="card">
+      <h2>Magnetic Field Vectors &amp; Compass Array Mapping <small>Field Visualization</small></h2>
+      <div class="desc">
+        Magnetic fields <strong>B</strong> form continuous closed loops originating from magnetic North and terminating at magnetic South. Test probes (compasses) always align parallel with the local magnetic vector field.
+      </div>
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSec('sec2-def','topic2')">Vector Fields</button>
+        <button class="section-tab" onclick="switchSec('sec2-math','topic2')">Biot-Savart &amp; Dipoles</button>
+        <button class="section-tab" onclick="switchSec('sec2-apps','topic2')">Earth's Geomagnetism</button>
+      </div>
+      <div id="sec2-def" class="panel active">
+        <h3>Magnetic Field Topology</h3>
+        <ul>
+          <li><strong>North to South Convention:</strong> Field lines exit the North pole and enter the South pole, continuing through the magnet interior to form closed loops.</li>
+          <li><strong>Field Line Density:</strong> The proximity of lines represents magnetic flux density (B in Tesla). Density is greatest near the pole tips.</li>
+          <li><strong>Non-Intersecting:</strong> Magnetic field lines never intersect at any point in space, because the field vector is unique at every coordinate.</li>
+        </ul>
+      </div>
+      <div id="sec2-math" class="panel">
+        <h3>Magnetic Dipole Moment</h3>
+        <p>A bar magnet acts as a magnetic dipole with moment <strong>m</strong>. At distance <strong>r</strong> along the axial line, the field strength decays with distance cubed: <strong>B &prop; 1 / r&sup3;</strong>.</p>
+      </div>
+      <div id="sec2-apps" class="panel">
+        <h3>Geomagnetism &amp; Navigation</h3>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Earth's Magnetosphere</h4>
+            <p>Liquid outer-core convection currents create a planetary dipole that shields life from cosmic solar wind radiation and produces the Auroras.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Magnetic Resonance Imaging (MRI)</h4>
+            <p>Superconducting solenoids produce homogeneous 1.5–3.0 Tesla magnetic fields to align hydrogen protons for non-invasive medical imaging.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Magnetic Storage (Hard Drives)</h4>
+            <p>Nanoscopic magnetic domains on spinning platters are magnetized to represent binary 0s and 1s, read by giant magnetoresistive heads.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-controls">
+        <label>Magnet Configuration:
+          <select id="fieldConfig" onchange="updateFieldConfig()">
+            <option value="single">Single Bar Magnet</option>
+            <option value="attract">Opposite Poles (Attracting N &ndash; S)</option>
+            <option value="repel">Like Poles (Repelling N &ndash; N)</option>
+            <option value="solenoid">Electromagnet Solenoid</option>
+          </select>
+        </label>
+        <label>Field Intensity: <input type="range" id="fieldIntensity" min="20" max="100" value="70" oninput="drawFieldCanvas()"></label>
+        <label><input type="checkbox" id="showCompassGrid" checked onchange="drawFieldCanvas()"> Show Compass Grid</label>
+        <label><input type="checkbox" id="showStreamlines" checked onchange="drawFieldCanvas()"> Streamline Curves</label>
+        <button class="btn-fs" onclick="launchFullscreen('topic2')">⛶ Fullscreen</button>
+      </div>
+
+      <canvas id="fieldCanvas" width="940" height="420"></canvas>
+
+      <div class="sim-readout">
+        Magnetic Topology: <span id="fieldLabel" style="color:#38bdf8;">Single Dipole Field</span> &nbsp;|&nbsp; 
+        Probe Field at Center: <span id="fieldMagnitude" style="color:#4ade80;">1.42 mT</span>
+      </div>
+      <div class="sim-info">
+        Move your mouse over the canvas to hover an interactive test compass! The red needle always points along the field vector toward South.
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 3: AC TRANSFORMER & MUTUAL INDUCTION -->
+  <div id="topic3" class="topic">
+    <div class="card">
+      <h2>AC Transformer &amp; Mutual Induction Lab <small>Voltage Transformation</small></h2>
+      <div class="desc">
+        A transformer transfers electrical energy between circuits via mutual magnetic induction. Alternating current in the primary coil generates an oscillating magnetic flux in the ferromagnetic core, inducing an AC voltage in the secondary coil: <strong>V<sub>s</sub> / V<sub>p</sub> = N<sub>s</sub> / N<sub>p</sub> = I<sub>p</sub> / I<sub>s</sub></strong>.
+      </div>
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSec('sec3-def','topic3')">Step-Up vs Step-Down</button>
+        <button class="section-tab" onclick="switchSec('sec3-math','topic3')">Turns Ratio &amp; Power</button>
+        <button class="section-tab" onclick="switchSec('sec3-apps','topic3')">Power Grid Distribution</button>
+      </div>
+      <div id="sec3-def" class="panel active">
+        <h3>Principles of Mutual Induction</h3>
+        <ul>
+          <li><strong>Step-Up Transformer (N<sub>s</sub> &gt; N<sub>p</sub>):</strong> Secondary turns exceed primary turns, stepping up voltage while reducing secondary current to minimize $I^2R$ grid transmission heat losses.</li>
+          <li><strong>Step-Down Transformer (N<sub>s</sub> &lt; N<sub>p</sub>):</strong> Reduces high transmission line voltage down to safe household levels (120V / 240V).</li>
+          <li><strong>Ferromagnetic Laminated Core:</strong> Silicon steel laminations concentrate magnetic flux lines while suppressing parasitic eddy current heating.</li>
+        </ul>
+      </div>
+      <div id="sec3-math" class="panel">
+        <h3>Ideal Transformer Equations</h3>
+        <p><strong>V<sub>s</sub> = V<sub>p</sub> &times; (N<sub>s</sub> / N<sub>p</sub>)</strong></p>
+        <p>Conservation of energy (assuming 100% ideal efficiency): <strong>P<sub>in</sub> = P<sub>out</sub> &rArr; V<sub>p</sub> &middot; I<sub>p</sub> = V<sub>s</sub> &middot; I<sub>s</sub></strong></p>
+      </div>
+      <div id="sec3-apps" class="panel">
+        <h3>Real World Engineering</h3>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>National Electric Grid</h4>
+            <p>Generators produce 20 kV, stepped up to 500 kV for cross-country overhead lines, then stepped down to substations and neighborhoods.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Smartphone Power Bricks</h4>
+            <p>High-efficiency switch-mode transformers step down 230V AC to 5V–20V DC USB-C fast charging without bulky heat sinks.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Audio Isolation Transformers</h4>
+            <p>Eliminate ground loops and humming noise in professional sound studios by passing signals purely via magnetic coupling with no electrical connection.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-controls">
+        <label>Primary Voltage (V<sub>p</sub>): <input type="range" id="tVp" min="10" max="240" value="120" oninput="updateTransformer()"><span id="tVpVal">120 V</span></label>
+        <label>Primary Turns (N<sub>p</sub>): <input type="range" id="tNp" min="10" max="200" step="10" value="50" oninput="updateTransformer()"><span id="tNpVal">50 turns</span></label>
+        <label>Secondary Turns (N<sub>s</sub>): <input type="range" id="tNs" min="10" max="200" step="10" value="100" oninput="updateTransformer()"><span id="tNsVal">100 turns</span></label>
+        <label>Core Type:
+          <select id="tCore" onchange="updateTransformer()">
+            <option value="iron">Laminated Iron Core (98% Flux Coupling)</option>
+            <option value="air">Air Core (Weak 20% Coupling)</option>
+          </select>
+        </label>
+        <label>AC Frequency: <input type="range" id="tFreq" min="10" max="100" value="50" oninput="updateTransformer()"><span id="tFreqVal">50 Hz</span></label>
+        <button class="btn-fs" onclick="launchFullscreen('topic3')">⛶ Fullscreen</button>
+      </div>
+
+      <canvas id="transformerCanvas" width="940" height="420"></canvas>
+
+      <div class="sim-readout">
+        Status: <span id="tTypeLabel" style="color:#38bdf8;">Step-Up Transformer (Ratio 2.00)</span> &nbsp;|&nbsp; 
+        V<sub>s</sub> = <span id="tVsReadout" style="color:#fbbf24;">235.2 V</span> &nbsp;|&nbsp; 
+        I<sub>s</sub> = <span id="tIsReadout" style="color:#4ade80;">2.35 A</span> (Load: 100 &Omega;)
+      </div>
+      <div class="sim-info">
+        Observe the oscillating magnetic flux flowing through the iron ring and the secondary light bulb output. Toggle turns to see instant step-up vs step-down behavior!
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 4: LORENTZ FORCE DEFLECTION -->
+  <div id="topic4" class="topic">
+    <div class="card">
+      <h2>Lorentz Force &amp; Charged Particle Motion in Magnetic Field <small>Electrodynamics</small></h2>
+      <div class="desc">
+        A charged particle moving with velocity <strong>v</strong> through a perpendicular magnetic field <strong>B</strong> experiences a magnetic deflecting force perpendicular to both its velocity and the field vector: <strong>F = q &middot; (v &times; B)</strong> (Fleming's Left-Hand Rule).
+      </div>
+      <div class="section-tabs">
+        <button class="section-tab active" onclick="switchSec('sec4-def','topic4')">Centripetal Deflection</button>
+        <button class="section-tab" onclick="switchSec('sec4-math','topic4')">Cyclotron Radius</button>
+        <button class="section-tab" onclick="switchSec('sec4-apps','topic4')">Particle Accelerators</button>
+      </div>
+      <div id="sec4-def" class="panel active">
+        <h3>Perpendicular Work &amp; Circular Orbits</h3>
+        <ul>
+          <li><strong>Zero Work Done:</strong> Because the Lorentz magnetic force is always perpendicular to velocity (<strong>F &perp; v</strong>), the magnetic field does zero work on the particle; its kinetic energy and speed remain constant while its direction bends!</li>
+          <li><strong>Right-Hand vs Left-Hand Rule:</strong> Positive particles (protons) curve in one direction, while negative particles (electrons) curve oppositely.</li>
+          <li><strong>Helical Motion:</strong> If velocity has a parallel component along the B-field axis, the particle traces a 3D corkscrew helix along field lines.</li>
+        </ul>
+      </div>
+      <div id="sec4-math" class="panel">
+        <h3>Cyclotron Formula</h3>
+        <p>Equating magnetic force to centripetal force: <strong>q &middot; v &middot; B = m &middot; v&sup2; / r &rArr; r = m &middot; v / (q &middot; B)</strong></p>
+        <p style="margin-top:6px;">Heavy particles (alpha particles) have a much wider turning radius than lightweight electrons!</p>
+      </div>
+      <div id="sec4-apps" class="panel">
+        <h3>Technological Breakthroughs</h3>
+        <div class="grid-3">
+          <div class="grid-item">
+            <h4>Mass Spectrometry</h4>
+            <p>Isotopes are ionized, accelerated, and deflected through a magnetic sector to identify chemical formulas based on exact mass-to-charge ($m/q$) ratios.</p>
+          </div>
+          <div class="grid-item">
+            <h4>CERN Large Hadron Collider</h4>
+            <p>1232 superconducting dipole magnets bent proton beams at 99.999999% the speed of light along a 27 km circumference ring to discover the Higgs boson.</p>
+          </div>
+          <div class="grid-item">
+            <h4>Tokamak Fusion Reactors</h4>
+            <p>Toroidal magnetic fields confine 150-million-degree deuterium-tritium plasma away from vessel walls to achieve clean nuclear fusion power.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-controls">
+        <label>Particle:
+          <select id="pType" onchange="resetParticle()">
+            <option value="electron">Electron (Negative, e⁻, Very Light)</option>
+            <option value="proton" selected>Proton (Positive, p⁺, Heavy)</option>
+            <option value="alpha">Alpha Particle (He²⁺, 2p+2n)</option>
+          </select>
+        </label>
+        <label>Velocity (v): <input type="range" id="pVelocity" min="20" max="120" value="65" oninput="updateParticleParams()"><span id="pVelVal">65 km/s</span></label>
+        <label>B-Field (Into/Out of Screen): <input type="range" id="pBField" min="-100" max="100" value="50" oninput="updateParticleParams()"><span id="pBVal">+0.50 T (Into Screen)</span></label>
+        <button class="btn-accent" onclick="fireParticle()">▶ Fire Particle</button>
+        <button onclick="clearParticleTrail()">Clear Trail</button>
+        <button class="btn-fs" onclick="launchFullscreen('topic4')">⛶ Fullscreen</button>
+      </div>
+
+      <canvas id="particleCanvas" width="940" height="420"></canvas>
+
+      <div class="sim-readout">
+        Trajectory Radius: <span id="pRadiusReadout" style="color:#38bdf8;">r = 13.5 cm</span> &nbsp;|&nbsp; 
+        Magnetic Force: <span id="pForceReadout" style="color:#fbbf24;">F = 5.2 &times; 10⁻¹⁴ N</span> &nbsp;|&nbsp; 
+        Direction: <span id="pDirReadout" style="color:#4ade80;">Clockwise Circular Arc</span>
+      </div>
+      <div class="sim-info">
+        The symbols &otimes; represent magnetic field vectors directed into the screen. Click <strong>Fire Particle</strong> to watch how velocity and field strength determine the trajectory radius!
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 5: QUIZ -->
+  <div id="topic5" class="topic">
+    <div class="card">
+      <h2>Interactive Electromagnetism Mastery Quiz <small>Assess Your Understanding</small></h2>
+      <div class="desc">
+        Test your mastery of Faraday's Law, Lenz's Law, transformer turns ratios, and Lorentz magnetic force deflection with immediate explanatory feedback.
+      </div>
+
+      <div class="quiz-card" id="q1">
+        <div class="quiz-q">1. According to Faraday's Law, what happens when a bar magnet is held completely stationary inside a coil?</div>
+        <button class="quiz-opt" onclick="checkAnswer('q1', 0, false)">A continuous steady DC voltage is produced</button>
+        <button class="quiz-opt" onclick="checkAnswer('q1', 1, true)">Zero voltage is induced because magnetic flux is not changing over time (d&Phi;/dt = 0)</button>
+        <button class="quiz-opt" onclick="checkAnswer('q1', 2, false)">The coil overheats due to infinite induced current</button>
+        <button class="quiz-opt" onclick="checkAnswer('q1', 3, false)">The magnet's magnetic poles permanently swap</button>
+        <div class="quiz-feedback" id="q1-fb"></div>
+      </div>
+
+      <div class="quiz-card" id="q2">
+        <div class="quiz-q">2. What is the fundamental physical reason behind the negative sign in Faraday's Law (&Epsilon; = -N d&Phi;/dt)?</div>
+        <button class="quiz-opt" onclick="checkAnswer('q2', 0, false)">It represents mathematical friction in the wires</button>
+        <button class="quiz-opt" onclick="checkAnswer('q2', 1, true)">Lenz's Law &mdash; Conservation of Energy: the induced magnetic field must oppose the change in flux</button>
+        <button class="quiz-opt" onclick="checkAnswer('q2', 2, false)">Negative charges always have negative mass</button>
+        <button class="quiz-opt" onclick="checkAnswer('q2', 3, false)">Voltage is always a negative scalar quantity</button>
+        <div class="quiz-feedback" id="q2-fb"></div>
+      </div>
+
+      <div class="quiz-card" id="q3">
+        <div class="quiz-q">3. A transformer has 100 primary turns and 400 secondary turns. If 120V AC is applied to the primary, what is the secondary output voltage?</div>
+        <button class="quiz-opt" onclick="checkAnswer('q3', 0, false)">30 V (Step-Down)</button>
+        <button class="quiz-opt" onclick="checkAnswer('q3', 1, false)">120 V (1:1 Isolation)</button>
+        <button class="quiz-opt" onclick="checkAnswer('q3', 2, true)">480 V (Step-Up: V_s = 120 &times; (400/100) = 480V)</button>
+        <button class="quiz-opt" onclick="checkAnswer('q3', 3, false)">48,000 V</button>
+        <div class="quiz-feedback" id="q3-fb"></div>
+      </div>
+
+      <div class="quiz-card" id="q4">
+        <div class="quiz-q">4. Why does a uniform magnetic field do zero mechanical work on a free moving electron?</div>
+        <button class="quiz-opt" onclick="checkAnswer('q4', 0, true)">The magnetic force is always strictly perpendicular to the particle's instantaneous velocity (F &perp; v), so F &middot; d = 0</button>
+        <button class="quiz-opt" onclick="checkAnswer('q4', 1, false)">Electrons are too small to interact with magnetic fields</button>
+        <button class="quiz-opt" onclick="checkAnswer('q4', 2, false)">Magnetic fields have zero energy</button>
+        <button class="quiz-opt" onclick="checkAnswer('q4', 3, false)">The force only acts when the electron is at rest</button>
+        <div class="quiz-feedback" id="q4-fb"></div>
+      </div>
+
+      <div style="text-align:center; margin-top:20px;">
+        <button class="chip-btn active" style="font-size:1.05rem; padding:12px 28px;" onclick="resetQuiz()">↺ Retake Quiz</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ==================== GLOBAL TAB SWITCHING ==================== */
+function switchTopic(topicId) {
+  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(topicId).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  if (topicId === 'topic1') btns[0].classList.add('active');
+  if (topicId === 'topic2') { btns[1].classList.add('active'); drawFieldCanvas(); }
+  if (topicId === 'topic3') { btns[2].classList.add('active'); updateTransformer(); }
+  if (topicId === 'topic4') { btns[3].classList.add('active'); updateParticleParams(); }
+  if (topicId === 'topic5') btns[4].classList.add('active');
+}
+
+function switchSec(panelId, topicId) {
+  const container = document.getElementById(topicId);
+  container.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  container.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+/* ==================== TOPIC 1: FARADAY & LENZ SIMULATION ==================== */
+const fCanvas = document.getElementById('faradayCanvas');
+const fCtx = fCanvas.getContext('2d');
+
+let fMagX = -150;
+let fPrevMagX = -150;
+let fVel = 0;
+let fAuto = false;
+let fAutoTime = 0;
+let fTurns = 4;
+let fMagStr = 0.6;
+let fPole = 'NS'; // NS or SN
+let fAudioCtx = null;
+
+function getAudio() {
+  if (!fAudioCtx) {
+    fAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return fAudioCtx;
+}
+
+function playInductionTone(freq, gain) {
+  try {
+    const ctx = getAudio();
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(Math.min(0.15, gain), ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.1);
+  } catch(e) {}
+}
+
+function updateFaradayManual() {
+  fAuto = false;
+  document.getElementById('fAutoBtn').textContent = '▶ Auto-Oscillate';
+  document.getElementById('fAutoBtn').classList.remove('active');
+  fMagX = parseFloat(document.getElementById('fMagPos').value);
+}
+
+function updateFaradayParams() {
+  fTurns = parseInt(document.getElementById('fTurns').value);
+  document.getElementById('fTurnsVal').textContent = fTurns + ' turns';
+  fMagStr = parseInt(document.getElementById('fMagStr').value) / 100;
+  document.getElementById('fMagStrVal').textContent = Math.round(fMagStr * 100) + '%';
+}
+
+function flipFaradayPole() {
+  fPole = document.getElementById('fPole').value;
+}
+
+function toggleFaradayAuto() {
+  fAuto = !fAuto;
+  const btn = document.getElementById('fAutoBtn');
+  if (fAuto) {
+    btn.textContent = '⏸ Pause Oscillation';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = '▶ Auto-Oscillate';
+    btn.classList.remove('active');
+  }
+}
+
+function resetFaraday() {
+  fAuto = false;
+  document.getElementById('fAutoBtn').textContent = '▶ Auto-Oscillate';
+  document.getElementById('fAutoBtn').classList.remove('active');
+  fMagX = -150;
+  fPrevMagX = -150;
+  fVel = 0;
+  document.getElementById('fMagPos').value = -150;
+}
+
+function setFaradayPreset(preset) {
+  document.querySelectorAll('#topic1 .chip-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  resetFaraday();
+  if (preset === 'normal') {
+    document.getElementById('fTurns').value = 4;
+    document.getElementById('fMagStr').value = 60;
+  } else if (preset === 'dense') {
+    document.getElementById('fTurns').value = 8;
+    document.getElementById('fMagStr').value = 60;
+  } else if (preset === 'strong') {
+    document.getElementById('fTurns').value = 5;
+    document.getElementById('fMagStr').value = 100;
+  } else if (preset === 'fast') {
+    document.getElementById('fTurns').value = 6;
+    document.getElementById('fMagStr').value = 85;
+    toggleFaradayAuto();
+  }
+  updateFaradayParams();
+}
+
+// Faraday loop
+function renderFaraday(ctx, w, h) {
+  ctx.clearRect(0, 0, w, h);
+
+  // Background grid
+  ctx.strokeStyle = '#0f2440';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  const cx = w * 0.58;
+  const cy = h * 0.48;
+
+  // Compute velocity and EMF
+  if (fAuto) {
+    fAutoTime += 0.045;
+    fMagX = Math.sin(fAutoTime) * 190;
+    document.getElementById('fMagPos').value = fMagX;
+  }
+  fVel = (fMagX - fPrevMagX);
+  fPrevMagX = fMagX;
+
+  // Theoretical flux Phi = B * A * bell-curve(dist)
+  const dist = (cx + fMagX) - cx;
+  const coilRadius = 65;
+  const sigma = 80;
+  const fluxSign = (fPole === 'NS') ? 1 : -1;
+  const flux = fluxSign * fMagStr * Math.exp(-(dist * dist) / (2 * sigma * sigma));
+  
+  // EMF = -N * dPhi/dt = -N * dPhi/dx * dx/dt
+  const dPhidx = fluxSign * fMagStr * (-dist / (sigma * sigma)) * Math.exp(-(dist * dist) / (2 * sigma * sigma));
+  const emf = -fTurns * dPhidx * (fVel * 30); // in Volts
+  const absEmf = Math.abs(emf);
+  const lampGlow = Math.min(1, absEmf / 4.5);
+
+  if (absEmf > 0.1 && Math.abs(fVel) > 0.5) {
+    playInductionTone(220 + absEmf * 150, lampGlow);
+  }
+
+  // Update readouts
+  const voltSpan = document.getElementById('fVoltReadout');
+  voltSpan.textContent = (emf >= 0 ? '+' : '') + emf.toFixed(2) + ' V';
+  voltSpan.style.color = emf > 0.05 ? '#38bdf8' : (emf < -0.05 ? '#f43f5e' : '#94a3b8');
+
+  document.getElementById('fFluxReadout').textContent = (flux * 10).toFixed(2) + ' mWb';
+  document.getElementById('fLampReadout').textContent = Math.round(lampGlow * 100) + '%';
+  
+  const lenzSpan = document.getElementById('fLenzReadout');
+  if (Math.abs(fVel) < 0.2) {
+    lenzSpan.textContent = 'Magnet is stationary — Zero induced current (dΦ/dt = 0)';
+    lenzSpan.style.color = '#7a9cc0';
+  } else if (emf > 0) {
+    lenzSpan.textContent = `Lenz Opposition: Induced field creates opposing magnetic pole to resist motion! (EMF = +${emf.toFixed(2)}V)`;
+    lenzSpan.style.color = '#38bdf8';
+  } else {
+    lenzSpan.textContent = `Lenz Opposition: Induced field reverses to attract receding magnet! (EMF = ${emf.toFixed(2)}V)`;
+    lenzSpan.style.color = '#f43f5e';
+  }
+
+  // 1. Draw Galvanometer / Voltmeter on top
+  const meterX = w * 0.22;
+  const meterY = h * 0.22;
+  const meterR = 60;
+
+  // Meter casing
+  ctx.save();
+  ctx.fillStyle = '#0f2440';
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(meterX, meterY, meterR, 0, Math.PI * 2);
+  ctx.fill(); ctx.stroke();
+
+  // Meter face
+  ctx.fillStyle = '#081426';
+  ctx.beginPath();
+  ctx.arc(meterX, meterY, meterR - 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Tick marks
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 2;
+  for (let a = -Math.PI * 0.75; a <= -Math.PI * 0.25; a += Math.PI * 0.1) {
+    const x1 = meterX + Math.cos(a) * (meterR - 16);
+    const y1 = meterY + Math.sin(a) * (meterR - 16);
+    const x2 = meterX + Math.cos(a) * (meterR - 9);
+    const y2 = meterY + Math.sin(a) * (meterR - 9);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+
+  // Zero label and scale
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('0', meterX, meterY - 32);
+  ctx.fillText('-V', meterX - 32, meterY - 26);
+  ctx.fillText('+V', meterX + 32, meterY - 26);
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('GALVANOMETER', meterX, meterY + 28);
+
+  // Meter needle
+  const maxDeflection = Math.PI * 0.35;
+  const angle = -Math.PI * 0.5 + Math.max(-maxDeflection, Math.min(maxDeflection, (emf / 4.0) * maxDeflection));
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(meterX, meterY);
+  ctx.lineTo(meterX + Math.cos(angle) * (meterR - 14), meterY + Math.sin(angle) * (meterR - 14));
+  ctx.stroke();
+
+  // Needle pivot
+  ctx.fillStyle = '#cbd5e1';
+  ctx.beginPath(); ctx.arc(meterX, meterY, 5, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // 2. Light Bulb beside meter
+  const bulbX = w * 0.40;
+  const bulbY = h * 0.22;
+
+  // Glow halo
+  if (lampGlow > 0.05) {
+    const glowGrad = ctx.createRadialGradient(bulbX, bulbY, 5, bulbX, bulbY, 55 * lampGlow);
+    glowGrad.addColorStop(0, `rgba(253, 224, 71, ${0.8 * lampGlow})`);
+    glowGrad.addColorStop(0.5, `rgba(234, 179, 8, ${0.4 * lampGlow})`);
+    glowGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.beginPath(); ctx.arc(bulbX, bulbY, 60, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Bulb glass
+  ctx.fillStyle = lampGlow > 0.1 ? `rgb(${Math.round(180 + 75*lampGlow)}, ${Math.round(150 + 74*lampGlow)}, 80)` : '#1e3a5c';
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(bulbX, bulbY, 22, 0, Math.PI * 2);
+  ctx.fill(); ctx.stroke();
+
+  // Filament
+  ctx.strokeStyle = lampGlow > 0.1 ? '#ffffff' : '#475569';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bulbX - 8, bulbY + 8);
+  ctx.lineTo(bulbX, bulbY - 6);
+  ctx.lineTo(bulbX + 8, bulbY + 8);
+  ctx.stroke();
+
+  // Bulb base
+  ctx.fillStyle = '#64748b';
+  ctx.fillRect(bulbX - 8, bulbY + 20, 16, 10);
+
+  // 3. Connective Circuit Wires
+  ctx.strokeStyle = '#0284c7';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  // Wire from meter to coil top
+  ctx.moveTo(meterX - 15, meterY + meterR);
+  ctx.lineTo(meterX - 15, cy - coilRadius);
+  ctx.lineTo(cx - 70, cy - coilRadius);
+  // Wire from meter to bulb to coil bottom
+  ctx.moveTo(meterX + 15, meterY + meterR);
+  ctx.lineTo(bulbX, meterY + meterR);
+  ctx.lineTo(bulbX, bulbY + 30);
+  ctx.moveTo(bulbX, bulbY + 30);
+  ctx.lineTo(bulbX, cy + coilRadius);
+  ctx.lineTo(cx - 70, cy + coilRadius);
+  ctx.stroke();
+
+  // Flowing electrons on wires if EMF active
+  if (absEmf > 0.05) {
+    const eTime = Date.now() * 0.005 * (emf > 0 ? 1 : -1);
+    ctx.fillStyle = '#38bdf8';
+    for (let i = 0; i < 6; i++) {
+      const offset = (eTime + i * 0.16) % 1;
+      const ex = cx - 70 - offset * (cx - 70 - (meterX - 15));
+      ctx.beginPath(); ctx.arc(ex, cy - coilRadius, 3, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  // 4. Copper Coil with N turns
+  const coilWidth = 140;
+  const loopSpacing = coilWidth / (fTurns + 1);
+  const coilStartX = cx - coilWidth / 2;
+
+  // Back half of coil loops
+  ctx.lineWidth = 5;
+  for (let i = 0; i < fTurns; i++) {
+    const lx = coilStartX + (i + 1) * loopSpacing;
+    ctx.strokeStyle = '#b45309'; // Dark copper for rear
+    ctx.beginPath();
+    ctx.ellipse(lx, cy, 14, coilRadius, 0, -Math.PI / 2, Math.PI / 2, true);
+    ctx.stroke();
+  }
+
+  // 5. Magnet (Passing through center of coil)
+  const magW = 150;
+  const magH = 48;
+  const mx = cx + fMagX - magW / 2;
+  const my = cy - magH / 2;
+
+  // Magnetic field lines around magnet
+  ctx.save();
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 4]);
+  for (let arc = 30; arc <= 80; arc += 25) {
+    ctx.beginPath();
+    ctx.ellipse(mx + magW / 2, cy, magW * 0.65, arc, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Magnet body (N and S poles)
+  const isNS = (fPole === 'NS');
+  // Left pole
+  ctx.fillStyle = isNS ? '#ef4444' : '#3b82f6';
+  ctx.fillRect(mx, my, magW / 2, magH);
+  // Right pole
+  ctx.fillStyle = isNS ? '#3b82f6' : '#ef4444';
+  ctx.fillRect(mx + magW / 2, my, magW / 2, magH);
+
+  // Border & divider
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, magW, magH);
+  ctx.beginPath(); ctx.moveTo(mx + magW / 2, my); ctx.lineTo(mx + magW / 2, my + magH); ctx.stroke();
+
+  // Pole Text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(isNS ? 'N' : 'S', mx + magW * 0.25, cy);
+  ctx.fillText(isNS ? 'S' : 'N', mx + magW * 0.75, cy);
+
+  // 6. Front half of coil loops (overlapping magnet)
+  ctx.lineWidth = 6;
+  for (let i = 0; i < fTurns; i++) {
+    const lx = coilStartX + (i + 1) * loopSpacing;
+    ctx.strokeStyle = '#f59e0b'; // Bright amber copper for front
+    ctx.beginPath();
+    ctx.ellipse(lx, cy, 14, coilRadius, 0, -Math.PI / 2, Math.PI / 2, false);
+    ctx.stroke();
+  }
+
+  // Coil Labels
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`COPPER COIL (${fTurns} TURNS)`, cx, cy + coilRadius + 28);
+}
+
+function animFaraday() {
+  renderFaraday(fCtx, fCanvas.width, fCanvas.height);
+  if (isFsActive && currentFsTopic === 'topic1') {
+    const fsCanvas = document.getElementById('fsCanvas');
+    renderFaraday(fsCanvas.getContext('2d'), fsCanvas.width, fsCanvas.height);
+  }
+  requestAnimationFrame(animFaraday);
+}
+requestAnimationFrame(animFaraday);
+
+/* ==================== TOPIC 2: MAGNETIC FIELD LINES & COMPASS ==================== */
+const fieldCanvas = document.getElementById('fieldCanvas');
+const fieldCtx = fieldCanvas.getContext('2d');
+let mousePos = { x: 300, y: 200, active: false };
+
+fieldCanvas.addEventListener('mousemove', (e) => {
+  const rect = fieldCanvas.getBoundingClientRect();
+  mousePos.x = (e.clientX - rect.left) * (fieldCanvas.width / rect.width);
+  mousePos.y = (e.clientY - rect.top) * (fieldCanvas.height / rect.height);
+  mousePos.active = true;
+  drawFieldCanvas();
+});
+fieldCanvas.addEventListener('mouseleave', () => {
+  mousePos.active = false;
+  drawFieldCanvas();
+});
+
+function updateFieldConfig() {
+  const cfg = document.getElementById('fieldConfig').value;
+  const lbl = document.getElementById('fieldLabel');
+  if (cfg === 'single') lbl.textContent = 'Single Bar Magnet Dipole';
+  if (cfg === 'attract') lbl.textContent = 'Attracting Dipoles (North - South)';
+  if (cfg === 'repel') lbl.textContent = 'Repelling Dipoles (North - North)';
+  if (cfg === 'solenoid') lbl.textContent = 'Electromagnetic Solenoid (Coil Field)';
+  drawFieldCanvas();
+}
+
+function calculateBField(x, y, cfg) {
+  let Bx = 0;
+  let By = 0;
+  const w = fieldCanvas.width;
+  const h = fieldCanvas.height;
+
+  function addDipole(px, py, angle, str) {
+    const dx = x - px;
+    const dy = y - py;
+    const r2 = dx*dx + dy*dy + 400;
+    const r = Math.sqrt(r2);
+    const r5 = r2 * r2 * r;
+    // Dipole moment components
+    const mx = Math.cos(angle) * str;
+    const my = Math.sin(angle) * str;
+    const m_dot_r = mx * dx + my * dy;
+    Bx += (3 * dx * m_dot_r / r5 - mx / (r2 * r)) * 100000;
+    By += (3 * dy * m_dot_r / r5 - my / (r2 * r)) * 100000;
+  }
+
+  if (cfg === 'single') {
+    addDipole(w * 0.5, h * 0.5, 0, 1.0);
+  } else if (cfg === 'attract') {
+    addDipole(w * 0.32, h * 0.5, 0, 0.85);
+    addDipole(w * 0.68, h * 0.5, 0, 0.85);
+  } else if (cfg === 'repel') {
+    addDipole(w * 0.32, h * 0.5, 0, 0.85);
+    addDipole(w * 0.68, h * 0.5, Math.PI, 0.85);
+  } else if (cfg === 'solenoid') {
+    for (let sx = w * 0.40; sx <= w * 0.60; sx += 25) {
+      addDipole(sx, h * 0.5, 0, 0.35);
+    }
+  }
+
+  return { Bx, By, mag: Math.sqrt(Bx*Bx + By*By) };
+}
+
+function drawFieldCanvas() {
+  const ctx = fieldCtx;
+  const w = fieldCanvas.width;
+  const h = fieldCanvas.height;
+  const cfg = document.getElementById('fieldConfig').value;
+  const showGrid = document.getElementById('showCompassGrid').checked;
+  const showStream = document.getElementById('showStreamlines').checked;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Background
+  ctx.fillStyle = '#06121f';
+  ctx.fillRect(0, 0, w, h);
+
+  // Streamlines
+  if (showStream) {
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
+    ctx.lineWidth = 1.2;
+    const seedPoints = [];
+    if (cfg === 'single') {
+      for (let a = -Math.PI*0.8; a <= Math.PI*0.8; a += 0.25) {
+        seedPoints.push({ x: w*0.5 + 85 * Math.cos(a), y: h*0.5 + 30 * Math.sin(a) });
+      }
+    } else {
+      for (let sx = w*0.2; sx <= w*0.8; sx += 50) {
+        seedPoints.push({ x: sx, y: h*0.25 });
+        seedPoints.push({ x: sx, y: h*0.75 });
+      }
+    }
+
+    seedPoints.forEach(pt => {
+      ctx.beginPath();
+      let cx = pt.x;
+      let cy = pt.y;
+      ctx.moveTo(cx, cy);
+      for (let step = 0; step < 70; step++) {
+        const f = calculateBField(cx, cy, cfg);
+        if (f.mag < 0.0001) break;
+        const stepSize = 6;
+        cx += (f.Bx / f.mag) * stepSize;
+        cy += (f.By / f.mag) * stepSize;
+        if (cx < 10 || cx > w - 10 || cy < 10 || cy > h - 10) break;
+        ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
+    });
+  }
+
+  // Draw Physical Magnets
+  if (cfg === 'single') {
+    drawMagnet(ctx, w * 0.5, h * 0.5, 140, 42, 'NS');
+  } else if (cfg === 'attract') {
+    drawMagnet(ctx, w * 0.32, h * 0.5, 110, 36, 'NS');
+    drawMagnet(ctx, w * 0.68, h * 0.5, 110, 36, 'NS');
+  } else if (cfg === 'repel') {
+    drawMagnet(ctx, w * 0.32, h * 0.5, 110, 36, 'NS');
+    drawMagnet(ctx, w * 0.68, h * 0.5, 110, 36, 'SN');
+  } else if (cfg === 'solenoid') {
+    drawSolenoid(ctx, w * 0.5, h * 0.5, 200, 50);
+  }
+
+  // Compass array grid
+  if (showGrid) {
+    const stepX = 55;
+    const stepY = 55;
+    for (let gx = 35; gx < w; gx += stepX) {
+      for (let gy = 35; gy < h; gy += stepY) {
+        const field = calculateBField(gx, gy, cfg);
+        if (field.mag > 0.001) {
+          const angle = Math.atan2(field.By, field.Bx);
+          drawCompassNeedle(ctx, gx, gy, angle, 12);
+        }
+      }
+    }
+  }
+
+  // Interactive Cursor Probe Compass
+  if (mousePos.active) {
+    const f = calculateBField(mousePos.x, mousePos.y, cfg);
+    const ang = Math.atan2(f.By, f.Bx);
+    
+    // Compass Housing
+    ctx.save();
+    ctx.fillStyle = 'rgba(15, 36, 64, 0.9)';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(mousePos.x, mousePos.y, 28, 0, Math.PI * 2);
+    ctx.fill(); ctx.stroke();
+
+    drawCompassNeedle(ctx, mousePos.x, mousePos.y, ang, 22);
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('PROBE', mousePos.x, mousePos.y + 20);
+    ctx.restore();
+
+    document.getElementById('fieldMagnitude').textContent = (f.mag * 0.15).toFixed(2) + ' mT';
+  }
+}
+
+function drawMagnet(ctx, cx, cy, w, h, poles) {
+  const mx = cx - w / 2;
+  const my = cy - h / 2;
+  const isNS = (poles === 'NS');
+  
+  // Left Pole
+  ctx.fillStyle = isNS ? '#ef4444' : '#3b82f6';
+  ctx.fillRect(mx, my, w / 2, h);
+  // Right Pole
+  ctx.fillStyle = isNS ? '#3b82f6' : '#ef4444';
+  ctx.fillRect(mx + w / 2, my, w / 2, h);
+
+  // Border & divider
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, w, h);
+  ctx.beginPath(); ctx.moveTo(mx + w/2, my); ctx.lineTo(mx + w/2, my + h); ctx.stroke();
+
+  // Text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(isNS ? 'N' : 'S', mx + w * 0.25, cy);
+  ctx.fillText(isNS ? 'S' : 'N', mx + w * 0.75, cy);
+}
+
+function drawSolenoid(ctx, cx, cy, w, h) {
+  ctx.fillStyle = '#0f2440';
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 4;
+  for (let x = cx - w/2 + 10; x <= cx + w/2 - 10; x += 15) {
+    ctx.beginPath();
+    ctx.ellipse(x, cy, 7, h/2, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('DC ELECTROMAGNET SOLENOID', cx, cy + h/2 + 20);
+}
+
+function drawCompassNeedle(ctx, x, y, angle, length) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+
+  // Red North half
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.moveTo(length, 0);
+  ctx.lineTo(0, -length * 0.28);
+  ctx.lineTo(0, length * 0.28);
+  ctx.closePath();
+  ctx.fill();
+
+  // Blue South half
+  ctx.fillStyle = '#3b82f6';
+  ctx.beginPath();
+  ctx.moveTo(-length, 0);
+  ctx.lineTo(0, -length * 0.28);
+  ctx.lineTo(0, length * 0.28);
+  ctx.closePath();
+  ctx.fill();
+
+  // Center pin
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath(); ctx.arc(0, 0, length * 0.15, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+/* ==================== TOPIC 3: AC TRANSFORMER ==================== */
+const tCanvas = document.getElementById('transformerCanvas');
+const tCtx = tCanvas.getContext('2d');
+let tPhase = 0;
+
+function updateTransformer() {
+  const vp = parseFloat(document.getElementById('tVp').value);
+  const np = parseInt(document.getElementById('tNp').value);
+  const ns = parseInt(document.getElementById('tNs').value);
+  const core = document.getElementById('tCore').value;
+  const freq = parseInt(document.getElementById('tFreq').value);
+
+  document.getElementById('tVpVal').textContent = vp + ' V';
+  document.getElementById('tNpVal').textContent = np + ' turns';
+  document.getElementById('tNsVal').textContent = ns + ' turns';
+  document.getElementById('tFreqVal').textContent = freq + ' Hz';
+
+  const ratio = ns / np;
+  const coupling = (core === 'iron') ? 0.98 : 0.20;
+  const vs = vp * ratio * coupling;
+  const loadR = 100;
+  const is = vs / loadR;
+
+  document.getElementById('tVsReadout').textContent = vs.toFixed(1) + ' V';
+  document.getElementById('tIsReadout').textContent = is.toFixed(2) + ' A';
+
+  const typeLbl = document.getElementById('tTypeLabel');
+  if (ratio > 1.05) {
+    typeLbl.textContent = `Step-Up Transformer (Ratio ${ratio.toFixed(2)})`;
+    typeLbl.style.color = '#38bdf8';
+  } else if (ratio < 0.95) {
+    typeLbl.textContent = `Step-Down Transformer (Ratio ${ratio.toFixed(2)})`;
+    typeLbl.style.color = '#fbbf24';
+  } else {
+    typeLbl.textContent = `1:1 Isolation Transformer (Ratio 1.00)`;
+    typeLbl.style.color = '#4ade80';
+  }
+
+  renderTransformer(tCtx, tCanvas.width, tCanvas.height, vp, vs, np, ns, core);
+}
+
+function renderTransformer(ctx, w, h, vp, vs, np, ns, core) {
+  ctx.clearRect(0, 0, w, h);
+  tPhase += 0.05;
+
+  const cx = w * 0.5;
+  const cy = h * 0.5;
+
+  // 1. Ferromagnetic Iron Ring Core
+  const coreW = 380;
+  const coreH = 240;
+  const coreThick = 50;
+
+  // Outer rect
+  ctx.fillStyle = (core === 'iron') ? '#334155' : '#0f172a';
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.roundRect(cx - coreW/2, cy - coreH/2, coreW, coreH, 18);
+  ctx.fill(); ctx.stroke();
+
+  // Inner cutout
+  ctx.fillStyle = '#06121f';
+  ctx.beginPath();
+  ctx.roundRect(cx - coreW/2 + coreThick, cy - coreH/2 + coreThick, coreW - coreThick*2, coreH - coreThick*2, 12);
+  ctx.fill(); ctx.stroke();
+
+  // Magnetic Flux Flow in Core
+  const fluxAlpha = (core === 'iron') ? 0.7 : 0.15;
+  const fluxWave = Math.sin(tPhase);
+  ctx.strokeStyle = `rgba(56, 189, 248, ${fluxAlpha * Math.abs(fluxWave)})`;
+  ctx.lineWidth = 4;
+  ctx.setLineDash([12, 10]);
+  ctx.lineDashOffset = -tPhase * 15;
+  ctx.strokeRect(cx - coreW/2 + coreThick/2, cy - coreH/2 + coreThick/2, coreW - coreThick, coreH - coreThick);
+  ctx.setLineDash([]);
+
+  // 2. Primary Coil on Left Arm
+  const leftArmX = cx - coreW/2 + coreThick/2;
+  const coilH = 140;
+  const numVisNp = Math.min(18, Math.max(5, Math.round(np / 6)));
+  const pStep = coilH / numVisNp;
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 5;
+  for (let i = 0; i < numVisNp; i++) {
+    const y = cy - coilH/2 + i * pStep;
+    ctx.beginPath();
+    ctx.ellipse(leftArmX, y, coreThick * 0.65, 8, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // 3. Secondary Coil on Right Arm
+  const rightArmX = cx + coreW/2 - coreThick/2;
+  const numVisNs = Math.min(24, Math.max(5, Math.round(ns / 6)));
+  const sStep = coilH / numVisNs;
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 5;
+  for (let i = 0; i < numVisNs; i++) {
+    const y = cy - coilH/2 + i * sStep;
+    ctx.beginPath();
+    ctx.ellipse(rightArmX, y, coreThick * 0.65, 8, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // 4. Primary AC Generator & Connections
+  const genX = leftArmX - 140;
+  const genY = cy;
+  ctx.fillStyle = '#0f2440';
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(genX, genY, 35, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('~ AC', genX, genY + 7);
+
+  // Wires to primary
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(genX, genY - 35);
+  ctx.lineTo(genX, cy - coilH/2);
+  ctx.lineTo(leftArmX - coreThick*0.65, cy - coilH/2);
+  ctx.moveTo(genX, genY + 35);
+  ctx.lineTo(genX, cy + coilH/2);
+  ctx.lineTo(leftArmX - coreThick*0.65, cy + coilH/2);
+  ctx.stroke();
+
+  // 5. Secondary Light Bulb Load
+  const bulbX = rightArmX + 140;
+  const bulbY = cy;
+  const bGlow = Math.min(1.0, vs / 220);
+
+  if (bGlow > 0.05) {
+    const glowGrad = ctx.createRadialGradient(bulbX, bulbY, 5, bulbX, bulbY, 60 * bGlow);
+    glowGrad.addColorStop(0, `rgba(253, 224, 71, ${0.9 * bGlow})`);
+    glowGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.beginPath(); ctx.arc(bulbX, bulbY, 65, 0, Math.PI * 2); ctx.fill();
+  }
+
+  ctx.fillStyle = bGlow > 0.1 ? '#fef08a' : '#1e293b';
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(bulbX, bulbY, 26, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+  // Filament
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bulbX - 8, bulbY + 8); ctx.lineTo(bulbX, bulbY - 8); ctx.lineTo(bulbX + 8, bulbY + 8);
+  ctx.stroke();
+
+  // Wires to secondary
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(rightArmX + coreThick*0.65, cy - coilH/2);
+  ctx.lineTo(bulbX, cy - coilH/2);
+  ctx.lineTo(bulbX, bulbY - 26);
+  ctx.moveTo(rightArmX + coreThick*0.65, cy + coilH/2);
+  ctx.lineTo(bulbX, cy + coilH/2);
+  ctx.lineTo(bulbX, bulbY + 26);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`PRIMARY COIL (Vₚ = ${vp}V, Nₚ = ${np})`, leftArmX, cy + coilH/2 + 40);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText(`SECONDARY COIL (Vₛ = ${vs.toFixed(1)}V, Nₛ = ${ns})`, rightArmX, cy + coilH/2 + 40);
+}
+
+function animTransformer() {
+  if (document.getElementById('topic3').classList.contains('active')) {
+    updateTransformer();
+  }
+  requestAnimationFrame(animTransformer);
+}
+requestAnimationFrame(animTransformer);
+
+/* ==================== TOPIC 4: LORENTZ FORCE SIMULATION ==================== */
+const pCanvas = document.getElementById('particleCanvas');
+const pCtx = pCanvas.getContext('2d');
+
+let pState = {
+  active: false,
+  x: 80,
+  y: 210,
+  vx: 3.5,
+  vy: 0,
+  trail: [],
+  type: 'proton',
+  vVal: 65,
+  bVal: 0.50
+};
+
+function updateParticleParams() {
+  pState.type = document.getElementById('pType').value;
+  pState.vVal = parseFloat(document.getElementById('pVelocity').value);
+  document.getElementById('pVelVal').textContent = pState.vVal + ' km/s';
+
+  const bRaw = parseFloat(document.getElementById('pBField').value);
+  pState.bVal = bRaw / 100;
+  document.getElementById('pBVal').textContent = (pState.bVal >= 0 ? '+' : '') + pState.bVal.toFixed(2) + ' T (' + (pState.bVal >= 0 ? 'Into Screen' : 'Out of Screen') + ')';
+
+  // Theoretical radius
+  let q = 1;
+  let m = 1;
+  if (pState.type === 'electron') { q = -1; m = 0.05; }
+  else if (pState.type === 'proton') { q = 1; m = 1.0; }
+  else if (pState.type === 'alpha') { q = 2; m = 4.0; }
+
+  const absB = Math.max(0.05, Math.abs(pState.bVal));
+  const rCm = (m * pState.vVal / (Math.abs(q) * absB * 15)).toFixed(1);
+  document.getElementById('pRadiusReadout').textContent = 'r = ' + rCm + ' cm';
+  document.getElementById('pForceReadout').textContent = `F = ${(Math.abs(q) * (pState.vVal * 0.1) * absB).toFixed(2)} × 10⁻¹⁴ N`;
+
+  const dirLbl = document.getElementById('pDirReadout');
+  const curveSign = q * pState.bVal;
+  if (Math.abs(pState.bVal) < 0.05) {
+    dirLbl.textContent = 'Straight Line (Zero Magnetic Deflection)';
+  } else if (curveSign > 0) {
+    dirLbl.textContent = 'Counter-Clockwise Upward Arc';
+  } else {
+    dirLbl.textContent = 'Clockwise Downward Arc';
+  }
+
+  drawParticleStatic();
+}
+
+function fireParticle() {
+  pState.active = true;
+  pState.x = 80;
+  pState.y = 210;
+  pState.vx = (pState.vVal / 65) * 3.5;
+  pState.vy = 0;
+  pState.trail = [];
+}
+
+function resetParticle() {
+  pState.active = false;
+  pState.trail = [];
+  updateParticleParams();
+}
+
+function clearParticleTrail() {
+  pState.trail = [];
+  drawParticleStatic();
+}
+
+function drawParticleStatic() {
+  const ctx = pCtx;
+  const w = pCanvas.width;
+  const h = pCanvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Background B-field symbols
+  const bVal = pState.bVal;
+  ctx.fillStyle = '#1e293b';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const sym = (bVal >= 0) ? '⊗' : '⊙';
+  const symColor = (bVal >= 0) ? 'rgba(56, 189, 248, 0.25)' : 'rgba(244, 63, 94, 0.25)';
+  ctx.fillStyle = symColor;
+
+  for (let x = 60; x < w; x += 60) {
+    for (let y = 40; y < h; y += 50) {
+      ctx.fillText(sym, x, y);
+    }
+  }
+
+  // Gun injector nozzle on left
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(10, 195, 70, 30);
+  ctx.strokeStyle = '#0284c7';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(10, 195, 70, 30);
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText('INJECTOR', 45, 210);
+
+  // Particle Trail
+  if (pState.trail.length > 1) {
+    ctx.strokeStyle = (pState.type === 'electron') ? '#f43f5e' : ((pState.type === 'proton') ? '#38bdf8' : '#fbbf24');
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(pState.trail[0].x, pState.trail[0].y);
+    for (let i = 1; i < pState.trail.length; i++) {
+      ctx.lineTo(pState.trail[i].x, pState.trail[i].y);
+    }
+    ctx.stroke();
+  }
+
+  // Particle Point
+  const px = pState.active ? pState.x : 80;
+  const py = pState.active ? pState.y : 210;
+
+  const pColor = (pState.type === 'electron') ? '#f43f5e' : ((pState.type === 'proton') ? '#38bdf8' : '#fbbf24');
+  ctx.fillStyle = pColor;
+  ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText(pState.type === 'electron' ? 'e⁻' : (pState.type === 'proton' ? 'p⁺' : 'α'), px, py);
+}
+
+function animParticle() {
+  if (pState.active) {
+    let q = 1;
+    let m = 1;
+    if (pState.type === 'electron') { q = -1; m = 0.05; }
+    else if (pState.type === 'proton') { q = 1; m = 1.0; }
+    else if (pState.type === 'alpha') { q = 2; m = 4.0; }
+
+    // Lorentz force F = q * (v x B)
+    // Here B is perpendicular to screen: Fx = q * vy * B, Fy = -q * vx * B
+    const b = pState.bVal * 0.035;
+    const ax = (q * pState.vy * b) / m;
+    const ay = (-q * pState.vx * b) / m;
+
+    pState.vx += ax;
+    pState.vy += ay;
+    pState.x += pState.vx;
+    pState.y += pState.vy;
+
+    pState.trail.push({ x: pState.x, y: pState.y });
+
+    if (pState.x < 0 || pState.x > pCanvas.width || pState.y < 0 || pState.y > pCanvas.height || pState.trail.length > 500) {
+      pState.active = false;
+    }
+    drawParticleStatic();
+  }
+  requestAnimationFrame(animParticle);
+}
+requestAnimationFrame(animParticle);
+
+/* ==================== TOPIC 5: QUIZ ==================== */
+function checkAnswer(qid, selectedOpt, isCorrect) {
+  const card = document.getElementById(qid);
+  const btns = card.querySelectorAll('.quiz-opt');
+  const fb = document.getElementById(qid + '-fb');
+
+  btns.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === selectedOpt) {
+      btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+    }
+  });
+
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.background = isCorrect ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+  fb.style.color = isCorrect ? '#34d399' : '#f87171';
+  fb.style.border = isCorrect ? '1px solid #10b981' : '1px solid #ef4444';
+  
+  if (isCorrect) {
+    fb.innerHTML = '✓ <strong>Correct!</strong> Well reasoned scientific analysis.';
+  } else {
+    fb.innerHTML = '✕ <strong>Incorrect.</strong> Review the scientific principles panel above.';
+  }
+}
+
+function resetQuiz() {
+  document.querySelectorAll('.quiz-card').forEach(card => {
+    card.querySelectorAll('.quiz-opt').forEach(btn => {
+      btn.disabled = false;
+      btn.classList.remove('correct', 'incorrect');
+    });
+    const fb = card.querySelector('.quiz-feedback');
+    fb.classList.remove('show');
+  });
+}
+
+/* ==================== FULLSCREEN OVERLAY ==================== */
+let isFsActive = false;
+let currentFsTopic = null;
+
+function launchFullscreen(topicId) {
+  currentFsTopic = topicId;
+  isFsActive = true;
+  const overlay = document.getElementById('fsOverlay');
+  overlay.classList.add('active');
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'GENZ_SIM_REQUEST_FULLSCREEN', simFile: window.location.pathname }, '*');
+    }
+  } catch (e) {}
+
+  const title = document.getElementById('fsTitle');
+  const controls = document.getElementById('fsControls');
+  controls.innerHTML = '';
+
+  if (topicId === 'topic1') {
+    title.textContent = "Faraday's Induction & Lenz's Law Interactive Lab";
+    controls.innerHTML = `
+      <label>Magnet Position: <input type="range" min="-220" max="220" value="${fMagX}" oninput="document.getElementById('fMagPos').value=this.value; updateFaradayManual();"></label>
+      <label>Coil Turns: <input type="range" min="1" max="8" value="${fTurns}" oninput="document.getElementById('fTurns').value=this.value; updateFaradayParams();"></label>
+      <label>Field Strength: <input type="range" min="20" max="100" value="${Math.round(fMagStr*100)}" oninput="document.getElementById('fMagStr').value=this.value; updateFaradayParams();"></label>
+      <button class="btn-accent" onclick="toggleFaradayAuto()">▶ Toggle Auto</button>
+      <button onclick="resetFaraday()">↺ Reset</button>
+    `;
+  } else if (topicId === 'topic2') {
+    title.textContent = 'Magnetic Field Lines & Compass Array Mapping';
+    controls.innerHTML = `
+      <label>Preset: <select onchange="document.getElementById('fieldConfig').value=this.value; updateFieldConfig();">
+        <option value="single">Single Dipole</option>
+        <option value="attract">Attracting Poles (N-S)</option>
+        <option value="repel">Repelling Poles (N-N)</option>
+        <option value="solenoid">Electromagnet Solenoid</option>
+      </select></label>
+    `;
+  } else if (topicId === 'topic3') {
+    title.textContent = 'AC Transformer & Mutual Induction Lab';
+    controls.innerHTML = `
+      <label>Vₚ: <input type="range" min="10" max="240" value="${document.getElementById('tVp').value}" oninput="document.getElementById('tVp').value=this.value; updateTransformer();"></label>
+      <label>Nₚ: <input type="range" min="10" max="200" step="10" value="${document.getElementById('tNp').value}" oninput="document.getElementById('tNp').value=this.value; updateTransformer();"></label>
+      <label>Nₛ: <input type="range" min="10" max="200" step="10" value="${document.getElementById('tNs').value}" oninput="document.getElementById('tNs').value=this.value; updateTransformer();"></label>
+    `;
+  } else if (topicId === 'topic4') {
+    title.textContent = 'Lorentz Force Charged Particle Deflection';
+    controls.innerHTML = `
+      <button class="btn-accent" onclick="fireParticle()">▶ Fire Particle</button>
+      <button onclick="clearParticleTrail()">Clear Trail</button>
+    `;
+  }
+}
+
+function closeFullscreen() {
+  isFsActive = false;
+  currentFsTopic = null;
+  document.getElementById('fsOverlay').classList.remove('active');
+}
+
+// Initial draw
+drawFieldCanvas();
+updateTransformer();
+updateParticleParams();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

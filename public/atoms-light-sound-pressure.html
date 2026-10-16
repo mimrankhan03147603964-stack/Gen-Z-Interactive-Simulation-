@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Science Lab · Atoms, Light, Sound & Pressure</title>
+<style>
+/* Zero-monochrome & color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #060e1d;
+  color: #e2e8f0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.7); }
+::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  width: 100%;
+}
+
+/* Top Navigation Tabs */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #0c182e;
+  border: 1px solid #1e3a5f;
+  border-radius: 16px;
+  padding: 10px 14px;
+}
+.tab-btn {
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #94a3b8;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1 0 auto;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.45);
+}
+
+.topic { display: none; }
+.topic.active { display: block; }
+
+.card {
+  background: linear-gradient(165deg, #0d1e38 0%, #071224 100%);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid #1e3a63;
+}
+.card h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #f8fafc;
+}
+.card h2 small {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #7dd3fc;
+  margin-left: 10px;
+}
+.card .desc {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 18px;
+  border-left: 4px solid #38bdf8;
+  padding: 8px 16px;
+  background: rgba(56, 189, 248, 0.06);
+  border-radius: 0 10px 10px 0;
+  line-height: 1.6;
+}
+
+.section-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 14px; }
+.section-tab {
+  padding: 8px 18px;
+  border: 1px solid #23436d;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: #11223f;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.section-tab:hover { background: #1a3560; color: #fff; }
+.section-tab.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+
+.panel { display: none; padding: 14px 0 8px; }
+.panel.active { display: block; }
+.panel h3 { font-size: 1.4rem; font-weight: 700; color: #fde047; margin-bottom: 12px; }
+.panel p, .panel li { font-size: 1rem; line-height: 1.7; color: #cbd5e1; }
+.panel ul { list-style: none; padding-left: 0; }
+.panel ul li { padding: 6px 0 6px 30px; position: relative; }
+.panel ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #38bdf8;
+  color: #060e1d;
+  font-weight: 900;
+  text-align: center;
+  line-height: 20px;
+  font-size: 0.8rem;
+}
+.teacher-note {
+  background: rgba(245, 158, 11, 0.12);
+  border-left: 4px solid #f59e0b;
+  padding: 10px 16px;
+  border-radius: 0 10px 10px 0;
+  margin-top: 14px;
+  color: #fef3c7;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 12px; }
+.grid-item { background: rgba(255, 255, 255, 0.04); padding: 16px; border-radius: 14px; border-left: 4px solid #38bdf8; }
+.grid-item h4 { font-size: 1.15rem; color: #7dd3fc; margin-bottom: 6px; }
+.grid-item p { font-size: 0.94rem; color: #cbd5e1; line-height: 1.5; }
+
+/* Simulation Stage Box */
+.sim-box {
+  background: #040915;
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 10px;
+  border: 1px solid #1e3a5f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: #0c182e;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid #1e3a5f;
+  z-index: 10;
+}
+.sim-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+.sim-controls select, .sim-controls button, .sim-controls input[type="range"] {
+  cursor: pointer;
+}
+.sim-controls select {
+  background: #132646;
+  color: #f8fafc;
+  border: 1px solid #2e5584;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.sim-controls input[type="range"] {
+  accent-color: #38bdf8;
+  max-width: 130px;
+}
+.sim-controls button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #2e5584;
+  font-weight: 800;
+  font-size: 0.88rem;
+  background: #172e54;
+  color: #f8fafc;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sim-controls button:hover {
+  background: #234375;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+.sim-controls button:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  border-color: #38bdf8 !important;
+}
+
+.sim-readout {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin: 6px 0 10px;
+  padding: 6px 14px;
+  background: rgba(14, 27, 50, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.sim-readout small {
+  display: block;
+  font-size: 0.88rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.sim-info {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+canvas {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  border-radius: 14px;
+  border: 1.5px solid #1e3a5f;
+  background: #030712;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Sub-mode selector bar */
+.submode-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.submode-btn {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 1px solid #1e3a5f;
+  background: #09152a;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.submode-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+}
+</style>
+
+<!-- FULLSCREEN STYLES -->
+<style id="genz-simulation-fullscreen-styles">
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+  :fullscreen canvas,
+  :-webkit-full-screen canvas,
+  .is-fullscreen canvas {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 68vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+  :fullscreen .sim-controls,
+  :-webkit-full-screen .sim-controls,
+  .is-fullscreen .sim-controls {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="tabs" id="topicTabs">
+    <button class="tab-btn active" data-topic="atoms"><span class="icon">⚛️</span> Atoms & Molecules</button>
+    <button class="tab-btn" data-topic="light"><span class="icon">💡</span> Light</button>
+    <button class="tab-btn" data-topic="sound"><span class="icon">🔊</span> Sound</button>
+    <button class="tab-btn" data-topic="pressure"><span class="icon">🔄</span> Pressure</button>
+  </div>
+
+  <!-- ================= ATOMS & MOLECULES ================= -->
+  <div class="topic active" id="topic-atoms">
+    <div class="card">
+      <h2>⚛️ Atoms & Molecules <small>building blocks of matter</small></h2>
+      <div class="desc">Explore the inner atomic structure with active electron orbits, build 3D rotating molecules, or observe particle phase transitions.</div>
+      <div class="section-tabs" data-topic="atoms">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Types</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
+      </div>
+      <div class="panel" id="atoms-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Atoms</strong> are the fundamental units of chemical elements, consisting of a central nucleus (protons and neutrons) surrounded by orbiting electrons. <strong>Molecules</strong> consist of two or more atoms bound together by covalent or ionic bonds.</p>
+        <div class="teacher-note"><strong>Teacher Note:</strong> Water is H₂O (2 hydrogen + 1 oxygen). Carbon dioxide is CO₂ (1 carbon + 2 oxygen). Matter transitions between solid, liquid, and gas as temperature changes.</div>
+      </div>
+      <div class="panel" id="atoms-exp">
+        <h3>💡 Explanation</h3>
+        <p>Electrons occupy discrete quantum energy shells (K: up to 2e⁻, L: up to 8e⁻, M: up to 8e⁻). Protons define the atomic number Z, while neutrons provide nuclear binding stability.</p>
+        <ul>
+          <li><strong>Protons (p⁺):</strong> Positively charged nuclear particles.</li>
+          <li><strong>Neutrons (n⁰):</strong> Neutral nuclear particles that stabilize the nucleus.</li>
+          <li><strong>Electrons (e⁻):</strong> Negatively charged leptons orbiting in quantized shells.</li>
+        </ul>
+      </div>
+      <div class="panel" id="atoms-types">
+        <h3>🧩 Types of Matter</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Elements</h4><p>Pure substances composed of identical atoms (e.g., Gold, Carbon, Neon).</p></div>
+          <div class="grid-item"><h4>Molecules & Compounds</h4><p>Chemically bonded combinations (e.g., H₂O, CO₂, CH₄, NaCl).</p></div>
+          <div class="grid-item"><h4>States of Matter</h4><p>Solids vibrate in fixed lattices, liquids slide past each other, gases fly freely.</p></div>
+        </div>
+      </div>
+      <div class="panel active" id="atoms-sim">
+        <div class="sim-box" id="atomsSimBox">
+          <div class="submode-bar">
+            <button class="submode-btn active" id="btnModeBohr">🪐 Bohr Model Atom</button>
+            <button class="submode-btn" id="btnModeMolecule">🧬 3D Molecules</button>
+            <button class="submode-btn" id="btnModeStates">🧊 States of Matter</button>
+          </div>
+
+          <div class="sim-controls" id="atomsControls">
+            <!-- Controls for Bohr Mode -->
+            <span id="bohrControlsGroup" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>Element:
+                <select id="atomElementSelect">
+                  <option value="H">1 - Hydrogen (H)</option>
+                  <option value="He">2 - Helium (He)</option>
+                  <option value="Li">3 - Lithium (Li)</option>
+                  <option value="C" selected>6 - Carbon (C)</option>
+                  <option value="N">7 - Nitrogen (N)</option>
+                  <option value="O">8 - Oxygen (O)</option>
+                  <option value="Ne">10 - Neon (Ne)</option>
+                  <option value="Na">11 - Sodium (Na)</option>
+                  <option value="Cl">17 - Chlorine (Cl)</option>
+                </select>
+              </label>
+              <button id="atomAddProton">p⁺ Add</button>
+              <button id="atomAddNeutron">n⁰ Add</button>
+              <button id="atomAddElectron">e⁻ Add</button>
+            </span>
+
+            <!-- Controls for Molecule Mode -->
+            <span id="moleculeControlsGroup" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>Molecule:
+                <select id="molSelect">
+                  <option value="H2O" selected>Water (H₂O)</option>
+                  <option value="CO2">Carbon Dioxide (CO₂)</option>
+                  <option value="CH4">Methane (CH₄)</option>
+                  <option value="NH3">Ammonia (NH₃)</option>
+                  <option value="O2">Oxygen (O₂)</option>
+                  <option value="NaCl">Salt (NaCl)</option>
+                </select>
+              </label>
+              <button id="molRotateBtn">🔄 Rotate</button>
+            </span>
+
+            <!-- Controls for States of Matter Mode -->
+            <span id="statesControlsGroup" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>State:
+                <select id="atomState">
+                  <option value="solid">Solid (Ice)</option>
+                  <option value="liquid" selected>Liquid (Water)</option>
+                  <option value="gas">Gas (Steam)</option>
+                </select>
+              </label>
+              <button id="atomBondBtn">➕ Bond Atoms</button>
+              <button id="atomHeatBtn">🔥 Heat</button>
+              <button id="atomCoolBtn">❄️ Cool</button>
+            </span>
+
+            <button id="atomResetBtn">⟳ Reset</button>
+            <button id="atomFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+
+          <div class="sim-readout" id="atomReadout">CARBON (C-12) · ATOM<small>6 Protons · 6 Neutrons · 6 Electrons (K:2, L:4) · Stable Neutral</small></div>
+          <canvas id="atomCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="atomInfo">Glowing central nucleus with proton/neutron cluster, concentric quantized electron shells K & L, and active orbiting electrons.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> All living organisms on Earth are carbon-based. Covalent bonds form the backbone of DNA and proteins.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LIGHT ================= -->
+  <div class="topic" id="topic-light">
+    <div class="card">
+      <h2>💡 Light <small>reflection, refraction, lenses & spectrum</small></h2>
+      <div class="desc">Interactive optical bench with laser source, plane mirror, glass block, convex focusing lens, and dispersion prism.</div>
+      <div class="section-tabs" data-topic="light">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Properties</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
+      </div>
+      <div class="panel" id="light-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Light</strong> is transverse electromagnetic radiation. In optical media, light reflects at equal angles, refracts according to Snell's Law (n₁ sin θ₁ = n₂ sin θ₂), focuses through lenses, and disperses into spectral colors.</p>
+      </div>
+      <div class="panel" id="light-exp">
+        <h3>💡 Explanation</h3>
+        <p>When light encounters a boundary between two optical media, part of the wave reflects back and part enters the medium with changed wave velocity and wavelength.</p>
+        <ul>
+          <li><strong>Law of Reflection:</strong> Angle of incidence θ₁ = Angle of reflection θ₂ relative to normal.</li>
+          <li><strong>Refraction:</strong> Bends toward the normal when entering a denser medium (air to glass).</li>
+          <li><strong>Optical Lens:</strong> Convex lenses converge parallel rays to a common focal point F.</li>
+          <li><strong>Dispersion:</strong> Prisms split white light because shorter blue wavelengths refract more than longer red wavelengths.</li>
+        </ul>
+      </div>
+      <div class="panel" id="light-types">
+        <h3>🌈 Key Optical Phenomena</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Plane Mirror</h4><p>Specular reflection with virtual image at equal distance.</p></div>
+          <div class="grid-item"><h4>Refractive Glass Block</h4><p>Lateral ray displacement with parallel emergent beam.</p></div>
+          <div class="grid-item"><h4>Convex Focusing Lens</h4><p>Convergences incident rays at focal point F = 1/P.</p></div>
+          <div class="grid-item"><h4>Prism Dispersion</h4><p>Full ROYGBIV visible color spectrum decomposition.</p></div>
+        </div>
+      </div>
+      <div class="panel active" id="light-sim">
+        <div class="sim-box" id="lightSimBox">
+          <div class="sim-controls" id="lightControls">
+            <label>Phenomenon:
+              <select id="lightMode">
+                <option value="reflect" selected>Reflection (Plane Mirror)</option>
+                <option value="refract">Refraction (Glass Block)</option>
+                <option value="lens">Convex Lens (Focal Focus)</option>
+                <option value="spectrum">Spectrum (Prism Dispersion)</option>
+              </select>
+            </label>
+            <label id="lblLightAngle">Incident Angle:
+              <input type="range" id="lightAngleSlider" min="15" max="75" value="45">
+              <span id="valLightAngle">45°</span>
+            </label>
+            <button id="lightAnimBtn">⏸ Pause</button>
+            <button id="lightAutoBtn">🔄 Auto-Sweep ON</button>
+            <button id="lightWavefrontsBtn">🌊 Wave Fronts: ON</button>
+            <button id="lightFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="lightReadout">REFLECTION (PLANE MIRROR) <small>Angle of Incidence θ₁ = 45° · Angle of Reflection θ₂ = 45°</small></div>
+          <canvas id="lightCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="lightInfo">Yellow laser ray = Incident · Orange ray = Reflected · Dashed cyan = Normal vector · Protractor arcs measure angles.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Eyeglasses, car mirrors, fiber-optic telecommunication cables, camera lenses, and natural rainbows.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SOUND ================= -->
+  <div class="topic" id="topic-sound">
+    <div class="card">
+      <h2>🔊 Sound <small>vibrations, longitudinal compression & waveforms</small></h2>
+      <div class="desc">Observe vibrating speaker cones or tuning forks creating longitudinal air compression and rarefaction waves, mapped directly to oscilloscope waveforms.</div>
+      <div class="section-tabs" data-topic="sound">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Features</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
+      </div>
+      <div class="panel" id="sound-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Sound</strong> is a mechanical longitudinal wave produced by vibrating matter. It requires an elastic material medium (solid, liquid, or gas) and propagates through alternating compressions (high pressure) and rarefactions (low pressure).</p>
+      </div>
+      <div class="panel" id="sound-exp">
+        <h3>💡 Explanation</h3>
+        <p>Individual medium particles do not travel across the room; they oscillate back and forth about their equilibrium positions while energy propagates forward.</p>
+        <ul>
+          <li><strong>Frequency (Hz):</strong> Number of wave cycles per second; determines musical pitch.</li>
+          <li><strong>Amplitude (A):</strong> Maximum particle displacement from equilibrium; determines loudness and sound pressure level.</li>
+          <li><strong>Compression & Rarefaction:</strong> High density air bands vs low density air bands.</li>
+        </ul>
+      </div>
+      <div class="panel" id="sound-types">
+        <h3>🎚️ Wave Properties</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Pitch & Frequency</h4><p>Higher frequency vibrations generate higher pitch tones.</p></div>
+          <div class="grid-item"><h4>Loudness & Amplitude</h4><p>Greater physical vibration excursion creates higher sound pressure.</p></div>
+          <div class="grid-item"><h4>Medium Requirement</h4><p>Speed of sound is ~343 m/s in air, ~1480 m/s in water, ~5120 m/s in iron.</p></div>
+        </div>
+      </div>
+      <div class="panel active" id="sound-sim">
+        <div class="sim-box" id="soundSimBox">
+          <div class="sim-controls" id="soundControls">
+            <label>Source:
+              <select id="soundSourceSelect">
+                <option value="speaker" selected>Subwoofer Speaker</option>
+                <option value="tuningFork">Acoustic Tuning Fork</option>
+              </select>
+            </label>
+            <label>Frequency (Hz): <input type="range" id="freqRange" min="1" max="20" value="8"></label>
+            <label>Amplitude: <input type="range" id="ampRange" min="1" max="20" value="12"></label>
+            <button id="soundPresetLow">Low Pitch</button>
+            <button id="soundPresetHigh">High Pitch</button>
+            <button id="soundPresetSoft">Soft</button>
+            <button id="soundPresetLoud">Loud</button>
+            <button id="soundPlayBtn">🔊 Play Tone</button>
+            <button id="soundFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="soundReadout">LONGITUDINAL SOUND WAVE <small>Frequency: 8 · Amplitude: 12 · Moving Compression & Rarefaction Bands</small></div>
+          <canvas id="soundCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="soundInfo">Left: Vibrating source. Middle: Medium air particles showing dense compression bands and rarefactions with particle motion indicators. Bottom: Transverse waveform.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Megaphones, ultrasound medical imaging, musical instruments, human vocal cords, and sonar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PRESSURE ================= -->
+  <div class="topic" id="topic-pressure">
+    <div class="card">
+      <h2>🔄 Pressure & Gas Laws <small>force per unit area & kinetic molecular collisions</small></h2>
+      <div class="desc">A transparent pressure vessel with movable piston, colliding gas molecules with real-time velocity vectors, analog needle manometer, and mercury thermometer.</div>
+      <div class="section-tabs" data-topic="pressure">
+        <button class="section-tab" data-section="def">Definition</button>
+        <button class="section-tab" data-section="exp">Explanation</button>
+        <button class="section-tab" data-section="types">Concepts</button>
+        <button class="section-tab active" data-section="sim">Simulation</button>
+      </div>
+      <div class="panel" id="pressure-def">
+        <h3>📖 Definition</h3>
+        <p><strong>Pressure (P)</strong> is the perpendicular force exerted per unit surface area (P = F / A), measured in Pascals (1 Pa = 1 N/m² = 1 J/m³). In gases, pressure arises from the sum of kinetic molecular collisions against container walls.</p>
+      </div>
+      <div class="panel" id="pressure-exp">
+        <h3>💡 Explanation</h3>
+        <p>According to Kinetic Molecular Theory and the Ideal Gas Law (PV = nRT), reducing container volume or increasing thermal temperature causes molecules to collide more frequently and vigorously with container walls, driving pressure upward.</p>
+        <ul>
+          <li><strong>Boyle's Law:</strong> Pressure is inversely proportional to volume at constant temperature (P ∝ 1/V).</li>
+          <li><strong>Gay-Lussac's Law:</strong> Pressure is directly proportional to absolute temperature (P ∝ T).</li>
+          <li><strong>Force vs Area:</strong> A smaller contact area concentrates mechanical force into extreme localized pressure.</li>
+        </ul>
+      </div>
+      <div class="panel" id="pressure-types">
+        <h3>📊 Thermodynamic Relations</h3>
+        <div class="grid-3">
+          <div class="grid-item"><h4>Boyle's Law</h4><p>Halving cylinder volume doubles molecular wall collision rate.</p></div>
+          <div class="grid-item"><h4>Thermal Heating</h4><p>Higher temperature accelerates molecular velocity vectors.</p></div>
+          <div class="grid-item"><h4>Gauge Pressure</h4><p>Measured directly via Bourdon tube needle deflection.</p></div>
+        </div>
+      </div>
+      <div class="panel active" id="pressure-sim">
+        <div class="sim-box" id="pressureSimBox">
+          <div class="sim-controls" id="pressureControls">
+            <label>Piston Force (N): <input type="range" id="forceRange" min="2" max="24" value="12"></label>
+            <label>Chamber Area (cm²): <input type="range" id="areaRange" min="2" max="20" value="8"></label>
+            <label>Temperature (K): <input type="range" id="pressTempRange" min="150" max="600" value="300"></label>
+            <button id="pressureHigh">High Pressure</button>
+            <button id="pressureLow">Low Pressure</button>
+            <button id="pressAddMol">➕ Add Gas</button>
+            <button id="pressureReset">⟳ Reset</button>
+            <button id="pressureFullscreenBtn" class="btn-primary">⛶ Fullscreen</button>
+          </div>
+          <div class="sim-readout" id="pressureReadout">PRESSURE = 1.50 atm (152 kPa) <small>Force: 12 N · Area: 8 cm² · Temp: 300 K · Colliding Molecules with Velocity Vectors</small></div>
+          <canvas id="pressureCanvas" width="1100" height="480"></canvas>
+          <div class="sim-info" id="pressureInfo">Left: Vertical mercury thermometer. Center: Cylindrical pressure chamber with movable piston and colliding gas molecules with real-time velocity vectors. Right: Analog dial pressure gauge.</div>
+          <div class="teacher-note"><strong>Real-Life:</strong> Hydraulic car brakes, syringe needles, submarine depth hulls, scuba diving tanks, and pressure cookers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT SIMULATION LOGIC ================= -->
+<script>
+(function() {
+  "use strict";
+
+  /* ==============================================================
+     TOPIC & SECTION TAB SWITCHING
+     ============================================================== */
+  const topicTabs = document.querySelectorAll(".tab-btn");
+  const topics = {
+    atoms: document.getElementById("topic-atoms"),
+    light: document.getElementById("topic-light"),
+    sound: document.getElementById("topic-sound"),
+    pressure: document.getElementById("topic-pressure")
+  };
+
+  topicTabs.forEach(btn => {
+    btn.addEventListener("click", function() {
+      topicTabs.forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+      const selected = this.dataset.topic;
+      Object.keys(topics).forEach(k => {
+        topics[k].classList.toggle("active", k === selected);
+      });
+      setTimeout(function() {
+        window.dispatchEvent(new Event("resize"));
+      }, 50);
+    });
+  });
+
+  document.querySelectorAll(".section-tabs").forEach(group => {
+    const topic = group.dataset.topic;
+    const btns = group.querySelectorAll(".section-tab");
+    btns.forEach(btn => {
+      btn.addEventListener("click", function() {
+        btns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        const section = this.dataset.section;
+        const parent = this.closest(".card");
+        parent.querySelectorAll(".panel").forEach(p => {
+          p.classList.toggle("active", p.id === topic + "-" + section);
+        });
+        setTimeout(function() {
+          window.dispatchEvent(new Event("resize"));
+        }, 50);
+      });
+    });
+  });
+
+  /* ==============================================================
+     1. ATOMS & MOLECULES SIMULATION ENGINE
+     ============================================================== */
+  let atomMode = "bohr"; // "bohr", "molecule", "states"
+  let atomElem = "C";
+  let bohrAngle = 0;
+  let bohrP = 6, bohrN = 6, bohrE = 6;
+
+  const ELEMENTS = {
+    H:  { name: "Hydrogen", sym: "H",  p: 1,  n: 0,  e: 1,  mass: 1,  color: "#38bdf8" },
+    He: { name: "Helium",   sym: "He", p: 2,  n: 2,  e: 2,  mass: 4,  color: "#f59e0b" },
+    Li: { name: "Lithium",  sym: "Li", p: 3,  n: 4,  e: 3,  mass: 7,  color: "#ec4899" },
+    C:  { name: "Carbon",   sym: "C",  p: 6,  n: 6,  e: 6,  mass: 12, color: "#94a3b8" },
+    N:  { name: "Nitrogen", sym: "N",  p: 7,  n: 7,  e: 7,  mass: 14, color: "#3b82f6" },
+    O:  { name: "Oxygen",   sym: "O",  p: 8,  n: 8,  e: 8,  mass: 16, color: "#ef4444" },
+    Ne: { name: "Neon",     sym: "Ne", p: 10, n: 10, e: 10, mass: 20, color: "#f97316" },
+    Na: { name: "Sodium",   sym: "Na", p: 11, n: 12, e: 11, mass: 23, color: "#a855f7" },
+    Cl: { name: "Chlorine", sym: "Cl", p: 17, n: 18, e: 17, mass: 35, color: "#10b981" }
+  };
+
+  const MOLECULES = {
+    H2O: {
+      name: "Water (H₂O)",
+      formula: "H₂O",
+      desc: "Bent polar covalent molecule (104.5° angle)",
+      atoms: [
+        { sym: "O", color: "#ef4444", r: 24, x: 0, y: -15, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: -65, y: 35, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 65, y: 35, z: 0 }
+      ],
+      bonds: [[0, 1], [0, 2]]
+    },
+    CO2: {
+      name: "Carbon Dioxide (CO₂)",
+      formula: "CO₂",
+      desc: "Linear double-bonded molecule (O=C=O)",
+      atoms: [
+        { sym: "C", color: "#64748b", r: 22, x: 0, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 22, x: -85, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 22, x: 85, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1], [0, 2]]
+    },
+    CH4: {
+      name: "Methane (CH₄)",
+      formula: "CH₄",
+      desc: "Tetrahedral hydrocarbon geometry (109.5°)",
+      atoms: [
+        { sym: "C", color: "#64748b", r: 25, x: 0, y: 0, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 0, y: -75, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: -70, y: 45, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 70, y: 45, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 15, x: 0, y: 30, z: -70 }
+      ],
+      bonds: [[0, 1], [0, 2], [0, 3], [0, 4]]
+    },
+    NH3: {
+      name: "Ammonia (NH₃)",
+      formula: "NH₃",
+      desc: "Trigonal pyramidal shape with polar lone pair",
+      atoms: [
+        { sym: "N", color: "#3b82f6", r: 23, x: 0, y: -25, z: 0 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: -60, y: 40, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: 60, y: 40, z: 30 },
+        { sym: "H", color: "#e2e8f0", r: 14, x: 0, y: 50, z: -50 }
+      ],
+      bonds: [[0, 1], [0, 2], [0, 3]]
+    },
+    O2: {
+      name: "Oxygen Molecule (O₂)",
+      formula: "O₂",
+      desc: "Diatomic double covalent bond",
+      atoms: [
+        { sym: "O", color: "#ef4444", r: 25, x: -50, y: 0, z: 0 },
+        { sym: "O", color: "#ef4444", r: 25, x: 50, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1]]
+    },
+    NaCl: {
+      name: "Sodium Chloride (NaCl)",
+      formula: "NaCl",
+      desc: "Ionic crystal compound: Na⁺ and Cl⁻ electrostatic attraction",
+      atoms: [
+        { sym: "Na⁺", color: "#a855f7", r: 22, x: -55, y: 0, z: 0 },
+        { sym: "Cl⁻", color: "#10b981", r: 30, x: 55, y: 0, z: 0 }
+      ],
+      bonds: [[0, 1]]
+    }
+  };
+
+  let molKey = "H2O";
+  let molRotAngle = 0;
+  let molAutoRotate = true;
+
+  // States of matter
+  let stateKind = "liquid";
+  let stateHeat = 1.0;
+  let stateParticles = [];
+  let stateBonds = [];
+  let stateTime = 0;
+
+  function initStateParticles(kind) {
+    stateKind = kind;
+    stateParticles = [];
+    stateBonds = [];
+    const count = kind === "solid" ? 48 : kind === "liquid" ? 52 : 36;
+    for (let i = 0; i < count; i++) {
+      let x, y, vx, vy;
+      if (kind === "solid") {
+        const col = i % 8;
+        const row = Math.floor(i / 8);
+        x = 140 + col * 110;
+        y = 110 + row * 60;
+        vx = (Math.random() - 0.5) * 0.4;
+        vy = (Math.random() - 0.5) * 0.4;
+      } else {
+        x = 80 + Math.random() * 940;
+        y = 80 + Math.random() * 320;
+        vx = (Math.random() - 0.5) * (kind === "gas" ? 5 : 2);
+        vy = (Math.random() - 0.5) * (kind === "gas" ? 5 : 2);
+      }
+      const elems = ["H", "O", "C", "N"];
+      const el = elems[i % elems.length];
+      const col = el === "H" ? "#f8fafc" : el === "O" ? "#ef4444" : el === "C" ? "#94a3b8" : "#3b82f6";
+      stateParticles.push({
+        x, y, vx, vy,
+        baseX: kind === "solid" ? x : null,
+        baseY: kind === "solid" ? y : null,
+        r: kind === "solid" ? 18 : kind === "liquid" ? 16 : 14,
+        elem: el,
+        color: col
+      });
+    }
+    if (kind !== "gas") {
+      for (let i = 0; i < Math.min(count, 24); i++) {
+        const j = (i + 3) % Math.min(count, 24);
+        if (i !== j) stateBonds.push([i, j]);
+      }
+    }
+  }
+  initStateParticles("liquid");
+
+  function getShells(electrons) {
+    const caps = [2, 8, 8];
+    const res = [];
+    let rem = electrons;
+    for (const cap of caps) {
+      if (rem <= 0) break;
+      const c = Math.min(rem, cap);
+      res.push(c);
+      rem -= c;
+    }
+    return res;
+  }
+
+  function setElement(sym) {
+    const el = ELEMENTS[sym] || ELEMENTS["C"];
+    atomElem = sym;
+    bohrP = el.p;
+    bohrN = el.n;
+    bohrE = el.e;
+    updateBohrReadout();
+  }
+
+  function updateBohrReadout() {
+    const el = ELEMENTS[atomElem] || { name: "Custom", sym: "X" };
+    const netQ = bohrP - bohrE;
+    const qStr = netQ === 0 ? "Neutral Atom" : netQ > 0 ? `+${netQ} Cation` : `${netQ} Anion`;
+    const shells = getShells(bohrE);
+    const shellsStr = shells.map((s, idx) => `Shell ${["K", "L", "M"][idx]}:${s}`).join(", ");
+    const stab = Math.abs(bohrP - bohrN) <= (bohrP <= 2 ? 1 : 3) ? "Stable Isotope" : "Unstable / Radioactive";
+    const ro = document.getElementById("atomReadout");
+    if (ro) {
+      ro.innerHTML = `${el.name.toUpperCase()} (${el.sym}-${bohrP + bohrN}) · ${qStr} <small>${bohrP} Protons · ${bohrN} Neutrons · ${bohrE} Electrons (${shellsStr}) · ${stab}</small>`;
+    }
+  }
+
+  // Draw Bohr Model on Canvas
+  function drawBohrAtom(ctx, w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
+
+    const bgGrad = ctx.createRadialGradient(cx, cy, 60, cx, cy, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0b1c38");
+    bgGrad.addColorStop(1, "#030814");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const shells = getShells(bohrE);
+    const baseR = 75;
+    const stepR = 55;
+    const shellNames = ["K (n=1)", "L (n=2)", "M (n=3)"];
+
+    shells.forEach((count, sIdx) => {
+      const r = baseR + sIdx * stepR;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([6, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "#7dd3fc";
+      ctx.font = "bold 11px monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(shellNames[sIdx] || `Shell ${sIdx + 1}`, cx + r + 6, cy - 4);
+
+      const dir = sIdx % 2 === 0 ? 1 : -1;
+      for (let e = 0; e < count; e++) {
+        const ang = bohrAngle * dir * (sIdx + 1) * 0.8 + (e * Math.PI * 2) / count;
+        const ex = cx + r * Math.cos(ang);
+        const ey = cy + r * Math.sin(ang);
+
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, ang - 0.25 * dir, ang);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(ex, ey, 6.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#38bdf8";
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        ctx.fillStyle = "#030814";
+        ctx.font = "bold 9px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("–", ex, ey);
+      }
+    });
+
+    const nucRadius = Math.max(28, Math.min(50, 18 + Math.sqrt(bohrP + bohrN) * 5));
+    const nucGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, nucRadius + 15);
+    nucGrad.addColorStop(0, "rgba(239, 68, 68, 0.4)");
+    nucGrad.addColorStop(1, "transparent");
+    ctx.fillStyle = nucGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, nucRadius + 15, 0, Math.PI * 2);
+    ctx.fill();
+
+    const totalNucleons = bohrP + bohrN;
+    const nucleonList = [];
+    for (let i = 0; i < bohrP; i++) nucleonList.push("p");
+    for (let i = 0; i < bohrN; i++) nucleonList.push("n");
+
+    nucleonList.forEach((type, idx) => {
+      const phi = idx * 137.5 * (Math.PI / 180);
+      const dist = Math.min(nucRadius - 7, Math.sqrt(idx + 1) * (nucRadius / Math.sqrt(totalNucleons + 1)));
+      const nx = cx + dist * Math.cos(phi + bohrAngle * 0.1);
+      const ny = cy + dist * Math.sin(phi + bohrAngle * 0.1);
+
+      ctx.beginPath();
+      ctx.arc(nx, ny, 6, 0, Math.PI * 2);
+      ctx.fillStyle = type === "p" ? "#ef4444" : "#94a3b8";
+      ctx.fill();
+      ctx.strokeStyle = type === "p" ? "#fca5a5" : "#cbd5e1";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 7px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(type === "p" ? "+" : "0", nx, ny);
+    });
+
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.lineWidth = 1;
+    ctx.fillRect(cx - 50, cy + nucRadius + 8, 100, 22);
+    ctx.strokeRect(cx - 50, cy + nucRadius + 8, 100, 22);
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 10px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${bohrP}p⁺  ${bohrN}n⁰`, cx, cy + nucRadius + 19);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 210, 110);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 210, 110);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("⚛️ ATOM STRUCTURE", 32, 42);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px monospace";
+    ctx.fillText(`Atomic Number (Z): ${bohrP}`, 32, 64);
+    ctx.fillText(`Mass Number (A):   ${bohrP + bohrN}`, 32, 82);
+    ctx.fillText(`Net Charge:        ${bohrP - bohrE >= 0 ? "+" : ""}${bohrP - bohrE}`, 32, 100);
+    ctx.fillText(`Active Electrons:  ${bohrE}`, 32, 118);
+  }
+
+  // Draw 3D Molecule on Canvas
+  function draw3DMolecule(ctx, w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
+
+    const bgGrad = ctx.createRadialGradient(cx, cy, 60, cx, cy, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0e1f3d");
+    bgGrad.addColorStop(1, "#030814");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const m = MOLECULES[molKey] || MOLECULES["H2O"];
+    const cos = Math.cos(molRotAngle);
+    const sin = Math.sin(molRotAngle);
+
+    m.bonds.forEach(([i, j]) => {
+      const a1 = m.atoms[i];
+      const a2 = m.atoms[j];
+      const x1 = cx + (a1.x * cos - (a1.z || 0) * sin);
+      const y1 = cy + a1.y;
+      const x2 = cx + (a2.x * cos - (a2.z || 0) * sin);
+      const y2 = cy + a2.y;
+
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    });
+
+    const sortedAtoms = m.atoms.map((a, idx) => {
+      const rx = a.x * cos - (a.z || 0) * sin;
+      const rz = a.x * sin + (a.z || 0) * cos;
+      return { ...a, rx: cx + rx, ry: cy + a.y, rz, idx };
+    }).sort((a, b) => a.rz - b.rz);
+
+    sortedAtoms.forEach(a => {
+      const scale = 1 + (a.rz / 300) * 0.2;
+      const radius = a.r * scale;
+
+      const grad = ctx.createRadialGradient(a.rx - radius * 0.35, a.ry - radius * 0.35, radius * 0.1, a.rx, a.ry, radius);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.35, a.color);
+      grad.addColorStop(1, "#091224");
+
+      ctx.beginPath();
+      ctx.arc(a.rx, a.ry, radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.shadowColor = a.color;
+      ctx.shadowBlur = 14;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = a.sym === "H" ? "#030814" : "#ffffff";
+      ctx.font = `bold ${Math.round(13 * scale)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(a.sym, a.rx, a.ry);
+    });
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 280, 80);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 280, 80);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText(m.name, 32, 44);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px sans-serif";
+    ctx.fillText(m.desc, 32, 66);
+    ctx.fillText(`Atoms: ${m.atoms.length} · Bonds: ${m.bonds.length}`, 32, 84);
+  }
+
+  // Draw Matter Lattice & Phases on Canvas
+  function drawStatesMatter(ctx, w, h) {
+    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 80, w / 2, h / 2, Math.max(w, h));
+    bgGrad.addColorStop(0, "#0c1e38");
+    bgGrad.addColorStop(1, "#030712");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const solid = stateKind === "solid";
+    const gas = stateKind === "gas";
+
+    stateParticles.forEach(p => {
+      if (solid) {
+        p.x = p.baseX + Math.sin(stateTime * 2.5 * stateHeat + p.baseY * 0.1) * 3 * stateHeat;
+        p.y = p.baseY + Math.cos(stateTime * 2.2 * stateHeat + p.baseX * 0.1) * 3 * stateHeat;
+      } else {
+        p.x += p.vx * (gas ? 3.0 : 1.3) * stateHeat;
+        p.y += p.vy * (gas ? 3.0 : 1.3) * stateHeat;
+        if (p.x < 35 || p.x > w - 35) p.vx *= -1;
+        if (p.y < 35 || p.y > h - 35) p.vy *= -1;
+        p.x = Math.max(35, Math.min(w - 35, p.x));
+        p.y = Math.max(35, Math.min(h - 35, p.y));
+      }
+    });
+
+    stateBonds.forEach(([i, j]) => {
+      if (i < stateParticles.length && j < stateParticles.length) {
+        const a = stateParticles[i];
+        const b = stateParticles[j];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        if (dist < 120) {
+          ctx.strokeStyle = `rgba(253, 224, 71, ${0.7 * (1 - dist / 120)})`;
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    });
+
+    stateParticles.forEach(p => {
+      const grad = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, p.r * 0.1, p.x, p.y, p.r);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.35, p.color);
+      grad.addColorStop(1, "#030712");
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = p.elem === "H" ? "#030814" : "#ffffff";
+      ctx.font = "bold 10px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(p.elem, p.x, p.y);
+    });
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "rgba(10, 20, 40, 0.85)";
+    ctx.fillRect(20, 20, 260, 60);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 260, 60);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText(`PHASE: ${stateKind.toUpperCase()}`, 32, 42);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "11px monospace";
+    ctx.fillText(`Thermal Energy: ${(stateHeat * 100).toFixed(0)}% · Molecules: ${stateParticles.length}`, 32, 62);
+  }
+
+  function atomLoop() {
+    const cv = document.getElementById("atomCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        if (atomMode === "bohr") {
+          drawBohrAtom(ctx, cv.width, cv.height);
+          bohrAngle += 0.025;
+        } else if (atomMode === "molecule") {
+          draw3DMolecule(ctx, cv.width, cv.height);
+          if (molAutoRotate) molRotAngle += 0.015;
+        } else {
+          drawStatesMatter(ctx, cv.width, cv.height);
+          stateTime += 0.04;
+        }
+      }
+    }
+    requestAnimationFrame(atomLoop);
+  }
+  atomLoop();
+
+  const btnModeBohr = document.getElementById("btnModeBohr");
+  const btnModeMolecule = document.getElementById("btnModeMolecule");
+  const btnModeStates = document.getElementById("btnModeStates");
+  const bohrGroup = document.getElementById("bohrControlsGroup");
+  const molGroup = document.getElementById("moleculeControlsGroup");
+  const statesGroup = document.getElementById("statesControlsGroup");
+
+  function setAtomMode(mode) {
+    atomMode = mode;
+    btnModeBohr.classList.toggle("active", mode === "bohr");
+    btnModeMolecule.classList.toggle("active", mode === "molecule");
+    btnModeStates.classList.toggle("active", mode === "states");
+
+    bohrGroup.style.display = mode === "bohr" ? "inline-flex" : "none";
+    molGroup.style.display = mode === "molecule" ? "inline-flex" : "none";
+    statesGroup.style.display = mode === "states" ? "inline-flex" : "none";
+
+    if (mode === "bohr") {
+      updateBohrReadout();
+      document.getElementById("atomInfo").textContent = "Glowing central nucleus with proton/neutron cluster, concentric quantized electron shells K & L, and active orbiting electrons.";
+    } else if (mode === "molecule") {
+      const m = MOLECULES[molKey];
+      document.getElementById("atomReadout").innerHTML = `${m.name.toUpperCase()} <small>${m.desc} · Covalent / Ionic Chemical Bonds</small>`;
+      document.getElementById("atomInfo").textContent = "3D space-filling molecule model with covalent/ionic cylindrical bonds rotating dynamically.";
+    } else {
+      document.getElementById("atomReadout").innerHTML = `${stateKind.toUpperCase()} (WATER / ICE / STEAM) <small>Particles vibrate in lattice (solid), slide past (liquid), or fly freely (gas)</small>`;
+      document.getElementById("atomInfo").textContent = "Matter particle simulation: heating increases molecular kinetic vibration and breaks crystalline bonds.";
+    }
+  }
+
+  btnModeBohr.addEventListener("click", () => setAtomMode("bohr"));
+  btnModeMolecule.addEventListener("click", () => setAtomMode("molecule"));
+  btnModeStates.addEventListener("click", () => setAtomMode("states"));
+
+  document.getElementById("atomElementSelect").addEventListener("change", e => setElement(e.target.value));
+  document.getElementById("atomAddProton").addEventListener("click", () => { bohrP = Math.min(20, bohrP + 1); updateBohrReadout(); });
+  document.getElementById("atomAddNeutron").addEventListener("click", () => { bohrN = Math.min(22, bohrN + 1); updateBohrReadout(); });
+  document.getElementById("atomAddElectron").addEventListener("click", () => { bohrE = Math.min(18, bohrE + 1); updateBohrReadout(); });
+
+  document.getElementById("molSelect").addEventListener("change", e => {
+    molKey = e.target.value;
+    const m = MOLECULES[molKey];
+    document.getElementById("atomReadout").innerHTML = `${m.name.toUpperCase()} <small>${m.desc} · Covalent / Ionic Chemical Bonds</small>`;
+  });
+  document.getElementById("molRotateBtn").addEventListener("click", () => { molAutoRotate = !molAutoRotate; });
+
+  document.getElementById("atomState").addEventListener("change", e => {
+    initStateParticles(e.target.value);
+    document.getElementById("atomReadout").innerHTML = `${e.target.value.toUpperCase()} <small>Kinetic energy & molecular bonding dynamics</small>`;
+  });
+  document.getElementById("atomHeatBtn").addEventListener("click", () => { stateHeat = Math.min(2.5, stateHeat + 0.3); });
+  document.getElementById("atomCoolBtn").addEventListener("click", () => { stateHeat = Math.max(0.2, stateHeat - 0.3); });
+  document.getElementById("atomBondBtn").addEventListener("click", () => {
+    for (let i = 0; i < stateParticles.length; i++) {
+      const j = (i + 2) % stateParticles.length;
+      stateBonds.push([i, j]);
+    }
+  });
+  document.getElementById("atomResetBtn").addEventListener("click", () => {
+    setElement("C");
+    molKey = "H2O";
+    initStateParticles("liquid");
+    stateHeat = 1.0;
+  });
+
+
+  /* ==============================================================
+     2. LIGHT & OPTICS SIMULATION ENGINE
+     ============================================================== */
+  let lightMode = "reflect"; // "reflect", "refract", "lens", "spectrum"
+  let lightAngle = 45; // degrees
+  let lightAutoSweep = true;
+  let lightPaused = false;
+  let lightWavefronts = true;
+  let lightTime = 0;
+
+  function lightLoop() {
+    const cv = document.getElementById("lightCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        if (lightAutoSweep && !lightPaused) {
+          lightTime += 0.02;
+          lightAngle = 45 + Math.sin(lightTime) * 25;
+          const sl = document.getElementById("lightAngleSlider");
+          const vl = document.getElementById("valLightAngle");
+          if (sl) sl.value = Math.round(lightAngle);
+          if (vl) vl.textContent = Math.round(lightAngle) + "°";
+        }
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.06)";
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 50) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 50) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+
+        const rad = (lightAngle * Math.PI) / 180;
+
+        if (lightMode === "reflect") {
+          // REFLECTION (PLANE MIRROR)
+          const mx = w / 2;
+          const my = h / 2;
+
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(mx - 12, 60, 24, h - 120);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(mx - 12, 60, 24, h - 120);
+
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillRect(mx - 12, 60, 4, h - 120);
+
+          ctx.strokeStyle = "#475569";
+          ctx.lineWidth = 1.5;
+          for (let y = 70; y < h - 70; y += 20) {
+            ctx.beginPath(); ctx.moveTo(mx + 2, y); ctx.lineTo(mx + 12, y + 10); ctx.stroke();
+          }
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+          ctx.beginPath(); ctx.moveTo(mx - 200, my); ctx.lineTo(mx + 100, my); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = "#38bdf8";
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("NORMAL", mx - 120, my - 10);
+
+          const inX = mx - 280;
+          const inY = my - 280 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.lineWidth = 5;
+          ctx.shadowColor = "#facc15";
+          ctx.shadowBlur = 16;
+          ctx.beginPath(); ctx.moveTo(inX, inY); ctx.lineTo(mx - 12, my); ctx.stroke();
+
+          const refX = mx - 280;
+          const refY = my + 280 * Math.tan(rad);
+          ctx.strokeStyle = "#fb923c";
+          ctx.shadowColor = "#fb923c";
+          ctx.beginPath(); ctx.moveTo(mx - 12, my); ctx.lineTo(refX, refY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          if (lightWavefronts) {
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = 2;
+            for (let f = 0; f < 10; f++) {
+              const phase = ((lightTime * 4 + f * 30) % 280) / 280;
+              const px = inX + (mx - 12 - inX) * phase;
+              const py = inY + (my - inY) * phase;
+              ctx.beginPath();
+              ctx.moveTo(px - 10 * Math.sin(rad), py + 10 * Math.cos(rad));
+              ctx.lineTo(px + 10 * Math.sin(rad), py - 10 * Math.cos(rad));
+              ctx.stroke();
+
+              const rpx = (mx - 12) + (refX - (mx - 12)) * phase;
+              const rpy = my + (refY - my) * phase;
+              ctx.beginPath();
+              ctx.moveTo(rpx + 10 * Math.sin(rad), rpy + 10 * Math.cos(rad));
+              ctx.lineTo(rpx - 10 * Math.sin(rad), rpy - 10 * Math.cos(rad));
+              ctx.stroke();
+            }
+          }
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(mx - 12, my, 50, Math.PI, Math.PI + rad); ctx.stroke();
+          ctx.beginPath(); ctx.arc(mx - 12, my, 50, Math.PI - rad, Math.PI); ctx.stroke();
+
+          ctx.fillStyle = "#fde047";
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillText(`θ₁ = ${lightAngle.toFixed(0)}°`, mx - 110, my - 30);
+          ctx.fillStyle = "#fb923c";
+          ctx.fillText(`θ₂ = ${lightAngle.toFixed(0)}°`, mx - 110, my + 45);
+
+          drawLaserSource(ctx, inX, inY, rad);
+
+        } else if (lightMode === "refract") {
+          // REFRACTION (GLASS BLOCK)
+          const gx = w / 2 - 120;
+          const gy = 80;
+          const gw = 240;
+          const gh = h - 160;
+
+          ctx.fillStyle = "rgba(56, 189, 248, 0.15)";
+          ctx.fillRect(gx, gy, gw, gh);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(gx, gy, gw, gh);
+
+          ctx.fillStyle = "#7dd3fc";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("GLASS BLOCK (n = 1.52)", gx + 25, gy + 35);
+
+          const entryY = h / 2 - 30;
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath(); ctx.moveTo(gx - 80, entryY); ctx.lineTo(gx + 80, entryY); ctx.stroke();
+          ctx.setLineDash([]);
+
+          const rad2 = Math.asin(Math.sin(rad) / 1.52);
+          const deg2 = (rad2 * 180) / Math.PI;
+
+          const inX = gx - 200;
+          const inY = entryY - 200 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.lineWidth = 5;
+          ctx.shadowColor = "#facc15";
+          ctx.shadowBlur = 14;
+          ctx.beginPath(); ctx.moveTo(inX, inY); ctx.lineTo(gx, entryY); ctx.stroke();
+
+          const exitY = entryY + gw * Math.tan(rad2);
+          ctx.strokeStyle = "#38bdf8";
+          ctx.shadowColor = "#38bdf8";
+          ctx.beginPath(); ctx.moveTo(gx, entryY); ctx.lineTo(gx + gw, exitY); ctx.stroke();
+
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath(); ctx.moveTo(gx + gw - 80, exitY); ctx.lineTo(gx + gw + 80, exitY); ctx.stroke();
+          ctx.setLineDash([]);
+
+          const outX = gx + gw + 200;
+          const outY = exitY + 200 * Math.tan(rad);
+          ctx.strokeStyle = "#facc15";
+          ctx.shadowColor = "#facc15";
+          ctx.beginPath(); ctx.moveTo(gx + gw, exitY); ctx.lineTo(outX, outY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = "#facc15";
+          ctx.font = "bold 13px sans-serif";
+          ctx.fillText(`Air θ₁ = ${lightAngle.toFixed(0)}°`, gx - 160, entryY - 25);
+          ctx.fillStyle = "#38bdf8";
+          ctx.fillText(`Glass θ₂ = ${deg2.toFixed(1)}° (Bends toward normal)`, gx + 20, entryY + 45);
+
+          drawLaserSource(ctx, inX, inY, rad);
+
+        } else if (lightMode === "lens") {
+          // CONVEX LENS (FOCAL FOCUS)
+          const lx = w / 2;
+          const ly = h / 2;
+          const fDist = 220;
+
+          ctx.strokeStyle = "rgba(148, 163, 184, 0.5)";
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([8, 8]);
+          ctx.beginPath(); ctx.moveTo(40, ly); ctx.lineTo(w - 40, ly); ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "#facc15";
+          ctx.beginPath(); ctx.arc(lx + fDist, ly, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.font = "bold 12px monospace";
+          ctx.fillText("Focal Point F", lx + fDist - 30, ly + 25);
+
+          ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.ellipse(lx, ly, 30, 160, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          const rayOffsets = [-100, -50, 0, 50, 100];
+          rayOffsets.forEach((off, i) => {
+            const rayY = ly + off;
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 4;
+            ctx.shadowColor = "#facc15";
+            ctx.shadowBlur = 10;
+
+            ctx.beginPath(); ctx.moveTo(lx - 320, rayY); ctx.lineTo(lx, rayY); ctx.stroke();
+
+            ctx.strokeStyle = "#38bdf8";
+            ctx.beginPath(); ctx.moveTo(lx, rayY); ctx.lineTo(lx + fDist * 1.5, ly - off * 0.5); ctx.stroke();
+            ctx.shadowBlur = 0;
+          });
+
+          ctx.fillStyle = "#7dd3fc";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("BICONVEX OPTICAL LENS (Converging)", lx - 130, ly - 180);
+
+        } else if (lightMode === "spectrum") {
+          // PRISM SPECTRUM (ROYGBIV DISPERSION)
+          const px = w / 2 - 60;
+          const py = h / 2 - 80;
+          const pSize = 180;
+
+          ctx.fillStyle = "rgba(224, 242, 254, 0.18)";
+          ctx.strokeStyle = "#e0f2fe";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(px + pSize, py + pSize * 1.4);
+          ctx.lineTo(px - pSize, py + pSize * 1.4);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 16px sans-serif";
+          ctx.fillText("DISPERSION PRISM", px - 70, py + pSize * 1.4 + 35);
+
+          const beamY = py + pSize * 0.8;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 10;
+          ctx.shadowColor = "#ffffff";
+          ctx.shadowBlur = 20;
+          ctx.beginPath(); ctx.moveTo(80, beamY); ctx.lineTo(px - pSize * 0.45, beamY); ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillText("WHITE LIGHT BEAM", 90, beamY - 16);
+
+          const colors = [
+            { name: "Red",    col: "#ef4444", dy: -40 },
+            { name: "Orange", col: "#f97316", dy: -20 },
+            { name: "Yellow", col: "#facc15", dy: 0 },
+            { name: "Green",  col: "#22c55e", dy: 20 },
+            { name: "Blue",   col: "#38bdf8", dy: 40 },
+            { name: "Indigo", col: "#6366f1", dy: 60 },
+            { name: "Violet", col: "#a855f7", dy: 80 }
+          ];
+
+          colors.forEach(c => {
+            ctx.strokeStyle = c.col;
+            ctx.lineWidth = 4.5;
+            ctx.shadowColor = c.col;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.moveTo(px + 20, beamY);
+            ctx.lineTo(w - 80, beamY + c.dy * 1.8);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = c.col;
+            ctx.font = "bold 11px monospace";
+            ctx.fillText(c.name, w - 70, beamY + c.dy * 1.8 + 4);
+          });
+        }
+      }
+    }
+    requestAnimationFrame(lightLoop);
+  }
+
+  function drawLaserSource(ctx, x, y, ang) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(ang);
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 2;
+    ctx.fillRect(-60, -16, 60, 32);
+    ctx.strokeRect(-60, -16, 60, 32);
+    ctx.fillStyle = "#ef4444";
+    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText("LASER", -52, 4);
+    ctx.restore();
+  }
+
+  lightLoop();
+
+  document.getElementById("lightMode").addEventListener("change", e => {
+    lightMode = e.target.value;
+    const ro = document.getElementById("lightReadout");
+    if (ro) {
+      if (lightMode === "reflect") ro.innerHTML = "REFLECTION (PLANE MIRROR) <small>Angle in θ₁ = Angle out θ₂</small>";
+      if (lightMode === "refract") ro.innerHTML = "REFRACTION (GLASS BLOCK) <small>Light bends towards normal in denser glass medium (Snell's Law)</small>";
+      if (lightMode === "lens") ro.innerHTML = "OPTICAL CONVEX LENS <small>Parallel incident rays refracted through Focal Point F</small>";
+      if (lightMode === "spectrum") ro.innerHTML = "PRISM SPECTRUM <small>White light dispersed into 7 constituent ROYGBIV wavelengths</small>";
+    }
+  });
+
+  const angleSlider = document.getElementById("lightAngleSlider");
+  if (angleSlider) {
+    angleSlider.addEventListener("input", e => {
+      lightAngle = parseFloat(e.target.value);
+      lightAutoSweep = false;
+      document.getElementById("lightAutoBtn").textContent = "🔄 Auto-Sweep OFF";
+      document.getElementById("valLightAngle").textContent = lightAngle.toFixed(0) + "°";
+    });
+  }
+
+  document.getElementById("lightAnimBtn").addEventListener("click", function() {
+    lightPaused = !lightPaused;
+    this.textContent = lightPaused ? "▶ Resume" : "⏸ Pause";
+  });
+  document.getElementById("lightAutoBtn").addEventListener("click", function() {
+    lightAutoSweep = !lightAutoSweep;
+    this.textContent = lightAutoSweep ? "🔄 Auto-Sweep ON" : "🔄 Auto-Sweep OFF";
+  });
+  document.getElementById("lightWavefrontsBtn").addEventListener("click", function() {
+    lightWavefronts = !lightWavefronts;
+    this.textContent = lightWavefronts ? "🌊 Wave Fronts: ON" : "🌊 Wave Fronts: OFF";
+  });
+
+
+  /* ==============================================================
+     3. SOUND WAVES & COMPRESSION ENGINE
+     ============================================================== */
+  let soundSource = "speaker";
+  let soundFreq = 8;
+  let soundAmp = 12;
+  let soundTime = 0;
+  let audioCtx = null;
+
+  const airParticles = [];
+  const COLS = 42;
+  const ROWS = 16;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      airParticles.push({
+        baseX: 230 + c * 20,
+        baseY: 60 + r * 18,
+        colIdx: c,
+        isIndicator: (r === 7 && (c === 8 || c === 20 || c === 32))
+      });
+    }
+  }
+
+  function soundLoop() {
+    const cv = document.getElementById("soundCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+
+        soundTime += 0.05 * (soundFreq * 0.4);
+
+        const k = 0.035 * soundFreq;
+        const omega = 1.8;
+        const ampPx = soundAmp * 1.5;
+
+        // 1. Draw Sound Source on the Left
+        if (soundSource === "speaker") {
+          const sx = 70;
+          const sy = 80;
+          const sw = 100;
+          const sh = 200;
+
+          ctx.fillStyle = "#1e293b";
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.fillRect(sx, sy, sw, sh);
+          ctx.strokeRect(sx, sy, sw, sh);
+
+          const coneVib = Math.sin(soundTime * omega) * (soundAmp * 0.6);
+          const coneX = sx + sw + coneVib;
+          const coneCenterY = sy + sh / 2;
+
+          ctx.fillStyle = "#0f172a";
+          ctx.beginPath();
+          ctx.moveTo(sx + 30, coneCenterY - 70);
+          ctx.lineTo(coneX, coneCenterY - 85);
+          ctx.lineTo(coneX, coneCenterY + 85);
+          ctx.lineTo(sx + 30, coneCenterY + 70);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(coneX - 6, coneCenterY, 20, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#f8fafc";
+          ctx.font = "bold 13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("SUBWOOFER", sx + sw / 2, sy - 14);
+
+        } else {
+          const fx = 120;
+          const fy = 90;
+          const forkVib = Math.sin(soundTime * omega * 2) * (soundAmp * 0.5);
+
+          ctx.strokeStyle = "#94a3b8";
+          ctx.lineWidth = 10;
+          ctx.lineCap = "round";
+
+          ctx.beginPath();
+          ctx.moveTo(fx, fy + 140);
+          ctx.lineTo(fx, fy + 220);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(fx, fy + 140, 24, 0, Math.PI);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(fx - 24, fy + 140);
+          ctx.lineTo(fx - 24 - forkVib, fy + 20);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(fx + 24, fy + 140);
+          ctx.lineTo(fx + 24 + forkVib, fy + 20);
+          ctx.stroke();
+
+          ctx.fillStyle = "#f8fafc";
+          ctx.font = "bold 13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("TUNING FORK (440 Hz)", fx, fy - 14);
+        }
+
+        // 2. Medium Air Compression & Rarefaction Particles
+        ctx.fillStyle = "rgba(14, 28, 54, 0.4)";
+        ctx.fillRect(210, 45, w - 240, 245);
+        ctx.strokeStyle = "#1e3a5f";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(210, 45, w - 240, 245);
+
+        airParticles.forEach(p => {
+          const disp = Math.sin(p.baseX * k - soundTime * omega) * ampPx;
+          const curX = p.baseX + disp;
+          const curY = p.baseY;
+
+          if (p.isIndicator) {
+            ctx.fillStyle = "#fde047";
+            ctx.beginPath();
+            ctx.arc(curX, curY, 6.5, 0, Math.PI * 2);
+            ctx.shadowColor = "#fde047";
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(p.baseX, curY);
+            ctx.lineTo(curX, curY);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = "#38bdf8";
+            ctx.beginPath();
+            ctx.arc(curX, curY, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        ctx.fillStyle = "#facc15";
+        ctx.font = "bold 11px monospace";
+        ctx.fillText("← HIGH DENSITY COMPRESSION →", w / 2 - 80, 40);
+        ctx.fillText("← LOW DENSITY RAREFACTION →", w / 2 + 160, 40);
+
+        // 3. Real-Time Oscilloscope Transverse Waveform Graph
+        const graphY = 380;
+
+        ctx.fillStyle = "#050f24";
+        ctx.fillRect(60, 310, w - 120, 140);
+        ctx.strokeStyle = "#1e3a5f";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(60, 310, w - 120, 140);
+
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(80, graphY);
+        ctx.lineTo(w - 80, graphY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.strokeStyle = "#22c55e";
+        ctx.lineWidth = 3.5;
+        ctx.shadowColor = "#22c55e";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        for (let x = 80; x <= w - 80; x += 4) {
+          const waveY = graphY - Math.sin((x - 80) * k - soundTime * omega) * (soundAmp * 3.2);
+          if (x === 80) ctx.moveTo(x, waveY);
+          else ctx.lineTo(x, waveY);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#4ade80";
+        ctx.font = "bold 12px monospace";
+        ctx.textAlign = "left";
+        ctx.fillText("OSCILLOSCOPE: PRESSURE WAVEFORM  P(x, t) = A·sin(kx – ωt)", 80, 330);
+        ctx.fillText(`Amplitude (A): ${soundAmp} · Frequency: ${soundFreq * 50} Hz · Wavelength (λ): ${(100 / soundFreq).toFixed(1)} cm`, 80, 348);
+      }
+    }
+    requestAnimationFrame(soundLoop);
+  }
+  soundLoop();
+
+  document.getElementById("soundSourceSelect").addEventListener("change", e => { soundSource = e.target.value; });
+  document.getElementById("freqRange").addEventListener("input", e => {
+    soundFreq = parseFloat(e.target.value);
+    document.getElementById("soundReadout").innerHTML = `LONGITUDINAL SOUND WAVE <small>Frequency: ${soundFreq} · Amplitude: ${soundAmp}</small>`;
+  });
+  document.getElementById("ampRange").addEventListener("input", e => {
+    soundAmp = parseFloat(e.target.value);
+    document.getElementById("soundReadout").innerHTML = `LONGITUDINAL SOUND WAVE <small>Frequency: ${soundFreq} · Amplitude: ${soundAmp}</small>`;
+  });
+
+  document.getElementById("soundPresetLow").addEventListener("click", () => {
+    soundFreq = 3; document.getElementById("freqRange").value = 3;
+    document.getElementById("soundReadout").innerHTML = `LOW PITCH <small>Frequency: 3 · Large Wavelength λ</small>`;
+  });
+  document.getElementById("soundPresetHigh").addEventListener("click", () => {
+    soundFreq = 18; document.getElementById("freqRange").value = 18;
+    document.getElementById("soundReadout").innerHTML = `HIGH PITCH <small>Frequency: 18 · Short Wavelength λ</small>`;
+  });
+  document.getElementById("soundPresetSoft").addEventListener("click", () => {
+    soundAmp = 4; document.getElementById("ampRange").value = 4;
+  });
+  document.getElementById("soundPresetLoud").addEventListener("click", () => {
+    soundAmp = 18; document.getElementById("ampRange").value = 18;
+  });
+
+  document.getElementById("soundPlayBtn").addEventListener("click", () => {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 150 + soundFreq * 35;
+    gain.gain.value = soundAmp / 40;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1.2);
+  });
+
+
+  /* ==============================================================
+     4. PRESSURE & GAS LAWS ENGINE
+     ============================================================== */
+  let pressForce = 12;
+  let pressArea = 8;
+  let pressTemp = 300;
+  let pressMolecules = [];
+
+  function initPressMolecules(count = 70) {
+    pressMolecules = [];
+    for (let i = 0; i < count; i++) {
+      const sp = Math.sqrt(pressTemp / 300) * 3.2;
+      const ang = Math.random() * Math.PI * 2;
+      pressMolecules.push({
+        x: 350 + Math.random() * 380,
+        y: 200 + Math.random() * 180,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp,
+        r: 4.5
+      });
+    }
+  }
+  initPressMolecules();
+
+  function pressureLoop() {
+    const cv = document.getElementById("pressureCanvas");
+    if (cv) {
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        const w = cv.width;
+        const h = cv.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#030814";
+        ctx.fillRect(0, 0, w, h);
+
+        const calcP = (pressForce / pressArea) * (pressTemp / 300);
+
+        const cx = 320;
+        const maxH = 260;
+        const cw = 440;
+        const bottomY = 400;
+
+        const pistonDown = Math.min(160, (pressForce / 24) * 150);
+        const pistonY = bottomY - maxH + pistonDown;
+        const chamberH = bottomY - pistonY;
+
+        // 1. Draw Temperature Thermometer on Left
+        const tx = 140;
+        const thTop = 120;
+        const thH = 260;
+        const thW = 14;
+
+        ctx.fillStyle = "#0f172a";
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 2;
+        ctx.fillRect(tx - thW / 2, thTop, thW, thH);
+        ctx.strokeRect(tx - thW / 2, thTop, thW, thH);
+
+        ctx.beginPath();
+        ctx.arc(tx, thTop + thH + 8, 14, 0, Math.PI * 2);
+        ctx.fillStyle = "#ef4444";
+        ctx.shadowColor = "#ef4444";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.stroke();
+
+        const tFrac = Math.max(0.1, Math.min(0.95, (pressTemp - 150) / 450));
+        const mercH = thH * tFrac;
+        ctx.fillStyle = "#ef4444";
+        ctx.fillRect(tx - thW / 2 + 2, (thTop + thH) - mercH, thW - 4, mercH);
+
+        ctx.fillStyle = "#cbd5e1";
+        ctx.font = "bold 9px monospace";
+        ctx.textAlign = "right";
+        for (let k = 150; k <= 600; k += 100) {
+          const yPos = (thTop + thH) - thH * ((k - 150) / 450);
+          ctx.fillRect(tx - thW / 2 - 4, yPos, 4, 1.5);
+          ctx.fillText(`${k}K`, tx - thW / 2 - 6, yPos + 3);
+        }
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("THERMOMETER", tx, thTop - 15);
+        ctx.fillStyle = "#ef4444";
+        ctx.fillText(`${pressTemp} K (${(pressTemp - 273.15).toFixed(0)}°C)`, tx, thTop + thH + 34);
+
+        // 2. Draw Cylinder Chamber Body
+        ctx.fillStyle = "rgba(15, 23, 42, 0.55)";
+        ctx.fillRect(cx, pistonY, cw, chamberH);
+
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(cx, bottomY - maxH - 20);
+        ctx.lineTo(cx, bottomY);
+        ctx.lineTo(cx + cw, bottomY);
+        ctx.lineTo(cx + cw, bottomY - maxH - 20);
+        ctx.stroke();
+
+        // 3. Draw Movable Piston Head & Load Handle
+        const pHeight = 24;
+        ctx.fillStyle = "#64748b";
+        ctx.fillRect(cx + 2, pistonY - pHeight, cw - 4, pHeight);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx + 2, pistonY - pHeight, cw - 4, pHeight);
+
+        const rodW = 32;
+        ctx.fillStyle = "#475569";
+        ctx.fillRect(cx + cw / 2 - rodW / 2, pistonY - pHeight - 70, rodW, 70);
+        ctx.strokeRect(cx + cw / 2 - rodW / 2, pistonY - pHeight - 70, rodW, 70);
+
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 13px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`⬇ FORCE: ${pressForce} N`, cx + cw / 2, pistonY - pHeight - 80);
+
+        // 4. Update and Render Colliding Gas Particles with Real-Time Velocity Vectors
+        const currentSpeed = Math.sqrt(pressTemp / 300) * 3.2;
+        pressMolecules.forEach(p => {
+          const curSp = Math.hypot(p.vx, p.vy) || 1;
+          p.vx = (p.vx / curSp) * currentSpeed;
+          p.vy = (p.vy / curSp) * currentSpeed;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x - p.r <= cx + 6) { p.x = cx + 6 + p.r; p.vx = Math.abs(p.vx); }
+          else if (p.x + p.r >= cx + cw - 6) { p.x = cx + cw - 6 - p.r; p.vx = -Math.abs(p.vx); }
+
+          if (p.y - p.r <= pistonY + 4) { p.y = pistonY + 4 + p.r; p.vy = Math.abs(p.vy); }
+          else if (p.y + p.r >= bottomY - 6) { p.y = bottomY - 6 - p.r; p.vy = -Math.abs(p.vy); }
+
+          const vScale = 2.6;
+          const vxEnd = p.x + p.vx * vScale;
+          const vyEnd = p.y + p.vy * vScale;
+
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(vxEnd, vyEnd);
+          ctx.stroke();
+
+          const ang = Math.atan2(p.vy, p.vx);
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.moveTo(vxEnd, vyEnd);
+          ctx.lineTo(vxEnd - 4.5 * Math.cos(ang - 0.45), vyEnd - 4.5 * Math.sin(ang - 0.45));
+          ctx.lineTo(vxEnd - 4.5 * Math.cos(ang + 0.45), vyEnd - 4.5 * Math.sin(ang + 0.45));
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = pressTemp > 450 ? "#ef4444" : pressTemp < 250 ? "#38bdf8" : "#c084fc";
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        });
+
+        // 5. Draw Analog Dial Pressure Gauge on Right
+        const gx = 930;
+        const gy = 230;
+        const gr = 65;
+
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(cx + cw, bottomY - 80);
+        ctx.lineTo(gx - gr, bottomY - 80);
+        ctx.lineTo(gx - gr + 20, gy + gr - 10);
+        ctx.stroke();
+
+        ctx.fillStyle = "#0c182e";
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(gx, gy, gr, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        for (let i = 0; i <= 8; i++) {
+          const tAng = -Math.PI * 0.75 + (i / 8) * (Math.PI * 1.5);
+          const r1 = gr - 4;
+          const r2 = gr - (i % 2 === 0 ? 14 : 8);
+          ctx.strokeStyle = i >= 6 ? "#ef4444" : "#94a3b8";
+          ctx.lineWidth = i % 2 === 0 ? 2.5 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(gx + r1 * Math.cos(tAng), gy + r1 * Math.sin(tAng));
+          ctx.lineTo(gx + r2 * Math.cos(tAng), gy + r2 * Math.sin(tAng));
+          ctx.stroke();
+        }
+
+        const fracP = Math.min(1.0, calcP / 4.0);
+        const needleAng = -Math.PI * 0.75 + fracP * (Math.PI * 1.5);
+
+        ctx.strokeStyle = "#ef4444";
+        ctx.lineWidth = 3;
+        ctx.shadowColor = "#ef4444";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(gx, gy);
+        ctx.lineTo(gx + (gr - 12) * Math.cos(needleAng), gy + (gr - 12) * Math.sin(needleAng));
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.beginPath();
+        ctx.arc(gx, gy, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("MANOMETER", gx, gy - 20);
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "bold 16px monospace";
+        ctx.fillText(`${calcP.toFixed(2)} atm`, gx, gy + 32);
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "10px sans-serif";
+        ctx.fillText(`${(calcP * 101.3).toFixed(0)} kPa`, gx, gy + 46);
+      }
+    }
+    requestAnimationFrame(pressureLoop);
+  }
+  pressureLoop();
+
+  function updatePressureReadout() {
+    const calcP = (pressForce / pressArea) * (pressTemp / 300);
+    const ro = document.getElementById("pressureReadout");
+    if (ro) {
+      ro.innerHTML = `PRESSURE = ${calcP.toFixed(2)} atm (${(calcP * 101.3).toFixed(0)} kPa) <small>Force: ${pressForce} N · Area: ${pressArea} cm² · Temp: ${pressTemp} K · Colliding Molecules with Velocity Vectors</small>`;
+    }
+  }
+
+  document.getElementById("forceRange").addEventListener("input", e => {
+    pressForce = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+  document.getElementById("areaRange").addEventListener("input", e => {
+    pressArea = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+  document.getElementById("pressTempRange").addEventListener("input", e => {
+    pressTemp = parseFloat(e.target.value);
+    updatePressureReadout();
+  });
+
+  document.getElementById("pressureHigh").addEventListener("click", () => {
+    pressForce = 22; pressArea = 4; pressTemp = 450;
+    document.getElementById("forceRange").value = 22;
+    document.getElementById("areaRange").value = 4;
+    document.getElementById("pressTempRange").value = 450;
+    updatePressureReadout();
+  });
+  document.getElementById("pressureLow").addEventListener("click", () => {
+    pressForce = 4; pressArea = 18; pressTemp = 200;
+    document.getElementById("forceRange").value = 4;
+    document.getElementById("areaRange").value = 18;
+    document.getElementById("pressTempRange").value = 200;
+    updatePressureReadout();
+  });
+  document.getElementById("pressAddMol").addEventListener("click", () => {
+    initPressMolecules(pressMolecules.length + 20);
+  });
+  document.getElementById("pressureReset").addEventListener("click", () => {
+    pressForce = 12; pressArea = 8; pressTemp = 300;
+    document.getElementById("forceRange").value = 12;
+    document.getElementById("areaRange").value = 8;
+    document.getElementById("pressTempRange").value = 300;
+    initPressMolecules(70);
+    updatePressureReadout();
+  });
+
+})();
+</script>
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  "use strict";
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) {});
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {});
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.openFullscreen = function(id) {
+    toggleSimulationFullscreen(id || this);
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      "#atomFullscreenBtn, #lightFullscreenBtn, #soundFullscreenBtn, #pressureFullscreenBtn, .b-fs, .fs-btn, .btn-fs, .fullscreen-btn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button#atomFullscreenBtn, button#lightFullscreenBtn, button#soundFullscreenBtn, button#pressureFullscreenBtn, button.b-fs, button.fs-btn, button.btn-fs, button.fullscreen-btn"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mixtures & Solutions Chemistry Lab</title>
+  <style>
+/* Zero-monochrome & 100% desktop color fidelity enforcement */
+*, *::before, *::after {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+html, body, canvas, svg {
+  forced-color-adjust: none !important;
+  -ms-high-contrast-adjust: none !important;
+}
+@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
+  html, body, canvas, svg, div {
+    forced-color-adjust: none !important;
+    -ms-high-contrast-adjust: none !important;
+  }
+}
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a1628;
+      color: #e8f4ff;
+      min-height: 100vh;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 18px 18px 24px; }
+
+    .card {
+      background: linear-gradient(160deg, #122a44, #0a1e34);
+      border-radius: 22px;
+      padding: 22px 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.7);
+      border: 1px solid rgba(255,255,255,.05);
+    }
+    .card h2 { font-size: 1.85rem; font-weight: 800; margin-bottom: 6px; }
+    .card h2 small { font-size: .9rem; font-weight: 400; color: #7a9cc0; margin-left: 8px; }
+    .card .desc {
+      font-size: 1rem;
+      color: #a8c4e0;
+      margin-bottom: 18px;
+      border-left: 5px solid #ffc107;
+      padding-left: 14px;
+      background: rgba(255,255,255,.03);
+      border-radius: 0 12px 12px 0;
+      line-height: 1.6;
+    }
+
+    .section-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0 14px; }
+    .section-tab {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: .88rem;
+      background: #1a3550;
+      color: #a8c8e8;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .section-tab:hover { background: #234468; color: #fff; }
+    .section-tab.active { background: #1976d2; color: #fff; }
+
+    .panel { display: none; padding: 14px 0 6px; }
+    .panel.active { display: block; }
+    .panel h3 { font-size: 1.45rem; font-weight: 700; color: #ffd54f; margin-bottom: 12px; }
+    .panel p, .panel li { font-size: 1rem; line-height: 1.7; color: #c8ddf0; }
+    .panel ul { list-style: none; padding-left: 0; }
+    .panel ul li { padding: 7px 0 7px 32px; position: relative; }
+    .panel ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffc107;
+      color: #0a1628;
+      font-weight: 900;
+      text-align: center;
+      line-height: 20px;
+      font-size: .8rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .grid-item {
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      border-radius: 14px;
+      border-left: 5px solid #ff9800;
+    }
+    .grid-item h4 { font-size: 1.15rem; color: #ffb74d; margin-bottom: 4px; }
+    .grid-item p { font-size: .92rem; color: #b8d4f0; }
+
+    .sim-box {
+      background: #06121f;
+      border-radius: 18px;
+      padding: 18px 16px 16px;
+      margin-top: 8px;
+      border: 1px solid #1e3a5c;
+      position: relative;
+    }
+    .sim-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      background: #0a1a2e;
+      padding: 12px 18px;
+      border-radius: 36px;
+      border: 1px solid #1e3a5c;
+    }
+    .sim-controls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #90b8e0;
+      font-size: .9rem;
+    }
+    .sim-controls input[type=range] {
+      width: 125px;
+      accent-color: #ff9800;
+      cursor: pointer;
+    }
+    .sim-controls select,
+    .sim-controls button {
+      padding: 8px 16px;
+      border-radius: 28px;
+      border: none;
+      font-weight: 700;
+      background: #1a3550;
+      color: #c8e0f8;
+      cursor: pointer;
+      transition: .2s;
+      font-size: .88rem;
+    }
+    .sim-controls button {
+      background: #1976d2;
+      color: #fff;
+    }
+    .sim-controls button:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      background: #040e1a;
+      border-radius: 14px;
+      border: 2px solid #1e3a5c;
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    .sim-readout {
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffd54f;
+      margin: 14px 0 6px;
+    }
+    .sim-readout small {
+      display: block;
+      font-size: .9rem;
+      color: #7a9cc0;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    .sim-info {
+      background: #0a1a2e;
+      padding: 11px 16px;
+      border-radius: 36px;
+      margin-top: 12px;
+      text-align: center;
+      font-size: .92rem;
+      color: #a8c8e8;
+      border: 1px solid #1a3550;
+    }
+
+    .teacher-note {
+      background: linear-gradient(135deg, #0d2018, #0a1a14);
+      border-left: 5px solid #4caf50;
+      border-radius: 0 14px 14px 0;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: .9rem;
+      color: #b8e6c8;
+      line-height: 1.7;
+    }
+    .teacher-note strong { color: #66bb6a; }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .tool-card {
+      background: linear-gradient(160deg, #0e2440, #081a30);
+      border: 1px solid #1e3a5c;
+      border-radius: 16px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .tool-card svg { width: 50px; height: 50px; display: block; margin: 0 auto 6px; }
+    .tool-card .name { font-weight: 800; color: #ffd54f; font-size: .9rem; margin-bottom: 2px; }
+    .tool-card .use { font-size: .76rem; color: #90b8e0; line-height: 1.4; }
+
+    .fullscreen-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 20;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: none;
+      background: #ffc107;
+      color: #0a1628;
+      font-weight: 900;
+      font-size: .85rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255,193,7,.5);
+      transition: .2s;
+    }
+    .fullscreen-btn:hover { transform: scale(1.05); }
+
+    :fullscreen, :-webkit-full-screen {
+      overflow: hidden !important;
+      background: #0a1628 !important;
+    }
+    .sim-box:fullscreen, .sim-box:-webkit-full-screen {
+      border-radius: 0 !important;
+      padding: 24px 20px 40px !important;
+      overflow: hidden !important;
+      background: #06121f !important;
+    }
+
+    @media (max-width: 800px) {
+      .card { padding: 14px; }
+      .sim-controls { flex-direction: column; gap: 8px; }
+    }
+  
+/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
+:root {
+  --blue: #2ea8ff;
+  --red: #ff4d67;
+  --grn: #22d3a0;
+  --amb: #ffc247;
+  --vio: #9b7bff;
+  --line: #2a3d80;
+  --mut: #a3b4e0;
+}
+
+/* Universal 3D Tactile Buttons & Docked Control Overlay */
+.ctl {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 14px !important;
+  background: rgba(5, 10, 30, 0.78) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.row span {
+  color: var(--mut) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding-right: 4px !important;
+  user-select: none !important;
+}
+.btn {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  color: #04102a !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
+}
+.btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #0007 !important;
+}
+.b-in { background: var(--blue) !important; color: #04102a !important; }
+.b-out { background: var(--red) !important; color: #ffffff !important; }
+.b-auto { background: var(--grn) !important; color: #04102a !important; }
+.b-play { background: var(--amb) !important; color: #04102a !important; }
+.b-hold { background: #cfd9ff !important; color: #04102a !important; }
+.b-set { background: #3d509a !important; color: #ffffff !important; }
+.b-fs {
+  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
+}
+.b-exit {
+  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
+}
+.tg {
+  background: #1c2b63 !important;
+  color: #d4e0ff !important;
+  border: 2px solid #3a4f9a !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font: 800 15px "Segoe UI", Arial, sans-serif !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
+  transition: all 0.12s ease !important;
+}
+.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
+.tg.on {
+  background: var(--vio) !important;
+  color: #ffffff !important;
+  border-color: #cbbcff !important;
+  box-shadow: 0 0 18px #9b7bffaa !important;
+}
+
+/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen,
+:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding: 8px 18px 12px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen canvas,
+:fullscreen svg,
+:-webkit-full-screen canvas,
+:-webkit-full-screen svg {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+:fullscreen .ctl,
+:-webkit-full-screen .ctl {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 4px auto 0 !important;
+  padding: 8px 16px !important;
+  background: rgba(5, 10, 30, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
+  z-index: 999999 !important;
+}
+
+:fullscreen .btn,
+:-webkit-full-screen .btn {
+  padding: 11px 18px !important;
+  font-size: 16px !important;
+}
+
+:fullscreen .teacher-note,
+:fullscreen .sim-info,
+:fullscreen nav,
+:fullscreen .tabs,
+:fullscreen .section-tabs,
+:-webkit-full-screen .teacher-note,
+:-webkit-full-screen .sim-info,
+:-webkit-full-screen nav,
+:-webkit-full-screen .tabs,
+:-webkit-full-screen .section-tabs {
+  display: none !important;
+}
+/* ================= END BLUEPRINT CSS ================= */
+
+</style>
+
+<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
+<style id="genz-simulation-fullscreen-styles">
+  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen, ::backdrop {
+    background-color: #060e1d !important;
+  }
+
+  html:fullscreen,
+  body:fullscreen,
+  :fullscreen,
+  :-webkit-full-screen,
+  :-moz-full-screen,
+  :-ms-fullscreen,
+  .simulation-wrapper:fullscreen,
+  .is-fullscreen,
+  [data-is-fullscreen="true"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 10px 16px !important;
+    background-color: #060e1d !important;
+    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar,
+  :-webkit-full-screen::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    display: block !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-track,
+  :-webkit-full-screen::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.7) !important;
+  }
+
+  :fullscreen::-webkit-scrollbar-thumb,
+  :-webkit-full-screen::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: #0284c7 !important;
+    border-radius: 4px !important;
+  }
+
+  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
+  :fullscreen canvas,
+  :fullscreen svg,
+  :-webkit-full-screen canvas,
+  :-webkit-full-screen svg,
+  .is-fullscreen canvas,
+  .is-fullscreen svg {
+    display: block !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    min-height: 280px !important;
+    flex-shrink: 0 !important;
+    margin: 4px auto !important;
+  }
+
+  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
+  :fullscreen .ctl,
+  :fullscreen .controls,
+  :fullscreen .sim-controls,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .controls-bar,
+  :fullscreen .fs-bar,
+  :fullscreen .fs-topbar,
+  :fullscreen .fullscreen-overlay-controls,
+  :fullscreen .floating-controls,
+  :fullscreen .preset-chips,
+  :fullscreen .stats-bar,
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :fullscreen header,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .controls,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .controls-bar,
+  :-webkit-full-screen .fs-bar,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen .fullscreen-overlay-controls,
+  :-webkit-full-screen .floating-controls,
+  :-webkit-full-screen .preset-chips,
+  :-webkit-full-screen .stats-bar,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  :-webkit-full-screen header,
+  .is-fullscreen .ctl,
+  .is-fullscreen .controls,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .controls-bar,
+  .is-fullscreen .fs-bar,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen .fullscreen-overlay-controls,
+  .is-fullscreen .floating-controls,
+  .is-fullscreen .preset-chips,
+  .is-fullscreen .stats-bar,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout,
+  .is-fullscreen header {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    margin: 4px auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Bottom docked toolbars */
+  :fullscreen .ctl,
+  :fullscreen .dock,
+  :fullscreen .control-panel,
+  :fullscreen .fs-bar,
+  :-webkit-full-screen .ctl,
+  :-webkit-full-screen .dock,
+  :-webkit-full-screen .control-panel,
+  :-webkit-full-screen .fs-bar,
+  .is-fullscreen .ctl,
+  .is-fullscreen .dock,
+  .is-fullscreen .control-panel,
+  .is-fullscreen .fs-bar {
+    padding: 8px 14px !important;
+    background: rgba(5, 10, 30, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  /* Top docked toolbars */
+  :fullscreen .sim-controls,
+  :fullscreen .fs-topbar,
+  :fullscreen header,
+  :fullscreen .stats-bar,
+  :-webkit-full-screen .sim-controls,
+  :-webkit-full-screen .fs-topbar,
+  :-webkit-full-screen header,
+  :-webkit-full-screen .stats-bar,
+  .is-fullscreen .sim-controls,
+  .is-fullscreen .fs-topbar,
+  .is-fullscreen header,
+  .is-fullscreen .stats-bar {
+    padding: 8px 14px !important;
+    background: rgba(6, 14, 34, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  }
+
+  /* Readouts between top toolbar and simulation canvas */
+  :fullscreen .sim-readout,
+  :fullscreen .readout,
+  :-webkit-full-screen .sim-readout,
+  :-webkit-full-screen .readout,
+  .is-fullscreen .sim-readout,
+  .is-fullscreen .readout {
+    margin: 4px auto !important;
+    padding: 4px 10px !important;
+    font-size: clamp(12px, 1.2vw, 15px) !important;
+  }
+
+  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
+  :fullscreen .btn,
+  :fullscreen button,
+  :-webkit-full-screen .btn,
+  :-webkit-full-screen button,
+  .is-fullscreen .btn,
+  .is-fullscreen button {
+    font-size: clamp(11px, 1.1vw, 15px) !important;
+    padding: 6px 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  :fullscreen .row,
+  :-webkit-full-screen .row,
+  .is-fullscreen .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  :fullscreen .ctrl-group,
+  :-webkit-full-screen .ctrl-group,
+  .is-fullscreen .ctrl-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :fullscreen input[type="range"],
+  :-webkit-full-screen input[type="range"],
+  .is-fullscreen input[type="range"] {
+    max-width: 140px !important;
+    cursor: pointer !important;
+  }
+
+  :fullscreen select,
+  :-webkit-full-screen select,
+  .is-fullscreen select {
+    cursor: pointer !important;
+    font-size: clamp(11px, 1.1vw, 14px) !important;
+  }
+
+  /* Keep teacher notes and explanations visible and reachable in scrolling view */
+  :fullscreen .teacher-note,
+  :fullscreen .sim-info,
+  :fullscreen .desc,
+  :-webkit-full-screen .teacher-note,
+  :-webkit-full-screen .sim-info,
+  :-webkit-full-screen .desc,
+  .is-fullscreen .teacher-note,
+  .is-fullscreen .sim-info,
+  .is-fullscreen .desc {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h2>💎 Mixtures &amp; Solutions <small>solute · solvent · concentration</small></h2>
+    <div class="desc">Dissolve sugar or salt in water, stir, heat, and watch real particles move in real time. Observe saturation point and concentration change with every action.</div>
+
+    <div class="section-tabs" data-topic="mix">
+      <button class="section-tab" data-section="def">Definition</button>
+      <button class="section-tab" data-section="exp">Explanation</button>
+      <button class="section-tab" data-section="types">Types</button>
+      <button class="section-tab" data-section="tools">Lab Tools</button>
+      <button class="section-tab active" data-section="sim">Simulation</button>
+    </div>
+
+    <!-- DEFINITION -->
+    <div class="panel" id="mix-def">
+      <h3>📖 Definition</h3>
+      <p>A <strong>mixture</strong> is a substance made of two or more materials combined <em>without</em> chemically joining. A <strong>solution</strong> is a special type of mixture in which one substance (the solute) dissolves evenly inside another (the solvent).</p>
+      <div class="teacher-note"><strong>Teacher's Note:</strong> Stir sugar into water — the sugar dissolves and spreads evenly. That is a solution. Drop sand into water — it settles at the bottom. That is a suspension.</div>
+    </div>
+
+    <!-- EXPLANATION -->
+    <div class="panel" id="mix-exp">
+      <h3>💡 Explanation</h3>
+      <p>When solute particles spread evenly between solvent particles, a solution forms.</p>
+      <ul>
+        <li><strong>Solute:</strong> The substance that dissolves (sugar, salt).</li>
+        <li><strong>Solvent:</strong> The liquid it dissolves into (water).</li>
+        <li><strong>Concentration:</strong> How much solute is dissolved per volume.</li>
+        <li><strong>Saturated:</strong> Maximum solute dissolved; no more can dissolve at current temperature.</li>
+        <li><strong>Unsaturated:</strong> More solute can still dissolve.</li>
+      </ul>
+    </div>
+
+    <!-- TYPES -->
+    <div class="panel" id="mix-types">
+      <h3>🧩 Types of Mixtures</h3>
+      <div class="grid-3">
+        <div class="grid-item"><h4>Solution</h4><p>Even, transparent mix (sugar or salt water).</p></div>
+        <div class="grid-item"><h4>Suspension</h4><p>Particles settle over time (sand or chalk in water).</p></div>
+        <div class="grid-item"><h4>Colloid</h4><p>Stable intermediate dispersion (milk, gelatin).</p></div>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="panel" id="mix-tools">
+      <h3>🧪 Lab Equipment</h3>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <svg viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="44" rx="4" fill="#5aa9e6" opacity=".6" stroke="#2a4a6a" stroke-width="2"/></svg>
+          <div class="name">Beaker</div>
+          <div class="use">Holds and mixes liquids</div>
+        </div>
+        <div class="tool-card">
+          <svg viewBox="0 0 64 64"><rect x="28" y="6" width="6" height="42" rx="3" fill="#dcdcdc" stroke="#666" stroke-width="2"/></svg>
+          <div class="name">Stirring Rod</div>
+          <div class="use">Accelerates dissolving</div>
+        </div>
+        <div class="tool-card">
+          <svg viewBox="0 0 64 64"><rect x="30" y="14" width="4" height="32" fill="#c0392b"/><circle cx="32" cy="48" r="6" fill="#c0392b"/></svg>
+          <div class="name">Thermometer</div>
+          <div class="use">Measures temperature</div>
+        </div>
+        <div class="tool-card">
+          <svg viewBox="0 0 64 64"><path d="M20 50h24l-4-26H24z" fill="#ff9800"/></svg>
+          <div class="name">Burner</div>
+          <div class="use">Heats the solution</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULATION -->
+    <div class="panel active" id="mix-sim">
+      <h3>🎮 Interactive Simulation</h3>
+      <div class="sim-box" id="simBox">
+        <button class="fullscreen-btn" id="fullscreenBtn">⛶ Fullscreen</button>
+
+        <div class="sim-controls">
+          <label>Solute:
+            <select id="soluteSel">
+              <option value="sugar">Sugar</option>
+              <option value="salt">Salt</option>
+              <option value="sand">Sand</option>
+              <option value="oil">Oil</option>
+            </select>
+          </label>
+          <label>Water (mL): <input type="range" id="waterRange" min="100" max="400" value="250"></label>
+          <button id="addBtn">Add Solute</button>
+          <button id="stirBtn">Stir</button>
+          <button id="heatBtn">Heat</button>
+          <button id="coolBtn">Cool</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="sim-readout" id="mixReadout">
+          PURE WATER <small>Solute: Sugar · Concentration: 0 g/L · Temp: 25°C</small>
+        </div>
+
+        <canvas id="mixCanvas" width="1100" height="540"></canvas>
+
+
+
+        <div class="sim-info" id="mixInfo">Click <strong>Add Solute</strong> to drop sugar into the water. Then click <strong>Stir</strong> to dissolve it. Watch the particles move!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function(){
+    'use strict';
+
+    document.querySelectorAll('.section-tabs').forEach(group=>{
+      const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+      btns.forEach(btn=>btn.addEventListener('click',function(){
+        btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+        const section=this.dataset.section,parent=this.closest('.card');
+        parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+        if(section==='sim'){setTimeout(()=>{startSim();},50);}
+      }));
+    });
+
+    let canvas,ctx;
+    let waterLevel=250;
+    let temp=25;
+    let soluteType='sugar';
+    let soluteMass=0;
+    let dissolvedMass=0;
+    let undissolved=[];
+    let dissolvedParticles=[];
+    let suspendedGrains=[];
+    let oilDrops=[];
+    let bubbles=[];
+    let stirBoost=0;
+    let heatBoost=0;
+    let time=0;
+    let simStarted=false;
+    let isHeating = false;
+
+    const solubility={
+      sugar:{base:200, rate:2.2, color:'#ffffff', label:'Sugar'},
+      salt :{base:36,  rate:0.3, color:'#e8e8e8', label:'Salt'},
+      sand :{base:0,   rate:0,   color:'#c2a25a', label:'Sand'},
+      oil  :{base:0,   rate:0,   color:'#f4d03f', label:'Oil'}
+    };
+
+    function getSaturation(){
+      const s=solubility[soluteType];
+      const factor=1+Math.max(0,(temp-25))*0.02;
+      const perL=s.base*factor;
+      const liters=waterLevel/1000;
+      return perL*liters;
+    }
+
+    function startSim(){
+      canvas=document.getElementById('mixCanvas');
+      ctx=canvas.getContext('2d');
+      if(!simStarted){simStarted=true;requestAnimationFrame(loop);}
+    }
+
+    document.getElementById('soluteSel').addEventListener('change',e=>{
+      soluteType=e.target.value;
+      updateReadout();
+    });
+
+    document.getElementById('waterRange').addEventListener('input',e=>{
+      waterLevel=+e.target.value;
+      updateReadout();
+    });
+
+    document.getElementById('addBtn').addEventListener('click',()=>{
+      const amount=8;
+      soluteType=document.getElementById('soluteSel').value;
+
+      if(soluteType==='oil'){
+        for(let i=0;i<amount*8;i++){
+          oilDrops.push({
+            x:360+Math.random()*380,
+            y:180+Math.random()*40,
+            vx:(Math.random()-.5)*.4,
+            vy:0.2+Math.random()*.3,
+            r:2+Math.random()*2.2,
+            wobble:Math.random()*6.28,
+            settled:false
+          });
+        }
+        updateReadout();
+        return;
+      }
+      if(soluteType==='sand'){
+        for(let i=0;i<amount*10;i++){
+          suspendedGrains.push({
+            x:360+Math.random()*380,
+            y:180+Math.random()*40,
+            vx:(Math.random()-.5)*.6,
+            vy:0.5+Math.random()*.7,
+            r:1.6+Math.random()*1.4,
+            settled:false
+          });
+        }
+        updateReadout();
+        return;
+      }
+
+      soluteMass+=amount;
+      for(let i=0;i<amount*16;i++){
+        undissolved.push({
+          x:360+Math.random()*380,
+          y:445+Math.random()*20,
+          vx:(Math.random()-.5)*.3,
+          vy:(Math.random()-.5)*.3,
+          r:1.5+Math.random()*1.3,
+          elem:soluteType
+        });
+      }
+      updateReadout();
+    });
+
+    document.getElementById('stirBtn').addEventListener('click',()=>{
+      stirBoost=1;
+      setTimeout(()=>{stirBoost=0;},3000);
+      for(const p of dissolvedParticles){
+        p.vx+=(Math.random()-.5)*2.5;
+        p.vy+=(Math.random()-.5)*2.5;
+      }
+      for(const p of undissolved){
+        p.vx+=(Math.random()-.5)*1.5;
+        p.vy+=(Math.random()-.5)*1.5;
+      }
+    });
+
+    document.getElementById('heatBtn').addEventListener('click',()=>{
+      isHeating = !isHeating;
+      if(isHeating){
+        heatBoost = 1;
+        document.getElementById('heatBtn').style.background = '#d32f2f';
+        document.getElementById('heatBtn').textContent = '🔥 Heating...';
+        temp = Math.min(100, temp + 8);
+        for(let i=0;i<20;i++){
+          bubbles.push({
+            x:340+Math.random()*420,
+            y:540-Math.random()*200,
+            r:1+Math.random()*2.5,
+            vy:-(0.6+Math.random()*1.2)
+          });
+        }
+      } else {
+        heatBoost = 0;
+        document.getElementById('heatBtn').style.background = '#1976d2';
+        document.getElementById('heatBtn').textContent = 'Heat';
+      }
+      updateReadout();
+    });
+
+    document.getElementById('coolBtn').addEventListener('click',()=>{
+      temp=Math.max(5,temp-15);
+      if(isHeating){
+        isHeating = false;
+        heatBoost = 0;
+        document.getElementById('heatBtn').style.background = '#1976d2';
+        document.getElementById('heatBtn').textContent = 'Heat';
+      }
+      updateReadout();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      waterLevel=+document.getElementById('waterRange').value;
+      temp=25;
+      soluteMass=0;dissolvedMass=0;
+      undissolved=[];dissolvedParticles=[];
+      suspendedGrains=[];oilDrops=[];bubbles=[];
+      stirBoost=0;heatBoost=0;
+      isHeating = false;
+      document.getElementById('heatBtn').style.background = '#1976d2';
+      document.getElementById('heatBtn').textContent = 'Heat';
+      updateReadout();
+    });
+
+    function updateReadout(){
+      const sat=getSaturation();
+      const conc=(dissolvedMass/(waterLevel/1000)).toFixed(1);
+      const s=solubility[soluteType];
+      let state='PURE WATER', sub='Add solute to begin';
+
+      if(soluteType==='sand'){state='SUSPENSION';sub='Sand sinks — it is a mixture, not a solution';}
+      else if(soluteType==='oil'){state='IMMISCIBLE LIQUIDS';sub='Oil floats on water — never mixes';}
+      else if(dissolvedMass>=sat-0.05 && sat>0 && soluteMass>0){state='SATURATED';sub='No more solute can dissolve at this temperature';}
+      else if(dissolvedMass>0){state='UNSATURATED';sub='More solute can still dissolve';}
+
+      document.getElementById('mixReadout').innerHTML=
+        state+' <small>Solute: '+s.label+' · Concentration: '+conc+' g/L · Temp: '+Math.round(temp)+'°C · Dissolved: '+dissolvedMass.toFixed(2)+' g / '+soluteMass.toFixed(2)+' g</small>';
+
+      let msg='';
+      if(soluteType==='sand') msg='Sand does NOT dissolve. It settles at the bottom — this is a suspension.';
+      else if(soluteType==='oil') msg='Oil does NOT mix with water. It floats on top — immiscible liquids.';
+      else if(state==='SATURATED') msg='Solution is SATURATED. Heat it to dissolve more, or add water.';
+      else if(dissolvedMass>0) msg=s.label+' is dissolving. Click Stir or Heat to speed it up.';
+      else msg='Click Add Solute to drop '+s.label+' into the water.';
+      document.getElementById('mixInfo').textContent=msg;
+    }
+
+    function dissolveTick(){
+      if(soluteType==='sand'||soluteType==='oil') return;
+      const sat=getSaturation();
+      const canDissolve=Math.max(0,sat-dissolvedMass);
+      if(canDissolve<=0 || undissolved.length===0) return;
+
+      const rate=0.9*(1+stirBoost*2.5+heatBoost*2);
+      const moves=Math.min(Math.ceil(rate),undissolved.length);
+      for(let i=0;i<moves;i++){
+        const idx=Math.floor(Math.random()*undissolved.length);
+        const p=undissolved.splice(idx,1)[0];
+        dissolvedMass+=0.06;
+        const col=solubility[soluteType].color;
+        dissolvedParticles.push({
+          x:p.x,y:p.y,
+          vx:(Math.random()-.5)*1.5,
+          vy:(Math.random()-.5)*1.5,
+          r:1.6+Math.random()*1.2,
+          color:col
+        });
+        if(dissolvedMass>=sat) break;
+      }
+      updateReadout();
+    }
+
+    function loop(){
+      const c=canvas;
+      const w=c.width,h=c.height;
+      ctx.clearRect(0,0,w,h);
+
+      const bg=ctx.createRadialGradient(w/2,h/2,100,w/2,h/2,700);
+      bg.addColorStop(0,'#0a1e33');
+      bg.addColorStop(1,'#040e1a');
+      ctx.fillStyle=bg;
+      ctx.fillRect(0,0,w,h);
+
+      const tableGrad=ctx.createLinearGradient(0,h-70,0,h);
+      tableGrad.addColorStop(0,'rgba(70,110,160,.35)');
+      tableGrad.addColorStop(1,'rgba(20,40,70,.55)');
+      ctx.fillStyle=tableGrad;
+      ctx.fillRect(0,h-70,w,70);
+
+      const bx=310, by=110, bw=480, bh=380;
+      drawBeakerGlass(bx,by,bw,bh);
+
+      const waterTop=by+bh-38-waterLevel*0.68;
+      const waterBottom=by+bh-6;
+      const waterGrad=ctx.createLinearGradient(0,waterTop,0,waterBottom);
+      waterGrad.addColorStop(0,'rgba(90,180,240,.55)');
+      waterGrad.addColorStop(1,'rgba(25,100,180,.82)');
+      ctx.fillStyle=waterGrad;
+      ctx.fillRect(bx+7,waterTop,bw-14,waterBottom-waterTop);
+
+      ctx.strokeStyle='rgba(200,235,255,.8)';
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      for(let x=bx+7;x<=bx+bw-7;x+=6){
+        const y=waterTop+Math.sin(x*0.05+time*0.08)*2.5;
+        if(x===bx+7)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+
+      for(const p of dissolvedParticles){
+        const speedBase=1+stirBoost*2.2+heatBoost*1.5;
+        p.x+=p.vx*speedBase;
+        p.y+=p.vy*speedBase;
+        if(p.x<bx+14||p.x>bx+bw-14)p.vx*=-1;
+        if(p.y<waterTop+8||p.y>waterBottom-6)p.vy*=-1;
+        ctx.fillStyle=p.color;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+      }
+
+      for(const p of undissolved){
+        const speedBase=1+stirBoost*2+heatBoost*1.5;
+        p.x+=p.vx*speedBase;
+        p.y+=p.vy*speedBase;
+        p.vx*=0.94;p.vy*=0.94;
+        if(p.x<bx+16){p.x=bx+16;p.vx*=-1;}
+        if(p.x>bx+bw-16){p.x=bx+bw-16;p.vx*=-1;}
+        if(p.y>waterBottom-3){p.y=waterBottom-3;p.vy*=-1;}
+        const col=solubility[p.elem].color;
+        ctx.fillStyle=col;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+      }
+
+      for(const g of suspendedGrains){
+        if(!g.settled){
+          g.x+=g.vx;
+          g.y+=g.vy;
+          if(g.y>waterBottom-14-g.r){
+            g.y=waterBottom-14-g.r;
+            g.vy=0;
+            g.vx*=0.4;
+            if(Math.abs(g.vx)<0.05)g.settled=true;
+          }
+        }
+        ctx.fillStyle='#c2a25a';
+        ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,7);ctx.fill();
+      }
+
+      for(const o of oilDrops){
+        o.wobble+=0.05;
+        if(!o.settled){
+          o.x+=o.vx;
+          o.y+=o.vy;
+          if(o.y>waterTop+6){
+            o.y=waterTop+6+(Math.sin(o.wobble)*1.2);
+            o.settled=true;
+          }
+        }
+        ctx.fillStyle='#f4d03f';
+        ctx.beginPath();ctx.ellipse(o.x,o.y,o.r*1.4,o.r*0.9,0,0,7);ctx.fill();
+      }
+
+      for(let i=bubbles.length-1;i>=0;i--){
+        const b=bubbles[i];
+        b.y+=b.vy;
+        b.x+=Math.sin(b.y*0.05)*0.4;
+        if(b.y<waterTop+4){bubbles.splice(i,1);continue;}
+        ctx.strokeStyle='rgba(220,240,255,.9)';
+        ctx.lineWidth=1.6;
+        ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.stroke();
+      }
+
+      drawBeakerFront(bx,by,bw,bh);
+      drawStirringRod(bx,bw,by,waterTop);
+      drawThermometer(bx+bw+40,by+20,temp);
+      drawBurner(bx+bw+150,by+bh-30,isHeating ? 1 : 0);
+
+      if(isHeating && temp < 100){
+        temp = Math.min(100, temp + 0.08);
+        updateReadout();
+      }
+
+      time+=1;
+      dissolveTick();
+      requestAnimationFrame(loop);
+    }
+
+    function drawBeakerGlass(bx,by,bw,bh){
+      const grad=ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+      grad.addColorStop(0,'rgba(180,220,255,.10)');
+      grad.addColorStop(.5,'rgba(120,180,240,.05)');
+      grad.addColorStop(1,'rgba(180,220,255,.15)');
+      ctx.fillStyle=grad;
+      ctx.fillRect(bx,by,bw,bh);
+    }
+
+    function drawBeakerFront(bx,by,bw,bh){
+      ctx.strokeStyle='rgba(200,230,255,.95)';
+      ctx.lineWidth=5;
+      ctx.beginPath();
+      ctx.moveTo(bx,by);
+      ctx.lineTo(bx,by+bh);
+      ctx.lineTo(bx+bw,by+bh);
+      ctx.lineTo(bx+bw,by);
+      ctx.stroke();
+
+      ctx.strokeStyle='rgba(220,240,255,.7)';
+      ctx.lineWidth=2;
+      ctx.font='bold 12px sans-serif';
+      ctx.fillStyle='rgba(220,240,255,.9)';
+      for(let i=1;i<=5;i++){
+        const y=by+bh-i*60;
+        const len=(i%2===0)?38:26;
+        ctx.beginPath();
+        ctx.moveTo(bx+10,y);
+        ctx.lineTo(bx+10+len,y);
+        ctx.stroke();
+        ctx.fillText((i*100)+' mL',bx+16+len,y+4);
+      }
+    }
+
+    function drawStirringRod(bx,bw,by,waterTop){
+      const rx=bx+bw-70, ry=by-20;
+      const angle=Math.sin(time*0.08)*0.12;
+      ctx.save();
+      ctx.translate(rx,ry);
+      ctx.rotate(angle);
+      ctx.fillStyle='#d8e6f0';
+      ctx.fillRect(-4,0,8,300);
+      ctx.restore();
+    }
+
+    function drawThermometer(x,y,t){
+      ctx.fillStyle='#eaf4ff';
+      ctx.strokeStyle='#2a4a6a';
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(x,y,26,200,12);
+      ctx.fill();
+      ctx.stroke();
+
+      const frac=(t-5)/(100-5);
+      const colH=Math.max(0.02,frac)*170;
+      const mercuryCol = t>60?'#e53935': t>30?'#fb8c00':'#1976d2';
+      ctx.fillStyle=mercuryCol;
+      ctx.beginPath();
+      ctx.roundRect(x+8,y+180-colH,10,colH+40,6);
+      ctx.fill();
+    }
+
+    function drawBurner(x,y,intensity){
+      const h=30+intensity*40+ (intensity ? Math.sin(time*0.3)*4 : 0);
+      if(intensity){
+        const fg=ctx.createLinearGradient(x,y-h,x,y);
+        fg.addColorStop(0,'rgba(255,240,120,.95)');
+        fg.addColorStop(.5,'rgba(255,140,40,.9)');
+        fg.addColorStop(1,'rgba(255,60,20,.7)');
+        ctx.fillStyle=fg;
+        ctx.beginPath();
+        ctx.moveTo(x-10,y);
+        ctx.quadraticCurveTo(x-16,y-h*0.6,x,y-h);
+        ctx.quadraticCurveTo(x+16,y-h*0.6,x+10,y);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.fillStyle='#2a4a6a';
+      ctx.beginPath();
+      ctx.roundRect(x-22,y,44,14,4);
+      ctx.fill();
+      ctx.fillStyle='#1a3a5a';
+      ctx.beginPath();
+      ctx.roundRect(x-30,y+14,60,16,4);
+      ctx.fill();
+    }
+
+    document.getElementById('fullscreenBtn').addEventListener('click', function(){
+      const simBox = document.getElementById('simBox') || document.documentElement;
+      if (!document.fullscreenElement) {
+        simBox.requestFullscreen().catch(()=>{});
+      } else {
+        document.exitFullscreen().catch(()=>{});
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      const btn = document.getElementById('fullscreenBtn');
+      if (btn) btn.textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+    });
+
+    function initMixLab(){
+      startSim();
+      updateReadout();
+    }
+
+    if(document.readyState==='complete'||document.readyState==='interactive'){
+      initMixLab();
+    } else {
+      window.addEventListener('DOMContentLoaded', initMixLab);
+      window.addEventListener('load', initMixLab);
+    }
+  })();
+</script>
+
+<script>
+/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
+</script>
+
+
+
+
+
+<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
+<script id="genz-simulation-fullscreen-engine">
+(function() {
+  'use strict';
+
+  function findSimulationRootContainer(triggerEl) {
+    if (triggerEl) {
+      if (typeof triggerEl === "string") {
+        var cleanId = triggerEl.replace(/^fs-?/, "");
+        var byId = document.getElementById(cleanId) ||
+                   document.getElementById(triggerEl) ||
+                   document.getElementById(cleanId + "SimBox") ||
+                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
+                   document.getElementById("box" + cleanId) ||
+                   document.getElementById("simBox" + cleanId) ||
+                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+        if (byId) return byId;
+      }
+      if (triggerEl.nodeType === 1) {
+        if (triggerEl.dataset && triggerEl.dataset.fs) {
+          var targetByFs = document.getElementById(triggerEl.dataset.fs);
+          if (targetByFs) return targetByFs;
+        }
+        if (triggerEl.dataset && triggerEl.dataset.target) {
+          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
+          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
+          if (targetByData) return targetByData;
+        }
+        var found = triggerEl.closest(
+          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
+        );
+        if (found && found !== document.body && found !== document.documentElement) {
+          return found;
+        }
+      }
+    }
+    var candidate = document.querySelector(".sim-box") ||
+                    document.querySelector(".sim-stage") ||
+                    document.getElementById("simContainer") ||
+                    document.getElementById("sim") ||
+                    document.querySelector(".main-stage") ||
+                    document.querySelector(".stage") ||
+                    document.querySelector(".lab") ||
+                    document.querySelector(".card-board") ||
+                    document.querySelector(".simulation") ||
+                    document.querySelector(".sim") ||
+                    document.querySelector(".simulation-wrapper") ||
+                    document.body;
+    return candidate;
+  }
+
+  function toggleSimulationFullscreen(triggerEl) {
+    try {
+      if (!document.fullscreenElement) {
+        var container = findSimulationRootContainer(triggerEl);
+        if (!container) container = document.body;
+
+        container.classList.add("simulation-wrapper");
+        container.classList.add("is-fullscreen");
+        container.setAttribute("data-is-fullscreen", "true");
+        document.documentElement.classList.add("in-fullscreen-mode");
+        document.body.classList.add("in-fullscreen-mode");
+
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(function(err) {
+            console.error("Fullscreen request failed on container:", err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
+            } else if (document.body && document.body.requestFullscreen) {
+              document.body.requestFullscreen().catch(function(e) { console.error(e); });
+            }
+          });
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(function(err) {
+            console.error("Exit fullscreen error:", err);
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Fullscreen toggle error:", err);
+    }
+  }
+
+  window.toggleFullscreen = function(target) {
+    toggleSimulationFullscreen(target || this);
+  };
+  window.toggleSimFullscreen = function(boxId) {
+    var el = boxId ? document.getElementById(boxId) : this;
+    toggleSimulationFullscreen(el || boxId);
+  };
+  window.toggleFs = function() {
+    toggleSimulationFullscreen(this);
+  };
+  window.openFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) {
+        ov.classList.remove("active");
+        ov.style.display = "none";
+      }
+      var clean = id.replace(/^fs-?/, "");
+      var target = document.getElementById(clean) ||
+                   document.getElementById(clean + "SimBox") ||
+                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
+                   document.getElementById("box" + clean) ||
+                   document.getElementById("simBox" + clean) ||
+                   document.getElementById("t-" + clean) ||
+                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
+                   document.getElementById(id);
+      toggleSimulationFullscreen(target || clean);
+      return;
+    }
+    toggleSimulationFullscreen(this);
+  };
+  window.launchFullscreen = function(topicId) {
+    window.openFullscreen(topicId);
+  };
+  window.closeFullscreen = function(id) {
+    if (id) {
+      var ov = document.getElementById(id);
+      if (ov) ov.classList.remove("active");
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+  window.exitSimFullscreen = function() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function() {});
+    }
+  };
+
+  function resizeAndRedrawSimulationCanvases() {
+    window.dispatchEvent(new Event("resize"));
+
+    document.querySelectorAll("canvas").forEach(function(cv) {
+      try {
+        var rect = cv.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          if (cv.width === 0 || cv.height === 0) {
+            cv.width = rect.width;
+            cv.height = rect.height;
+          }
+        }
+      } catch(e) {}
+    });
+
+    var redrawFns = [
+      "resize", "onResize", "onWindowResize", "resizeCanvas",
+      "draw", "render", "animate", "redraw", "update", "drawCanvas",
+      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
+      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
+      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
+    ];
+    redrawFns.forEach(function(fn) {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch(e) {}
+      }
+    });
+
+    if (window.camera && window.renderer) {
+      try {
+        var rw = window.innerWidth;
+        var rh = window.innerHeight;
+        window.camera.aspect = rw / rh;
+        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
+        window.renderer.setSize(rw, rh);
+      } catch(e) {}
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function() {
+    var isFs = !!document.fullscreenElement;
+    if (isFs) {
+      document.documentElement.classList.add("in-fullscreen-mode");
+      document.body.classList.add("in-fullscreen-mode");
+      if (document.fullscreenElement) {
+        document.fullscreenElement.classList.add("is-fullscreen");
+        document.fullscreenElement.classList.add("simulation-wrapper");
+        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
+      }
+    } else {
+      document.documentElement.classList.remove("in-fullscreen-mode");
+      document.body.classList.remove("in-fullscreen-mode");
+      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
+        el.classList.remove("is-fullscreen");
+        el.removeAttribute("data-is-fullscreen");
+      });
+    }
+
+    var fsButtons = document.querySelectorAll(
+      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
+    );
+    fsButtons.forEach(function(btn) {
+      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
+        return;
+      }
+      if (isFs) {
+        btn.innerHTML = "✕ Exit Fullscreen";
+        btn.classList.add("is-fullscreen-active");
+      } else {
+        btn.innerHTML = "⛶ Fullscreen";
+        btn.classList.remove("is-fullscreen-active");
+      }
+    });
+
+    resizeAndRedrawSimulationCanvases();
+    setTimeout(resizeAndRedrawSimulationCanvases, 50);
+    setTimeout(resizeAndRedrawSimulationCanvases, 150);
+    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+  });
+
+  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(
+      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
+    );
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSimulationFullscreen(btn);
+    }
+  }, true);
+})();
+</script>
+
+</body>
+</html>
