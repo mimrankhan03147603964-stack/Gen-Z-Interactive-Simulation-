@@ -3,6 +3,7 @@ import { Clock, Sparkles, Layers, Play, Radio, ExternalLink } from 'lucide-react
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
+import { TopicRealisticIcon } from './TopicRealisticIcon';
 
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
@@ -10,46 +11,97 @@ interface HeroBannerProps {
   onSelectSim?: (sim: SimulationItem) => void;
 }
 
-// Curated list strictly restricted to simulations with real-time visual canvas objects,
-// dynamic animations, and interactive physical apparatus (e.g., pendulum oscillations,
-// projectile trajectory cannons, electrical circuits, planetary orbits, wave optics).
-// All purely text-based, grammar, curriculum guide, or non-object labs are 100% excluded.
-const VISUAL_APPARATUS_SLUGS = [
-  'pendulum-harmonic-motion',
-  'projectile-motion-gravity',
-  'electricity-circuits',
-  'wave-optics-double-slit-interference',
-  'solar-system-orbits',
-  'ohms-law-lab',
-  'atoms-light-sound-pressure',
-  'newtons-laws-of-motion',
-  'heat-transfer-temperature',
-  'kinematics-motion-graphs',
-  'breathing-process',
-  'moon-phases-tides-orbit',
-  'electromagnetic-induction-lab',
-  'ideal-gas-laws',
-  'chemical-reaction-kinetics',
-  'unit-circle-trigonometry',
-  'volcano-magma-dynamics',
-  'logic-gates-circuit-designer'
-];
+const cleanTopicTitle = (title: string): string => {
+  return title
+    .replace(/\.html$/i, '')
+    .replace(/_/g, ' ')
+    .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+    .trim();
+};
+
+const getCategoryStyle = (category: string, isDark: boolean) => {
+  if (category.includes('Physics')) {
+    return {
+      name: 'Physics',
+      bg: isDark ? 'rgba(37, 99, 235, 0.25)' : 'rgba(239, 246, 255, 0.95)',
+      color: isDark ? '#93c5fd' : '#1d4ed8',
+      border: isDark ? '#3b82f6' : '#bfdbfe'
+    };
+  }
+  if (category.includes('Chemistry')) {
+    return {
+      name: 'Chemistry',
+      bg: isDark ? 'rgba(168, 85, 247, 0.25)' : 'rgba(250, 245, 255, 0.95)',
+      color: isDark ? '#d8b4fe' : '#7e22ce',
+      border: isDark ? '#a855f7' : '#e9d5ff'
+    };
+  }
+  if (category.includes('Biology')) {
+    return {
+      name: 'Biology',
+      bg: isDark ? 'rgba(34, 197, 94, 0.25)' : 'rgba(240, 253, 244, 0.95)',
+      color: isDark ? '#86efac' : '#15803d',
+      border: isDark ? '#22c55e' : '#bbf7d0'
+    };
+  }
+  if (category.includes('Earth') || category.includes('Space')) {
+    return {
+      name: 'Earth & Space',
+      bg: isDark ? 'rgba(2, 132, 199, 0.25)' : 'rgba(240, 249, 255, 0.95)',
+      color: isDark ? '#7dd3fc' : '#0369a1',
+      border: isDark ? '#0284c7' : '#bae6fd'
+    };
+  }
+  if (category.includes('Math')) {
+    return {
+      name: 'Mathematics',
+      bg: isDark ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 251, 235, 0.95)',
+      color: isDark ? '#fcd34d' : '#b45309',
+      border: isDark ? '#f59e0b' : '#fde68a'
+    };
+  }
+  if (category.includes('Computer')) {
+    return {
+      name: 'Computer Science',
+      bg: isDark ? 'rgba(20, 184, 166, 0.25)' : 'rgba(240, 253, 250, 0.95)',
+      color: isDark ? '#5eead4' : '#0f766e',
+      border: isDark ? '#14b8a6' : '#99f6e4'
+    };
+  }
+  if (category.includes('English') || category.includes('Grammar')) {
+    return {
+      name: 'English & Grammar',
+      bg: isDark ? 'rgba(139, 92, 246, 0.25)' : 'rgba(245, 243, 255, 0.95)',
+      color: isDark ? '#c4b5fd' : '#6d28d9',
+      border: isDark ? '#8b5cf6' : '#ddd6fe'
+    };
+  }
+  return {
+    name: 'Early Childhood',
+    bg: isDark ? 'rgba(244, 63, 94, 0.25)' : 'rgba(255, 241, 242, 0.95)',
+    color: isDark ? '#fecdd3' : '#be123c',
+    border: isDark ? '#f43f5e' : '#fecdd3'
+  };
+};
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = false, onSelectSim }) => {
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
 
-  // 5-Second Interval Timer & Fluid Right-to-Left Carousel Slider State
+  // Strict 2-Second Interval Timer & Fluid Right-to-Left Slide Rotator State
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
-  // Pure visual interactive apparatus simulations pool
-  const visualSims = VISUAL_APPARATUS_SLUGS.map((slug) =>
-    SIMULATIONS_LIST.find((s) => s.slug === slug)
-  ).filter((s): s is SimulationItem => Boolean(s));
+  // 100% of available simulation topics currently in the system library
+  const allSimulationTopics = SIMULATIONS_LIST.filter(s => {
+    if (s.indexNumber === '53' || s.indexNumber === '55' || s.id === 'sim-cambridge-scholar-parts-of-speech-lab' || s.id === 'sim-urdu-grammar') {
+      return false;
+    }
+    return true;
+  });
 
   // Digital clock widget
   useEffect(() => {
@@ -80,33 +132,33 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     return () => clearInterval(timer);
   }, []);
 
-  // Strict 5-Second (5000ms) Interval with Fluid Right-to-Left Slide Animation
-  // Pauses automatically on hover or direct interaction with controls
+  // Strict 2-Second (2000ms) Interval with Fluid Right-to-Left Slide Transition
+  // Pauses automatically on hover over the topic or direct launch button
   useEffect(() => {
-    if (isShowcaseHovered || visualSims.length === 0) return;
+    if (isShowcaseHovered || allSimulationTopics.length <= 1) return;
 
     const timer = setInterval(() => {
-      const target = (currentIndex + 1) % visualSims.length;
+      const target = (currentIndex + 1) % allSimulationTopics.length;
       setNextIndex(target);
 
-      // Trigger the slide on the next micro-frame for smooth CSS animation
+      // Trigger the slide on next micro-frame for smooth CSS animation
       requestAnimationFrame(() => {
         setIsSliding(true);
       });
 
-      // Complete slide transition after 700ms
+      // Complete slide transition after 450ms
       setTimeout(() => {
         setCurrentIndex(target);
         setNextIndex(null);
         setIsSliding(false);
-      }, 700);
-    }, 5000); // Strictly 5 seconds (5000ms)
+      }, 450);
+    }, 2000); // Strictly 2 seconds (2000ms)
 
     return () => clearInterval(timer);
-  }, [currentIndex, isShowcaseHovered, visualSims.length]);
+  }, [currentIndex, isShowcaseHovered, allSimulationTopics.length]);
 
-  const currentSim = visualSims[currentIndex % visualSims.length] || visualSims[0];
-  const nextSim = nextIndex !== null ? visualSims[nextIndex % visualSims.length] : null;
+  const currentSim = allSimulationTopics[currentIndex % allSimulationTopics.length] || allSimulationTopics[0];
+  const nextSim = nextIndex !== null ? allSimulationTopics[nextIndex % allSimulationTopics.length] : null;
 
   const handleLaunchShowcase = (sim: SimulationItem) => {
     if (onSelectSim) {
@@ -114,6 +166,83 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     } else {
       openSimulationInNewTab(sim);
     }
+  };
+
+  const renderTopicItem = (sim: SimulationItem) => {
+    const catStyle = getCategoryStyle(sim.category, isDarkMode);
+    const cleanTitle = cleanTopicTitle(sim.title);
+
+    return (
+      <div 
+        className="w-full h-full flex items-center justify-between gap-3 px-3.5 sm:px-6"
+      >
+        {/* Left Topic Name & Category Badge */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+          {/* Topic Realistic Icon */}
+          <div 
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shrink-0 p-1 flex items-center justify-center shadow-xs"
+            style={{
+              backgroundColor: catStyle.bg,
+              border: `1.5px solid ${catStyle.border}`
+            }}
+          >
+            <TopicRealisticIcon indexNumber={sim.indexNumber} simId={sim.id} className="w-7 h-7 sm:w-8 sm:h-8" />
+          </div>
+
+          {/* Clean Category Badge */}
+          <span 
+            className="text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-lg shrink-0 shadow-2xs"
+            style={{
+              backgroundColor: catStyle.bg,
+              color: catStyle.color,
+              border: `1px solid ${catStyle.border}`
+            }}
+          >
+            {catStyle.name}
+          </span>
+
+          {/* Clean Topic Name (Clickable link to open simulation) */}
+          <a
+            href={getSimulationStandaloneUrl(sim)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleLaunchShowcase(sim);
+            }}
+            className="text-xs sm:text-sm md:text-base font-black truncate hover:underline cursor-pointer transition-colors"
+            style={{
+              color: isDarkMode ? '#f8fafc' : '#0f172a'
+            }}
+            title={`Open ${cleanTitle} in new tab`}
+          >
+            {cleanTitle}
+          </a>
+        </div>
+
+        {/* Right Direct "Launch Lab 🚀" Button */}
+        <a
+          href={getSimulationStandaloneUrl(sim)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleLaunchShowcase(sim);
+          }}
+          className="btn-3d shrink-0 ml-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1.5 text-white shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap"
+          style={{
+            backgroundColor: '#2563eb',
+            backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+            border: '1.5px solid #60a5fa',
+            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)'
+          }}
+          title={`Launch ${cleanTitle} simulation now`}
+        >
+          <span>Launch Lab</span>
+          <span className="text-sm">🚀</span>
+        </a>
+      </div>
+    );
   };
 
   return (
@@ -459,7 +588,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <div className="animate-marquee-infinite flex items-center">
               
               <div className="flex items-center shrink-0">
-                {visualSims.map((sim) => (
+                {allSimulationTopics.map((sim) => (
                   <a 
                     key={`sim-ticker-1-${sim.id}`} 
                     href={getSimulationStandaloneUrl(sim)}
@@ -486,7 +615,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               </div>
 
               <div className="flex items-center shrink-0">
-                {visualSims.map((sim) => (
+                {allSimulationTopics.map((sim) => (
                   <a 
                     key={`sim-ticker-2-${sim.id}`} 
                     href={getSimulationStandaloneUrl(sim)}
@@ -520,119 +649,56 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
       </div>
 
       {/* =========================================================================
-          REFACTORED ROTATING SHOWCASE:
-          1. Displays EXCLUSIVELY the real interactive simulation canvas & apparatus stage
-             (e.g., swinging pendulum with trajectory line, live energy gauges, sliders)
-          2. Filtered pool strictly restricted to real-time visual canvas objects & animations
-          3. Silent 5-second right-to-left slide animation (700ms translateX)
-          4. Auto-pauses smoothly on hover and controls interaction
-          5. Minimal "Launch Full Simulation ↗" button in the corner
-          6. ZERO unnecessary headers, topic cards, theory text, or counter badges
+          FAST 2-SECOND TOPIC TICKER / ROTATOR:
+          1. Topic-Only Content: Clean names/topics of all available simulations
+          2. Clean category badge (Physics, Chemistry, Biology, etc.)
+          3. Compact direct "Launch Lab 🚀" button
+          4. Strict 2-second right-to-left slide animation (450ms translateX)
+          5. Smooth pause on hover
+          6. NO heavy visual canvases, text paragraphs, complex theory, countdowns, or counter numbers
           ========================================================================= */}
       {currentSim && (
         <div 
-          className="w-full rounded-2xl overflow-hidden shadow-2xl relative select-none"
+          className="w-full h-16 sm:h-20 rounded-2xl overflow-hidden shadow-xl relative select-none"
           onMouseEnter={() => setIsShowcaseHovered(true)}
           onMouseLeave={() => setIsShowcaseHovered(false)}
           style={{
-            backgroundColor: isDarkMode ? '#060d1f' : '#ffffff',
-            borderColor: isDarkMode ? '#0284c7' : '#2563eb',
-            borderWidth: '2.5px',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.88)' : 'rgba(255, 255, 255, 0.94)',
+            borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.38)' : 'rgba(147, 197, 253, 0.85)',
+            borderWidth: '1.5px',
             borderStyle: 'solid',
             boxShadow: isDarkMode 
-              ? '0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(2, 132, 199, 0.3)' 
-              : '0 20px 45px rgba(37, 99, 235, 0.16), 0 4px 16px rgba(0, 0, 0, 0.08)'
+              ? '0 12px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15)' 
+              : '0 8px 24px rgba(37, 99, 235, 0.08), 0 2px 10px rgba(37, 99, 235, 0.05)'
           }}
         >
-          {/* Top-Right Floating Minimal CTA: "Launch Full Simulation ↗" */}
-          <a
-            href={getSimulationStandaloneUrl(currentSim)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleLaunchShowcase(currentSim);
-            }}
-            className="absolute top-3.5 right-3.5 z-30 px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-lg backdrop-blur-md cursor-pointer transition-transform hover:scale-105 active:scale-95 text-white"
+          {/* Active Current Topic (Slides out to LEFT when isSliding is true) */}
+          <div
+            className="absolute inset-0 w-full h-full flex items-center"
             style={{
-              backgroundColor: 'rgba(15, 23, 42, 0.88)',
-              border: '1px solid rgba(56, 189, 248, 0.55)',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.3)'
-            }}
-            title={`Expand ${currentSim.title} into full view`}
-          >
-            <span>Launch Full Simulation</span>
-            <ExternalLink className="w-3.5 h-3.5 text-cyan-300" />
-          </a>
-
-          {/* Top-Left Minimal Floating Badge (Simulation Name Only - Zero Clutter / Counters) */}
-          <div 
-            className="absolute top-3.5 left-3.5 z-30 px-3 py-1 rounded-xl text-xs font-black backdrop-blur-md flex items-center gap-2 pointer-events-none"
-            style={{
-              backgroundColor: 'rgba(15, 23, 42, 0.88)',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              color: '#ffffff',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
+              transform: isSliding ? 'translateX(-100%)' : 'translateX(0%)',
+              transition: isSliding ? 'transform 450ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              willChange: 'transform'
             }}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-extrabold text-[11px] sm:text-xs text-white">
-              {currentSim.title}
-            </span>
+            {renderTopicItem(currentSim)}
           </div>
 
-          {/* Pure Live Visual Canvas Viewport (Height 560px) with Right-to-Left Slide Animation */}
-          <div 
-            className="w-full relative overflow-hidden"
-            style={{
-              height: '560px',
-              backgroundColor: isDarkMode ? '#060a16' : '#030712'
-            }}
-          >
-            {/* Active Current Stage (Slides out to LEFT when isSliding is true) */}
+          {/* Next Incoming Topic (Slides in from RIGHT when isSliding is true) */}
+          {nextSim && (
             <div
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 w-full h-full flex items-center"
               style={{
-                transform: isSliding ? 'translateX(-100%)' : 'translateX(0%)',
-                transition: isSliding ? 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+                transform: isSliding ? 'translateX(0%)' : 'translateX(100%)',
+                transition: isSliding ? 'transform 450ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
                 willChange: 'transform'
               }}
             >
-              <iframe
-                src={currentSim.fileUrl}
-                title={currentSim.title}
-                className="w-full h-full border-0 block"
-                style={{
-                  pointerEvents: isShowcaseHovered ? 'auto' : 'none'
-                }}
-                loading="eager"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              />
+              {renderTopicItem(nextSim)}
             </div>
-
-            {/* Next Incoming Stage (Slides in from RIGHT when isSliding is true) */}
-            {nextSim && (
-              <div
-                className="absolute inset-0 w-full h-full"
-                style={{
-                  transform: isSliding ? 'translateX(0%)' : 'translateX(100%)',
-                  transition: isSliding ? 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-                  willChange: 'transform'
-                }}
-              >
-                <iframe
-                  src={nextSim.fileUrl}
-                  title={nextSim.title}
-                  className="w-full h-full border-0 block"
-                  style={{
-                    pointerEvents: isShowcaseHovered ? 'auto' : 'none'
-                  }}
-                  loading="eager"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       )}
 
