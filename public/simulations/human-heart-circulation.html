@@ -1,1530 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Realistic Human Heart Anatomy & Double Circulation Simulator</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-    body {
-      background: radial-gradient(circle at 50% 15%, #18050e 0%, #0d0208 55%, #030002 100%);
-      color: #f8fafc;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-    }
-    header {
-      padding: 10px 22px;
-      background: rgba(26, 6, 14, 0.92);
-      backdrop-filter: blur(14px);
-      border-bottom: 1.5px solid rgba(244, 63, 94, 0.3);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-    .brand-box { display: flex; align-items: center; gap: 12px; }
-    .badge {
-      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 8px;
-      letter-spacing: 0.8px;
-      border: 1px solid #fda4af;
-      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
-    }
-    h1 { font-size: 16px; font-weight: 900; color: #ffe4e6; letter-spacing: -0.2px; }
-    .vitals-banner {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-weight: 700;
-    }
-    .vital-chip {
-      background: rgba(45, 10, 24, 0.85);
-      border: 1px solid rgba(244, 63, 94, 0.4);
-      padding: 4px 10px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .vital-chip.pulse { border-color: #f43f5e; box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
-    .main-stage {
-      flex: 1;
-      display: flex;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-    }
-    canvas {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      display: block;
-      cursor: crosshair;
-    }
-    /* Side Medical Telemetry HUD (Desktop & Laptop) */
-    .telemetry-hud {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      width: 290px;
-      background: rgba(22, 6, 12, 0.94);
-      backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(244, 63, 94, 0.35);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 15px rgba(225, 29, 72, 0.2);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .hud-title {
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #fda4af;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .ecg-monitor {
-      background: #060103;
-      border: 1px solid #4c0519;
-      border-radius: 10px;
-      padding: 6px;
-      position: relative;
-    }
-    .ecg-canvas {
-      width: 100%;
-      height: 65px;
-      display: block;
-    }
-    .info-card {
-      background: rgba(38, 10, 20, 0.7);
-      border: 1px solid rgba(244, 63, 94, 0.25);
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 11px;
-      line-height: 1.45;
-    }
-    .info-card h4 {
-      font-size: 12px;
-      font-weight: 800;
-      color: #fecdd3;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .legend-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      font-size: 10px;
-      font-weight: 800;
-    }
-    .legend-tag {
-      padding: 5px 8px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .tag-oxy {
-      background: rgba(225, 29, 72, 0.25);
-      border: 1px solid #f43f5e;
-      color: #ffe4e6;
-    }
-    .tag-deoxy {
-      background: rgba(2, 132, 199, 0.25);
-      border: 1px solid #38bdf8;
-      color: #e0f2fe;
-    }
-    .dock {
-      padding: 10px 20px;
-      background: rgba(22, 5, 12, 0.96);
-      backdrop-filter: blur(14px);
-      border-top: 1.5px solid rgba(244, 63, 94, 0.3);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-    .ctrl-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(45, 10, 22, 0.85);
-      padding: 6px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      font-size: 12px;
-      font-weight: 800;
-    }
-    .btn {
-      background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
-      color: #ffffff;
-      border: 1px solid #fda4af;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
-    }
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(225, 29, 72, 0.5);
-    }
-    .btn.active {
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      border-color: #7dd3fc;
-    }
-    input[type="range"] {
-      width: 90px;
-      accent-color: #f43f5e;
-      cursor: pointer;
-    }
-  </style>
-
-<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
-<style id="genz-simulation-fullscreen-styles">
-  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
-  html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen, ::backdrop {
-    background-color: #060e1d !important;
-  }
-
-  html:fullscreen,
-  body:fullscreen,
-  :fullscreen,
-  :-webkit-full-screen,
-  :-moz-full-screen,
-  :-ms-fullscreen,
-  .simulation-wrapper:fullscreen,
-  .is-fullscreen,
-  [data-is-fullscreen="true"] {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    padding: 10px 16px !important;
-    background-color: #060e1d !important;
-    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 999999 !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar,
-  :-webkit-full-screen::-webkit-scrollbar,
-  ::-webkit-scrollbar {
-    display: block !important;
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-track,
-  :-webkit-full-screen::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track {
-    background: rgba(10, 15, 30, 0.7) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-thumb,
-  :-webkit-full-screen::-webkit-scrollbar-thumb,
-  ::-webkit-scrollbar-thumb {
-    background: #0284c7 !important;
-    border-radius: 4px !important;
-  }
-
-  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
-  :fullscreen canvas,
-  :fullscreen svg,
-  :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  .is-fullscreen canvas,
-  .is-fullscreen svg {
-    display: block !important;
-    object-fit: contain !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 70vh !important;
-    min-height: 280px !important;
-    flex-shrink: 0 !important;
-    margin: 4px auto !important;
-  }
-
-  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
-  :fullscreen .ctl,
-  :fullscreen .controls,
-  :fullscreen .sim-controls,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .controls-bar,
-  :fullscreen .fs-bar,
-  :fullscreen .fs-topbar,
-  :fullscreen .fullscreen-overlay-controls,
-  :fullscreen .floating-controls,
-  :fullscreen .preset-chips,
-  :fullscreen .stats-bar,
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :fullscreen header,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .controls,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .controls-bar,
-  :-webkit-full-screen .fs-bar,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen .fullscreen-overlay-controls,
-  :-webkit-full-screen .floating-controls,
-  :-webkit-full-screen .preset-chips,
-  :-webkit-full-screen .stats-bar,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  :-webkit-full-screen header,
-  .is-fullscreen .ctl,
-  .is-fullscreen .controls,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .controls-bar,
-  .is-fullscreen .fs-bar,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen .fullscreen-overlay-controls,
-  .is-fullscreen .floating-controls,
-  .is-fullscreen .preset-chips,
-  .is-fullscreen .stats-bar,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout,
-  .is-fullscreen header {
-    flex-shrink: 0 !important;
-    position: relative !important;
-    z-index: 100 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    box-sizing: border-box !important;
-    margin: 4px auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Bottom docked toolbars */
-  :fullscreen .ctl,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .fs-bar,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .fs-bar,
-  .is-fullscreen .ctl,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .fs-bar {
-    padding: 8px 14px !important;
-    background: rgba(5, 10, 30, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
-  }
-
-  /* Top docked toolbars */
-  :fullscreen .sim-controls,
-  :fullscreen .fs-topbar,
-  :fullscreen header,
-  :fullscreen .stats-bar,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen header,
-  :-webkit-full-screen .stats-bar,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen header,
-  .is-fullscreen .stats-bar {
-    padding: 8px 14px !important;
-    background: rgba(6, 14, 34, 0.92) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  }
-
-  /* Readouts between top toolbar and simulation canvas */
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout {
-    margin: 4px auto !important;
-    padding: 4px 10px !important;
-    font-size: clamp(12px, 1.2vw, 15px) !important;
-  }
-
-  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
-  :fullscreen .btn,
-  :fullscreen button,
-  :-webkit-full-screen .btn,
-  :-webkit-full-screen button,
-  .is-fullscreen .btn,
-  .is-fullscreen button {
-    font-size: clamp(11px, 1.1vw, 15px) !important;
-    padding: 6px 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  :fullscreen .row,
-  :-webkit-full-screen .row,
-  .is-fullscreen .row {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  :fullscreen .ctrl-group,
-  :-webkit-full-screen .ctrl-group,
-  .is-fullscreen .ctrl-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-  }
-
-  :fullscreen input[type="range"],
-  :-webkit-full-screen input[type="range"],
-  .is-fullscreen input[type="range"] {
-    max-width: 140px !important;
-    cursor: pointer !important;
-  }
-
-  :fullscreen select,
-  :-webkit-full-screen select,
-  .is-fullscreen select {
-    cursor: pointer !important;
-    font-size: clamp(11px, 1.1vw, 14px) !important;
-  }
-
-  /* Keep teacher notes and explanations visible and reachable in scrolling view */
-  :fullscreen .teacher-note,
-  :fullscreen .sim-info,
-  :fullscreen .desc,
-  :-webkit-full-screen .teacher-note,
-  :-webkit-full-screen .sim-info,
-  :-webkit-full-screen .desc,
-  .is-fullscreen .teacher-note,
-  .is-fullscreen .sim-info,
-  .is-fullscreen .desc {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-</style>
-</head>
-<body>
-  <header>
-    <div class="brand-box">
-      <span class="badge">LAB 44</span>
-      <h1>Human Heart Anatomy & Double Blood Circulation</h1>
-    </div>
-    <div class="vitals-banner">
-      <div class="vital-chip" id="chipPhase">PHASE: <span style="color:#fde047;" id="valPhase">VENTRICULAR SYSTOLE</span></div>
-      <div class="vital-chip pulse" id="chipHr">HR: <span style="color:#fb7185;" id="valHr">75 BPM</span></div>
-      <div class="vital-chip">BP: <span style="color:#38bdf8;" id="valBp">120 / 80 mmHg</span></div>
-      <div class="vital-chip">SpO₂: <span style="color:#4ade80;">98% Systemic</span></div>
-    </div>
-  </header>
-
-  <div class="main-stage">
-    <canvas id="heartCanvas"></canvas>
-
-    <!-- Side Medical Telemetry HUD -->
-    <div class="telemetry-hud">
-      <div class="hud-title">
-        <span>Electrocardiogram</span>
-        <span style="color:#4ade80;">LEAD II LIVE</span>
-      </div>
-      <div class="ecg-monitor">
-        <canvas id="ecgCanvas" class="ecg-canvas"></canvas>
-      </div>
-
-      <div class="legend-box">
-        <div class="legend-tag tag-deoxy">
-          <span style="width:10px;height:10px;border-radius:50%;background:#0284c7;display:inline-block;"></span>
-          <span>Deoxygenated (75% O₂)</span>
-        </div>
-        <div class="legend-tag tag-oxy">
-          <span style="width:10px;height:10px;border-radius:50%;background:#e11d48;display:inline-block;"></span>
-          <span>Oxygenated (98% O₂)</span>
-        </div>
-      </div>
-
-      <div class="info-card" id="anatomicalCard">
-        <h4 id="cardTitle">❤️ Cardiac Overview</h4>
-        <p id="cardDesc" style="color:#cbd5e1;">
-          Hover or click on any anatomical chamber, valve, or vessel to inspect its physiological function, blood pressure, and flow direction.
-        </p>
-      </div>
-
-      <div style="font-size: 10px; font-weight: 700; color: #94a3b8; line-height: 1.4;">
-        💡 <b>Teacher's Demonstration:</b> Double circulation separates pulmonary (deoxygenated to lungs) and systemic circuits (oxygenated to body).
-      </div>
-    </div>
-  </div>
-
-  <div class="dock">
-    <div class="ctrl-group">
-      <label>Heart Rate (BPM):</label>
-      <input type="range" id="sliderBpm" min="40" max="180" value="75">
-      <span id="labelBpm" style="color:#f43f5e;min-width:35px;">75</span>
-    </div>
-
-    <div style="display:flex;gap:8px;">
-      <button class="btn active" id="btnModeCross">🔬 Full Cross-Section</button>
-      <button class="btn" id="btnModeConduction">⚡ Conduction (SA/AV)</button>
-      <button class="btn" id="btnModeCircuits">🔄 Double Circuits</button>
-    </div>
-
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="btn" id="btnSteth">🩺 Stethoscope: ON</button>
-      <button class="btn" id="btnReset">↻ Reset Cardiac View</button>
-    </div>
-  </div>
-
-  <script>
-    const canvas = document.getElementById('heartCanvas');
-    const ctx = canvas.getContext('2d');
-    const ecgCanvas = document.getElementById('ecgCanvas');
-    const ecgCtx = ecgCanvas.getContext('2d');
-
-    // UI Elements
-    const sliderBpm = document.getElementById('sliderBpm');
-    const labelBpm = document.getElementById('labelBpm');
-    const valHr = document.getElementById('valHr');
-    const valPhase = document.getElementById('valPhase');
-    const valBp = document.getElementById('valBp');
-    const chipPhase = document.getElementById('chipPhase');
-    const cardTitle = document.getElementById('cardTitle');
-    const cardDesc = document.getElementById('cardDesc');
-    const btnModeCross = document.getElementById('btnModeCross');
-    const btnModeConduction = document.getElementById('btnModeConduction');
-    const btnModeCircuits = document.getElementById('btnModeCircuits');
-    const btnSteth = document.getElementById('btnSteth');
-
-    let bpm = 75;
-    let viewMode = 'cross'; // 'cross', 'conduction', 'circuits'
-    let soundEnabled = true;
-    let hoveredPart = null;
-
-    // Resize canvases
-    function resize() {
-      canvas.width = canvas.clientWidth * window.devicePixelRatio;
-      canvas.height = canvas.clientHeight * window.devicePixelRatio;
-      ecgCanvas.width = ecgCanvas.clientWidth * window.devicePixelRatio;
-      ecgCanvas.height = ecgCanvas.clientHeight * window.devicePixelRatio;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // Web Audio Stethoscope Sound Synthesis (Lub-Dub)
-    let audioCtx = null;
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    function playHeartSound(isDub = false) {
-      if (!soundEnabled) return;
-      try {
-        initAudio();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        const freq = isDub ? 75 : 55;
-        const dur = isDub ? 0.08 : 0.12;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + dur);
-
-        gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-
-        osc.start();
-        osc.stop(audioCtx.currentTime + dur);
-      } catch(e) {}
-    }
-
-    // Anatomical Hotspots
-    const ANATOMY = [
-      { id: 'aorta', name: 'Aorta & Aortic Arch', type: 'vessel', oxy: true, bp: '120/80 mmHg', desc: 'The largest systemic artery in the body. Receives high-pressure oxygenated blood from the Left Ventricle and arches over the heart, branching into the Brachiocephalic, Common Carotid, and Subclavian arteries to supply the brain and entire body.', xRel: 0.04, yRel: -0.38, rRel: 0.12 },
-      { id: 'pulmonary_artery', name: 'Pulmonary Trunk & Arteries', type: 'vessel', oxy: false, bp: '25/10 mmHg', desc: 'Arises from the Right Ventricle and branches left and right to deliver deoxygenated blood to the lungs for gas exchange (CO₂ release and O₂ absorption).', xRel: -0.08, yRel: -0.22, rRel: 0.11 },
-      { id: 'superior_vena_cava', name: 'Superior Vena Cava (SVC)', type: 'vessel', oxy: false, bp: '4-8 mmHg', desc: 'Major vein draining deoxygenated blood from the head, neck, arms, and upper chest back into the Right Atrium.', xRel: -0.26, yRel: -0.32, rRel: 0.09 },
-      { id: 'right_atrium', name: 'Right Atrium (RA)', type: 'chamber', oxy: false, bp: '2-6 mmHg', desc: 'Receives deoxygenated venous return from the Superior and Inferior Vena Cava and coronary sinus. Contracts to pump blood through the Tricuspid Valve into the Right Ventricle.', xRel: -0.22, yRel: -0.06, rRel: 0.14 },
-      { id: 'tricuspid_valve', name: 'Tricuspid Valve', type: 'valve', oxy: false, desc: 'Atrioventricular valve with three fibrous cusps anchored by chordae tendineae. Prevents backflow of blood from the Right Ventricle into the Right Atrium during systole.', xRel: -0.16, yRel: 0.12, rRel: 0.08 },
-      { id: 'right_ventricle', name: 'Right Ventricle (RV)', type: 'chamber', oxy: false, bp: '25/4 mmHg', desc: 'Crescent-shaped muscular pump that contracts to eject deoxygenated blood through the pulmonary semilunar valve into the low-resistance pulmonary circuit.', xRel: -0.15, yRel: 0.28, rRel: 0.15 },
-      { id: 'pulmonary_veins', name: 'Pulmonary Veins (4 Vessels)', type: 'vessel', oxy: true, bp: '8-12 mmHg', desc: 'Four oxygen-rich pulmonary veins returning freshly oxygenated blood from the alveolar capillary beds of both lungs into the Left Atrium.', xRel: 0.26, yRel: -0.18, rRel: 0.09 },
-      { id: 'left_atrium', name: 'Left Atrium (LA)', type: 'chamber', oxy: true, bp: '6-10 mmHg', desc: 'Smooth-walled posterior cardiac chamber receiving oxygenated pulmonary return. Contracts to pump blood past the Bicuspid (Mitral) valve into the Left Ventricle.', xRel: 0.20, yRel: -0.06, rRel: 0.13 },
-      { id: 'mitral_valve', name: 'Bicuspid (Mitral) Valve', type: 'valve', oxy: true, desc: 'Two-cusp high-pressure valve anchored by stout papillary muscles. Shuts forcefully during left ventricular contraction to create the first heart sound (S1 "LUB").', xRel: 0.14, yRel: 0.12, rRel: 0.08 },
-      { id: 'left_ventricle', name: 'Left Ventricle (LV)', type: 'chamber', oxy: true, bp: '120/8 mmHg', desc: 'The most powerful, thick-walled conical cardiac chamber (3x thicker myocardium than RV). Generates immense hydrostatic pressure to pump oxygenated blood through the Aortic Valve to the entire body.', xRel: 0.16, yRel: 0.32, rRel: 0.17 },
-      { id: 'septum', name: 'Interventricular Septum', type: 'myocardium', oxy: 'divider', desc: 'Stout muscular partition separating the left and right ventricles, preventing mixing of oxygenated and deoxygenated blood and housing the Bundle of His conduction pathways.', xRel: 0.0, yRel: 0.24, rRel: 0.11 }
-    ];
-
-    // Flowing Blood Cells Particles (Hundreds of erythrocyte tokens)
-    const bloodParticles = [];
-    for (let i = 0; i < 220; i++) {
-      bloodParticles.push({
-        circuit: i % 2 === 0 ? 'pulmonary' : 'systemic',
-        progress: Math.random(),
-        speed: 0.0018 + Math.random() * 0.0012,
-        wobble: Math.random() * Math.PI * 2,
-        size: 2.8 + Math.random() * 2.2
-      });
-    }
-
-    // Cardiac Cycle Simulation Timing
-    let cyclePhase = 0; // 0 to 1
-    let lastLub = false;
-    let lastDub = false;
-
-    // ECG Telemetry Data
-    const ecgBuffer = [];
-    const maxEcgPoints = 300;
-    for (let i = 0; i < maxEcgPoints; i++) ecgBuffer.push(0);
-
-    function getEcgVoltage(phase) {
-      // P wave (atrial depolarization) ~ phase 0.08 - 0.18
-      if (phase >= 0.08 && phase <= 0.16) {
-        return Math.sin((phase - 0.08) / 0.08 * Math.PI) * 0.25;
-      }
-      // PR segment ~ 0.16 - 0.25 (flat baseline)
-      if (phase > 0.16 && phase < 0.26) return 0;
-      // QRS Complex (ventricular depolarization) ~ 0.26 - 0.36
-      if (phase >= 0.26 && phase < 0.28) {
-        return -0.15; // Q
-      }
-      if (phase >= 0.28 && phase < 0.32) {
-        return 1.0; // R peak
-      }
-      if (phase >= 0.32 && phase < 0.35) {
-        return -0.35; // S
-      }
-      // ST segment ~ 0.35 - 0.45 (baseline)
-      if (phase >= 0.35 && phase < 0.45) return 0;
-      // T wave (ventricular repolarization) ~ 0.45 - 0.65
-      if (phase >= 0.45 && phase <= 0.65) {
-        return Math.sin((phase - 0.45) / 0.20 * Math.PI) * 0.35;
-      }
-      // Diastole flat baseline
-      return 0;
-    }
-
-    // Input handlers
-    sliderBpm.addEventListener('input', (e) => {
-      bpm = parseInt(e.target.value);
-      labelBpm.textContent = bpm;
-      valHr.textContent = `${bpm} BPM`;
-    });
-
-    btnModeCross.addEventListener('click', () => {
-      viewMode = 'cross';
-      [btnModeCross, btnModeConduction, btnModeCircuits].forEach(b => b.classList.remove('active'));
-      btnModeCross.classList.add('active');
-    });
-    btnModeConduction.addEventListener('click', () => {
-      viewMode = 'conduction';
-      [btnModeCross, btnModeConduction, btnModeCircuits].forEach(b => b.classList.remove('active'));
-      btnModeConduction.classList.add('active');
-    });
-    btnModeCircuits.addEventListener('click', () => {
-      viewMode = 'circuits';
-      [btnModeCross, btnModeConduction, btnModeCircuits].forEach(b => b.classList.remove('active'));
-      btnModeCircuits.classList.add('active');
-    });
-
-    btnSteth.addEventListener('click', () => {
-      initAudio();
-      soundEnabled = !soundEnabled;
-      btnSteth.textContent = soundEnabled ? '🩺 Stethoscope: ON' : '🩺 Stethoscope: MUTED';
-      btnSteth.style.background = soundEnabled ? '' : '#475569';
-    });
-
-    document.getElementById('btnReset').addEventListener('click', () => {
-      bpm = 75;
-      sliderBpm.value = 75;
-      labelBpm.textContent = 75;
-      valHr.textContent = '75 BPM';
-      hoveredPart = null;
-      cardTitle.textContent = '❤️ Cardiac Overview';
-      cardDesc.textContent = 'Hover or click on any anatomical chamber, valve, or vessel to inspect its physiological function, blood pressure, and flow direction.';
-    });
-
-    // Mouse interactive inspection
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const mx = (e.clientX - rect.left) * scaleX;
-      const my = (e.clientY - rect.top) * scaleY;
-
-      const cx = canvas.width * 0.46;
-      const cy = canvas.height * 0.50;
-      const H = Math.min(canvas.width, canvas.height) * 0.65;
-
-      let match = null;
-      for (const part of ANATOMY) {
-        const px = cx + part.xRel * H;
-        const py = cy + part.yRel * H;
-        const dist = Math.hypot(mx - px, my - py);
-        if (dist < part.rRel * H) {
-          match = part;
-          break;
-        }
-      }
-
-      if (match !== hoveredPart) {
-        hoveredPart = match;
-        if (match) {
-          cardTitle.textContent = match.name;
-          const oxyLabel = match.oxy === true ? '🔴 Oxygenated (High O₂)' : (match.oxy === false ? '🔵 Deoxygenated (Low O₂)' : 'Partition');
-          const bpStr = match.bp ? ` | Pressure: ${match.bp}` : '';
-          cardDesc.innerHTML = `<span style="color:#fde047;font-weight:bold;">${oxyLabel}${bpStr}</span><br><br>${match.desc}`;
-        }
-      }
-    });
-
-    // Main 60 FPS Render Loop
-    let lastTime = performance.now();
-
-    function loop(now) {
-      const dt = Math.min((now - lastTime) / 1000, 0.05);
-      lastTime = now;
-
-      const cycleDuration = 60 / bpm;
-      cyclePhase = (cyclePhase + dt / cycleDuration) % 1.0;
-
-      // Heart contraction pulse factor
-      // Ventricular Systole: phase ~ 0.28 to 0.45
-      const isVentricularSystole = (cyclePhase >= 0.26 && cyclePhase <= 0.46);
-      const isAtrialSystole = (cyclePhase >= 0.08 && cyclePhase <= 0.24);
-
-      if (isVentricularSystole) {
-        valPhase.textContent = 'VENTRICULAR SYSTOLE (PUMP)';
-        valPhase.style.color = '#f43f5e';
-        valBp.textContent = '120 / 80 mmHg';
-        chipPhase.style.borderColor = '#f43f5e';
-        if (!lastLub) {
-          playHeartSound(false); // S1 LUB
-          lastLub = true;
-          lastDub = false;
-        }
-      } else if (isAtrialSystole) {
-        valPhase.textContent = 'ATRIAL SYSTOLE (INFLOW)';
-        valPhase.style.color = '#38bdf8';
-        valBp.textContent = '80 / 60 mmHg';
-        chipPhase.style.borderColor = '#38bdf8';
-      } else {
-        valPhase.textContent = 'DIASTOLE (FILLING)';
-        valPhase.style.color = '#4ade80';
-        valBp.textContent = '75 / 55 mmHg';
-        chipPhase.style.borderColor = '#4ade80';
-        if (cyclePhase > 0.48 && !lastDub) {
-          playHeartSound(true); // S2 DUB (Semilunar valves snap shut)
-          lastDub = true;
-          lastLub = false;
-        }
-      }
-
-      // Systole squeeze contraction amplitude
-      let squeeze = 1.0;
-      if (isVentricularSystole) {
-        const p = (cyclePhase - 0.26) / 0.20;
-        squeeze = 1.0 - Math.sin(p * Math.PI) * 0.08;
-      } else if (isAtrialSystole) {
-        const p = (cyclePhase - 0.08) / 0.16;
-        squeeze = 1.0 + Math.sin(p * Math.PI) * 0.03;
-      }
-
-      // 1. Clear Stage
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw Atmospheric Grid
-      ctx.strokeStyle = 'rgba(244, 63, 94, 0.06)';
-      ctx.lineWidth = 1;
-      const step = 40 * window.devicePixelRatio;
-      for (let x = 0; x < canvas.width; x += step) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += step) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-      }
-
-      // Center Coordinates for Heart
-      const cx = canvas.width * 0.46;
-      const cy = canvas.height * 0.50;
-      const scaleH = Math.min(canvas.width, canvas.height) * 0.58;
-
-      // 2. Draw Realistic Anatomical Heart
-      drawRealisticHeart(cx, cy, scaleH, squeeze, isVentricularSystole, isAtrialSystole);
-
-      // 3. Draw Blood Flowing Cells
-      drawBloodCells(cx, cy, scaleH, isVentricularSystole);
-
-      // 4. Draw Electrical Conduction (SA/AV Nodes & Purkinje fibers if in mode)
-      if (viewMode === 'conduction') {
-        drawConductionSystem(cx, cy, scaleH, cyclePhase);
-      }
-
-      // 5. Draw Interactive Labels & Hotspots
-      drawAnatomicalLabels(cx, cy, scaleH);
-
-      // 6. Update & Render ECG Monitor
-      updateEcgMonitor();
-
-      requestAnimationFrame(loop);
-    }
-
-    // Realistic Anatomical Heart Render Function
-    function drawRealisticHeart(cx, cy, H, squeeze, isVentricularSystole, isAtrialSystole) {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(squeeze, squeeze);
-
-      // Great Vessels (Behind the main cardiac mass)
-      // A. Superior Vena Cava (SVC) - Deep Blue
-      const svcGrad = ctx.createLinearGradient(-H * 0.30, -H * 0.55, -H * 0.20, -H * 0.15);
-      svcGrad.addColorStop(0, '#0284c7');
-      svcGrad.addColorStop(0.5, '#0369a1');
-      svcGrad.addColorStop(1, '#082f49');
-      ctx.fillStyle = svcGrad;
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.32, -H * 0.58);
-      ctx.bezierCurveTo(-H * 0.33, -H * 0.35, -H * 0.30, -H * 0.20, -H * 0.22, -H * 0.10);
-      ctx.lineTo(-H * 0.12, -H * 0.10);
-      ctx.bezierCurveTo(-H * 0.18, -H * 0.25, -H * 0.20, -H * 0.40, -H * 0.20, -H * 0.58);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
-
-      // B. Inferior Vena Cava (IVC) - Deep Blue (Bottom Posterior)
-      ctx.beginPath();
-      ctx.rect(-H * 0.28, H * 0.25, H * 0.12, H * 0.22);
-      ctx.fillStyle = '#0369a1'; ctx.fill();
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.stroke();
-
-      // C. Pulmonary Veins (Oxygenated Red) - Posterior Left Atrium Inlets
-      const pvGrad = ctx.createLinearGradient(H * 0.15, -H * 0.30, H * 0.38, -H * 0.10);
-      pvGrad.addColorStop(0, '#e11d48');
-      pvGrad.addColorStop(1, '#881337');
-      ctx.fillStyle = pvGrad;
-      // Right Pulmonary Veins (appears left)
-      ctx.beginPath();
-      ctx.ellipse(-H * 0.32, -H * 0.05, H * 0.06, H * 0.09, Math.PI * 0.1, 0, Math.PI * 2);
-      ctx.fill(); ctx.strokeStyle = '#fda4af'; ctx.lineWidth = 2; ctx.stroke();
-      // Left Pulmonary Veins (appears right)
-      ctx.beginPath();
-      ctx.ellipse(H * 0.28, -H * 0.08, H * 0.06, H * 0.09, -Math.PI * 0.1, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-
-      // D. Aorta Arch (High Pressure Crimson Arch with 3 Supra-Aortic Branches)
-      const aortaGrad = ctx.createLinearGradient(-H * 0.10, -H * 0.60, H * 0.25, -H * 0.15);
-      aortaGrad.addColorStop(0, '#f43f5e');
-      aortaGrad.addColorStop(0.4, '#e11d48');
-      aortaGrad.addColorStop(0.8, '#be123c');
-      aortaGrad.addColorStop(1, '#881337');
-
-      ctx.fillStyle = aortaGrad;
-      ctx.beginPath();
-      // Main Arch Curve
-      ctx.moveTo(-H * 0.08, -H * 0.22);
-      ctx.bezierCurveTo(-H * 0.10, -H * 0.52, H * 0.05, -H * 0.62, H * 0.22, -H * 0.50);
-      ctx.bezierCurveTo(H * 0.32, -H * 0.40, H * 0.28, -H * 0.20, H * 0.22, -H * 0.10);
-      ctx.lineTo(H * 0.12, -H * 0.10);
-      ctx.bezierCurveTo(H * 0.16, -H * 0.25, H * 0.20, -H * 0.35, H * 0.14, -H * 0.42);
-      ctx.bezierCurveTo(H * 0.04, -H * 0.50, -H * 0.02, -H * 0.42, 0, -H * 0.20);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = '#ffe4e6'; ctx.lineWidth = 3; ctx.stroke();
-
-      // 3 Supra-Aortic Arterial Branches (Brachiocephalic, Carotid, Subclavian)
-      drawAorticBranch(-H * 0.02, -H * 0.52, -H * 0.04, -H * 0.68, H * 0.04);
-      drawAorticBranch(H * 0.06, -H * 0.55, H * 0.06, -H * 0.69, H * 0.035);
-      drawAorticBranch(H * 0.14, -H * 0.52, H * 0.16, -H * 0.67, H * 0.035);
-
-      // E. Pulmonary Trunk & Arteries (Crosses in front of ascending aorta)
-      const ptGrad = ctx.createLinearGradient(-H * 0.20, -H * 0.35, H * 0.15, -H * 0.15);
-      ptGrad.addColorStop(0, '#0284c7');
-      ptGrad.addColorStop(0.6, '#0369a1');
-      ptGrad.addColorStop(1, '#075985');
-      ctx.fillStyle = ptGrad;
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.14, -H * 0.12);
-      ctx.bezierCurveTo(-H * 0.16, -H * 0.32, -H * 0.08, -H * 0.40, H * 0.08, -H * 0.32);
-      ctx.lineTo(H * 0.06, -H * 0.22);
-      ctx.bezierCurveTo(-H * 0.05, -H * 0.28, -H * 0.08, -H * 0.24, -H * 0.06, -H * 0.12);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
-
-      // F. Main Myocardial Muscle Body (Cross-Sectioned Interior + Muscular Walls)
-      // Realistic Anatomical Heart Contour
-      const heartMyoGrad = ctx.createRadialGradient(H * 0.05, H * 0.15, H * 0.1, 0, H * 0.1, H * 0.6);
-      heartMyoGrad.addColorStop(0, '#be123c');
-      heartMyoGrad.addColorStop(0.5, '#9f1239');
-      heartMyoGrad.addColorStop(0.85, '#881337');
-      heartMyoGrad.addColorStop(1, '#4c0519');
-
-      ctx.fillStyle = heartMyoGrad;
-      ctx.beginPath();
-      // Base / Atria level
-      ctx.moveTo(-H * 0.30, -H * 0.08);
-      // Right border (curved outward)
-      ctx.bezierCurveTo(-H * 0.38, H * 0.10, -H * 0.30, H * 0.35, -H * 0.12, H * 0.48);
-      // Apex (Pointing downward and left anatomically)
-      ctx.bezierCurveTo(-H * 0.04, H * 0.54, H * 0.04, H * 0.56, H * 0.10, H * 0.52);
-      // Left border (thick LV curvature)
-      ctx.bezierCurveTo(H * 0.35, H * 0.40, H * 0.38, H * 0.18, H * 0.32, -H * 0.05);
-      // Top base contour
-      ctx.bezierCurveTo(H * 0.20, -H * 0.15, -H * 0.15, -H * 0.18, -H * 0.30, -H * 0.08);
-      ctx.closePath();
-      ctx.shadowColor = 'rgba(225, 29, 72, 0.4)';
-      ctx.shadowBlur = 28;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = '#fda4af';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // 4 Internal Anatomical Chambers (Hollow cavities with realistic mucosal shading)
-      // 1. Right Atrium (RA) - Top Left
-      drawInternalChamber(-H * 0.20, -H * 0.04, H * 0.12, H * 0.10, '#0c2a4d', '#0284c7');
-      // 2. Right Ventricle (RV) - Bottom Left
-      drawInternalChamber(-H * 0.15, H * 0.24, H * 0.13, H * 0.16, '#082544', '#0369a1');
-      // 3. Left Atrium (LA) - Top Right
-      drawInternalChamber(H * 0.18, -H * 0.04, H * 0.12, H * 0.10, '#4c0519', '#e11d48');
-      // 4. Left Ventricle (LV) - Bottom Right (Massive thick wall)
-      drawInternalChamber(H * 0.15, H * 0.24, H * 0.14, H * 0.18, '#3d0413', '#be123c');
-
-      // Interventricular Septum (Thick central muscle partition)
-      ctx.fillStyle = '#650821';
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.02, H * 0.02);
-      ctx.lineTo(H * 0.04, H * 0.02);
-      ctx.bezierCurveTo(H * 0.04, H * 0.30, H * 0.06, H * 0.46, H * 0.08, H * 0.50);
-      ctx.lineTo(-H * 0.02, H * 0.46);
-      ctx.bezierCurveTo(-H * 0.03, H * 0.30, -H * 0.03, H * 0.15, -H * 0.02, H * 0.02);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = '#9f1239'; ctx.lineWidth = 2; ctx.stroke();
-
-      // Trabeculae Carneae & Papillary Muscles with Chordae Tendineae
-      drawPapillaryMuscles(-H * 0.15, H * 0.24, H * 0.10, H);
-      drawPapillaryMuscles(H * 0.15, H * 0.24, H * 0.12, H);
-
-      // Cardiac Valves (Dynamic opening/closing based on cycle phase)
-      // A. Tricuspid Valve (RA to RV)
-      const tricuspidOpen = !isVentricularSystole;
-      drawHeartValve(-H * 0.16, H * 0.08, H * 0.11, tricuspidOpen, '#e2e8f0', 'Tricuspid');
-
-      // B. Bicuspid / Mitral Valve (LA to LV)
-      const mitralOpen = !isVentricularSystole;
-      drawHeartValve(H * 0.16, H * 0.08, H * 0.11, mitralOpen, '#e2e8f0', 'Bicuspid');
-
-      // C. Pulmonary Semilunar Valve (RV to Pulmonary Artery)
-      const semilunarOpen = isVentricularSystole;
-      drawHeartValve(-H * 0.08, -H * 0.08, H * 0.08, semilunarOpen, '#38bdf8', 'Pulmonary');
-
-      // D. Aortic Semilunar Valve (LV to Aorta)
-      drawHeartValve(H * 0.06, -H * 0.06, H * 0.08, semilunarOpen, '#fda4af', 'Aortic');
-
-      // External Epicardial Coronary Blood Vessels (Realistic branched network)
-      drawCoronaryArteries(H);
-
-      ctx.restore();
-    }
-
-    // Helper: Aortic Arch Branches
-    function drawAorticBranch(x1, y1, x2, y2, width) {
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = width;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-      ctx.strokeStyle = '#ffe4e6';
-      ctx.lineWidth = width * 0.3;
-      ctx.stroke();
-    }
-
-    // Helper: Hollow Chamber Cavity
-    function drawInternalChamber(cx, cy, rx, ry, fill, border) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-      ctx.fillStyle = fill;
-      ctx.fill();
-      ctx.strokeStyle = border;
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // Helper: Papillary Muscles & Chordae Tendineae (Fibrous strands)
-    function drawPapillaryMuscles(x, y, radius, H) {
-      ctx.save();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.lineWidth = 1.2;
-      // 3 fibrous chordae lines
-      for (let i = -1; i <= 1; i++) {
-        ctx.beginPath();
-        ctx.moveTo(x + i * H * 0.03, y + H * 0.08);
-        ctx.lineTo(x + i * H * 0.02, y - H * 0.06);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
-
-    // Helper: Dynamic Cardiac Valve
-    function drawHeartValve(cx, cy, width, isOpen, color, name) {
-      ctx.save();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 3.5;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      if (isOpen) {
-        // Flaps open downward into ventricle
-        ctx.moveTo(cx - width / 2, cy);
-        ctx.lineTo(cx - width * 0.15, cy + 12);
-        ctx.moveTo(cx + width / 2, cy);
-        ctx.lineTo(cx + width * 0.15, cy + 12);
-      } else {
-        // Flaps sealed tight horizontally
-        ctx.moveTo(cx - width / 2, cy);
-        ctx.lineTo(cx, cy + 3);
-        ctx.lineTo(cx + width / 2, cy);
-      }
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // Helper: Branching Coronary Blood Vessels on Epicardium
-    function drawCoronaryArteries(H) {
-      ctx.save();
-      ctx.strokeStyle = 'rgba(253, 224, 71, 0.85)'; // Anterior Interventricular Artery (Left anterior descending - LAD)
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.02, H * 0.05);
-      ctx.bezierCurveTo(H * 0.01, H * 0.20, -H * 0.01, H * 0.35, H * 0.04, H * 0.48);
-      ctx.stroke();
-
-      // Small branching capillaries
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.01, H * 0.18);
-      ctx.lineTo(-H * 0.06, H * 0.24);
-      ctx.moveTo(0, H * 0.28);
-      ctx.lineTo(H * 0.05, H * 0.34);
-      ctx.stroke();
-
-      // Great Cardiac Vein (Blue companion vessel)
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
-      ctx.lineWidth = 1.8;
-      ctx.beginPath();
-      ctx.moveTo(H * 0.01, H * 0.06);
-      ctx.bezierCurveTo(H * 0.03, H * 0.22, 0, H * 0.36, H * 0.06, H * 0.47);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    // Flowing Blood Cells Particles (Hundreds of Erythrocytes)
-    function drawBloodCells(cx, cy, H, isSystole) {
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      const pulseSpeedMultiplier = isSystole ? 2.5 : 0.8;
-
-      for (const p of bloodParticles) {
-        p.progress = (p.progress + p.speed * pulseSpeedMultiplier * (bpm / 75)) % 1.0;
-        let pos;
-
-        if (p.circuit === 'pulmonary') {
-          // Deoxygenated blue loop: SVC/IVC -> RA -> RV -> Pulmonary Artery
-          pos = getPulmonaryPoint(p.progress, H, p.wobble);
-          ctx.fillStyle = '#38bdf8';
-          ctx.shadowColor = 'rgba(2, 132, 199, 0.6)';
-        } else {
-          // Oxygenated red loop: Pulmonary Veins -> LA -> LV -> Aorta
-          pos = getSystemicPoint(p.progress, H, p.wobble);
-          ctx.fillStyle = '#f43f5e';
-          ctx.shadowColor = 'rgba(244, 63, 94, 0.6)';
-        }
-
-        ctx.shadowBlur = 6;
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
-
-    function getPulmonaryPoint(t, H, wobble) {
-      const wob = Math.sin(t * 20 + wobble) * 6;
-      if (t < 0.25) {
-        // Down SVC into RA
-        const u = t / 0.25;
-        return { x: -H * 0.24 + wob, y: -H * 0.45 + u * H * 0.38 };
-      } else if (t < 0.50) {
-        // RA down into RV
-        const u = (t - 0.25) / 0.25;
-        return { x: -H * 0.22 + u * H * 0.07 + wob, y: -H * 0.07 + u * H * 0.30 };
-      } else if (t < 0.80) {
-        // RV up through Pulmonary Semilunar valve into Pulmonary Trunk
-        const u = (t - 0.50) / 0.30;
-        return { x: -H * 0.15 + u * H * 0.08 + wob, y: H * 0.23 - u * H * 0.45 };
-      } else {
-        // Into Pulmonary branches towards lungs
-        const u = (t - 0.80) / 0.20;
-        return { x: -H * 0.07 - u * H * 0.15 + wob, y: -H * 0.22 - u * H * 0.14 };
-      }
-    }
-
-    function getSystemicPoint(t, H, wobble) {
-      const wob = Math.cos(t * 20 + wobble) * 6;
-      if (t < 0.25) {
-        // Pulmonary veins into LA
-        const u = t / 0.25;
-        return { x: H * 0.32 - u * H * 0.14 + wob, y: -H * 0.15 + u * H * 0.10 };
-      } else if (t < 0.50) {
-        // LA down into LV
-        const u = (t - 0.25) / 0.25;
-        return { x: H * 0.18 - u * H * 0.03 + wob, y: -H * 0.05 + u * H * 0.28 };
-      } else if (t < 0.80) {
-        // LV up into Aorta arch
-        const u = (t - 0.50) / 0.30;
-        return { x: H * 0.15 - u * H * 0.18 + wob, y: H * 0.23 - u * H * 0.60 };
-      } else {
-        // Around Aorta Arch out to carotid and systemic body
-        const u = (t - 0.80) / 0.20;
-        return { x: -H * 0.03 + u * H * 0.22 + wob, y: -H * 0.37 - u * H * 0.18 };
-      }
-    }
-
-    // Conduction System Mode (SA Node, AV Node, Bundle of His, Purkinje Fibers)
-    function drawConductionSystem(cx, cy, H, phase) {
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      const saActive = (phase >= 0.05 && phase <= 0.15);
-      const avActive = (phase >= 0.18 && phase <= 0.28);
-      const hisActive = (phase >= 0.28 && phase <= 0.42);
-
-      // SA Node (Sinoatrial node - Pacemaker) top of RA
-      ctx.fillStyle = saActive ? '#fef08a' : '#eab308';
-      ctx.shadowColor = '#facc15';
-      ctx.shadowBlur = saActive ? 28 : 10;
-      ctx.beginPath();
-      ctx.arc(-H * 0.25, -H * 0.15, saActive ? 12 : 8, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 10px sans-serif';
-      ctx.fillText('SA NODE (Pacemaker)', -H * 0.42, -H * 0.18);
-
-      // Internodal Pathways
-      ctx.strokeStyle = saActive ? '#fef08a' : 'rgba(250, 204, 21, 0.4)';
-      ctx.lineWidth = 3;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.25, -H * 0.15);
-      ctx.lineTo(-H * 0.04, H * 0.02);
-      ctx.stroke();
-
-      // AV Node (Atrioventricular node)
-      ctx.fillStyle = avActive ? '#fef08a' : '#eab308';
-      ctx.shadowBlur = avActive ? 28 : 10;
-      ctx.beginPath();
-      ctx.arc(-H * 0.04, H * 0.02, avActive ? 12 : 8, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillText('AV NODE', -H * 0.15, H * 0.02);
-
-      // Bundle of His & Purkinje Fibers down septum
-      ctx.strokeStyle = hisActive ? '#38bdf8' : 'rgba(56, 189, 248, 0.4)';
-      ctx.lineWidth = hisActive ? 4 : 2;
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      ctx.moveTo(-H * 0.04, H * 0.02);
-      ctx.lineTo(H * 0.02, H * 0.18);
-      // Left and Right Bundle Branches
-      ctx.lineTo(-H * 0.10, H * 0.38);
-      ctx.moveTo(H * 0.02, H * 0.18);
-      ctx.lineTo(H * 0.14, H * 0.38);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    // Draw Interactive Labels & Hotspots
-    function drawAnatomicalLabels(cx, cy, H) {
-      ctx.save();
-      for (const part of ANATOMY) {
-        const px = cx + part.xRel * H;
-        const py = cy + part.yRel * H;
-        const isHovered = hoveredPart && hoveredPart.id === part.id;
-
-        // Glowing interactive pinpoint
-        ctx.beginPath();
-        ctx.arc(px, py, isHovered ? 8 : 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = isHovered ? '#ffffff' : (part.oxy === true ? '#f43f5e' : (part.oxy === false ? '#38bdf8' : '#fbbf24'));
-        ctx.shadowColor = isHovered ? '#ffffff' : (part.oxy === true ? '#f43f5e' : '#38bdf8');
-        ctx.shadowBlur = isHovered ? 16 : 8;
-        ctx.fill();
-
-        if (isHovered) {
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(px, py, 14, 0, Math.PI * 2);
-          ctx.stroke();
-
-          // Label tooltip
-          ctx.font = 'bold 12px "Segoe UI", sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.shadowColor = 'rgba(0,0,0,0.8)';
-          ctx.shadowBlur = 6;
-          ctx.fillText(part.name, px + 18, py + 4);
-        }
-      }
-      ctx.restore();
-    }
-
-    // ECG Telemetry Plotter
-    function updateEcgMonitor() {
-      const v = getEcgVoltage(cyclePhase);
-      ecgBuffer.shift();
-      ecgBuffer.push(v);
-
-      ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
-
-      // Grid lines
-      ecgCtx.strokeStyle = 'rgba(244, 63, 94, 0.15)';
-      ecgCtx.lineWidth = 1;
-      const gStep = 15 * window.devicePixelRatio;
-      for (let x = 0; x < ecgCanvas.width; x += gStep) {
-        ecgCtx.beginPath(); ecgCtx.moveTo(x, 0); ecgCtx.lineTo(x, ecgCanvas.height); ecgCtx.stroke();
-      }
-      for (let y = 0; y < ecgCanvas.height; y += gStep) {
-        ecgCtx.beginPath(); ecgCtx.moveTo(0, y); ecgCtx.lineTo(ecgCanvas.width, y); ecgCtx.stroke();
-      }
-
-      // ECG Neon Trace
-      ecgCtx.strokeStyle = '#4ade80';
-      ecgCtx.shadowColor = '#4ade80';
-      ecgCtx.shadowBlur = 8;
-      ecgCtx.lineWidth = 2 * window.devicePixelRatio;
-      ecgCtx.beginPath();
-
-      const midY = ecgCanvas.height * 0.65;
-      const amp = ecgCanvas.height * 0.45;
-      const dx = ecgCanvas.width / (maxEcgPoints - 1);
-
-      for (let i = 0; i < ecgBuffer.length; i++) {
-        const x = i * dx;
-        const y = midY - ecgBuffer[i] * amp;
-        if (i === 0) ecgCtx.moveTo(x, y);
-        else ecgCtx.lineTo(x, y);
-      }
-      ecgCtx.stroke();
-
-      // Lead cursor blip
-      const lastX = ecgCanvas.width - 2;
-      const lastY = midY - ecgBuffer[ecgBuffer.length - 1] * amp;
-      ecgCtx.fillStyle = '#ffffff';
-      ecgCtx.beginPath();
-      ecgCtx.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
-      ecgCtx.fill();
-    }
-
-    requestAnimationFrame(loop);
-  </script>
-
-
-
-
-<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
-<script id="genz-simulation-fullscreen-engine">
-(function() {
-  'use strict';
-
-  function findSimulationRootContainer(triggerEl) {
-    if (triggerEl) {
-      if (typeof triggerEl === "string") {
-        var cleanId = triggerEl.replace(/^fs-?/, "");
-        var byId = document.getElementById(cleanId) ||
-                   document.getElementById(triggerEl) ||
-                   document.getElementById(cleanId + "SimBox") ||
-                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
-                   document.getElementById("box" + cleanId) ||
-                   document.getElementById("simBox" + cleanId) ||
-                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-        if (byId) return byId;
-      }
-      if (triggerEl.nodeType === 1) {
-        if (triggerEl.dataset && triggerEl.dataset.fs) {
-          var targetByFs = document.getElementById(triggerEl.dataset.fs);
-          if (targetByFs) return targetByFs;
-        }
-        if (triggerEl.dataset && triggerEl.dataset.target) {
-          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
-          if (targetByData) return targetByData;
-        }
-        var found = triggerEl.closest(
-          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
-        );
-        if (found && found !== document.body && found !== document.documentElement) {
-          return found;
-        }
-      }
-    }
-    var candidate = document.querySelector(".sim-box") ||
-                    document.querySelector(".sim-stage") ||
-                    document.getElementById("simContainer") ||
-                    document.getElementById("sim") ||
-                    document.querySelector(".main-stage") ||
-                    document.querySelector(".stage") ||
-                    document.querySelector(".lab") ||
-                    document.querySelector(".card-board") ||
-                    document.querySelector(".simulation") ||
-                    document.querySelector(".sim") ||
-                    document.querySelector(".simulation-wrapper") ||
-                    document.body;
-    return candidate;
-  }
-
-  function toggleSimulationFullscreen(triggerEl) {
-    try {
-      if (!document.fullscreenElement) {
-        var container = findSimulationRootContainer(triggerEl);
-        if (!container) container = document.body;
-
-        container.classList.add("simulation-wrapper");
-        container.classList.add("is-fullscreen");
-        container.setAttribute("data-is-fullscreen", "true");
-        document.documentElement.classList.add("in-fullscreen-mode");
-        document.body.classList.add("in-fullscreen-mode");
-
-        if (container.requestFullscreen) {
-          container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed on container:", err);
-            if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-            } else if (document.body && document.body.requestFullscreen) {
-              document.body.requestFullscreen().catch(function(e) { console.error(e); });
-            }
-          });
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function(err) {
-            console.error("Exit fullscreen error:", err);
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Fullscreen toggle error:", err);
-    }
-  }
-
-  window.toggleFullscreen = function(target) {
-    toggleSimulationFullscreen(target || this);
-  };
-  window.toggleSimFullscreen = function(boxId) {
-    var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el || boxId);
-  };
-  window.toggleFs = function() {
-    toggleSimulationFullscreen(this);
-  };
-  window.openFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) {
-        ov.classList.remove("active");
-        ov.style.display = "none";
-      }
-      var clean = id.replace(/^fs-?/, "");
-      var target = document.getElementById(clean) ||
-                   document.getElementById(clean + "SimBox") ||
-                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
-                   document.getElementById("box" + clean) ||
-                   document.getElementById("simBox" + clean) ||
-                   document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
-                   document.getElementById(id);
-      toggleSimulationFullscreen(target || clean);
-      return;
-    }
-    toggleSimulationFullscreen(this);
-  };
-  window.launchFullscreen = function(topicId) {
-    window.openFullscreen(topicId);
-  };
-  window.closeFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) ov.classList.remove("active");
-    }
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-  window.exitSimFullscreen = function() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-
-  function resizeAndRedrawSimulationCanvases() {
-    window.dispatchEvent(new Event("resize"));
-
-    document.querySelectorAll("canvas").forEach(function(cv) {
-      try {
-        var rect = cv.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          if (cv.width === 0 || cv.height === 0) {
-            cv.width = rect.width;
-            cv.height = rect.height;
-          }
-        }
-      } catch(e) {}
-    });
-
-    var redrawFns = [
-      "resize", "onResize", "onWindowResize", "resizeCanvas",
-      "draw", "render", "animate", "redraw", "update", "drawCanvas",
-      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
-      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
-    ];
-    redrawFns.forEach(function(fn) {
-      if (typeof window[fn] === "function") {
-        try { window[fn](); } catch(e) {}
-      }
-    });
-
-    if (window.camera && window.renderer) {
-      try {
-        var rw = window.innerWidth;
-        var rh = window.innerHeight;
-        window.camera.aspect = rw / rh;
-        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
-        window.renderer.setSize(rw, rh);
-      } catch(e) {}
-    }
-  }
-
-  document.addEventListener("fullscreenchange", function() {
-    var isFs = !!document.fullscreenElement;
-    if (isFs) {
-      document.documentElement.classList.add("in-fullscreen-mode");
-      document.body.classList.add("in-fullscreen-mode");
-      if (document.fullscreenElement) {
-        document.fullscreenElement.classList.add("is-fullscreen");
-        document.fullscreenElement.classList.add("simulation-wrapper");
-        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
-      }
-    } else {
-      document.documentElement.classList.remove("in-fullscreen-mode");
-      document.body.classList.remove("in-fullscreen-mode");
-      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
-        el.classList.remove("is-fullscreen");
-        el.removeAttribute("data-is-fullscreen");
-      });
-    }
-
-    var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
-    );
-    fsButtons.forEach(function(btn) {
-      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
-        return;
-      }
-      if (isFs) {
-        btn.innerHTML = "✕ Exit Fullscreen";
-        btn.classList.add("is-fullscreen-active");
-      } else {
-        btn.innerHTML = "⛶ Fullscreen";
-        btn.classList.remove("is-fullscreen-active");
-      }
-    });
-
-    resizeAndRedrawSimulationCanvases();
-    setTimeout(resizeAndRedrawSimulationCanvases, 50);
-    setTimeout(resizeAndRedrawSimulationCanvases, 150);
-    setTimeout(resizeAndRedrawSimulationCanvases, 300);
-  });
-
-  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
-
-  document.addEventListener("click", function(e) {
-    var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
-    );
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleSimulationFullscreen(btn);
-    }
-  }, true);
-})();
-</script>
-
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Human Heart Anatomy &amp; Double Blood Circulation - LAB 44</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial,sans-serif;background:#050208;color:#fff;min-height:100vh;padding:12px}
+.wrap{max-width:1250px;margin:auto;border:1px solid #5a1020;border-radius:22px;background:linear-gradient(#0a0309,#050208);box-shadow:0 0 30px #ff2a5530;overflow:hidden}
+.hd{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid #4a0d1a}
+.lab{background:#e0143c;border:1px solid #ff6a85;border-radius:8px;padding:6px 14px;font-weight:800;text-align:center;line-height:1.1;box-shadow:0 0 14px #ff2a5566}
+.ttl{font-weight:800;font-style:italic;font-size:19px;max-width:340px}
+.chip{border-radius:10px;padding:7px 14px;font-weight:700;border:1px solid;font-size:15px}
+.ph{border-color:#13d36a;color:#fff;background:#06220f}.ph b{color:#2cff8a}
+.hr{border-color:#ff3b55;background:#2a0710}.hr b{color:#ff5a70}
+.bp{border-color:#1f8fff;background:#06152e}.bp b{color:#4db2ff}
+.sp{border-color:#13d36a;background:#06220f}.sp b{color:#2cff8a}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;padding:16px;
+ background-image:linear-gradient(rgba(255,40,70,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,40,70,.05) 1px,transparent 1px);background-size:40px 40px}
+canvas#c{width:100%;display:block;border-radius:16px;cursor:pointer}
+.side{display:flex;flex-direction:column;gap:12px}
+.box{border:1px solid #ff3b55;border-radius:16px;background:rgba(40,6,16,.85);padding:14px;box-shadow:0 0 18px #ff2a5530}
+.box h4{font-size:12px;letter-spacing:1.5px;display:flex;justify-content:space-between}
+.box h4 i{color:#2cff8a;font-style:normal}
+#ecg{width:100%;height:80px;background:#021008;border:1px solid #0a4a2a;border-radius:8px;margin:8px 0;display:block}
+.leg{display:flex;gap:8px}.leg div{flex:1;border-radius:9px;padding:7px 9px;font-size:12px;font-weight:700;border:1px solid}
+.l1{border-color:#1f8fff;background:#06152e}.l2{border-color:#ff3b55;background:#2a0710}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}
+#ovt{font-size:15px;font-weight:800;margin-bottom:6px}
+#ovd{font-size:14px;line-height:1.55;color:#ffd9de}
+.note{font-size:12px;font-style:italic;color:#e8b8c0;line-height:1.5}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 18px;border-top:1px solid #4a0d1a;background:#0a0309}
+.hrp{display:flex;gap:10px;align-items:center;border:1px solid #5a1020;border-radius:12px;padding:8px 14px;background:#1a0510;font-weight:700}
+input[type=range]{accent-color:#ff3b55;width:150px}
+.btn{border:1px solid;border-radius:10px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:14px;transition:.2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.2)}
+.bl{background:#0b5cff;border-color:#5aa0ff}.rd{background:#e0143c;border-color:#ff6a85}.dk{background:#2a0710;border-color:#ff3b55}
+.on{box-shadow:0 0 16px #fff6}
+@media(max-width:950px){.main{grid-template-columns:1fr}.side{order:-1}}
+</style></head><body><div class="wrap">
+<div class="hd">
+<div class="lab">LAB<br>44</div>
+<div class="ttl">Human Heart Anatomy &amp; Double Blood Circulation</div>
+<div class="chip ph">PHASE: <b id="phase">DIASTOLE (FILLING)</b></div>
+<div class="chip hr">HR: <b id="hrv">75 BPM</b></div>
+<div class="chip bp">BP: <b id="bpv">120 / 80 mmHg</b></div>
+<div class="chip sp">SpO₂: <b id="spv">98% Systemic</b></div>
+<span style="flex:1"></span>
+<button class="btn dk" onclick="fs()">⤢ Fullscreen</button>
+</div>
+<div class="main">
+<canvas id="c" width="930" height="1000"></canvas>
+<div class="side">
+<div class="box"><h4>ELECTROCARDIOGRAM <i>LEAD II LIVE</i></h4><canvas id="ecg" width="300" height="80"></canvas>
+<div class="leg"><div class="l1"><span class="dot" style="background:#1f8fff"></span>Deoxygenated (70% O₂)</div><div class="l2"><span class="dot" style="background:#ff3b55"></span>Oxygenated (98% O₂)</div></div></div>
+<div class="box"><div id="ovt">❤️ Cardiac Overview</div><div id="ovd">Hover or click on any anatomical chamber, valve, or vessel to inspect its physiological function, blood pressure, and flow direction.</div></div>
+<div class="box note">💡 Teacher's Demonstration: Double circulation separates pulmonary (deoxygenated to lungs) and systemic circuits (oxygenated to body).</div>
+</div></div>
+<div class="ctl">
+<div class="hrp">Heart Rate (BPM): <input type="range" id="hr" min="40" max="180" value="75"> <span id="hrs" style="color:#ff5a70">75</span></div>
+<div class="hrp">🐢 Slow motion <input type="checkbox" id="slow" checked></div>
+<span style="flex:1"></span>
+<button class="btn bl on" id="bx" onclick="tg('xsec','bx')">🔬 Full Cross-Section</button>
+<button class="btn rd" id="bc" onclick="tg('cond','bc')">⚡ Conduction (SA/AV)</button>
+<button class="btn rd" id="bd" onclick="tg('circ','bd')">🔁 Double Circuits</button>
+<button class="btn rd on" id="bs" onclick="tg('steth','bs')">🩺 Stethoscope: ON</button>
+<button class="btn dk" onclick="resetAll()">↻ Reset Cardiac View</button>
+</div></div>
+<script>
+const cv=document.getElementById('c'),x=cv.getContext('2d'),W=930,H=1000;
+const ec=document.getElementById('ecg'),ex=ec.getContext('2d');
+const $=id=>document.getElementById(id);
+let S={hr:75,xsec:true,cond:false,circ:false,steth:true,sel:null,hov:null},u=0,t=0,last=performance.now(),pu=0,AC=null;
+let avO=1,smO=0,vc=0,ac=0,flash=[0,0],ecgS=new Array(300).fill(40),PB=[],PBc=[];
+document.addEventListener('pointerdown',()=>{if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}});
+$('hr').oninput=e=>{S.hr=+e.target.value;$('hrs').textContent=S.hr};
+function tg(k,b){S[k]=!S[k];$(b).classList.toggle('on',S[k]);if(k=='steth')$(b).textContent='🩺 Stethoscope: '+(S[k]?'ON':'OFF')}
+function resetAll(){S={hr:75,xsec:true,cond:false,circ:false,steth:true,sel:null,hov:null};$('hr').value=75;$('hrs').textContent=75;
+ ['bx','bs'].forEach(i=>$(i).classList.add('on'));['bc','bd'].forEach(i=>$(i).classList.remove('on'));$('bs').textContent='🩺 Stethoscope: ON';$('slow').checked=true;info(null);PB=[]}
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+function beep(f,d,g){if(!AC||!S.steth)return;try{const o=AC.createOscillator(),n=AC.createGain();o.type='sine';o.frequency.value=f;n.gain.setValueAtTime(g,AC.currentTime);n.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(n);n.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+const rnd=(a,b)=>a+Math.random()*(b-a),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const BLUE='#37a8ff',RED='#ff4d5e';
+// labels
+const LB=[
+['svc','b',80,81,[['Superior',1],['Vena Cava',1],['(from head & arms)',0]],285,118,'Superior Vena Cava','Carries deoxygenated blood from the head, neck and arms into the right atrium. Low pressure (about 2–5 mmHg). Flow: down into the heart.'],
+['rpa','b',30,223,[['Right Pulmonary',1],['Artery',1],['(to right lung)',0]],178,260,'Right Pulmonary Artery','Carries deoxygenated blood from the right ventricle to the right lung. Pressure about 25/10 mmHg.'],
+['rpv','r',25,348,[['Right Pulmonary',1],['Veins',1],['(from right lung)',0]],168,385,'Right Pulmonary Veins','Bring oxygenated blood from the right lung to the left atrium. The only veins that carry oxygenated blood.'],
+['ra','b',25,482,[['Right Atrium',1],['(receives deoxygenated',0],['blood)',0]],327,518,'Right Atrium','Receives deoxygenated blood from the body through the vena cavae. Pressure 0–8 mmHg. Holds the SA node (the natural pacemaker).'],
+['tv','b',35,594,[['Tricuspid Valve',1],['(prevents backflow',0],['to atrium)',0]],382,625,'Tricuspid Valve','Has 3 flaps. Opens during diastole so blood flows from the right atrium to the right ventricle. Closes during systole (the "LUB" sound).'],
+['rv','b',57,731,[['Right Ventricle',1],['(pumps to lungs)',0]],390,765,'Right Ventricle','Pumps deoxygenated blood to the lungs through the pulmonary artery. Pressure about 25/4 mmHg. Thin muscular wall.'],
+['ivc','b',100,896,[['Inferior Vena Cava',1],['(from lower body)',0]],313,922,'Inferior Vena Cava','Carries deoxygenated blood from the lower body to the right atrium. Flow: upward toward the heart.'],
+['ao','r',573,39,[['Aorta',1],['(to body)',0]],517,153,'Aorta','The largest artery. Carries oxygenated blood from the left ventricle to the whole body. Pressure about 120/80 mmHg.'],
+['lpa','b',748,177,[['Left Pulmonary',1],['Artery',1],['(to left lung)',0]],740,222,'Left Pulmonary Artery','Carries deoxygenated blood from the right ventricle to the left lung to pick up oxygen.'],
+['lpv','r',748,347,[['Left Pulmonary',1],['Veins',1],['(from left lung)',0]],740,384,'Left Pulmonary Veins','Bring oxygenated blood from the left lung into the left atrium.'],
+['la','r',728,481,[['Left Atrium',1],['(receives oxygenated',0],['blood)',0]],567,475,'Left Atrium','Receives oxygenated blood from the lungs through the pulmonary veins. Pressure about 8–10 mmHg.'],
+['mv','r',728,591,[['Mitral (Bicuspid) Valve',1],['(prevents backflow',0],['to atrium)',0]],558,590,'Mitral (Bicuspid) Valve','Has 2 flaps. Opens in diastole so blood flows from the left atrium to the left ventricle. Closes in systole.'],
+['lv','r',728,763,[['Left Ventricle',1],['(pumps to body)',0]],610,748,'Left Ventricle','The strongest chamber with the thickest wall. Pumps oxygenated blood to the whole body. Pressure about 120/8 mmHg.']];
+function boxOf(l){x.font='bold 15px Segoe UI';let w=0;l[4].forEach(([s,b])=>{x.font=(b?'italic bold 15px':'14px')+' Segoe UI';w=Math.max(w,x.measureText(s).width)});return[l[2],l[3],w+30,l[4].length*18+16]}
+function info(l){$('ovt').textContent=l?(l[1]=='b'?'🔵 ':'🔴 ')+l[7]:'❤️ Cardiac Overview';
+ $('ovd').textContent=l?l[8]:'Hover or click on any anatomical chamber, valve, or vessel to inspect its physiological function, blood pressure, and flow direction.'}
+function mpos(e){const r=cv.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return[(p.clientX-r.left)*W/r.width,(p.clientY-r.top)*H/r.height]}
+function hit(mx,my){for(const l of LB){const[bx,by,w,h]=boxOf(l);if(mx>=bx&&mx<=bx+w&&my>=by&&my<=by+h)return l;if(Math.hypot(mx-l[5],my-l[6])<18)return l}return null}
+cv.addEventListener('mousemove',e=>{const[a,b]=mpos(e);const l=hit(a,b);S.hov=l;if(!S.sel&&l)info(l);if(!l&&!S.sel)info(null)});
+cv.addEventListener('click',e=>{const[a,b]=mpos(e);const l=hit(a,b);S.sel=(l&&S.sel==l)?null:l;info(S.sel||l)});
+// helpers
+function tube(pf,w,c1,c2,c3,ca){x.lineJoin='round';x.lineCap='butt';[[1,c1],[.72,c2],[.22,c3]].forEach(([k,c],i)=>{x.lineWidth=w*k;x.strokeStyle=c;x.globalAlpha=(i==2?.55:1)*(ca||1);pf();x.stroke()});x.globalAlpha=1}
+function scaled(cx,cy,s,fn){x.save();x.translate(cx,cy);x.scale(s,s);x.translate(-cx,-cy);fn();x.restore()}
+function glow(px,py,r,c){const g=x.createRadialGradient(px,py,0,px,py,r*2.8);g.addColorStop(0,'#fff');g.addColorStop(.3,c);g.addColorStop(1,c+'00');x.fillStyle=g;x.beginPath();x.arc(px,py,r*2.8,0,7);x.fill()}
+function along(p,k){let L=[],tot=0;for(let i=1;i<p.length;i++){const d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);L.push(d);tot+=d}
+ let s=k*tot;for(let i=0;i<L.length;i++){if(s<=L[i]){const f=s/L[i];return[p[i][0]+(p[i+1][0]-p[i][0])*f,p[i][1]+(p[i+1][1]-p[i][1])*f]}s-=L[i]}return p[p.length-1]}
+function valve(cx,cy,half,o,dir){x.strokeStyle='#fff';x.shadowColor='#fff';x.shadowBlur=8;x.lineWidth=5;x.lineCap='round';
+ const tx=half*(.12+.7*o),ty=dir*(10+22*o);
+ x.beginPath();x.moveTo(cx-half,cy);x.lineTo(cx-tx,cy+ty);x.moveTo(cx+half,cy);x.lineTo(cx+tx,cy+ty);x.stroke();x.shadowBlur=0;
+ x.fillStyle='#fff';[[cx-half,cy],[cx+half,cy]].forEach(([a,b])=>{x.beginPath();x.arc(a,b,4,0,7);x.fill()})}
+function arrow(px,py,ang,sz,c,a){x.save();x.translate(px,py);x.rotate(ang);x.globalAlpha=a;x.fillStyle=c;x.shadowColor=c;x.shadowBlur=14;x.beginPath();x.moveTo(0,-sz);x.lineTo(-sz*.7,sz*.3);x.lineTo(sz*.7,sz*.3);x.fill();x.fillRect(-sz*.22,sz*.3,sz*.44,sz*.8);x.restore()}
+// paths for blood
+const PTH={
+ svc:[[287,110],[290,330],[315,470],[360,560],[382,625],[395,740],[415,830]],
+ ivc:[[316,930],[316,790],[318,640],[330,560],[360,545],[382,625],[400,760]],
+ rpv:[[205,392],[300,420],[430,455],[520,490],[550,560],[558,590],[552,700],[545,820]],
+ lpv:[[715,392],[650,430],[610,490],[580,560],[558,590],[552,700],[545,820]],
+ rl:[[400,780],[430,620],[420,470],[420,330],[430,285],[330,300],[215,262]],
+ ll:[[400,780],[430,620],[420,470],[430,300],[490,262],[600,260],[710,235]],
+ a1:[[560,800],[520,640],[470,520],[420,400],[410,250],[405,60]],
+ a2:[[560,800],[520,640],[470,520],[430,360],[460,200],[465,40]],
+ a3:[[560,800],[520,640],[500,500],[520,300],[540,170],[527,70]]};
+const FILL=['svc','ivc','rpv','lpv'],EJ=['rl','ll','a1','a2','a3'];
+function spawn(dt){const fill=(u<.54||u>.88),ej=(u>.6&&u<.86),k=dt*60*(S.hr/75);
+ if(fill)FILL.forEach(n=>{if(Math.random()<.14*k)PB.push({n,u:0,v:.009+rnd(0,.004)})});
+ else FILL.forEach(n=>{if(Math.random()<.03*k)PB.push({n,u:0,v:.007})});
+ if(ej)EJ.forEach(n=>{if(Math.random()<.2*k)PB.push({n,u:0,v:.016+rnd(0,.006)})})}
+// ecg
+function ecgv(q){const g=(c,w)=>Math.exp(-Math.pow((q-c)/w,2));return .15*g(.43,.025)-.12*g(.545,.008)+1*g(.56,.009)-.25*g(.578,.009)+.3*g(.74,.05)}
+// draw
+function drawBG(){x.clearRect(0,0,W,H);x.fillStyle='#06020a';x.fillRect(0,0,W,H)}
+function drawHeart(){
+ const vs=1-.07*vc,as=1-.09*ac;x.lineCap='butt';
+ // vessels (outside)
+ tube(()=>{x.beginPath();x.moveTo(287,92);x.lineTo(290,335)},72,'#06306e','#1769d8','#8fd0ff');
+ tube(()=>{x.beginPath();x.moveTo(316,948);x.lineTo(317,770)},76,'#06306e','#1769d8','#8fd0ff');
+ tube(()=>{x.beginPath();x.moveTo(188,380);x.quadraticCurveTo(260,395,400,450)},34,'#7a0a1c','#e0243c','#ff9aa8');
+ tube(()=>{x.beginPath();x.moveTo(722,392);x.quadraticCurveTo(650,410,600,455)},34,'#7a0a1c','#e0243c','#ff9aa8');
+ tube(()=>{x.beginPath();x.moveTo(205,262);x.quadraticCurveTo(300,285,420,335)},34,'#26157a','#4a3ad0','#a8a2ff');
+ tube(()=>{x.beginPath();x.moveTo(715,235);x.quadraticCurveTo(620,260,500,305)},34,'#26157a','#4a3ad0','#a8a2ff');
+ tube(()=>{x.beginPath();x.moveTo(405,530);x.bezierCurveTo(385,420,395,320,430,282);x.quadraticCurveTo(455,262,486,262)},56,'#06306e','#1769d8','#8fd0ff');
+ x.fillStyle='#0a3a8a';x.strokeStyle='#6fc0ff';x.lineWidth=3;x.beginPath();x.ellipse(490,262,12,28,-.3,0,7);x.fill();x.stroke();
+ // aorta
+ const ap=()=>{x.beginPath();x.moveTo(450,590);x.bezierCurveTo(395,480,385,300,420,215);x.bezierCurveTo(450,150,565,130,590,215);x.bezierCurveTo(610,270,605,340,590,400)};
+ x.shadowColor='#ff2a45';x.shadowBlur=20;tube(ap,64,'#8a0a1c','#e0243c','#ffa0ac');x.shadowBlur=0;
+ [[405,230,405,60],[465,150,465,40],[527,150,527,70]].forEach(([a,b,c,d])=>tube(()=>{x.beginPath();x.moveTo(a,b);x.lineTo(c,d+25)},30,'#8a0a1c','#e0243c','#ffa0ac'));
+ // heart body
+ const outer=()=>{x.beginPath();x.moveTo(250,430);x.bezierCurveTo(215,520,225,640,250,740);x.bezierCurveTo(290,850,400,950,475,950);x.bezierCurveTo(600,950,700,800,700,620);x.bezierCurveTo(700,520,680,430,600,380);x.bezierCurveTo(540,340,400,330,330,370);x.bezierCurveTo(290,390,262,405,250,430);x.closePath()};
+ let g=x.createLinearGradient(220,380,700,950);g.addColorStop(0,'#c01a30');g.addColorStop(1,'#7a0818');
+ x.shadowColor='#ff2a55';x.shadowBlur=30;x.fillStyle=g;outer();x.fill();x.strokeStyle='#ff6a80';x.lineWidth=4;x.stroke();x.shadowBlur=0;
+ if(S.xsec){
+  // RV
+  scaled(450,800,vs,()=>{
+   g=x.createLinearGradient(280,600,450,900);g.addColorStop(0,'#1a4fc0');g.addColorStop(1,'#04164a');x.fillStyle=g;
+   x.beginPath();x.moveTo(268,650);x.bezierCurveTo(275,770,335,870,445,905);x.bezierCurveTo(470,840,455,740,438,640);x.bezierCurveTo(395,600,325,605,268,650);x.fill();x.strokeStyle='#6fc0ff';x.lineWidth=2;x.stroke();
+   // septum
+   x.fillStyle='#ff6a80';x.beginPath();x.moveTo(430,540);x.bezierCurveTo(445,650,455,780,482,895);x.lineTo(510,885);x.bezierCurveTo(488,770,478,650,466,540);x.fill();
+   // LV
+   g=x.createLinearGradient(500,600,660,880);g.addColorStop(0,'#ff3a50');g.addColorStop(1,'#6a0614');x.fillStyle=g;
+   x.beginPath();x.moveTo(482,600);x.bezierCurveTo(472,700,482,830,522,885);x.bezierCurveTo(605,885,668,795,672,680);x.bezierCurveTo(674,630,640,590,560,585);x.bezierCurveTo(520,585,487,590,482,600);x.fill();x.strokeStyle='#ff9aa8';x.stroke()});
+  // RA
+  scaled(330,510,as,()=>{g=x.createRadialGradient(330,510,10,330,510,110);g.addColorStop(0,'#2a6ff0');g.addColorStop(1,'#06206a');x.fillStyle=g;
+   x.beginPath();x.moveTo(255,460);x.bezierCurveTo(260,400,330,380,395,420);x.bezierCurveTo(430,470,425,560,385,610);x.bezierCurveTo(320,640,260,600,255,540);x.closePath();x.fill();x.strokeStyle='#6fc0ff';x.lineWidth=2;x.stroke()});
+  // LA
+  scaled(570,485,as,()=>{g=x.createRadialGradient(570,485,10,570,485,105);g.addColorStop(0,'#ff4a60');g.addColorStop(1,'#7a0a1c');x.fillStyle=g;x.beginPath();x.arc(570,485,102,0,7);x.fill();x.strokeStyle='#ffb0bc';x.lineWidth=5;x.stroke()});
+  // wall rim
+  x.strokeStyle='#ff9aa8aa';x.lineWidth=14;x.globalAlpha=.35;outer();x.stroke();x.globalAlpha=1;
+  // valves
+  valve(380,625,40,avO,1);valve(558,590,50,avO,1);valve(462,560,24,smO,-1);valve(407,500,24,smO,-1);
+ }else{
+  g=x.createLinearGradient(240,380,700,950);g.addColorStop(0,'#d8283c');g.addColorStop(1,'#8a0a1c');x.fillStyle=g;x.globalAlpha=.97;outer();x.fill();x.globalAlpha=1;
+  x.strokeStyle='#ffb0bc';x.lineWidth=3;x.globalAlpha=.7;[[330,430,300,620,360,800],[560,400,640,560,600,780],[470,420,480,600,500,860]].forEach(([a,b,c,d,e,f])=>{x.beginPath();x.moveTo(a,b);x.quadraticCurveTo(c,d,e,f);x.stroke()});x.globalAlpha=1;
+  x.fillStyle='#ffe0e4';x.font='italic bold 18px Segoe UI';x.textAlign='center';x.fillText('Outer view: coronary arteries on the heart wall',470,700);x.textAlign='left'}
+ // big arrows
+ const pa=.45+.55*vc;[[405,40,0],[465,28,0],[527,50,0]].forEach(([a,b])=>arrow(a,b+8,0,24,'#ff5a6e',pa));
+ arrow(202,262,-1.9,16,'#4db2ff',pa);arrow(722,236,1.9,16,'#4db2ff',pa);
+ arrow(190,382,-2,15,'#ff5a6e',.8);arrow(730,392,2,15,'#ff5a6e',.8)}
+function drawParticles(dt){spawn(dt);PB.forEach(p=>{p.u+=p.v*dt*60*(S.hr/75)*(S.slow?1:1);const[px,py]=along(PTH[p.n],Math.min(p.u,1));const col=(p.n=='svc'||p.n=='ivc'||p.n=='rl'||p.n=='ll')?BLUE:RED;
+  x.globalAlpha=cl(Math.min(p.u,1-p.u)*7,0,1);glow(px,py,3.2,col)});x.globalAlpha=1;PB=PB.filter(p=>p.u<1)}
+function part(pts,k){const out=[pts[0]];let tot=0,L=[];for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);L.push(d);tot+=d}
+ let s=k*tot;for(let i=0;i<L.length;i++){if(s>=L[i]){out.push(pts[i+1]);s-=L[i]}else{const f=s/L[i];out.push([pts[i][0]+(pts[i+1][0]-pts[i][0])*f,pts[i][1]+(pts[i+1][1]-pts[i][1])*f]);break}}return out}
+function drawCond(){
+ const nets=[{p:[[318,395],[350,500],[395,590]],a:.38,b:.46},{p:[[318,395],[420,420],[520,430],[570,470]],a:.38,b:.48},
+  {p:[[395,590],[410,610],[448,690],[470,800]],a:.55,b:.58},{p:[[470,800],[430,860],[400,900]],a:.58,b:.64},{p:[[470,800],[520,870],[600,840],[640,750]],a:.58,b:.66}];
+ nets.forEach(n=>{x.strokeStyle='#ffe14a55';x.lineWidth=4;x.setLineDash([8,6]);x.beginPath();n.p.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke();x.setLineDash([]);
+  const k=cl((u-n.a)/(n.b-n.a),0,1);if(k>0&&k<1||(u>n.b&&u<n.b+.12)){const pp=part(n.p,k);x.strokeStyle='#ffe14a';x.lineWidth=6;x.shadowColor='#ffe14a';x.shadowBlur=18;x.beginPath();pp.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke();x.shadowBlur=0;const e=pp[pp.length-1];glow(e[0],e[1],6,'#ffe14a')}});
+ const sa=(u>.38&&u<.46),av=(u>.46&&u<.56);
+ [[318,395,'SA Node',sa],[395,590,'AV Node',av]].forEach(([a,b,n,on])=>{glow(a,b,on?10:6,'#ffe14a');x.fillStyle='#fff';x.font='bold 14px Segoe UI';x.fillText(n,a+(n=='SA Node'?-80:-84),b+(n=='SA Node'?-12:-4))});
+ x.fillStyle='#ffe14a';x.font='bold 13px Segoe UI';x.fillText('Bundle of His',455,720);x.fillText('Purkinje Fibers',500,915)}
+function drawCirc(){
+ x.fillStyle='rgba(5,2,10,.92)';x.fillRect(0,0,W,H);
+ x.textAlign='center';x.fillStyle='#fff';x.font='bold 26px Segoe UI';x.fillText('DOUBLE CIRCULATION',465,60);
+ x.font='15px Segoe UI';x.fillStyle='#ffd9de';x.fillText("Click 'Double Circuits' again to go back to the heart",465,88);
+ // heart icon
+ x.shadowColor='#ff2a55';x.shadowBlur=24;x.fillStyle='#1769d8';x.beginPath();x.arc(430,480,70,Math.PI/2,Math.PI*1.5);x.fill();x.fillStyle='#e0243c';x.beginPath();x.arc(500,480,70,-Math.PI/2,Math.PI/2);x.fill();x.shadowBlur=0;
+ x.fillStyle='#fff';x.font='bold 15px Segoe UI';x.fillText('Right Heart',400,485);x.fillText('Left Heart',535,485);
+ // lungs
+ x.fillStyle='#e08090';x.beginPath();x.ellipse(405,190,45,70,.2,0,7);x.fill();x.beginPath();x.ellipse(525,190,45,70,-.2,0,7);x.fill();
+ x.fillStyle='#fff';x.font='bold 18px Segoe UI';x.fillText('LUNGS',465,280);
+ // body
+ x.fillStyle='#8aa0d0';x.beginPath();x.arc(465,760,24,0,7);x.fill();x.beginPath();x.roundRect(425,790,80,110,18);x.fill();x.fillStyle='#fff';x.fillText('BODY',465,935);
+ const q=(a,b,c,k)=>[(1-k)*(1-k)*a[0]+2*(1-k)*k*b[0]+k*k*c[0],(1-k)*(1-k)*a[1]+2*(1-k)*k*b[1]+k*k*c[1]];
+ const C=[[[400,415],[230,330],[400,270],BLUE],[[530,270],[700,330],[530,415],RED],[[530,545],[710,650],[500,745],RED],[[430,745],[220,650],[400,545],BLUE]];
+ C.forEach(([a,b,c,col])=>{x.strokeStyle=col+'88';x.lineWidth=7;x.beginPath();x.moveTo(a[0],a[1]);x.quadraticCurveTo(b[0],b[1],c[0],c[1]);x.stroke();
+  for(let i=0;i<6;i++){const k=((t*.35+i/6)%1),p=q(a,b,c,k);glow(p[0],p[1],5,col)}});
+ x.font='bold 16px Segoe UI';x.fillStyle=BLUE;x.fillText('PULMONARY CIRCUIT',150,330);x.font='14px Segoe UI';x.fillStyle='#fff';x.fillText('Right ventricle → lungs → left atrium',150,352);x.fillText('Blue (no O₂) becomes Red (O₂ added)',150,374);
+ x.font='bold 16px Segoe UI';x.fillStyle=RED;x.fillText('SYSTEMIC CIRCUIT',790,640);x.font='14px Segoe UI';x.fillStyle='#fff';x.fillText('Left ventricle → body → right atrium',790,662);x.fillText('Red (O₂) goes to organs, returns Blue',790,684);x.textAlign='left'}
+function drawLabels(){
+ LB.forEach(l=>{const[bx,by,w,h]=boxOf(l),on=(S.sel==l||S.hov==l),c=l[1]=='b'?'#1f8fff':'#ff3b55',bg=l[1]=='b'?'#05224a':'#3a0a16';
+  const sx=l[2]<400?bx+w:bx,sy=by+h/2;
+  x.strokeStyle=on?'#fff':'#fff9';x.lineWidth=on?2:1.3;x.beginPath();x.moveTo(sx,sy);x.lineTo(l[5],l[6]);x.stroke();
+  x.fillStyle='#fff';x.shadowColor=c;x.shadowBlur=12;x.beginPath();x.arc(l[5],l[6],on?8:5.5,0,7);x.fill();
+  x.fillStyle=bg;x.strokeStyle=on?'#fff':c;x.lineWidth=on?3:2;x.shadowBlur=on?24:10;x.beginPath();x.roundRect(bx,by,w,h,9);x.fill();x.stroke();x.shadowBlur=0;
+  l[4].forEach(([s,b],i)=>{x.fillStyle='#fff';x.font=(b?'italic bold 15px':'14px')+' Segoe UI';x.fillText(s,bx+14,by+25+i*18)});
+  if(on){x.strokeStyle=c;x.lineWidth=3;x.globalAlpha=.6+.4*Math.sin(t*6);x.beginPath();x.arc(l[5],l[6],16+3*Math.sin(t*6),0,7);x.stroke();x.globalAlpha=1}})}
+function drawSteth(){if(!S.steth)return;x.textAlign='center';x.font='bold 30px Segoe UI';
+ if(flash[0]>0){x.fillStyle='rgba(255,255,255,'+flash[0]+')';x.shadowColor='#fff';x.shadowBlur=20;x.fillText('LUB',465,640);x.shadowBlur=0}
+ if(flash[1]>0){x.fillStyle='rgba(255,220,120,'+flash[1]+')';x.shadowColor='#ffd070';x.shadowBlur=20;x.fillText('DUB',440,545);x.shadowBlur=0}x.textAlign='left'}
+let lastPh='';
+function frame(){const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+ const cyc=(60/S.hr)*($('slow').checked?2:1);pu=u;u=(u+dt/cyc)%1;
+ const cross=(a)=>(pu<a&&u>=a)||(pu>u&&a<=u);
+ if(cross(.545)){beep(70,.18,.6);flash[0]=1}if(cross(.85)){beep(110,.12,.45);flash[1]=1}
+ flash=flash.map(f=>Math.max(0,f-dt*2.2));
+ ac=u>.42&&u<.54?Math.sin(Math.PI*(u-.42)/.12):0;
+ vc=u<.54?0:u<.62?(u-.54)/.08:u<.85?1:u<.95?1-(u-.85)/.1:0;
+ avO+=((u<.545||u>.9?1:0)-avO)*.3;smO+=((u>.6&&u<.85?1:0)-smO)*.3;
+ let ph=u<.42?'DIASTOLE (FILLING)':u<.54?'ATRIAL SYSTOLE':u<.6?'ISOVOLUMIC CONTRACTION':u<.85?'VENTRICULAR SYSTOLE (EJECTION)':'DIASTOLE (RELAXING)';
+ if(ph!=lastPh){$('phase').textContent=ph;lastPh=ph}
+ $('hrv').textContent=S.hr+' BPM';
+ const sys=Math.round(110+(S.hr-75)*.25),dia=Math.round(72+(S.hr-75)*.1);$('bpv').textContent=sys+' / '+dia+' mmHg';
+ // ecg
+ ecgS.push(40-ecgv(u)*34);ecgS.shift();ex.fillStyle='#021008';ex.fillRect(0,0,300,80);ex.strokeStyle='#0a3a20';ex.lineWidth=1;for(let i=0;i<300;i+=20){ex.beginPath();ex.moveTo(i,0);ex.lineTo(i,80);ex.stroke()}
+ ex.strokeStyle='#19ff7a';ex.lineWidth=2;ex.shadowColor='#19ff7a';ex.shadowBlur=6;ex.beginPath();ecgS.forEach((v,i)=>i?ex.lineTo(i,v):ex.moveTo(i,v));ex.stroke();ex.shadowBlur=0;
+ // scene
+ drawBG();
+ if(S.circ){drawCirc()}else{drawHeart();if(S.xsec)drawParticles(dt);else{PB=[]}if(S.cond)drawCond();drawLabels();drawSteth()}
+ requestAnimationFrame(frame)}
+frame();
+</script></body></html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Breathing Process - LAB 112</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#0b2a55,#030b1c 70%);color:#fff;min-height:100vh;padding:14px}
+.wrap{max-width:1180px;margin:auto}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:14px;transition:.2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.white{background:#fff;color:#0a2a5c}.blue{background:#0b5cff;box-shadow:0 0 14px #0b5cff88}.green{background:#12a56a}
+.red{background:#e0314b;box-shadow:0 0 14px #e0314b88}.yel{background:#ffb81c;color:#222}.slate{background:#4b5f82}
+.lab{background:#19c25a;padding:8px 14px;border-radius:8px;font-weight:800;font-size:18px}
+.card{background:rgba(10,30,70,.85);border:1px solid #1c4a8c;border-radius:22px;box-shadow:0 0 25px #0a4fb355;padding:16px;margin-bottom:14px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+h1{font-style:italic;font-size:36px}h1 small{font-size:15px;font-weight:400;margin-left:10px;color:#cde}
+.tabs{display:flex;gap:6px}
+.tab{background:#12305f;border:0;color:#dfe9ff;border-radius:14px;padding:12px 18px;cursor:pointer;font-weight:600;min-width:100px}
+.tab.on{background:#1b8cff;box-shadow:0 0 16px #1b8cff}
+h2{color:#ffd21f;font-style:italic;margin:6px 0 12px}
+.ctrl{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+.pill{background:#0a2250;border:1px solid #1c4a8c;border-radius:30px;padding:8px 16px;display:flex;align-items:center;gap:10px;font-weight:600}
+select{background:#12305f;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:700}
+.scene{border-radius:22px;overflow:hidden;border:2px solid #1c4a8c;position:relative;background:#000}
+canvas{width:100%;display:block}
+.tip{text-align:center;font-style:italic;font-size:18px;padding:16px}
+.info{display:none;font-size:18px;line-height:1.7}.info li{margin:8px 0 8px 22px}
+#phase{font-weight:800;color:#ffd21f}
+@media(max-width:800px){h1{font-size:26px}}
+</style></head><body><div class="wrap">
+<div class="top">
+<span class="lab">LAB 112</span>
+<div><b style="font-size:18px">The Breathing Process</b></div>
+<span style="flex:1"></span>
+<button class="btn green" onclick="resetAll()">⟳ Reset Engine</button>
+<button class="btn blue" onclick="fs()">⤢ Fullscreen</button>
+</div>
+<div class="card head">
+<div style="display:flex;gap:14px;align-items:center"><span style="font-size:60px">🫁</span>
+<div><h1>Breathing Process <small>How we take in O₂ and give out CO₂</small></h1>
+<p style="margin-top:6px;max-width:600px">Watch air travel through the nose, trachea, bronchi and lungs. See oxygen enter the blood and carbon dioxide leave it inside the tiny air sacs called alveoli.</p></div></div>
+<div class="tabs">
+<button class="tab" data-t="def">📖<br>Definition</button><button class="tab" data-t="exp">📝<br>Explanation</button>
+<button class="tab" data-t="key">🔑<br>Key Facts</button><button class="tab on" data-t="sim">🧪<br>Simulation</button></div>
+</div>
+<div id="def" class="card info"><h2>Definition</h2><p>Breathing is the process of taking air into the lungs (inhalation) and pushing air out of the lungs (exhalation). It brings oxygen (O₂) into the body and removes carbon dioxide (CO₂).</p></div>
+<div id="exp" class="card info"><h2>Explanation</h2><ul><li><b>Inhalation:</b> The diaphragm contracts and moves down. The lungs expand. Air rushes in through the nose, pharynx, larynx, trachea and bronchi.</li><li>Air reaches the alveoli (air sacs). Oxygen passes into the blood through the thin walls of the capillaries.</li><li><b>Exhalation:</b> The diaphragm relaxes and moves up. The lungs get smaller. Air is pushed out.</li><li>Carbon dioxide moves from the blood into the alveoli and leaves the body with the air.</li></ul></div>
+<div id="key" class="card info"><h2>Key Facts</h2><ul><li>Inhalation brings O₂ IN. Exhalation sends CO₂ OUT.</li><li>The diaphragm is the main breathing muscle under the lungs.</li><li>Alveoli are tiny air sacs. Gas exchange happens here.</li><li>Red blood cells carry oxygen to all parts of the body.</li><li>The trachea (windpipe) splits into two bronchi, one for each lung.</li></ul></div>
+<div id="simBox">
+<h2>🎮 Interactive Simulation – Breathing</h2>
+<div class="card"><div class="ctrl">
+<div class="pill">Speed: <select id="sp"><option value=".6">Slow</option><option value="1" selected>Normal</option><option value="1.8">Fast</option></select></div>
+<button class="btn blue" onclick="setMode('auto')">🔄 Auto Breathing</button>
+<button class="btn blue" onclick="setMode('in')">⬇ Inhale Only</button>
+<button class="btn red" onclick="setMode('out')">⬆ Exhale Only</button>
+<button class="btn yel" id="pb" onclick="togglePause()">⏸ Pause</button>
+<button class="btn blue" id="lbBtn" onclick="toggleLabels()">🏷️ Labels ON</button>
+<button class="btn slate" onclick="resetAll()">⟳ Reset</button>
+<button class="btn green" onclick="fs()">⛶ Fullscreen</button>
+<div class="pill">Now: <span id="phase">INHALING</span></div>
+</div></div>
+<div class="scene" id="scene"><canvas id="c" width="1140" height="830"></canvas></div>
+<div class="card tip" style="margin-top:14px">💡 Diaphragm moves down → lungs expand → O₂ enters the blood. Diaphragm moves up → lungs compress → CO₂ leaves the body.</div>
+</div></div>
+<script>
+const cv=document.getElementById('c'),x=cv.getContext('2d'),W=1140,H=830;
+const $=id=>document.getElementById(id);
+let st={act:'in',prog:0,mode:'auto',speed:1,labels:true,pause:false},t=0,last=performance.now();
+const PA=[[],[]],PZ=[[],[]];
+$('sp').onchange=e=>st.speed=+e.target.value;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.tab').forEach(k=>k.classList.remove('on'));b.classList.add('on');
+ ['def','exp','key'].forEach(i=>$(i).style.display=b.dataset.t==i?'block':'none');
+ $('simBox').style.display=b.dataset.t=='sim'?'block':'none';});
+function setMode(m){st.mode=m;if(m!='auto'){st.act=m;}st.prog=0;st.pause=false;$('pb').textContent='⏸ Pause'}
+function togglePause(){st.pause=!st.pause;$('pb').textContent=st.pause?'▶ Play':'⏸ Pause'}
+function toggleLabels(){st.labels=!st.labels;$('lbBtn').textContent='🏷️ Labels '+(st.labels?'ON':'OFF')}
+function resetAll(){st={act:'in',prog:0,mode:'auto',speed:1,labels:true,pause:false};$('sp').value=1;$('lbBtn').textContent='🏷️ Labels ON';$('pb').textContent='⏸ Pause';PA[0]=[];PA[1]=[];PZ[0]=[];PZ[1]=[]}
+function fs(){const e=$('scene');document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen()}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const PATH=[[[150,222],[250,228],[285,262],[285,430],[205,470],[190,530]],[[150,222],[250,228],[285,262],[285,430],[365,470],[380,530]]];
+function along(p,u){let L=[],tot=0;for(let i=1;i<p.length;i++){const d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);L.push(d);tot+=d}
+ let s=u*tot;for(let i=0;i<L.length;i++){if(s<=L[i]){const k=s/L[i];return[p[i][0]+(p[i+1][0]-p[i][0])*k,p[i][1]+(p[i+1][1]-p[i][1])*k]}s-=L[i]}return p[p.length-1]}
+function glow(px,py,r,c){const g=x.createRadialGradient(px,py,0,px,py,r*2.6);g.addColorStop(0,'#fff');g.addColorStop(.35,c);g.addColorStop(1,c+'00');x.fillStyle=g;x.beginPath();x.arc(px,py,r*2.6,0,7);x.fill()}
+function pill(txt,sub,cx,cy,th,tx,ty,big){if(!st.labels)return;
+ x.font='bold 17px Segoe UI';let w=x.measureText(txt).width;if(sub){x.font='14px Segoe UI';w=Math.max(w,x.measureText(sub).width)}w+=28;const h=sub?48:32;
+ if(tx!=null){x.strokeStyle='#fff';x.lineWidth=1.3;x.beginPath();x.moveTo(cx,cy);x.lineTo(tx,ty);x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(tx,ty,4,0,7);x.fill()}
+ x.fillStyle='#050f26';x.strokeStyle=th.c;x.lineWidth=2;x.shadowColor=th.c;x.shadowBlur=10;x.beginPath();x.roundRect(cx-w/2,cy-h/2,w,h,9);x.fill();x.stroke();x.shadowBlur=0;
+ x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';
+ if(sub){x.font='bold 17px Segoe UI';x.fillText(txt,cx,cy-9);x.font='14px Segoe UI';x.fillText(sub,cx,cy+12)}else{x.font='bold 16px Segoe UI';x.fillText(txt,cx,cy)}
+ x.textAlign='left'}
+function tree(px,py,a,l,d,col){if(d==0)return;const x2=px+Math.cos(a)*l,y2=py+Math.sin(a)*l;x.strokeStyle=col;x.lineWidth=d*.9;x.beginPath();x.moveTo(px,py);x.lineTo(x2,y2);x.stroke();
+ tree(x2,y2,a+.55-d*.05,l*.78,d-1,col);tree(x2,y2,a-.5+d*.04,l*.78,d-1,col)}
+function lung(cx,cy,sc,side,th){x.save();x.translate(cx,cy);x.scale(sc,sc);x.rotate(side*.08);
+ const g=x.createRadialGradient(-side*15,-20,10,0,0,110);g.addColorStop(0,'#f0a0a8');g.addColorStop(.7,'#c8606c');g.addColorStop(1,'#8a3040');
+ x.fillStyle=g;x.strokeStyle=th.c2;x.lineWidth=2.5;x.beginPath();x.moveTo(side*-8,-105);x.bezierCurveTo(side*70,-100,side*90,-20,side*70,60);x.bezierCurveTo(side*55,115,side*-20,110,side*-55,100);x.bezierCurveTo(side*-30,30,side*-30,-60,side*-8,-105);x.fill();x.stroke();
+ tree(side*-30,-70,side>0?.9:2.25,38,5,th.c+'cc');tree(side*-30,-30,side>0?.5:2.65,40,5,th.c+'aa');
+ x.restore()}
+function panel(ox,out){
+ const th=out?{c:'#ff4d5e',c2:'#ff9aa4',d:'#ff5a5a',bg:'#4a0e1c'}:{c:'#2ea8ff',c2:'#9ad8ff',d:'#4fc3ff',bg:'#0b2f6e'};
+ const key=out?'out':'in',act=st.act==key,pr=st.prog,i=out?1:0;
+ const M=v=>out?570-v:v;
+ const sc=out?1.1-.1*(act?pr:0):1+.1*(act?pr:0);
+ const dY=out?(act?24*(1-pr):24):(act?24*pr:0);
+ x.save();x.translate(ox,0);x.globalAlpha=act?1:.7;
+ // header
+ x.fillStyle=th.bg;x.strokeStyle=th.c;x.lineWidth=3;x.shadowColor=th.c;x.shadowBlur=act?24:8;x.beginPath();x.roundRect(65,100,440,80,40);x.fill();x.stroke();x.shadowBlur=0;
+ x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';x.font='bold 38px Segoe UI';x.fillText(out?'EXHALATION':'INHALATION',285,128);
+ x.font='bold 17px Segoe UI';x.fillText(out?'( Carbon dioxide (CO₂) goes OUT )':'( Oxygen (O₂) goes IN )',285,162);x.textAlign='left';
+ // mechanism box
+ const bx=out?335:15;x.fillStyle='#050f26';x.strokeStyle=th.c;x.lineWidth=2;x.beginPath();x.roundRect(bx,200,225,128,10);x.fill();x.stroke();
+ x.fillStyle='#fff';x.font='italic bold 18px Segoe UI';x.fillText('Mechanism:',bx+14,222);x.font='15px Segoe UI';
+ (out?['• Diaphragm relaxes','   (moves up)','• Lungs compress','• Air exits']:['• Diaphragm contracts','   (moves down)','• Lungs expand','• Air enters']).forEach((s,k)=>x.fillText(s,bx+14,248+k*20));
+ // body
+ x.fillStyle='rgba(80,120,190,.22)';x.strokeStyle='rgba(120,170,255,.45)';x.lineWidth=2;
+ x.beginPath();x.moveTo(30,640);x.bezierCurveTo(30,400,150,350,285,350);x.bezierCurveTo(420,350,540,400,540,640);x.fill();x.stroke();
+ x.beginPath();x.ellipse(285,250,54,78,0,0,7);x.fill();x.stroke();
+ x.fillRect(262,320,46,40);
+ // lungs
+ lung(205,510,sc,1,th);lung(365,510,sc,-1,th);
+ // bronchi + trachea
+ x.strokeStyle=th.c;x.lineCap='round';x.lineWidth=9;x.globalAlpha*=.9;
+ x.beginPath();x.moveTo(285,430);x.lineTo(210,475);x.moveTo(285,430);x.lineTo(360,475);x.stroke();x.globalAlpha=act?1:.7;
+ const tg=x.createLinearGradient(272,0,298,0);tg.addColorStop(0,th.c);tg.addColorStop(.5,th.c2);tg.addColorStop(1,th.c);
+ x.fillStyle=tg;x.beginPath();x.roundRect(274,280,22,155,8);x.fill();
+ x.strokeStyle='#ffffff66';x.lineWidth=1;for(let y=290;y<430;y+=8){x.beginPath();x.moveTo(274,y);x.lineTo(296,y);x.stroke()}
+ // nasal cavity
+ const ng=x.createRadialGradient(285,235,5,285,235,45);ng.addColorStop(0,out?'#e8a0d8':'#8a7af0');ng.addColorStop(1,out?'#a04a9a':'#4a3aa8');
+ x.fillStyle=ng;x.beginPath();x.ellipse(283,238,32,42,0,0,7);x.fill();
+ x.fillStyle='#fff3';x.fillRect(252,252,34,4);
+ // airway particles
+ if(act&&!st.pause&&Math.random()<.4)PA[i].push({u:0,b:Math.random()<.5?0:1,o:Math.random()*10-5});
+ PA[i].forEach(p=>{if(!st.pause)p.u+=.012*st.speed*(1+.2*Math.sin(t));const u=out?1-p.u:p.u;const[px,py]=along(PATH[p.b],u);
+  x.globalAlpha=Math.max(0,Math.min(1,Math.min(p.u,1-p.u)*6));glow(px+(p.u>.2?p.o*.3:0),py,3.2,th.d)});
+ PA[i]=PA[i].filter(p=>p.u<1);x.globalAlpha=act?1:.7;
+ // arrow near nose
+ x.fillStyle=th.c;const ax=out?150:140,dir=out?-1:1;x.globalAlpha=(act?1:.5)*(.6+.4*Math.sin(t*5));
+ x.beginPath();x.moveTo(ax+(out?0:80),222);x.lineTo(ax+(out?0:80)-dir*18,212);x.lineTo(ax+(out?0:80)-dir*18,232);x.fill();x.fillRect(Math.min(ax+(out?0:80)-dir*18,ax+(out?0:80)-dir*70),219,52,6);x.globalAlpha=act?1:.7;
+ // zoom circle
+ const zx=out?420:150,zy=640,zr=132;
+ x.save();x.beginPath();x.arc(zx,zy,zr,0,7);x.clip();
+ const zg=x.createRadialGradient(zx,zy,10,zx,zy,zr);zg.addColorStop(0,out?'#6a2a40':'#3a2a5a');zg.addColorStop(1,out?'#2a0a18':'#14123a');x.fillStyle=zg;x.fillRect(zx-zr,zy-zr,zr*2,zr*2);
+ const B=[[-62,-58,32],[0,-80,30],[62,-52,30],[-88,-5,30],[-28,-22,38],[40,-10,34],[88,18,26],[-60,22,26]];
+ B.forEach(([bx2,by,r],k)=>{const px=zx+bx2,py=zy+by+Math.sin(t*2+k)*2;const bg=x.createRadialGradient(px-r*.3,py-r*.3,2,px,py,r);
+  bg.addColorStop(0,out?'#ffd0d6':'#ffd8e8');bg.addColorStop(1,out?'#d86a7a':'#b0608a');x.fillStyle=bg;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.strokeStyle='#fff6';x.lineWidth=2;x.stroke();
+  for(let d=0;d<5;d++){const a=d*1.9+k+t*.8,rr=r*.55*((d%3+1)/3);x.fillStyle=th.d;x.beginPath();x.arc(px+Math.cos(a)*rr,py+Math.sin(a)*rr,3.2,0,7);x.fill()}});
+ // capillary
+ x.fillStyle='#6a1028';x.beginPath();x.moveTo(zx-zr,zy+62);x.quadraticCurveTo(zx,zy+40,zx+zr,zy+70);x.lineTo(zx+zr,zy+zr);x.lineTo(zx-zr,zy+zr);x.fill();
+ for(let k=0;k<6;k++){const rx=zx-zr+((k*55+(st.pause?0:t*34*st.speed))%(zr*2+40)),ry=zy+88+Math.sin(k*2)*8;
+  const rg=x.createRadialGradient(rx,ry,2,rx,ry,24);rg.addColorStop(0,'#8a0f1a');rg.addColorStop(1,'#e0343c');x.fillStyle=rg;x.beginPath();x.ellipse(rx,ry,24,15,Math.sin(k)*.3,0,7);x.fill()}
+ // zoom particles
+ if(act&&!st.pause&&Math.random()<.35)PZ[i].push({u:0,x:rnd(-80,80)});
+ PZ[i].forEach(p=>{if(!st.pause)p.u+=.012*st.speed;const u=out?1-p.u:p.u;glow(zx+p.x+Math.sin(p.u*9)*5,zy-20+u*100,3.5,th.d)});
+ PZ[i]=PZ[i].filter(p=>p.u<1);
+ // arrows
+ x.fillStyle=th.c;x.globalAlpha=(act?.9:.4);const ay=zy+40,s=out?-1:1;
+ [[zx-20,0],[zx+30,0]].forEach(([px])=>{x.beginPath();x.moveTo(px,ay+s*22);x.lineTo(px-11,ay+s*2);x.lineTo(px+11,ay+s*2);x.fill();x.fillRect(px-4,ay-s*16-(s>0?0:-0),8,1)});
+ x.globalAlpha=act?1:.7;x.restore();
+ x.strokeStyle=th.c2;x.lineWidth=5;x.shadowColor=th.c;x.shadowBlur=18;x.beginPath();x.arc(zx,zy,zr,0,7);x.stroke();x.shadowBlur=0;
+ // diaphragm
+ const dx0=out?10:300,dx1=dx0+260,dy=655+dY;
+ const dg=x.createLinearGradient(0,dy-30,0,dy+50);dg.addColorStop(0,'#e0907a');dg.addColorStop(1,'#a04a3a');x.fillStyle=dg;x.strokeStyle='#ffc8b0';x.lineWidth=2;
+ x.beginPath();x.moveTo(dx0,dy+50);x.bezierCurveTo(dx0+40,dy-30,dx1-70,dy-45,dx1,dy+45);x.lineTo(dx1,dy+62);x.lineTo(dx0,dy+62);x.closePath();x.fill();x.stroke();
+ // big arrow
+ const arx=out?140:430,up=out;x.fillStyle=th.c;x.shadowColor=th.c;x.shadowBlur=14;
+ const ay2=up?738-(act?10*Math.sin(t*5):0):726+(act?10*Math.sin(t*5):0);
+ x.beginPath();if(up){x.moveTo(arx,ay2-4);x.lineTo(arx-26,ay2+24);x.lineTo(arx+26,ay2+24);x.fill();x.fillRect(arx-10,ay2+24,20,30)}
+ else{x.moveTo(arx,ay2+54);x.lineTo(arx-26,ay2+26);x.lineTo(arx+26,ay2+26);x.fill();x.fillRect(arx-10,ay2,20,28)}x.shadowBlur=0;
+ // labels
+ const mc=(a,b,c,d,e,f)=>pill(a,b,M(c),d,th,e==null?null:(e<0?-e:M(e)),f);
+ mc('Nose / Mouth','',470,215,285,235);
+ mc('Pharynx / Larynx','',430,300,285,300);
+ mc('Trachea','',410,380,285,380);
+ pill('Bronchus (R)','',125,465,th,235,455);pill('Bronchus (L)','',445,465,th,335,455);
+ mc('Bronchioles','',105,570,160,545);
+ mc('Lungs','',445,615,360,590);
+ mc('Alveoli','(Air sacs)',80,575,120,630);
+ if(out)pill('Carbon dioxide (CO₂)','leaves blood',140,690,th,null);else pill('Oxygen (O₂)','enters blood',460,690,th,null);
+ pill('Capillary (Blood vessel)','',out?420:150,790,th,out?420:150,742);
+ pill('Diaphragm',out?'relaxes (moves up)':'contracts (moves down)',M(440),790,th,null);
+ x.restore()}
+function draw(){const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+ if(!st.pause){if(st.mode=='auto'){st.prog+=dt*.2*st.speed;if(st.prog>=1){st.prog=0;st.act=st.act=='in'?'out':'in'}}else{st.act=st.mode;st.prog=(st.prog+dt*.25*st.speed)%1}}
+ $('phase').textContent=st.pause?'PAUSED':st.act=='in'?'INHALING':'EXHALING';
+ const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#04122e');g.addColorStop(1,'#020817');x.fillStyle=g;x.fillRect(0,0,W,H);
+ x.fillStyle='#0a1c45';x.strokeStyle='#2ea8ff';x.lineWidth=3;x.shadowColor='#2ea8ff';x.shadowBlur=16;x.beginPath();x.roundRect(190,14,760,76,38);x.fill();x.stroke();x.shadowBlur=0;
+ const tg=x.createLinearGradient(260,0,880,0);tg.addColorStop(0,'#fff');tg.addColorStop(1,'#37d2ff');x.fillStyle=tg;x.font='900 48px Segoe UI';x.textAlign='center';x.textBaseline='middle';x.fillText('THE BREATHING PROCESS',570,54);x.textAlign='left';
+ x.strokeStyle='#ffffff30';x.lineWidth=1.5;x.beginPath();x.moveTo(570,100);x.lineTo(570,H);x.stroke();
+ panel(0,false);panel(570,true);requestAnimationFrame(draw)}
+draw();
+</script></body></html>
