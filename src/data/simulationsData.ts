@@ -752,6 +752,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Elementary, Middle & Secondary English'
   },
   {
+    id: 'sim-urdu-grammar',
+    slug: 'urdu-grammar',
+    indexNumber: '53',
+    title: 'Urdu Grammar (اردو گرامر)',
+    subject: 'Urdu Linguistics & Grammar Rules (اردو گرامر)',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#10b981', // Emerald
+    description: 'Interactive Urdu Grammar (اردو گرامر) laboratory. Explore complete rules, definitions, and visual examples of لفظ، کلمہ، جملہ، فاعل، مفعول، اسم، ضمیر، صفت، فعل، حروف، رموز اوقاف، محاورات with interactive flashcards and fullscreen study modes.',
+    fileUrl: '/simulations/Urdu_Grammar.html',
+    topics: ['لفظ، کلمہ اور جملہ (Word & Sentence)', 'اسم، معرفہ، نکرہ اور جمع (Nouns)', 'ضمیر، صفت اور فعل (Pronouns, Adjectives, Verbs)', 'حروف، رموز اوقاف، محاورے اور ضرب الامثال'],
+    features: ['100% Offline Standalone Chrome-Ready Lab', 'Full Nastaliq Typography & Real-time Search', 'Interactive Category Tabs with Visual Cards', 'Fullscreen Immersive Study Environment'],
+    gradeLevel: 'Primary, Middle & Secondary Urdu'
+  },
+  {
     id: 'sim-english-grammar',
     slug: 'english-grammar',
     indexNumber: '54',
@@ -764,6 +779,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     fileUrl: '/simulations/English_Grammar.html',
     topics: ['Parts of Speech', '8 Core Word Classes', 'Interactive 3D Cards', 'Grammar Rules & Examples'],
     features: ['100% Offline Standalone Chrome-Ready Lab', '3D Perspective Orbiting Polyhedra Animation', 'Interactive Card Hover 3D Tilt Mechanics', 'Comprehensive Grammar Classification & Rules'],
+    gradeLevel: 'Elementary, Middle & Secondary English'
+  },
+  {
+    id: 'sim-parts-of-speech-lab',
+    slug: 'parts-of-speech-lab',
+    indexNumber: '55',
+    title: 'Parts of Speech Lab',
+    subject: 'English Grammar & Lexical Classes',
+    category: 'English & Grammar',
+    iconName: 'BookOpen',
+    accentColor: '#8b5cf6', // Violet
+    description: 'Interactive Parts of Speech laboratory. Master the 8 English parts of speech (Nouns, Pronouns, Verbs, Adjectives, Adverbs, Prepositions, Conjunctions, Interjections) with color-coded classification, dynamic sentence analyzers, and interactive quiz challenges.',
+    fileUrl: '/simulations/PARTS OF SPEECH LAB.html',
+    topics: ['Nouns & Pronouns', 'Verbs & Adverbs', 'Adjectives & Prepositions', 'Conjunctions & Interjections'],
+    features: ['100% Offline Standalone Chrome-Ready Lab', 'Interactive Color-Coded Grammar Cards', 'Real-world Sentence Analyzers', 'Built-in Interactive Grammar Quiz'],
     gradeLevel: 'Elementary, Middle & Secondary English'
   },
   {

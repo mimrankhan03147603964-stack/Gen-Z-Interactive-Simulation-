@@ -96,12 +96,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
   // 100% of available simulation topics currently in the system library
-  const allSimulationTopics = SIMULATIONS_LIST.filter(s => {
-    if (s.indexNumber === '53' || s.indexNumber === '55' || s.id === 'sim-cambridge-scholar-parts-of-speech-lab' || s.id === 'sim-urdu-grammar') {
-      return false;
-    }
-    return true;
-  });
+  const allSimulationTopics = SIMULATIONS_LIST;
 
   // Digital clock widget
   useEffect(() => {

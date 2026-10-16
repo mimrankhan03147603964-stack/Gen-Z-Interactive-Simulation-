@@ -249,13 +249,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     openSimulationInNewTab(sim);
   };
 
-  // Strictly remove deleted labs (LAB 53, LAB 55) entirely from the display grid
-  const activeSimulations = simulations.filter(s => {
-    if (s.indexNumber === '53' || s.indexNumber === '55' || s.id === 'sim-cambridge-scholar-parts-of-speech-lab' || s.id === 'sim-urdu-grammar') {
-      return false;
-    }
-    return true;
-  });
+  // All active simulation labs including standalone uploaded modules
+  const activeSimulations = simulations;
 
   const cleanCardTitle = (title: string): string => {
     return title

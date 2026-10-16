@@ -848,6 +848,38 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#6366f1',
     glowColor: 'rgba(99, 102, 241, 0.45)'
   },
+  '53': {
+    id: '53',
+    name: 'Urdu Grammar',
+    bgSolid: '#10b981',
+    bgGradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+    borderColor: '#34d399',
+    iconBg: '#064e3b',
+    iconBorder: '#6ee7b7',
+    iconColor: '#a7f3d0',
+    badgeBg: '#ecfdf5',
+    badgeText: '#065f46',
+    badgeBorder: '#a7f3d0',
+    tagBg: '#f0fdf4',
+    tagText: '#047857',
+    glowColor: 'rgba(16, 185, 129, 0.45)'
+  },
+  '55': {
+    id: '55',
+    name: 'Parts of Speech Lab',
+    bgSolid: '#8b5cf6',
+    bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+    borderColor: '#c4b5fd',
+    iconBg: '#4c1d95',
+    iconBorder: '#a78bfa',
+    iconColor: '#ede9fe',
+    badgeBg: '#f5f3ff',
+    badgeText: '#5b21b6',
+    badgeBorder: '#ddd6fe',
+    tagBg: '#ede9fe',
+    tagText: '#7c3aed',
+    glowColor: 'rgba(139, 92, 246, 0.45)'
+  },
   '56': {
     id: '56',
     name: 'ECCE Learning World',

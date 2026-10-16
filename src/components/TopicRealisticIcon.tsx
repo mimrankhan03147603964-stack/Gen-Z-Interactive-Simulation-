@@ -1710,6 +1710,36 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 53: Urdu Grammar (اردو گرامر)
+    case 53:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="urduBookGrad" x1="10" y1="14" x2="54" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#064e3b" />
+            </linearGradient>
+            <linearGradient id="urduPageGrad" x1="16" y1="20" x2="48" y2="44" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#ecfdf5" />
+            </linearGradient>
+          </defs>
+          {/* Open Book Base */}
+          <path d="M8 44 C18 40 28 41 32 46 C36 41 46 40 56 44 V20 C46 16 36 17 32 22 C28 17 18 16 8 20 Z" fill="url(#urduBookGrad)" stroke="#34d399" strokeWidth="1.5" />
+          {/* Inner Pages */}
+          <path d="M12 40 C20 37 28 38 31 43 C34 38 42 37 52 40 V18 C42 15 34 16 31 21 C28 16 20 15 12 18 Z" fill="url(#urduPageGrad)" stroke="#a7f3d0" strokeWidth="1" />
+          {/* Book Spine */}
+          <line x1="31.5" y1="21" x2="31.5" y2="44" stroke="#059669" strokeWidth="1.5" />
+          {/* Nastaliq text on pages */}
+          <text x="21" y="32" fill="#065f46" fontSize="11" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', serif">اردو</text>
+          <text x="42" y="32" fill="#047857" fontSize="10" fontWeight="bold" textAnchor="middle" fontFamily="'Noto Nastaliq Urdu', serif">گرامر</text>
+          {/* Golden feather pen (Qalam) */}
+          <path d="M46 12 C48 10 52 11 53 14 C51 22 41 30 38 33 L37 31 C40 28 45 19 46 12 Z" fill="#facc15" stroke="#d97706" strokeWidth="0.8" />
+          <circle cx="16" cy="12" r="1.5" fill="#34d399" />
+          <circle cx="50" cy="48" r="1.8" fill="#facc15" />
+        </svg>
+      );
+
     // 54: English Grammar (3D Cubes & Parts of Speech Studio)
     case 54:
       return (
@@ -1746,6 +1776,42 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <circle cx="54" cy="14" r="1.8" fill="#00c6ff" />
           <circle cx="48" cy="52" r="1.5" fill="#2ecc71" />
           <circle cx="16" cy="50" r="1.5" fill="#f1c40f" />
+        </svg>
+      );
+
+    // 55: Parts of Speech Lab
+    case 55:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="posCard1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#6d28d9" />
+            </linearGradient>
+            <linearGradient id="posCard2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+            <linearGradient id="posCard3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#d97706" />
+            </linearGradient>
+          </defs>
+          {/* Card 1: Noun */}
+          <rect x="8" y="14" width="22" height="15" rx="3.5" fill="url(#posCard1)" stroke="#ddd6fe" strokeWidth="1.2" />
+          <text x="19" y="24" fill="#ffffff" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">NOUN</text>
+          {/* Card 2: Verb */}
+          <rect x="34" y="14" width="22" height="15" rx="3.5" fill="url(#posCard2)" stroke="#bae6fd" strokeWidth="1.2" />
+          <text x="45" y="24" fill="#ffffff" fontSize="7" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">VERB</text>
+          {/* Card 3: Adjective */}
+          <rect x="8" y="35" width="22" height="15" rx="3.5" fill="url(#posCard3)" stroke="#fde68a" strokeWidth="1.2" />
+          <text x="19" y="45" fill="#ffffff" fontSize="6.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ADJ</text>
+          {/* Card 4: Adverb */}
+          <rect x="34" y="35" width="22" height="15" rx="3.5" fill="#ec4899" stroke="#fbcfe8" strokeWidth="1.2" />
+          <text x="45" y="45" fill="#ffffff" fontSize="6.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ADV</text>
+          {/* Linking syntactic arc */}
+          <path d="M30 21.5 C32 21.5 32 42.5 30 42.5" stroke="#facc15" strokeWidth="1.5" strokeDasharray="2 2" />
+          <circle cx="32" cy="32" r="3" fill="#facc15" />
         </svg>
       );
 
