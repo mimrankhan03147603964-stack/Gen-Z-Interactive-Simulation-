@@ -1055,6 +1055,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fce7f3',
     tagText: '#db2777',
     glowColor: 'rgba(236, 72, 153, 0.45)'
+  },
+  '66': {
+    id: '66',
+    name: 'Human Heart Simulation',
+    bgSolid: '#dc2626',
+    bgGradient: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
+    borderColor: '#f87171',
+    iconBg: '#7f1d1d',
+    iconBorder: '#f87171',
+    iconColor: '#fecaca',
+    badgeBg: '#fef2f2',
+    badgeText: '#991b1b',
+    badgeBorder: '#fecaca',
+    tagBg: '#fee2e2',
+    tagText: '#b91c1c',
+    glowColor: 'rgba(220, 38, 38, 0.45)'
+  },
+  '67': {
+    id: '67',
+    name: 'Ice to Water to Steam Simulation',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0c4a6e',
+    iconBorder: '#38bdf8',
+    iconColor: '#e0f2fe',
+    badgeBg: '#f0f9ff',
+    badgeText: '#0369a1',
+    badgeBorder: '#bae6fd',
+    tagBg: '#e0f2fe',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.45)'
+  },
+  '68': {
+    id: '68',
+    name: 'Water Cycle Simulation',
+    bgSolid: '#0ea5e9',
+    bgGradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+    borderColor: '#7dd3fc',
+    iconBg: '#082f49',
+    iconBorder: '#38bdf8',
+    iconColor: '#f0f9ff',
+    badgeBg: '#f0f9ff',
+    badgeText: '#075985',
+    badgeBorder: '#bae6fd',
+    tagBg: '#e0f2fe',
+    tagText: '#0284c7',
+    glowColor: 'rgba(14, 165, 233, 0.45)'
   }
 };
 

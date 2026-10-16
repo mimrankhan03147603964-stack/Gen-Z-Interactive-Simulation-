@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Anatomy Simulation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #090d16;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(90deg, #1e1b4b, #311042);
+      border-bottom: 1px solid #4338ca;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+    .sub-head {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background: #334155;
+      border-color: #64748b;
+    }
+    .btn-primary {
+      background: #ef4444;
+      border-color: #dc2626;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #dc2626;
+    }
+    .btn-purple {
+      background: #6366f1;
+      border-color: #4f46e5;
+      color: #fff;
+    }
+    .btn-purple:hover {
+      background: #4f46e5;
+    }
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      flex: 1;
+      min-height: calc(100vh - 75px);
+    }
+    @media (max-width: 1024px) {
+      .main-layout { grid-template-columns: 1fr; }
+    }
+    .viewport-panel {
+      position: relative;
+      background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #1f2937;
+      overflow: hidden;
+    }
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+    .floating-hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      gap: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .hud-metric {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hud-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f8fafc;
+      font-family: monospace;
+    }
+    .hud-value.red { color: #f87171; }
+    .hud-value.blue { color: #60a5fa; }
+    .hud-value.green { color: #4ade80; }
+    .controls-strip {
+      background: #0f172a;
+      border-top: 1px solid #1e293b;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .control-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    .control-item input[type="range"] {
+      width: 130px;
+      accent-color: #ef4444;
+      cursor: pointer;
+    }
+    .view-toggles {
+      display: flex;
+      background: #1e293b;
+      padding: 3px;
+      border-radius: 8px;
+      gap: 4px;
+    }
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .view-btn.active {
+      background: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
+    .sidebar-panel {
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-height: calc(100vh - 75px);
+    }
+    .tab-header {
+      display: flex;
+      border-bottom: 1px solid #1e293b;
+      background: #0c1322;
+    }
+    .sidebar-tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .sidebar-tab.active {
+      color: #f8fafc;
+      border-bottom-color: #ef4444;
+      background: #111c33;
+    }
+    .tab-content {
+      padding: 20px;
+      flex: 1;
+    }
+    .info-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .info-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .info-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .structure-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .structure-item {
+      background: #111a2e;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .structure-item:hover, .structure-item.active {
+      border-color: #ef4444;
+      background: #1e293b;
+      transform: translateX(4px);
+    }
+    .structure-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .structure-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #2563eb; }
+    .tag-red { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #dc2626; }
+    .tag-yellow { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #ca8a04; }
+    .tag-purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #9333ea; }
+    .quiz-box {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .quiz-q {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f3f4f6;
+      margin-bottom: 12px;
+    }
+    .quiz-opt {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #e5e7eb;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .quiz-opt:hover {
+      background: #374151;
+      border-color: #6b7280;
+    }
+    .quiz-opt.correct {
+      background: #065f46;
+      border-color: #10b981;
+      color: #fff;
+    }
+    .quiz-opt.wrong {
+      background: #991b1b;
+      border-color: #ef4444;
+      color: #fff;
+    }
+    .ecg-box {
+      margin-top: 14px;
+      background: #030712;
+      border: 1px solid #1f2937;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .ecg-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #10b981;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    #ecgCanvas {
+      width: 100%;
+      height: 60px;
+      display: block;
+      background: #000;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title-group">
+      <span class="badge">LAB 57</span>
+      <div>
+        <h1>Heart Anatomy Simulation</h1>
+        <div class="sub-head">Internal Chambers, Valves, Great Vessels &amp; Electrical Conduction System</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="btnReset">⟳ Reset View</button>
+      <button class="btn btn-purple" id="btnQuizToggle">🎯 Quiz Mode</button>
+      <button class="btn btn-primary" id="btnFullscreen">⤢ Fullscreen</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <div class="viewport-panel">
+      <div class="floating-hud">
+        <div class="hud-metric">
+          <span class="hud-label">Heart Rate</span>
+          <span class="hud-value red" id="hudBpm">72 BPM</span>
+        </div>
+        <div class="hud-metric">
+          <span class="hud-label">Cardiac Phase</span>
+          <span class="hud-value" id="hudPhase">Ventricular Systole</span>
+        </div>
+        <div class="hud-metric">
+          <span class="hud-label">Cardiac Output</span>
+          <span class="hud-value blue" id="hudOutput">5.04 L/min</span>
+        </div>
+        <div class="hud-metric">
+          <span class="hud-label">Conduction</span>
+          <span class="hud-value green" id="hudConduction">SA → AV → Purkinje</span>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="heartCanvas"></canvas>
+      </div>
+
+      <div class="controls-strip">
+        <div class="control-item">
+          <span>Heart Rate (BPM):</span>
+          <input type="range" id="bpmSlider" min="40" max="160" value="72">
+          <span id="bpmDisplay" style="color:#ef4444; min-width:32px;">72</span>
+        </div>
+
+        <div class="view-toggles">
+          <button class="view-btn active" id="btnModeCross">Cross Section</button>
+          <button class="view-btn" id="btnModeConduction">Conduction Nodes</button>
+          <button class="view-btn" id="btnModeValves">Heart Valves</button>
+          <button class="view-btn" id="btnModeVessels">Great Vessels</button>
+        </div>
+
+        <div class="control-item">
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="chkBloodFlow" checked>
+            <span>Animate Flow Particles</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-panel">
+      <div class="tab-header">
+        <div class="sidebar-tab active" id="tabAnatomy">Anatomy Atlas</div>
+        <div class="sidebar-tab" id="tabPhysiology">Physiology &amp; Valves</div>
+        <div class="sidebar-tab" id="tabQuiz">Knowledge Test</div>
+      </div>
+
+      <div class="tab-content" id="contentArea">
+        <!-- Dynamic content filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STRUCTURES = {
+      ra: {
+        name: "Right Atrium",
+        tag: "Deoxygenated",
+        tagClass: "tag-blue",
+        role: "Receiving Chamber",
+        desc: "Receives deoxygenated venous blood returning from the upper and lower body tissues via the Superior and Inferior Vena Cava. Pumps blood into the right ventricle through the tricuspid valve.",
+        cx: 260, cy: 260, r: 50, color: "#2563eb"
+      },
+      rv: {
+        name: "Right Ventricle",
+        tag: "Deoxygenated",
+        tagClass: "tag-blue",
+        role: "Pulmonary Pump",
+        desc: "Thick-walled lower chamber that ejects deoxygenated blood through the pulmonary semilunar valve into the pulmonary artery, leading to the lungs for gas exchange.",
+        cx: 280, cy: 380, r: 60, color: "#1d4ed8"
+      },
+      la: {
+        name: "Left Atrium",
+        tag: "Oxygenated",
+        tagClass: "tag-red",
+        role: "Receiving Chamber",
+        desc: "Receives freshly oxygenated blood from the lungs via four pulmonary veins. Contracts during atrial systole to push blood across the mitral (bicuspid) valve into the left ventricle.",
+        cx: 440, cy: 260, r: 50, color: "#dc2626"
+      },
+      lv: {
+        name: "Left Ventricle",
+        tag: "Oxygenated",
+        tagClass: "tag-red",
+        role: "Systemic Pump",
+        desc: "The largest and most muscular heart chamber (approx. 3x thicker myocardium than RV). Develops high pressure (120 mmHg) to pump blood through the aortic valve into the aorta and entire body.",
+        cx: 420, cy: 400, r: 70, color: "#b91c1c"
+      },
+      aorta: {
+        name: "Aorta & Aortic Arch",
+        tag: "High Pressure",
+        tagClass: "tag-red",
+        role: "Main Systemic Artery",
+        desc: "The largest blood vessel in the human body. Arches superiorly from the left ventricle, branching into brachiocephalic, carotid, and subclavian arteries to supply the brain, heart, and body.",
+        cx: 370, cy: 130, r: 40, color: "#ef4444"
+      },
+      pa: {
+        name: "Pulmonary Artery Trunk",
+        tag: "Deoxygenated Artery",
+        tagClass: "tag-blue",
+        role: "Vessel to Lungs",
+        desc: "Carries oxygen-depleted blood from the right ventricle into left and right pulmonary branches towards alveolar capillaries for oxygen uptake and CO2 release.",
+        cx: 320, cy: 160, r: 35, color: "#3b82f6"
+      },
+      svc: {
+        name: "Superior & Inferior Vena Cava",
+        tag: "Venous Return",
+        tagClass: "tag-blue",
+        role: "Great Veins",
+        desc: "Large systemic veins returning blood from head, neck, upper limbs (SVC) and lower body, abdomen, and viscera (IVC) back into the right atrium.",
+        cx: 210, cy: 150, r: 30, color: "#1e40af"
+      },
+      sanode: {
+        name: "Sinoatrial (SA) Node",
+        tag: "Pacemaker",
+        tagClass: "tag-yellow",
+        role: "Cardiac Pacemaker",
+        desc: "Crescent-shaped cluster of specialized autorhythmic pacemaker cells in the right atrial wall. Automatically fires electrical action potentials at 60-100 times/min to initiate each heartbeat.",
+        cx: 235, cy: 230, r: 16, color: "#eab308"
+      },
+      avnode: {
+        name: "Atrioventricular (AV) Node",
+        tag: "Conduction Gate",
+        tagClass: "tag-yellow",
+        role: "Conduction Relay",
+        desc: "Located at the interatrial septum. Imposes an essential 0.1-second delay, allowing the atria to fully empty into ventricles before ventricular contraction begins.",
+        cx: 340, cy: 300, r: 14, color: "#facc15"
+      },
+      his: {
+        name: "Bundle of His & Purkinje Fibers",
+        tag: "Rapid Conduction",
+        tagClass: "tag-yellow",
+        role: "Ventricular Activation",
+        desc: "High-speed conduction fibers transmitting electrical depolarization through the interventricular septum to myocardial apex and ventricular walls, triggering coordinated contraction from apex upward.",
+        cx: 350, cy: 420, r: 25, color: "#fde047"
+      },
+      tricuspid: {
+        name: "Tricuspid Atrioventricular Valve",
+        tag: "Valve",
+        tagClass: "tag-purple",
+        role: "Right AV Prevention",
+        desc: "Three fibrous cusps connected by chordae tendineae to papillary muscles. Closes during ventricular systole to prevent regurgitation into the right atrium (producing the S1 heart sound).",
+        cx: 270, cy: 320, r: 18, color: "#a855f7"
+      },
+      mitral: {
+        name: "Mitral (Bicuspid) Valve",
+        tag: "Valve",
+        tagClass: "tag-purple",
+        role: "Left AV Prevention",
+        desc: "Dual-cusped valve between left atrium and left ventricle. Endures high ventricular pressures; closure corresponds to first heart sound (\"Lub\").",
+        cx: 430, cy: 330, r: 18, color: "#9333ea"
+      }
+    };
+
+    let activeKey = "ra";
+    let activeMode = "cross";
+    let heartRate = 72;
+    let bloodFlowActive = true;
+    let quizActive = false;
+    let currentQuizIndex = 0;
+    let score = 0;
+
+    const canvas = document.getElementById("heartCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const particles = [];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        type: i % 2 === 0 ? "blue" : "red",
+        progress: Math.random(),
+        speed: 0.003 + Math.random() * 0.004,
+        offset: (Math.random() - 0.5) * 16
+      });
+    }
+
+    let phaseTime = 0;
+
+    function draw() {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, w, h);
+
+      const scale = Math.min(w / 700, h / 600);
+      const offsetX = (w - 700 * scale) / 2;
+      const offsetY = (h - 600 * scale) / 2;
+
+      ctx.save();
+      ctx.translate(offsetX, offsetY);
+      ctx.scale(scale, scale);
+
+      phaseTime += (heartRate / 60) * 0.035;
+      const cycle = phaseTime % 1;
+      let pulseScale = 1;
+      let phaseLabel = "Ventricular Diastole (Filling)";
+
+      if (cycle < 0.2) {
+        pulseScale = 1 + Math.sin(cycle / 0.2 * Math.PI) * 0.025;
+        phaseLabel = "Atrial Systole (Active Filling)";
+      } else if (cycle < 0.6) {
+        pulseScale = 1 - Math.sin((cycle - 0.2) / 0.4 * Math.PI) * 0.045;
+        phaseLabel = "Ventricular Systole (Pumping)";
+      } else {
+        phaseLabel = "Isovolumetric Relaxation / Diastole";
+      }
+
+      document.getElementById("hudPhase").textContent = phaseLabel;
+      document.getElementById("hudOutput").textContent = ((heartRate * 70) / 1000).toFixed(2) + " L/min";
+
+      ctx.save();
+      ctx.translate(350, 340);
+      ctx.scale(pulseScale, pulseScale);
+      ctx.translate(-350, -340);
+
+      // Superior Vena Cava
+      ctx.fillStyle = activeKey === "svc" || activeMode === "vessels" ? "#3b82f6" : "#1e3a8a";
+      ctx.beginPath();
+      ctx.roundRect(190, 80, 50, 160, [14, 14, 0, 0]);
+      ctx.fill();
+
+      // Aortic Arch
+      ctx.fillStyle = activeKey === "aorta" || activeMode === "vessels" ? "#ef4444" : "#991b1b";
+      ctx.beginPath();
+      ctx.arc(360, 150, 70, Math.PI, 0, false);
+      ctx.lineWidth = 42;
+      ctx.strokeStyle = ctx.fillStyle;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ef4444";
+      [315, 360, 405].forEach((bx) => {
+        ctx.beginPath();
+        ctx.roundRect(bx - 10, 50, 20, 50, [6, 6, 0, 0]);
+        ctx.fill();
+      });
+
+      // Pulmonary Trunk
+      ctx.fillStyle = activeKey === "pa" || activeMode === "vessels" ? "#2563eb" : "#1e40af";
+      ctx.beginPath();
+      ctx.moveTo(310, 240);
+      ctx.lineTo(260, 130);
+      ctx.lineTo(390, 130);
+      ctx.lineTo(350, 240);
+      ctx.closePath();
+      ctx.fill();
+
+      // Outer Myocardium Body
+      ctx.fillStyle = "#7f1d1d";
+      ctx.strokeStyle = "#991b1b";
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.moveTo(350, 190);
+      ctx.bezierCurveTo(460, 170, 560, 260, 520, 410);
+      ctx.bezierCurveTo(490, 530, 380, 570, 350, 580);
+      ctx.bezierCurveTo(320, 570, 210, 530, 180, 410);
+      ctx.bezierCurveTo(140, 260, 240, 170, 350, 190);
+      ctx.fill();
+      ctx.stroke();
+
+      if (activeMode === "cross" || activeMode === "valves") {
+        ctx.fillStyle = activeKey === "ra" ? "#1e40af" : "#0f2347";
+        ctx.strokeStyle = "#3b82f6";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(260, 270, 55, 45, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = activeKey === "rv" ? "#1d4ed8" : "#091e3f";
+        ctx.strokeStyle = "#2563eb";
+        ctx.beginPath();
+        ctx.ellipse(280, 395, 60, 65, 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = activeKey === "la" ? "#991b1b" : "#450a0a";
+        ctx.strokeStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.ellipse(435, 270, 55, 45, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = activeKey === "lv" ? "#b91c1c" : "#5a0b0b";
+        ctx.strokeStyle = "#dc2626";
+        ctx.beginPath();
+        ctx.ellipse(420, 410, 55, 75, -0.15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#991b1b";
+        ctx.beginPath();
+        ctx.roundRect(335, 320, 30, 220, 15);
+        ctx.fill();
+
+        const isTricuspidOpen = cycle < 0.2 || cycle > 0.6;
+        ctx.strokeStyle = activeKey === "tricuspid" || activeMode === "valves" ? "#facc15" : "#e2e8f0";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        if (isTricuspidOpen) {
+          ctx.moveTo(235, 320); ctx.lineTo(250, 335);
+          ctx.moveTo(285, 320); ctx.lineTo(270, 335);
+        } else {
+          ctx.moveTo(235, 322); ctx.lineTo(285, 322);
+        }
+        ctx.stroke();
+
+        const isMitralOpen = isTricuspidOpen;
+        ctx.strokeStyle = activeKey === "mitral" || activeMode === "valves" ? "#facc15" : "#e2e8f0";
+        ctx.beginPath();
+        if (isMitralOpen) {
+          ctx.moveTo(410, 320); ctx.lineTo(425, 335);
+          ctx.moveTo(460, 320); ctx.lineTo(445, 335);
+        } else {
+          ctx.moveTo(410, 322); ctx.lineTo(460, 322);
+        }
+        ctx.stroke();
+      }
+
+      if (activeMode === "conduction") {
+        const saGlow = Math.sin(phaseTime * 4) * 0.5 + 0.5;
+        ctx.fillStyle = "#eab308";
+        ctx.shadowColor = "#facc15";
+        ctx.shadowBlur = 15 * saGlow + 5;
+        ctx.beginPath();
+        ctx.arc(235, 230, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.7)";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(235, 230);
+        ctx.quadraticCurveTo(290, 260, 340, 300);
+        ctx.stroke();
+
+        ctx.fillStyle = "#facc15";
+        ctx.beginPath();
+        ctx.arc(340, 300, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(340, 300);
+        ctx.lineTo(350, 360);
+        ctx.lineTo(330, 480);
+        ctx.moveTo(350, 360);
+        ctx.lineTo(370, 480);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.shadowBlur = 0;
+      }
+
+      if (bloodFlowActive) {
+        particles.forEach((p) => {
+          p.progress += p.speed * (heartRate / 60);
+          if (p.progress > 1) p.progress = 0;
+
+          let px, py;
+          if (p.type === "blue") {
+            if (p.progress < 0.3) {
+              px = 215 + (p.progress / 0.3) * 45 + p.offset;
+              py = 100 + (p.progress / 0.3) * 160;
+            } else if (p.progress < 0.65) {
+              const sub = (p.progress - 0.3) / 0.35;
+              px = 260 + sub * 20 + p.offset;
+              py = 260 + sub * 135;
+            } else {
+              const sub = (p.progress - 0.65) / 0.35;
+              px = 280 + sub * 40 + p.offset;
+              py = 395 - sub * 250;
+            }
+            ctx.fillStyle = "rgba(96, 165, 250, 0.85)";
+          } else {
+            if (p.progress < 0.3) {
+              px = 480 - (p.progress / 0.3) * 45 + p.offset;
+              py = 190 + (p.progress / 0.3) * 80;
+            } else if (p.progress < 0.65) {
+              const sub = (p.progress - 0.3) / 0.35;
+              px = 435 - sub * 15 + p.offset;
+              py = 270 + sub * 140;
+            } else {
+              const sub = (p.progress - 0.65) / 0.35;
+              px = 420 - sub * 60 + p.offset;
+              py = 410 - sub * 280;
+            }
+            ctx.fillStyle = "rgba(248, 113, 113, 0.85)";
+          }
+
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      const target = STRUCTURES[activeKey];
+      if (target) {
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#ef4444";
+        ctx.lineWidth = 3;
+        ctx.shadowColor = "#ffffff";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(target.cx, target.cy, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 13px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText(target.name, target.cx, target.cy - 16);
+      }
+
+      ctx.restore();
+      ctx.restore();
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    canvas.addEventListener("click", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+      const scale = Math.min(w / 700, h / 600);
+      const offsetX = (w - 700 * scale) / 2;
+      const offsetY = (h - 600 * scale) / 2;
+
+      const simX = (clickX - offsetX) / scale;
+      const simY = (clickY - offsetY) / scale;
+
+      let closestKey = null;
+      let minDistance = 60;
+
+      for (const [k, s] of Object.entries(STRUCTURES)) {
+        const dist = Math.hypot(s.cx - simX, s.cy - simY);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestKey = k;
+        }
+      }
+
+      if (closestKey) {
+        selectStructure(closestKey);
+      }
+    });
+
+    function selectStructure(key) {
+      activeKey = key;
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      const area = document.getElementById("contentArea");
+      const s = STRUCTURES[activeKey];
+
+      if (quizActive) {
+        renderQuiz();
+        return;
+      }
+
+      let html = '<div class="info-card">';
+      html += '<div class="info-title"><span>' + s.name + '</span><span class="structure-tag ' + s.tagClass + '">' + s.tag + '</span></div>';
+      html += '<p class="info-desc" style="font-weight:600; color:#93c5fd; margin-bottom:6px;">Role: ' + s.role + '</p>';
+      html += '<p class="info-desc">' + s.desc + '</p>';
+      html += '</div>';
+
+      html += '<div class="info-card">';
+      html += '<div class="info-title">Interactive Heart Structures</div>';
+      html += '<div class="structure-list">';
+
+      for (const [k, item] of Object.entries(STRUCTURES)) {
+        const isActive = k === activeKey;
+        html += '<div class="structure-item ' + (isActive ? 'active' : '') + '" onclick="selectStructure(\'' + k + '\')">';
+        html += '<span class="structure-name">' + item.name + '</span>';
+        html += '<span class="structure-tag ' + item.tagClass + '">' + item.tag + '</span>';
+        html += '</div>';
+      }
+
+      html += '</div></div>';
+
+      html += '<div class="ecg-box">';
+      html += '<div class="ecg-title"><span>LIVE ECG MONITOR (LEAD II)</span><span style="color:#ef4444;" id="ecgBpmLabel">' + heartRate + ' BPM</span></div>';
+      html += '<canvas id="ecgCanvas"></canvas>';
+      html += '</div>';
+
+      area.innerHTML = html;
+      drawEcg();
+    }
+
+    const QUIZ_QUESTIONS = [
+      {
+        q: "Which chamber pumps oxygenated blood into the aorta under highest systemic pressure?",
+        opts: ["Right Atrium", "Right Ventricle", "Left Atrium", "Left Ventricle"],
+        ans: 3,
+        expl: "The Left Ventricle has the thickest muscular myocardium to generate up to 120 mmHg systolic pressure."
+      },
+      {
+        q: "What is known as the primary natural pacemaker of the heart?",
+        opts: ["AV Node", "SA Node", "Bundle of His", "Purkinje Fibers"],
+        ans: 1,
+        expl: "The Sinoatrial (SA) node in the right atrium generates autorhythmic action potentials driving heart rate."
+      },
+      {
+        q: "Which valve prevents the backflow of blood from the right ventricle into the right atrium?",
+        opts: ["Tricuspid Valve", "Mitral Valve", "Aortic Valve", "Pulmonary Valve"],
+        ans: 0,
+        expl: "The Tricuspid valve (Right AV valve) closes during ventricular contraction to prevent regurgitation."
+      },
+      {
+        q: "Oxygen-depleted venous blood returns from body organs to the heart via which vessels?",
+        opts: ["Pulmonary Veins", "Aorta", "Vena Cava (SVC & IVC)", "Carotid Artery"],
+        ans: 2,
+        expl: "The Superior and Inferior Vena Cava drain deoxygenated systemic venous return directly into the Right Atrium."
+      }
+    ];
+
+    function renderQuiz() {
+      const area = document.getElementById("contentArea");
+      const cur = QUIZ_QUESTIONS[currentQuizIndex];
+
+      let optsHtml = cur.opts.map((opt, i) => {
+        return '<div class="quiz-opt" onclick="answerQuiz(' + i + ')">' + opt + '</div>';
+      }).join('');
+
+      area.innerHTML = '<div class="quiz-box">' +
+        '<div style="display:flex; justify-content:space-between; margin-bottom:12px;">' +
+        '<span style="font-size:12px; font-weight:800; color:#ef4444;">QUESTION ' + (currentQuizIndex + 1) + ' OF ' + QUIZ_QUESTIONS.length + '</span>' +
+        '<span style="font-size:12px; font-weight:700; color:#4ade80;">SCORE: ' + score + '</span>' +
+        '</div>' +
+        '<p class="quiz-q">' + cur.q + '</p>' +
+        '<div id="quizOptions">' + optsHtml + '</div>' +
+        '<div id="quizFeedback" style="margin-top:12px; font-size:13px; line-height:1.5;"></div>' +
+        '<button class="btn btn-primary" id="btnNextQ" style="display:none; margin-top:14px; width:100%;" onclick="nextQuestion()">Next Question →</button>' +
+        '</div>';
+    }
+
+    window.answerQuiz = function(selected) {
+      const cur = QUIZ_QUESTIONS[currentQuizIndex];
+      const opts = document.querySelectorAll(".quiz-opt");
+      opts.forEach((btn, idx) => {
+        btn.onclick = null;
+        if (idx === cur.ans) btn.classList.add("correct");
+        else if (idx === selected) btn.classList.add("wrong");
+      });
+
+      const feedback = document.getElementById("quizFeedback");
+      if (selected === cur.ans) {
+        score += 25;
+        feedback.innerHTML = '<span style="color:#4ade80; font-weight:700;">✓ Correct!</span> ' + cur.expl;
+      } else {
+        feedback.innerHTML = '<span style="color:#f87171; font-weight:700;">✗ Incorrect.</span> ' + cur.expl;
+      }
+      document.getElementById("btnNextQ").style.display = "block";
+    };
+
+    window.nextQuestion = function() {
+      currentQuizIndex++;
+      if (currentQuizIndex >= QUIZ_QUESTIONS.length) {
+        const area = document.getElementById("contentArea");
+        area.innerHTML = '<div class="quiz-box" style="text-align:center; padding:28px 16px;">' +
+          '<h2 style="color:#f8fafc; font-size:22px; margin-bottom:8px;">Quiz Completed! 🎉</h2>' +
+          '<p style="font-size:16px; color:#cbd5e1; margin-bottom:18px;">Your final score is: <b style="color:#ef4444; font-size:20px;">' + score + '%</b></p>' +
+          '<button class="btn btn-primary" onclick="restartQuiz()">Restart Quiz</button>' +
+          '<button class="btn" style="margin-left:8px;" onclick="toggleQuizMode(false)">Back to Anatomy</button>' +
+          '</div>';
+      } else {
+        renderQuiz();
+      }
+    };
+
+    window.restartQuiz = function() {
+      score = 0;
+      currentQuizIndex = 0;
+      renderQuiz();
+    };
+
+    function toggleQuizMode(enable) {
+      quizActive = enable;
+      document.getElementById("tabQuiz").classList.toggle("active", quizActive);
+      document.getElementById("tabAnatomy").classList.toggle("active", !quizActive);
+      renderSidebar();
+    }
+
+    function drawEcg() {
+      const ecgCanvas = document.getElementById("ecgCanvas");
+      if (!ecgCanvas) return;
+      const ecgCtx = ecgCanvas.getContext("2d");
+      const w = ecgCanvas.width = ecgCanvas.offsetWidth;
+      const h = ecgCanvas.height = ecgCanvas.offsetHeight;
+
+      ecgCtx.fillStyle = "#000000";
+      ecgCtx.fillRect(0, 0, w, h);
+
+      ecgCtx.strokeStyle = "rgba(16, 185, 129, 0.15)";
+      ecgCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 15) {
+        ecgCtx.beginPath(); ecgCtx.moveTo(x, 0); ecgCtx.lineTo(x, h); ecgCtx.stroke();
+      }
+      for (let y = 0; y < h; y += 15) {
+        ecgCtx.beginPath(); ecgCtx.moveTo(0, y); ecgCtx.lineTo(w, y); ecgCtx.stroke();
+      }
+
+      ecgCtx.strokeStyle = "#10b981";
+      ecgCtx.lineWidth = 2;
+      ecgCtx.shadowColor = "#10b981";
+      ecgCtx.shadowBlur = 6;
+      ecgCtx.beginPath();
+
+      const midY = h / 2;
+      for (let x = 0; x < w; x++) {
+        const t = (x * 3) % 180;
+        let y = midY;
+        if (t > 30 && t < 45) {
+          y -= Math.sin((t - 30) / 15 * Math.PI) * 8;
+        } else if (t >= 55 && t <= 58) {
+          y += 5;
+        } else if (t > 58 && t < 68) {
+          y -= 26;
+        } else if (t >= 68 && t <= 72) {
+          y += 10;
+        } else if (t > 95 && t < 125) {
+          y -= Math.sin((t - 95) / 30 * Math.PI) * 12;
+        }
+        if (x === 0) ecgCtx.moveTo(x, y);
+        else ecgCtx.lineTo(x, y);
+      }
+      ecgCtx.stroke();
+    }
+
+    document.getElementById("bpmSlider").addEventListener("input", (e) => {
+      heartRate = parseInt(e.target.value);
+      document.getElementById("bpmDisplay").textContent = heartRate;
+      document.getElementById("hudBpm").textContent = heartRate + " BPM";
+      const lbl = document.getElementById("ecgBpmLabel");
+      if (lbl) lbl.textContent = heartRate + " BPM";
+    });
+
+    document.getElementById("chkBloodFlow").addEventListener("change", (e) => {
+      bloodFlowActive = e.target.checked;
+    });
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      heartRate = 72;
+      document.getElementById("bpmSlider").value = 72;
+      document.getElementById("bpmDisplay").textContent = "72";
+      document.getElementById("hudBpm").textContent = "72 BPM";
+      activeKey = "ra";
+      activeMode = "cross";
+      updateViewButtons();
+      renderSidebar();
+    });
+
+    function updateViewButtons() {
+      document.getElementById("btnModeCross").classList.toggle("active", activeMode === "cross");
+      document.getElementById("btnModeConduction").classList.toggle("active", activeMode === "conduction");
+      document.getElementById("btnModeValves").classList.toggle("active", activeMode === "valves");
+      document.getElementById("btnModeVessels").classList.toggle("active", activeMode === "vessels");
+    }
+
+    document.getElementById("btnModeCross").addEventListener("click", () => { activeMode = "cross"; updateViewButtons(); });
+    document.getElementById("btnModeConduction").addEventListener("click", () => { activeMode = "conduction"; updateViewButtons(); });
+    document.getElementById("btnModeValves").addEventListener("click", () => { activeMode = "valves"; updateViewButtons(); });
+    document.getElementById("btnModeVessels").addEventListener("click", () => { activeMode = "vessels"; updateViewButtons(); });
+
+    document.getElementById("tabAnatomy").addEventListener("click", () => toggleQuizMode(false));
+    document.getElementById("tabPhysiology").addEventListener("click", () => {
+      activeMode = "valves";
+      updateViewButtons();
+      toggleQuizMode(false);
+    });
+    document.getElementById("tabQuiz").addEventListener("click", () => toggleQuizMode(true));
+    document.getElementById("btnQuizToggle").addEventListener("click", () => toggleQuizMode(!quizActive));
+
+    document.getElementById("btnFullscreen").addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    renderSidebar();
+  </script>
+</body>
+</html>

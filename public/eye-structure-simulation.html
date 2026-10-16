@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eye Structure Simulation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;min-height:100vh;padding:14px;color:#0a2a5c;
+background:radial-gradient(circle at 0 0,#ff7a59 0,transparent 22%),radial-gradient(circle at 100% 0,#3ac7ff 0,transparent 25%),radial-gradient(circle at 0 100%,#ffd23c 0,transparent 22%),radial-gradient(circle at 100% 100%,#7a3aff 0,transparent 25%),linear-gradient(135deg,#e6f5ff,#f7fbff)}
+.wrap{max-width:1300px;margin:auto}
+.banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.t1{background:linear-gradient(90deg,#0a4fd8,#1aa0ff);color:#fff;font-size:44px;font-weight:900;padding:8px 34px 12px;border-radius:24px 40px 40px 24px;box-shadow:0 8px 20px #0a4fd855;text-shadow:0 3px 0 #0a3aa0}
+.t1 b{color:#ffe21f}
+.t2{background:#0a2a6a;color:#fff;font-size:20px;font-weight:700;padding:10px 26px;border-radius:30px;transform:rotate(-1.5deg)}
+.card{background:rgba(255,255,255,.85);border-radius:28px;box-shadow:0 10px 30px #0a4fd833;border:2px solid #fff;padding:14px}
+.top{display:grid;grid-template-columns:270px minmax(0,1fr) 250px;gap:14px;align-items:start}
+.ext{padding:0;background:none;box-shadow:none;border:0;text-align:center}
+.ext canvas{width:100%;border-radius:36px;border:6px solid #4cc3ff;box-shadow:0 8px 20px #0a4fd855;display:block;background:#e9b58c}
+.extl{display:inline-block;margin-top:-22px;position:relative;background:#0a4fd8;color:#fff;font-weight:800;font-size:20px;padding:8px 40px;border-radius:20px;box-shadow:0 4px 10px #0a4fd877}
+.diag{position:relative;padding:6px}
+canvas#c{width:100%;display:block;cursor:pointer}
+#fn{position:absolute;left:50%;top:6px;transform:translateX(-50%);max-width:70%;background:#fff;border:3px solid #1565d8;border-radius:18px;padding:8px 18px;font-weight:800;font-size:17px;box-shadow:0 6px 16px #0003;display:none;text-align:center;z-index:2}
+.ctl{display:flex;flex-direction:column;gap:11px;padding:12px;background:rgba(120,200,255,.35)}
+.cb{border:0;border-radius:18px;padding:15px 14px;font-size:19px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;box-shadow:0 5px 0 #0004,0 8px 14px #0003;transition:.15s;font-family:inherit}
+.cb:hover{transform:translateY(-3px);filter:brightness(1.1)}.cb:active{transform:translateY(2px)}
+.cb span{font-size:26px}
+.hdr{background:linear-gradient(#0a2a6a,#05174a);cursor:default;padding:12px 14px}
+.cb.act{outline:4px solid #fff;box-shadow:0 0 22px #fff}
+.c1{background:linear-gradient(#26a0ff,#0a5ee0)}.c2{background:linear-gradient(#52d03a,#1a9a14)}.c3{background:linear-gradient(#ffb12e,#ff7a00)}
+.c4{background:linear-gradient(#9a3aff,#6a14c8)}.c5{background:linear-gradient(#ff2a9a,#d0106a)}.c6{background:linear-gradient(#20d8c8,#0a9a9a)}
+.lt{background:#fff;border-radius:16px;padding:10px 12px;font-weight:800;font-size:15px}
+.lt input{width:100%;accent-color:#ff9a00;margin-top:6px}
+.bot{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px}
+.ph{display:inline-block;background:linear-gradient(90deg,#0a4fd8,#1a8aff);color:#fff;font-size:28px;font-weight:900;padding:8px 40px;border-radius:30px;margin:-4px 0 12px -4px;box-shadow:0 5px 12px #0a4fd855}
+.pf{display:grid;grid-template-columns:1fr 1fr;gap:4px 26px}
+.row{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:12px;cursor:pointer;font-size:16px;transition:.15s}
+.row:hover{background:#e6f3ff}.row.sel{background:#fff2b8;box-shadow:0 0 0 3px #ffb800}
+.row i{width:26px;height:26px;border-radius:50%;flex:none;box-shadow:inset -3px -3px 6px #0004}
+.row b{min-width:112px;font-size:17px}.row u{text-decoration:none;color:#223;font-size:15px}
+.dk{background:rgba(255,255,255,.9)}
+.dkh{display:inline-block;background:#ffe21f;color:#0a2a6a;font-weight:900;font-size:26px;padding:6px 26px;transform:rotate(-3deg);border-radius:6px;box-shadow:0 4px 10px #0003}
+#fact{background:#e3f1ff;border-radius:16px;padding:16px;margin:12px 0;font-size:20px;line-height:1.5;min-height:92px;transition:opacity .4s}
+.hb{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#d01a9a,#6a3aff,#16c8b8);color:#fff;font-size:28px;font-weight:900;font-style:italic;line-height:1.15;border-radius:30px;padding:16px 26px;box-shadow:0 6px 16px #6a3aff66}
+@media(max-width:1000px){.top{grid-template-columns:1fr}.bot{grid-template-columns:1fr}.pf{grid-template-columns:1fr}.t1{font-size:30px}.ctl{display:grid;grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<div class="banner"><div class="t1">Structure of the <b>Eye</b></div><div class="t2">See the amazing parts of your eye!</div><span style="flex:1"></span><button class="cb c1" style="padding:10px 16px;font-size:15px" onclick="fs()"><span style="font-size:18px">⤢</span>Fullscreen</button></div>
+<div class="top">
+<div class="ext"><canvas id="ext" width="300" height="300"></canvas><div class="extl">External View</div></div>
+<div class="card diag"><div id="fn"></div><canvas id="c" width="900" height="640"></canvas></div>
+<div class="card ctl">
+<div class="cb hdr"><span>👆</span>Interactive<br>Simulation</div>
+<button class="cb c1" id="bR" onclick="tg('rot','bR')"><span>🔄</span>Rotate View</button>
+<button class="cb c2" onclick="zoom(.15)"><span>🔍</span>Zoom In</button>
+<button class="cb c3" onclick="zoom(-.15)"><span>🔎</span>Zoom Out</button>
+<button class="cb c4" id="bH" onclick="tg('hl','bH')"><span>💡</span>Highlight Parts</button>
+<button class="cb c5 act" id="bF" onclick="tg('fn','bF')"><span>⚙️</span>Show Function</button>
+<button class="cb c6" id="bL" onclick="tg('rays','bL')"><span>☀️</span>Light Rays</button>
+<div class="lt">🌗 Light Intensity: <span id="ltv">50%</span><input type="range" id="lt" min="0" max="100" value="50"></div>
+</div></div>
+<div class="bot">
+<div class="card"><div class="ph">Parts and Their Functions</div><div class="pf" id="pf"></div></div>
+<div class="card dk"><span class="dkh">Did You Know?</span><div id="fact">Your eye can detect over <b>10 million</b> different colors!</div>
+<div class="hb"><div>Healthy Eyes<br>Brighter Future</div><span style="font-size:54px">👁️</span></div></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('c'),x=cv.getContext('2d'),W=900,H=640,CX=475,CY=335;
+const ec=$('ext'),e2=ec.getContext('2d');
+const PARTS=[
+{id:'sclera',n:'Sclera',f:'Gives shape and protection.',c:'#1565d8',a:[40,-205],p:[403,43],s:'b'},
+{id:'ciliary',n:'Ciliary Body',f:'Controls lens shape.',c:'#7a1fcf',a:[-135,-100],p:[228,118],s:'r'},
+{id:'cornea',n:'Cornea',f:'Lets in light and focuses it.',c:'#3aa72a',a:[-206,-80],p:[88,192],s:'r'},
+{id:'iris',n:'Iris',f:'Gives the eye its color.',c:'#1c5fe0',a:[-175,-60],p:[108,294],s:'r'},
+{id:'pupil',n:'Pupil',f:'Controls the amount of light.',c:'#e8168b',a:[-168,4],p:[108,372],s:'r'},
+{id:'lens',n:'Lens',f:'Focuses light on the retina.',c:'#f0a800',a:[-118,28],p:[142,458],s:'r'},
+{id:'conj',n:'Conjunctiva',f:'Keeps the eye moist and clean.',c:'#e02424',a:[-167,127],p:[183,563],s:'r'},
+{id:'retina',n:'Retina',f:'Turns light into nerve signals.',c:'#ff7a1c',a:[127,-131],p:[724,120],s:'l'},
+{id:'fovea',n:'Fovea',f:'Provides sharp central vision.',c:'#7a1fcf',a:[188,-8],p:[771,251],s:'l'},
+{id:'optic',n:'Optic Nerve',f:'Sends signals to the brain.',c:'#12b5a0',a:[285,52],p:[748,519],s:'t'},
+{id:'vitreous',n:'Vitreous Humor',f:"Keeps the eye's shape.",c:'#0fb0f0',a:[30,60],p:[592,608],s:'t'}];
+const ORDER=['sclera','cornea','ciliary','pupil','lens','iris','conj','retina','fovea','optic','vitreous'];
+let S={rot:false,hl:false,fn:true,rays:false,sel:null,hov:null,z:1,ang:0,light:.5},t=0,last=performance.now(),tour=0,tourT=0;
+const byId=id=>PARTS.find(p=>p.id==id);
+// table
+(function(){const pf=$('pf');const mk=id=>{const p=byId(id),d=document.createElement('div');d.className='row';d.id='r_'+id;d.innerHTML='<i style="background:'+p.c+'"></i><b style="color:'+p.c+'">'+p.n+'</b><u>'+p.f+'</u>';d.onclick=()=>select(p);return d};
+ const L=['sclera','cornea','ciliary','pupil','lens'],R=['iris','conj','retina','fovea','optic','vitreous'];
+ const a=document.createElement('div'),b=document.createElement('div');L.forEach(i=>a.appendChild(mk(i)));R.forEach(i=>b.appendChild(mk(i)));pf.appendChild(a);pf.appendChild(b)})();
+function select(p){S.sel=(S.sel==p)?null:p;sync()}
+function sync(){PARTS.forEach(p=>$('r_'+p.id).classList.toggle('sel',S.sel==p));const f=$('fn');
+ if(S.sel&&S.fn){f.style.display='block';f.style.borderColor=S.sel.c;f.innerHTML='<span style="color:'+S.sel.c+'">'+S.sel.n+':</span> '+S.sel.f}else f.style.display='none'}
+function tg(k,b){S[k]=!S[k];$(b).classList.toggle('act',S[k]);if(k=='hl'){tour=0;tourT=0;if(!S.hl){S.sel=null}}sync()}
+function zoom(d){S.z=Math.max(.7,Math.min(1.4,S.z+d))}
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+$('lt').oninput=e=>{S.light=e.target.value/100;$('ltv').textContent=e.target.value+'%'};
+const FACTS=['Your eye can detect over <b>10 million</b> different colors!','You blink about <b>15–20 times</b> every minute to keep your eyes moist.','The <b>cornea</b> has no blood vessels, so it gets oxygen straight from the air.','In bright light your <b>pupil gets smaller</b>. In the dark it gets bigger!'];
+let fi=0;setInterval(()=>{fi=(fi+1)%FACTS.length;const f=$('fact');f.style.opacity=0;setTimeout(()=>{f.innerHTML=FACTS[fi];f.style.opacity=1},400)},7000);
+// transform
+function tr(lx,ly){const z=S.z,X=lx*z,Y=ly*z,c=Math.cos(S.ang),s=Math.sin(S.ang);return[CX+X*c-Y*s,CY+X*s+Y*c]}
+function pupilH(){return 38-26*S.light}
+function eyeDraw(){const R=210,ph=pupilH();let g;
+ // sclera
+ g=x.createRadialGradient(-60,-70,20,0,0,R+10);g.addColorStop(0,'#fff');g.addColorStop(.65,'#dff0ff');g.addColorStop(1,'#8fc8ff');
+ x.shadowColor='#1a7aff99';x.shadowBlur=34;x.fillStyle=g;x.beginPath();x.arc(0,0,R,0,7);x.fill();x.shadowBlur=0;x.strokeStyle='#4aa0ff';x.lineWidth=5;x.stroke();
+ // vitreous
+ g=x.createRadialGradient(70,-20,10,0,0,R-30);g.addColorStop(0,'#ffc040');g.addColorStop(.55,'#ff8a1c');g.addColorStop(1,'#e8480c');
+ x.fillStyle=g;x.beginPath();x.arc(0,0,R-30,0,7);x.fill();
+ x.fillStyle='rgba(255,255,255,.18)';x.beginPath();x.ellipse(-20,-90,100,50,-.4,0,7);x.fill();
+ const a0=-Math.PI+.95,a1=Math.PI-.95;
+ x.lineCap='butt';x.strokeStyle='#d8344c';x.lineWidth=16;x.beginPath();x.arc(0,0,R-16,a0,a1);x.stroke();
+ x.strokeStyle='#ff8a2a';x.lineWidth=8;x.beginPath();x.arc(0,0,R-29,a0,a1);x.stroke();
+ x.strokeStyle='#ffe21f';x.lineWidth=7;x.beginPath();x.arc(0,0,R-33,a0,a1);x.stroke();
+ // veins
+ x.strokeStyle='#b01426';x.lineWidth=2.4;x.lineCap='round';
+ [[188,38,150,-40,110,-120],[188,38,120,0,40,-40],[188,38,120,60,60,110],[188,38,150,90,100,140],[188,38,140,10,20,10],[188,38,160,-20,70,-80]].forEach(([a,b,c,d,e,f])=>{
+  x.beginPath();x.moveTo(a,b);x.quadraticCurveTo(c,d,e,f);x.stroke();const ang=Math.atan2(f-d,e-c);
+  [.55,-.55].forEach(k=>{x.beginPath();x.moveTo(e,f);x.lineTo(e+Math.cos(ang+k)*28,f+Math.sin(ang+k)*28);x.stroke()})});
+ x.strokeStyle='#2a4ab0';x.lineWidth=1.6;x.beginPath();x.moveTo(188,38);x.quadraticCurveTo(160,-10,130,-70);x.moveTo(188,38);x.quadraticCurveTo(150,60,100,80);x.stroke();
+ // optic nerve
+ const nf=()=>{x.beginPath();x.moveTo(192,34);x.bezierCurveTo(240,40,290,48,345,64)};
+ x.lineCap='butt';[[50,'#7ec8ff'],[40,'#bfe6ff'],[28,'#ffe21f'],[14,'#ff9a1a']].forEach(([w,c])=>{x.strokeStyle=c;x.lineWidth=w;nf();x.stroke()});
+ x.strokeStyle='#e01a2a';x.lineWidth=3;x.beginPath();x.moveTo(192,30);x.bezierCurveTo(240,36,290,44,345,60);x.stroke();
+ x.strokeStyle='#2a5ae0';x.beginPath();x.moveTo(192,42);x.bezierCurveTo(240,48,290,56,345,70);x.stroke();
+ // fovea
+ x.fillStyle='#8a2ad8';x.shadowColor='#c06aff';x.shadowBlur=12;x.beginPath();x.arc(188,-8,7,0,7);x.fill();x.shadowBlur=0;x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+ // cornea dome
+ g=x.createLinearGradient(-240,-100,-150,100);g.addColorStop(0,'rgba(190,235,255,.75)');g.addColorStop(1,'rgba(120,190,255,.35)');
+ x.fillStyle=g;x.strokeStyle='#5ab8ff';x.lineWidth=6;x.beginPath();x.moveTo(-170.6,-122.9);x.bezierCurveTo(-255,-90,-255,90,-170.6,122.9);x.lineTo(-150,100);x.lineTo(-150,-100);x.closePath();x.fill();x.stroke();
+ x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=4;x.beginPath();x.moveTo(-225,-62);x.quadraticCurveTo(-238,-20,-232,10);x.stroke();
+ // conjunctiva
+ x.strokeStyle='#e63a4a';x.lineWidth=11;x.shadowColor='#e63a4a';x.shadowBlur=8;[[Math.PI+.5,Math.PI+.82],[Math.PI-.82,Math.PI-.5]].forEach(([a,b])=>{x.beginPath();x.arc(0,0,R+4,a,b);x.stroke()});x.shadowBlur=0;
+ // ciliary + zonules
+ x.strokeStyle='#ffd0dc';x.lineWidth=1.3;for(let i=-3;i<=3;i++){[-1,1].forEach(s=>{x.beginPath();x.moveTo(-135+i*5,s*88);x.lineTo(-120+i*3,s*66);x.stroke()})}
+ [-1,1].forEach(s=>{g=x.createRadialGradient(-135,s*98,3,-135,s*98,30);g.addColorStop(0,'#ff7a9a');g.addColorStop(1,'#b01a46');x.fillStyle=g;x.shadowColor='#7a1fcf';x.shadowBlur=10;x.beginPath();x.ellipse(-135,s*98,24,17,s*.5,0,7);x.fill();x.shadowBlur=0;x.strokeStyle='#ffc0d0';x.lineWidth=1.5;x.stroke()});
+ // iris face
+ g=x.createRadialGradient(-170,0,10,-165,0,110);g.addColorStop(0,'#0a2a8a');g.addColorStop(.6,'#1c6af0');g.addColorStop(1,'#7ec8ff');
+ x.fillStyle=g;x.shadowColor='#1c5fe0';x.shadowBlur=14;x.beginPath();x.ellipse(-165,0,36,105,0,0,7);x.fill();x.shadowBlur=0;
+ x.strokeStyle='#ffffff55';x.lineWidth=1.3;for(let i=0;i<22;i++){const a=i/22*6.283;x.beginPath();x.moveTo(-165+Math.cos(a)*16,Math.sin(a)*(ph+6));x.lineTo(-165+Math.cos(a)*34,Math.sin(a)*100);x.stroke()}
+ x.fillStyle='#050510';x.beginPath();x.ellipse(-168,0,13,ph,0,0,7);x.fill();x.strokeStyle='#ffd23a';x.lineWidth=2;x.stroke();
+ // lens
+ g=x.createLinearGradient(-150,-70,-90,70);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.5,'rgba(200,235,255,.75)');g.addColorStop(1,'rgba(255,230,150,.7)');
+ x.fillStyle=g;x.strokeStyle='#ffc21f';x.lineWidth=4;x.shadowColor='#fff';x.shadowBlur=14;x.beginPath();x.ellipse(-120,0,30,72,0,0,7);x.fill();x.stroke();x.shadowBlur=0;
+ x.strokeStyle='rgba(255,255,255,.95)';x.lineWidth=3;x.beginPath();x.moveTo(-132,-48);x.quadraticCurveTo(-142,-10,-132,28);x.stroke();
+ // rays
+ if(S.rays){x.lineWidth=3;x.setLineDash([12,9]);x.lineDashOffset=-t*70;x.shadowColor='#ffe21f';x.shadowBlur=10;x.strokeStyle='#ffe21f';x.lineCap='round';
+  [-70,-35,0,35,70].forEach(y=>{x.beginPath();x.moveTo(-440,y);x.lineTo(-235,y*.92);x.lineTo(-120,y*.45);x.lineTo(188,-8);x.stroke()});x.setLineDash([]);x.shadowBlur=0}}
+function pillD(p,on){x.font='bold 22px Trebuchet MS,Segoe UI';const w=x.measureText(p.n).width+36,h=40;p.w=w;p.h=h;
+ x.save();x.translate(p.p[0],p.p[1]);x.scale(on?1.1:1,on?1.1:1);x.shadowColor=p.c;x.shadowBlur=on?26:8;x.fillStyle=p.c;x.beginPath();x.roundRect(-w/2,-h/2,w,h,20);x.fill();x.shadowBlur=0;
+ x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';x.fillText(p.n,0,2);x.restore()}
+function draw(){
+ x.clearRect(0,0,W,H);
+ // soft backdrop
+ const bg=x.createRadialGradient(CX,CY,50,CX,CY,330);bg.addColorStop(0,'rgba(190,230,255,.7)');bg.addColorStop(1,'rgba(190,230,255,0)');x.fillStyle=bg;x.fillRect(0,0,W,H);
+ x.save();x.translate(CX,CY);x.rotate(S.ang);x.scale(S.z,S.z);eyeDraw();x.restore();
+ PARTS.forEach(p=>{const on=S.sel==p||S.hov==p;const[ax,ay]=tr(p.a[0],p.a[1]);p.ax=ax;p.ay=ay;
+  let sx=p.p[0],sy=p.p[1];const h=20,w2=(p.w||90)/2;if(p.s=='r')sx+=w2;else if(p.s=='l')sx-=w2;else if(p.s=='t')sy-=h;else sy+=h;
+  x.strokeStyle=p.c;x.lineWidth=on?4:2.6;x.beginPath();x.moveTo(sx,sy);x.lineTo(ax,ay);x.stroke();
+  x.fillStyle='#fff';x.strokeStyle=p.c;x.lineWidth=3;x.beginPath();x.arc(ax,ay,on?8:5.5,0,7);x.fill();x.stroke();
+  if(on){x.globalAlpha=.7;x.lineWidth=4;x.beginPath();x.arc(ax,ay,16+4*Math.sin(t*6),0,7);x.stroke();x.globalAlpha=1}});
+ PARTS.forEach(p=>pillD(p,S.sel==p||S.hov==p))}
+// external view
+let nb=3,bt=-1,bl=0;
+function extDraw(){const c=e2,l=S.light,pr=40-26*l;
+ let g=c.createLinearGradient(0,0,300,300);g.addColorStop(0,'#f2bd96');g.addColorStop(1,'#c98c62');c.fillStyle=g;c.fillRect(0,0,300,300);
+ c.fillStyle='rgba(120,60,30,.25)';c.beginPath();c.ellipse(150,95,130,50,0,0,7);c.fill();
+ const k=1-.96*bl;
+ c.save();c.translate(0,150);c.scale(1,k);c.translate(0,-150);
+ c.beginPath();c.moveTo(22,150);c.quadraticCurveTo(150,40,278,150);c.quadraticCurveTo(150,260,22,150);c.closePath();c.clip();
+ g=c.createRadialGradient(150,150,20,150,150,150);g.addColorStop(0,'#fff');g.addColorStop(1,'#f0c8c0');c.fillStyle=g;c.fillRect(0,0,300,300);
+ g=c.createRadialGradient(150,150,pr,150,150,70);g.addColorStop(0,'#1a3a7a');g.addColorStop(.35,'#3a8ae8');g.addColorStop(.8,'#2a6ad0');g.addColorStop(1,'#0a2a70');
+ c.fillStyle=g;c.beginPath();c.arc(150,150,70,0,7);c.fill();
+ c.strokeStyle='rgba(255,215,90,.6)';c.lineWidth=1.6;for(let i=0;i<46;i++){const a=i/46*6.283;c.beginPath();c.moveTo(150+Math.cos(a)*(pr+2),150+Math.sin(a)*(pr+2));c.lineTo(150+Math.cos(a)*(pr+16),150+Math.sin(a)*(pr+16));c.stroke()}
+ c.strokeStyle='rgba(180,230,255,.6)';for(let i=0;i<30;i++){const a=i/30*6.283+.1;c.beginPath();c.moveTo(150+Math.cos(a)*(pr+18),150+Math.sin(a)*(pr+18));c.lineTo(150+Math.cos(a)*66,150+Math.sin(a)*66);c.stroke()}
+ c.fillStyle='#030308';c.beginPath();c.arc(150,150,pr,0,7);c.fill();
+ c.fillStyle='rgba(255,255,255,.9)';c.beginPath();c.ellipse(128,126,12,9,-.6,0,7);c.fill();c.beginPath();c.arc(172,172,5,0,7);c.fill();
+ g=c.createLinearGradient(0,60,0,150);g.addColorStop(0,'rgba(40,10,0,.55)');g.addColorStop(1,'rgba(40,10,0,0)');c.fillStyle=g;c.fillRect(0,60,300,90);
+ c.restore();
+ // lid line + lashes
+ c.strokeStyle='#4a2410';c.lineWidth=4;c.beginPath();c.moveTo(22,150);c.quadraticCurveTo(150,150-110*k,278,150);c.stroke();
+ c.lineWidth=2;c.strokeStyle='#2a1208';for(let i=0;i<=44;i++){const u=i/44,px=(1-u)*(1-u)*22+2*(1-u)*u*150+u*u*278,py=(1-u)*(1-u)*150+2*(1-u)*u*(150-110*k)+u*u*150;
+  const a=-1.57+(u-.5)*2.4;c.beginPath();c.moveTo(px,py);c.quadraticCurveTo(px+Math.cos(a)*10,py+Math.sin(a)*14,px+Math.cos(a+(u<.5?-.4:.4))*20,py+Math.sin(a)*26*(.6+.4*k));c.stroke()}
+ c.strokeStyle='#a0603a';c.lineWidth=2;c.beginPath();c.moveTo(22,150);c.quadraticCurveTo(150,260,278,150);c.stroke();
+ c.fillStyle='#f08a90';c.beginPath();c.ellipse(34,152,10,7,0,0,7);c.fill()}
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)*W/r.width,my=(e.clientY-r.top)*H/r.height;S.hov=hitP(mx,my);cv.style.cursor=S.hov?'pointer':'default'});
+cv.addEventListener('mouseleave',()=>S.hov=null);
+cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)*W/r.width,my=(e.clientY-r.top)*H/r.height;const p=hitP(mx,my);if(p){S.hl=false;$('bH').classList.remove('act');select(p)}});
+function hitP(mx,my){for(const p of PARTS){if(Math.abs(mx-p.p[0])<(p.w||90)/2&&Math.abs(my-p.p[1])<21)return p;if(p.ax!=null&&Math.hypot(mx-p.ax,my-p.ay)<14)return p}return null}
+function frame(){const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+ S.ang+=((S.rot?.28*Math.sin(t*.9):0)-S.ang)*.08;
+ if(S.hl){tourT+=dt;if(tourT>2){tourT=0;tour=(tour+1)%ORDER.length}const np=byId(ORDER[tour]);if(S.sel!=np){S.sel=np;sync()}}
+ nb-=dt;if(bt<0&&nb<=0)bt=0;if(bt>=0){bt+=dt*4;if(bt>=1){bt=-1;nb=2.5+Math.random()*3;bl=0}else bl=Math.sin(bt*Math.PI)}
+ draw();extDraw();requestAnimationFrame(frame)}
+
+frame();
+</script></body></html>

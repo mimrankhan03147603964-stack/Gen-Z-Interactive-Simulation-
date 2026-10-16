@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Cycle Simulation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #061121;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(90deg, #0c213d, #163e6e);
+      border-bottom: 1px solid #1e4a80;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .sub-head {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #334155; border-color: #64748b; }
+    .btn-cyan { background: #0891b2; border-color: #0e7490; color:#fff; }
+    .btn-cyan:hover { background: #0e7490; }
+    .btn-amber { background: #d97706; border-color: #b45309; color:#fff; }
+    .btn-amber:hover { background: #b45309; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      flex: 1;
+      min-height: calc(100vh - 75px);
+    }
+    @media (max-width: 1024px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    .viewport {
+      background: #071325;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #1e293b;
+      position: relative;
+    }
+    .canvas-box {
+      flex: 1;
+      min-height: 480px;
+      position: relative;
+    }
+    canvas#cycleCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+    .hud {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      gap: 14px;
+      background: rgba(11, 26, 49, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .hud-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+    .hud-val {
+      font-size: 17px;
+      font-weight: 800;
+      font-family: monospace;
+    }
+    .controls {
+      background: #0b1a31;
+      border-top: 1px solid #1e355b;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .slider-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .slider-item input[type="range"] {
+      width: 110px;
+      accent-color: #38bdf8;
+    }
+    .sidebar {
+      background: #061121;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      max-height: calc(100vh - 75px);
+    }
+    .card {
+      background: #0d1e38;
+      border: 1px solid #1a3763;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .stage-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #112747;
+      border: 1px solid #1c4277;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .stage-pill:hover, .stage-pill.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag-cyan { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .tag-green { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .tag-amber { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .quiz-opt {
+      background: #112747;
+      border: 1px solid #1e3f6e;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .quiz-opt:hover { background: #1a3c6c; }
+    .quiz-opt.correct { background: #065f46; border-color: #10b981; }
+    .quiz-opt.wrong { background: #7f1d1d; border-color: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="badge">LAB 59</span>
+      <div>
+        <h1>Water Cycle Simulation</h1>
+        <div class="sub-head">Evaporation, Transpiration, Condensation, Precipitation, Runoff &amp; Groundwater Infiltration</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn" id="btnReset">⟳ Reset System</button>
+      <button class="btn btn-amber" id="btnRainToggle">🌧 Trigger Rain</button>
+      <button class="btn btn-cyan" id="btnFullscreen">⤢ Fullscreen</button>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <div class="viewport">
+      <div class="hud">
+        <div class="hud-col">
+          <span class="hud-title">Sun Power</span>
+          <span class="hud-val" id="hudSun" style="color:#fbbf24;">80%</span>
+        </div>
+        <div class="hud-col">
+          <span class="hud-title">Ambient Temp</span>
+          <span class="hud-val" id="hudTemp" style="color:#38bdf8;">22 °C</span>
+        </div>
+        <div class="hud-col">
+          <span class="hud-title">Precipitation</span>
+          <span class="hud-val" id="hudRain" style="color:#60a5fa;">Active (Rain)</span>
+        </div>
+        <div class="hud-col">
+          <span class="hud-title">Humidity</span>
+          <span class="hud-val" id="hudHum" style="color:#a78bfa;">68%</span>
+        </div>
+      </div>
+
+      <div class="canvas-box">
+        <canvas id="cycleCanvas"></canvas>
+      </div>
+
+      <div class="controls">
+        <div class="slider-item">
+          <span>Sun Intensity:</span>
+          <input type="range" id="sunSlider" min="10" max="100" value="80">
+          <span id="sunVal" style="color:#fbbf24; min-width:34px;">80%</span>
+        </div>
+
+        <div class="slider-item">
+          <span>Temperature:</span>
+          <input type="range" id="tempSlider" min="-10" max="40" value="22">
+          <span id="tempVal" style="color:#38bdf8; min-width:38px;">22°C</span>
+        </div>
+
+        <div class="slider-item">
+          <span>Wind Velocity:</span>
+          <input type="range" id="windSlider" min="0" max="50" value="15">
+          <span id="windVal" style="color:#cbd5e1; min-width:34px;">15 km/h</span>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button class="btn" id="btnDayNight">☀️ Day Mode</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-title">
+          <span id="stageTitle">Evaporation &amp; Transpiration</span>
+          <span class="tag tag-cyan" id="stageTag">Phase 1</span>
+        </div>
+        <p class="card-text" id="stageDesc">
+          Solar radiation warms liquid water in oceans, lakes, and rivers, supplying latent heat that transforms water molecules into invisible water vapor. Simultaneously, plants and vegetation transpire moisture through microscopic leaf stomata into the atmosphere.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Hydrologic Cycle Stages</div>
+        <div class="stage-pill active" onclick="selectStage('evap')">
+          <span>1. Evaporation (Ocean / Lakes)</span>
+          <span class="tag tag-cyan">Solar Heat</span>
+        </div>
+        <div class="stage-pill" onclick="selectStage('transp')">
+          <span>2. Transpiration (Forest Canopy)</span>
+          <span class="tag tag-green">Biosphere</span>
+        </div>
+        <div class="stage-pill" onclick="selectStage('cond')">
+          <span>3. Condensation (Clouds)</span>
+          <span class="tag tag-cyan">Cooling</span>
+        </div>
+        <div class="stage-pill" onclick="selectStage('precip')">
+          <span>4. Precipitation (Rain &amp; Snow)</span>
+          <span class="tag tag-cyan">Gravity</span>
+        </div>
+        <div class="stage-pill" onclick="selectStage('runoff')">
+          <span>5. Surface Runoff &amp; Rivers</span>
+          <span class="tag tag-amber">Water Flow</span>
+        </div>
+        <div class="stage-pill" onclick="selectStage('infilt')">
+          <span>6. Infiltration &amp; Aquifer</span>
+          <span class="tag tag-green">Underground</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Quick Quiz Challenge</div>
+        <p class="card-text" id="quizQ" style="font-weight:700; margin-bottom:8px;">
+          What is the primary driving energy source behind Earth's water cycle?
+        </p>
+        <div id="quizOpts">
+          <div class="quiz-opt" onclick="checkQuiz(0)">A. Earth's molten core heat</div>
+          <div class="quiz-opt" onclick="checkQuiz(1)">B. Solar energy from the Sun</div>
+          <div class="quiz-opt" onclick="checkQuiz(2)">C. Gravitational pull of the Moon</div>
+          <div class="quiz-opt" onclick="checkQuiz(3)">D. Ocean tidal currents</div>
+        </div>
+        <div id="quizAns" style="margin-top:8px; font-size:12px; font-weight:600;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("cycleCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let sunPower = 80;
+    let temp = 22;
+    let windSpeed = 15;
+    let raining = true;
+    let isNight = false;
+    let activeStage = "evap";
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Particle systems
+    const evapParticles = [];
+    for (let i = 0; i < 50; i++) {
+      evapParticles.push({
+        x: 80 + Math.random() * 220,
+        y: 420 + Math.random() * 80,
+        speed: 0.5 + Math.random() * 1.5,
+        opacity: Math.random() * 0.8
+      });
+    }
+
+    const rainParticles = [];
+    for (let i = 0; i < 80; i++) {
+      rainParticles.push({
+        x: 350 + Math.random() * 320,
+        y: 100 + Math.random() * 250,
+        speed: 4 + Math.random() * 4,
+        length: 8 + Math.random() * 6
+      });
+    }
+
+    const riverParticles = [];
+    for (let i = 0; i < 30; i++) {
+      riverParticles.push({
+        prog: Math.random(),
+        speed: 0.005 + Math.random() * 0.005
+      });
+    }
+
+    // Cloud drift
+    let cloudOffset = 0;
+
+    function draw() {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, w, h);
+
+      cloudOffset += (windSpeed / 10) * 0.2;
+      if (cloudOffset > w) cloudOffset = 0;
+
+      // Sky Background
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.7);
+      if (isNight) {
+        skyGrad.addColorStop(0, "#030712");
+        skyGrad.addColorStop(1, "#0c1d38");
+      } else {
+        skyGrad.addColorStop(0, "#0284c7");
+        skyGrad.addColorStop(0.5, "#38bdf8");
+        skyGrad.addColorStop(1, "#bae6fd");
+      }
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Sun or Moon
+      if (!isNight) {
+        const sunRadius = 35 + (sunPower / 100) * 15;
+        const sunGlow = ctx.createRadialGradient(100, 80, 10, 100, 80, sunRadius * 1.8);
+        sunGlow.addColorStop(0, "rgba(254, 240, 138, 1)");
+        sunGlow.addColorStop(0.4, "rgba(251, 191, 36, 0.8)");
+        sunGlow.addColorStop(1, "rgba(251, 191, 36, 0)");
+
+        ctx.fillStyle = sunGlow;
+        ctx.beginPath();
+        ctx.arc(100, 80, sunRadius * 1.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#fef08a";
+        ctx.beginPath();
+        ctx.arc(100, 80, sunRadius, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#f8fafc";
+        ctx.beginPath();
+        ctx.arc(100, 80, 28, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // High Mountain Ridge (Right side)
+      ctx.fillStyle = isNight ? "#111827" : "#334155";
+      ctx.beginPath();
+      ctx.moveTo(w * 0.45, h * 0.75);
+      ctx.lineTo(w * 0.72, h * 0.25);
+      ctx.lineTo(w + 20, h * 0.55);
+      ctx.lineTo(w + 20, h);
+      ctx.lineTo(w * 0.45, h);
+      ctx.fill();
+
+      // Snowcap on mountains if temp < 5
+      if (temp < 12) {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.moveTo(w * 0.65, h * 0.38);
+        ctx.lineTo(w * 0.72, h * 0.25);
+        ctx.lineTo(w * 0.80, h * 0.38);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Rolling Green Foothills
+      ctx.fillStyle = isNight ? "#064e3b" : "#15803d";
+      ctx.beginPath();
+      ctx.moveTo(w * 0.25, h * 0.75);
+      ctx.quadraticCurveTo(w * 0.45, h * 0.45, w * 0.65, h * 0.75);
+      ctx.lineTo(w * 0.65, h);
+      ctx.lineTo(w * 0.25, h);
+      ctx.fill();
+
+      // Forest Trees
+      ctx.fillStyle = "#14532d";
+      for (let tx = w * 0.32; tx < w * 0.58; tx += 28) {
+        ctx.beginPath();
+        ctx.moveTo(tx, h * 0.64);
+        ctx.lineTo(tx - 10, h * 0.69);
+        ctx.lineTo(tx + 10, h * 0.69);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Ocean / Large Lake Basin (Left side)
+      const oceanGrad = ctx.createLinearGradient(0, h * 0.7, 0, h);
+      oceanGrad.addColorStop(0, "#0284c7");
+      oceanGrad.addColorStop(1, "#075985");
+      ctx.fillStyle = oceanGrad;
+      ctx.fillRect(0, h * 0.7, w * 0.4, h * 0.3);
+
+      // Soil & Underground Aquifer (Right side underground)
+      ctx.fillStyle = "#78350f";
+      ctx.fillRect(w * 0.4, h * 0.75, w * 0.6, h * 0.25);
+
+      // Groundwater Table Blue Layer
+      ctx.fillStyle = "rgba(56, 189, 248, 0.45)";
+      ctx.fillRect(w * 0.4, h * 0.88, w * 0.6, h * 0.12);
+
+      // River Path flowing from mountain to ocean
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.72, h * 0.45);
+      ctx.quadraticCurveTo(w * 0.55, h * 0.65, w * 0.38, h * 0.72);
+      ctx.stroke();
+
+      // Fluffy Condensation Clouds
+      const cloudX = (w * 0.5 + cloudOffset) % w;
+      drawCloud(cloudX, 90, 80);
+      drawCloud((cloudX + 220) % w, 110, 65);
+
+      // Evaporation Rising Particles from ocean
+      const evapSpeed = (sunPower / 100) * 2;
+      ctx.fillStyle = "rgba(224, 242, 254, 0.7)";
+      evapParticles.forEach((p) => {
+        p.y -= p.speed * evapSpeed;
+        if (p.y < 160) {
+          p.y = h * 0.7 + Math.random() * 50;
+          p.x = 40 + Math.random() * (w * 0.32);
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Precipitation (Rain or Snow)
+      if (raining) {
+        if (temp < 0) {
+          // Snowflakes
+          ctx.fillStyle = "#ffffff";
+          rainParticles.forEach((rp) => {
+            rp.y += rp.speed * 0.5;
+            rp.x += Math.sin(rp.y * 0.05) * 1;
+            if (rp.y > h * 0.75) {
+              rp.y = 120;
+              rp.x = w * 0.45 + Math.random() * (w * 0.45);
+            }
+            ctx.beginPath();
+            ctx.arc(rp.x, rp.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        } else {
+          // Rain streaks
+          ctx.strokeStyle = "rgba(186, 230, 253, 0.75)";
+          ctx.lineWidth = 2;
+          rainParticles.forEach((rp) => {
+            rp.y += rp.speed;
+            rp.x += (windSpeed / 50) * 2;
+            if (rp.y > h * 0.75) {
+              rp.y = 120;
+              rp.x = w * 0.45 + Math.random() * (w * 0.45);
+            }
+            ctx.beginPath();
+            ctx.moveTo(rp.x, rp.y);
+            ctx.lineTo(rp.x + 2, rp.y + rp.length);
+            ctx.stroke();
+          });
+        }
+      }
+
+      // Labels on landscape
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 13px system-ui";
+      ctx.shadowColor = "#000000";
+      ctx.shadowBlur = 6;
+      ctx.fillText("☀️ Sun (Energy Engine)", 110, 140);
+      ctx.fillText("💨 Evaporation", 60, h * 0.66);
+      ctx.fillText("🌿 Transpiration", w * 0.35, h * 0.62);
+      ctx.fillText("☁️ Condensation", cloudX - 30, 60);
+      ctx.fillText(temp < 0 ? "❄️ Precipitation (Snow)" : "🌧️ Precipitation (Rain)", w * 0.55, 170);
+      ctx.fillText("🌊 Surface Runoff", w * 0.52, h * 0.69);
+      ctx.fillText("💧 Groundwater Infiltration", w * 0.55, h * 0.85);
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(draw);
+    }
+
+    function drawCloud(cx, cy, r) {
+      ctx.fillStyle = isNight ? "rgba(71, 85, 105, 0.85)" : "rgba(255, 255, 255, 0.88)";
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.5, 0, Math.PI * 2);
+      ctx.arc(cx + r * 0.4, cy - r * 0.15, r * 0.45, 0, Math.PI * 2);
+      ctx.arc(cx + r * 0.8, cy, r * 0.4, 0, Math.PI * 2);
+      ctx.arc(cx + r * 0.3, cy + r * 0.2, r * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+
+    const STAGES = {
+      evap: {
+        title: "Evaporation & Transpiration",
+        tag: "Phase 1: Vaporization",
+        desc: "Solar radiation warms liquid water in oceans, lakes, and rivers, supplying latent heat that transforms water molecules into invisible water vapor. Simultaneously, plants and vegetation transpire moisture through microscopic leaf stomata into the atmosphere."
+      },
+      transp: {
+        title: "Transpiration in Forests",
+        tag: "Phase 2: Biosphere Flux",
+        desc: "Plant roots absorb water from soil aquifers. Water travels up through xylem vascular vessels to leaves, where solar heating causes water molecules to evaporate through leaf stomata, forming forest mist."
+      },
+      cond: {
+        title: "Condensation & Cloud Formation",
+        tag: "Phase 3: Gas to Liquid",
+        desc: "As warm, moist air rises into the cooler upper troposphere, water vapor expands and cools. When it reaches dew point, it condenses around microscopic aerosol nuclei (dust and salt particles) to produce billions of suspended water droplets as clouds."
+      },
+      precip: {
+        title: "Precipitation (Rain & Snow)",
+        tag: "Phase 4: Gravity Release",
+        desc: "Cloud droplets collide and coalesce into larger drops. When they become too heavy for atmospheric thermal updrafts to support, gravity pulls them down to Earth as liquid rain, or as ice crystals/snow if ambient temperatures are freezing."
+      },
+      runoff: {
+        title: "Surface Runoff & River Drainage",
+        tag: "Phase 5: Watershed Flow",
+        desc: "Precipitation falling over high-elevation mountains and watersheds drains down sloping gradients via mountain streams, waterfalls, and river tributaries back into ocean basins."
+      },
+      infilt: {
+        title: "Infiltration & Aquifer Recharge",
+        tag: "Phase 6: Subsurface Hydrology",
+        desc: "A portion of precipitation infiltrates porous soil and permeable rock layers, slowly percolating downward under gravity to replenish groundwater tables and deep subterranean aquifers."
+      }
+    };
+
+    window.selectStage = function(key) {
+      activeStage = key;
+      const s = STAGES[key];
+      document.getElementById("stageTitle").textContent = s.title;
+      document.getElementById("stageTag").textContent = s.tag;
+      document.getElementById("stageDesc").textContent = s.desc;
+
+      const pills = document.querySelectorAll(".stage-pill");
+      pills.forEach((p) => p.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+    };
+
+    // Quiz check
+    window.checkQuiz = function(choice) {
+      const ansDiv = document.getElementById("quizAns");
+      const opts = document.querySelectorAll(".quiz-opt");
+      opts.forEach((o, i) => {
+        if (i === 1) o.classList.add("correct");
+        else if (i === choice) o.classList.add("wrong");
+      });
+
+      if (choice === 1) {
+        ansDiv.innerHTML = "<span style='color:#4ade80;'>✓ Correct!</span> The Sun provides radiant thermal energy driving evaporation and atmospheric convection currents.";
+      } else {
+        ansDiv.innerHTML = "<span style='color:#f87171;'>✗ Incorrect.</span> The Sun is the fundamental engine that powers evaporation and atmospheric wind cycles.";
+      }
+    };
+
+    // Controls
+    document.getElementById("sunSlider").addEventListener("input", (e) => {
+      sunPower = parseInt(e.target.value);
+      document.getElementById("sunVal").textContent = sunPower + "%";
+      document.getElementById("hudSun").textContent = sunPower + "%";
+    });
+
+    document.getElementById("tempSlider").addEventListener("input", (e) => {
+      temp = parseInt(e.target.value);
+      document.getElementById("tempVal").textContent = temp + "°C";
+      document.getElementById("hudTemp").textContent = temp + " °C";
+      document.getElementById("hudRain").textContent = raining ? (temp < 0 ? "Active (Snow)" : "Active (Rain)") : "Clear Skies";
+    });
+
+    document.getElementById("windSlider").addEventListener("input", (e) => {
+      windSpeed = parseInt(e.target.value);
+      document.getElementById("windVal").textContent = windSpeed + " km/h";
+    });
+
+    document.getElementById("btnRainToggle").addEventListener("click", () => {
+      raining = !raining;
+      document.getElementById("hudRain").textContent = raining ? (temp < 0 ? "Active (Snow)" : "Active (Rain)") : "Clear Skies";
+      document.getElementById("btnRainToggle").textContent = raining ? "🌧 Pause Rain" : "🌧 Trigger Rain";
+    });
+
+    document.getElementById("btnDayNight").addEventListener("click", () => {
+      isNight = !isNight;
+      document.getElementById("btnDayNight").textContent = isNight ? "🌙 Night Mode" : "☀️ Day Mode";
+    });
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      sunPower = 80; temp = 22; windSpeed = 15; raining = true; isNight = false;
+      document.getElementById("sunSlider").value = 80;
+      document.getElementById("tempSlider").value = 22;
+      document.getElementById("windSlider").value = 15;
+      document.getElementById("sunVal").textContent = "80%";
+      document.getElementById("tempVal").textContent = "22°C";
+      document.getElementById("windVal").textContent = "15 km/h";
+      document.getElementById("hudSun").textContent = "80%";
+      document.getElementById("hudTemp").textContent = "22 °C";
+      document.getElementById("hudRain").textContent = "Active (Rain)";
+      document.getElementById("btnDayNight").textContent = "☀️ Day Mode";
+      selectStage('evap');
+    });
+
+    document.getElementById("btnFullscreen").addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2093,6 +2093,97 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 66: Human Heart Simulation
+    case 66:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hhGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#991b1b" />
+            </linearGradient>
+            <linearGradient id="hhVessel" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+          </defs>
+          {/* Superior Great Vessels */}
+          <path d="M26 8 V18 M38 8 V18" stroke="url(#hhVessel)" strokeWidth="4" strokeLinecap="round" />
+          <path d="M32 6 Q38 4 44 14" stroke="#ef4444" strokeWidth="4" strokeLinecap="round" />
+          {/* Muscular Heart Body */}
+          <path d="M32 20 C22 14 12 24 14 36 C16 46 28 54 32 58 C36 54 48 46 50 36 C52 24 42 14 32 20 Z" fill="url(#hhGrad)" stroke="#fca5a5" strokeWidth="1.5" />
+          {/* Blood Flow Vector Loop */}
+          <path d="M24 32 Q20 40 26 46" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M40 32 Q44 40 38 46" stroke="#fecaca" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Central Septum Divider */}
+          <line x1="32" y1="24" x2="32" y2="52" stroke="#7f1d1d" strokeWidth="2" strokeDasharray="3 2" />
+        </svg>
+      );
+
+    // 67: Ice to Water to Steam Simulation
+    case 67:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iceCubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e0f2fe" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="waterDropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+          </defs>
+          {/* Ice Crystal Cube (Left) */}
+          <polygon points="18,34 28,29 28,42 18,47" fill="url(#iceCubeGrad)" stroke="#bae6fd" strokeWidth="1.2" />
+          <polygon points="8,29 18,34 18,47 8,42" fill="#7dd3fc" stroke="#bae6fd" strokeWidth="1.2" />
+          <polygon points="18,24 28,29 18,34 8,29" fill="#f0f9ff" stroke="#bae6fd" strokeWidth="1.2" />
+          {/* Transition Arrow 1 */}
+          <path d="M29 37 L33 37" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+          {/* Liquid Water Droplet (Center) */}
+          <path d="M42 28 C42 28 35 37 35 42 A7 7 0 0 0 49 42 C49 37 42 28 42 28 Z" fill="url(#waterDropGrad)" stroke="#7dd3fc" strokeWidth="1.2" />
+          {/* Steam Vapor Wafts (Top Right) */}
+          <path d="M48 20 Q52 14 48 8" stroke="#e0f2fe" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M54 22 Q58 16 54 10" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M42 18 Q46 12 42 6" stroke="#f0f9ff" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          {/* Base Thermal Flame Indicator */}
+          <path d="M22 56 Q28 50 34 56 Q40 50 46 56" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 68: Water Cycle Simulation
+    case 68:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wcSun" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fef08a" />
+              <stop offset="100%" stopColor="#f59e0b" />
+            </linearGradient>
+            <linearGradient id="wcWater" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+          </defs>
+          {/* Radiant Sun (Top Left) */}
+          <circle cx="14" cy="14" r="8" fill="url(#wcSun)" stroke="#fde047" strokeWidth="1.2" />
+          {/* Condensation Cloud (Top Right) */}
+          <path d="M38 18 C38 14 44 12 47 15 C50 13 56 15 56 19 C58 20 58 24 55 25 H37 C34 25 34 20 38 18 Z" fill="#e0f2fe" stroke="#bae6fd" strokeWidth="1.2" />
+          {/* Rain Droplets from Cloud */}
+          <line x1="40" y1="28" x2="38" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="46" y1="29" x2="44" y2="34" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="52" y1="28" x2="50" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          {/* Mountain Watershed (Right) */}
+          <polygon points="32,48 48,34 60,48" fill="#475569" stroke="#64748b" strokeWidth="1.2" />
+          <polygon points="44,38 48,34 52,38" fill="#ffffff" />
+          {/* Ocean Reservoir & Wave (Bottom) */}
+          <path d="M6 54 Q18 48 30 54 Q42 60 58 54 V60 H6 Z" fill="url(#wcWater)" />
+          {/* Evaporation Ascending Vector */}
+          <path d="M16 46 Q20 38 18 30" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M15 33 L18 29 L21 33" stroke="#bae6fd" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (
