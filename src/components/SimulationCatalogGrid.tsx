@@ -2,45 +2,22 @@ import React, { useState } from 'react';
 import { SimulationItem } from '../types';
 import { getSimTheme } from '../data/simTheme';
 import { 
-  Activity, 
-  Atom, 
-  Zap, 
-  Flame, 
-  Gauge, 
-  Sun, 
   Sparkles, 
-  FlaskConical, 
-  Rocket, 
-  Cpu, 
-  Leaf, 
-  Cog, 
-  Layers, 
-  Globe,
-  Moon,
-  CircleDot,
-  Orbit,
-  Telescope,
-  Search,
-  Play,
-  Maximize2,
-  CheckCircle2,
-  Filter,
-  Calculator,
-  Shapes,
-  Scale,
-  Ruler,
-  BookOpen,
-  Computer,
-  Keyboard,
-  Baby,
-  Dna,
-  TestTube,
-  Magnet,
-  ExternalLink,
-  Wand2,
-  Loader2,
+  Search, 
+  Play, 
+  Maximize2, 
+  CheckCircle2, 
+  Filter, 
+  BookOpen, 
+  ExternalLink, 
+  Wand2, 
+  Loader2, 
+  ChevronDown, 
+  ChevronRight,
+  ChevronUp,
+  Layers,
   ArrowRight,
-  Lightbulb
+  Check
 } from 'lucide-react';
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
@@ -59,24 +36,12 @@ interface SimulationCatalogGridProps {
   isDarkMode?: boolean;
 }
 
-// Topic-specific realistic visual icon renderer for simulation badges
-const renderTopicIcon = (iconName: string, iconColor?: string, indexNumber?: string, simId?: string) => {
-  return (
-    <TopicRealisticIcon 
-      indexNumber={indexNumber || '01'} 
-      simId={simId} 
-      className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200" 
-    />
-  );
-};
-
-// Prominent Subject configuration matching all 8 disciplines + All Subjects
+// Prominent Subject configuration matching all 8 disciplines
 interface SubjectCategoryConfig {
   key: string;
   shortLabel: string;
   fullTitle: string;
   subtitle: string;
-  badgeCount: number;
   colorName: string;
   iconBg: string;
   iconBorder: string;
@@ -98,7 +63,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Physics & Motion',
     fullTitle: 'Physics & Classical Mechanics',
     subtitle: 'Kinematics, Optics & Energy',
-    badgeCount: getCategoryCount('Physics & Motion'),
     colorName: 'Electric Blue & Cyan',
     iconBg: 'rgba(37, 99, 235, 0.16)',
     iconBorder: '#3b82f6',
@@ -112,8 +76,7 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#1d4ed8',
     textColorDark: '#60a5fa',
     renderIcon: ({ isSelected, className }) => (
-      /* Glowing 3D Rutherford-Bohr atom model with revolving electrons and force trajectories */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
         <defs>
           <radialGradient id="physNucleus" cx="40%" cy="40%" r="60%">
             <stop offset="0%" stopColor="#ffffff" />
@@ -125,34 +88,15 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
             <stop offset="0%" stopColor="#00f5ff" />
             <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
-          <linearGradient id="orbitGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#6366f1" />
-          </linearGradient>
         </defs>
-        {/* Quantum Orbital Glow Field */}
         <circle cx="36" cy="36" r="30" fill="url(#physNucleus)" opacity="0.15" />
-        {/* Orbital 1: Trajectory 30 deg */}
-        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(30 36 36)" stroke={isSelected ? '#ffffff' : 'url(#orbitGrad1)'} strokeWidth="2.2" opacity="0.9" />
-        {/* Electron 1 on Orbit 1 with Cyan Glow */}
+        <ellipse cx="36" cy="36" rx="28" ry="11" transform="rotate(30 36 36)" stroke={isSelected ? '#ffffff' : 'url(#orbitGrad1)'} strokeWidth="2.2" opacity="0.9" />
         <circle cx="58" cy="49" r="4.2" fill={isSelected ? '#ffffff' : '#00f5ff'} />
-        <circle cx="58" cy="49" r="6" stroke="#00f5ff" strokeWidth="1" opacity="0.6" />
-        {/* Orbital 2: Trajectory -30 deg */}
-        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : 'url(#orbitGrad2)'} strokeWidth="2.2" opacity="0.9" />
-        {/* Electron 2 on Orbit 2 with Blue Glow */}
+        <ellipse cx="36" cy="36" rx="28" ry="11" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="2.2" opacity="0.9" />
         <circle cx="15" cy="49" r="4.2" fill={isSelected ? '#ffffff' : '#38bdf8'} />
-        <circle cx="15" cy="49" r="6" stroke="#38bdf8" strokeWidth="1" opacity="0.6" />
-        {/* Orbital 3: Vertical Trajectory 90 deg */}
-        <ellipse cx="36" cy="36" rx="29" ry="11" transform="rotate(90 36 36)" stroke={isSelected ? '#e0f2fe' : '#60a5fa'} strokeWidth="2.2" opacity="0.85" />
-        {/* Electron 3 on Orbit 3 */}
-        <circle cx="36" cy="8" r="4.2" fill={isSelected ? '#ffffff' : '#7dd3fc'} />
-        <circle cx="36" cy="64" r="3.2" fill={isSelected ? '#ffffff' : '#93c5fd'} opacity="0.8" />
-        {/* Multi-proton / Neutron Dense 3D Nucleus */}
-        <circle cx="36" cy="36" r="10" fill="url(#physNucleus)" filter="drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))" />
-        <circle cx="33" cy="33" r="3.5" fill="#ffffff" opacity="0.9" />
-        <circle cx="38" cy="37" r="2.5" fill="#93c5fd" opacity="0.8" />
-        {/* Vector Force Arrow Vector */}
-        <path d="M50 18L58 12M58 12L53 12M58 12L58 17" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <ellipse cx="36" cy="36" rx="28" ry="11" transform="rotate(90 36 36)" stroke={isSelected ? '#e0f2fe' : '#60a5fa'} strokeWidth="2.2" opacity="0.85" />
+        <circle cx="36" cy="8" r="4" fill={isSelected ? '#ffffff' : '#7dd3fc'} />
+        <circle cx="36" cy="36" r="9" fill="url(#physNucleus)" />
       </svg>
     )
   },
@@ -161,7 +105,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Chemistry & Matter',
     fullTitle: 'Chemistry & Molecular Science',
     subtitle: 'Reactions, Acids & Atoms',
-    badgeCount: getCategoryCount('Chemistry & Matter'),
     colorName: 'Vibrant Violet / Purple',
     iconBg: 'rgba(168, 85, 247, 0.16)',
     iconBorder: '#a855f7',
@@ -175,52 +118,25 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#7e22ce',
     textColorDark: '#c084fc',
     renderIcon: ({ isSelected, className }) => (
-      /* Realistic laboratory conical flask with bubbling colorful reagents and molecular structures */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
         <defs>
           <linearGradient id="chemFluidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#e879f9" />
             <stop offset="50%" stopColor="#a855f7" />
             <stop offset="100%" stopColor="#7e22ce" />
           </linearGradient>
-          <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
-            <stop offset="30%" stopColor="#c084fc" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.6" />
-          </linearGradient>
         </defs>
-        {/* Outer Flask Glass Contour */}
-        <path d="M30 6 H42 V22 L59 55 C61 59 58 64 53 64 H19 C14 64 11 59 13 55 L30 22 V6 Z" 
+        <path d="M30 8 H42 V22 L58 54 C60 58 57 62 53 62 H19 C15 62 12 58 14 54 L30 22 V8 Z" 
           stroke={isSelected ? '#ffffff' : '#d8b4fe'} 
           strokeWidth="2.5" 
           strokeLinejoin="round" 
           fill="rgba(168, 85, 247, 0.08)" 
         />
-        {/* Flask Lip Rim */}
-        <rect x="27" y="4" width="18" height="3.5" rx="1.5" fill={isSelected ? '#ffffff' : '#c084fc'} />
-        {/* Bubbling Fluid Liquid Volume */}
-        <path d="M19 44 Q28 41 36 45 T53 43 L57 55 C58 58 56 62 52 62 H20 C16 62 14 58 15 55 Z" 
-          fill="url(#chemFluidGrad)" 
-        />
-        {/* Surface Wave Highlight */}
-        <path d="M19 44 Q28 41 36 45 T53 43" stroke="#f0abfc" strokeWidth="2" strokeLinecap="round" />
-        {/* Bubbling Effervescent Reagent Bubbles */}
-        <circle cx="30" cy="51" r="3.2" fill="#ffffff" opacity="0.9" />
-        <circle cx="41" cy="55" r="2.5" fill="#fdf4ff" opacity="0.8" />
-        <circle cx="36" cy="38" r="3.5" fill="#e879f9" stroke="#ffffff" strokeWidth="1" />
-        <circle cx="28" cy="32" r="2.8" fill="#c084fc" />
-        <circle cx="43" cy="28" r="2" fill="#d8b4fe" />
-        <circle cx="34" cy="20" r="1.8" fill="#f0abfc" />
-        {/* Glass Reflection Highlight on Left Edge */}
-        <path d="M19 55 L33 26" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
-        {/* Molecular Structure Attachment / Orbit */}
-        <g transform="translate(48, 10)">
-          <line x1="0" y1="8" x2="12" y2="2" stroke={isSelected ? '#ffffff' : '#f0abfc'} strokeWidth="1.8" />
-          <line x1="12" y1="2" x2="12" y2="14" stroke={isSelected ? '#ffffff' : '#f0abfc'} strokeWidth="1.8" />
-          <circle cx="0" cy="8" r="3.5" fill="#e879f9" />
-          <circle cx="12" cy="2" r="3" fill="#c084fc" />
-          <circle cx="12" cy="14" r="3" fill="#a855f7" />
-        </g>
+        <rect x="27" y="6" width="18" height="3" rx="1.5" fill={isSelected ? '#ffffff' : '#c084fc'} />
+        <path d="M19 44 Q28 41 36 45 T53 43 L56 54 C57 57 55 60 52 60 H20 C17 60 15 57 16 54 Z" fill="url(#chemFluidGrad)" />
+        <circle cx="30" cy="51" r="3" fill="#ffffff" opacity="0.9" />
+        <circle cx="41" cy="54" r="2.2" fill="#fdf4ff" opacity="0.8" />
+        <circle cx="36" cy="38" r="3" fill="#e879f9" stroke="#ffffff" strokeWidth="1" />
       </svg>
     )
   },
@@ -229,7 +145,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Biology & Life',
     fullTitle: 'Biology & Living Systems',
     subtitle: 'Genetics, Plants & Organisms',
-    badgeCount: getCategoryCount('Biology & Life'),
     colorName: 'Vivid Green',
     iconBg: 'rgba(34, 197, 94, 0.16)',
     iconBorder: '#22c55e',
@@ -243,68 +158,19 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#15803d',
     textColorDark: '#4ade80',
     renderIcon: ({ isSelected, className }) => (
-      /* Detailed colorful DNA double helix paired with a lush botanical leaf and microscopic cell */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <linearGradient id="dnaStrand1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#059669" />
-          </linearGradient>
-          <linearGradient id="dnaStrand2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#a7f3d0" />
-            <stop offset="100%" stopColor="#10b981" />
-          </linearGradient>
-          <linearGradient id="bioLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#86efac" />
-            <stop offset="60%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#15803d" />
-          </linearGradient>
-        </defs>
-        {/* Botanical Organic Leaf in background */}
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
         <path d="M38 12 C49 14 62 25 60 44 C58 56 46 62 34 60 C32 50 31 38 38 12 Z" 
-          fill="url(#bioLeaf)" 
+          fill="#22c55e" 
           opacity="0.85" 
           stroke={isSelected ? '#ffffff' : '#86efac'} 
           strokeWidth="1.5" 
         />
-        {/* Leaf Vein Structure */}
         <path d="M38 15 Q43 38 35 59" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M41 28 Q48 30 54 28" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
-        <path d="M40 38 Q48 42 53 40" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
-        <path d="M38 48 Q44 52 48 50" stroke={isSelected ? '#ffffff' : '#bbf7d0'} strokeWidth="1.2" />
-        
-        {/* DNA Double Helix Structure foreground (Left side) */}
-        {/* Helix base rungs connecting strands */}
-        <line x1="12" y1="18" x2="26" y2="18" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="2.2" strokeLinecap="round" />
-        <line x1="10" y1="28" x2="28" y2="28" stroke={isSelected ? '#ffffff' : '#a7f3d0'} strokeWidth="2.2" strokeLinecap="round" />
-        <line x1="14" y1="38" x2="24" y2="38" stroke={isSelected ? '#ffffff' : '#34d399'} strokeWidth="2.2" strokeLinecap="round" />
-        <line x1="10" y1="48" x2="28" y2="48" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="2.2" strokeLinecap="round" />
-        <line x1="12" y1="58" x2="26" y2="58" stroke={isSelected ? '#ffffff' : '#a7f3d0'} strokeWidth="2.2" strokeLinecap="round" />
-        
-        {/* Base Pair Nucleotide Nodes */}
-        <circle cx="12" cy="18" r="3" fill="#22c55e" />
-        <circle cx="26" cy="18" r="3" fill="#3b82f6" />
-        <circle cx="19" cy="28" r="3.2" fill="#fbbf24" />
-        <circle cx="10" cy="48" r="3" fill="#3b82f6" />
-        <circle cx="28" cy="48" r="3" fill="#22c55e" />
-        
-        {/* Strand 1 Sine Wave */}
-        <path d="M12 12 Q28 23 19 33 Q10 43 28 53 Q19 63 12 68" 
-          stroke={isSelected ? '#ffffff' : 'url(#dnaStrand1)'} 
-          strokeWidth="3.2" 
-          strokeLinecap="round" 
-          fill="none" 
-        />
-        {/* Strand 2 Cosine Wave */}
-        <path d="M26 12 Q10 23 19 33 Q28 43 10 53 Q19 63 26 68" 
-          stroke={isSelected ? '#e0f2fe' : 'url(#dnaStrand2)'} 
-          strokeWidth="3.2" 
-          strokeLinecap="round" 
-          fill="none" 
-        />
-        {/* Microscopic Living Cell with Nucleus (Bottom Right) */}
-        <circle cx="54" cy="54" r="8" fill="rgba(34, 197, 94, 0.4)" stroke="#86efac" strokeWidth="1.5" />
-        <circle cx="54" cy="54" r="3.5" fill="#15803d" />
+        <path d="M12 14 Q28 24 19 34 Q10 44 28 54 Q19 64 12 68" stroke={isSelected ? '#ffffff' : '#34d399'} strokeWidth="3" fill="none" />
+        <path d="M26 14 Q10 24 19 34 Q28 44 10 54 Q19 64 26 68" stroke={isSelected ? '#e0f2fe' : '#10b981'} strokeWidth="3" fill="none" />
+        <circle cx="12" cy="18" r="2.8" fill="#22c55e" />
+        <circle cx="26" cy="18" r="2.8" fill="#3b82f6" />
+        <circle cx="19" cy="34" r="3" fill="#fbbf24" />
       </svg>
     )
   },
@@ -313,7 +179,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Earth & Space',
     fullTitle: 'Earth & Space Exploration',
     subtitle: 'Planets, Tectonics & Orbits',
-    badgeCount: getCategoryCount('Earth & Space'),
     colorName: 'Deep Blue & Golden Amber',
     iconBg: 'rgba(2, 132, 199, 0.16)',
     iconBorder: '#0284c7',
@@ -327,60 +192,11 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#0369a1',
     textColorDark: '#38bdf8',
     renderIcon: ({ isSelected, className }) => (
-      /* Photorealistic 3D planet Earth showing atmospheric glow, continents, and planetary orbit rings */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <radialGradient id="earthGlobe" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#7dd3fc" />
-            <stop offset="25%" stopColor="#38bdf8" />
-            <stop offset="60%" stopColor="#0284c7" />
-            <stop offset="85%" stopColor="#0369a1" />
-            <stop offset="100%" stopColor="#082f49" />
-          </radialGradient>
-          <linearGradient id="saturnRing" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="50%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#d97706" />
-          </linearGradient>
-          <radialGradient id="atmoGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {/* Planetary Atmosphere Outer Glow */}
-        <circle cx="36" cy="36" r="28" fill="url(#atmoGlow)" />
-        {/* Planetary Back Orbit Ring */}
-        <ellipse cx="36" cy="36" rx="34" ry="12" transform="rotate(-22 36 36)" stroke="url(#saturnRing)" strokeWidth="3" opacity="0.6" strokeDasharray="38 40" />
-        
-        {/* Spherical Earth Globe Body */}
-        <circle cx="36" cy="36" r="22" fill="url(#earthGlobe)" stroke={isSelected ? '#ffffff' : '#7dd3fc'} strokeWidth="1.5" />
-        
-        {/* Continents & Landmasses (Green & Emerald Shapes) */}
-        {/* Eurasia / Africa Continent */}
-        <path d="M26 24 C28 20 38 21 42 24 C45 27 47 33 43 36 C39 39 34 35 32 37 C29 39 27 33 26 24 Z" 
-          fill="#22c55e" 
-          opacity="0.9" 
-        />
-        {/* Americas / Archipelago */}
-        <path d="M20 28 C22 26 25 30 23 35 C22 38 18 42 19 46 C21 48 24 50 22 52 C19 50 17 44 18 36 Z" 
-          fill="#16a34a" 
-          opacity="0.85" 
-        />
-        {/* Australia / Oceania */}
-        <circle cx="48" cy="44" r="3.5" fill="#22c55e" opacity="0.85" />
-        {/* Cloud Layer / Swirls */}
-        <path d="M22 22 Q32 26 44 20" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.75" />
-        <path d="M28 42 Q38 38 48 42" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
-        
-        {/* Planetary Front Orbit Ring with Golden Amber Sheen */}
-        <ellipse cx="36" cy="36" rx="34" ry="12" transform="rotate(-22 36 36)" stroke={isSelected ? '#ffffff' : 'url(#saturnRing)'} strokeWidth="3.2" strokeDasharray="40 38" />
-        {/* Orbiting Satellite / Moon */}
-        <circle cx="62" cy="24" r="3.8" fill={isSelected ? '#ffffff' : '#fbbf24'} />
-        <circle cx="62" cy="24" r="5" stroke="#f59e0b" strokeWidth="1" opacity="0.7" />
-        {/* Stars in Space */}
-        <circle cx="10" cy="14" r="1.2" fill="#ffffff" />
-        <circle cx="64" cy="56" r="1.2" fill="#ffffff" />
-        <circle cx="12" cy="60" r="1" fill="#7dd3fc" />
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
+        <ellipse cx="36" cy="36" rx="32" ry="11" transform="rotate(-22 36 36)" stroke="#f59e0b" strokeWidth="2.5" opacity="0.6" strokeDasharray="36 36" />
+        <circle cx="36" cy="36" r="20" fill="#0284c7" stroke={isSelected ? '#ffffff' : '#7dd3fc'} strokeWidth="1.5" />
+        <path d="M26 26 C28 22 37 23 41 26 C44 29 45 34 42 37 C38 40 33 36 31 38 C29 40 27 34 26 26 Z" fill="#22c55e" />
+        <circle cx="60" cy="25" r="3.5" fill={isSelected ? '#ffffff' : '#fbbf24'} />
       </svg>
     )
   },
@@ -389,7 +205,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Mathematics & Logic',
     fullTitle: 'Mathematics & Geometry',
     subtitle: 'Equations, Algebra & Shapes',
-    badgeCount: getCategoryCount('Mathematics & Logic'),
     colorName: 'Vibrant Amber / Orange',
     iconBg: 'rgba(245, 158, 11, 0.16)',
     iconBorder: '#f59e0b',
@@ -403,52 +218,13 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#c2410c',
     textColorDark: '#fb923c',
     renderIcon: ({ isSelected, className }) => (
-      /* 3D geometric compass, golden ratio spiral, and calculus coordinate curves */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <linearGradient id="mathAmber" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="50%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#ea580c" />
-          </linearGradient>
-          <linearGradient id="compassMetal" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fed7aa" />
-            <stop offset="100%" stopColor="#c2410c" />
-          </linearGradient>
-        </defs>
-        {/* Background Coordinate Axis Grid */}
-        <line x1="8" y1="56" x2="64" y2="56" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
-        <line x1="14" y1="8" x2="14" y2="64" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
-        
-        {/* Calculus Coordinate Curve (Sinusoidal Polynomial) */}
-        <path d="M14 56 Q28 16 42 42 T64 18" stroke={isSelected ? '#ffffff' : '#f59e0b'} strokeWidth="2.8" strokeLinecap="round" fill="none" />
-        
-        {/* Golden Ratio Logarithmic Spiral */}
-        <path d="M50 38 A6 6 0 0 1 44 44 A12 12 0 0 1 32 32 A20 20 0 0 1 52 12" 
-          stroke={isSelected ? '#fef08a' : '#ea580c'} 
-          strokeWidth="2.2" 
-          strokeLinecap="round" 
-          fill="none" 
-          strokeDasharray="2 3"
-        />
-        
-        {/* 3D Drafting Compass Instrument */}
-        {/* Hinge Head */}
-        <circle cx="36" cy="14" r="4.5" fill="url(#mathAmber)" stroke={isSelected ? '#ffffff' : '#7c2d12'} strokeWidth="1.5" />
-        <circle cx="36" cy="14" r="2" fill="#ffffff" />
-        {/* Compass Left Leg */}
-        <path d="M34 16 L22 52" stroke={isSelected ? '#ffffff' : 'url(#compassMetal)'} strokeWidth="3" strokeLinecap="round" />
-        {/* Compass Right Leg with Needle Tip */}
-        <path d="M38 16 L50 52" stroke={isSelected ? '#ffffff' : 'url(#compassMetal)'} strokeWidth="3" strokeLinecap="round" />
-        {/* Center Adjustment Spindle */}
-        <line x1="27" y1="36" x2="45" y2="36" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="36" cy="36" r="2" fill="#ffffff" />
-        {/* Sharp Tips on Paper */}
-        <polygon points="22,52 20,56 24,56" fill={isSelected ? '#ffffff' : '#ea580c'} />
-        <polygon points="50,52 48,56 52,56" fill={isSelected ? '#ffffff' : '#ea580c'} />
-        
-        {/* Mathematical Sigma Symbol badge (Top Right) */}
-        <text x="50" y="24" fill={isSelected ? '#ffffff' : '#ea580c'} fontSize="15" fontWeight="900" fontFamily="serif">∑</text>
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
+        <line x1="10" y1="56" x2="62" y2="56" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" />
+        <line x1="16" y1="10" x2="16" y2="62" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="1.8" />
+        <path d="M16 56 Q28 18 42 42 T62 20" stroke={isSelected ? '#ffffff' : '#f59e0b'} strokeWidth="2.8" fill="none" />
+        <circle cx="36" cy="16" r="4" fill="#fbbf24" stroke={isSelected ? '#ffffff' : '#7c2d12'} strokeWidth="1.2" />
+        <path d="M34 18 L24 50" stroke={isSelected ? '#ffffff' : '#c2410c'} strokeWidth="2.5" />
+        <path d="M38 18 L48 50" stroke={isSelected ? '#ffffff' : '#c2410c'} strokeWidth="2.5" />
       </svg>
     )
   },
@@ -457,7 +233,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Computer Science & IT',
     fullTitle: 'Computer Science & Hardware',
     subtitle: 'Binary, CPU & Peripherals',
-    badgeCount: getCategoryCount('Computer Science & IT'),
     colorName: 'Teal / Neon Cyan',
     iconBg: 'rgba(20, 184, 166, 0.16)',
     iconBorder: '#14b8a6',
@@ -471,61 +246,16 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#0f766e',
     textColorDark: '#2dd4bf',
     renderIcon: ({ isSelected, className }) => (
-      /* Modern 3D workstation display showing glowing colored code, microchip processor, and binary stream */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <linearGradient id="monitorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#14b8a6" />
-            <stop offset="100%" stopColor="#0f766e" />
-          </linearGradient>
-          <linearGradient id="chipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2dd4bf" />
-            <stop offset="100%" stopColor="#06b6d4" />
-          </linearGradient>
-        </defs>
-        {/* Workstation Monitor Outer Chassis */}
-        <rect x="10" y="8" width="52" height="36" rx="4" 
-          fill="rgba(15, 23, 42, 0.92)" 
-          stroke={isSelected ? '#ffffff' : '#2dd4bf'} 
-          strokeWidth="2.5" 
-        />
-        {/* Terminal Screen Screen Glow */}
-        <rect x="13" y="11" width="46" height="30" rx="2" fill="rgba(6, 78, 70, 0.4)" />
-        
-        {/* Code Syntax Lines on Terminal Display */}
-        <line x1="17" y1="18" x2="30" y2="18" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="33" y1="18" x2="44" y2="18" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="21" y1="24" x2="38" y2="24" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="41" y1="24" x2="48" y2="24" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="21" y1="30" x2="32" y2="30" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" />
-        
-        {/* Blinking CLI Cursor */}
-        <rect x="35" y="28" width="4" height="4" fill={isSelected ? '#ffffff' : '#2dd4bf'} />
-        
-        {/* Monitor Ergonomic Stand */}
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
+        <rect x="12" y="10" width="48" height="34" rx="4" fill="#042f2e" stroke={isSelected ? '#ffffff' : '#2dd4bf'} strokeWidth="2.2" />
+        <line x1="18" y1="18" x2="30" y2="18" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+        <line x1="33" y1="18" x2="42" y2="18" stroke="#34d399" strokeWidth="2" strokeLinecap="round" />
+        <line x1="22" y1="24" x2="38" y2="24" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" />
         <path d="M31 44 L30 52 H42 L41 44" fill={isSelected ? '#ffffff' : '#0d9488'} />
-        <rect x="24" y="52" width="24" height="3.5" rx="1.5" fill={isSelected ? '#ffffff' : '#14b8a6'} />
-        
-        {/* Floating 3D Microchip Silicon Processor (Bottom Right) */}
-        <g transform="translate(42, 38)">
-          <rect x="2" y="2" width="20" height="20" rx="3" fill="#042f2e" stroke="#5eead4" strokeWidth="2" />
-          <rect x="7" y="7" width="10" height="10" rx="1" fill="url(#chipGrad)" />
-          {/* Chip Pins */}
-          <line x1="6" y1="0" x2="6" y2="2" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="12" y1="0" x2="12" y2="2" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="18" y1="0" x2="18" y2="2" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="0" y1="7" x2="2" y2="7" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="0" y1="13" x2="2" y2="13" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="22" y1="7" x2="24" y2="7" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="22" y1="13" x2="24" y2="13" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="6" y1="22" x2="6" y2="24" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="12" y1="22" x2="12" y2="24" stroke="#5eead4" strokeWidth="1.8" />
-          <line x1="18" y1="22" x2="18" y2="24" stroke="#5eead4" strokeWidth="1.8" />
+        <rect x="25" y="52" width="22" height="3" rx="1.5" fill={isSelected ? '#ffffff' : '#14b8a6'} />
+        <g transform="translate(42, 36)">
+          <rect x="2" y="2" width="18" height="18" rx="2" fill="#064e3b" stroke="#5eead4" strokeWidth="1.5" />
         </g>
-        
-        {/* Binary Stream (Left Column: 0101) */}
-        <text x="6" y="58" fill={isSelected ? '#ffffff' : '#2dd4bf'} fontSize="9" fontWeight="900" fontFamily="monospace">01</text>
-        <text x="6" y="66" fill={isSelected ? '#ffffff' : '#0d9488'} fontSize="9" fontWeight="900" fontFamily="monospace">10</text>
       </svg>
     )
   },
@@ -534,7 +264,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'English & Grammar',
     fullTitle: 'English & Spatial Linguistics',
     subtitle: '3D Prepositions & Vocabulary',
-    badgeCount: getCategoryCount('English & Grammar'),
     colorName: 'Deep Indigo & Gold',
     iconBg: 'rgba(139, 92, 246, 0.16)',
     iconBorder: '#8b5cf6',
@@ -548,70 +277,16 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#4338ca',
     textColorDark: '#a5b4fc',
     renderIcon: ({ isSelected, className }) => (
-      /* Beautifully detailed open hardbound book with glowing golden typography letters */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <linearGradient id="bookCoverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#312e81" />
-            <stop offset="100%" stopColor="#1e1b4b" />
-          </linearGradient>
-          <linearGradient id="goldFontGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="50%" stopColor="#facc15" />
-            <stop offset="100%" stopColor="#ca8a04" />
-          </linearGradient>
-          <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#f8fafc" />
-          </linearGradient>
-        </defs>
-        {/* Hardbound Book Spine & Outer Binding */}
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
         <path d="M36 54 C26 49 14 49 8 51 V21 C14 19 26 19 36 24 C46 19 58 19 64 21 V51 C58 49 46 49 36 54 Z" 
-          fill="url(#bookCoverGrad)" 
+          fill="#312e81" 
           stroke={isSelected ? '#ffffff' : '#fbbf24'} 
-          strokeWidth="2.5" 
-          strokeLinejoin="round" 
+          strokeWidth="2.2" 
         />
-        {/* Open Book Left Pages Deck */}
-        <path d="M36 51 C27 46 16 46 10 48 V18 C16 16 27 16 36 21 Z" 
-          fill="url(#pageGrad)" 
-          stroke="#cbd5e1" 
-          strokeWidth="1.5" 
-        />
-        {/* Open Book Right Pages Deck */}
-        <path d="M36 51 C45 46 56 46 62 48 V18 C56 16 45 16 36 21 Z" 
-          fill="url(#pageGrad)" 
-          stroke="#cbd5e1" 
-          strokeWidth="1.5" 
-        />
-        {/* Center Ribbon Bookmark in Scarlet */}
-        <path d="M36 21 V45 L40 41 L44 45 V21" fill="#ef4444" />
-        
-        {/* Left Page Elegant Typography Text Lines */}
-        <line x1="15" y1="26" x2="31" y2="26" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="15" y1="32" x2="29" y2="32" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="15" y1="38" x2="31" y2="38" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="15" y1="44" x2="25" y2="44" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        
-        {/* Right Page Elegant Typography Text Lines */}
-        <line x1="41" y1="26" x2="57" y2="26" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="41" y1="32" x2="55" y2="32" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="41" y1="38" x2="57" y2="38" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-        
-        {/* Floating Glowing Golden Typography Letters (A, B, C) */}
-        {/* Golden 'A' */}
-        <g transform="translate(18, 2)">
-          <circle cx="10" cy="10" r="9" fill="url(#goldFontGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
-          <text x="6" y="14" fill="#1e1b4b" fontSize="13" fontWeight="900" fontFamily="serif">A</text>
-        </g>
-        {/* Golden 'B' */}
-        <g transform="translate(42, 4)">
-          <circle cx="9" cy="9" r="8" fill="url(#goldFontGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
-          <text x="5" y="13" fill="#1e1b4b" fontSize="12" fontWeight="900" fontFamily="serif">B</text>
-        </g>
-        {/* Magic Glowing Sparkles from the Book */}
-        <polygon points="36,7 37,10 40,11 37,12 36,15 35,12 32,11 35,10" fill={isSelected ? '#ffffff' : '#facc15'} />
-        <polygon points="58,16 59,18 61,19 59,20 58,22 57,20 55,19 57,18" fill={isSelected ? '#ffffff' : '#facc15'} />
+        <path d="M36 51 C27 46 16 46 10 48 V18 C16 16 27 16 36 21 Z" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.2" />
+        <path d="M36 51 C45 46 56 46 62 48 V18 C56 16 45 16 36 21 Z" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.2" />
+        <circle cx="26" cy="12" r="7" fill="#fbbf24" />
+        <text x="23" y="16" fill="#1e1b4b" fontSize="11" fontWeight="900">A</text>
       </svg>
     )
   },
@@ -620,7 +295,6 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     shortLabel: 'Early Childhood (ECCE)',
     fullTitle: 'Early Childhood Care & Education',
     subtitle: 'Sensory Blocks, Shapes & Color',
-    badgeCount: getCategoryCount('Early Childhood (ECCE)'),
     colorName: 'Vibrant Coral / Pink',
     iconBg: 'rgba(244, 63, 94, 0.16)',
     iconBorder: '#f43f5e',
@@ -634,65 +308,15 @@ const getSubjectCategories = (getCategoryCount: (cat: string) => number): Subjec
     textColorLight: '#e11d48',
     textColorDark: '#fb7185',
     renderIcon: ({ isSelected, className }) => (
-      /* Bright 3D alphabet learning blocks (A-B-C) with playful geometric shapes */
-      <svg className={className || "w-20 h-20 sm:w-24 sm:h-24"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <linearGradient id="blockAGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fb7185" />
-            <stop offset="100%" stopColor="#e11d48" />
-          </linearGradient>
-          <linearGradient id="blockBGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0284c7" />
-          </linearGradient>
-          <linearGradient id="blockCGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#facc15" />
-            <stop offset="100%" stopColor="#eab308" />
-          </linearGradient>
-        </defs>
-        
-        {/* Playful Geometric Cylinder / Cone Background Element */}
-        <circle cx="16" cy="18" r="8" fill="#a78bfa" stroke={isSelected ? '#ffffff' : '#c4b5fd'} strokeWidth="1.5" />
-        <polygon points="56,8 64,22 48,22" fill="#34d399" stroke={isSelected ? '#ffffff' : '#86efac'} strokeWidth="1.5" />
-        
-        {/* Block A: Isometric 3D Coral / Pink Block (Bottom Left) */}
-        <g transform="translate(6, 32)">
-          {/* Top Face */}
-          <polygon points="16,0 30,7 16,14 2,7" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
-          {/* Left Face */}
-          <polygon points="2,7 16,14 16,30 2,23" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
-          {/* Right Face */}
-          <polygon points="16,14 30,7 30,23 16,30" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
-          {/* Letter A on Left Face */}
-          <text x="5" y="24" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">A</text>
-        </g>
-        
-        {/* Block B: Isometric 3D Blue Block (Bottom Right) */}
-        <g transform="translate(36, 34)">
-          {/* Top Face */}
-          <polygon points="15,0 28,6 15,13 2,6" fill="#7dd3fc" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
-          {/* Left Face */}
-          <polygon points="2,6 15,13 15,28 2,21" fill="#0284c7" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
-          {/* Right Face */}
-          <polygon points="15,13 28,6 28,21 15,28" fill="#0369a1" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
-          {/* Letter B on Left Face */}
-          <text x="5" y="23" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">B</text>
-        </g>
-        
-        {/* Block C: Isometric 3D Golden Yellow Block (Stacked in Center) */}
-        <g transform="translate(22, 10)">
-          {/* Top Face */}
-          <polygon points="15,0 28,6 15,13 2,6" fill="#fef08a" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
-          {/* Left Face */}
-          <polygon points="2,6 15,13 15,28 2,21" fill="#eab308" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
-          {/* Right Face */}
-          <polygon points="15,13 28,6 28,21 15,28" fill="#ca8a04" stroke={isSelected ? '#ffffff' : '#ca8a04'} strokeWidth="1.5" />
-          {/* Letter C on Left Face */}
-          <text x="5" y="23" fill="#ffffff" fontSize="13" fontWeight="900" fontFamily="sans-serif">C</text>
-        </g>
-        
-        {/* Playful Floating Star */}
-        <polygon points="36,4 37,7 40,7 38,9 39,12 36,10 33,12 34,9 32,7 35,7" fill="#f43f5e" />
+      <svg className={className || "w-10 h-10"} viewBox="0 0 72 72" fill="none">
+        <polygon points="16,32 30,39 16,46 2,39" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+        <polygon points="2,39 16,46 16,60 2,53" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+        <polygon points="16,46 30,39 30,53 16,60" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+        <text x="5" y="53" fill="#ffffff" fontSize="11" fontWeight="900">A</text>
+        <polygon points="45,34 58,40 45,47 32,40" fill="#7dd3fc" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+        <polygon points="32,40 45,47 45,61 32,54" fill="#0284c7" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+        <polygon points="45,47 58,40 58,54 45,61" fill="#0369a1" stroke={isSelected ? '#ffffff' : '#0284c7'} strokeWidth="1.5" />
+        <text x="35" y="54" fill="#ffffff" fontSize="11" fontWeight="900">B</text>
       </svg>
     )
   }
@@ -710,18 +334,25 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
-  // By default, the first subject 'Physics & Motion' is selected when the page opens
+  // Category state (default to 'Physics & Motion')
   const [internalCategory, setInternalCategory] = useState<string>('Physics & Motion');
+  
+  // UPDATE 1: Topic / Lab state (default to 'all' for all labs in the selected subject)
+  const [selectedTopic, setSelectedTopic] = useState<string>('all');
+  
+  // Quick search filter term
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
-  const handleCategoryChange = (cat: string) => {
+  const handleCategoryChange = (catKey: string) => {
     if (onSelectCategory) {
-      onSelectCategory(cat);
+      onSelectCategory(catKey);
     } else {
-      setInternalCategory(cat);
+      setInternalCategory(catKey);
     }
+    // Reset topic selection when category changes
+    setSelectedTopic('all');
   };
 
   const handleCardClick = (sim: SimulationItem) => {
@@ -790,775 +421,725 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const subjectCategories = getSubjectCategories(getCategoryCount);
-
-  // Determine active subject configuration for visual summary
   const activeSubjectConfig = subjectCategories.find(c => c.key === selectedCategory) || subjectCategories[0];
 
-  return (
-    <section 
-      id="catalog" 
-      className="w-full space-y-8 pt-4 scroll-mt-20 opacity-100"
-    >
-      {/* 1. Website Section Header with Search Bar */}
-      <div 
-        className="rounded-2xl p-6 sm:p-8 border shadow-xl transition-all"
+  // Simulations belonging to currently selected subject
+  const currentSubjectSims = activeSimulations.filter(s => s.category === selectedCategory);
+
+  // Filtered simulations based on Subject, Topic, and Search
+  const displayedSims = activeSimulations.filter(s => {
+    // 1. Subject constraint
+    if (s.category !== selectedCategory) return false;
+    // 2. Topic / Lab constraint
+    if (selectedTopic !== 'all' && s.id !== selectedTopic) return false;
+    // 3. Search query constraint
+    if (!matchesSearch(s)) return false;
+    return true;
+  });
+
+  // Active topic label for breadcrumb
+  const getActiveTopicLabel = (): string => {
+    if (selectedTopic === 'all') {
+      return `All Labs (${currentSubjectSims.length})`;
+    }
+    const matchingSim = currentSubjectSims.find(s => s.id === selectedTopic);
+    return matchingSim ? cleanCardTitle(matchingSim.title) : 'Topic Selected';
+  };
+
+  // Render a simulation card with full fidelity
+  const renderCard = (sim: SimulationItem) => {
+    const theme = getSimTheme(sim.indexNumber);
+    const isActive = activeSim ? activeSim.id === sim.id : false;
+    const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
+    const displayTitle = cleanCardTitle(sim.title);
+    const displayGrade = cleanGradeBadge(sim.gradeLevel);
+    const displaySubject = cleanCardSubject(sim.subject);
+    const displayDesc = cleanCardDescription(sim.description);
+
+    return (
+      <div
+        key={sim.id}
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest('button')) return;
+          handleCardClick(sim);
+        }}
+        className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
+          isActive ? 'scale-[1.01]' : ''
+        }`}
         style={{
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.88)',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
-          borderWidth: '1px',
+          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
           borderStyle: 'solid',
-          boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
+          borderTopWidth: isConceptGuide ? '5px' : '4px',
+          borderRightWidth: isActive ? '2px' : '1.5px',
+          borderBottomWidth: isActive ? '2px' : '1.5px',
+          borderLeftWidth: isActive ? '2px' : '1.5px',
+          borderTopColor: theme.bgSolid,
+          borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
+          borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
+          borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
+          boxShadow: isDarkMode 
+            ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
+            : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
           color: isDarkMode ? '#ffffff' : '#0f172a'
         }}
       >
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
+        {/* Card Content */}
+        <div className="p-5 pb-3">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            {/* Realistic Visual Emblem */}
+            <a
+              href={getSimulationStandaloneUrl(sim)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1 block"
+              style={{
+                backgroundColor: theme.badgeBg,
+                borderColor: theme.borderColor,
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: `0 4px 14px ${theme.glowColor}`
+              }}
+              title={`Open ${displayTitle} in new tab`}
+            >
+              <TopicRealisticIcon 
+                indexNumber={sim.indexNumber}
+                simId={sim.id}
+                className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200" 
+              />
+            </a>
+
+            {/* Badges: Lab / Concept & Grade */}
+            <div className="flex flex-col items-end gap-1.5">
               <span 
-                className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-2xs flex items-center gap-1.5"
+                className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs"
                 style={{
-                  backgroundColor: isDarkMode ? 'rgba(15, 41, 99, 0.75)' : 'rgba(239, 246, 255, 0.9)',
-                  color: isDarkMode ? '#38bdf8' : '#1d4ed8',
-                  borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
+                  backgroundColor: theme.bgSolid,
+                  color: '#ffffff',
+                  borderColor: theme.borderColor,
                   borderWidth: '1px',
                   borderStyle: 'solid'
                 }}
               >
-                <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                Curriculum Subject Filtering
+                {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
               </span>
               <span 
-                className="px-3 py-1 rounded-full text-xs font-black shadow-xs flex items-center gap-1"
-                style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
+                className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor: theme.badgeBg,
+                  color: theme.badgeText,
+                  borderColor: theme.badgeBorder,
+                  borderWidth: '1px',
+                  borderStyle: 'solid'
+                }}
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {activeSimulations.length} Labs Available
+                {displayGrade}
               </span>
             </div>
-
-            <h2 
-              className="text-2xl sm:text-3xl font-black tracking-tight"
-              style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-            >
-              Interactive STEM Simulations Catalog
-            </h2>
-            <p 
-              className="text-xs sm:text-sm font-bold mt-1.5 max-w-3xl leading-relaxed"
-              style={{ color: isDarkMode ? '#94a3b8' : '#475569' }}
-            >
-              Select any subject card below to dynamically filter its dedicated labs. Click any simulation card to launch the interactive physics engine in a dedicated, isolated workspace tab.
-            </p>
           </div>
 
-          {/* Quick Search Input with Auto-Open & AI Dynamic Generator */}
-          <div className="w-full lg:w-96 xl:w-[460px] shrink-0 space-y-2">
-            <div 
-              className="relative flex items-center rounded-xl border shadow-inner transition-all"
-              style={{
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.85)' : 'rgba(248, 250, 252, 0.85)',
-                borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(148, 163, 184, 0.6)',
-                borderWidth: '1.5px',
-                borderStyle: 'solid'
+          {/* Simulation Topic Title */}
+          <h4 
+            className="text-base font-black tracking-tight leading-snug line-clamp-2 group-hover:text-blue-500 transition-colors"
+            style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+          >
+            <a
+              href={getSimulationStandaloneUrl(sim)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.stopPropagation();
               }}
+              className="hover:underline"
+              title={`Open ${displayTitle} in new tab`}
             >
-              <Search className="w-4 h-4 ml-3 shrink-0" style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }} />
-              <input
-                type="text"
-                placeholder="Search labs (e.g., Optics, DNA, Bohr) or query any topic..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const matches = activeSimulations.filter(matchesSearch);
-                    if (matches.length > 0) {
-                      if (onLaunchOnStage) {
-                        onLaunchOnStage(matches[0]);
-                      }
-                    } else if (searchTerm.trim().length >= 2) {
-                      if (onTriggerAiGeneration) {
-                        onTriggerAiGeneration(searchTerm.trim());
-                      }
-                    }
-                  }
-                }}
-                className="w-full py-2.5 px-3 text-xs font-bold bg-transparent outline-none"
+              {displayTitle}
+            </a>
+          </h4>
+
+          {/* Subject & Sub-discipline */}
+          <p 
+            className="text-xs font-bold mt-1 line-clamp-1"
+            style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+          >
+            {displaySubject}
+          </p>
+
+          {/* Concept Description Intro */}
+          <p 
+            className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
+            style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+          >
+            {displayDesc}
+          </p>
+
+          {/* Topic Tags */}
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {sim.topics.slice(0, 2).map((topic, i) => (
+              <span
+                key={i}
+                className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
                 style={{
+                  backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
+                  color: isDarkMode ? '#cbd5e1' : theme.tagText,
+                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
+                  borderWidth: '1px',
+                  borderStyle: 'solid'
+                }}
+              >
+                {cleanCardTopic(topic)}
+              </span>
+            ))}
+            {sim.topics.length > 2 && (
+              <span 
+                className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
+                style={{
+                  backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
+                  color: isDarkMode ? '#94a3b8' : theme.badgeText,
+                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
+                  borderWidth: '1px',
+                  borderStyle: 'solid'
+                }}
+              >
+                +{sim.topics.length - 2}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Card Action Bar */}
+        <div 
+          className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
+          style={{
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
+            borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
+          }}
+        >
+          <a
+            href={getSimulationStandaloneUrl(sim)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
+            style={{
+              backgroundColor: theme.bgSolid,
+              boxShadow: `0 2px 6px ${theme.glowColor}`
+            }}
+            title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
+          >
+            <ExternalLink className="w-3 h-3 text-white" />
+            <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+          </a>
+
+          {/* Direct Fullscreen Modal Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onLaunchFullscreenModal(sim);
+            }}
+            className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
+            style={{
+              backgroundColor: theme.bgSolid,
+              borderColor: theme.borderColor,
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              color: '#ffffff'
+            }}
+            title="Launch in 4K Fullscreen View"
+          >
+            <Maximize2 className="w-3.5 h-3.5 text-white" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section 
+      id="catalog" 
+      className="w-full space-y-6 pt-2 scroll-mt-20 opacity-100"
+    >
+      {/* =========================================================================
+          UPDATE 1: MOBILE & TABLET ADAPTABILITY (< 1024px)
+          Cascading Controls: "Select Subject" dropdown + Dependent "Select Topic / Lab"
+          dropdown & horizontal scrollable pills.
+          ========================================================================= */}
+      <div 
+        className="block lg:hidden rounded-2xl p-4 sm:p-5 border shadow-xl transition-all"
+        style={{
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.85)' : 'rgba(255, 255, 255, 0.95)',
+          borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.35)' : 'rgba(147, 197, 253, 0.7)',
+          borderWidth: '1.5px',
+          borderStyle: 'solid'
+        }}
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <Filter className="w-4 h-4 text-blue-500" />
+          <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Interactive Catalog Navigation
+          </span>
+          <span className="ml-auto text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">
+            {activeSimulations.length} Labs
+          </span>
+        </div>
+
+        {/* 1. Select Subject Dropdown */}
+        <div className="space-y-3">
+          <div>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+              Select Subject
+            </label>
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="w-full py-2.5 px-3.5 pr-10 rounded-xl text-xs sm:text-sm font-black border appearance-none outline-none cursor-pointer transition-all shadow-sm"
+                style={{
+                  backgroundColor: isDarkMode ? '#0b1633' : '#ffffff',
+                  borderColor: isDarkMode ? '#3b82f6' : '#93c5fd',
                   color: isDarkMode ? '#ffffff' : '#0f172a'
                 }}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="mr-3 text-xs font-black px-1.5 py-0.5 rounded cursor-pointer transition-transform hover:scale-110"
-                  style={{
-                    backgroundColor: isDarkMode ? '#1e293b' : '#e2e8f0',
-                    color: isDarkMode ? '#ffffff' : '#0f172a'
-                  }}
-                  title="Clear search"
-                >
-                  &times;
-                </button>
-              )}
+              >
+                {subjectCategories.map((cat) => (
+                  <option key={cat.key} value={cat.key}>
+                    {cat.fullTitle} ({getCategoryCount(cat.key)} Labs)
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500" />
             </div>
+          </div>
 
-            {/* Smart Auto-Action Detection Banner */}
-            {searchTerm.trim().length >= 2 && (() => {
-              const currentMatches = activeSimulations.filter(matchesSearch);
-              return (
-                <div className="text-xs transition-all">
-                  {currentMatches.length > 0 ? (
-                    <div 
-                      className="p-2.5 rounded-xl border flex items-center justify-between gap-2 shadow-md"
-                      style={{
-                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : '#eff6ff',
-                        borderColor: '#3b82f6',
-                        borderWidth: '1.5px',
-                        color: isDarkMode ? '#ffffff' : '#1e3a8a'
-                      }}
-                    >
-                      <div className="flex items-center gap-1.5 truncate">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                        <span className="font-bold truncate text-[11px] sm:text-xs">
-                          Found: <strong>Lab {currentMatches[0].indexNumber} &bull; {currentMatches[0].title}</strong>
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => onLaunchOnStage && onLaunchOnStage(currentMatches[0])}
-                        className="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase text-white shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 shadow-sm"
-                        style={{
-                          backgroundColor: '#2563eb',
-                          backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
-                        }}
-                        title="Launch on Interactive Stage immediately"
-                      >
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>Launch on Stage &crarr;</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div 
-                      className="p-2.5 rounded-xl border flex items-center justify-between gap-2 shadow-md"
-                      style={{
-                        backgroundColor: isDarkMode ? 'rgba(26, 16, 51, 0.95)' : '#faf5ff',
-                        borderColor: '#a855f7',
-                        borderWidth: '1.5px',
-                        color: isDarkMode ? '#ffffff' : '#581c87'
-                      }}
-                    >
-                      <div className="flex items-center gap-1.5 truncate">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0 animate-spin-slow" />
-                        <span className="font-bold truncate text-[11px] sm:text-xs">
-                          New Topic &bull; <strong>Generate with Gemini AI</strong>
-                        </span>
-                      </div>
-                      <button
-                        disabled={isGeneratingAi}
-                        onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
-                        className="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase text-white shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 shadow-sm disabled:opacity-50"
-                        style={{
-                          backgroundColor: '#9333ea',
-                          backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)'
-                        }}
-                        title="Generate dynamic interactive simulation with Gemini AI"
-                      >
-                        {isGeneratingAi ? (
-                          <>
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                            <span>Generating...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Wand2 className="w-3 h-3" />
-                            <span>Generate Lab &crarr;</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+          {/* 2. Dependent Select Topic / Lab Dropdown */}
+          <div>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+              Select Topic / Lab in {activeSubjectConfig.shortLabel}
+            </label>
+            <div className="relative">
+              <select
+                value={selectedTopic}
+                onChange={(e) => setSelectedTopic(e.target.value)}
+                className="w-full py-2.5 px-3.5 pr-10 rounded-xl text-xs sm:text-sm font-bold border appearance-none outline-none cursor-pointer transition-all shadow-sm"
+                style={{
+                  backgroundColor: isDarkMode ? '#0b1633' : '#ffffff',
+                  borderColor: isDarkMode ? '#38bdf8' : '#cbd5e1',
+                  color: isDarkMode ? '#ffffff' : '#0f172a'
+                }}
+              >
+                <option value="all">All {activeSubjectConfig.shortLabel} Labs ({currentSubjectSims.length})</option>
+                {currentSubjectSims.map((sim) => (
+                  <option key={sim.id} value={sim.id}>
+                    Lab {sim.indexNumber}: {cleanCardTitle(sim.title)}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-cyan-500" />
+            </div>
+          </div>
 
-            {/* Quick Topic Prompts for AI Dynamic Generation */}
-            <div className="flex items-center gap-1.5 text-[10px] flex-wrap pt-0.5">
-              <span className="font-bold text-slate-400 flex items-center gap-1">
-                <Sparkles className="w-2.5 h-2.5 text-purple-400" />
-                <span>AI Prompt:</span>
-              </span>
-              {['Quantum Tunneling', 'Black Hole Dynamics', 'CRISPR Cas9', 'Bernoulli Fluid Lift'].map((topic) => (
+          {/* 3. Horizontal Scrollable Quick-Tap Topic Pills */}
+          <div className="pt-1">
+            <span className="block text-[10px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">
+              Quick Filter Pills:
+            </span>
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+              <button
+                type="button"
+                onClick={() => setSelectedTopic('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black shrink-0 transition-all cursor-pointer ${
+                  selectedTopic === 'all'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                All ({currentSubjectSims.length})
+              </button>
+              {currentSubjectSims.map((sim) => (
                 <button
-                  key={topic}
+                  key={`pill-${sim.id}`}
                   type="button"
-                  onClick={() => {
-                    setSearchTerm(topic);
-                    if (onTriggerAiGeneration) {
-                      onTriggerAiGeneration(topic);
-                    }
-                  }}
-                  className="px-2 py-0.5 rounded-md font-bold transition-all hover:scale-105 cursor-pointer"
-                  style={{
-                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
-                    color: isDarkMode ? '#cbd5e1' : '#475569',
-                    border: '1px solid rgba(168, 85, 247, 0.3)'
-                  }}
-                  title={`Generate interactive simulation for ${topic}`}
+                  onClick={() => setSelectedTopic(sim.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all cursor-pointer ${
+                    selectedTopic === sim.id
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}
                 >
-                  +{topic}
+                  Lab {sim.indexNumber}
                 </button>
               ))}
             </div>
           </div>
         </div>
-
-        {/* 2. PROMINENT & LARGE SUBJECT BUTTONS (STRICT 2-COLUMN GRID) */}
-        <div className="mt-8 pt-6 border-t" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(226, 232, 240, 0.9)' }}>
-          <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-black uppercase tracking-wider flex items-center gap-1.5" style={{ color: isDarkMode ? '#94a3b8' : '#475569' }}>
-                <Filter className="w-4 h-4 text-blue-500" />
-                Curriculum Subject Filtering:
-              </span>
-              <span 
-                className="text-xs font-black px-3 py-1 rounded-full shadow-xs"
-                style={{
-                  backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.55)' : '#dbeafe',
-                  color: isDarkMode ? '#60a5fa' : '#1d4ed8',
-                  border: isDarkMode ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid #bfdbfe'
-                }}
-              >
-                Active Discipline: {selectedCategory} ({getCategoryCount(selectedCategory)} {getCategoryCount(selectedCategory) === 1 ? 'Lab' : 'Labs'})
-              </span>
-            </div>
-          </div>
-
-          {/* Strict 2-Column Grid on Desktops & Tablets, 1-Column on Mobile */}
-          <div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
-            style={{
-              display: 'grid',
-              gap: '1.5rem'
-            }}
-          >
-            {subjectCategories.map((cat) => {
-              const isSelected = selectedCategory === cat.key;
-              
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => handleCategoryChange(cat.key)}
-                  aria-pressed={isSelected}
-                  className={`group relative rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left justify-between transition-all duration-300 cursor-pointer select-none btn-3d w-full ${
-                    isSelected ? 'scale-[1.02] z-10' : 'hover:scale-[1.01]'
-                  }`}
-                  style={{
-                    minHeight: '168px',
-                    backgroundImage: isSelected ? cat.activeGradient : 'none',
-                    backgroundColor: isSelected 
-                      ? 'transparent' 
-                      : (isDarkMode ? cat.darkCardBg : cat.lightCardBg),
-                    borderColor: isSelected 
-                      ? cat.activeBorder 
-                      : (isDarkMode ? cat.darkBorder : cat.lightBorder),
-                    borderWidth: isSelected ? '3px' : '2px',
-                    borderStyle: 'solid',
-                    color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a'),
-                    boxShadow: isSelected 
-                      ? `0 20px 40px -8px ${cat.glowColor}, 0 0 28px ${cat.glowColor}, inset 0 2px 4px rgba(255, 255, 255, 0.45)` 
-                      : (isDarkMode ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 6px 20px rgba(0, 0, 0, 0.05)')
-                  }}
-                  title={`Filter by ${cat.fullTitle} (${cat.badgeCount} labs)`}
-                >
-                  <div className="flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 w-full">
-                    {/* Significantly Enlarged Subject Icon (84px - 96px width/height) */}
-                    <div 
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-xl shrink-0 p-2"
-                      style={{
-                        backgroundColor: isSelected 
-                          ? 'rgba(255, 255, 255, 0.22)' 
-                          : (isDarkMode ? 'rgba(15, 23, 42, 0.94)' : cat.iconBg),
-                        borderColor: isSelected 
-                          ? 'rgba(255, 255, 255, 0.65)' 
-                          : cat.iconBorder,
-                        borderWidth: '2.5px',
-                        borderStyle: 'solid',
-                        boxShadow: isSelected ? '0 8px 24px rgba(0, 0, 0, 0.4)' : `0 6px 20px ${cat.glowColor}`
-                      }}
-                    >
-                      {cat.renderIcon({
-                        className: "w-16 h-16 sm:w-20 sm:h-20",
-                        isSelected,
-                        isDark: isDarkMode
-                      })}
-                    </div>
-
-                    {/* Center: Large & Bold Typography + Subtitle */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-center sm:justify-start gap-2 mb-1 flex-wrap">
-                        <span 
-                          className="text-[10px] font-mono font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md"
-                          style={{
-                            backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.25)' : (isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)'),
-                            color: isSelected ? '#ffffff' : (isDarkMode ? '#cbd5e1' : '#64748b')
-                          }}
-                        >
-                          {cat.shortLabel}
-                        </span>
-                      </div>
-
-                      <h3 
-                        className="text-xl sm:text-2xl font-black tracking-tight leading-snug"
-                        style={{
-                          fontSize: '1.4rem',
-                          fontWeight: 800,
-                          color: isSelected ? '#ffffff' : (isDarkMode ? '#ffffff' : '#0f172a'),
-                          textShadow: isSelected ? '0 2px 8px rgba(0, 0, 0, 0.4)' : 'none'
-                        }}
-                      >
-                        {cat.fullTitle}
-                      </h3>
-                      
-                      <p 
-                        className="text-xs sm:text-sm font-semibold mt-1 line-clamp-1"
-                        style={{
-                          color: isSelected ? 'rgba(255, 255, 255, 0.9)' : (isDarkMode ? '#94a3b8' : '#64748b')
-                        }}
-                      >
-                        {cat.subtitle}
-                      </p>
-
-                      {/* Prominent Lab Count Badge cleanly positioned below the title */}
-                      <div className="mt-3 flex items-center justify-center sm:justify-start">
-                        <span 
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full font-mono text-xs font-black transition-all shadow-sm"
-                          style={{
-                            backgroundColor: isSelected 
-                              ? 'rgba(255, 255, 255, 0.22)' 
-                              : (isDarkMode ? 'rgba(30, 41, 59, 0.95)' : '#ffffff'),
-                            color: isSelected 
-                              ? '#ffffff' 
-                              : (isDarkMode ? cat.textColorDark : cat.textColorLight),
-                            borderColor: isSelected 
-                              ? 'rgba(255, 255, 255, 0.45)' 
-                              : (isDarkMode ? cat.darkBorder : cat.lightBorder),
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            boxShadow: isSelected ? '0 3px 8px rgba(0, 0, 0, 0.25)' : 'none'
-                          }}
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          {cat.badgeCount} {cat.badgeCount === 1 ? 'Simulation Lab' : 'Simulation Labs'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
 
-      {/* 3. STRICT SUBJECT FILTERING: SYSTEMATIC SIMULATION MODULE CARDS */}
-      <div className="space-y-10">
-        {subjectCategories
-          .filter(cat => cat.key !== 'All') // Only iterate over actual subjects for grouping
-          .filter(cat => selectedCategory === 'All' || selectedCategory === cat.key) // Strict Filtering
-          .map((cat) => {
-            const categorySims = activeSimulations.filter(s => s.category === cat.key && matchesSearch(s));
-            if (categorySims.length === 0) return null;
-
-            const isEcceCategory = cat.key === 'Early Childhood (ECCE)';
-            const interactiveSims = isEcceCategory 
-              ? categorySims.filter(s => s.id !== 'sim-ecce-curriculum-learning-areas')
-              : categorySims;
-            const conceptSims = isEcceCategory
-              ? categorySims.filter(s => s.id === 'sim-ecce-curriculum-learning-areas')
-              : [];
-
-            const renderCard = (sim: SimulationItem) => {
-              const theme = getSimTheme(sim.indexNumber);
-              const isActive = activeSim ? activeSim.id === sim.id : false;
-              const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
-              const displayTitle = cleanCardTitle(sim.title);
-              const displayGrade = cleanGradeBadge(sim.gradeLevel);
-              const displaySubject = cleanCardSubject(sim.subject);
-              const displayDesc = cleanCardDescription(sim.description);
-
-              return (
-                <div
-                  key={sim.id}
-                  onClick={(e) => {
-                    if ((e.target as HTMLElement).closest('button')) return;
-                    handleCardClick(sim);
-                  }}
-                  className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
-                    isActive ? 'scale-[1.01]' : ''
-                  }`}
-                  style={{
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
-                    borderStyle: 'solid',
-                    borderTopWidth: isConceptGuide ? '5px' : '4px',
-                    borderRightWidth: isActive ? '2px' : '1.5px',
-                    borderBottomWidth: isActive ? '2px' : '1.5px',
-                    borderLeftWidth: isActive ? '2px' : '1.5px',
-                    borderTopColor: theme.bgSolid,
-                    borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
-                    borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
-                    borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
-                    boxShadow: isDarkMode 
-                      ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
-                      : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
-                    color: isDarkMode ? '#ffffff' : '#0f172a'
-                  }}
-                >
-                  {/* Card Content */}
-                  <div className="p-5 pb-3">
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      {/* Realistic Visual Emblem */}
-                      <a
-                        href={getSimulationStandaloneUrl(sim)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1 block"
-                        style={{
-                          backgroundColor: theme.badgeBg,
-                          borderColor: theme.borderColor,
-                          borderWidth: '2px',
-                          borderStyle: 'solid',
-                          boxShadow: `0 4px 14px ${theme.glowColor}`
-                        }}
-                        title={`Open ${displayTitle} in new tab`}
-                      >
-                        <TopicRealisticIcon 
-                          indexNumber={sim.indexNumber}
-                          simId={sim.id}
-                          className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
-                        />
-                      </a>
-
-                      {/* Badges: Lab / Concept & Grade */}
-                      <div className="flex flex-col items-end gap-1.5">
-                        <span 
-                          className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs"
-                          style={{
-                            backgroundColor: theme.bgSolid,
-                            color: '#ffffff',
-                            borderColor: theme.borderColor,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
-                        </span>
-                        <span 
-                          className="text-[10px] font-black px-2 py-0.5 rounded-full"
-                          style={{
-                            backgroundColor: theme.badgeBg,
-                            color: theme.badgeText,
-                            borderColor: theme.badgeBorder,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          {displayGrade}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Simulation Topic Title */}
-                    <h4 
-                      className="text-base font-black tracking-tight leading-snug line-clamp-2 group-hover:text-blue-500 transition-colors"
-                      style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-                    >
-                      <a
-                        href={getSimulationStandaloneUrl(sim)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className="hover:underline"
-                        title={`Open ${displayTitle} in new tab`}
-                      >
-                        {displayTitle}
-                      </a>
-                    </h4>
-
-                    {/* Subject & Sub-discipline */}
-                    <p 
-                      className="text-xs font-bold mt-1 line-clamp-1"
-                      style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
-                    >
-                      {displaySubject}
-                    </p>
-
-                    {/* Concept Description Intro */}
-                    <p 
-                      className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
-                      style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
-                    >
-                      {displayDesc}
-                    </p>
-
-                    {/* Topic Tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {sim.topics.slice(0, 2).map((topic, i) => (
-                        <span
-                          key={i}
-                          className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
-                          style={{
-                            backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
-                            color: isDarkMode ? '#cbd5e1' : theme.tagText,
-                            borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          {cleanCardTopic(topic)}
-                        </span>
-                      ))}
-                      {sim.topics.length > 2 && (
-                        <span 
-                          className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-                          style={{
-                            backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
-                            color: isDarkMode ? '#94a3b8' : theme.badgeText,
-                            borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          +{sim.topics.length - 2}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Card Action Bar */}
-                  <div 
-                    className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
-                    style={{
-                      backdropFilter: 'blur(12px)',
-                      WebkitBackdropFilter: 'blur(12px)',
-                      backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
-                      borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
-                    }}
-                  >
-                    <a
-                      href={getSimulationStandaloneUrl(sim)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
-                      style={{
-                        backgroundColor: theme.bgSolid,
-                        boxShadow: `0 2px 6px ${theme.glowColor}`
-                      }}
-                      title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
-                    >
-                      <ExternalLink className="w-3 h-3 text-white" />
-                      <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
-                    </a>
-
-                    {/* Direct Fullscreen Modal Button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onLaunchFullscreenModal(sim);
-                      }}
-                      className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
-                      style={{
-                        backgroundColor: theme.bgSolid,
-                        borderColor: theme.borderColor,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        color: '#ffffff'
-                      }}
-                      title="Launch in 4K Fullscreen View"
-                    >
-                      <Maximize2 className="w-3.5 h-3.5 text-white" />
-                    </button>
-                  </div>
-                </div>
-              );
-            };
-
-            return (
-              <div key={cat.key} className="space-y-6">
-                {/* Regular Interactive Simulations Grid */}
-                {interactiveSims.length > 0 && (
-                  <div className="space-y-3">
-                    {isEcceCategory && (
-                      <div className="flex items-center gap-2">
-                        <span 
-                          className="px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5"
-                          style={{
-                            backgroundColor: isDarkMode ? 'rgba(234, 88, 12, 0.2)' : 'rgba(255, 237, 213, 0.9)',
-                            color: '#ea580c',
-                            border: '1px solid rgba(234, 88, 12, 0.4)'
-                          }}
-                        >
-                          <Sparkles className="w-3.5 h-3.5" />
-                          ECCE Interactive Simulations • Visual Preschool Labs
-                        </span>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                      {interactiveSims.map(renderCard)}
-                    </div>
-                  </div>
-                )}
-
-                {/* Dedicated Separate Heading & Section for ECCE Pedagogical Concept */}
-                {isEcceCategory && conceptSims.length > 0 && (
-                  <div className="mt-8 pt-6 border-t" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(226, 232, 240, 0.8)' }}>
-                    <div 
-                      className="mb-5 p-5 sm:p-6 rounded-2xl border shadow-lg transition-all"
-                      style={{
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        backgroundColor: isDarkMode ? 'rgba(8, 43, 87, 0.55)' : 'rgba(239, 246, 255, 0.92)',
-                        borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.45)' : 'rgba(147, 197, 253, 0.85)',
-                        boxShadow: isDarkMode ? '0 8px 32px rgba(0, 0, 0, 0.35)' : '0 8px 24px rgba(22, 119, 255, 0.1)'
-                      }}
-                    >
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider text-white shadow-xs" style={{ backgroundColor: '#1677ff' }}>
-                              Pedagogical Concept & Standards Guide • NCP 2022–23
-                            </span>
-                            <span className="px-3 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: isDarkMode ? 'rgba(30, 58, 138, 0.6)' : '#dbeafe', color: isDarkMode ? '#93c5fd' : '#1e40af' }}>
-                              National Curriculum Standards Reference Guide
-                            </span>
-                          </div>
-                          <h3 className="text-xl sm:text-2xl font-black tracking-tight" style={{ color: isDarkMode ? '#ffffff' : '#082b57' }}>
-                            ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards
-                          </h3>
-                          <p className="text-xs sm:text-sm font-semibold max-w-4xl leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#334155' }}>
-                            Comprehensive pedagogical concept guide and curriculum standard framework. Designed specifically for teachers, educators, and parents to explain the 7 core development areas and visual competency standards to early learners.
-                          </p>
-                        </div>
-                        <div className="shrink-0">
-                          <span className="px-4 py-2 rounded-xl text-xs font-black shadow-sm flex items-center gap-2" style={{ backgroundColor: '#0284c7', color: '#ffffff' }}>
-                            <BookOpen className="w-4 h-4" />
-                            Teacher Conceptual Reference
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                      {conceptSims.map(renderCard)}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-      {/* Empty State / AI Dynamic Generator Banner when Search Yields No Catalog Results */}
-      {activeSimulations.filter(matchesSearch).length === 0 && (
-        <div 
-          className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
+      {/* =========================================================================
+          UPDATE 1: RESPONSIVE DESKTOP & LAPTOP ARCHITECTURE (TWO-COLUMN >= 1024px)
+          Left Sidebar Panel (Subject & Topic Accordion) + Right Content Area (Grid)
+          ========================================================================= */}
+      <div className="flex flex-col lg:flex-row items-start gap-8 w-full">
+        
+        {/* =======================================================================
+            LEFT SIDEBAR PANEL (SUBJECT & DYNAMIC TOPIC SELECTION)
+            Organized vertical accordion with active state indicators
+            ======================================================================= */}
+        <aside 
+          className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-20 self-start rounded-2xl border shadow-xl p-4 transition-all"
           style={{
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.95)',
-            borderColor: '#a855f7',
-            borderWidth: '2px',
+            backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.88)' : 'rgba(255, 255, 255, 0.94)',
+            borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(203, 213, 225, 0.8)',
+            borderWidth: '1.5px',
             borderStyle: 'solid',
-            boxShadow: '0 12px 40px rgba(168, 85, 247, 0.25)'
+            boxShadow: isDarkMode ? '0 12px 36px rgba(0, 0, 0, 0.45)' : '0 8px 32px rgba(31, 38, 135, 0.08)'
           }}
         >
-          <div className="w-16 h-16 mx-auto rounded-3xl flex items-center justify-center bg-purple-500/20 text-purple-500 mb-4 shadow-lg border border-purple-500/30">
-            <Sparkles className="w-8 h-8 animate-pulse text-purple-400" />
+          {/* Sidebar Top Header */}
+          <div className="pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-blue-500" />
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                STEM Disciplines
+              </h3>
+            </div>
+            <span className="font-mono text-[11px] font-black px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-500">
+              {activeSimulations.length} Labs
+            </span>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 inline-block mb-2">
-            AI-Powered Dynamic Simulation Generator
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black" style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
-            Generate Interactive Simulation for &ldquo;{searchTerm}&rdquo;
-          </h3>
-          <p className="text-xs sm:text-sm font-bold mt-2 max-w-xl mx-auto leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}>
-            This STEM topic is not in our 52 pre-built catalog modules. Click below to dynamically synthesize and execute a complete 4K interactive physics canvas and controls on the fly using the Gemini API.
-          </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              disabled={isGeneratingAi}
-              onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
-              className="btn-3d px-6 py-3 rounded-xl text-sm font-black text-white cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl disabled:opacity-50"
+          {/* Subjects Accordion List */}
+          <div className="space-y-2 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
+            {subjectCategories.map((cat) => {
+              const isSelectedSubject = selectedCategory === cat.key;
+              const subjectSims = activeSimulations.filter(s => s.category === cat.key);
+
+              return (
+                <div 
+                  key={cat.key}
+                  className="rounded-xl overflow-hidden border transition-all"
+                  style={{
+                    borderColor: isSelectedSubject 
+                      ? (isDarkMode ? 'rgba(56, 189, 248, 0.45)' : '#93c5fd') 
+                      : (isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(226, 232, 240, 0.8)'),
+                    backgroundColor: isSelectedSubject
+                      ? (isDarkMode ? 'rgba(15, 30, 68, 0.6)' : 'rgba(239, 246, 255, 0.75)')
+                      : 'transparent'
+                  }}
+                >
+                  {/* Subject Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleCategoryChange(cat.key)}
+                    className="w-full p-2.5 flex items-center justify-between text-left cursor-pointer transition-colors duration-150 group"
+                    style={{
+                      color: isSelectedSubject ? (isDarkMode ? '#ffffff' : '#1d4ed8') : (isDarkMode ? '#cbd5e1' : '#334155')
+                    }}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 p-1 shadow-xs transition-transform group-hover:scale-105"
+                        style={{
+                          backgroundColor: isSelectedSubject ? cat.activeBorder : (isDarkMode ? '#1e293b' : cat.iconBg),
+                          border: `1px solid ${cat.iconBorder}`
+                        }}
+                      >
+                        {cat.renderIcon({
+                          className: "w-5 h-5",
+                          isSelected: isSelectedSubject,
+                          isDark: isDarkMode
+                        })}
+                      </div>
+
+                      <div className="min-w-0">
+                        <span className={`block text-xs font-black truncate leading-tight ${isSelectedSubject ? 'text-blue-600 dark:text-cyan-300' : ''}`}>
+                          {cat.fullTitle}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-semibold block truncate">
+                          {cat.subtitle}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <span 
+                        className="font-mono text-[10px] font-black px-1.5 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: isSelectedSubject ? '#2563eb' : (isDarkMode ? '#1e293b' : '#e2e8f0'),
+                          color: isSelectedSubject ? '#ffffff' : (isDarkMode ? '#94a3b8' : '#64748b')
+                        }}
+                      >
+                        {subjectSims.length}
+                      </span>
+                      {isSelectedSubject ? (
+                        <ChevronDown className="w-4 h-4 text-blue-500 shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Dynamic Topic / Sub-discipline Menu: When subject is selected, expand & list all relevant topics/labs */}
+                  {isSelectedSubject && (
+                    <div 
+                      className="px-2 pb-2.5 pt-1 space-y-1 border-t border-slate-200/50 dark:border-slate-800/80 bg-white/40 dark:bg-black/20"
+                    >
+                      {/* 1. All Labs Option */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTopic('all')}
+                        className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between cursor-pointer transition-all ${
+                          selectedTopic === 'all'
+                            ? 'bg-blue-600 text-white shadow-sm font-black'
+                            : 'text-slate-600 dark:text-slate-300 hover:bg-blue-500/10'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <Layers className="w-3.5 h-3.5" />
+                          <span>All {cat.shortLabel} Labs</span>
+                        </span>
+                        <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/15">
+                          {subjectSims.length}
+                        </span>
+                      </button>
+
+                      {/* 2. Individual Topics & Labs under this Subject */}
+                      <div className="pt-1 space-y-1">
+                        {subjectSims.map((sim) => {
+                          const isTopicActive = selectedTopic === sim.id;
+                          const cleanTitle = cleanCardTitle(sim.title);
+
+                          return (
+                            <button
+                              key={`sidebar-topic-${sim.id}`}
+                              type="button"
+                              onClick={() => setSelectedTopic(sim.id)}
+                              className={`w-full px-2.5 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-between text-left cursor-pointer transition-all group/item ${
+                                isTopicActive
+                                  ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-200 border border-cyan-400/50 shadow-xs font-black'
+                                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <span 
+                                  className="w-1.5 h-1.5 rounded-full shrink-0" 
+                                  style={{ backgroundColor: isTopicActive ? '#06b6d4' : '#94a3b8' }}
+                                />
+                                <span className="truncate" title={cleanTitle}>
+                                  {cleanTitle}
+                                </span>
+                              </div>
+
+                              <span 
+                                className="font-mono text-[9px] font-bold shrink-0 ml-1.5 px-1 py-0.2 rounded text-slate-400 group-hover/item:text-slate-600 dark:group-hover/item:text-slate-200"
+                              >
+                                {sim.indexNumber}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </aside>
+
+        {/* =======================================================================
+            RIGHT CONTENT AREA (SIMULATION CARDS GRID + SEARCH & BREADCRUMB)
+            Responsive 2 or 3-column grid displaying ONLY cards for selected Subject & Topic
+            ======================================================================= */}
+        <div className="flex-1 min-w-0 space-y-6">
+          
+          {/* Top Breadcrumb & Quick Search Filter Bar */}
+          <div 
+            className="rounded-2xl p-4 sm:p-5 border shadow-xl transition-all"
+            style={{
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.92)',
+              borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255, 255, 255, 0.65)',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)'
+            }}
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              
+              {/* Breadcrumb & Topic Header */}
+              <div className="space-y-1">
+                {/* Clean 100% English Breadcrumb */}
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 flex-wrap">
+                  <span className="hover:text-blue-500 cursor-pointer" onClick={() => handleCategoryChange('Physics & Motion')}>
+                    Interactive Catalog
+                  </span>
+                  <span>&gt;</span>
+                  <span className="text-blue-600 dark:text-blue-400 font-extrabold">
+                    {activeSubjectConfig.shortLabel}
+                  </span>
+                  <span>&gt;</span>
+                  <span className="text-slate-900 dark:text-white font-extrabold">
+                    {getActiveTopicLabel()}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h2 
+                    className="text-xl sm:text-2xl font-black tracking-tight"
+                    style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+                  >
+                    {activeSubjectConfig.fullTitle}
+                  </h2>
+                  <span 
+                    className="px-2.5 py-0.5 rounded-full text-xs font-black shadow-2xs flex items-center gap-1"
+                    style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {displayedSims.length} {displayedSims.length === 1 ? 'Lab Displayed' : 'Labs Displayed'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Quick Search Bar to Filter Labs Instantly */}
+              <div className="w-full md:w-80 shrink-0">
+                <div 
+                  className="relative flex items-center rounded-xl border shadow-inner transition-all"
+                  style={{
+                    backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.85)' : 'rgba(248, 250, 252, 0.95)',
+                    borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.4)' : 'rgba(148, 163, 184, 0.6)',
+                    borderWidth: '1.5px',
+                    borderStyle: 'solid'
+                  }}
+                >
+                  <Search className="w-4 h-4 ml-3 shrink-0" style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }} />
+                  <input
+                    type="text"
+                    placeholder="Search labs in this discipline..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full py-2 px-2.5 text-xs font-bold bg-transparent outline-none"
+                    style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="mr-2 text-xs font-black px-1.5 py-0.5 rounded cursor-pointer"
+                      style={{
+                        backgroundColor: isDarkMode ? '#1e293b' : '#e2e8f0',
+                        color: isDarkMode ? '#ffffff' : '#0f172a'
+                      }}
+                      title="Clear search"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* =====================================================================
+              RESPONSIVE 2 OR 3-COLUMN CARDS GRID (Laptops & Desktops)
+              Displays ONLY simulation lab cards belonging to selected Subject & Topic
+              ===================================================================== */}
+          {displayedSims.length > 0 ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {displayedSims.map(renderCard)}
+              </div>
+            </div>
+          ) : (
+            /* Empty State & AI Generator Trigger when No Matches Found */
+            <div 
+              className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
               style={{
-                backgroundColor: '#9333ea',
-                backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
-                borderColor: '#c084fc',
-                borderWidth: '1.5px',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.95)',
+                borderColor: '#a855f7',
+                borderWidth: '2px',
                 borderStyle: 'solid',
-                boxShadow: '0 6px 20px rgba(168, 85, 247, 0.4)'
+                boxShadow: '0 12px 40px rgba(168, 85, 247, 0.25)'
               }}
             >
-              {isGeneratingAi ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Synthesizing Simulation with Gemini...</span>
-                </>
-              ) : (
-                <>
-                  <Wand2 className="w-4 h-4" />
-                  <span>⚡ Generate &amp; Launch &ldquo;{searchTerm}&rdquo; Simulation</span>
-                </>
-              )}
-            </button>
+              <div className="w-16 h-16 mx-auto rounded-3xl flex items-center justify-center bg-purple-500/20 text-purple-500 mb-4 shadow-lg border border-purple-500/30">
+                <Sparkles className="w-8 h-8 animate-pulse text-purple-400" />
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 inline-block mb-2">
+                No Pre-Built Simulation Found
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black" style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
+                {searchTerm ? `Synthesize Simulation for "${searchTerm}"` : `No Labs Found for Selected Topic`}
+              </h3>
+              <p className="text-xs sm:text-sm font-bold mt-2 max-w-xl mx-auto leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}>
+                Use the Gemini AI generator below to synthesize a live 4K interactive physics canvas and controls on the fly, or reset your topic selection.
+              </p>
 
-            <button
-              onClick={() => setSearchTerm('')}
-              className="btn-3d px-4 py-3 rounded-xl text-xs font-black cursor-pointer transition-transform hover:scale-105"
-              style={{
-                backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
-                borderColor: isDarkMode ? '#334155' : '#cbd5e1',
-                borderWidth: '1px',
-                color: isDarkMode ? '#cbd5e1' : '#475569'
-              }}
-            >
-              Clear Search
-            </button>
-          </div>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                {searchTerm && (
+                  <button
+                    disabled={isGeneratingAi}
+                    onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
+                    className="btn-3d px-6 py-3 rounded-xl text-sm font-black text-white cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl disabled:opacity-50"
+                    style={{
+                      backgroundColor: '#9333ea',
+                      backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
+                      borderColor: '#c084fc',
+                      borderWidth: '1.5px',
+                      borderStyle: 'solid',
+                      boxShadow: '0 6px 20px rgba(168, 85, 247, 0.4)'
+                    }}
+                  >
+                    {isGeneratingAi ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Synthesizing Simulation with Gemini...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="w-4 h-4" />
+                        <span>⚡ Synthesize &ldquo;{searchTerm}&rdquo; Lab with Gemini AI</span>
+                      </>
+                    )}
+                  </button>
+                )}
 
-          <div className="mt-8 pt-6 border-t flex flex-wrap items-center justify-center gap-2 text-xs font-bold" style={{ borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0' }}>
-            <span style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}>Or try generating other advanced topics:</span>
-            {['Quantum Tunneling', 'Black Hole Dynamics', 'CRISPR Cas9', 'Bernoulli Fluid Lift', 'Superconductivity'].map((t) => (
-              <button
-                key={t}
-                onClick={() => {
-                  setSearchTerm(t);
-                  if (onTriggerAiGeneration) {
-                    onTriggerAiGeneration(t);
-                  }
-                }}
-                className="px-2.5 py-1 rounded-lg text-xs font-bold transition-transform hover:scale-105 cursor-pointer text-purple-400 bg-purple-500/10 border border-purple-500/30"
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+                <button
+                  onClick={() => {
+                    setSelectedTopic('all');
+                    setSearchTerm('');
+                  }}
+                  className="btn-3d px-4 py-3 rounded-xl text-xs font-black cursor-pointer transition-transform hover:scale-105"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
+                    borderColor: isDarkMode ? '#334155' : '#cbd5e1',
+                    borderWidth: '1px',
+                    color: isDarkMode ? '#cbd5e1' : '#475569'
+                  }}
+                >
+                  View All {activeSubjectConfig.shortLabel} Labs
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
-      )}
+
+      </div>
     </section>
   );
 };
