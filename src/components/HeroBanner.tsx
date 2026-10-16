@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, Sparkles, Layers, Play, Radio, ExternalLink } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
-import { getSimTheme } from '../data/simTheme';
 
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
@@ -11,25 +10,46 @@ interface HeroBannerProps {
   onSelectSim?: (sim: SimulationItem) => void;
 }
 
+// Curated list strictly restricted to simulations with real-time visual canvas objects,
+// dynamic animations, and interactive physical apparatus (e.g., pendulum oscillations,
+// projectile trajectory cannons, electrical circuits, planetary orbits, wave optics).
+// All purely text-based, grammar, curriculum guide, or non-object labs are 100% excluded.
+const VISUAL_APPARATUS_SLUGS = [
+  'pendulum-harmonic-motion',
+  'projectile-motion-gravity',
+  'electricity-circuits',
+  'wave-optics-double-slit-interference',
+  'solar-system-orbits',
+  'ohms-law-lab',
+  'atoms-light-sound-pressure',
+  'newtons-laws-of-motion',
+  'heat-transfer-temperature',
+  'kinematics-motion-graphs',
+  'breathing-process',
+  'moon-phases-tides-orbit',
+  'electromagnetic-induction-lab',
+  'ideal-gas-laws',
+  'chemical-reaction-kinetics',
+  'unit-circle-trigonometry',
+  'volcano-magma-dynamics',
+  'logic-gates-circuit-designer'
+];
+
 export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = false, onSelectSim }) => {
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
 
-  // UPDATE 2: 5-Second Interval Timer & Fluid Right-to-Left Carousel Slider State
+  // 5-Second Interval Timer & Fluid Right-to-Left Carousel Slider State
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
-  // Filter only valid, currently existing simulations in database
-  const validSims = SIMULATIONS_LIST.filter(
-    (s) =>
-      s.indexNumber !== '53' &&
-      s.indexNumber !== '55' &&
-      s.id !== 'sim-cambridge-scholar-parts-of-speech-lab' &&
-      s.id !== 'sim-urdu-grammar'
-  );
+  // Pure visual interactive apparatus simulations pool
+  const visualSims = VISUAL_APPARATUS_SLUGS.map((slug) =>
+    SIMULATIONS_LIST.find((s) => s.slug === slug)
+  ).filter((s): s is SimulationItem => Boolean(s));
 
   // Digital clock widget
   useEffect(() => {
@@ -60,13 +80,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     return () => clearInterval(timer);
   }, []);
 
-  // UPDATE 2: Strict 5-Second (5000ms) Timer with Fluid Right-to-Left Slide Animation
+  // Strict 5-Second (5000ms) Interval with Fluid Right-to-Left Slide Animation
   // Pauses automatically on hover or direct interaction with controls
   useEffect(() => {
-    if (isShowcaseHovered || validSims.length === 0) return;
+    if (isShowcaseHovered || visualSims.length === 0) return;
 
     const timer = setInterval(() => {
-      const target = (currentIndex + 1) % validSims.length;
+      const target = (currentIndex + 1) % visualSims.length;
       setNextIndex(target);
 
       // Trigger the slide on the next micro-frame for smooth CSS animation
@@ -83,13 +103,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     }, 5000); // Strictly 5 seconds (5000ms)
 
     return () => clearInterval(timer);
-  }, [currentIndex, isShowcaseHovered, validSims.length]);
+  }, [currentIndex, isShowcaseHovered, visualSims.length]);
 
-  const currentSim = validSims[currentIndex % validSims.length] || validSims[0];
-  const nextSim = nextIndex !== null ? validSims[nextIndex % validSims.length] : null;
-
-  // The active simulation displayed in header details
-  const activeHeaderSim = isSliding && nextSim ? nextSim : currentSim;
+  const currentSim = visualSims[currentIndex % visualSims.length] || visualSims[0];
+  const nextSim = nextIndex !== null ? visualSims[nextIndex % visualSims.length] : null;
 
   const handleLaunchShowcase = (sim: SimulationItem) => {
     if (onSelectSim) {
@@ -111,12 +128,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         style={{ background: 'radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, transparent 70%)' }}
       />
 
-      {/* =========================================================================
-          UPDATE 1: ENHANCE 3D BACKGROUND EFFECT & FIX BANNER COLOR
-          - Removed flat jet black; applied rich deep dark sapphire/midnight navy cyber-gradient
-          - Dramatically amplified 3D perspective grids, glowing tech vector meshes,
-            luminous particle rings, and floating physics equations for vibrant depth.
-          ========================================================================= */}
+      {/* Top Main Large Dark Card/Banner with Rich 3D Science & Technology Background Effect */}
       <div 
         className="w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all text-white opacity-100"
         style={{
@@ -134,7 +146,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
         {/* Highly Visible, Vibrant 3D Science & Technology Background Layer */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
           
-          {/* 1. Dynamic 3D Perspective Cyber Horizon Grid */}
+          {/* Dynamic 3D Perspective Cyber Horizon Grid */}
           <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="cyberGridGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -150,7 +162,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <rect width="100%" height="100%" fill="url(#highContrastGrid)" />
           </svg>
 
-          {/* 2. Luminous 3D Holographic Orbits, Coordinate Rings & Vector Meshes */}
+          {/* Luminous 3D Holographic Orbits, Coordinate Rings & Vector Meshes */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 600" preserveAspectRatio="none" fill="none">
             <defs>
               <linearGradient id="vibrantCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -198,7 +210,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <circle cx="250" cy="280" r="45" stroke="rgba(251, 191, 36, 0.4)" strokeWidth="1.2" strokeDasharray="4 6" />
           </svg>
 
-          {/* 3. High-Contrast Floating Physics & Mathematical Formulas */}
+          {/* High-Contrast Floating Physics & Mathematical Formulas */}
           <div className="absolute inset-0 pointer-events-none font-mono text-xs sm:text-sm font-black tracking-widest overflow-hidden opacity-75 select-none">
             <span 
               className="absolute top-6 left-1/4 text-cyan-300"
@@ -250,7 +262,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             </span>
           </div>
 
-          {/* 4. Subtle Horizon Glow Sheen (Enhances Depth Without Hiding 3D Assets) */}
+          {/* Subtle Horizon Glow Sheen */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -447,7 +459,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <div className="animate-marquee-infinite flex items-center">
               
               <div className="flex items-center shrink-0">
-                {validSims.map((sim) => (
+                {visualSims.map((sim) => (
                   <a 
                     key={`sim-ticker-1-${sim.id}`} 
                     href={getSimulationStandaloneUrl(sim)}
@@ -474,7 +486,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               </div>
 
               <div className="flex items-center shrink-0">
-                {validSims.map((sim) => (
+                {visualSims.map((sim) => (
                   <a 
                     key={`sim-ticker-2-${sim.id}`} 
                     href={getSimulationStandaloneUrl(sim)}
@@ -508,98 +520,73 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
       </div>
 
       {/* =========================================================================
-          UPDATE 2: EXTEND SHOWCASE DURATION TO 5 SECONDS & FLUID RIGHT-TO-LEFT SLIDE
-          - 5000ms Interval Timer
-          - Authentic fluid carousel slide animation: Current stage slides out to LEFT,
-            next stage slides in from RIGHT (700ms cubic-bezier transition)
-          - Distinct, contrasting container background & clean border
-          - Sleek, uncluttered header without any debug, speed, or counter numbers
-          - Automatically pauses rotation on hover and interactive controls usage
+          REFACTORED ROTATING SHOWCASE:
+          1. Displays EXCLUSIVELY the real interactive simulation canvas & apparatus stage
+             (e.g., swinging pendulum with trajectory line, live energy gauges, sliders)
+          2. Filtered pool strictly restricted to real-time visual canvas objects & animations
+          3. Silent 5-second right-to-left slide animation (700ms translateX)
+          4. Auto-pauses smoothly on hover and controls interaction
+          5. Minimal "Launch Full Simulation ↗" button in the corner
+          6. ZERO unnecessary headers, topic cards, theory text, or counter badges
           ========================================================================= */}
       {currentSim && (
         <div 
-          className="w-full rounded-2xl overflow-hidden transition-all duration-300 shadow-2xl relative select-none"
+          className="w-full rounded-2xl overflow-hidden shadow-2xl relative select-none"
           onMouseEnter={() => setIsShowcaseHovered(true)}
           onMouseLeave={() => setIsShowcaseHovered(false)}
           style={{
-            backgroundColor: isDarkMode ? '#0a1628' : '#ffffff',
-            backgroundImage: isDarkMode 
-              ? 'linear-gradient(180deg, #0e1e38 0%, #081122 100%)' 
-              : 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+            backgroundColor: isDarkMode ? '#060d1f' : '#ffffff',
             borderColor: isDarkMode ? '#0284c7' : '#2563eb',
             borderWidth: '2.5px',
             borderStyle: 'solid',
             boxShadow: isDarkMode 
-              ? '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(2, 132, 199, 0.3)' 
-              : '0 20px 45px rgba(37, 99, 235, 0.14), 0 4px 16px rgba(0, 0, 0, 0.06)'
+              ? '0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(2, 132, 199, 0.3)' 
+              : '0 20px 45px rgba(37, 99, 235, 0.16), 0 4px 16px rgba(0, 0, 0, 0.08)'
           }}
         >
-          {/* Sleek, Minimal Header Bar (Zero speed, counter, or status labels) */}
-          <div 
-            className="px-4 sm:px-6 py-3 border-b flex items-center justify-between flex-wrap gap-3 transition-colors"
+          {/* Top-Right Floating Minimal CTA: "Launch Full Simulation ↗" */}
+          <a
+            href={getSimulationStandaloneUrl(currentSim)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleLaunchShowcase(currentSim);
+            }}
+            className="absolute top-3.5 right-3.5 z-30 px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-lg backdrop-blur-md cursor-pointer transition-transform hover:scale-105 active:scale-95 text-white"
             style={{
-              backgroundColor: isDarkMode ? 'rgba(2, 132, 199, 0.12)' : 'rgba(239, 246, 255, 0.95)',
-              borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(147, 197, 253, 0.6)'
+              backgroundColor: 'rgba(15, 23, 42, 0.88)',
+              border: '1px solid rgba(56, 189, 248, 0.55)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.3)'
+            }}
+            title={`Expand ${currentSim.title} into full view`}
+          >
+            <span>Launch Full Simulation</span>
+            <ExternalLink className="w-3.5 h-3.5 text-cyan-300" />
+          </a>
+
+          {/* Top-Left Minimal Floating Badge (Simulation Name Only - Zero Clutter / Counters) */}
+          <div 
+            className="absolute top-3.5 left-3.5 z-30 px-3 py-1 rounded-xl text-xs font-black backdrop-blur-md flex items-center gap-2 pointer-events-none"
+            style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.88)',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              color: '#ffffff',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
             }}
           >
-            {/* Left: Clean Simulation Name and Subject */}
-            <div className="flex items-center gap-2.5 truncate">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
-              <span 
-                className="font-mono text-xs font-black uppercase tracking-wider"
-                style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
-              >
-                Live Interactive Showcase:
-              </span>
-              <span 
-                className="font-black text-xs sm:text-sm truncate transition-opacity duration-300"
-                style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-              >
-                {activeHeaderSim.title}
-              </span>
-              <span 
-                className="hidden sm:inline text-xs font-bold px-2 py-0.5 rounded-md"
-                style={{
-                  backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-                  color: isDarkMode ? '#94a3b8' : '#475569'
-                }}
-              >
-                {activeHeaderSim.category}
-              </span>
-            </div>
-
-            {/* Right: Sleek Action CTA to launch simulation in dedicated tab */}
-            <div className="flex items-center gap-2 ml-auto">
-              <a
-                href={getSimulationStandaloneUrl(activeHeaderSim)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleLaunchShowcase(activeHeaderSim);
-                }}
-                className="btn-3d px-4 py-1.5 rounded-xl text-xs font-black flex items-center gap-2 shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95 text-white"
-                style={{
-                  backgroundColor: '#2563eb',
-                  backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                  borderColor: '#60a5fa',
-                  borderWidth: '1.5px',
-                  borderStyle: 'solid'
-                }}
-                title={`Open ${activeHeaderSim.title} in new dedicated tab`}
-              >
-                <ExternalLink className="w-3.5 h-3.5 text-white" />
-                <span>Launch Full Simulation</span>
-              </a>
-            </div>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-extrabold text-[11px] sm:text-xs text-white">
+              {currentSim.title}
+            </span>
           </div>
 
-          {/* Fluid Carousel Viewport (Height 440px) with Right-to-Left Slide Animation */}
+          {/* Pure Live Visual Canvas Viewport (Height 560px) with Right-to-Left Slide Animation */}
           <div 
             className="w-full relative overflow-hidden"
             style={{
-              height: '440px',
-              backgroundColor: isDarkMode ? '#060a16' : '#f8fafc'
+              height: '560px',
+              backgroundColor: isDarkMode ? '#060a16' : '#030712'
             }}
           >
             {/* Active Current Stage (Slides out to LEFT when isSliding is true) */}
@@ -612,8 +599,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               }}
             >
               <iframe
-                src={currentSim.htmlContent ? undefined : currentSim.fileUrl}
-                srcDoc={currentSim.htmlContent || undefined}
+                src={currentSim.fileUrl}
                 title={currentSim.title}
                 className="w-full h-full border-0 block"
                 style={{
@@ -635,8 +621,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                 }}
               >
                 <iframe
-                  src={nextSim.htmlContent ? undefined : nextSim.fileUrl}
-                  srcDoc={nextSim.htmlContent || undefined}
+                  src={nextSim.fileUrl}
                   title={nextSim.title}
                   className="w-full h-full border-0 block"
                   style={{

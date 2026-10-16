@@ -30,7 +30,7 @@ interface SimulationCatalogGridProps {
   isDarkMode?: boolean;
 }
 
-// Prominent Subject configuration matching all 8 disciplines
+// Subject configuration matching "All Simulations" default + all 8 STEM disciplines
 interface SubjectCategoryConfig {
   key: string;
   shortLabel: string;
@@ -43,6 +43,22 @@ interface SubjectCategoryConfig {
 }
 
 const getSubjectCategories = (): SubjectCategoryConfig[] => [
+  {
+    key: 'All Simulations',
+    shortLabel: 'All Simulations',
+    fullTitle: 'All Simulations',
+    iconBg: 'rgba(56, 189, 248, 0.16)',
+    iconBorder: '#0ea5e9',
+    activeBorder: '#38bdf8',
+    glowColor: 'rgba(14, 165, 233, 0.45)',
+    renderIcon: ({ isSelected, className }) => (
+      <svg className={className || "w-6 h-6"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" fill={isSelected ? 'rgba(255,255,255,0.35)' : 'rgba(56,189,248,0.2)'} stroke={isSelected ? '#ffffff' : '#38bdf8'} />
+        <polyline points="2 17 12 22 22 17" stroke={isSelected ? '#ffffff' : '#38bdf8'} />
+        <polyline points="2 12 12 17 22 12" stroke={isSelected ? '#ffffff' : '#0ea5e9'} />
+      </svg>
+    )
+  },
   {
     key: 'Physics & Motion',
     shortLabel: 'Physics & Motion',
@@ -192,9 +208,9 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     glowColor: 'rgba(244, 63, 94, 0.45)',
     renderIcon: ({ isSelected, className }) => (
       <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <polygon points="16,32 30,39 16,46 2,39" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
-        <polygon points="2,39 16,46 16,60 2,53" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
-        <polygon points="16,46 30,39 30,53 16,60" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fb7185'} strokeWidth="1.5" />
+        <polygon points="16,32 30,39 16,46 2,39" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
+        <polygon points="2,39 16,46 16,60 2,53" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
+        <polygon points="16,46 30,39 30,53 16,60" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
         <text x="5" y="53" fill="#ffffff" fontSize="11" fontWeight="900">A</text>
       </svg>
     )
@@ -213,8 +229,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
-  // Category state (default to 'Physics & Motion')
-  const [internalCategory, setInternalCategory] = useState<string>('Physics & Motion');
+  // Category state (Default to 'All Simulations')
+  const [internalCategory, setInternalCategory] = useState<string>('All Simulations');
   
   // Quick search filter term
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -291,15 +307,21 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const getCategoryCount = (categoryKey: string) => {
+    if (categoryKey === 'All Simulations' || categoryKey === 'All') {
+      return activeSimulations.length;
+    }
     return activeSimulations.filter(s => s.category === categoryKey).length;
   };
 
   const subjectCategories = getSubjectCategories();
   const activeSubjectConfig = subjectCategories.find(c => c.key === selectedCategory) || subjectCategories[0];
 
+  const isAllCategory = selectedCategory === 'All Simulations' || selectedCategory === 'All';
+
   // Simulations belonging to currently selected subject & filtered by search
+  // In default "All Simulations" state, displays all simulation labs across all subjects
   const displayedSims = activeSimulations.filter(s => {
-    if (s.category !== selectedCategory) return false;
+    if (!isAllCategory && s.category !== selectedCategory) return false;
     if (!matchesSearch(s)) return false;
     return true;
   });
@@ -561,7 +583,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           >
             {subjectCategories.map((cat) => (
               <option key={cat.key} value={cat.key}>
-                {cat.fullTitle} ({getCategoryCount(cat.key)} Labs)
+                {cat.fullTitle} ({getCategoryCount(cat.key)} {getCategoryCount(cat.key) === 1 ? 'Lab' : 'Labs'})
               </option>
             ))}
           </select>
@@ -573,11 +595,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       <div className="flex flex-col lg:flex-row items-start gap-8 w-full">
         
         {/* =======================================================================
-            SIDEBAR CLEANUP (SUBJECTS ONLY):
-            - ONLY clean Subject Names are displayed
-            - Completely removed all subtopic subtitle lines
-            - Completely removed all expanded accordion simulation title lists
-            - Dedicated concise subject selector panel
+            SIDEBAR (STEM DISCIPLINES PANEL):
+            1. "All Simulations" option as the very first item at top (Default state)
+            2. Total count badge showing all available labs (e.g. 51 Labs)
+            3. Appropriate STEM / layers icon matching design style
+            4. Individual subjects clearly highlighted when selected
+            5. Clicking back on "All Simulations" resets filter to display all labs
             ======================================================================= */}
         <aside 
           className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-20 self-start rounded-2xl border shadow-xl p-4 transition-all"
@@ -604,7 +627,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </span>
           </div>
 
-          {/* Concise Subjects-Only Selector Menu */}
+          {/* Subjects Selector Menu (Beginning with "All Simulations" as Top Default) */}
           <div className="space-y-2">
             {subjectCategories.map((cat) => {
               const isSelectedSubject = selectedCategory === cat.key;
@@ -622,7 +645,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   }`}
                   style={{
                     backgroundColor: isSelectedSubject
-                      ? (isDarkMode ? 'rgba(37, 99, 235, 0.25)' : 'rgba(239, 246, 255, 0.95)')
+                      ? (isDarkMode ? 'rgba(37, 99, 235, 0.28)' : 'rgba(239, 246, 255, 0.95)')
                       : (isDarkMode ? 'rgba(15, 23, 42, 0.4)' : '#ffffff'),
                     borderColor: isSelectedSubject
                       ? (isDarkMode ? '#38bdf8' : '#2563eb')
@@ -646,7 +669,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       })}
                     </div>
 
-                    {/* ONLY Clean Subject Name (no subtitles, no lists) */}
+                    {/* Clean Subject Name */}
                     <span 
                       className={`text-xs font-black truncate leading-tight ${
                         isSelectedSubject 
@@ -665,7 +688,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       color: isSelectedSubject ? '#ffffff' : (isDarkMode ? '#94a3b8' : '#64748b')
                     }}
                   >
-                    {subjectCount}
+                    {cat.key === 'All Simulations' ? `${subjectCount} Labs` : subjectCount}
                   </span>
                 </button>
               );
@@ -673,7 +696,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </aside>
 
-        {/* Right Content Area: Simulation Cards Grid for Selected Subject */}
+        {/* Right Content Area: Simulation Cards Grid */}
         <div className="flex-1 min-w-0 space-y-6">
           
           {/* Top Breadcrumb & Quick Search Filter Bar */}
@@ -694,10 +717,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               {/* Breadcrumb & Subject Header */}
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 flex-wrap">
-                  <span>Interactive Catalog</span>
+                  <span 
+                    onClick={() => handleCategoryChange('All Simulations')}
+                    className="cursor-pointer hover:text-blue-500"
+                  >
+                    Interactive Catalog
+                  </span>
                   <span>&gt;</span>
                   <span className="text-blue-600 dark:text-blue-400 font-extrabold">
-                    {activeSubjectConfig.fullTitle}
+                    {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
                   </span>
                 </div>
 
@@ -706,7 +734,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     className="text-xl sm:text-2xl font-black tracking-tight"
                     style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
                   >
-                    {activeSubjectConfig.fullTitle}
+                    {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
                   </h2>
                   <span 
                     className="px-2.5 py-0.5 rounded-full text-xs font-black shadow-2xs flex items-center gap-1"
@@ -732,7 +760,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <Search className="w-4 h-4 ml-3 shrink-0" style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }} />
                   <input
                     type="text"
-                    placeholder="Search labs in this discipline..."
+                    placeholder="Search labs across disciplines..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full py-2 px-2.5 text-xs font-bold bg-transparent outline-none"
@@ -757,7 +785,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </div>
           </div>
 
-          {/* Cards Grid: 2 or 3 Columns for Selected Subject */}
+          {/* Cards Grid: 2 or 3 Columns for Selected Subject / All Simulations */}
           {displayedSims.length > 0 ? (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -820,7 +848,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 )}
 
                 <button
-                  onClick={() => setSearchTerm('')}
+                  onClick={() => {
+                    handleCategoryChange('All Simulations');
+                    setSearchTerm('');
+                  }}
                   className="btn-3d px-4 py-3 rounded-xl text-xs font-black cursor-pointer transition-transform hover:scale-105"
                   style={{
                     backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
@@ -829,7 +860,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     color: isDarkMode ? '#cbd5e1' : '#475569'
                   }}
                 >
-                  Clear Search Filter
+                  View All Simulations
                 </button>
               </div>
             </div>

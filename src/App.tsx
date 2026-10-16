@@ -62,8 +62,8 @@ export default function App() {
   // Check if launched as dedicated standalone simulation workspace via /simulation/:id or ?lab=01
   const [standaloneLab, setStandaloneLab] = useState<SimulationItem | null>(() => resolveSimulationFromUrl());
 
-  // Default active subject filter: "Physics & Motion" is the default initial discipline
-  const [selectedSubject, setSelectedSubject] = useState<string>('Physics & Motion');
+  // Default active subject filter: "All Simulations" is the default initial state
+  const [selectedSubject, setSelectedSubject] = useState<string>('All Simulations');
   
   // Active stage simulation (auto-opened from search, catalog card, or AI generation)
   const [activeStageSim, setActiveStageSim] = useState<SimulationItem | null>(null);
