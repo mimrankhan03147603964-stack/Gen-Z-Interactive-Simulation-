@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, Sparkles, Layers, Play, Radio, ExternalLink } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -16,8 +16,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
 
-  // 1-Second Live Showcase Carousel State
-  const [showcaseIndex, setShowcaseIndex] = useState<number>(0);
+  // UPDATE 2: 5-Second Interval Timer & Fluid Right-to-Left Carousel Slider State
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
   // Filter only valid, currently existing simulations in database
@@ -29,7 +31,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
       s.id !== 'sim-urdu-grammar'
   );
 
-  // Digital clock updater
+  // Digital clock widget
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -58,19 +60,36 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     return () => clearInterval(timer);
   }, []);
 
-  // Silent 1-Second Auto-Rotation:
-  // Cycles through available visual simulation canvases smoothly in background every 1 second (1000ms).
-  // Pauses seamlessly when user hovers over or interacts with the canvas controls.
+  // UPDATE 2: Strict 5-Second (5000ms) Timer with Fluid Right-to-Left Slide Animation
+  // Pauses automatically on hover or direct interaction with controls
   useEffect(() => {
     if (isShowcaseHovered || validSims.length === 0) return;
-    const interval = setInterval(() => {
-      setShowcaseIndex((prev) => (prev + 1) % validSims.length);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isShowcaseHovered, validSims.length]);
 
-  const currentShowcaseSim = validSims[showcaseIndex % validSims.length] || validSims[0];
-  const showcaseTheme = getSimTheme(currentShowcaseSim?.indexNumber || '01');
+    const timer = setInterval(() => {
+      const target = (currentIndex + 1) % validSims.length;
+      setNextIndex(target);
+
+      // Trigger the slide on the next micro-frame for smooth CSS animation
+      requestAnimationFrame(() => {
+        setIsSliding(true);
+      });
+
+      // Complete slide transition after 700ms
+      setTimeout(() => {
+        setCurrentIndex(target);
+        setNextIndex(null);
+        setIsSliding(false);
+      }, 700);
+    }, 5000); // Strictly 5 seconds (5000ms)
+
+    return () => clearInterval(timer);
+  }, [currentIndex, isShowcaseHovered, validSims.length]);
+
+  const currentSim = validSims[currentIndex % validSims.length] || validSims[0];
+  const nextSim = nextIndex !== null ? validSims[nextIndex % validSims.length] : null;
+
+  // The active simulation displayed in header details
+  const activeHeaderSim = isSliding && nextSim ? nextSim : currentSim;
 
   const handleLaunchShowcase = (sim: SimulationItem) => {
     if (onSelectSim) {
@@ -84,114 +103,158 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
     <div className="relative group w-full space-y-5">
       {/* Soft Ambient Cyan & Purple Glow Lights Behind Card Corners for Futuristic 3D Depth */}
       <div 
-        className="absolute -top-6 -left-6 w-72 h-72 rounded-full pointer-events-none -z-10 blur-3xl opacity-30 transition-opacity"
-        style={{ background: 'radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, transparent 70%)' }}
+        className="absolute -top-6 -left-6 w-80 h-80 rounded-full pointer-events-none -z-10 blur-3xl opacity-40 transition-opacity"
+        style={{ background: 'radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, transparent 70%)' }}
       />
       <div 
-        className="absolute -bottom-6 -right-6 w-72 h-72 rounded-full pointer-events-none -z-10 blur-3xl opacity-30 transition-opacity"
-        style={{ background: 'radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%)' }}
+        className="absolute -bottom-6 -right-6 w-80 h-80 rounded-full pointer-events-none -z-10 blur-3xl opacity-40 transition-opacity"
+        style={{ background: 'radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, transparent 70%)' }}
       />
 
-      {/* Top Main Large Dark Card/Banner with Rich 3D Science & Technology Background Effect */}
+      {/* =========================================================================
+          UPDATE 1: ENHANCE 3D BACKGROUND EFFECT & FIX BANNER COLOR
+          - Removed flat jet black; applied rich deep dark sapphire/midnight navy cyber-gradient
+          - Dramatically amplified 3D perspective grids, glowing tech vector meshes,
+            luminous particle rings, and floating physics equations for vibrant depth.
+          ========================================================================= */}
       <div 
         className="w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all text-white opacity-100"
         style={{
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          backgroundColor: 'rgba(8, 14, 28, 0.94)',
-          backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.38) 0%, rgba(8, 14, 28, 0.97) 75%)',
-          borderColor: 'rgba(56, 189, 248, 0.28)',
+          backgroundColor: '#090e1a',
+          backgroundImage: 'linear-gradient(135deg, #090e1a 0%, #0d1b2e 50%, #061124 100%)',
+          borderColor: 'rgba(56, 189, 248, 0.45)',
           borderWidth: '1.5px',
           borderStyle: 'solid',
-          boxShadow: '0 25px 60px 0 rgba(0, 0, 0, 0.75), 0 0 50px rgba(6, 182, 212, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 25px 60px 0 rgba(0, 0, 0, 0.75), 0 0 50px rgba(6, 182, 212, 0.22), inset 0 1px 3px rgba(56, 189, 248, 0.25)',
           color: '#ffffff'
         }}
       >
-        {/* Rich 3D Science & Technology Holographic Background Pattern Confined Strictly to This Card */}
+        {/* Highly Visible, Vibrant 3D Science & Technology Background Layer */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
           
-          {/* 3D Perspective Grid Mesh (Isometric Cyber Horizon) */}
-          <svg className="absolute inset-0 w-full h-full opacity-25" xmlns="http://www.w3.org/2000/svg">
+          {/* 1. Dynamic 3D Perspective Cyber Horizon Grid */}
+          <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="grid3dGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.45" />
-                <stop offset="60%" stopColor="#0891b2" stopOpacity="0.18" />
-                <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0.02" />
+              <linearGradient id="cyberGridGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+                <stop offset="45%" stopColor="#06b6d4" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.12" />
               </linearGradient>
-              <pattern id="perspectiveGrid" width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="url(#grid3dGrad)" strokeWidth="0.8" />
-                <circle cx="0" cy="0" r="1.5" fill="#38bdf8" opacity="0.6" />
+              <pattern id="highContrastGrid" width="44" height="44" patternUnits="userSpaceOnUse">
+                <path d="M 44 0 L 0 0 0 44" fill="none" stroke="url(#cyberGridGrad)" strokeWidth="1.2" />
+                <circle cx="0" cy="0" r="2" fill="#38bdf8" opacity="0.9" filter="drop-shadow(0 0 4px #38bdf8)" />
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#perspectiveGrid)" />
+            <rect width="100%" height="100%" fill="url(#highContrastGrid)" />
           </svg>
 
-          {/* 3D Holographic Orbits, Ellipses & Quantum Wave Trajectories */}
+          {/* 2. Luminous 3D Holographic Orbits, Coordinate Rings & Vector Meshes */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 600" preserveAspectRatio="none" fill="none">
             <defs>
-              <linearGradient id="holoCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.5" />
-                <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#6366f1" stopOpacity="0.05" />
+              <linearGradient id="vibrantCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.9" />
+                <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.65" />
+                <stop offset="100%" stopColor="#818cf8" stopOpacity="0.25" />
               </linearGradient>
-              <linearGradient id="holoGoldGrad" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.4" />
-                <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+              <linearGradient id="vibrantGoldGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#fef08a" stopOpacity="0.95" />
+                <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.2" />
               </linearGradient>
-              <linearGradient id="waveInterference" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.35" />
-                <stop offset="50%" stopColor="#a855f7" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.2" />
+              <linearGradient id="vibrantWave" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.75" />
+                <stop offset="50%" stopColor="#c084fc" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.6" />
               </linearGradient>
+              <filter id="glow3d" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
 
-            {/* Dimensional Elliptical Orbits */}
-            <ellipse cx="600" cy="220" rx="480" ry="140" stroke="url(#holoCyanGrad)" strokeWidth="1.8" strokeDasharray="14 10" transform="rotate(-7 600 220)" />
-            <ellipse cx="600" cy="220" rx="360" ry="90" stroke="url(#holoGoldGrad)" strokeWidth="1.4" strokeDasharray="8 6" transform="rotate(12 600 220)" />
-            <ellipse cx="600" cy="220" rx="220" ry="60" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" transform="rotate(-18 600 220)" />
+            {/* Glowing 3D Dimensional Elliptical Orbits */}
+            <ellipse cx="600" cy="220" rx="500" ry="150" stroke="url(#vibrantCyanGrad)" strokeWidth="2.5" strokeDasharray="16 10" transform="rotate(-7 600 220)" filter="url(#glow3d)" />
+            <ellipse cx="600" cy="220" rx="380" ry="100" stroke="url(#vibrantGoldGrad)" strokeWidth="2.2" strokeDasharray="10 8" transform="rotate(14 600 220)" filter="url(#glow3d)" />
+            <ellipse cx="600" cy="220" rx="240" ry="70" stroke="#38bdf8" strokeWidth="1.8" strokeOpacity="0.65" transform="rotate(-20 600 220)" />
 
-            {/* Holographic Science Curves / Sine Waves */}
-            <path d="M-50,180 Q150,80 350,190 T750,160 T1150,220 T1350,140" stroke="url(#waveInterference)" strokeWidth="2" fill="none" opacity="0.6" />
-            <path d="M-50,230 Q200,320 450,210 T850,240 T1250,180" stroke="url(#holoCyanGrad)" strokeWidth="1.5" fill="none" opacity="0.45" />
+            {/* Holographic Quantum Interference Sine Waves */}
+            <path d="M-50,170 Q160,60 360,180 T760,150 T1160,210 T1360,130" stroke="url(#vibrantWave)" strokeWidth="3" fill="none" opacity="0.85" filter="url(#glow3d)" />
+            <path d="M-50,240 Q210,340 460,220 T860,250 T1260,190" stroke="url(#vibrantCyanGrad)" strokeWidth="2.2" fill="none" opacity="0.7" />
 
-            {/* Glowing Coordinate Nodes on Orbits */}
-            <circle cx="210" cy="185" r="3.5" fill="#38bdf8" filter="drop-shadow(0 0 6px #38bdf8)" />
-            <circle cx="890" cy="280" r="3" fill="#fbbf24" filter="drop-shadow(0 0 6px #fbbf24)" />
-            <circle cx="1020" cy="150" r="2.5" fill="#2dd4bf" filter="drop-shadow(0 0 5px #2dd4bf)" />
-            <circle cx="440" cy="120" r="2.5" fill="#a78bfa" filter="drop-shadow(0 0 5px #a78bfa)" />
+            {/* Luminous Science Particle Rings and Orbiting Nodes */}
+            <circle cx="210" cy="185" r="5" fill="#00f5ff" filter="drop-shadow(0 0 10px #00f5ff)" />
+            <circle cx="890" cy="285" r="4.5" fill="#fbbf24" filter="drop-shadow(0 0 10px #fbbf24)" />
+            <circle cx="1030" cy="150" r="4" fill="#2dd4bf" filter="drop-shadow(0 0 8px #2dd4bf)" />
+            <circle cx="430" cy="115" r="4" fill="#c084fc" filter="drop-shadow(0 0 8px #c084fc)" />
+            <circle cx="680" cy="330" r="3.5" fill="#38bdf8" filter="drop-shadow(0 0 6px #38bdf8)" />
+
+            {/* Coordinate Ring Geometry in Deep Space */}
+            <circle cx="950" cy="180" r="55" stroke="rgba(56, 189, 248, 0.45)" strokeWidth="1.2" strokeDasharray="4 6" />
+            <circle cx="250" cy="280" r="45" stroke="rgba(251, 191, 36, 0.4)" strokeWidth="1.2" strokeDasharray="4 6" />
           </svg>
 
-          {/* Faint Glowing Science & Math Equations */}
-          <div className="absolute inset-0 pointer-events-none font-mono text-xs font-black tracking-widest overflow-hidden opacity-30 select-none">
-            <span className="absolute top-6 left-1/4 text-cyan-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
+          {/* 3. High-Contrast Floating Physics & Mathematical Formulas */}
+          <div className="absolute inset-0 pointer-events-none font-mono text-xs sm:text-sm font-black tracking-widest overflow-hidden opacity-75 select-none">
+            <span 
+              className="absolute top-6 left-1/4 text-cyan-300"
+              style={{ textShadow: '0 0 14px rgba(6, 182, 212, 0.9), 0 0 24px rgba(56, 189, 248, 0.6)' }}
+            >
               E = mc²
             </span>
-            <span className="absolute top-20 right-1/3 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
+            <span 
+              className="absolute top-16 right-1/4 text-amber-300"
+              style={{ textShadow: '0 0 14px rgba(251, 191, 36, 0.9), 0 0 24px rgba(245, 158, 11, 0.6)' }}
+            >
               ∇ × B = μ₀J + μ₀ε₀(∂E/∂t)
             </span>
-            <span className="absolute bottom-28 left-16 text-teal-300 drop-shadow-[0_0_8px_rgba(45,212,191,0.5)]">
+            <span 
+              className="absolute bottom-28 left-12 text-teal-300"
+              style={{ textShadow: '0 0 14px rgba(45, 212, 191, 0.9), 0 0 20px rgba(20, 184, 166, 0.6)' }}
+            >
               iℏ(∂ψ/∂t) = Ĥψ
             </span>
-            <span className="absolute top-1/2 left-8 text-sky-300 drop-shadow-[0_0_6px_rgba(56,189,248,0.4)]">
+            <span 
+              className="absolute top-1/2 left-8 text-sky-300"
+              style={{ textShadow: '0 0 12px rgba(56, 189, 248, 0.8)' }}
+            >
               F = G(m₁m₂)/r²
             </span>
-            <span className="absolute bottom-24 right-20 text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.5)]">
+            <span 
+              className="absolute bottom-24 right-16 text-yellow-300"
+              style={{ textShadow: '0 0 14px rgba(253, 224, 71, 0.9)' }}
+            >
               λ = h/p
             </span>
-            <span className="absolute top-12 right-12 text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]">
+            <span 
+              className="absolute top-12 right-10 text-cyan-300"
+              style={{ textShadow: '0 0 12px rgba(34, 211, 238, 0.8)' }}
+            >
               PV = nRT
             </span>
-            <span className="absolute bottom-1/2 right-1/4 text-emerald-300 drop-shadow-[0_0_6px_rgba(110,231,183,0.4)]">
+            <span 
+              className="absolute bottom-1/2 right-1/3 text-emerald-300"
+              style={{ textShadow: '0 0 12px rgba(110, 231, 183, 0.8)' }}
+            >
               e^(iπ) + 1 = 0
+            </span>
+            <span 
+              className="absolute bottom-12 left-1/3 text-blue-300"
+              style={{ textShadow: '0 0 12px rgba(147, 197, 253, 0.8)' }}
+            >
+              c = 299,792,458 m/s
             </span>
           </div>
 
-          {/* Translucent Radial Sheen Mask for Text Legibility */}
+          {/* 4. Subtle Horizon Glow Sheen (Enhances Depth Without Hiding 3D Assets) */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(circle at 50% 40%, rgba(8, 14, 28, 0.72) 0%, rgba(8, 14, 28, 0.92) 100%)'
+              background: 'radial-gradient(circle at 50% 30%, rgba(13, 27, 46, 0.25) 0%, rgba(9, 14, 26, 0.65) 100%)'
             }}
           />
         </div>
@@ -206,10 +269,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               backgroundColor: 'rgba(15, 23, 42, 0.85)',
-              borderColor: 'rgba(56, 189, 248, 0.35)',
+              borderColor: 'rgba(56, 189, 248, 0.45)',
               borderWidth: '1px',
               borderStyle: 'solid',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.35), 0 0 12px rgba(56, 189, 248, 0.15)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.35), 0 0 14px rgba(56, 189, 248, 0.25)',
               color: '#ffffff'
             }}
           >
@@ -231,10 +294,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
                 backgroundColor: 'rgba(11, 19, 38, 0.88)',
-                borderColor: 'rgba(56, 189, 248, 0.35)',
+                borderColor: 'rgba(56, 189, 248, 0.45)',
                 borderWidth: '1px',
                 borderStyle: 'solid',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.45), 0 0 15px rgba(56, 189, 248, 0.15)',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.45), 0 0 16px rgba(56, 189, 248, 0.2)',
                 color: '#ffffff'
               }}
             >
@@ -269,12 +332,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             <h1 
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight"
               style={{
-                textShadow: '0 2px 14px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.25)'
+                textShadow: '0 2px 14px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.35)'
               }}
             >
               Gen Z EdTech Interactive Simulation
             </h1>
-            <p className="mt-3 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed font-semibold opacity-100">
+            <p className="mt-3 text-xs sm:text-sm text-slate-200 max-w-2xl leading-relaxed font-semibold opacity-100">
               Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, computer science, linguistics, and early childhood care &amp; education (ECCE). Switch seamlessly across all {SIMULATIONS_LIST.length} modules with single-click direct execution in 4K high fidelity.
             </p>
           </div>
@@ -445,13 +508,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
       </div>
 
       {/* =========================================================================
-          ROTATING SHOWCASE COMPONENT OVERHAUL:
-          1. Live Interactive Simulation Canvas: Renders actual simulation visual apparatus & controls in an iframe
-          2. Distinct Background Styling: Contrasting background color & border, not blending into dark banner
-          3. Complete Removal of Clutter & Counter Labels: Sleek and minimal without speed or counter text
-          4. Silent 1-Second Auto-Rotation: Cycles smoothly every 1000ms, pausing seamlessly on hover/interaction
+          UPDATE 2: EXTEND SHOWCASE DURATION TO 5 SECONDS & FLUID RIGHT-TO-LEFT SLIDE
+          - 5000ms Interval Timer
+          - Authentic fluid carousel slide animation: Current stage slides out to LEFT,
+            next stage slides in from RIGHT (700ms cubic-bezier transition)
+          - Distinct, contrasting container background & clean border
+          - Sleek, uncluttered header without any debug, speed, or counter numbers
+          - Automatically pauses rotation on hover and interactive controls usage
           ========================================================================= */}
-      {currentShowcaseSim && (
+      {currentSim && (
         <div 
           className="w-full rounded-2xl overflow-hidden transition-all duration-300 shadow-2xl relative select-none"
           onMouseEnter={() => setIsShowcaseHovered(true)}
@@ -487,10 +552,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                 Live Interactive Showcase:
               </span>
               <span 
-                className="font-black text-xs sm:text-sm truncate"
+                className="font-black text-xs sm:text-sm truncate transition-opacity duration-300"
                 style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
               >
-                {currentShowcaseSim.title}
+                {activeHeaderSim.title}
               </span>
               <span 
                 className="hidden sm:inline text-xs font-bold px-2 py-0.5 rounded-md"
@@ -499,19 +564,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                   color: isDarkMode ? '#94a3b8' : '#475569'
                 }}
               >
-                {currentShowcaseSim.category}
+                {activeHeaderSim.category}
               </span>
             </div>
 
             {/* Right: Sleek Action CTA to launch simulation in dedicated tab */}
             <div className="flex items-center gap-2 ml-auto">
               <a
-                href={getSimulationStandaloneUrl(currentShowcaseSim)}
+                href={getSimulationStandaloneUrl(activeHeaderSim)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleLaunchShowcase(currentShowcaseSim);
+                  handleLaunchShowcase(activeHeaderSim);
                 }}
                 className="btn-3d px-4 py-1.5 rounded-xl text-xs font-black flex items-center gap-2 shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95 text-white"
                 style={{
@@ -521,7 +586,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
                   borderWidth: '1.5px',
                   borderStyle: 'solid'
                 }}
-                title={`Open ${currentShowcaseSim.title} in new dedicated tab`}
+                title={`Open ${activeHeaderSim.title} in new dedicated tab`}
               >
                 <ExternalLink className="w-3.5 h-3.5 text-white" />
                 <span>Launch Full Simulation</span>
@@ -529,26 +594,59 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ activeSim, isDarkMode = 
             </div>
           </div>
 
-          {/* Actual Live Simulation Visual Canvas / Stage */}
+          {/* Fluid Carousel Viewport (Height 440px) with Right-to-Left Slide Animation */}
           <div 
-            className="w-full relative transition-all overflow-hidden"
+            className="w-full relative overflow-hidden"
             style={{
               height: '440px',
               backgroundColor: isDarkMode ? '#060a16' : '#f8fafc'
             }}
           >
-            <iframe
-              key={currentShowcaseSim.id}
-              src={currentShowcaseSim.htmlContent ? undefined : currentShowcaseSim.fileUrl}
-              srcDoc={currentShowcaseSim.htmlContent || undefined}
-              title={currentShowcaseSim.title}
-              className="w-full h-full border-0 block"
+            {/* Active Current Stage (Slides out to LEFT when isSliding is true) */}
+            <div
+              className="absolute inset-0 w-full h-full"
               style={{
-                pointerEvents: isShowcaseHovered ? 'auto' : 'none'
+                transform: isSliding ? 'translateX(-100%)' : 'translateX(0%)',
+                transition: isSliding ? 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+                willChange: 'transform'
               }}
-              loading="eager"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            />
+            >
+              <iframe
+                src={currentSim.htmlContent ? undefined : currentSim.fileUrl}
+                srcDoc={currentSim.htmlContent || undefined}
+                title={currentSim.title}
+                className="w-full h-full border-0 block"
+                style={{
+                  pointerEvents: isShowcaseHovered ? 'auto' : 'none'
+                }}
+                loading="eager"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+              />
+            </div>
+
+            {/* Next Incoming Stage (Slides in from RIGHT when isSliding is true) */}
+            {nextSim && (
+              <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  transform: isSliding ? 'translateX(0%)' : 'translateX(100%)',
+                  transition: isSliding ? 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+                  willChange: 'transform'
+                }}
+              >
+                <iframe
+                  src={nextSim.htmlContent ? undefined : nextSim.fileUrl}
+                  srcDoc={nextSim.htmlContent || undefined}
+                  title={nextSim.title}
+                  className="w-full h-full border-0 block"
+                  style={{
+                    pointerEvents: isShowcaseHovered ? 'auto' : 'none'
+                  }}
+                  loading="eager"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
