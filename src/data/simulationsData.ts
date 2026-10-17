@@ -692,21 +692,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Elementary, Middle & Secondary English'
   },
   {
-    id: 'sim-animal-safari-habitats',
-    slug: 'animal-safari-habitats',
-    indexNumber: '49',
-    title: 'Animal Kingdom & Safari Discovery Academy',
-    subject: 'Early Cognitive Science & Nature Exploration',
-    category: 'Early Childhood (ECCE)',
-    iconName: 'Sparkles',
-    accentColor: '#ea580c', // Bright Safari Orange
-    description: 'Joyful 100% colorful multi-sensory preschool safari across 4 rich habitats: African Savannah, Tropical Jungle, Deep Blue Ocean, and Snowy Arctic. Tap smiling animals for cheerful greetings, fun facts, balloon confetti, and friendly audio chimes.',
-    fileUrl: '/simulations/animal-safari-habitats.html',
-    topics: ['4 Global Wildlife Habitats (Savannah, Jungle, Ocean, Arctic)', 'Animal Names, Sounds & Recognitions', 'Diet & Behavioral Adaptations', 'Multi-Sensory Fine Motor Coordination'],
-    features: ['Interactive Bouncy Cartoon Animals with Sounds', '4 High-Contrast Vibrant Biome Landscapes', 'Pop-able Celebratory Balloon Confetti', 'Web-Audio Synthesized Friendly Musical Chimes'],
-    gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
-  },
-  {
     id: 'sim-ecce-curriculum-learning-areas',
     slug: 'ecce-curriculum-learning-areas',
     indexNumber: '50',
@@ -812,21 +797,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Pre-K, Nursery & Kindergarten (Ages 3–6)'
   },
   {
-    id: 'sim-heart-anatomy-simulation',
-    slug: 'heart-anatomy-simulation',
-    indexNumber: '57',
-    title: 'Heart Anatomy Simulation',
-    subject: 'Biology & Cardiovascular Internal Anatomy',
-    category: 'Biology & Life',
-    iconName: 'Activity',
-    accentColor: '#ef4444',
-    description: 'Comprehensive medical anatomy simulation of the human heart. Explore the 4 internal chambers, atrioventricular & semilunar valves, SA/AV nodal electrical conduction pathway, coronary vessels, and synchronized live ECG monitor.',
-    fileUrl: '/simulations/heart-anatomy-simulation.html',
-    topics: ['Internal Atria & Ventricles', 'Tricuspid & Mitral Valves', 'SA & AV Node Conduction Wave', 'Real-Time ECG Strip & BPM Controls', 'Interactive Anatomical Quiz'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Cross-Section & Internal Valves View', 'Live Lead II ECG Strip Monitor', 'Interactive Structure Pinpoint Highlights & Quiz'],
-    gradeLevel: 'Middle & High School (Grades 6–12)'
-  },
-  {
     id: 'sim-eye-structure-simulation',
     slug: 'eye-structure-simulation',
     indexNumber: '58',
@@ -855,36 +825,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Alphabet Letters A to Z', 'Real-World Object Association', 'Phonics & Speech Sounds', 'Visual Vocabulary Building'],
     features: ['100% Offline Standalone Chrome-Ready Lab', 'High-Definition Real Object Imagery', 'Instant Audio Voice Phonics Playback', 'Child-Friendly Big Touch Controls & Animations'],
     gradeLevel: 'Early Childhood (Ages 3–7)'
-  },
-  {
-    id: 'sim-enzyme-kinetics-substrate-catalysis',
-    slug: 'enzyme-kinetics-substrate-catalysis',
-    indexNumber: '60',
-    title: 'Enzyme Kinetics & Substrate Catalysis Workbench',
-    subject: 'Biochemistry & Cellular Enzymes',
-    category: 'Biology & Life',
-    iconName: 'Cpu',
-    accentColor: '#10b981',
-    description: 'Comprehensive biochemical laboratory for enzyme-substrate interactions. Simulate Michaelis-Menten kinetics, active site binding, competitive vs non-competitive inhibition, and temperature/pH denaturation.',
-    fileUrl: '/simulations/enzyme-kinetics-substrate-catalysis.html',
-    topics: ['Enzyme-Substrate Active Site Binding', 'Michaelis-Menten Kinetics (Vmax & Km)', 'Competitive & Non-Competitive Inhibitors', 'pH & Temperature Denaturation Curves'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Real-time Kinetic Molecular Collision Engine', 'Live Dynamic Reaction Velocity Graphs', 'Adjustable Substrate & Inhibitor Concentration Dials'],
-    gradeLevel: 'High School & College (Grades 9–12)'
-  },
-  {
-    id: 'sim-logic-gates-boolean-circuit-builder',
-    slug: 'logic-gates-boolean-circuit-builder',
-    indexNumber: '61',
-    title: 'Digital Logic Gates & Boolean Circuit Workbench',
-    subject: 'Computer Science & Digital Circuit Design',
-    category: 'Computer Science & IT',
-    iconName: 'Binary',
-    accentColor: '#6366f1',
-    description: 'Interactive digital electronics breadboard. Design and test circuits with AND, OR, NOT, NAND, NOR, XOR, and XNOR gates with live signal propagation, truth tables, and LED outputs.',
-    fileUrl: '/simulations/logic-gates-boolean-circuit-builder.html',
-    topics: ['Boolean Algebra & Logic Operations', 'Basic & Universal Gates (NAND/NOR)', 'Multi-Input Combinational Circuits', 'Live Truth Table Auto-Evaluation'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Interactive Wire Connection Drag-and-Drop', 'Real-time High/Low Voltage Propagation Glow', 'Built-in Preset Circuits (Adders, Multiplexers, Flip-Flops)'],
-    gradeLevel: 'High School & University (Grades 8–12)'
   },
   {
     id: 'sim-photosynthesis-simulation',
@@ -932,21 +872,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Middle & High School (Grades 6–10)'
   },
   {
-    id: 'sim-ecce-studio',
-    slug: 'ecce',
-    indexNumber: '65',
-    title: 'Interactive ECCE Discovery Academy Studio',
-    subject: 'Early Childhood Care & Education (ECCE)',
-    category: 'Early Childhood (ECCE)',
-    iconName: 'Sparkles',
-    accentColor: '#ec4899',
-    description: 'Multifunctional early childhood education environment. Features foundational shape matching, color exploration, number counting, animal classification, and sensory cognitive development games.',
-    fileUrl: '/simulations/ecce.html',
-    topics: ['Foundational Shape & Pattern Recognition', 'Sensory Color Sorting & Discovery', 'Counting & Numerical Quantity Matching', 'Animal Habitats & Sounds'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Child-Safe Audio Feedback & Cheerful Celebrations', 'Intuitive Drag-and-Snap Touch Mechanics', 'Multi-Module Progressive Learning Paths'],
-    gradeLevel: 'Early Childhood (Ages 3–8)'
-  },
-  {
     id: 'sim-human-heart-simulation',
     slug: 'human-heart-simulation',
     indexNumber: '66',
@@ -960,36 +885,6 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Systemic & Pulmonary Circulation Loops', 'Deoxygenated & Oxygenated Blood Vectors', 'Ventricular Pumping Mechanics', 'Cardiac Output & Blood Pressure Dynamics'],
     features: ['100% Offline Standalone Chrome-Ready Lab', 'Pulsing Interactive Heart Chambers', 'Oxygenated (Red) vs Deoxygenated (Blue) Blood Flow', 'BPM Heart Rate Controller & Waveform Monitor'],
     gradeLevel: 'Middle & High School (Grades 6–12)'
-  },
-  {
-    id: 'sim-ice-to-water-to-steam-simulation',
-    slug: 'ice-to-water-to-steam-simulation',
-    indexNumber: '67',
-    title: 'Ice to Water to Steam Simulation',
-    subject: 'Chemistry & States of Matter Thermodynamics',
-    category: 'Chemistry & Matter',
-    iconName: 'Thermometer',
-    accentColor: '#0284c7',
-    description: 'Interactive phase change laboratory illustrating thermodynamic transformations between Solid Ice, Liquid Water, and Gaseous Steam. Features kinetic H2O molecule animations, heating curve with latent heat plateaus, and Bunsen burner burner controls.',
-    fileUrl: '/simulations/Ice_to_Water_to_Steam_Simulation.html',
-    topics: ['Hexagonal Ice Crystal Lattice', 'Latent Heat of Fusion (0 °C Plateau)', 'Liquid Water Hydrogen Bond Dynamics', 'Latent Heat of Vaporization (100 °C Plateau)', 'Gaseous Steam Molecular Kinetic Collisions'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Dynamic Molecular Simulation (H2O Atoms & Bonds)', 'Real-time Heating Curve Graph with Dual Phase Plateaus', 'Bunsen Burner Flame & Temperature Slider (-50°C to 220°C)'],
-    gradeLevel: 'Elementary to High School (Grades 5–12)'
-  },
-  {
-    id: 'sim-water-cycle-simulation',
-    slug: 'water-cycle-simulation',
-    indexNumber: '68',
-    title: 'Water Cycle Simulation',
-    subject: 'Earth Sciences & Hydrology',
-    category: 'Earth & Space',
-    iconName: 'CloudRain',
-    accentColor: '#0ea5e9',
-    description: 'Dynamic hydrological simulation illustrating Earth water circulation. Features solar-powered evaporation, forest transpiration, atmospheric condensation cloud dynamics, precipitation (rain and snowfall), mountain river runoff, and groundwater aquifer infiltration.',
-    fileUrl: '/simulations/water-cycle-simulation.html',
-    topics: ['Solar-Driven Evaporation', 'Canopy Transpiration in Forests', 'Condensation & Cloud Droplet Formation', 'Precipitation Rain & Snow Mechanics', 'Mountain Watershed Runoff & River Flow', 'Groundwater Table Percolation & Ocean Storage'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Dynamic Weather Sliders (Sun Power, Ambient Temp, Wind Velocity)', 'Interactive Rain Trigger & Day/Night Toggle', 'Clickable Landscape Hotspots & Knowledge Challenge Quiz'],
-    gradeLevel: 'Elementary to High School (Grades 4–12)'
   }
 ];
 

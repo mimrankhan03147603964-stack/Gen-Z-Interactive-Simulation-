@@ -1603,30 +1603,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // 49: Animal Kingdom & Safari Discovery Academy (Early Childhood ECCE)
-    case 49:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Sunny Savannah Background Hill */}
-          <ellipse cx="32" cy="54" rx="26" ry="12" fill="#f59e0b" />
-          {/* Safari Acacia Tree (Right) */}
-          <path d="M48 50 V34" stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
-          <ellipse cx="48" cy="30" rx="12" ry="6" fill="#16a34a" />
-          {/* Friendly Smiling Cartoon Lion (Center) */}
-          {/* Mane */}
-          <circle cx="26" cy="32" r="16" fill="#d97706" />
-          {/* Head */}
-          <circle cx="26" cy="32" r="11" fill="#fbbf24" />
-          {/* Eyes */}
-          <circle cx="22" cy="30" r="1.8" fill="#1e293b" />
-          <circle cx="30" cy="30" r="1.8" fill="#1e293b" />
-          {/* Smiling Mouth */}
-          <path d="M23 35 Q26 38 29 35" stroke="#78350f" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          {/* Happy Confetti Star */}
-          <polygon points="12,12 14,16 19,16 15,19 17,24 12,21 7,24 9,19 5,16 10,16" fill="#f43f5e" />
-        </svg>
-      );
-
     // 50: ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)
     case 50:
       return (
@@ -1846,34 +1822,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // 57: Human Heart Anatomy & Circulation
-    case 57:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f87171" />
-              <stop offset="50%" stopColor="#ef4444" />
-              <stop offset="100%" stopColor="#991b1b" />
-            </linearGradient>
-            <linearGradient id="aortaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="100%" stopColor="#1d4ed8" />
-            </linearGradient>
-          </defs>
-          {/* Superior Vena Cava / Aorta Arches */}
-          <path d="M24 10 C24 6 30 6 30 14" stroke="#ef4444" strokeWidth="4.5" strokeLinecap="round" />
-          <path d="M34 8 C34 4 42 4 42 14" stroke="#38bdf8" strokeWidth="4" strokeLinecap="round" />
-          {/* Main Anatomical Heart Mass */}
-          <path d="M32 54 C18 42 12 32 12 24 C12 16 20 12 28 17 C32 19 32 19 32 19 C32 19 32 19 36 17 C44 12 52 16 52 24 C52 32 46 42 32 54 Z" fill="url(#heartGrad)" stroke="#fecaca" strokeWidth="1.5" />
-          {/* Coronary blood vessel branches */}
-          <path d="M26 26 Q32 34 30 46" stroke="#fee2e2" strokeWidth="1.5" fill="none" opacity="0.8" />
-          <path d="M30 34 Q36 38 40 44" stroke="#bae6fd" strokeWidth="1.2" fill="none" opacity="0.8" />
-          {/* Pulse wave overlay */}
-          <path d="M16 34 L23 34 L26 27 L30 41 L34 31 L37 34 L48 34" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      );
-
     // 58: Structure of the Human Eye
     case 58:
       return (
@@ -1928,60 +1876,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <ellipse cx="45" cy="20" rx="2" ry="1" fill="#22c55e" />
           {/* Friendly Star */}
           <polygon points="50,12 51.5,8 55,8 52,6 53,2 50,4.5 47,2 48,6 45,8 48.5,8" fill="#facc15" />
-        </svg>
-      );
-
-    // 60: Enzyme Kinetics & Substrate Catalysis
-    case 60:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="enzymeBody" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#047857" />
-            </linearGradient>
-            <linearGradient id="substrateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#d97706" />
-            </linearGradient>
-          </defs>
-          {/* Large Enzyme Molecule with Keyhole Active Site */}
-          <path d="M12 28 C12 18 20 14 30 14 C32 14 34 20 38 20 C42 20 44 14 46 14 C54 14 58 22 58 34 C58 46 48 52 34 52 C20 52 12 44 12 28 Z" fill="url(#enzymeBody)" stroke="#6ee7b7" strokeWidth="2" />
-          {/* Active Site Notch Detail */}
-          <rect x="33" y="18" width="8" height="8" rx="2" fill="#064e3b" stroke="#34d399" strokeWidth="1" strokeDasharray="1 1" />
-          {/* Substrate Key Fitting in from Top */}
-          <rect x="34" y="8" width="6" height="7" rx="1.5" fill="url(#substrateGrad)" stroke="#fef08a" strokeWidth="1.2" />
-          {/* Catalytic Energy Sparks */}
-          <circle cx="28" cy="18" r="2" fill="#facc15" />
-          <circle cx="44" cy="18" r="1.5" fill="#facc15" />
-          <path d="M18 40 Q32 36 46 42" stroke="#d1fae5" strokeWidth="1.5" strokeDasharray="2 2" />
-        </svg>
-      );
-
-    // 61: Digital Logic Gates & Boolean Workbench
-    case 61:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="gateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#6366f1" />
-              <stop offset="100%" stopColor="#4338ca" />
-            </linearGradient>
-          </defs>
-          {/* Circuit Board Grid Background Lines */}
-          <line x1="8" y1="24" x2="22" y2="24" stroke="#818cf8" strokeWidth="2" />
-          <line x1="8" y1="40" x2="22" y2="40" stroke="#818cf8" strokeWidth="2" />
-          <line x1="48" y1="32" x2="58" y2="32" stroke="#34d399" strokeWidth="2.5" />
-          {/* AND/NAND Gate Body */}
-          <path d="M22 16 H34 C44 16 48 24 48 32 C48 40 44 48 34 48 H22 Z" fill="url(#gateGrad)" stroke="#a5b4fc" strokeWidth="2" />
-          {/* Gate Inversion Bubble (NOT bubble) */}
-          <circle cx="51" cy="32" r="3" fill="#0f172a" stroke="#34d399" strokeWidth="1.5" />
-          {/* Output LED Node */}
-          <circle cx="58" cy="32" r="2" fill="#34d399" />
-          {/* Binary labels */}
-          <text x="14" y="21" fill="#c7d2fe" fontSize="7" fontWeight="bold">1</text>
-          <text x="14" y="47" fill="#c7d2fe" fontSize="7" fontWeight="bold">1</text>
-          <text x="33" y="35" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle">AND</text>
         </svg>
       );
 
@@ -2063,35 +1957,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // 65: ECCE Discovery Academy Studio
-    case 65:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="ecceAcad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f472b6" />
-              <stop offset="100%" stopColor="#db2777" />
-            </linearGradient>
-            <linearGradient id="ecceAcad2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="100%" stopColor="#0284c7" />
-            </linearGradient>
-          </defs>
-          {/* Block 1 */}
-          <rect x="10" y="24" width="20" height="20" rx="4" fill="url(#ecceAcad1)" stroke="#fbcfe8" strokeWidth="1.5" />
-          <text x="20" y="39" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">1</text>
-          {/* Block 2 */}
-          <rect x="34" y="24" width="20" height="20" rx="4" fill="url(#ecceAcad2)" stroke="#bae6fd" strokeWidth="1.5" />
-          <text x="44" y="39" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">2</text>
-          {/* Stacked Triangle Shape */}
-          <polygon points="32,8 20,22 44,22" fill="#facc15" stroke="#fde047" strokeWidth="1.5" />
-          <circle cx="32" cy="17" r="2.5" fill="#ffffff" />
-          {/* Bottom Star & Heart Badge */}
-          <polygon points="14,50 16,46 20,46 17,44 18,40 14,42 10,40 11,44 8,46 12,46" fill="#fbbf24" />
-          <circle cx="50" cy="48" r="4" fill="#ef4444" />
-        </svg>
-      );
-
     // 66: Human Heart Simulation
     case 66:
       return (
@@ -2116,70 +1981,6 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <path d="M40 32 Q44 40 38 46" stroke="#fecaca" strokeWidth="2.5" strokeLinecap="round" />
           {/* Central Septum Divider */}
           <line x1="32" y1="24" x2="32" y2="52" stroke="#7f1d1d" strokeWidth="2" strokeDasharray="3 2" />
-        </svg>
-      );
-
-    // 67: Ice to Water to Steam Simulation
-    case 67:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="iceCubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#e0f2fe" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </linearGradient>
-            <linearGradient id="waterDropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="100%" stopColor="#0284c7" />
-            </linearGradient>
-          </defs>
-          {/* Ice Crystal Cube (Left) */}
-          <polygon points="18,34 28,29 28,42 18,47" fill="url(#iceCubeGrad)" stroke="#bae6fd" strokeWidth="1.2" />
-          <polygon points="8,29 18,34 18,47 8,42" fill="#7dd3fc" stroke="#bae6fd" strokeWidth="1.2" />
-          <polygon points="18,24 28,29 18,34 8,29" fill="#f0f9ff" stroke="#bae6fd" strokeWidth="1.2" />
-          {/* Transition Arrow 1 */}
-          <path d="M29 37 L33 37" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
-          {/* Liquid Water Droplet (Center) */}
-          <path d="M42 28 C42 28 35 37 35 42 A7 7 0 0 0 49 42 C49 37 42 28 42 28 Z" fill="url(#waterDropGrad)" stroke="#7dd3fc" strokeWidth="1.2" />
-          {/* Steam Vapor Wafts (Top Right) */}
-          <path d="M48 20 Q52 14 48 8" stroke="#e0f2fe" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
-          <path d="M54 22 Q58 16 54 10" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
-          <path d="M42 18 Q46 12 42 6" stroke="#f0f9ff" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
-          {/* Base Thermal Flame Indicator */}
-          <path d="M22 56 Q28 50 34 56 Q40 50 46 56" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
-      );
-
-    // 68: Water Cycle Simulation
-    case 68:
-      return (
-        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="wcSun" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="100%" stopColor="#f59e0b" />
-            </linearGradient>
-            <linearGradient id="wcWater" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </linearGradient>
-          </defs>
-          {/* Radiant Sun (Top Left) */}
-          <circle cx="14" cy="14" r="8" fill="url(#wcSun)" stroke="#fde047" strokeWidth="1.2" />
-          {/* Condensation Cloud (Top Right) */}
-          <path d="M38 18 C38 14 44 12 47 15 C50 13 56 15 56 19 C58 20 58 24 55 25 H37 C34 25 34 20 38 18 Z" fill="#e0f2fe" stroke="#bae6fd" strokeWidth="1.2" />
-          {/* Rain Droplets from Cloud */}
-          <line x1="40" y1="28" x2="38" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="46" y1="29" x2="44" y2="34" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="52" y1="28" x2="50" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
-          {/* Mountain Watershed (Right) */}
-          <polygon points="32,48 48,34 60,48" fill="#475569" stroke="#64748b" strokeWidth="1.2" />
-          <polygon points="44,38 48,34 52,38" fill="#ffffff" />
-          {/* Ocean Reservoir & Wave (Bottom) */}
-          <path d="M6 54 Q18 48 30 54 Q42 60 58 54 V60 H6 Z" fill="url(#wcWater)" />
-          {/* Evaporation Ascending Vector */}
-          <path d="M16 46 Q20 38 18 30" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
-          <path d="M15 33 L18 29 L21 33" stroke="#bae6fd" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
 

@@ -784,22 +784,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#4f46e5',
     glowColor: 'rgba(79, 70, 229, 0.45)'
   },
-  '49': {
-    id: '49',
-    name: 'Animal Kingdom & Safari Discovery Academy',
-    bgSolid: '#ea580c',
-    bgGradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-    borderColor: '#fb923c',
-    iconBg: '#ea580c',
-    iconBorder: '#fed7aa',
-    iconColor: '#ffffff',
-    badgeBg: '#fff7ed',
-    badgeText: '#9a3412',
-    badgeBorder: '#fed7aa',
-    tagBg: '#ffedd5',
-    tagText: '#ea580c',
-    glowColor: 'rgba(234, 88, 12, 0.45)'
-  },
   '50': {
     id: '50',
     name: 'ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)',
@@ -912,22 +896,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#0e7490',
     glowColor: 'rgba(0, 198, 255, 0.45)'
   },
-  '57': {
-    id: '57',
-    name: 'Human Heart Circulation',
-    bgSolid: '#ef4444',
-    bgGradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-    borderColor: '#fca5a5',
-    iconBg: '#7f1d1d',
-    iconBorder: '#f87171',
-    iconColor: '#fecaca',
-    badgeBg: '#fef2f2',
-    badgeText: '#991b1b',
-    badgeBorder: '#fecaca',
-    tagBg: '#fee2e2',
-    tagText: '#b91c1c',
-    glowColor: 'rgba(239, 68, 68, 0.45)'
-  },
   '58': {
     id: '58',
     name: 'Structure of the Eye',
@@ -959,38 +927,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fef3c7',
     tagText: '#d97706',
     glowColor: 'rgba(245, 158, 11, 0.45)'
-  },
-  '60': {
-    id: '60',
-    name: 'Enzyme Kinetics',
-    bgSolid: '#10b981',
-    bgGradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-    borderColor: '#6ee7b7',
-    iconBg: '#064e3b',
-    iconBorder: '#34d399',
-    iconColor: '#d1fae5',
-    badgeBg: '#ecfdf5',
-    badgeText: '#065f46',
-    badgeBorder: '#a7f3d0',
-    tagBg: '#d1fae5',
-    tagText: '#059669',
-    glowColor: 'rgba(16, 185, 129, 0.45)'
-  },
-  '61': {
-    id: '61',
-    name: 'Logic Gates Workbench',
-    bgSolid: '#6366f1',
-    bgGradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
-    borderColor: '#a5b4fc',
-    iconBg: '#312e81',
-    iconBorder: '#818cf8',
-    iconColor: '#e0e7ff',
-    badgeBg: '#eef2ff',
-    badgeText: '#3730a3',
-    badgeBorder: '#c7d2fe',
-    tagBg: '#e0e7ff',
-    tagText: '#4f46e5',
-    glowColor: 'rgba(99, 102, 241, 0.45)'
   },
   '62': {
     id: '62',
@@ -1040,22 +976,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagText: '#ca8a04',
     glowColor: 'rgba(234, 179, 8, 0.45)'
   },
-  '65': {
-    id: '65',
-    name: 'ECCE Discovery Academy',
-    bgSolid: '#ec4899',
-    bgGradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
-    borderColor: '#f472b6',
-    iconBg: '#831843',
-    iconBorder: '#f472b6',
-    iconColor: '#fce7f3',
-    badgeBg: '#fdf2f8',
-    badgeText: '#9d174d',
-    badgeBorder: '#fbcfe8',
-    tagBg: '#fce7f3',
-    tagText: '#db2777',
-    glowColor: 'rgba(236, 72, 153, 0.45)'
-  },
   '66': {
     id: '66',
     name: 'Human Heart Simulation',
@@ -1071,38 +991,6 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fee2e2',
     tagText: '#b91c1c',
     glowColor: 'rgba(220, 38, 38, 0.45)'
-  },
-  '67': {
-    id: '67',
-    name: 'Ice to Water to Steam Simulation',
-    bgSolid: '#0284c7',
-    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-    borderColor: '#38bdf8',
-    iconBg: '#0c4a6e',
-    iconBorder: '#38bdf8',
-    iconColor: '#e0f2fe',
-    badgeBg: '#f0f9ff',
-    badgeText: '#0369a1',
-    badgeBorder: '#bae6fd',
-    tagBg: '#e0f2fe',
-    tagText: '#0284c7',
-    glowColor: 'rgba(2, 132, 199, 0.45)'
-  },
-  '68': {
-    id: '68',
-    name: 'Water Cycle Simulation',
-    bgSolid: '#0ea5e9',
-    bgGradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-    borderColor: '#7dd3fc',
-    iconBg: '#082f49',
-    iconBorder: '#38bdf8',
-    iconColor: '#f0f9ff',
-    badgeBg: '#f0f9ff',
-    badgeText: '#075985',
-    badgeBorder: '#bae6fd',
-    tagBg: '#e0f2fe',
-    tagText: '#0284c7',
-    glowColor: 'rgba(14, 165, 233, 0.45)'
   }
 };
 
