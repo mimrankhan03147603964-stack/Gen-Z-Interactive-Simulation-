@@ -44,7 +44,7 @@ app.post('/api/generate-simulation', async (req: Request, res: Response) => {
     });
   }
 
-  const prompt = `You are a world-class STEM professor and creative software engineer building an authentic, interactive HTML5 laboratory for the Gen Z EdTech interactive simulation platform.
+  const prompt = `You are a world-class STEM professor and creative software engineer building an authentic, interactive HTML5 laboratory for the Gen Z Interactive Simulations platform.
 
 Topic to simulate: "${cleanTopic}"
 

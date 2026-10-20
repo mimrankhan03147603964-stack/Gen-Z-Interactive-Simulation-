@@ -113,9 +113,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             }}
           >
             <img 
-              src="/genz-edtech-symbol.svg" 
-              alt="Gen Z EdTech Interactive Monogram" 
-              className="w-full h-full object-contain drop-shadow-xs" 
+              src="/genz-monogram.jpg" 
+              alt="Gen Z Interactive Simulations Monogram" 
+              className="w-full h-full object-contain rounded-lg drop-shadow-xs" 
             />
           </div>
           <div>
@@ -123,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="text-xs font-black tracking-wider uppercase text-slate-900 dark:text-white"
               style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
             >
-              GEN Z EDTECH SIMULATION
+              GEN Z INTERACTIVE SIMULATIONS
             </h2>
             <p className="text-[11px] font-extrabold tracking-tight flex items-center gap-1.5 mt-0.5">
               <span style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}>STEM Lab Catalog</span>

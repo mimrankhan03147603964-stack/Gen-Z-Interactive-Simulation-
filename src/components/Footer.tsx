@@ -31,9 +31,9 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
             }}
           >
             <img 
-              src="/genz-edtech-monogram.svg" 
-              alt="Gen Z EdTech Interactive Monogram Logo" 
-              className="w-full h-full object-contain"
+              src="/genz-monogram.jpg" 
+              alt="Gen Z Interactive Simulations Monogram Logo" 
+              className="w-full h-full object-contain rounded-xl"
             />
           </div>
           <div className="space-y-0.5">
@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
               className="text-lg sm:text-xl md:text-2xl font-black tracking-wide uppercase"
               style={{ color: isDarkMode ? '#f8fafc' : '#0f172a' }}
             >
-              GEN Z EDTECH INTERACTIVE SIMULATION
+              GEN Z INTERACTIVE SIMULATIONS
             </h2>
             <p 
               className="text-xs sm:text-sm font-semibold tracking-wide"
@@ -135,7 +135,7 @@ export const Footer: React.FC<FooterProps> = ({ isDarkMode = false }) => {
             className="text-xs font-medium tracking-normal text-center"
             style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
           >
-            © 2026 Gen Z EdTech Interactive Simulation. All Rights Reserved.
+            © 2026 Gen Z Interactive Simulations. All Rights Reserved.
           </p>
         </div>
 

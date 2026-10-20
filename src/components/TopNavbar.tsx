@@ -51,15 +51,15 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             }}
           >
             <img 
-              src="/genz-edtech-symbol.svg" 
-              alt="Gen Z EdTech Interactive Monogram" 
-              className="w-full h-full object-contain" 
+              src="/genz-monogram.jpg" 
+              alt="Gen Z Interactive Simulations Monogram" 
+              className="w-full h-full object-contain rounded-lg" 
             />
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-wider leading-tight flex items-center gap-1.5">
               <span style={{ color: '#111827' }}>
-                GEN Z EDTECH INTERACTIVE SIMULATION
+                GEN Z INTERACTIVE SIMULATIONS
               </span>
               <span 
                 className="hidden xl:inline-block px-1.5 py-0.2 rounded text-[9px] font-black shadow-xs"

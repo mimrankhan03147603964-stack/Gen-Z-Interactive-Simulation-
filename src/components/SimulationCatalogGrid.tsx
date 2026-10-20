@@ -305,7 +305,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const cleanCardSubject = (subject: string, category?: string): string => {
     let clean = subject
       .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
-      .replace(/\|\s*GEN\s+Z\s+EDTECH\s+INTERACTIVE/gi, '')
+      .replace(/\|\s*GEN\s+Z\s+(?:EDTECH\s+)?INTERACTIVE(?:\s+SIMULATIONS?)?/gi, '')
       .trim();
     if (category !== 'Urdu & Linguistics') {
       clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();

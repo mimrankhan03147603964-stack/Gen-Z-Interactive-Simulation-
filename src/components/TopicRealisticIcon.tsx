@@ -9,7 +9,7 @@ interface TopicRealisticIconProps {
 
 /**
  * High-definition, fully colored, topic-specific realistic visual emblems
- * for all 33 STEM interactive simulations in the Gen Z EdTech catalog.
+ * for all STEM interactive simulations in the Gen Z Interactive Simulations catalog.
  * Each icon features bespoke vector art, rich gradients, 3D shading, and scientific details.
  */
 export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({

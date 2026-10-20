@@ -43,7 +43,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     });
   }
 
-  const prompt = `You are an expert STEM educator and creative web developer creating an authentic, interactive HTML5 simulation for the Gen Z EdTech STEM laboratory portal.
+  const prompt = `You are an expert STEM educator and creative web developer creating an authentic, interactive HTML5 simulation for the Gen Z Interactive Simulations STEM laboratory portal.
 
 The requested STEM simulation topic is: "${cleanTopic}"
 

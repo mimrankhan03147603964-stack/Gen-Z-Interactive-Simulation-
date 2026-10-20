@@ -1,5 +1,5 @@
 /**
- * AI-Powered Dynamic Simulation Generator for Gen Z EdTech Portal
+ * AI-Powered Dynamic Simulation Generator for Gen Z Interactive Simulations Portal
  * Generates interactive STEM simulations on-demand using Gemini API or rich procedural engine.
  */
 
