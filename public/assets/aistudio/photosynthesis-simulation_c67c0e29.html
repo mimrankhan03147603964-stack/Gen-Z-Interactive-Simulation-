@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photosynthesis in Flowering Plants - LAB 111</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0,#0b2a55,#030b1c 70%);color:#fff;min-height:100vh;padding:14px}
+.wrap{max-width:1180px;margin:auto}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;cursor:pointer;font-size:14px;transition:.2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.white{background:#fff;color:#0a2a5c}.blue{background:#0b5cff;box-shadow:0 0 14px #0b5cff88}.green{background:#12a56a}
+.lab{background:#19c25a;padding:8px 14px;border-radius:8px;font-weight:800;font-size:18px}
+.card{background:rgba(10,30,70,.85);border:1px solid #1c4a8c;border-radius:22px;box-shadow:0 0 25px #0a4fb355;padding:16px;margin-bottom:14px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+h1{font-style:italic;font-size:36px}h1 small{font-size:15px;font-weight:400;margin-left:10px;color:#cde}
+.tabs{display:flex;gap:6px}
+.tab{background:#12305f;border:0;color:#dfe9ff;border-radius:14px;padding:12px 18px;cursor:pointer;font-weight:600;min-width:100px}
+.tab.on{background:#1b8cff;box-shadow:0 0 16px #1b8cff}
+h2{color:#ffd21f;font-style:italic;margin:6px 0 12px}
+.ctrl{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+.pill{background:#0a2250;border:1px solid #1c4a8c;border-radius:30px;padding:8px 16px;display:flex;align-items:center;gap:10px;font-weight:600}
+select{background:#12305f;color:#fff;border:0;border-radius:10px;padding:8px;font-weight:700}
+input[type=range]{accent-color:#ff9d1f;width:120px}
+.scene{border-radius:22px;overflow:hidden;border:2px solid #1c4a8c;position:relative;background:#000}
+canvas{width:100%;display:block}
+.panels{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:14px}
+.panels h3{font-size:16px;margin-bottom:12px;letter-spacing:1px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g2 .btn{padding:16px 8px}
+.yel{background:#ffb81c;color:#222}.cy{background:#1aa3ff}.mint{background:#10d28a}.slate{background:#4b5f82}
+.lav{background:#cfd8ff;color:#223}.pur{background:linear-gradient(90deg,#8a3ffc,#d65cff)}.pink{background:linear-gradient(90deg,#c14bff,#ff4d8d)}
+.tip{text-align:center;font-style:italic;font-size:18px;padding:16px}
+.info{display:none;font-size:18px;line-height:1.7}.info li{margin:8px 0 8px 22px}
+@media(max-width:800px){.panels{grid-template-columns:1fr}h1{font-size:26px}}
+</style></head><body><div class="wrap">
+<div class="top">
+<button class="btn white" onclick="alert('Back to Portal Catalog')">← Portal Catalog</button>
+<span class="lab">LAB 111</span>
+<div><b style="font-size:18px">Photosynthesis in Flowering Plants</b><br><small style="color:#9cf">Developed by: M. Imran Khan</small></div>
+<span style="flex:1"></span>
+<button class="btn green" onclick="resetAll()">⟳ Reset Engine</button>
+<button class="btn blue" onclick="fs()">⤢ Fullscreen</button>
+</div>
+<div class="card head">
+<div style="display:flex;gap:14px;align-items:center"><span style="font-size:60px">🍃</span>
+<div><h1>Photosynthesis <small>How flowering plants make food</small></h1>
+<p style="margin-top:6px;max-width:600px">Watch a real flowering plant absorb sunlight, water, and CO₂ — and release oxygen and glucose. Explore the full process through an interactive and animated simulation.</p></div></div>
+<div class="tabs" id="tabs">
+<button class="tab" data-t="def">📖<br>Definition</button><button class="tab" data-t="exp">📝<br>Explanation</button>
+<button class="tab" data-t="key">🔑<br>Key Facts</button><button class="tab on" data-t="sim">🧪<br>Simulation</button></div>
+</div>
+<div id="def" class="card info"><h2>Definition</h2><p>Photosynthesis is the process by which green plants make their own food (glucose) using sunlight, water, and carbon dioxide. Oxygen is released as a by-product.</p><p style="margin-top:12px;font-size:22px;color:#7dffb0">6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂</p></div>
+<div id="exp" class="card info"><h2>Explanation</h2><ul><li>Roots take in water (H₂O) from the soil. Water goes up the stem through the xylem.</li><li>Leaves take in carbon dioxide (CO₂) from the air through tiny holes called stomata.</li><li>Chlorophyll inside the chloroplast captures sunlight energy.</li><li>Light Reactions (in the thylakoids) split water and make energy and oxygen.</li><li>Calvin Cycle (in the stroma) uses CO₂ and energy to make glucose.</li><li>Oxygen goes out into the air. Glucose is the food for the plant.</li></ul></div>
+<div id="key" class="card info"><h2>Key Facts</h2><ul><li>Chlorophyll is the green pigment that absorbs sunlight.</li><li>Chloroplasts are the "kitchens" of the plant cell.</li><li>More light, water, and CO₂ means faster photosynthesis (up to a limit).</li><li>Photosynthesis gives us the oxygen we breathe.</li><li>Cold and cloudy weather slows photosynthesis down.</li></ul></div>
+<div id="simBox">
+<h2>🎮 Interactive Simulation – Flowering Plant</h2>
+<div class="card"><div class="ctrl">
+<div class="pill">Sunlight: ☀️ <select id="sun"><option>Low</option><option selected>Normal</option><option>High</option></select></div>
+<div class="pill">Water: 💧 <input type="range" id="water" min="0" max="100" value="70"> <span id="wv">70%</span></div>
+<div class="pill">CO₂: ☁️ <input type="range" id="co2" min="0" max="100" value="60"> <span id="cv">60%</span></div>
+<button class="btn blue" id="lbBtn" onclick="toggleLabels()">🏷️ Labels ON</button>
+<button class="btn blue" onclick="resetAll()">⟳ Reset</button>
+<button class="btn green" onclick="fs()">⛶ Fullscreen</button>
+</div></div>
+<div class="scene" id="scene"><canvas id="c" width="1140" height="600"></canvas></div>
+<div class="panels" style="margin-top:14px">
+<div class="card"><h3>⚙ VARIABLES</h3><div class="g2">
+<button class="btn yel" onclick="sunToggle()">☀ Sunlight Toggle</button>
+<button class="btn cy" onclick="boost('water')">💧 Water Roots</button>
+<button class="btn mint" onclick="boost('co2')">☁ CO₂ Inflow</button>
+<button class="btn slate" onclick="resetAll()">⟳ Reset Plant</button></div></div>
+<div class="card"><h3>🍃 ENVIRONMENT</h3><div class="g2">
+<button class="btn lav" onclick="env('cold')">☁ Overcast &amp; Cold</button>
+<button class="btn mint" onclick="env('spring')">🌱 Normal Spring Day</button>
+<button class="btn yel" style="grid-column:span 2" onclick="env('green')">✨ Ideal Greenhouse (Max O₂)</button></div></div>
+<div class="card"><h3>🔧 SHOW / OPTIONS</h3><div class="g2">
+<button class="btn pur" style="grid-column:span 2" onclick="toggleEq()">⚗ Chemical Equation &amp; Labels</button>
+<button class="btn pink" style="grid-column:span 2" onclick="fs()">⛶ Full Screen</button></div></div>
+</div>
+<div class="card tip">💡 Watch sunlight reach the leaves, water rise through the xylem, CO₂ enter the stomata, and O₂ + glucose come out.</div>
+</div></div>
+<script>
+const cv=document.getElementById('c'),x=cv.getContext('2d'),W=1140,H=600;
+let S={sun:'Normal',on:true,water:70,co2:60,labels:true,eq:false,sky:'clear'},t=0;
+const $=id=>document.getElementById(id);
+const sunF=()=>!S.on?0:{Low:.4,Normal:.8,High:1.2}[S.sun];
+const rate=()=>Math.max(0,sunF()*Math.min(S.water,S.co2)/100);
+$('sun').onchange=e=>{S.sun=e.target.value;S.on=true};
+$('water').oninput=e=>{S.water=+e.target.value;$('wv').textContent=S.water+'%'};
+$('co2').oninput=e=>{S.co2=+e.target.value;$('cv').textContent=S.co2+'%'};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.tab').forEach(k=>k.classList.remove('on'));b.classList.add('on');
+ ['def','exp','key'].forEach(i=>$(i).style.display=b.dataset.t==i?'block':'none');
+ $('simBox').style.display=b.dataset.t=='sim'?'block':'none';});
+function sync(){$('sun').value=S.sun;$('water').value=S.water;$('co2').value=S.co2;$('wv').textContent=S.water+'%';$('cv').textContent=S.co2+'%'}
+function resetAll(){S={sun:'Normal',on:true,water:70,co2:60,labels:true,eq:false,sky:'clear'};$('lbBtn').textContent='🏷️ Labels ON';sync()}
+function toggleLabels(){S.labels=!S.labels;$('lbBtn').textContent='🏷️ Labels '+(S.labels?'ON':'OFF')}
+function toggleEq(){S.eq=!S.eq}
+function sunToggle(){S.on=!S.on}
+function boost(k){S[k]=Math.min(100,S[k]+20);sync()}
+function env(k){if(k=='cold'){S.sun='Low';S.water=50;S.co2=40;S.sky='cold'}
+ if(k=='spring'){S.sun='Normal';S.water=70;S.co2=60;S.sky='clear'}
+ if(k=='green'){S.sun='High';S.water=100;S.co2=100;S.sky='clear'}S.on=true;sync()}
+function fs(){const e=$('scene');(document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen())}
+
+// particles
+const P={co2:[],h2o:[],o2:[],glu:[],ray:[]};
+function rnd(a,b){return a+Math.random()*(b-a)}
+function spawn(){const r=rate();
+ if(Math.random()<.03+.05*S.co2/100)P.co2.push({x:90,y:rnd(640-60,640-20)*0+rnd(560,600)*0+rnd(630,650)*0+rnd(300,330),p:0});
+ if(Math.random()<.03+.05*S.water/100)P.h2o.push({p:0,k:rnd(-1,1)});
+ if(Math.random()<.15*r)P.o2.push({x:rnd(380,420),y:rnd(260,300),vx:rnd(.6,1.2),vy:-rnd(.8,1.5),a:1});
+ if(Math.random()<.05*r)P.glu.push({x:545,y:430,p:0});
+ if(S.on&&Math.random()<.25*sunF())P.ray.push({x:rnd(120,260),y:rnd(120,170),p:0});}
+function mol(px,py,type,s=1){
+ const a=(c,ox,oy,r)=>{x.beginPath();x.arc(px+ox*s,py+oy*s,r*s,0,7);const g=x.createRadialGradient(px+ox*s-r*.3*s,py+oy*s-r*.3*s,1,px+ox*s,py+oy*s,r*s);g.addColorStop(0,'#fff');g.addColorStop(.3,c[0]);g.addColorStop(1,c[1]);x.fillStyle=g;x.fill()};
+ const R=['#ff6a6a','#b00'],G=['#bbb','#555'],B=['#6cf','#0a3fd0'],Wh=['#fff','#bbb'];
+ if(type=='co2'){a(R,-18,0,9);a(G,0,0,12);a(R,18,0,9)}
+ if(type=='h2o'){a(B,0,0,12);a(B,-14,12,9);a(B,14,12,9)}
+ if(type=='o2'){a(R,-8,0,9);a(R,8,0,9);a(Wh,0,-14,7)}
+ if(type=='glu'){a(['#8f8','#2a2'],0,0,11);a(['#8f8','#2a2'],14,8,9);a(['#8f8','#2a2'],-12,9,9)}}
+function pill(txt,sub,px,py,bg,fg){if(!S.labels)return;x.font='bold 17px Segoe UI';
+ const w=Math.max(x.measureText(txt).width,sub?x.measureText(sub).width*.8:0)+28,h=sub?50:34;
+ x.fillStyle=bg;x.shadowColor='#0008';x.shadowBlur=8;x.beginPath();x.roundRect(px-w/2,py-h/2,w,h,10);x.fill();x.shadowBlur=0;
+ x.fillStyle=fg;x.textAlign='center';x.textBaseline='middle';
+ if(sub){x.fillText(txt,px,py-9);x.font='12px Segoe UI';x.fillText(sub,px,py+12)}else x.fillText(txt,px,py);x.textAlign='left'}
+function leaf(px,py,len,ang,wd){x.save();x.translate(px,py);x.rotate(ang);
+ const g=x.createLinearGradient(0,0,len,0);g.addColorStop(0,'#1f6b1a');g.addColorStop(.5,'#4fbf2f');g.addColorStop(1,'#2d8a22');
+ x.fillStyle=g;x.beginPath();x.moveTo(0,0);x.quadraticCurveTo(len*.5,-wd,len,0);x.quadraticCurveTo(len*.5,wd,0,0);x.fill();
+ x.strokeStyle='#a6f08a';x.lineWidth=2;x.beginPath();x.moveTo(0,0);x.lineTo(len,0);x.stroke();
+ x.lineWidth=1;for(let i=1;i<6;i++){x.beginPath();x.moveTo(len*i/6,0);x.lineTo(len*i/6+16,-wd*.6);x.moveTo(len*i/6,0);x.lineTo(len*i/6+16,wd*.6);x.stroke()}x.restore()}
+function draw(){t+=.016;const r=rate(),cold=S.sky=='cold';
+ // sky
+ let g=x.createLinearGradient(0,0,0,430);
+ if(cold){g.addColorStop(0,'#7c8a99');g.addColorStop(1,'#b8c4cf')}else{g.addColorStop(0,'#2e8de0');g.addColorStop(1,'#bfe6ff')}
+ x.fillStyle=g;x.fillRect(0,0,W,H);
+ // hills
+ x.fillStyle=cold?'#6f8a6a':'#5da34a';x.beginPath();x.moveTo(0,400);for(let i=0;i<=W;i+=40)x.lineTo(i,380+Math.sin(i/90)*18);x.lineTo(W,440);x.lineTo(0,440);x.fill();
+ // clouds
+ x.fillStyle=cold?'#dfe5ea':'#ffffffcc';[[300,90],[700,60],[950,130],[560,200]].forEach(([cx,cy],i)=>{const o=(t*6*(i+1)%1300)-100;const px=(cx+o)%1240-50;
+  [[0,0,34],[30,-10,28],[58,2,30],[28,10,26]].forEach(([a,b,rr])=>{x.beginPath();x.arc(px+a,cy+b,rr*(cold?1.3:1),0,7);x.fill()})});
+ // sun
+ if(S.on){const sf=sunF(),sr=70+10*sf;const gg=x.createRadialGradient(70,60,10,70,60,sr*2.6);gg.addColorStop(0,'#fff8c0');gg.addColorStop(.3,'#ffd84a');gg.addColorStop(1,'#ffd84a00');
+  x.fillStyle=gg;x.fillRect(0,0,350,300);x.fillStyle='#fff3a0';x.beginPath();x.arc(70,60,sr*.7,0,7);x.fill();
+  x.save();x.globalAlpha=.25*sf;x.fillStyle='#fff6a0';x.beginPath();x.moveTo(60,60);x.lineTo(420,330);x.lineTo(260,420);x.fill();x.restore()}
+ // soil
+ g=x.createLinearGradient(0,430,0,H);g.addColorStop(0,'#6b4a2a');g.addColorStop(1,'#2a1a0c');x.fillStyle=g;
+ x.beginPath();x.moveTo(0,440);for(let i=0;i<=W;i+=30)x.lineTo(i,432+Math.sin(i/35)*6);x.lineTo(W,H);x.lineTo(0,H);x.fill();
+ x.fillStyle='#8a6a44';for(let i=0;i<260;i++){x.fillRect((i*97)%W,445+(i*53)%150,3,3)}
+ x.fillStyle='#3d8f2c';for(let i=0;i<W;i+=7){x.fillRect(i,428+Math.sin(i)*3,2,12)}
+ // roots
+ x.strokeStyle='#e8c88a';x.lineCap='round';
+ const roots=[[[400,440,400,500,380,560],4],[[400,470,350,500,300,540],3],[[400,480,450,520,500,550],3],[[390,500,340,540,330,590],2],[[400,500,420,560,410,595],2],[[380,520,430,560,470,590],2],[[400,460,330,480,270,500],2]];
+ roots.forEach(([p,w])=>{x.lineWidth=w;x.beginPath();x.moveTo(400,440);x.bezierCurveTo(p[0],p[1],p[2],p[3],p[4],p[5]);x.stroke()});
+ // water glow in roots
+ if(S.water>0){x.fillStyle='#4cf';for(let i=0;i<S.water/3;i++){const a=(i*47+t*20)%360;x.globalAlpha=.6;x.beginPath();x.arc(300+(i*37)%200,470+(i*29)%110,2.5,0,7);x.fill()}x.globalAlpha=1}
+ // stem
+ x.strokeStyle='#2f8f26';x.lineWidth=9;x.beginPath();x.moveTo(400,440);x.bezierCurveTo(385,380,415,320,400,190);x.stroke();
+ x.strokeStyle='#7fe05a';x.lineWidth=2;x.beginPath();x.moveTo(398,440);x.bezierCurveTo(383,380,413,320,398,190);x.stroke();
+ // leaves
+ leaf(397,380,170,-2.75,40);leaf(404,330,190,-.35,42);leaf(398,285,150,-2.65,34);leaf(405,250,130,-.2,32);leaf(400,360,120,.35,30);
+ // rose
+ const rx=400,ry=165;[[62,'#a50d1c'],[52,'#cf1a2c'],[42,'#e5303f'],[32,'#d41f30'],[22,'#f04a58'],[12,'#b00f20']].forEach(([rr,c],i)=>{
+  for(let k=0;k<6;k++){const a=k*1.05+i*.5;x.fillStyle=c;x.beginPath();x.arc(rx+Math.cos(a)*rr*.35,ry+Math.sin(a)*rr*.3,rr*.55,0,7);x.fill()}});
+ x.strokeStyle='#7a0a15';x.lineWidth=1.5;for(let i=1;i<5;i++){x.beginPath();x.arc(rx,ry,i*11,i,i+3.5);x.stroke()}
+ // chloroplast zoom
+ const cx=830,cy=330,cr=195;
+ x.fillStyle='#2f9a2288';x.beginPath();x.moveTo(520,330);x.lineTo(cx-150,cy-130);x.lineTo(cx-150,cy+130);x.fill();
+ x.strokeStyle='#bff5a0';x.lineWidth=2;x.beginPath();x.arc(520,330,17,0,7);x.stroke();
+ g=x.createRadialGradient(cx,cy,20,cx,cy,cr);g.addColorStop(0,'#2e8a2a');g.addColorStop(1,'#1b6b1a');
+ x.fillStyle=g;x.beginPath();x.arc(cx,cy,cr,0,7);x.fill();x.strokeStyle='#c8f5a0';x.lineWidth=9;x.stroke();
+ x.strokeStyle='#7ed957';x.lineWidth=3;x.beginPath();x.arc(cx,cy,cr-16,0,7);x.stroke();
+ // grana
+ function stack(sx,sy,n,s){for(let i=n;i>=0;i--){const yy=sy-i*14*s,ww=(70-i*2)*s;x.fillStyle='#1c6a1c';x.beginPath();x.ellipse(sx,yy+8,ww,18*s,0,0,7);x.fill();
+   const gg=x.createLinearGradient(sx-ww,yy,sx+ww,yy);gg.addColorStop(0,'#58d63a');gg.addColorStop(.5,'#9bf07a');gg.addColorStop(1,'#3aa82a');x.fillStyle=gg;x.beginPath();x.ellipse(sx,yy,ww,18*s,0,0,7);x.fill()}}
+ stack(785,390,6,1);stack(925,300,5,.9);stack(870,400,4,.7);
+ // light arrows
+ x.fillStyle='#ffd21f';for(let i=0;i<3;i++){const ax=770+i*38,ay=320+Math.sin(t*5+i)*5*sunF();x.globalAlpha=Math.min(1,.3+sunF());x.fillRect(ax-4,ay,8,35);x.beginPath();x.moveTo(ax-12,ay+35);x.lineTo(ax+12,ay+35);x.lineTo(ax,ay+55);x.fill()}x.globalAlpha=1;
+ // calvin cycle
+ x.save();x.translate(950,410);x.strokeStyle='#33b8ff';x.lineWidth=4;x.setLineDash([10,6]);x.lineDashOffset=-t*40*r;x.beginPath();x.arc(0,0,48,0,6.28);x.stroke();x.setLineDash([]);
+ for(let i=0;i<4;i++){const a=t*2*(.3+r)+i*1.57;x.fillStyle='#bff7ae';x.beginPath();x.arc(Math.cos(a)*48,Math.sin(a)*48,9,0,7);x.fill()}x.restore();
+ // particles
+ spawn();
+ P.ray.forEach(p=>{p.p+=.02;const px=p.x+p.p*260,py=p.y+p.p*230;x.strokeStyle='#ffe34a';x.lineWidth=5;x.globalAlpha=1-p.p;x.beginPath();x.moveTo(px,py);x.lineTo(px+22,py+20);x.stroke();x.globalAlpha=1});
+ P.co2.forEach(p=>{p.p+=.004+S.co2/30000;const px=p.x+p.p*300,py=p.y-p.p*50;mol(px,py,'co2',.8);p.px=px});
+ P.h2o.forEach(p=>{p.p+=.004+S.water/30000;let px,py;if(p.p<.4){px=300+p.k*90+(400-300-p.k*90)*(p.p/.4);py=560-p.p/.4*100}else{const q=(p.p-.4)/.6;px=400+Math.sin(q*6)*6;py=460-q*230}mol(px,py,'h2o',.6)});
+ P.o2.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a-=.004;x.globalAlpha=Math.max(0,p.a);mol(p.x,p.y,'o2',.9);x.globalAlpha=1});
+ P.glu.forEach(p=>{p.p+=.006;mol(p.x+Math.sin(p.p*8)*4,p.y-p.p*60,'glu',.8)});
+ for(const k in P)P[k]=P[k].filter(p=>(k=='co2'?p.p<1:k=='h2o'?p.p<1:k=='o2'?(p.a>0):k=='glu'?p.p<1.2:p.p<1));
+ // static molecules + labels
+ mol(110,235,'co2',1.1);mol(165,400,'h2o',1);mol(585,75,'o2',1.2);mol(500,325,'glu',1.1);
+ pill('Sunlight','',175,85,'#ffc81f','#222');
+ pill('CO₂','(Carbon Dioxide)',98,285,'#0c2a4d','#fff');
+ pill('O₂','(Oxygen)',583,125,'#0d7a4a','#fff');
+ pill('Glucose','(Food for plant)',519,368,'#0d7a4a','#fff');
+ pill('H₂O','',165,458,'#162a44','#fff');
+ pill('Inside Leaf (Chloroplast)','',853,95,'#14762a','#fff');
+ pill('Light Reactions','',801,255,'#ffc81f','#222');
+ pill('Calvin Cycle','',930,345,'#1d6fd0','#fff');
+ [['Chloroplast',1075,160,1010,190],['Thylakoid',1080,238,1000,255],['Strome',1085,360,1000,372]].forEach(([n,px,py,lx,ly])=>{
+  if(!S.labels)return;x.strokeStyle='#fff';x.lineWidth=1.5;x.beginPath();x.moveTo(px-45,py);x.lineTo(lx,ly);x.stroke();pill(n,'',px,py,'#0a1a33','#fff')});
+ // equation
+ if(S.eq){x.fillStyle='#000a';x.beginPath();x.roundRect(250,20,640,60,14);x.fill();x.fillStyle='#fff';x.font='bold 26px Segoe UI';x.textAlign='center';x.fillText('6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂',570,58);x.textAlign='left'}
+ requestAnimationFrame(draw)}
+draw();
+</script></body></html>

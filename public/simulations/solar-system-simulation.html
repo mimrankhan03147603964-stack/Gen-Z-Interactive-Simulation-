@@ -1,934 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>3D Solar System & Planetary Orbits</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solar System Simulation</title>
 <style>
-/* Zero-monochrome & 100% desktop color fidelity enforcement */
-*, *::before, *::after {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-}
-html, body, canvas, svg {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-}
-@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
-  html, body, canvas, svg, div {
-    forced-color-adjust: none !important;
-    -ms-high-contrast-adjust: none !important;
-  }
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Segoe UI',system-ui,sans-serif; background:#040712; color:#f8fafc; min-height:100vh; overflow-x:hidden; }
-.container { max-width:1440px; margin:0 auto; padding:18px 20px 30px; }
-
-.header-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #1e3a5f; }
-.title-group h1 { font-size:1.8rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:10px; }
-.title-group p { font-size:0.92rem; color:#94a3b8; margin-top:3px; }
-.top-badges { display:flex; gap:8px; flex-wrap:wrap; }
-.badge { padding:6px 14px; border-radius:30px; font-size:0.82rem; font-weight:700; }
-.badge-cyan { background:#0369a1; color:#f0f9ff; border:1px solid #38bdf8; }
-.badge-amber { background:#92400e; color:#fef3c7; border:1px solid #f59e0b; }
-
-.main-grid { display:grid; grid-template-columns:1fr 360px; gap:20px; }
-@media (max-width: 1024px) { .main-grid { grid-template-columns:1fr; } }
-
-.sim-stage { background:radial-gradient(ellipse at 50% 50%, #0c1830 0%, #02050f 100%); border-radius:20px; border:2px solid #1e3a5f; padding:18px; position:relative; box-shadow:0 12px 36px rgba(0,0,0,0.85); }
-.canvas-wrapper { position:relative; width:100%; border-radius:14px; overflow:hidden; border:1px solid #1e3a5f; background:#010309; }
-canvas { display:block; width:100%; height:auto; }
-
-.planets-bar { display:flex; gap:6px; overflow-x:auto; padding:8px 4px; margin-top:12px; scrollbar-width:thin; }
-.p-btn { padding:7px 12px; border-radius:20px; border:1px solid #1e3a5f; background:#09162a; color:#cbd5e1; font-weight:700; font-size:0.78rem; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
-.p-btn:hover { border-color:#38bdf8; color:#fff; }
-.p-btn.active { background:#0284c7; border-color:#38bdf8; color:#fff; box-shadow:0 0 10px rgba(56,189,248,0.4); }
-
-.controls-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:12px; background:#09162a; padding:12px 18px; border-radius:14px; border:1px solid #1e3a5f; }
-.ctrl-group { display:flex; align-items:center; gap:10px; }
-.ctrl-btn { padding:9px 18px; border-radius:30px; border:none; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
-.btn-primary { background:#0284c7; color:#fff; box-shadow:0 4px 12px rgba(2,132,199,0.35); }
-.btn-primary:hover { background:#0369a1; transform:translateY(-1px); }
-.btn-secondary { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
-.btn-secondary:hover { background:#334155; color:#fff; }
-
-.slider-group { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:600; color:#94a3b8; }
-.slider-group input[type="range"] { accent-color:#38bdf8; width:110px; cursor:pointer; }
-
-.side-panel { display:flex; flex-direction:column; gap:16px; }
-.card { background:#09162a; border-radius:16px; border:1.5px solid #1e3a5f; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
-.card h3 { font-size:1.1rem; font-weight:800; color:#38bdf8; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-
-.metrics-list { display:flex; flex-direction:column; gap:10px; }
-.metric-row { display:flex; justify-content:space-between; align-items:center; background:#050c18; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5f; }
-.metric-row .m-label { font-size:0.82rem; color:#94a3b8; font-weight:600; }
-.metric-row .m-val { font-size:0.95rem; font-weight:800; color:#38bdf8; font-family:monospace; }
-
-.planet-view-box { text-align:center; padding:12px; background:#050c18; border-radius:12px; border:1px solid #1e3a5f; margin-bottom:12px; }
-#planetThumb { margin:0 auto; border-radius:50%; border:2px solid #38bdf8; background:#000; display:block; }
-
-.fullscreen-btn { position:absolute; top:28px; right:28px; background:rgba(15,23,42,0.85); color:#cbd5e1; border:1px solid #334155; border-radius:8px; padding:6px 14px; font-size:0.82rem; font-weight:700; cursor:pointer; z-index:10; transition:all 0.2s; }
-.fullscreen-btn:hover { background:#1e293b; color:#fff; border-color:#38bdf8; }
-
-:fullscreen, :-webkit-full-screen {
-  overflow: hidden !important;
-  background: #070d18 !important;
-}
-:fullscreen .container, :-webkit-full-screen .container {
-  max-width: 100% !important;
-  padding: 16px 24px 40px !important;
-}
-:fullscreen .main-grid, :-webkit-full-screen .main-grid {
-  grid-template-columns: 1fr 380px !important;
-}
-@media (max-width: 1024px) {
-  :fullscreen .main-grid, :-webkit-full-screen .main-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-</style>
-
-<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
-<style id="genz-simulation-fullscreen-styles">
-  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
-  html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen, ::backdrop {
-    background-color: #060e1d !important;
-  }
-
-  html:fullscreen,
-  body:fullscreen,
-  :fullscreen,
-  :-webkit-full-screen,
-  :-moz-full-screen,
-  :-ms-fullscreen,
-  .simulation-wrapper:fullscreen,
-  .is-fullscreen,
-  [data-is-fullscreen="true"] {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    padding: 10px 16px !important;
-    background-color: #060e1d !important;
-    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 999999 !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar,
-  :-webkit-full-screen::-webkit-scrollbar,
-  ::-webkit-scrollbar {
-    display: block !important;
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-track,
-  :-webkit-full-screen::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track {
-    background: rgba(10, 15, 30, 0.7) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-thumb,
-  :-webkit-full-screen::-webkit-scrollbar-thumb,
-  ::-webkit-scrollbar-thumb {
-    background: #0284c7 !important;
-    border-radius: 4px !important;
-  }
-
-  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
-  :fullscreen canvas,
-  :fullscreen svg,
-  :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  .is-fullscreen canvas,
-  .is-fullscreen svg {
-    display: block !important;
-    object-fit: contain !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 70vh !important;
-    min-height: 280px !important;
-    flex-shrink: 0 !important;
-    margin: 4px auto !important;
-  }
-
-  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
-  :fullscreen .ctl,
-  :fullscreen .controls,
-  :fullscreen .sim-controls,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .controls-bar,
-  :fullscreen .fs-bar,
-  :fullscreen .fs-topbar,
-  :fullscreen .fullscreen-overlay-controls,
-  :fullscreen .floating-controls,
-  :fullscreen .preset-chips,
-  :fullscreen .stats-bar,
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :fullscreen header,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .controls,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .controls-bar,
-  :-webkit-full-screen .fs-bar,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen .fullscreen-overlay-controls,
-  :-webkit-full-screen .floating-controls,
-  :-webkit-full-screen .preset-chips,
-  :-webkit-full-screen .stats-bar,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  :-webkit-full-screen header,
-  .is-fullscreen .ctl,
-  .is-fullscreen .controls,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .controls-bar,
-  .is-fullscreen .fs-bar,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen .fullscreen-overlay-controls,
-  .is-fullscreen .floating-controls,
-  .is-fullscreen .preset-chips,
-  .is-fullscreen .stats-bar,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout,
-  .is-fullscreen header {
-    flex-shrink: 0 !important;
-    position: relative !important;
-    z-index: 100 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    box-sizing: border-box !important;
-    margin: 4px auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Bottom docked toolbars */
-  :fullscreen .ctl,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .fs-bar,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .fs-bar,
-  .is-fullscreen .ctl,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .fs-bar {
-    padding: 8px 14px !important;
-    background: rgba(5, 10, 30, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
-  }
-
-  /* Top docked toolbars */
-  :fullscreen .sim-controls,
-  :fullscreen .fs-topbar,
-  :fullscreen header,
-  :fullscreen .stats-bar,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen header,
-  :-webkit-full-screen .stats-bar,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen header,
-  .is-fullscreen .stats-bar {
-    padding: 8px 14px !important;
-    background: rgba(6, 14, 34, 0.92) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  }
-
-  /* Readouts between top toolbar and simulation canvas */
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout {
-    margin: 4px auto !important;
-    padding: 4px 10px !important;
-    font-size: clamp(12px, 1.2vw, 15px) !important;
-  }
-
-  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
-  :fullscreen .btn,
-  :fullscreen button,
-  :-webkit-full-screen .btn,
-  :-webkit-full-screen button,
-  .is-fullscreen .btn,
-  .is-fullscreen button {
-    font-size: clamp(11px, 1.1vw, 15px) !important;
-    padding: 6px 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  :fullscreen .row,
-  :-webkit-full-screen .row,
-  .is-fullscreen .row {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  :fullscreen .ctrl-group,
-  :-webkit-full-screen .ctrl-group,
-  .is-fullscreen .ctrl-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-  }
-
-  :fullscreen input[type="range"],
-  :-webkit-full-screen input[type="range"],
-  .is-fullscreen input[type="range"] {
-    max-width: 140px !important;
-    cursor: pointer !important;
-  }
-
-  :fullscreen select,
-  :-webkit-full-screen select,
-  .is-fullscreen select {
-    cursor: pointer !important;
-    font-size: clamp(11px, 1.1vw, 14px) !important;
-  }
-
-  /* Keep teacher notes and explanations visible and reachable in scrolling view */
-  :fullscreen .teacher-note,
-  :fullscreen .sim-info,
-  :fullscreen .desc,
-  :-webkit-full-screen .teacher-note,
-  :-webkit-full-screen .sim-info,
-  :-webkit-full-screen .desc,
-  .is-fullscreen .teacher-note,
-  .is-fullscreen .sim-info,
-  .is-fullscreen .desc {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-</style>
-</head>
-<body>
-
-<div class="container">
-  <header class="header-bar">
-    <div class="title-group">
-      <h1>☀️ 3D Solar System & Planetary Orbits</h1>
-      <p>Interactive Multi-Planet Simulation: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune & Asteroids</p>
-    </div>
-    <div class="top-badges">
-      <span class="badge badge-cyan">Planetary Astronomy</span>
-      <span class="badge badge-amber">8 Major Planets</span>
-    </div>
-  </header>
-
-  <div class="main-grid">
-    <div class="sim-stage">
-      <button class="fullscreen-btn" id="btnFullscreen">⛶ Fullscreen</button>
-
-      <div class="canvas-wrapper">
-        <canvas id="solarCanvas" width="960" height="540"></canvas>
-      </div>
-
-      <div class="planets-bar">
-        <button class="p-btn active" data-planet="all">🌌 System Overview</button>
-        <button class="p-btn" data-planet="mercury">☿ Mercury</button>
-        <button class="p-btn" data-planet="venus">♀ Venus</button>
-        <button class="p-btn" data-planet="earth">♁ Earth</button>
-        <button class="p-btn" data-planet="mars">♂ Mars</button>
-        <button class="p-btn" data-planet="jupiter">♃ Jupiter</button>
-        <button class="p-btn" data-planet="saturn">♄ Saturn</button>
-        <button class="p-btn" data-planet="uranus">♅ Uranus</button>
-        <button class="p-btn" data-planet="neptune">♆ Neptune</button>
-      </div>
-
-      <div class="controls-bar">
-        <div class="ctrl-group">
-          <button class="ctrl-btn btn-primary" id="btnPlayPause">⏸ Pause</button>
-          <button class="ctrl-btn btn-secondary" id="btnReset">↺ Reset View</button>
-        </div>
-
-        <div class="slider-group">
-          <label>Warp Speed:</label>
-          <input type="range" id="sliderSpeed" min="0.1" max="5" step="0.1" value="1">
-          <span id="valSpeed">1.0x</span>
-        </div>
-
-        <div class="ctrl-group">
-          <label class="slider-group">
-            <input type="checkbox" id="chkLabels" checked> Labels
-          </label>
-          <label class="slider-group">
-            <input type="checkbox" id="chkOrbits" checked> Orbit Lines
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="side-panel">
-      <div class="card">
-        <h3 id="planetCardTitle">🪐 Focus: Earth (Terra)</h3>
-        <div class="planet-view-box">
-          <canvas id="planetThumb" width="130" height="130"></canvas>
-          <p id="planetNick" style="margin-top:8px; font-size:0.85rem; font-weight:700; color:#38bdf8;">The Blue Marble</p>
-        </div>
-
-        <div class="metrics-list">
-          <div class="metric-row">
-            <span class="m-label">Sun Distance:</span>
-            <span class="m-val" id="hudDist">1.00 AU (149.6M km)</span>
-          </div>
-          <div class="metric-row">
-            <span class="m-label">Orbital Period:</span>
-            <span class="m-val" id="hudPeriod">365.25 Days</span>
-          </div>
-          <div class="metric-row">
-            <span class="m-label">Orbital Speed:</span>
-            <span class="m-val" id="hudSpeed">29.78 km/s</span>
-          </div>
-          <div class="metric-row">
-            <span class="m-label">Diameter:</span>
-            <span class="m-val" id="hudDiameter">12,742 km</span>
-          </div>
-          <div class="metric-row">
-            <span class="m-label">Known Moons:</span>
-            <span class="m-val" id="hudMoons">1 (Luna)</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>💡 Planetary Quick Fact</h3>
-        <div id="planetFact" style="font-size:0.86rem; line-height:1.6; color:#cbd5e1;">
-          Earth is the only known planet to harbor life, with liquid oceans covering 71% of the surface and a protective magnetic field shielding us from solar radiation.
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#02030a;font-family:'Segoe UI',Arial,sans-serif;color:#e8f1ff;overflow:hidden}
+#app{height:100vh;width:100%;display:flex;flex-direction:column;background:radial-gradient(circle at 30% 0,#10204a,#04060f 70%)}
+header{flex:none;text-align:center;padding:6px 10px}
+header h1{display:inline-block;font-size:28px;color:#fff;padding:4px 36px;border-radius:40px;background:linear-gradient(180deg,#2b7bff,#123fa6);border:3px solid #a9d0ff;box-shadow:0 5px 0 #0a2a78,0 10px 22px rgba(0,0,0,.55);text-shadow:0 3px 0 #0a2a78}
+header h1 span{color:#ffd23c}header p{font-size:13px;color:#b9d2f5;margin-top:3px}
+#main{flex:1;display:flex;gap:10px;padding:0 10px;min-height:0}
+#stage{flex:1;position:relative;border-radius:18px;overflow:hidden;border:2px solid #2a4373;box-shadow:0 10px 30px rgba(0,0,0,.6);min-width:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+#hud{position:absolute;left:12px;top:10px;font-size:14px;font-weight:700;text-shadow:0 2px 4px #000;pointer-events:none;line-height:1.5}
+#info{width:290px;flex:none;overflow:auto;background:linear-gradient(#14264a,#0c1830);border:2px solid #2a4373;border-radius:18px;padding:14px}
+#info h2{font-size:26px;margin-bottom:2px}#info .ty{font-size:13px;color:#ffd23c;font-weight:700;margin-bottom:10px}
+.r{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #26406e;font-size:13.5px}.r b{color:#8fc6ff;white-space:nowrap}.r span{text-align:right}
+.fact{margin-top:12px;background:#fff7d0;color:#3a2c00;border-radius:12px;padding:10px;font-size:13.5px;font-weight:600;line-height:1.4}
+#bar{flex:none;padding:8px 10px 10px;display:flex;flex-direction:column;gap:7px}
+.row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center}
+.btn{border:none;cursor:pointer;color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:22px;background:linear-gradient(#5a9bff,#1f55c8);box-shadow:0 4px 0 #123a8a;transition:.12s;white-space:nowrap}
+.btn:hover{filter:brightness(1.15)}.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.o{background:linear-gradient(#ff8a3a,#e0430f);box-shadow:0 4px 0 #8c2606}.btn.g{background:linear-gradient(#3fc65f,#1b8a38);box-shadow:0 4px 0 #0f5a22}.btn.p{background:linear-gradient(#9b6bff,#5a2fc9);box-shadow:0 4px 0 #34187f}
+.pb{padding:6px 12px;font-size:13px;background:linear-gradient(#26395f,#162646);box-shadow:0 3px 0 #0b1530;display:flex;align-items:center;gap:6px}.pb.on{outline:3px solid #ffd23c;background:linear-gradient(#35507f,#1f3560)}
+.pb i{width:13px;height:13px;border-radius:50%;display:inline-block;box-shadow:inset -2px -2px 3px rgba(0,0,0,.5)}
+label{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}input[type=range]{width:130px}
+@media(max-width:900px){#info{display:none}}
+</style></head><body>
+<div id="app">
+<header><h1>Solar <span>System</span></h1><p>Our cosmic neighbourhood: click any planet to explore it</p></header>
+<div id="main"><div id="stage"><canvas id="c"></canvas><div id="hud"></div></div><aside id="info"></aside></div>
+<div id="bar">
+ <div class="row">
+  <button class="btn g" id="play">⏸ Pause</button>
+  <label>Speed <input type="range" id="sp" min="0" max="100" value="48"><b id="spv" style="min-width:92px"></b></label>
+  <label>View angle <input type="range" id="tl" min="15" max="100" value="45"></label>
+  <button class="btn" id="zo">➖ Zoom Out</button><button class="btn" id="zi">➕ Zoom In</button>
+  <button class="btn p" id="orb">Orbits: ON</button><button class="btn p" id="lab">Labels: ON</button>
+  <button class="btn o" id="ov">⟲ Reset View</button>
+  <button class="btn o" id="fs">⛶ Full Screen</button>
+ </div>
+ <div class="row" id="pl"></div>
+</div></div>
 <script>
-const canvas = document.getElementById('solarCanvas');
-const ctx = canvas.getContext('2d');
-const tCanvas = document.getElementById('planetThumb');
-const tCtx = tCanvas.getContext('2d');
-
-let isRunning = true;
-let speedMult = 1.0;
-let showLabels = true;
-let showOrbits = true;
-let selectedPlanetKey = 'earth';
-let time = 0;
-
-// Starfield
-const stars = [];
-for (let i = 0; i < 200; i++) {
-  stars.push({ x: Math.random() * 960, y: Math.random() * 540, r: Math.random() * 1.5 + 0.5 });
-}
-
-// Asteroid belt particles (between Mars & Jupiter)
-const asteroids = [];
-for (let i = 0; i < 120; i++) {
-  asteroids.push({
-    angle: Math.random() * Math.PI * 2,
-    dist: 235 + (Math.random() - 0.5) * 22,
-    speed: 0.003 + Math.random() * 0.001,
-    size: Math.random() * 1.5 + 0.6
-  });
-}
-
-const planetsData = {
-  mercury: { name: 'Mercury', nick: 'The Swift Planet', dist: '0.39 AU (57.9M km)', period: '88 Days', speed: '47.36 km/s', diameter: '4,879 km', moons: '0', color: '#94a3b8', r: 5, orbitR: 70, oSpeed: 0.04, fact: 'Smallest planet with cratered surfaces similar to our Moon. Experiences extreme temperatures ranging from -180°C to 430°C.' },
-  venus: { name: 'Venus', nick: 'Earth\'s Twin', dist: '0.72 AU (108.2M km)', period: '225 Days', speed: '35.02 km/s', diameter: '12,104 km', moons: '0', color: '#f59e0b', r: 8, orbitR: 110, oSpeed: 0.025, fact: 'Hottest planet in the solar system (465°C) due to a runaway greenhouse effect from dense CO₂ atmosphere and sulfuric acid clouds.' },
-  earth: { name: 'Earth', nick: 'The Blue Marble', dist: '1.00 AU (149.6M km)', period: '365.25 Days', speed: '29.78 km/s', diameter: '12,742 km', moons: '1 (Luna)', color: '#38bdf8', r: 9, orbitR: 155, oSpeed: 0.018, fact: 'The only known world harboring life, with abundant liquid water, plate tectonics, and a protective magnetosphere.' },
-  mars: { name: 'Mars', nick: 'The Red Planet', dist: '1.52 AU (227.9M km)', period: '687 Days', speed: '24.07 km/s', diameter: '6,779 km', moons: '2 (Phobos, Deimos)', color: '#ef4444', r: 6.5, orbitR: 200, oSpeed: 0.012, fact: 'Home to Olympus Mons (largest volcano in solar system at 21.9 km height) and ancient river channels indicating past liquid water.' },
-  jupiter: { name: 'Jupiter', nick: 'King of Planets', dist: '5.20 AU (778.5M km)', period: '11.86 Years', speed: '13.07 km/s', diameter: '139,820 km', moons: '95 (Io, Europa, Ganymede)', color: '#d97706', r: 18, orbitR: 280, oSpeed: 0.007, fact: 'Massive gas giant containing more mass than all other planets combined. The Great Red Spot is a persistent anticyclonic storm larger than Earth.' },
-  saturn: { name: 'Saturn', nick: 'The Ringed Giant', dist: '9.58 AU (1.43B km)', period: '29.45 Years', speed: '9.69 km/s', diameter: '116,460 km', moons: '146 (Titan, Enceladus)', color: '#facc15', r: 15, orbitR: 350, oSpeed: 0.0045, hasRings: true, fact: 'Famous for its spectacular ice particle ring system extending up to 282,000 km wide yet only tens of meters thick.' },
-  uranus: { name: 'Uranus', nick: 'The Ice Giant', dist: '19.2 AU (2.87B km)', period: '84.0 Years', speed: '6.81 km/s', diameter: '50,724 km', moons: '28 (Titania, Oberon)', color: '#22d3ee', r: 12, orbitR: 410, oSpeed: 0.0028, fact: 'Rotates on its side with an axial tilt of 97.8 degrees, causing 42 years of continuous sunlight followed by 42 years of dark winter.' },
-  neptune: { name: 'Neptune', nick: 'The Wind King', dist: '30.1 AU (4.50B km)', period: '164.8 Years', speed: '5.43 km/s', diameter: '49,244 km', moons: '16 (Triton)', color: '#3b82f6', r: 11.5, orbitR: 460, oSpeed: 0.0018, fact: 'Most distant major planet with supersonic methane wind gusts exceeding 2,100 km/h and dark storms like the Great Dark Spot.' }
-};
-
-function selectPlanet(key) {
-  selectedPlanetKey = key;
-  const p = planetsData[key] || planetsData.earth;
-
-  document.getElementById('planetCardTitle').textContent = `🪐 Focus: ${p.name}`;
-  document.getElementById('planetNick').textContent = p.nick;
-  document.getElementById('hudDist').textContent = p.dist;
-  document.getElementById('hudPeriod').textContent = p.period;
-  document.getElementById('hudSpeed').textContent = p.speed;
-  document.getElementById('hudDiameter').textContent = p.diameter;
-  document.getElementById('hudMoons').textContent = p.moons;
-  document.getElementById('planetFact').textContent = p.fact;
-
-  drawPlanetThumb(p);
-}
-
-function drawPlanetThumb(p) {
-  tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
-  const cx = 65;
-  const cy = 65;
-
-  tCtx.fillStyle = '#020617';
-  tCtx.fillRect(0, 0, 130, 130);
-
-  // Draw Planet Body
-  tCtx.fillStyle = p.color;
-  tCtx.beginPath();
-  tCtx.arc(cx, cy, 38, 0, Math.PI * 2);
-  tCtx.fill();
-
-  // Rings if Saturn
-  if (p.hasRings) {
-    tCtx.strokeStyle = 'rgba(254, 240, 138, 0.6)';
-    tCtx.lineWidth = 6;
-    tCtx.beginPath();
-    tCtx.ellipse(cx, cy, 58, 14, 0.3, 0, Math.PI * 2);
-    tCtx.stroke();
-  }
-
-  // Shadow terminator
-  tCtx.fillStyle = 'rgba(2, 6, 23, 0.65)';
-  tCtx.beginPath();
-  tCtx.arc(cx, cy, 38, -Math.PI / 2, Math.PI / 2, true);
-  tCtx.fill();
-}
-
-function drawScene() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-
-  // Starfield
-  ctx.fillStyle = '#ffffff';
-  for (let s of stars) {
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Draw Orbit Tracks
-  if (showOrbits) {
-    ctx.strokeStyle = '#1e3a5f';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 3]);
-    for (let key in planetsData) {
-      const p = planetsData[key];
-      ctx.beginPath();
-      ctx.arc(cx, cy, p.orbitR, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-    ctx.setLineDash([]);
-  }
-
-  // Draw Asteroid Belt
-  ctx.fillStyle = '#64748b';
-  for (let a of asteroids) {
-    const ax = cx + a.dist * Math.cos(a.angle + time * a.speed);
-    const ay = cy + a.dist * Math.sin(a.angle + time * a.speed);
-    ctx.beginPath();
-    ctx.arc(ax, ay, a.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Draw Sun at Center
-  const sunR = 24;
-  const sunGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, sunR * 2.2);
-  sunGrad.addColorStop(0, '#fff');
-  sunGrad.addColorStop(0.3, '#fde047');
-  sunGrad.addColorStop(0.8, '#ea580c');
-  sunGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = sunGrad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, sunR * 2.2, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = '#f59e0b';
-  ctx.beginPath();
-  ctx.arc(cx, cy, sunR, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Draw Planets
-  for (let key in planetsData) {
-    const p = planetsData[key];
-    const angle = time * p.oSpeed * speedMult;
-    const px = cx + p.orbitR * Math.cos(angle);
-    const py = cy + p.orbitR * Math.sin(angle);
-
-    // Planet Body
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(px, py, p.r, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Rings for Saturn
-    if (p.hasRings) {
-      ctx.strokeStyle = 'rgba(253, 224, 71, 0.7)';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.ellipse(px, py, p.r * 2.2, p.r * 0.7, 0.4, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    // Selected indicator ring
-    if (selectedPlanetKey === key) {
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(px, py, p.r + 5, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    // Label
-    if (showLabels) {
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '10px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(p.name, px, py + p.r + 13);
-    }
-  }
-}
-
-function loop() {
-  if (isRunning) {
-    time += 0.5;
-  }
-  drawScene();
-  requestAnimationFrame(loop);
-}
-
-// Button Events
-document.querySelectorAll('.p-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const target = btn.getAttribute('data-planet');
-    if (target !== 'all') {
-      selectPlanet(target);
-    }
-  });
-});
-
-document.getElementById('btnPlayPause').addEventListener('click', (e) => {
-  isRunning = !isRunning;
-  e.target.textContent = isRunning ? '⏸ Pause' : '▶ Play';
-});
-
-document.getElementById('btnReset').addEventListener('click', () => {
-  time = 0;
-  speedMult = 1.0;
-  document.getElementById('sliderSpeed').value = 1;
-  document.getElementById('valSpeed').textContent = '1.0x';
-  selectPlanet('earth');
-});
-
-document.getElementById('sliderSpeed').addEventListener('input', (e) => {
-  speedMult = parseFloat(e.target.value);
-  document.getElementById('valSpeed').textContent = `${speedMult.toFixed(1)}x`;
-});
-
-document.getElementById('chkLabels').addEventListener('change', (e) => {
-  showLabels = e.target.checked;
-});
-
-document.getElementById('chkOrbits').addEventListener('change', (e) => {
-  showOrbits = e.target.checked;
-});
-
-// Fullscreen
-document.getElementById('btnFullscreen').addEventListener('click', () => {
-  if (!document.fullscreenElement) {
-    (document.documentElement || document.body).requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-});
-
-document.addEventListener('fullscreenchange', () => {
-  const isFs = !!document.fullscreenElement;
-  document.getElementById('btnFullscreen').textContent = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
-});
-
-selectPlanet('earth');
-loop();
-</script>
-
-
-
-
-<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
-<script id="genz-simulation-fullscreen-engine">
-(function() {
-  'use strict';
-
-  function findSimulationRootContainer(triggerEl) {
-    if (triggerEl) {
-      if (typeof triggerEl === "string") {
-        var cleanId = triggerEl.replace(/^fs-?/, "");
-        var byId = document.getElementById(cleanId) ||
-                   document.getElementById(triggerEl) ||
-                   document.getElementById(cleanId + "SimBox") ||
-                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
-                   document.getElementById("box" + cleanId) ||
-                   document.getElementById("simBox" + cleanId) ||
-                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-        if (byId) return byId;
-      }
-      if (triggerEl.nodeType === 1) {
-        if (triggerEl.dataset && triggerEl.dataset.fs) {
-          var targetByFs = document.getElementById(triggerEl.dataset.fs);
-          if (targetByFs) return targetByFs;
-        }
-        if (triggerEl.dataset && triggerEl.dataset.target) {
-          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
-          if (targetByData) return targetByData;
-        }
-        var found = triggerEl.closest(
-          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
-        );
-        if (found && found !== document.body && found !== document.documentElement) {
-          return found;
-        }
-      }
-    }
-    var candidate = document.querySelector(".sim-box") ||
-                    document.querySelector(".sim-stage") ||
-                    document.getElementById("simContainer") ||
-                    document.getElementById("sim") ||
-                    document.querySelector(".main-stage") ||
-                    document.querySelector(".stage") ||
-                    document.querySelector(".lab") ||
-                    document.querySelector(".card-board") ||
-                    document.querySelector(".simulation") ||
-                    document.querySelector(".sim") ||
-                    document.querySelector(".simulation-wrapper") ||
-                    document.body;
-    return candidate;
-  }
-
-  function toggleSimulationFullscreen(triggerEl) {
-    try {
-      if (!document.fullscreenElement) {
-        var container = findSimulationRootContainer(triggerEl);
-        if (!container) container = document.body;
-
-        container.classList.add("simulation-wrapper");
-        container.classList.add("is-fullscreen");
-        container.setAttribute("data-is-fullscreen", "true");
-        document.documentElement.classList.add("in-fullscreen-mode");
-        document.body.classList.add("in-fullscreen-mode");
-
-        if (container.requestFullscreen) {
-          container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed on container:", err);
-            if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-            } else if (document.body && document.body.requestFullscreen) {
-              document.body.requestFullscreen().catch(function(e) { console.error(e); });
-            }
-          });
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function(err) {
-            console.error("Exit fullscreen error:", err);
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Fullscreen toggle error:", err);
-    }
-  }
-
-  window.toggleFullscreen = function(target) {
-    toggleSimulationFullscreen(target || this);
-  };
-  window.toggleSimFullscreen = function(boxId) {
-    var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el || boxId);
-  };
-  window.toggleFs = function() {
-    toggleSimulationFullscreen(this);
-  };
-  window.openFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) {
-        ov.classList.remove("active");
-        ov.style.display = "none";
-      }
-      var clean = id.replace(/^fs-?/, "");
-      var target = document.getElementById(clean) ||
-                   document.getElementById(clean + "SimBox") ||
-                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
-                   document.getElementById("box" + clean) ||
-                   document.getElementById("simBox" + clean) ||
-                   document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
-                   document.getElementById(id);
-      toggleSimulationFullscreen(target || clean);
-      return;
-    }
-    toggleSimulationFullscreen(this);
-  };
-  window.launchFullscreen = function(topicId) {
-    window.openFullscreen(topicId);
-  };
-  window.closeFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) ov.classList.remove("active");
-    }
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-  window.exitSimFullscreen = function() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-
-  function resizeAndRedrawSimulationCanvases() {
-    window.dispatchEvent(new Event("resize"));
-
-    document.querySelectorAll("canvas").forEach(function(cv) {
-      try {
-        var rect = cv.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          if (cv.width === 0 || cv.height === 0) {
-            cv.width = rect.width;
-            cv.height = rect.height;
-          }
-        }
-      } catch(e) {}
-    });
-
-    var redrawFns = [
-      "resize", "onResize", "onWindowResize", "resizeCanvas",
-      "draw", "render", "animate", "redraw", "update", "drawCanvas",
-      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
-      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
-    ];
-    redrawFns.forEach(function(fn) {
-      if (typeof window[fn] === "function") {
-        try { window[fn](); } catch(e) {}
-      }
-    });
-
-    if (window.camera && window.renderer) {
-      try {
-        var rw = window.innerWidth;
-        var rh = window.innerHeight;
-        window.camera.aspect = rw / rh;
-        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
-        window.renderer.setSize(rw, rh);
-      } catch(e) {}
-    }
-  }
-
-  document.addEventListener("fullscreenchange", function() {
-    var isFs = !!document.fullscreenElement;
-    if (isFs) {
-      document.documentElement.classList.add("in-fullscreen-mode");
-      document.body.classList.add("in-fullscreen-mode");
-      if (document.fullscreenElement) {
-        document.fullscreenElement.classList.add("is-fullscreen");
-        document.fullscreenElement.classList.add("simulation-wrapper");
-        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
-      }
-    } else {
-      document.documentElement.classList.remove("in-fullscreen-mode");
-      document.body.classList.remove("in-fullscreen-mode");
-      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
-        el.classList.remove("is-fullscreen");
-        el.removeAttribute("data-is-fullscreen");
-      });
-    }
-
-    var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
-    );
-    fsButtons.forEach(function(btn) {
-      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
-        return;
-      }
-      if (isFs) {
-        btn.innerHTML = "✕ Exit Fullscreen";
-        btn.classList.add("is-fullscreen-active");
-      } else {
-        btn.innerHTML = "⛶ Fullscreen";
-        btn.classList.remove("is-fullscreen-active");
-      }
-    });
-
-    resizeAndRedrawSimulationCanvases();
-    setTimeout(resizeAndRedrawSimulationCanvases, 50);
-    setTimeout(resizeAndRedrawSimulationCanvases, 150);
-    setTimeout(resizeAndRedrawSimulationCanvases, 300);
-  });
-
-  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
-
-  document.addEventListener("click", function(e) {
-    var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
-    );
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleSimulationFullscreen(btn);
-    }
-  }, true);
-})();
-</script>
-
-</body>
-</html>
+const $=s=>document.querySelector(s),cv=$("#c"),x=cv.getContext("2d");
+let W=800,H=500,dpr=1,stars,tw=[];
+/* ---------- seeded random + texture helpers ---------- */
+let seed=1;function R(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}
+function mk(fn){const c=document.createElement("canvas");c.width=512;c.height=256;fn(c.getContext("2d"));return c}
+function soft(c,X,Y,r,rgb,a,sy=1){[-512,0,512].forEach(o=>{c.save();c.translate(X+o,Y);c.scale(1,sy);const g=c.createRadialGradient(0,0,0,0,0,r);g.addColorStop(0,`rgba(${rgb},${a})`);g.addColorStop(1,`rgba(${rgb},0)`);c.fillStyle=g;c.fillRect(-r,-r,2*r,2*r);c.restore()})}
+function blob(c,X,Y,r,col,a){c.globalAlpha=a;c.fillStyle=col;[-512,0,512].forEach(o=>{c.beginPath();c.arc(X+o,Y,r,0,7);c.fill()});c.globalAlpha=1}
+function fillG(c,a,b){const g=c.createLinearGradient(0,0,0,256);g.addColorStop(0,a);g.addColorStop(1,b);c.fillStyle=g;c.fillRect(0,0,512,256)}
+function bands(c,cols,wave,minH,maxH){let y=-10;while(y<256){const h=minH+R()*(maxH-minH);c.fillStyle=cols[R()*cols.length|0];c.beginPath();c.moveTo(0,y);for(let X=0;X<=512;X+=16)c.lineTo(X,y+Math.sin(X/38+y)*wave);for(let X=512;X>=0;X-=16)c.lineTo(X,y+h+Math.sin(X/38+y+h)*wave);c.fill();y+=h}}
+const TX={
+mercury:()=>mk(c=>{seed=3;fillG(c,"#8d8782","#6f6a66");for(let i=0;i<70;i++)soft(c,R()*512,R()*256,10+R()*30,"60,56,52",.3);for(let i=0;i<110;i++){const X=R()*512,Y=R()*256,r=2+R()*9;blob(c,X,Y,r,"#4d4944",.5);blob(c,X-r*.2,Y-r*.2,r*.8,"#9c968f",.6)}}),
+venus:()=>mk(c=>{seed=5;fillG(c,"#e8c882","#d3a65a");bands(c,["#e9cf8e","#d9b36a","#f0dba0","#cf9f55"],10,10,28);for(let i=0;i<90;i++)soft(c,R()*512,R()*256,14+R()*28,R()<.5?"255,240,190":"170,120,50",.25,.45)}),
+earth:()=>mk(c=>{seed=11;fillG(c,"#0a3b8e","#1e6fd6");for(let i=0;i<40;i++)soft(c,R()*512,R()*256,20+R()*30,"40,150,230",.25);
+for(let k=0;k<15;k++){const cx=R()*512,cy=50+R()*156,col=R()<.7?"#2f7f3c":"#9b8a50";for(let i=0;i<26;i++)blob(c,cx+(R()-.5)*95,cy+(R()-.5)*55,6+R()*17,col,.96);for(let i=0;i<10;i++)blob(c,cx+(R()-.5)*70,cy+(R()-.5)*40,5+R()*10,"#58a04a",.55)}
+let g=c.createLinearGradient(0,0,0,26);g.addColorStop(0,"#fff");g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.fillRect(0,0,512,26);g=c.createLinearGradient(0,256,0,230);g.addColorStop(0,"#fff");g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.fillRect(0,230,512,26);
+for(let i=0;i<90;i++)soft(c,R()*512,R()*256,10+R()*30,"255,255,255",.32,.5)}),
+mars:()=>mk(c=>{seed=13;fillG(c,"#b8552b","#9c4322");for(let i=0;i<60;i++)soft(c,R()*512,R()*256,14+R()*34,R()<.5?"110,50,28":"226,150,100",.4);for(let i=0;i<40;i++)blob(c,R()*512,60+R()*140,3+R()*9,"#5e2e1a",.4);
+let g=c.createLinearGradient(0,0,0,16);g.addColorStop(0,"#fff");g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.fillRect(0,0,512,16);g=c.createLinearGradient(0,256,0,238);g.addColorStop(0,"#fff");g.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=g;c.fillRect(0,238,512,18)}),
+jupiter:()=>mk(c=>{seed=17;fillG(c,"#c9a27a","#b98a5e");bands(c,["#c9a27a","#efdcbc","#b07548","#f3e6cc","#9c5f3a","#d8b78a","#e4c9a0"],6,10,26);for(let i=0;i<200;i++)soft(c,R()*512,R()*256,6+R()*14,R()<.5?"255,240,215":"120,70,40",.18,.4);
+c.save();c.translate(190,168);c.scale(1,.55);let g=c.createRadialGradient(0,0,0,0,0,38);g.addColorStop(0,"#9c2f1a");g.addColorStop(.7,"#c4603a");g.addColorStop(1,"rgba(235,200,160,0)");c.fillStyle=g;c.beginPath();c.arc(0,0,38,0,7);c.fill();c.restore()}),
+saturn:()=>mk(c=>{seed=19;fillG(c,"#e3cc98","#cfb27a");bands(c,["#e6d2a3","#d2b985","#f1e2bb","#c9ab72","#ddc592"],4,10,24);for(let i=0;i<110;i++)soft(c,R()*512,R()*256,8+R()*16,R()<.5?"255,245,215":"150,115,60",.14,.4)}),
+uranus:()=>mk(c=>{seed=23;fillG(c,"#9fe9ee","#6fc6d2");bands(c,["#97e3ea","#82d6e0","#a8eef2"],2,20,40);for(let i=0;i<40;i++)soft(c,R()*512,R()*256,20+R()*30,"255,255,255",.12,.4)}),
+neptune:()=>mk(c=>{seed=29;fillG(c,"#2f5be0","#1b3fb0");bands(c,["#2c58dc","#3a68ea","#2449c2","#4474f0"],6,14,30);for(let i=0;i<60;i++)soft(c,R()*512,R()*256,8+R()*18,R()<.5?"200,225,255":"10,20,90",.2,.4);soft(c,170,120,24,"10,20,90",.65,.55);soft(c,300,70,12,"255,255,255",.5,.3)}),
+sun:()=>mk(c=>{seed=31;fillG(c,"#ff9a10","#f57a00");for(let i=0;i<600;i++)soft(c,R()*512,R()*256,4+R()*12,R()<.5?"255,205,60":"230,80,0",.35);for(let i=0;i<14;i++)soft(c,R()*512,40+R()*176,5+R()*9,"110,30,0",.55)})};
+/* ---------- data ---------- */
+const PL=[
+{id:"mercury",n:"Mercury",a:62,s:3.8,per:.2408,rot:1407.6,col:"#9a948d",ph:.5,info:["Rocky planet","4,879 km","57.9 million km","88 Earth days","59 Earth days","0","167 °C (average)","The smallest planet and the closest to the Sun."]},
+{id:"venus",n:"Venus",a:92,s:6.8,per:.6152,rot:-5832,col:"#e0bb70",ph:2.1,atm:"255,220,150",info:["Rocky planet","12,104 km","108.2 million km","225 Earth days","243 Earth days (backwards)","0","464 °C (average)","The hottest planet. Its thick clouds trap heat."]},
+{id:"earth",n:"Earth",a:128,s:7.2,per:1,rot:24,col:"#2a6fd0",ph:4.2,atm:"90,160,255",moons:[{n:"Moon",a:14,s:2,p:27.3,col:"#bdbdb5",ph:1}],info:["Rocky planet","12,742 km","149.6 million km","365.25 days","24 hours","1","15 °C (average)","The only known planet with life. Water covers about 71% of it."]},
+{id:"mars",n:"Mars",a:165,s:4.8,per:1.881,rot:24.6,col:"#c05a2e",ph:5.6,atm:"255,170,120",info:["Rocky planet","6,779 km","227.9 million km","687 Earth days","24.6 hours","2","-65 °C (average)","Home of Olympus Mons, the tallest volcano known in the Solar System."]},
+{id:"jupiter",n:"Jupiter",a:290,s:17,per:11.86,rot:9.9,col:"#c9a27a",ph:1.2,moons:[{n:"Io",a:27,s:1.9,p:1.77,col:"#e8d47c",ph:0},{n:"Europa",a:34,s:1.6,p:3.55,col:"#ddd5c2",ph:2},{n:"Ganymede",a:42,s:2.5,p:7.15,col:"#8f8a82",ph:4},{n:"Callisto",a:52,s:2.3,p:16.7,col:"#5f564c",ph:5.5}],info:["Gas giant","139,820 km","778.5 million km","11.9 Earth years","9.9 hours","95+","-110 °C (cloud tops)","The largest planet. Its Great Red Spot is a storm bigger than Earth."]},
+{id:"saturn",n:"Saturn",a:370,s:14.5,per:29.46,rot:10.7,col:"#e0c890",ph:3.3,ring:1,moons:[{n:"Titan",a:40,s:2.3,p:15.9,col:"#dba04a",ph:1}],info:["Gas giant","116,460 km","1,434 million km","29.5 Earth years","10.7 hours","140+","-140 °C (cloud tops)","Famous for its rings. It is less dense than water."]},
+{id:"uranus",n:"Uranus",a:440,s:10,per:84.01,rot:-17.2,col:"#8fe0e8",ph:.2,atm:"130,220,235",info:["Ice giant","50,724 km","2,871 million km","84 Earth years","17.2 hours (backwards)","28","-195 °C (average)","It spins on its side like a rolling ball."]},
+{id:"neptune",n:"Neptune",a:500,s:9.6,per:164.8,rot:16.1,col:"#2f5be0",ph:5,atm:"110,160,255",info:["Ice giant","49,244 km","4,495 million km","164.8 Earth years","16.1 hours","16","-200 °C (average)","The windiest planet, with storms over 2,000 km/h."]}];
+const L=["Type","Diameter","Distance from Sun","Year (orbit)","Day (spin)","Moons","Temperature"];
+const SUN={id:"sun",n:"Sun",s:34,col:"#ffb020",info:["Star (yellow dwarf)","1,392,000 km","0 (centre)","—","About 25 Earth days","—","5,500 °C (surface)","Holds 99.86% of the mass of the Solar System. About 4.6 billion years old."]};
+PL.forEach(p=>p.tex=TX[p.id]());SUN.tex=TX.sun();
+const belt=[];seed=77;for(let i=0;i<520;i++)belt.push({a:200+R()*40,an:R()*6.283,s:.5+R()*.8,g:90+R()*80|0});
+/* ---------- state ---------- */
+let playing=true,days=0,moonT=0,tilt=.45,showO=true,showL=true,sel=null,cam={x:0,y:0,z:1},um=1,last=performance.now(),spd=40,t0=0;
+function ov(){return Math.min(W/2/560,H/2/(560*Math.max(.3,tilt)),H/2/300+.2)}
+function targetZ(){return sel?(sel.id=="sun"?3:70/sel.s)*um:ov()*um}
+/* ---------- UI ---------- */
+function setSpeed(){spd=Math.pow(10,$("#sp").value/100*3.3);$("#spv").textContent=spd>=365?(spd/365.25).toFixed(1)+" years/sec":Math.round(spd)+" days/sec"}
+$("#sp").oninput=setSpeed;setSpeed();$("#tl").oninput=e=>tilt=e.target.value/100;
+$("#play").onclick=()=>{playing=!playing;$("#play").textContent=playing?"⏸ Pause":"▶ Play"};
+$("#zi").onclick=()=>um=Math.min(40,um*1.35);$("#zo").onclick=()=>um=Math.max(.2,um/1.35);
+$("#orb").onclick=function(){showO=!showO;this.textContent="Orbits: "+(showO?"ON":"OFF")};
+$("#lab").onclick=function(){showL=!showL;this.textContent="Labels: "+(showL?"ON":"OFF")};
+$("#ov").onclick=()=>choose(null);
+cv.addEventListener("wheel",e=>{e.preventDefault();um=Math.max(.2,Math.min(40,um*(e.deltaY<0?1.15:1/1.15)))},{passive:false});
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement}
+$("#fs").onclick=()=>{const a=$("#app");if(!fsEl())(a.requestFullscreen||a.webkitRequestFullscreen).call(a);else(document.exitFullscreen||document.webkitExitFullscreen).call(document)};
+function fsUpd(){$("#fs").textContent=fsEl()?"⛶ Exit Full Screen":"⛶ Full Screen";setTimeout(resize,60)}
+document.addEventListener("fullscreenchange",fsUpd);document.addEventListener("webkitfullscreenchange",fsUpd);
+document.addEventListener("keydown",e=>{if(e.code=="Space"){e.preventDefault();$("#play").click()}if(e.key=="f"||e.key=="F")$("#fs").click()});
+const all=[SUN,...PL];
+$("#pl").innerHTML=`<button class="btn pb on" data-i="-1"><i style="background:radial-gradient(#fff,#888)"></i>Overview</button>`+all.map((b,i)=>`<button class="btn pb" data-i="${i}"><i style="background:${b.col}"></i>${b.n}</button>`).join("");
+$("#pl").onclick=e=>{const b=e.target.closest("[data-i]");if(b){const i=+b.dataset.i;choose(i<0?null:all[i])}};
+function choose(b){sel=b;um=1;document.querySelectorAll(".pb").forEach(e=>e.classList.toggle("on",(+e.dataset.i<0&&!b)||(b&&all[+e.dataset.i]===b)));panel()}
+function panel(){const b=sel;if(!b){$("#info").innerHTML=`<h2>Solar System</h2><div class="ty">1 star • 8 planets • asteroid belt</div><div class="r"><b>Age</b><span>4.6 billion years</span></div><div class="r"><b>Star</b><span>The Sun</span></div><div class="r"><b>Rocky planets</b><span>Mercury, Venus, Earth, Mars</span></div><div class="r"><b>Gas giants</b><span>Jupiter, Saturn</span></div><div class="r"><b>Ice giants</b><span>Uranus, Neptune</span></div><div class="fact">Not to scale: planets are drawn larger and closer together so you can see them. Click a planet to zoom in.</div>`;return}
+const i=b.info;$("#info").innerHTML=`<h2>${b.n}</h2><div class="ty">${i[0]}</div>`+L.slice(1).map((l,k)=>`<div class="r"><b>${l}</b><span>${i[k+1]}</span></div>`).join("")+`<div class="fact">⭐ ${i[7]}</div>`}
+panel();
+/* ---------- canvas ---------- */
+function resize(){const r=$("#stage").getBoundingClientRect();W=Math.max(300,r.width);H=Math.max(200,r.height);dpr=Math.min(2,devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);mkStars()}
+new ResizeObserver(resize).observe($("#stage"));
+function mkStars(){stars=document.createElement("canvas");stars.width=W;stars.height=H;const c=stars.getContext("2d");seed=5;let g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,"#03040c");g.addColorStop(1,"#070a1c");c.fillStyle=g;c.fillRect(0,0,W,H);
+[[.2,.3,"90,60,170"],[.75,.7,"40,90,190"],[.5,.15,"150,50,120"],[.9,.2,"50,120,160"]].forEach(n=>{const r=Math.max(W,H)*.35;g=c.createRadialGradient(n[0]*W,n[1]*H,0,n[0]*W,n[1]*H,r);g.addColorStop(0,`rgba(${n[2]},.16)`);g.addColorStop(1,"rgba(0,0,0,0)");c.fillStyle=g;c.fillRect(0,0,W,H)});
+for(let i=0;i<W*H/1400;i++){const r=R()<.04?1.6:R()*1+.3,t=R();c.fillStyle=t<.15?"#ffd9b0":t<.3?"#b8d0ff":"#fff";c.globalAlpha=.3+R()*.7;c.beginPath();c.arc(R()*W,R()*H,r,0,7);c.fill()}c.globalAlpha=1;tw=[];for(let i=0;i<70;i++)tw.push({x:R()*W,y:R()*H,p:R()*6})}
+const proj=(wx,wy)=>[W/2+(wx-cam.x)*cam.z,H/2+(wy-cam.y)*cam.z*tilt];
+function sphere(b,sx,sy,r,ux,uy,flat){x.save();x.beginPath();x.arc(sx,sy,r,0,7);x.clip();
+if(b.tex){const T=b.tex,off=((b.spin||0)%512+512)%512,sw=256;if(off+sw<=512)x.drawImage(T,off,0,sw,256,sx-r,sy-r,2*r,2*r);else{const a=512-off,w=2*r*a/sw;x.drawImage(T,off,0,a,256,sx-r,sy-r,w,2*r);x.drawImage(T,0,0,sw-a,256,sx-r+w,sy-r,2*r-w,2*r)}}else{x.fillStyle=b.col;x.fillRect(sx-r,sy-r,2*r,2*r)}
+const g=x.createRadialGradient(sx+ux*r*.5,sy+uy*r*.5,r*.12,sx+ux*r*.15,sy+uy*r*.15,r*1.3);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(.5,"rgba(0,0,10,.3)");g.addColorStop(1,"rgba(0,0,10,.93)");x.fillStyle=g;x.fillRect(sx-r,sy-r,2*r,2*r);x.restore();
+if(b.atm&&r>3){x.globalCompositeOperation="lighter";const a=x.createRadialGradient(sx,sy,r*.9,sx,sy,r*1.22);a.addColorStop(0,`rgba(${b.atm},.35)`);a.addColorStop(1,`rgba(${b.atm},0)`);x.fillStyle=a;x.beginPath();x.arc(sx,sy,r*1.22,0,7);x.fill();x.globalCompositeOperation="source-over"}}
+function ring(b,sx,sy,r,back){const rx0=r*1.3,rx1=r*2.3,ty=tilt*.92+.06,n=28;x.save();for(let k=0;k<n;k++){const rx=rx0+(rx1-rx0)*k/n;const gap=k>17&&k<20,al=gap?.06:(.35+.4*Math.sin(k/n*3.1));x.strokeStyle=`rgba(${k%5<2?"225,205,160":"190,165,120"},${al})`;x.lineWidth=(rx1-rx0)/n+.8;x.beginPath();x.ellipse(sx,sy,rx,rx*ty,-.12,back?Math.PI:0,back?2*Math.PI:Math.PI);x.stroke()}x.restore()}
+function sunDraw(sx,sy,r,t){x.globalCompositeOperation="lighter";[[6,.18],[3,.3],[1.8,.4]].forEach(q=>{const g=x.createRadialGradient(sx,sy,r*.6,sx,sy,r*q[0]);g.addColorStop(0,`rgba(255,${q[0]>3?140:170},30,${q[1]*(.9+.1*Math.sin(t*2))})`);g.addColorStop(1,"rgba(255,100,0,0)");x.fillStyle=g;x.beginPath();x.arc(sx,sy,r*q[0],0,7);x.fill()});
+for(let i=0;i<14;i++){const a=i/14*6.283+t*.05,l=r*(1.5+.5*Math.sin(t*1.5+i*2)),w=.07;x.fillStyle="rgba(255,170,40,.07)";x.beginPath();x.moveTo(sx+Math.cos(a-w)*r,sy+Math.sin(a-w)*r);x.lineTo(sx+Math.cos(a)*(r+l),sy+Math.sin(a)*(r+l));x.lineTo(sx+Math.cos(a+w)*r,sy+Math.sin(a+w)*r);x.fill()}
+x.globalCompositeOperation="source-over";SUN.spin=t*8;x.save();x.beginPath();x.arc(sx,sy,r,0,7);x.clip();const off=(SUN.spin%512+512)%512,sw=256;if(off+sw<=512)x.drawImage(SUN.tex,off,0,sw,256,sx-r,sy-r,2*r,2*r);else{const a=512-off,w=2*r*a/sw;x.drawImage(SUN.tex,off,0,a,256,sx-r,sy-r,w,2*r);x.drawImage(SUN.tex,0,0,sw-a,256,sx-r+w,sy-r,2*r-w,2*r)}
+let g=x.createRadialGradient(sx,sy,r*.2,sx,sy,r);g.addColorStop(0,"rgba(255,245,180,.45)");g.addColorStop(.7,"rgba(255,150,20,0)");g.addColorStop(1,"rgba(150,40,0,.6)");x.fillStyle=g;x.fillRect(sx-r,sy-r,2*r,2*r);x.restore()}
+function label(t,sx,sy,r,hl){if(!showL)return;x.font=(hl?"bold ":"")+"13px Segoe UI";x.fillStyle=hl?"#ffd23c":"#fff";x.shadowColor="#000";x.shadowBlur=4;x.textAlign="left";x.fillText(t,sx+r+6,sy+4);x.shadowBlur=0}
+cv.addEventListener("click",e=>{const rc=cv.getBoundingClientRect(),mx=e.clientX-rc.left,my=e.clientY-rc.top;let best=null,bd=1e9;all.forEach(b=>{if(!b.scr)return;const d=Math.hypot(b.scr[0]-mx,b.scr[1]-my);if(d<Math.max(b.r+8,16)&&d<bd){bd=d;best=b}});if(best)choose(best)});
+/* ---------- loop ---------- */
+function frame(now){const dt=Math.min(.05,(now-last)/1e3);last=now;t0+=dt;if(playing){days+=dt*spd;moonT+=dt*Math.min(spd,6);PL.forEach(p=>p.spin=(p.spin||0)+dt*1440/p.rot)}
+const yrs=days/365.25;PL.forEach(p=>{const an=p.ph+6.2832*yrs/p.per;p.w=[p.a*Math.cos(an),p.a*Math.sin(an)]});SUN.w=[0,0];
+const tg=sel?sel.w:[0,0];const tz=targetZ();cam.x+=(tg[0]-cam.x)*.1;cam.y+=(tg[1]-cam.y)*.1;cam.z*=Math.pow(tz/cam.z,.1);const z=cam.z;
+x.drawImage(stars,0,0,W,H);tw.forEach(s=>{x.fillStyle=`rgba(255,255,255,${.3+.5*Math.abs(Math.sin(t0*1.5+s.p))})`;x.fillRect(s.x,s.y,1.6,1.6)});
+const sc=proj(0,0);
+if(showO){x.lineWidth=1;PL.forEach(p=>{x.strokeStyle=sel===p?"rgba(255,210,60,.7)":"rgba(160,200,255,.2)";x.beginPath();x.ellipse(sc[0],sc[1],p.a*z,p.a*z*tilt,0,0,7);x.stroke()})}
+const items=[];
+const drawBelt=front=>{x.fillStyle="#8d857a";belt.forEach(a=>{const an=a.an+6.2832*yrs/(a.a/200*Math.sqrt(a.a/200)*4.6)*1;const wx=a.a*Math.cos(an),wy=a.a*Math.sin(an);if((wy>0)!==front)return;const p=proj(wx,wy);if(p[0]<-5||p[0]>W+5||p[1]<-5||p[1]>H+5)return;x.fillStyle=`rgb(${a.g+30},${a.g+20},${a.g})`;const s=Math.max(.8,a.s*z*.9);x.fillRect(p[0],p[1],s,s)})};
+drawBelt(false);
+all.forEach(b=>{const p=proj(b.w[0],b.w[1]);b.scr=p;b.r=Math.max(b.id=="sun"?10:2.5,b.s*z);items.push({y:p[1],f:()=>{const[sx,sy]=p,r=b.r;if(b.id=="sun"){sunDraw(sx,sy,r,t0);label("Sun",sx,sy,r,sel===b);return}
+let dx=sc[0]-sx,dy=sc[1]-sy;const d=Math.hypot(dx,dy)||1;if(b.ring)ring(b,sx,sy,r,true);sphere(b,sx,sy,r,dx/d,dy/d);if(b.ring)ring(b,sx,sy,r,false);label(b.n,sx,sy,b.ring?r*2.2:r,sel===b)}});
+(b.moons||[]).forEach(m=>{if(m.a*z<9)return;const an=m.ph+6.2832*moonT/m.p,mw=[b.w[0]+m.a*Math.cos(an),b.w[1]+m.a*Math.sin(an)],mp=proj(mw[0],mw[1]),mr=Math.max(1.6,m.s*z);
+if(showO){x.strokeStyle="rgba(200,220,255,.18)";x.beginPath();x.ellipse(p[0],p[1],m.a*z,m.a*z*tilt,0,0,7);x.stroke()}
+items.push({y:mp[1],f:()=>{let dx=sc[0]-mp[0],dy=sc[1]-mp[1];const d=Math.hypot(dx,dy)||1;sphere(m,mp[0],mp[1],mr,dx/d,dy/d);if(m.a*z>30)label(m.n,mp[0],mp[1],mr,false)}})})});
+items.sort((a,b)=>a.y-b.y).forEach(i=>i.f());drawBelt(true);
+const yy=Math.floor(yrs),dd=Math.floor((yrs-yy)*365.25);
+$("#hud").innerHTML=`⏱ Elapsed: <span style="color:#ffd23c">${yy} years ${dd} days</span><br>🔭 ${sel?sel.n:"Overview"} &nbsp;|&nbsp; Zoom ${(z/ov()).toFixed(1)}×`;
+requestAnimationFrame(frame)}
+resize();choose(null);requestAnimationFrame(frame);
+</script></body></html>

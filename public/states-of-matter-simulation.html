@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>States of Matter – Interactive Simulation | GEN Z EDTECH</title>
+<style>
+:root{--ink:#0d1b3d;--panel:#14264f;--line:#2b4482;--text:#eef4ff;--soft:#a9bde8}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0a1430;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;color:var(--text)}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 20% 0,#1e3a8a,#0a1430 70%)}
+header{padding:10px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--line);background:rgba(10,20,48,.7)}
+header h1{font-size:22px;letter-spacing:.3px}
+header h1 span{color:#ffd54f}
+header small{color:var(--soft);font-size:13px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 360px}
+#stage{position:relative;min-height:0;cursor:grab}
+#stage:active{cursor:grabbing}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+aside{background:var(--panel);border-left:2px solid var(--line);overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.card{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+#badge{font-size:24px;font-weight:800;text-align:center;padding:8px;border-radius:12px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.4);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 4px 12px rgba(0,0,0,.3);transition:background .4s}
+#temp{font-size:34px;font-weight:800;text-align:center;margin-top:6px}
+input[type=range]{width:100%;margin:6px 0 2px;accent-color:#ffb300}
+#desc{font-size:14px;line-height:1.45}
+.fact{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.fact b{color:#ffd54f}
+#energy{height:12px;border-radius:8px;background:#0a1430;overflow:hidden;margin-top:4px}
+#energy i{display:block;height:100%;width:0;background:linear-gradient(90deg,#29b6f6,#ffeb3b,#ff5252);transition:width .2s}
+h3{font-size:13px;color:var(--soft);margin-bottom:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn{--c:#888;border:0;border-radius:11px;padding:9px 6px;font:700 13px "Trebuchet MS",Verdana,sans-serif;color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 80%,#fff),var(--c));box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000),0 6px 10px rgba(0,0,0,.35);cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.btn.on{outline:3px solid #fff;outline-offset:1px}
+.btn:focus-visible{outline:3px solid #fff}
+@media(max-width:900px){main{grid-template-columns:1fr}aside{max-height:45vh}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header><h1>GEN Z EDTECH <span>•</span> States of Matter</h1><small>Drag the picture to turn it. Press the colorful buttons!</small></header>
+  <main>
+    <div id="stage"><canvas id="cv"></canvas></div>
+    <aside>
+      <div class="card"><div id="badge">LIQUID</div><div id="temp">25°C</div>
+        <input id="slider" type="range" min="-30" max="130" value="25" aria-label="Temperature">
+        <div id="energy"><i></i></div></div>
+      <div class="card"><div id="desc"></div></div>
+      <div class="card"><div class="fact"><span>Movement</span><b id="f1"></b></div><div class="fact"><span>Space between</span><b id="f2"></b></div><div class="fact"><span>Shape</span><b id="f3"></b></div><div class="fact" style="border:0"><span>Now</span><b id="f4"></b></div></div>
+      <div id="btns"></div>
+    </aside>
+  </main>
+</div>
+<script>
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),app=$('app');
+let W=800,H=600,T=25,heat=0,target=null,speed=1,paused=false,labels=true,auto=false,ang=.35,zoom=1,flame=0,time=0,cooling=false;
+const fillA=[0,1,0];
+function resize(){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(resize).observe($('stage'));
+
+/* ---------- molecules ---------- */
+const P=[];
+for(let i=0;i<4;i++)for(let j=0;j<4;j++)for(let k=0;k<4;k++)P.push({i,j,k,hx:.2+i*.2,hy:.6+j*.11,hz:.2+k*.2,x:0,y:0,z:0,vx:0,vy:0,vz:0,ph:Math.random()*6.28});
+const bonds=[];P.forEach((p,n)=>{if(p.i<3)bonds.push([n,n+16]);if(p.j<3)bonds.push([n,n+4]);if(p.k<3)bonds.push([n,n+1])});
+function initP(){P.forEach(p=>{p.x=.1+Math.random()*.8;p.y=.5+Math.random()*.45;p.z=.1+Math.random()*.8;p.vx=p.vy=p.vz=0})}
+initP();
+const bubbles=[],fx=[];
+const state=()=>T<=0?0:T>=100?2:1;
+const R=Math.random;
+
+function update(dt){
+  const heating=(target!==null&&target>T)||heat>0;cooling=(target!==null&&target<T)||heat<0;
+  if(target!==null){const d=target-T,s=30*dt;if(Math.abs(d)<=s){T=target;target=null}else T+=Math.sign(d)*s}
+  else if(heat)T+=heat*18*dt;
+  T=Math.max(-30,Math.min(130,T));
+  flame+=((heating?1:0)-flame)*Math.min(1,dt*4);
+  const st=state(),spd=Math.sqrt((T+273)/298);
+  for(let s=0;s<3;s++){fillA[s]+=((st===s?1:0)-fillA[s])*Math.min(1,dt*3)}
+  if(st===1){
+    for(let a=0;a<64;a++)for(let b=a+1;b<64;b++){const p=P[a],q=P[b],dx=p.x-q.x,dy=p.y-q.y,dz=p.z-q.z,d=Math.max(.02,Math.hypot(dx,dy,dz));
+      if(d<.15){const f=(.15-d)/d*30*dt;p.vx+=dx*f;p.vy+=dy*f;p.vz+=dz*f;q.vx-=dx*f;q.vy-=dy*f;q.vz-=dz*f}}
+  }
+  for(const p of P){
+    p.ph+=dt*(st===0?.5:st===1?2:4)*spd;
+    if(st===0){
+      const a=.004+.012*(T+30)/30,f=p.ph*3+p.i*1.3+p.j,k=Math.min(1,dt*6);
+      p.x+=(p.hx+Math.sin(f)*a-p.x)*k;p.y+=(p.hy+Math.cos(f*1.1)*a-p.y)*k;p.z+=(p.hz+Math.sin(f*.9+1)*a-p.z)*k;p.vx=p.vy=p.vz=0;continue}
+    if(st===1){
+      const n=5*dt*Math.pow(spd,3);
+      p.vx+=(R()-.5)*n;p.vy+=(R()-.5)*n+1.4*dt;p.vz+=(R()-.5)*n;
+      if(p.y<.5)p.vy+=5*dt;
+      const dm=1-1.2*dt;p.vx*=dm;p.vy*=dm;p.vz*=dm;
+    }else{
+      let v=Math.hypot(p.vx,p.vy,p.vz);const tv=.45+(T-100)*.01;
+      if(v<.02){p.vx+=R()-.5;p.vy+=R()-.5;p.vz+=R()-.5;v=Math.hypot(p.vx,p.vy,p.vz)}
+      const m=1+(tv/v-1)*Math.min(1,2*dt);p.vx*=m;p.vy*=m;p.vz*=m;
+    }
+    p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;
+    const e=st===1?.3:1;
+    if(p.x<.05){p.x=.05;p.vx=Math.abs(p.vx)*e}if(p.x>.95){p.x=.95;p.vx=-Math.abs(p.vx)*e}
+    if(p.y<.05){p.y=.05;p.vy=Math.abs(p.vy)*e}if(p.y>.95){p.y=.95;p.vy=-Math.abs(p.vy)*e}
+    if(p.z<.05){p.z=.05;p.vz=Math.abs(p.vz)*e}if(p.z>.95){p.z=.95;p.vz=-Math.abs(p.vz)*e}
+  }
+  if(st===1&&T>65&&R()<(T-65)/35*.5)bubbles.push({x:.1+R()*.8,y:.95,r:2+R()*4});
+  for(let i=bubbles.length-1;i>=0;i--){const b=bubbles[i];b.y-=dt*.45;b.x+=Math.sin(time*5+i)*.002;if(b.y<.5)bubbles.splice(i,1)}
+  if(st===2&&R()<.5)fx.push({k:0,x:0,y:0,a:.6,r:8});
+  if(cooling&&R()<.4)fx.push({k:1,x:R(),y:0,a:1,r:6+R()*6});
+  for(let i=fx.length-1;i>=0;i--){const f=fx[i];f.y+=dt;f.a-=dt*(f.k?.35:.4);f.r+=dt*(f.k?0:22);if(f.a<=0)fx.splice(i,1)}
+  if(auto)ang+=dt*.5;
+}
+
+/* ---------- drawing helpers ---------- */
+function sphere(x,y,r,c1,c2,c3){const g=ctx.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r);g.addColorStop(0,c1);g.addColorStop(.55,c2);g.addColorStop(1,c3);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}
+function pill(t,x,y,bg,al){ctx.font='600 13px "Trebuchet MS",Verdana,sans-serif';const w=ctx.measureText(t).width+18,l=al==='l'?x:al==='r'?x-w:x-w/2;ctx.fillStyle=bg;ctx.beginPath();ctx.roundRect(l,y-12,w,24,12);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(t,l+9,y+1)}
+function glow(x,y,r,c){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,c);g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}
+function poly(pts,fill){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.2;ctx.stroke()}
+
+function iceCube(cx,b,s,on){
+  if(on)glow(cx,b-s*.55,s*1.5,'rgba(120,220,255,.55)');
+  poly([[cx,b-s*1.1],[cx+s*.55,b-s*.85],[cx,b-s*.6],[cx-s*.55,b-s*.85]],'rgba(235,250,255,.9)');
+  poly([[cx-s*.55,b-s*.85],[cx,b-s*.6],[cx,b],[cx-s*.55,b-s*.25]],'rgba(150,215,245,.85)');
+  poly([[cx+s*.55,b-s*.85],[cx,b-s*.6],[cx,b],[cx+s*.55,b-s*.25]],'rgba(100,180,230,.85)');
+  ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx-s*.4,b-s*.7);ctx.lineTo(cx-s*.15,b-s*.5);ctx.stroke();
+}
+function waterGlass(cx,b,s,on){
+  const tw=s*.9,bw2=s*.62,h=s*1.5;
+  if(on)glow(cx,b-h/2,s*1.6,'rgba(80,170,255,.55)');
+  ctx.beginPath();ctx.moveTo(cx-tw/2,b-h);ctx.lineTo(cx+tw/2,b-h);ctx.lineTo(cx+bw2/2,b);ctx.lineTo(cx-bw2/2,b);ctx.closePath();
+  ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();
+  ctx.save();ctx.clip();const g=ctx.createLinearGradient(0,b-h*.8,0,b);g.addColorStop(0,'rgba(90,190,255,.85)');g.addColorStop(1,'rgba(10,100,200,.95)');ctx.fillStyle=g;ctx.fillRect(cx-tw,b-h*.78,tw*2,h);
+  ctx.fillStyle='rgba(255,255,255,.25)';ctx.fillRect(cx-tw/2+5,b-h*.78,6,h);ctx.restore();
+  ctx.strokeStyle='rgba(220,240,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx-tw/2,b-h);ctx.lineTo(cx-bw2/2,b);ctx.lineTo(cx+bw2/2,b);ctx.lineTo(cx+tw/2,b-h);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(cx,b-h,tw/2,5,0,0,7);ctx.stroke();
+}
+function kettle(cx,b,s,on){
+  if(on)glow(cx,b-s*.5,s*1.7,'rgba(255,150,200,.5)');
+  const cy=b-s*.5;
+  ctx.strokeStyle='#2c3e50';ctx.lineWidth=s*.09;ctx.beginPath();ctx.arc(cx+s*.35,cy-s*.1,s*.38,-1.2,1.2);ctx.stroke();
+  poly([[cx-s*.45,cy+s*.05],[cx-s*.95,cy-s*.45],[cx-s*.8,cy-s*.5],[cx-s*.4,cy-s*.2]],'#9fb3c8');
+  let g=ctx.createLinearGradient(cx-s*.6,0,cx+s*.6,0);g.addColorStop(0,'#e3ecf5');g.addColorStop(.4,'#9fb3c8');g.addColorStop(1,'#56687c');
+  ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(cx,cy,s*.62,s*.5,0,0,7);ctx.fill();
+  ctx.fillStyle='#d32f2f';ctx.beginPath();ctx.ellipse(cx,cy-s*.48,s*.3,s*.1,0,0,7);ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy-s*.62,s*.09,0,7);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.ellipse(cx-s*.25,cy-s*.12,s*.07,s*.22,.4,0,7);ctx.fill();
+}
+function flameDraw(cx,y,h){
+  if(h<3)return;h*=1+Math.sin(time*20)*.06+Math.sin(time*13)*.05;
+  let g=ctx.createLinearGradient(0,y,0,y-h);g.addColorStop(0,'#2979ff');g.addColorStop(.25,'#ffd54f');g.addColorStop(.7,'#ff7043');g.addColorStop(1,'rgba(255,60,0,0)');
+  const f=(k,col)=>{ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx-h*.2*k,y);ctx.bezierCurveTo(cx-h*.3*k,y-h*.5*k,cx-h*.08*k,y-h*.7*k,cx,y-h*k);ctx.bezierCurveTo(cx+h*.08*k,y-h*.7*k,cx+h*.3*k,y-h*.5*k,cx+h*.2*k,y);ctx.fill()};
+  f(1,g);f(.5,'rgba(41,121,255,.85)');
+}
+
+/* ---------- main draw ---------- */
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const bh=H*.5,bw=Math.min(W*.3,bh*.85),bx=W/2-bw/2,by=H*.12,table=H*.84,bot=by+bh,cx=W/2,st=state();
+  let g=ctx.createLinearGradient(0,0,0,table);g.addColorStop(0,'#16337a');g.addColorStop(1,'#2a7fa8');ctx.fillStyle=g;ctx.fillRect(0,0,W,table);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;for(let x=0;x<W;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,table);ctx.stroke()}for(let y=0;y<table;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  g=ctx.createLinearGradient(0,table,0,H);g.addColorStop(0,'#c98b4d');g.addColorStop(1,'#6b3f1d');ctx.fillStyle=g;ctx.fillRect(0,table,W,H-table);
+  ctx.fillStyle='rgba(255,255,255,.25)';ctx.fillRect(0,table,W,4);
+  ctx.strokeStyle='rgba(60,30,10,.25)';for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(0,table+i*(H-table)/5);ctx.lineTo(W,table+i*(H-table)/5+3);ctx.stroke()}
+
+  /* objects from daily life */
+  const os=Math.min(W*.075,H*.12);
+  iceCube(W*.09,table,os,st===0);waterGlass(W*.2,table,os,st===1);kettle(W*.9,table,os*1.3,st===2);
+  /* burner + tripod */
+  ctx.strokeStyle='#37474f';ctx.lineWidth=5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(bx+bw*.08,bot+6);ctx.lineTo(bx-bw*.08,table);ctx.moveTo(bx+bw*.92,bot+6);ctx.lineTo(bx+bw*1.08,table);ctx.stroke();
+  ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(bx+bw*.02,bot+6);ctx.lineTo(bx+bw*.98,bot+6);ctx.stroke();
+  const bt=H*.74;
+  g=ctx.createLinearGradient(cx-25,0,cx+25,0);g.addColorStop(0,'#78909c');g.addColorStop(.5,'#eceff1');g.addColorStop(1,'#546e7a');
+  ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(cx-10,bt,20,table-bt-6,4);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx,table-4,H*.07,10,0,0,7);ctx.fillStyle='#37474f';ctx.fill();
+  ctx.fillStyle='#263238';ctx.fillRect(cx-8,bt+14,16,6);
+  glow(cx,bot+20,bw*.7,`rgba(255,140,30,${flame*.35})`);
+  flameDraw(cx,bt,(bt-bot-8)*flame);
+
+  /* beaker back + contents */
+  const path=()=>{ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx,bot-16);ctx.quadraticCurveTo(bx,bot,bx+16,bot);ctx.lineTo(bx+bw-16,bot);ctx.quadraticCurveTo(bx+bw,bot,bx+bw,bot-16);ctx.lineTo(bx+bw,by)};
+  path();ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();
+  ctx.save();path();ctx.clip();
+  if(fillA[1]>.01){ctx.globalAlpha=fillA[1];const top=by+bh*.5;g=ctx.createLinearGradient(0,top,0,bot);g.addColorStop(0,'rgba(100,200,255,.55)');g.addColorStop(1,'rgba(10,90,190,.8)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(bx,bot);ctx.lineTo(bx,top);for(let x=0;x<=bw;x+=6)ctx.lineTo(bx+x,top+Math.sin(x*.08+time*(2+T/20))*(2+Math.max(0,T-50)/12));ctx.lineTo(bx+bw,bot);ctx.fill();ctx.globalAlpha=1}
+  if(fillA[0]>.01){ctx.globalAlpha=fillA[0];g=ctx.createLinearGradient(bx,0,bx+bw,0);g.addColorStop(0,'rgba(210,245,255,.6)');g.addColorStop(.5,'rgba(160,220,250,.45)');g.addColorStop(1,'rgba(120,190,240,.6)');ctx.fillStyle=g;ctx.fillRect(bx+4,by+bh*.55,bw-8,bh);ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(bx+bw*.15,by+bh*.58,6,bh*.35);ctx.globalAlpha=1}
+  if(fillA[2]>.01){ctx.globalAlpha=fillA[2];g=ctx.createLinearGradient(0,by,0,bot);g.addColorStop(0,'rgba(255,190,230,.05)');g.addColorStop(1,'rgba(255,170,220,.28)');ctx.fillStyle=g;ctx.fillRect(bx,by,bw,bh);ctx.globalAlpha=1}
+  /* bubbles */
+  ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=1.5;bubbles.forEach(b=>{ctx.beginPath();ctx.arc(bx+b.x*bw,by+bh*.04+b.y*bh*.92,b.r,0,7);ctx.stroke()});
+  ctx.restore();
+
+  /* bonds + molecules (3D) */
+  const ca=Math.cos(ang),sa=Math.sin(ang),sc=bw*.7*zoom,br=bw*.055*zoom;
+  const proj=P.map(p=>{const x=p.x-.5,z=p.z-.5,rx=x*ca+z*sa,rz=-x*sa+z*ca,pr=1/(1+rz*.5);return{p,sx:cx+rx*sc*pr,sy:by+bh*.5+(p.y-.5)*bh*.92*pr*(zoom>1?zoom*.8:1),r:br*pr,d:rz}});
+  if(fillA[0]>.05){ctx.strokeStyle=`rgba(255,255,255,${.5*fillA[0]})`;ctx.lineWidth=2.5;ctx.beginPath();bonds.forEach(([a,b])=>{ctx.moveTo(proj[a].sx,proj[a].sy);ctx.lineTo(proj[b].sx,proj[b].sy)});ctx.stroke()}
+  const halo=['rgba(130,230,255,.28)','rgba(70,140,255,.22)','rgba(255,130,200,.2)'][st];
+  const order=proj.slice().sort((a,b)=>b.d-a.d);
+  for(const q of order){
+    ctx.globalAlpha=Math.max(.55,Math.min(1,.8-q.d*.6));
+    ctx.fillStyle=halo;ctx.beginPath();ctx.arc(q.sx,q.sy,q.r*1.9,0,7);ctx.fill();
+    const a=q.p.ph;
+    for(const s of[-1,1]){const hx=q.sx+Math.cos(a+s*.9)*q.r*1.25,hy=q.sy+Math.sin(a+s*.9)*q.r*1.25;sphere(hx,hy,q.r*.55,'#fff','#dfe8f5','#8aa0bd')}
+    sphere(q.sx,q.sy,q.r,'#ff9e9e','#e53935','#7a0f10');
+  }
+  ctx.globalAlpha=1;
+
+  /* beaker front glass */
+  path();ctx.strokeStyle='rgba(215,240,255,.9)';ctx.lineWidth=3.5;ctx.stroke();
+  g=ctx.createLinearGradient(bx,0,bx+bw*.25,0);g.addColorStop(0,'rgba(255,255,255,.35)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.fillRect(bx+4,by+8,bw*.22,bh-30);
+  ctx.beginPath();ctx.ellipse(cx,by,bw/2+6,6,0,0,7);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='11px "Trebuchet MS"';ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let i=1;i<=5;i++){const y=by+bh*(.12+i*.15);ctx.fillRect(bx+4,y,i%2?12:20,1.5)}
+
+  /* thermometer */
+  const tx=bx+bw+W*.065,tt=by,tb=bot+H*.03,map=v=>tb-(v+30)/160*(tb-tt);
+  ctx.fillStyle='rgba(255,255,255,.85)';ctx.beginPath();ctx.roundRect(tx-8,tt-8,16,tb-tt+16,8);ctx.fill();
+  ctx.beginPath();ctx.arc(tx,tb+10,16,0,7);ctx.fill();
+  ctx.fillStyle='#e53935';ctx.beginPath();ctx.arc(tx,tb+10,12,0,7);ctx.fill();ctx.fillRect(tx-3,map(T),6,tb-map(T)+8);
+  ctx.font='11px "Trebuchet MS"';ctx.textAlign='left';ctx.fillStyle='#fff';
+  for(let v=-20;v<=120;v+=20){ctx.fillRect(tx+10,map(v),8,1.5);ctx.fillText(v,tx+22,map(v))}
+  ctx.strokeStyle='#4fc3f7';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(tx-30,map(0));ctx.lineTo(tx+10,map(0));ctx.stroke();
+  ctx.strokeStyle='#ff80ab';ctx.beginPath();ctx.moveTo(tx-30,map(100));ctx.lineTo(tx+10,map(100));ctx.stroke();ctx.setLineDash([]);
+
+  /* effects: steam, snow */
+  const sx0=W*.9-os*1.3*.9,sy0=table-os*1.3*.95;
+  for(const f of fx){
+    if(f.k===0){ctx.globalAlpha=Math.max(0,f.a);glow(sx0+f.y*14,sy0-f.y*95,f.r*2,'rgba(255,255,255,.9)');glow(cx+Math.sin(f.y*4)*bw*.2,by-f.y*70,f.r*3,'rgba(255,255,255,.6)')}
+    else{ctx.globalAlpha=Math.max(0,f.a);ctx.fillStyle='#e1f5fe';ctx.font=f.r*2+'px sans-serif';ctx.textAlign='center';ctx.fillText('❄',bx-20+f.x*(bw+40),by-10+f.y*bh*.9)}
+  }
+  ctx.globalAlpha=1;
+
+  /* labels */
+  if(labels){
+    pill('Ice – Solid',W*.09,table+22,'rgba(0,120,170,.9)');pill('Water – Liquid',W*.2,table+22,'rgba(20,70,190,.9)');pill('Steam – Gas',W*.9,table+22,'rgba(190,40,120,.9)');
+    pill('Glass Beaker',cx,by-24,'rgba(0,0,0,.5)');pill('Burner',cx,table+22,'rgba(230,100,20,.9)');
+    pill('Thermometer',tx,tt-30,'rgba(0,0,0,.5)');
+    pill('Freezes 0°C',tx-34,map(0)-14,'rgba(0,140,190,.9)','r');pill('Boils 100°C',tx-34,map(100)-14,'rgba(200,40,110,.9)','r');
+    pill('Water molecule (H₂O)',bx+bw+20,by+bh*.45,'rgba(180,30,30,.9)','l');
+    const q=proj[27];ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(q.sx+q.r,q.sy);ctx.lineTo(bx+bw+20,by+bh*.45);ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,.45)';ctx.beginPath();ctx.roundRect(16,16,175,62,12);ctx.fill();
+    sphere(36,36,9,'#ff9e9e','#e53935','#7a0f10');sphere(36,62,6,'#fff','#dfe8f5','#8aa0bd');
+    ctx.fillStyle='#fff';ctx.font='600 13px "Trebuchet MS"';ctx.textAlign='left';ctx.fillText('Red = Oxygen (O)',54,37);ctx.fillText('White = Hydrogen (H)',54,62);
+  }
+}
+
+/* ---------- panel ---------- */
+const INFO=[
+ {n:'SOLID – ICE',c:'#0288d1',d:'Water molecules are packed tightly in a neat pattern. They only shake a little in place. A solid keeps its own shape.',f:['Tiny shaking','Very close','Fixed shape']},
+ {n:'LIQUID – WATER',c:'#1e56d6',d:'Molecules are close together but can slide past each other. A liquid flows and takes the shape of its container.',f:['Slow sliding','Close together','Takes container shape']},
+ {n:'GAS – STEAM',c:'#d81b60',d:'Molecules are far apart and zoom around very fast in every direction. A gas spreads out to fill the whole container.',f:['Very fast zooming','Far apart','Fills all space']}];
+function panel(){
+  const st=state(),i=INFO[st];
+  $('badge').textContent=i.n;$('badge').style.background=`linear-gradient(180deg,${i.c},${i.c}cc)`;
+  $('temp').textContent=Math.round(T)+'°C';$('slider').value=T;$('desc').textContent=i.d;
+  $('f1').textContent=i.f[0];$('f2').textContent=i.f[1];$('f3').textContent=i.f[2];
+  const hot=(target!==null&&target>T)||heat>0,cold=(target!==null&&target<T)||heat<0;
+  $('f4').textContent=hot?'Heating – energy goes up':cold?'Cooling – energy goes down':'Steady';
+  document.querySelector('#energy i').style.width=((T+30)/160*100)+'%';
+  btns.forEach(b=>b.el.classList.toggle('on',!!(b.on&&b.on())));
+}
+
+/* ---------- buttons ---------- */
+const btns=[];
+const fsBtn={};
+const groups=[
+ ['Temperature',[
+  ['🔥 Heat Up','#e53935',()=>{target=null;heat=heat>0?0:1},()=>heat>0],
+  ['❄️ Cool Down','#039be5',()=>{target=null;heat=heat<0?0:-1},()=>heat<0],
+  ['⏹ Stop','#757575',()=>{heat=0;target=null}]]],
+ ['Changes of State',[
+  ['🧊➜💧 Melt','#00acc1',()=>{heat=0;if(T>0||T<-10)T=-10;target=20}],
+  ['💧➜🧊 Freeze','#5e35b1',()=>{heat=0;if(T>25)T=25;target=-15}],
+  ['💧➜☁️ Boil','#fb8c00',()=>{heat=0;if(T<50)T=50;target=115}],
+  ['☁️➜💧 Condense','#43a047',()=>{heat=0;if(T<100)T=120;target=70}]]],
+ ['Quick States',[
+  ['🧊 Ice (−10°C)','#26c6da',()=>{heat=0;target=null;T=-10}],
+  ['💧 Water (25°C)','#3949ab',()=>{heat=0;target=null;T=25}],
+  ['☁️ Steam (120°C)','#ec407a',()=>{heat=0;target=null;T=120}],
+  ['🌡 Warm Water 80°C','#ff7043',()=>{heat=0;target=null;T=80}]]],
+ ['Speed & View',[
+  ['🐢 Slow','#8e24aa',()=>speed=.3,()=>speed===.3],
+  ['⚡ Normal','#00897b',()=>speed=1,()=>speed===1],
+  ['🐇 Fast','#f4511e',()=>speed=2.2,()=>speed===2.2],
+  ['⏯ Pause','#ffb300',()=>paused=!paused,()=>paused],
+  ['🏷 Labels','#7cb342',()=>labels=!labels,()=>labels],
+  ['🔄 Auto Spin','#3d5afe',()=>auto=!auto,()=>auto],
+  ['◀ Turn Left','#6d4c41',()=>ang-=.3],
+  ['▶ Turn Right','#c2185b',()=>ang+=.3],
+  ['➕ Zoom In','#00b8d4',()=>zoom=Math.min(1.6,zoom+.15)],
+  ['➖ Zoom Out','#aa00ff',()=>zoom=Math.max(.6,zoom-.15)]]],
+ ['Tools',[
+  ['📸 Save Picture','#2e7d32',()=>{const a=document.createElement('a');a.download='states-of-matter.png';a.href=cv.toDataURL('image/png');a.click()}],
+  ['♻ Reset','#d50000',()=>{T=25;heat=0;target=null;speed=1;zoom=1;ang=.35;paused=false;auto=false;initP();bubbles.length=0;fx.length=0}],
+  ['⛶ Full Screen','#1565c0',()=>{document.fullscreenElement?document.exitFullscreen():app.requestFullscreen().catch(()=>{})},null,'fs']]]
+];
+groups.forEach(([t,list])=>{
+  const c=document.createElement('div');c.className='card';c.innerHTML='<h3>'+t+'</h3><div class="grid"></div>';
+  list.forEach(([label,color,fn,on,id])=>{const b=document.createElement('button');b.className='btn';b.style.setProperty('--c',color);b.textContent=label;b.onclick=fn;if(id==='fs')fsBtn.el=b;c.lastChild.appendChild(b);btns.push({el:b,on})});
+  $('btns').appendChild(c);
+});
+const fsLast=btns[btns.length-1].el;fsLast.style.gridColumn='1 / -1';
+document.addEventListener('fullscreenchange',()=>{fsBtn.el.textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';setTimeout(resize,60)});
+document.addEventListener('keydown',e=>{if(e.key==='f'||e.key==='F')fsBtn.el.click()});
+$('slider').oninput=e=>{T=+e.target.value;heat=0;target=null};
+let drag=null;
+$('stage').addEventListener('pointerdown',e=>{drag=e.clientX;e.currentTarget.setPointerCapture(e.pointerId)});
+$('stage').addEventListener('pointermove',e=>{if(drag!==null){ang+=(e.clientX-drag)*.01;drag=e.clientX}});
+$('stage').addEventListener('pointerup',()=>drag=null);
+
+let last=performance.now();
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;time+=dt;if(!paused)update(dt*speed);draw();panel();requestAnimationFrame(loop)}
+resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

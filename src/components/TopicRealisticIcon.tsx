@@ -1984,6 +1984,104 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 67: Heating Ice to Steam
+    case 67:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iceCubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e0f2fe" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="waterDropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+          </defs>
+          {/* Ice Crystal Cube (Left) */}
+          <polygon points="18,34 28,29 28,42 18,47" fill="url(#iceCubeGrad)" stroke="#bae6fd" strokeWidth="1.2" />
+          <polygon points="8,29 18,34 18,47 8,42" fill="#7dd3fc" stroke="#bae6fd" strokeWidth="1.2" />
+          <polygon points="18,24 28,29 18,34 8,29" fill="#f0f9ff" stroke="#bae6fd" strokeWidth="1.2" />
+          {/* Transition Arrow */}
+          <path d="M29 37 L33 37" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+          {/* Liquid Water Droplet (Center) */}
+          <path d="M42 28 C42 28 35 37 35 42 A7 7 0 0 0 49 42 C49 37 42 28 42 28 Z" fill="url(#waterDropGrad)" stroke="#7dd3fc" strokeWidth="1.2" />
+          {/* Steam Vapor Wafts (Top Right) */}
+          <path d="M48 20 Q52 14 48 8" stroke="#e0f2fe" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M54 22 Q58 16 54 10" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M42 18 Q46 12 42 6" stroke="#f0f9ff" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          {/* Base Thermal Flame Indicator */}
+          <path d="M22 56 Q28 50 34 56 Q40 50 46 56" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 68: The Water Cycle
+    case 68:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wcSun" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fef08a" />
+              <stop offset="100%" stopColor="#f59e0b" />
+            </linearGradient>
+            <linearGradient id="wcWater" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+          </defs>
+          {/* Radiant Sun (Top Left) */}
+          <circle cx="14" cy="14" r="8" fill="url(#wcSun)" stroke="#fde047" strokeWidth="1.2" />
+          {/* Condensation Cloud (Top Right) */}
+          <path d="M38 18 C38 14 44 12 47 15 C50 13 56 15 56 19 C58 20 58 24 55 25 H37 C34 25 34 20 38 18 Z" fill="#e0f2fe" stroke="#bae6fd" strokeWidth="1.2" />
+          {/* Rain Droplets from Cloud */}
+          <line x1="40" y1="28" x2="38" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="46" y1="29" x2="44" y2="34" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="52" y1="28" x2="50" y2="33" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          {/* Mountain Watershed (Right) */}
+          <polygon points="32,48 48,34 60,48" fill="#475569" stroke="#64748b" strokeWidth="1.2" />
+          <polygon points="44,38 48,34 52,38" fill="#ffffff" />
+          {/* Ocean Reservoir & Wave (Bottom) */}
+          <path d="M6 54 Q18 48 30 54 Q42 60 58 54 V60 H6 Z" fill="url(#wcWater)" />
+          {/* Evaporation Ascending Vector */}
+          <path d="M16 46 Q20 38 18 30" stroke="#bae6fd" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 2" />
+          <path d="M15 33 L18 29 L21 33" stroke="#bae6fd" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+
+    // 69: Urdu Grammar: Kinds of Adjectives (صفت کی اقسام)
+    case 69:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="basketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#b45309" />
+            </linearGradient>
+            <linearGradient id="urduFlowerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f472b6" />
+              <stop offset="100%" stopColor="#db2777" />
+            </linearGradient>
+          </defs>
+          {/* Woven Flower Basket Base */}
+          <path d="M16 36 H48 L44 54 Q43 56 39 56 H25 Q21 56 20 54 Z" fill="url(#basketGrad)" stroke="#fcd34d" strokeWidth="1.5" />
+          {/* Basket Handle */}
+          <path d="M18 36 C18 16 46 16 46 36" stroke="#d97706" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* Colorful Blossom Petals */}
+          <circle cx="24" cy="28" r="6" fill="#f43f5e" />
+          <circle cx="32" cy="22" r="7" fill="url(#urduFlowerGrad)" />
+          <circle cx="40" cy="28" r="6" fill="#38bdf8" />
+          <circle cx="28" cy="34" r="5" fill="#facc15" />
+          <circle cx="36" cy="34" r="5" fill="#a855f7" />
+          {/* Golden Center */}
+          <circle cx="32" cy="26" r="3" fill="#ffffff" />
+          {/* Sparkle Stars */}
+          <polygon points="12,14 13.5,10 17,10 14,8 15,4 12,6.5 9,4 10,8 7,10 10.5,10" fill="#facc15" />
+          <polygon points="50,14 51.5,10 55,10 52,8 53,4 50,6.5 47,4 48,8 45,10 48.5,10" fill="#facc15" />
+          {/* Nastaliq Badge label */}
+          <text x="32" y="49" fill="#ffffff" fontSize="12" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ص</text>
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

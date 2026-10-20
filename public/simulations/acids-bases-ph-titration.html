@@ -1,1527 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Acids, Bases &amp; pH Titration Lab</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acids, Bases and the pH Scale – Interactive Simulation | GEN Z EDTECH</title>
 <style>
-/* Zero-monochrome & 100% desktop color fidelity enforcement */
-*, *::before, *::after {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-}
-html, body, canvas, svg {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-}
-@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
-  html, body, canvas, svg, div {
-    forced-color-adjust: none !important;
-    -ms-high-contrast-adjust: none !important;
-  }
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; overflow-x:hidden; }
-body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:#0a1628; color:#e8f4ff; min-height:100vh;
-  display:flex; flex-direction:column;
-}
-.container { max-width:1500px; margin:0 auto; padding:18px 18px 24px; flex:1; width:100%; }
-
-/* TOP TABS */
-.tabs {
-  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;
-  background:#0f2440; border-radius:14px; padding:8px 12px;
-}
-.tab-btn {
-  padding:12px 22px; border:none; border-radius:40px; font-size:1.02rem;
-  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
-  transition:all .25s; flex:1 0 auto;
-}
-.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
-.tab-btn.active {
-  background:linear-gradient(135deg,#a855f7,#7c3aed);
-  color:#ffffff; box-shadow:0 6px 20px rgba(168,85,247,.45);
-}
-.tab-btn .icon { margin-right:8px; }
-.topic { display:none; } .topic.active { display:block; }
-
-/* EDUCATIONAL CARD */
-.card {
-  background:linear-gradient(160deg,#122a44,#0a1e34);
-  border-radius:22px; padding:22px 24px 26px; margin-bottom:20px;
-  box-shadow:0 14px 40px rgba(0,0,0,.7);
-  border:1px solid rgba(255,255,255,.05);
-}
-.card h2 { font-size:1.75rem; font-weight:800; margin-bottom:6px; color:#c084fc; }
-.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
-.card .desc {
-  font-size:1rem; color:#a8c4e0; margin-bottom:18px;
-  border-left:5px solid #a855f7; padding-left:14px;
-  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
-  line-height:1.6;
-}
-.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 14px; }
-.section-tab {
-  padding:8px 16px; border:none; border-radius:30px;
-  font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8;
-  cursor:pointer; transition:.2s;
-}
-.section-tab:hover { background:#234468; color:#fff; }
-.section-tab.active { background:#7c3aed; color:#fff; }
-.panel { display:none; padding:14px 0 6px; } .panel.active { display:block; }
-.panel h3 { font-size:1.45rem; font-weight:700; color:#d8b4fe; margin-bottom:12px; }
-.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
-.panel ul { list-style:none; padding-left:0; }
-.panel ul li { padding:7px 0 7px 32px; position:relative; }
-.panel ul li::before {
-  content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px;
-  border-radius:50%; background:#a855f7; color:#0a1628; font-weight:900;
-  text-align:center; line-height:20px; font-size:.8rem;
-}
-.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:10px; }
-.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #a855f7; }
-.grid-item h4 { font-size:1.15rem; color:#d8b4fe; margin-bottom:4px; }
-.grid-item p { font-size:.92rem; color:#b8d4f0; }
-
-/* SIMULATION BOX */
-.sim-box {
-  background:#06121f; border-radius:18px; padding:18px 16px 16px;
-  margin-top:8px; border:1px solid #1e3a5c; position:relative;
-}
-.sim-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; margin-bottom:14px;
-  background:#0a1a2e; padding:12px 18px; border-radius:36px;
-  border:1px solid #1e3a5c;
-}
-.sim-controls label {
-  display:flex; align-items:center; gap:8px; font-weight:600;
-  color:#90b8e0; font-size:.9rem;
-}
-.sim-controls input[type=range] { width:125px; accent-color:#a855f7; cursor:pointer; }
-.sim-controls select,.sim-controls button {
-  padding:8px 16px; border-radius:28px; border:none; font-weight:700;
-  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.88rem;
-}
-.sim-controls button { background:#7c3aed; color:#fff; }
-.sim-controls button:hover { transform:scale(1.05); filter:brightness(1.2); }
-.sim-controls .btn-accent { background:linear-gradient(135deg,#a855f7,#7c3aed); color:#fff; }
-.sim-controls .btn-fs { background:linear-gradient(135deg,#7b1fa2,#512da8); color:#fff; }
-
-canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
-.sim-readout { text-align:center; font-size:1.35rem; font-weight:700; color:#d8b4fe; margin:14px 0 6px; }
-.sim-readout small { display:block; font-size:.9rem; color:#7a9cc0; font-weight:400; }
-.sim-info { background:#0a1a2e; padding:11px 16px; border-radius:36px; margin-top:12px; text-align:center; font-size:.92rem; color:#a8c8e8; border:1px solid #1a3550; }
-.teacher-note {
-  background:linear-gradient(135deg,#0d2018,#0a1a14);
-  border-left:5px solid #a855f7; border-radius:0 14px 14px 0;
-  padding:12px 16px; margin-top:12px; font-size:.9rem;
-  color:#b8e6c8; line-height:1.7;
-}
-.teacher-note strong { color:#c084fc; }
-
-/* PRESET CHIPS */
-.preset-chips {
-  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
-  margin:12px 0 16px;
-}
-.chip-btn {
-  padding:8px 14px; border-radius:24px; border:1.5px solid #1e3a5c;
-  background:#0a1a2e; color:#cbd5e1; font-weight:800; font-size:0.9rem;
-  cursor:pointer; transition:all 0.15s;
-}
-.chip-btn:hover { background:#1a3550; color:#fff; transform:translateY(-1px); }
-.chip-btn.active {
-  background:linear-gradient(135deg,#a855f7,#7c3aed);
-  color:#ffffff; border-color:#c084fc; box-shadow:0 4px 12px rgba(168,85,247,0.4);
-}
-
-/* FULLSCREEN OVERLAY */
-.fs-overlay {
-  position:fixed; inset:0; background:#040e1a; z-index:99999;
-  display:none; flex-direction:column; padding:10px 16px 12px;
-  overflow:hidden;
-}
-.fs-overlay.active { display:flex; }
-.fs-topbar {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:4px 4px 10px; flex-shrink:0;
-}
-.fs-topbar h2 {
-  font-size:1.45rem; font-weight:800; color:#d8b4fe;
-  margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.fs-close-btn {
-  padding:9px 24px; border-radius:30px; border:none;
-  background:linear-gradient(135deg,#ff5252,#d32f2f);
-  color:#fff; font-weight:900; font-size:.95rem; cursor:pointer;
-  box-shadow:0 4px 14px rgba(255,82,82,.5); transition:.2s;
-  flex-shrink:0;
-}
-.fs-close-btn:hover { transform:scale(1.05); filter:brightness(1.1); }
-.fs-canvas-area {
-  flex:1; display:flex; align-items:center; justify-content:center;
-  min-height:0; padding:6px 0;
-}
-.fs-canvas-area canvas {
-  max-width:100%; max-height:100%; width:auto; height:auto;
-  border-radius:12px; border:2px solid #1e3a5c; background:#040e1a;
-}
-.fs-controls {
-  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
-  justify-content:center; padding:10px 16px;
-  background:#0a1a2e; border-radius:40px;
-  border:1px solid #1e3a5c; margin-top:8px; flex-shrink:0;
-}
-
-/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
-:root {
-  --blue: #2ea8ff;
-  --red: #ff4d67;
-  --grn: #22d3a0;
-  --amb: #ffc247;
-  --vio: #9b7bff;
-  --line: #2a3d80;
-  --mut: #a3b4e0;
-}
-
-/* Universal 3D Tactile Buttons & Docked Control Overlay */
-.ctl {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-  max-width: 1180px !important;
-  margin: 10px auto 0 !important;
-  padding: 8px 14px !important;
-  background: rgba(5, 10, 30, 0.78) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
-  box-sizing: border-box !important;
-  z-index: 99999 !important;
-}
-.row {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-.row span {
-  color: var(--mut) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  padding-right: 4px !important;
-  user-select: none !important;
-}
-.btn {
-  border: 0 !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  color: #04102a !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  user-select: none !important;
-  white-space: nowrap !important;
-  text-decoration: none !important;
-}
-.btn:hover {
-  filter: brightness(1.15) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
-}
-.btn:active {
-  transform: translateY(3px) !important;
-  box-shadow: 0 1px 0 #0007 !important;
-}
-.b-in { background: var(--blue) !important; color: #04102a !important; }
-.b-out { background: var(--red) !important; color: #ffffff !important; }
-.b-auto { background: var(--grn) !important; color: #04102a !important; }
-.b-play { background: var(--amb) !important; color: #04102a !important; }
-.b-hold { background: #cfd9ff !important; color: #04102a !important; }
-.b-set { background: #3d509a !important; color: #ffffff !important; }
-.b-fs {
-  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
-}
-.b-exit {
-  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
-}
-.tg {
-  background: #1c2b63 !important;
-  color: #d4e0ff !important;
-  border: 2px solid #3a4f9a !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-}
-.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
-.tg.on {
-  background: var(--vio) !important;
-  color: #ffffff !important;
-  border-color: #cbbcff !important;
-  box-shadow: 0 0 18px #9b7bffaa !important;
-}
-
-/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
-:fullscreen,
-:-webkit-full-screen,
-:-moz-full-screen,
-:-ms-fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  padding: 8px 18px 12px !important;
-  box-sizing: border-box !important;
-  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  overflow: hidden !important;
-  border-radius: 0 !important;
-  border: none !important;
-  margin: 0 !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen canvas,
-:fullscreen svg,
-:-webkit-full-screen canvas,
-:-webkit-full-screen svg {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  object-fit: contain !important;
-  display: block !important;
-  margin: 0 auto !important;
-}
-
-:fullscreen .ctl,
-:-webkit-full-screen .ctl {
-  flex-shrink: 0 !important;
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 4px auto 0 !important;
-  padding: 8px 16px !important;
-  background: rgba(5, 10, 30, 0.94) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen .btn,
-:-webkit-full-screen .btn {
-  padding: 11px 18px !important;
-  font-size: 16px !important;
-}
-
-:fullscreen .teacher-note,
-:fullscreen .sim-info,
-:fullscreen nav,
-:fullscreen .tabs,
-:fullscreen .section-tabs,
-:-webkit-full-screen .teacher-note,
-:-webkit-full-screen .sim-info,
-:-webkit-full-screen nav,
-:-webkit-full-screen .tabs,
-:-webkit-full-screen .section-tabs {
-  display: none !important;
-}
-/* ================= END BLUEPRINT CSS ================= */
-
-</style>
-
-<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
-<style id="genz-simulation-fullscreen-styles">
-  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
-  html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen, ::backdrop {
-    background-color: #060e1d !important;
-  }
-
-  html:fullscreen,
-  body:fullscreen,
-  :fullscreen,
-  :-webkit-full-screen,
-  :-moz-full-screen,
-  :-ms-fullscreen,
-  .simulation-wrapper:fullscreen,
-  .is-fullscreen,
-  [data-is-fullscreen="true"] {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    padding: 10px 16px !important;
-    background-color: #060e1d !important;
-    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 999999 !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar,
-  :-webkit-full-screen::-webkit-scrollbar,
-  ::-webkit-scrollbar {
-    display: block !important;
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-track,
-  :-webkit-full-screen::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track {
-    background: rgba(10, 15, 30, 0.7) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-thumb,
-  :-webkit-full-screen::-webkit-scrollbar-thumb,
-  ::-webkit-scrollbar-thumb {
-    background: #0284c7 !important;
-    border-radius: 4px !important;
-  }
-
-  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
-  :fullscreen canvas,
-  :fullscreen svg,
-  :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  .is-fullscreen canvas,
-  .is-fullscreen svg {
-    display: block !important;
-    object-fit: contain !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 70vh !important;
-    min-height: 280px !important;
-    flex-shrink: 0 !important;
-    margin: 4px auto !important;
-  }
-
-  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
-  :fullscreen .ctl,
-  :fullscreen .controls,
-  :fullscreen .sim-controls,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .controls-bar,
-  :fullscreen .fs-bar,
-  :fullscreen .fs-topbar,
-  :fullscreen .fullscreen-overlay-controls,
-  :fullscreen .floating-controls,
-  :fullscreen .preset-chips,
-  :fullscreen .stats-bar,
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :fullscreen header,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .controls,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .controls-bar,
-  :-webkit-full-screen .fs-bar,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen .fullscreen-overlay-controls,
-  :-webkit-full-screen .floating-controls,
-  :-webkit-full-screen .preset-chips,
-  :-webkit-full-screen .stats-bar,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  :-webkit-full-screen header,
-  .is-fullscreen .ctl,
-  .is-fullscreen .controls,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .controls-bar,
-  .is-fullscreen .fs-bar,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen .fullscreen-overlay-controls,
-  .is-fullscreen .floating-controls,
-  .is-fullscreen .preset-chips,
-  .is-fullscreen .stats-bar,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout,
-  .is-fullscreen header {
-    flex-shrink: 0 !important;
-    position: relative !important;
-    z-index: 100 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    box-sizing: border-box !important;
-    margin: 4px auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Bottom docked toolbars */
-  :fullscreen .ctl,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .fs-bar,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .fs-bar,
-  .is-fullscreen .ctl,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .fs-bar {
-    padding: 8px 14px !important;
-    background: rgba(5, 10, 30, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
-  }
-
-  /* Top docked toolbars */
-  :fullscreen .sim-controls,
-  :fullscreen .fs-topbar,
-  :fullscreen header,
-  :fullscreen .stats-bar,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen header,
-  :-webkit-full-screen .stats-bar,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen header,
-  .is-fullscreen .stats-bar {
-    padding: 8px 14px !important;
-    background: rgba(6, 14, 34, 0.92) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  }
-
-  /* Readouts between top toolbar and simulation canvas */
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout {
-    margin: 4px auto !important;
-    padding: 4px 10px !important;
-    font-size: clamp(12px, 1.2vw, 15px) !important;
-  }
-
-  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
-  :fullscreen .btn,
-  :fullscreen button,
-  :-webkit-full-screen .btn,
-  :-webkit-full-screen button,
-  .is-fullscreen .btn,
-  .is-fullscreen button {
-    font-size: clamp(11px, 1.1vw, 15px) !important;
-    padding: 6px 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  :fullscreen .row,
-  :-webkit-full-screen .row,
-  .is-fullscreen .row {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  :fullscreen .ctrl-group,
-  :-webkit-full-screen .ctrl-group,
-  .is-fullscreen .ctrl-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-  }
-
-  :fullscreen input[type="range"],
-  :-webkit-full-screen input[type="range"],
-  .is-fullscreen input[type="range"] {
-    max-width: 140px !important;
-    cursor: pointer !important;
-  }
-
-  :fullscreen select,
-  :-webkit-full-screen select,
-  .is-fullscreen select {
-    cursor: pointer !important;
-    font-size: clamp(11px, 1.1vw, 14px) !important;
-  }
-
-  /* Keep teacher notes and explanations visible and reachable in scrolling view */
-  :fullscreen .teacher-note,
-  :fullscreen .sim-info,
-  :fullscreen .desc,
-  :-webkit-full-screen .teacher-note,
-  :-webkit-full-screen .sim-info,
-  :-webkit-full-screen .desc,
-  .is-fullscreen .teacher-note,
-  .is-fullscreen .sim-info,
-  .is-fullscreen .desc {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
+:root{--panel:#14264f;--line:#2b4482;--text:#eef4ff;--soft:#a9bde8}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0a1430;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;color:var(--text)}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 20% 0,#1e3a8a,#0a1430 70%)}
+header{padding:10px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--line);background:rgba(10,20,48,.7)}
+header h1{font-size:22px}header h1 span{color:#ffd54f}header small{color:var(--soft);font-size:13px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 370px}
+#stage{position:relative;min-height:0;cursor:default}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+aside{background:var(--panel);border-left:2px solid var(--line);overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.card{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+#badge{font-size:26px;font-weight:800;text-align:center;padding:8px;border-radius:12px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.5);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 4px 12px rgba(0,0,0,.3)}
+#type{font-size:18px;font-weight:800;text-align:center;margin-top:6px}
+h3{font-size:13px;color:var(--soft);margin-bottom:6px}
+#desc{font-size:14px;line-height:1.45}
+#tip{font-size:13px;line-height:1.4;margin-top:8px;padding:8px;border-radius:10px;background:rgba(255,213,79,.12);border:1px dashed #ffd54f}
+.fact{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.fact b{color:#ffd54f}
+#now{font-size:14px;font-weight:700;margin-top:8px;line-height:1.4;color:#9fffc2}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn{--c:#888;border:0;border-radius:11px;padding:9px 6px;font:700 13px "Trebuchet MS",Verdana,sans-serif;color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 80%,#fff),var(--c));box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000),0 6px 10px rgba(0,0,0,.35);cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.btn.on{outline:3px solid #fff;outline-offset:1px}
+.btn:focus-visible{outline:3px solid #fff}
+.btn.span{grid-column:1/-1}
+@media(max-width:900px){main{grid-template-columns:1fr}aside{max-height:45vh}}
 </style>
 </head>
 <body>
-
-<div class="container">
-
-  <!-- TOP NAVIGATION TABS -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTopic('t-scale', this)"><span class="icon">🧪</span>The 0–14 pH Scale &amp; Spectrophotometry</button>
-    <button class="tab-btn" onclick="switchTopic('t-titration', this)"><span class="icon">⚗️</span>Buret Neutralization Titration</button>
-  </div>
-
-  <!-- TOPIC 1: pH SCALE -->
-  <div class="topic active" id="t-scale">
-    <div class="card">
-      <h2>🧪 The 0–14 pH Scale &amp; Hydrogen Ion Concentration <small>Acid-Base Chemistry Lab</small></h2>
-      <div class="desc">
-        Investigate logarithmic acidity and alkalinity. The pH scale measures the decimal logarithm of hydrogen ion activity: pH = -log₁₀[H⁺]. Acidic solutions (pH &lt; 7) have high [H⁺] ions; basic solutions (pH &gt; 7) have high [OH⁻] hydroxide ions.
-      </div>
-
-      <div class="section-tabs">
-        <button class="section-tab active" onclick="switchSection(this, 'p-scale-def')">📖 Logarithmic Definition</button>
-        <button class="section-tab" onclick="switchSection(this, 'p-scale-exp')">💡 Real-World Benchmarks</button>
-        <button class="section-tab" onclick="switchSection(this, 'p-scale-notes')">🎯 Teacher Guidance</button>
-      </div>
-
-      <div class="panel active" id="p-scale-def">
-        <h3>Logarithmic Nature of pH</h3>
-        <p>Because pH is logarithmic, each whole pH unit represents a 10-fold change in hydrogen ion concentration. A solution of pH 3 is 10 times more acidic than pH 4 and 100 times more acidic than pH 5.</p>
-        <div class="grid-3">
-          <div class="grid-item">
-            <h4>[H⁺] Hydronium Ions</h4>
-            <p>Acids release protons (H⁺) into water, forming hydronium ions (H₃O⁺). Universal indicator glows red/orange.</p>
-          </div>
-          <div class="grid-item">
-            <h4>Neutral Water (pH 7.0)</h4>
-            <p>At 25°C, autoionization gives [H⁺] = [OH⁻] = 1.0 × 10⁻⁷ M, yielding a perfectly balanced neutral pH of 7.</p>
-          </div>
-          <div class="grid-item">
-            <h4>[OH⁻] Hydroxide Ions</h4>
-            <p>Bases accept protons or release OH⁻ ions. Universal indicator shifts to deep royal blue and violet.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel" id="p-scale-exp">
-        <h3>Substance pH Spectrum</h3>
-        <ul>
-          <li>Strong Acids (pH 0–2): Battery Acid (0.8), Stomach Gastric Juice (1.5), Lemon Juice (2.2).</li>
-          <li>Weak Acids &amp; Everyday Items (pH 3–6): Vinegar (2.8), Tomato Juice (4.2), Black Coffee (5.0), Pure Milk (6.6).</li>
-          <li>Weak Bases &amp; Physiological Fluids (pH 7–10): Human Blood (7.4), Sea Water (8.1), Baking Soda (8.5).</li>
-          <li>Strong Bases (pH 11–14): Ammonia Cleaner (11.5), Bleach (12.5), Drain Cleaner NaOH (14.0).</li>
-        </ul>
-      </div>
-
-      <div class="panel" id="p-scale-notes">
-        <h3>Electrode Sensor Calibration</h3>
-        <p>Remind learners that standard laboratory glass pH electrodes require calibration using two buffer solutions (pH 4.0 and pH 7.0 or pH 10.0) before measurement.</p>
-      </div>
-
-      <!-- Simulation Box -->
-      <div class="sim-box" id="boxScale">
-        <div class="sim-controls">
-          <label>
-            pH Value (0.0 to 14.0):
-            <input type="range" id="phSlider" min="0" max="14" step="0.1" value="7.0" oninput="setPhValue(parseFloat(this.value))">
-            <span id="phSliderVal" style="color:#d8b4fe; font-weight:800;">7.0</span>
-          </label>
-          <label>
-            Solution Dilution (Water Ratio):
-            <input type="range" id="dilutionSlider" min="1" max="10" step="1" value="1" oninput="setDilution(parseInt(this.value))">
-            <span id="dilutionVal" style="color:#d8b4fe; font-weight:800;">1x</span>
-          </label>
-          <button class="btn-fs" onclick="openFullscreen('fs-scale')">⛶ Fullscreen</button>
-        </div>
-
-        <div class="preset-chips" id="liquidChipsContainer"></div>
-
-        <canvas id="scaleCanvas" width="960" height="420"></canvas>
-
-        <div class="sim-readout">
-          <span id="scaleReadout">pH 7.00 • Neutral Pure Water • [H⁺] = 1.00 × 10⁻⁷ M • [OH⁻] = 1.00 × 10⁻⁷ M</span>
-          <small>Dynamic Optical Absorption &amp; Ion Concentration Engine</small>
-        </div>
-
-        <div class="teacher-note">
-          <strong>Teacher Tip:</strong> Adding water to dilute an acid shifts its pH closer to neutral 7.0, but dilution alone can never turn an acid into a base!
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOPIC 2: TITRATION -->
-  <div class="topic" id="t-titration">
-    <div class="card">
-      <h2>⚗️ Acid-Base Buret Titration &amp; Neutralization <small>Analytical Chemistry Laboratory</small></h2>
-      <div class="desc">
-        Perform a precise quantitative titration. Slowly dispense standardized Sodium Hydroxide (0.10 M NaOH) from a 50 mL graduated buret into 25 mL of 0.10 M Hydrochloric Acid (HCl) containing phenolphthalein indicator. Watch the live pH titration curve plot in real-time!
-      </div>
-
-      <div class="sim-box" id="boxTitration">
-        <div class="sim-controls">
-          <button class="btn-accent" onclick="dispenseDrop()">💧 Add 1 Drop (0.5 mL)</button>
-          <button onclick="toggleAutoTitrate()" id="btnAutoTitrate">▶ Auto Titrate</button>
-          <button onclick="resetTitration()">⟳ Reset Flask &amp; Buret</button>
-          <label>
-            Buret Volume Dispensed:
-            <span id="titrationVolReadout" style="color:#d8b4fe; font-weight:800;">0.0 mL</span>
-          </label>
-          <button class="btn-fs" onclick="openFullscreen('fs-titration')">⛶ Fullscreen</button>
-        </div>
-
-        <canvas id="titrationCanvas" width="960" height="440"></canvas>
-
-
-
-
-        <div class="sim-readout">
-          <span id="titrationReadout">Volume NaOH Added: 0.0 mL &bull; Flask pH: 1.00 &bull; Solution Color: Colorless (Acidic)</span>
-          <small>Equivalence Point: Exactly 25.0 mL of 0.10 M NaOH (pH jumps from 3.5 to 10.5)</small>
-        </div>
-
-        <div class="teacher-note">
-          <strong>Teacher Tip:</strong> Phenolphthalein transitions from colorless to light pink at the end point (pH ~8.2–10.0), signaling that stoichiometric neutralization is complete.
-        </div>
-      </div>
-    </div>
-  </div>
-
+<div id="app">
+  <header><h1>GEN Z EDTECH <span>•</span> Acids, Bases and the pH Scale</h1><small>Click a bottle on the shelf or press a button to pour it into the beaker!</small></header>
+  <main>
+    <div id="stage"><canvas id="cv"></canvas></div>
+    <aside>
+      <div class="card"><div id="badge"></div><div id="type"></div></div>
+      <div class="card"><div id="desc">Acids have a pH below 7 and taste sour. Bases have a pH above 7 and feel slippery. Pure water is neutral at pH 7.</div><div id="tip"></div></div>
+      <div class="card"><div id="rows"></div><div id="now"></div></div>
+      <div class="card"><h3>1. Pour Into the Beaker</h3><div class="grid" id="subs"></div></div>
+      <div class="card"><h3>2. Strong Chemicals (Drops)</h3><div class="grid" id="drops"></div></div>
+      <div class="card"><h3>3. Choose an Indicator</h3><div class="grid" id="inds"></div></div>
+      <div class="card"><h3>4. Test the Liquid</h3><div class="grid" id="tests"></div></div>
+      <div class="card"><h3>Tools</h3><div class="grid" id="tools"></div></div>
+    </aside>
+  </main>
 </div>
-
 <script>
-// WEB AUDIO CHIMES
-let audioCtx = null;
-function getAudioContext() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) audioCtx = new AudioContext();
-  }
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),app=$('app'),R=Math.random;
+let W=800,H=600,time=0,paused=false,labels=true,showIons=false,meter=false,ind='univ',tipI=0,now='',lastFact='',fizz=0,stirT=0;
+/* ---------- colour helpers ---------- */
+const hx=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
+const mixc=(a,b,t)=>{const A=hx(a),B=hx(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function stops(list,ph){const p=clamp(ph,0,list.length-1),i=Math.floor(p);return mixc(list[i],list[Math.min(list.length-1,i+1)],p-i)}
+const UNI=['#e5191c','#f0262c','#f5471f','#f98b1b','#fbc318','#f4e51d','#b5d81f','#4fb848','#12a58c','#168ec7','#2a5bb8','#4a3fa8','#6a2f9b','#7f2a8c','#8a1f7a'];
+const CAB=['#d81b4c','#d81b4c','#e8366e','#df4a8c','#c35aa8','#a65fb8','#8f63c4','#7b5fd0','#5a74e0','#3fa0d8','#34bfb0','#4fc66a','#a8cc3c','#e0d030','#f0d020'];
+const WATER='#cfeeff';
+const INDS={univ:ph=>stops(UNI,ph),cab:ph=>stops(CAB,ph),phen:ph=>mixc(WATER,'#e91e8c',clamp((ph-8.2)/1.8,0,1)),meth:ph=>ph<3.1?'#e53935':mixc('#e53935','#fdd835',clamp((ph-3.1)/1.3,0,1)),none:null};
+/* ---------- chemistry ---------- */
+const cOf=ph=>ph<7?Math.pow(10,-ph):-Math.pow(10,ph-14);
+let V=100,N=0,cs=hx('#bfe6ff').map(v=>v*100),pHd=7;
+function phNow(){const n=N/V;if(Math.abs(n)<1e-7)return 7;return n>0?clamp(-Math.log10(n),0,7):clamp(14+Math.log10(-n),7,14)}
+const SUBS=[
+ {n:'Lemon Juice',s:'Lemon',ph:2,col:'#fff59d',f:'Lemon juice has citric acid. That is why it tastes sour.',bc:'#f9a825',e:'🍋',sp:'lemon',h:46},
+ {n:'Vinegar',s:'Vinegar',ph:2.9,col:'#e8d4a8',f:'Vinegar has acetic acid. We use it in salads and pickles.',bc:'#ef6c00',e:'🍶',b:[28,50,'#a0652a',12,18,'#222','#fff'],h:68},
+ {n:'Cola',s:'Cola',ph:2.5,col:'#5d3a1a',f:'Cola drinks have acids in them, so they are quite acidic.',bc:'#c62828',e:'🥤',b:[32,56,'#d32f2f',32,0,'#cfd8dc','#fff'],h:56},
+ {n:'Orange Juice',s:'Orange Juice',ph:3.5,col:'#ffb74d',f:'Orange juice has citric acid, but less than lemon juice.',bc:'#fb8c00',e:'🍊',b:[36,56,'#fb8c00',14,10,'#fff','#fff176'],h:66},
+ {n:'Coffee',s:'Coffee',ph:5,col:'#4e342e',f:'Coffee is a weak acid.',bc:'#6d4c41',e:'☕',sp:'mug',h:38},
+ {n:'Milk',s:'Milk',ph:6.5,col:'#fffaf0',f:'Milk is almost neutral. It is only a tiny bit acidic.',bc:'#42a5f5',e:'🥛',b:[34,52,'#f5f5f5',16,8,'#1e88e5','#42a5f5'],h:60},
+ {n:'Pure Water',s:'Water',ph:7,col:'#cfeeff',f:'Pure water is neutral. It adds no acid and no base.',bc:'#00acc1',e:'💧',b:[28,60,'#80d8ff',12,10,'#1565c0','#e3f2fd'],h:70},
+ {n:'Baking Soda',s:'Baking Soda',ph:8.3,col:'#f5f5f5',f:'Baking soda is a mild base. Bakers use it to make cakes rise.',bc:'#7cb342',e:'🧂',b:[40,46,'#ffb300',34,0,'#ffb300','#fff'],h:46},
+ {n:'Soap',s:'Soap',ph:10,col:'#c5e1a5',f:'Soap is a base. That is why it feels slippery.',bc:'#26a69a',e:'🧼',b:[30,46,'#66bb6a',10,14,'#2e7d32','#e8f5e9'],h:66},
+ {n:'Ammonia Cleaner',s:'Ammonia',ph:11.5,col:'#b3e5fc',f:'Cleaning ammonia is a strong base. Only grown-ups should use it!',bc:'#5e35b1',e:'🧴',b:[30,46,'#1e88e5',12,14,'#fff','#bbdefb'],h:66},
+ {n:'Bleach',s:'Bleach',ph:12.6,col:'#fff9c4',f:'Bleach is a very strong base. Never touch it or mix chemicals at home!',bc:'#8e24aa',e:'🧪',b:[40,52,'#eceff1',16,10,'#1976d2','#90caf9'],h:68}];
+const DROPS=[{n:'Strong Acid (HCl)',ph:1,col:'#ff8a80',f:'Hydrochloric acid is a strong acid. Labs use tiny drops of it.',bc:'#d50000',e:'🔴',sp:'drop',vol:5},
+ {n:'Strong Base (NaOH)',ph:13,col:'#82b1ff',f:'Sodium hydroxide is a strong base. Labs use tiny drops of it.',bc:'#2962ff',e:'🔵',sp:'drop',vol:5}];
+const ALL=SUBS.concat(DROPS);
+/* ---------- sprites (base at 0,0) ---------- */
+const lg=(x0,y0,x1,y1,s)=>{const g=ctx.createLinearGradient(x0,y0,x1,y1);s.forEach((c,i)=>g.addColorStop(i/(s.length-1),c));return g};
+function bot(w,h,col,nw,nh,cap,lab){
+  ctx.fillStyle=lg(-w/2,0,w/2,0,[col,'rgba(255,255,255,.6)',col]);ctx.beginPath();ctx.roundRect(-w/2,-h,w,h,5);ctx.fill();
+  if(nh){ctx.fillRect(-nw/2,-h-nh,nw,nh+2)}
+  ctx.fillStyle=cap;ctx.fillRect(-nw/2-1,-h-nh-6,nw+2,7);
+  ctx.fillStyle=lab;ctx.fillRect(-w/2+1,-h*.65,w-2,h*.3);ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(-w/2+5,-h*.55,w-10,3)}
+function sprite(it){
+  if(it.sp==='lemon'){ctx.fillStyle=lg(0,-44,0,0,['#fff176','#f9a825']);ctx.beginPath();ctx.moveTo(-28,-22);ctx.quadraticCurveTo(-18,-46,0,-44);ctx.quadraticCurveTo(18,-46,28,-22);ctx.quadraticCurveTo(18,0,0,0);ctx.quadraticCurveTo(-18,0,-28,-22);ctx.fill();ctx.fillStyle='#43a047';ctx.beginPath();ctx.ellipse(8,-46,9,4,-.5,0,7);ctx.fill();ctx.fillStyle='rgba(255,255,255,.5)';ctx.beginPath();ctx.ellipse(-10,-30,7,4,-.6,0,7);ctx.fill()}
+  else if(it.sp==='mug'){ctx.fillStyle=lg(-20,0,20,0,['#cfd8dc','#fff','#b0bec5']);ctx.beginPath();ctx.roundRect(-19,-38,38,38,6);ctx.fill();ctx.strokeStyle='#cfd8dc';ctx.lineWidth=5;ctx.beginPath();ctx.arc(21,-20,10,-1.5,1.5);ctx.stroke();ctx.fillStyle='#3e2723';ctx.beginPath();ctx.ellipse(0,-36,17,4,0,0,7);ctx.fill();ctx.fillStyle='#e53935';ctx.fillRect(-19,-22,38,6)}
+  else if(it.sp==='drop'){ctx.fillStyle='rgba(220,240,255,.8)';ctx.beginPath();ctx.moveTo(-2,0);ctx.lineTo(2,0);ctx.lineTo(6,-56);ctx.lineTo(-6,-56);ctx.fill();ctx.fillStyle=it.col;ctx.fillRect(-3,-30,6,28);ctx.fillStyle=lg(-12,0,12,0,['#212121','#616161','#212121']);ctx.beginPath();ctx.ellipse(0,-72,12,18,0,0,7);ctx.fill();ctx.fillRect(-7,-62,14,8)}
+  else bot(...it.b)}
+/* ---------- pour animation ---------- */
+let pour=null,hit=[];
+function addSub(i){
+  if(pour)return;const it=ALL[i],vol=it.vol||50;
+  if(V+vol>500){now='The beaker is full! Press "Empty Beaker".';return}
+  const ph=phNow();
+  if((it.ph<6.5&&ph>7.6)||(it.ph>7.5&&ph<6.4)){fizz=Math.max(fizz,it.vol?1.5:3)}
+  pour={i,p:0,dur:it.vol?1.3:1.9,vol,done:0};lastFact=it.n+': '+it.f;now='';
 }
-
-function playTone(freq, type = 'sine', duration = 0.12, gain = 0.12) {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    g.gain.setValueAtTime(gain, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-    osc.connect(g);
-    g.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + duration);
-  } catch (e) {}
+function updPour(dt){
+  if(!pour)return;const it=ALL[pour.i];pour.p+=dt/pour.dur;
+  if(pour.p>.25&&pour.p<.75){let dv=pour.vol*dt/(pour.dur*.5);dv=Math.min(dv,pour.vol-pour.done);pour.done+=dv;V+=dv;N+=dv*cOf(it.ph);const c=hx(it.col);cs=cs.map((v,k)=>v+c[k]*dv)}
+  if(pour.p>=1){pour=null}
 }
-
-function switchTopic(id, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(id).classList.add('active');
-  playTone(587.33, 'sine', 0.1, 0.12);
+/* ---------- tests: paper / strip ---------- */
+let PP=null;
+const REDL='#d32f2f',BLUEL='#1e63d6',STRIPC='#f3ecc8';
+function paperFinal(kind,ph){return kind==='red'?(ph<8?REDL:mixc(REDL,BLUEL,clamp((ph-8)/1.5,0,1))):kind==='blue'?(ph>6.5?BLUEL:mixc(REDL,BLUEL,clamp((ph-4.5)/2,0,1))):INDS.univ(ph)}
+function startTest(kind){if(PP&&PP.t<.7*PP.dur)return;PP={kind,t:0,dur:4.2,wet:0,fin:null,msg:''};now=''}
+function updTest(dt){if(!PP)return;PP.t+=dt;const p=PP.t/PP.dur;if(p>.2&&!PP.fin){const ph=phNow();PP.fin=paperFinal(PP.kind,ph);const k=PP.kind;
+  PP.msg=k==='red'?(ph>=9?'Red litmus turned BLUE: it is a BASE':'Red litmus stayed RED: not a base'):k==='blue'?(ph<=4.5?'Blue litmus turned RED: it is an ACID':ph<6.5?'Blue litmus turned a bit PURPLE: weak acid':'Blue litmus stayed BLUE: not an acid'):'pH strip shows about pH '+ph.toFixed(1);now=PP.msg}}
+/* ---------- particles ---------- */
+const IH=[],IO=[];for(let i=0;i<60;i++){IH.push({x:R(),y:R(),vx:R()-.5,vy:R()-.5});IO.push({x:R(),y:R(),vx:R()-.5,vy:R()-.5})}
+const bubbles=[];
+function update(dt){
+  updPour(dt);updTest(dt);
+  const ph=phNow();pHd+=(ph-pHd)*Math.min(1,dt*4);
+  if(fizz>0){fizz-=dt;for(let i=0;i<3;i++)bubbles.push({x:R(),y:1,r:2+R()*5,v:.3+R()*.5})}
+  for(let i=bubbles.length-1;i>=0;i--){const b=bubbles[i];b.y-=b.v*dt;b.x+=Math.sin(time*6+i)*.002;if(b.y<0)bubbles.splice(i,1)}
+  if(stirT>0)stirT-=dt;
+  for(const a of[IH,IO])for(const p of a){p.x+=p.vx*dt*.25;p.y+=p.vy*dt*.25;if(p.x<.04||p.x>.96)p.vx*=-1;if(p.y<.06||p.y>.96)p.vy*=-1;p.x=clamp(p.x,.04,.96);p.y=clamp(p.y,.06,.96)}
 }
-
-function switchSection(btn, panelId) {
-  const card = btn.closest('.card');
-  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
-  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId).classList.add('active');
-  playTone(659.25, 'sine', 0.1, 0.1);
-}
-
-// ================= TOPIC 1: pH SCALE =================
-let currPh = 7.0;
-let dilutionFactor = 1;
-
-const LIQUID_PRESETS = [
-  { name: 'Battery Acid', ph: 0.8, color: '#ef4444' },
-  { name: 'Stomach Acid', ph: 1.5, color: '#f87171' },
-  { name: 'Lemon Juice', ph: 2.2, color: '#fb923c' },
-  { name: 'Vinegar', ph: 2.8, color: '#f97316' },
-  { name: 'Tomato Juice', ph: 4.2, color: '#fbbf24' },
-  { name: 'Black Coffee', ph: 5.0, color: '#facc15' },
-  { name: 'Fresh Milk', ph: 6.6, color: '#a3e635' },
-  { name: 'Pure Water', ph: 7.0, color: '#22c55e' },
-  { name: 'Human Blood', ph: 7.4, color: '#10b981' },
-  { name: 'Sea Water', ph: 8.2, color: '#06b6d4' },
-  { name: 'Baking Soda', ph: 8.5, color: '#0ea5e9' },
-  { name: 'Ammonia Cleaner', ph: 11.5, color: '#3b82f6' },
-  { name: 'Bleach Solution', ph: 12.5, color: '#6366f1' },
-  { name: 'Drain Cleaner (NaOH)', ph: 14.0, color: '#8b5cf6' }
-];
-
-function initLiquidChips() {
-  const container = document.getElementById('liquidChipsContainer');
-  container.innerHTML = '';
-  LIQUID_PRESETS.forEach((item, idx) => {
-    const btn = document.createElement('button');
-    btn.className = `chip-btn ${item.ph === 7.0 ? 'active' : ''}`;
-    btn.textContent = `${item.name} (${item.ph})`;
-    btn.onclick = () => selectLiquid(item, btn);
-    container.appendChild(btn);
+/* ---------- drawing ---------- */
+function pill(t,x,y,bg,al,fs=13){ctx.font='600 '+fs+'px "Trebuchet MS",Verdana,sans-serif';const w=ctx.measureText(t).width+18,l=al==='l'?x:al==='r'?x-w:x-w/2;ctx.fillStyle=bg;ctx.beginPath();ctx.roundRect(l,y-12,w,24,12);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(t,l+9,y+1)}
+function liqColor(){const f=INDS[ind];if(f)return f(pHd);const k=cs.map(v=>Math.round(v/V));return'#'+k.map(v=>clamp(v,0,255).toString(16).padStart(2,'0')).join('')}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const sh=H*.27,bench=H*.75;
+  ctx.fillStyle=lg(0,0,0,bench,['#2a4a6b','#5a8aa8']);ctx.fillRect(0,0,W,bench);
+  ctx.fillStyle=lg(0,sh,0,sh+14,['#d2a05b','#7a5224']);ctx.fillRect(W*.01,sh,W*.98,14);
+  /* shelf items */
+  const slot=W/11,sc=Math.min(slot/58,H*.1/62);hit=[];
+  const bx0=W*.44,bw=Math.min(W*.27,H*.52),bh=H*.38,by=H*.35,bot=by+bh,cx=bx0,fillH=bh*.94*(V/500),surf=bot-fillH-2;
+  SUBS.forEach((it,i)=>{
+    const x=slot*(i+.5),y=sh-4;hit.push([x-slot/2,0,slot,sh+30,i]);
+    if(!(pour&&pour.i===i&&pour.p>.02&&pour.p<.98)){ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);sprite(it);ctx.restore()}
+    if(labels){ctx.font='700 12px "Trebuchet MS",Verdana,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText(it.s,x,sh+28);pill('pH '+it.ph,x,sh+50,INDS.univ(it.ph),'c',11);}
   });
-}
-
-function selectLiquid(item, btn) {
-  document.querySelectorAll('#liquidChipsContainer .chip-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  setPhValue(item.ph);
-}
-
-function setPhValue(val) {
-  currPh = val;
-  document.getElementById('phSlider').value = val;
-  document.getElementById('phSliderVal').textContent = val.toFixed(1);
-
-  const hConc = Math.pow(10, -currPh);
-  const ohConc = Math.pow(10, -(14 - currPh));
-
-  let classification = 'Neutral';
-  if (currPh < 6.8) classification = currPh < 3.0 ? 'Strongly Acidic' : 'Mildly Acidic';
-  if (currPh > 7.2) classification = currPh > 11.0 ? 'Strongly Basic (Alkaline)' : 'Mildly Basic';
-
-  document.getElementById('scaleReadout').textContent = 
-    `pH ${currPh.toFixed(2)} • ${classification} • [H⁺] = ${hConc.toExponential(2)} M • [OH⁻] = ${ohConc.toExponential(2)} M`;
-
-  drawScaleCanvas();
-  playTone(200 + currPh * 50, 'sine', 0.08, 0.1);
-}
-
-function setDilution(d) {
-  dilutionFactor = d;
-  document.getElementById('dilutionVal').textContent = `${d}x`;
-  drawScaleCanvas();
-}
-
-function getPhColor(ph) {
-  // Universal indicator spectrophotometric color mapping
-  if (ph < 1) return '#dc2626'; // Deep Red
-  if (ph < 3) return '#ea580c'; // Red-Orange
-  if (ph < 5) return '#f59e0b'; // Orange
-  if (ph < 6) return '#eab308'; // Yellow-Orange
-  if (ph < 7) return '#84cc16'; // Yellow-Green
-  if (ph < 8) return '#22c55e'; // Green (Neutral)
-  if (ph < 9) return '#10b981'; // Green-Cyan
-  if (ph < 10) return '#06b6d4'; // Cyan
-  if (ph < 12) return '#3b82f6'; // Royal Blue
-  if (ph < 13) return '#6366f1'; // Indigo
-  return '#7c3aed';            // Deep Violet
-}
-
-function drawScaleCanvas() {
-  const canvas = document.getElementById('scaleCanvas');
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width;
-  const H = canvas.height;
-
-  ctx.fillStyle = '#051120';
-  ctx.fillRect(0, 0, W, H);
-
-  // Beaker on Left
-  const bX = 140;
-  const bY = 90;
-  const bW = 240;
-  const bH = 260;
-
-  // Beaker 3D glass wall with bright highlights
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(bX, bY);
-  ctx.lineTo(bX, bY + bH);
-  ctx.lineTo(bX + bW, bY + bH);
-  ctx.lineTo(bX + bW, bY);
-  ctx.stroke();
-  // Glass thickness specular glare
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(bX + 6, bY + 10);
-  ctx.lineTo(bX + 6, bY + bH - 6);
-  ctx.stroke();
-
-  // Beaker liquid fill
-  const liqColor = getPhColor(currPh);
-  ctx.fillStyle = liqColor;
-  ctx.globalAlpha = 0.82;
-  ctx.fillRect(bX + 4, bY + 60, bW - 8, bH - 64);
-  ctx.globalAlpha = 1.0;
-
-  // Liquid surface meniscus
-  ctx.beginPath();
-  ctx.ellipse(bX + bW / 2, bY + 60, bW / 2 - 4, 10, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-  ctx.fill();
-
-  // Glass electrode probe immersed with glowing sensing bulb
-  ctx.fillStyle = '#1e293b';
-  ctx.fillRect(bX + bW / 2 - 8, 40, 16, 170);
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(bX + bW / 2 - 8, 40, 16, 170);
-  ctx.fillStyle = '#38bdf8';
-  ctx.shadowColor = '#38bdf8';
-  ctx.shadowBlur = 12;
-  ctx.beginPath();
-  ctx.arc(bX + bW / 2, 210, 12, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // On-screen Component Badges
-  ctx.fillStyle = '#0f172a';
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.roundRect(bX - 20, bY + bH + 15, 130, 24, 6);
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 11px system-ui,sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('🧪 BOROSILICATE BEAKER', bX + 45, bY + bH + 31);
-
-  ctx.fillStyle = '#0f172a';
-  ctx.strokeStyle = '#a855f7';
-  ctx.beginPath();
-  ctx.roundRect(bX + bW - 20, bY + 110, 120, 24, 6);
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#d8b4fe';
-  ctx.fillText('⚡ pH GLASS PROBE', bX + bW + 40, bY + 126);
-  ctx.textAlign = 'left';
-
-  // Digital pH Display Box above beaker
-  ctx.fillStyle = '#091c33';
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 2;
-  ctx.roundRect(bX + 20, 20, 200, 48, 10);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.font = 'bold 26px "Segoe UI", monospace';
-  ctx.fillStyle = '#38bdf8';
-  ctx.textAlign = 'center';
-  ctx.fillText(`pH: ${currPh.toFixed(2)}`, bX + 120, 52);
-
-  // Rainbow 0 to 14 Spectrum Bar on Right
-  const barX = 460;
-  const barY = 90;
-  const barW = 440;
-  const barH = 50;
-
-  const grad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
-  for (let p = 0; p <= 14; p++) {
-    grad.addColorStop(p / 14, getPhColor(p));
+  /* bench */
+  ctx.fillStyle=lg(0,bench,0,H,['#c98b4d','#6b3f1d']);ctx.fillRect(0,bench,W,H-bench);ctx.fillStyle='rgba(255,255,255,.25)';ctx.fillRect(0,bench,W,4);
+  /* pH scale bar */
+  const sx=W*.06,sw=W*.88,sy=H*.8,shh=H*.075,cw=sw/15;
+  for(let i=0;i<15;i++){ctx.fillStyle=UNI[i];ctx.fillRect(sx+i*cw,sy,cw,shh);ctx.fillStyle=i>=3&&i<=8?'#1a1a1a':'#fff';ctx.font='700 '+Math.min(16,cw*.45)+'px "Trebuchet MS"';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i,sx+i*cw+cw/2,sy+shh/2)}
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(sx,sy,sw,shh);
+  if(labels){pill('ACID',sx+cw*3.5,sy+shh+18,'rgba(200,40,30,.95)');pill('NEUTRAL',sx+cw*7.5,sy+shh+18,'rgba(40,140,60,.95)');pill('BASE',sx+cw*11,sy+shh+18,'rgba(40,70,190,.95)')}
+  const mx=sx+clamp(pHd,0,14)*cw+cw/2;ctx.fillStyle='#fff';ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mx,sy-2);ctx.lineTo(mx-11,sy-20);ctx.lineTo(mx+11,sy-20);ctx.closePath();ctx.fill();ctx.stroke();pill('pH '+pHd.toFixed(1),mx,sy-34,'rgba(0,0,0,.7)');
+  /* beaker */
+  const path=()=>{ctx.beginPath();ctx.moveTo(cx-bw/2,by);ctx.lineTo(cx-bw/2,bot-16);ctx.quadraticCurveTo(cx-bw/2,bot,cx-bw/2+16,bot);ctx.lineTo(cx+bw/2-16,bot);ctx.quadraticCurveTo(cx+bw/2,bot,cx+bw/2,bot-16);ctx.lineTo(cx+bw/2,by)};
+  path();ctx.fillStyle='rgba(255,255,255,.1)';ctx.fill();
+  ctx.save();path();ctx.clip();
+  const lc=liqColor(),amp=2+(stirT>0?5:0)+(fizz>0?2:0);
+  ctx.globalAlpha=.88;ctx.fillStyle=lg(0,surf,0,bot,[lc,mixc(lc.length===7?lc:'#cfeeff','#000000',.25)]);ctx.beginPath();ctx.moveTo(cx-bw/2,bot);ctx.lineTo(cx-bw/2,surf);for(let x=0;x<=bw;x+=6)ctx.lineTo(cx-bw/2+x,surf+Math.sin(x*.09+time*3)*amp);ctx.lineTo(cx+bw/2,bot);ctx.fill();ctx.globalAlpha=1;
+  const lh=bot-surf;
+  if(showIons){
+    const nH=Math.round(clamp(3+Math.max(0,7-pHd)*8.5,3,60)),nO=Math.round(clamp(3+Math.max(0,pHd-7)*8.5,3,60)),r=Math.max(6,Math.min(10,bw*.035));
+    const dot=(p,c,t)=>{const x=cx-bw/2+8+p.x*(bw-16),y=surf+8+p.y*(lh-12);ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=1.2;ctx.stroke();ctx.fillStyle='#fff';ctx.font='700 '+(r*.9)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y+.5)};
+    for(let i=0;i<nH;i++)dot(IH[i],'#e53935','H⁺');for(let i=0;i<nO;i++)dot(IO[i],'#1e63d6','OH⁻');
   }
-  ctx.fillStyle = grad;
-  ctx.roundRect(barX, barY, barW, barH, 8);
-  ctx.fill();
-
-  // Spectrum tick marks & numbers
-  ctx.font = 'bold 13px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#ffffff';
-  for (let p = 0; p <= 14; p += 2) {
-    const tx = barX + (p / 14) * barW;
-    ctx.fillText(`${p}`, tx, barY + barH + 20);
-  }
-
-  // Pointer indicator on spectrum
-  const pointerX = barX + (currPh / 14) * barW;
-  ctx.beginPath();
-  ctx.moveTo(pointerX, barY - 10);
-  ctx.lineTo(pointerX - 10, barY - 24);
-  ctx.lineTo(pointerX + 10, barY - 24);
-  ctx.closePath();
-  ctx.fillStyle = '#ffffff';
-  ctx.shadowColor = '#000000';
-  ctx.shadowBlur = 8;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // Detailed Analysis Card Below Bar
-  ctx.fillStyle = '#0a1e34';
-  ctx.strokeStyle = '#1e3a5c';
-  ctx.lineWidth = 2;
-  ctx.roundRect(barX, 190, barW, 160, 14);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.font = 'bold 20px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#ffd54f';
-  ctx.textAlign = 'left';
-  ctx.fillText('CHEMICAL EQUILIBRIUM TELEMETRY', barX + 20, 225);
-
-  const hVal = Math.pow(10, -currPh);
-  const ohVal = Math.pow(10, -(14 - currPh));
-
-  ctx.font = '15px "Segoe UI", monospace';
-  ctx.fillStyle = '#e2e8f0';
-  ctx.fillText(`[H₃O⁺] Hydronium  : ${hVal.toExponential(4)} mol/L`, barX + 20, 260);
-  ctx.fillText(`[OH⁻]  Hydroxide  : ${ohVal.toExponential(4)} mol/L`, barX + 20, 290);
-  ctx.fillText(`Ion Product Kw   : 1.00 × 10⁻¹⁴ (at 25°C)`, barX + 20, 320);
-}
-
-// ================= TOPIC 2: TITRATION =================
-let titrateVol = 0.0;
-let isAutoTitrating = false;
-let autoInterval = null;
-let titrateHistory = [{ v: 0, ph: 1.0 }];
-
-function dispenseDrop() {
-  if (titrateVol >= 50.0) return;
-  titrateVol = parseFloat((titrateVol + 0.5).toFixed(1));
-  const newPh = calculateTitrationPh(titrateVol);
-  titrateHistory.push({ v: titrateVol, ph: newPh });
-  updateTitrationUI(newPh);
-  playTone(800, 'sine', 0.06, 0.08);
-}
-
-function calculateTitrationPh(vAdded) {
-  // 25.0 mL of 0.10 M HCl titrated with 0.10 M NaOH
-  const vAcid = 25.0;
-  const cAcid = 0.10;
-  const cBase = 0.10;
-  const molesAcidInit = (vAcid / 1000) * cAcid;
-  const molesBaseAdded = (vAdded / 1000) * cBase;
-  const totalVol = (vAcid + vAdded) / 1000;
-
-  if (molesBaseAdded < molesAcidInit) {
-    // Before equivalence: excess H+
-    const molesHRem = molesAcidInit - molesBaseAdded;
-    const hConc = molesHRem / totalVol;
-    return Math.max(1.0, -Math.log10(hConc));
-  } else if (Math.abs(molesBaseAdded - molesAcidInit) < 0.000005) {
-    // Exactly at equivalence point (25.0 mL)
-    return 7.0;
-  } else {
-    // Past equivalence: excess OH-
-    const molesOhRem = molesBaseAdded - molesAcidInit;
-    const ohConc = molesOhRem / totalVol;
-    const pOH = -Math.log10(ohConc);
-    return Math.min(13.0, 14.0 - pOH);
-  }
-}
-
-function updateTitrationUI(currentPh) {
-  document.getElementById('titrationVolReadout').textContent = `${titrateVol.toFixed(1)} mL`;
-  let colorDesc = 'Colorless (Acidic)';
-  if (currentPh >= 8.2) colorDesc = currentPh > 10 ? 'Bright Magenta Pink (Basic Excess)' : 'Faint Light Pink (Endpoint Reached! 🌟)';
-
-  document.getElementById('titrationReadout').textContent = 
-    `Volume NaOH Added: ${titrateVol.toFixed(1)} mL • Flask pH: ${currentPh.toFixed(2)} • Indicator: ${colorDesc}`;
-
-  drawTitrationCanvas();
-}
-
-function toggleAutoTitrate() {
-  isAutoTitrating = !isAutoTitrating;
-  const btn = document.getElementById('btnAutoTitrate');
-  if (isAutoTitrating) {
-    btn.textContent = '⏸ Pause Auto';
-    btn.classList.add('btn-accent');
-    autoInterval = setInterval(() => {
-      if (titrateVol >= 50.0) {
-        toggleAutoTitrate();
-        return;
-      }
-      dispenseDrop();
-    }, 150);
-  } else {
-    btn.textContent = '▶ Auto Titrate';
-    btn.classList.remove('btn-accent');
-    clearInterval(autoInterval);
-  }
-}
-
-function resetTitration() {
-  clearInterval(autoInterval);
-  isAutoTitrating = false;
-  document.getElementById('btnAutoTitrate').textContent = '▶ Auto Titrate';
-  document.getElementById('btnAutoTitrate').classList.remove('btn-accent');
-  titrateVol = 0.0;
-  titrateHistory = [{ v: 0, ph: 1.0 }];
-  updateTitrationUI(1.0);
-  playTone(440, 'triangle', 0.15, 0.12);
-}
-
-function drawTitrationCanvas() {
-  const canvas = document.getElementById('titrationCanvas');
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width;
-  const H = canvas.height;
-
-  ctx.fillStyle = '#051120';
-  ctx.fillRect(0, 0, W, H);
-
-  // Left Apparatus Drawing (Buret + Erlenmeyer Flask)
-  const appX = 140;
-
-  // Buret Tube
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(appX - 12, 30, 24, 200);
-
-  // Liquid inside Buret (decreases as dispensed)
-  const buretFillH = Math.max(0, 190 - (titrateVol / 50) * 190);
-  ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
-  ctx.fillRect(appX - 10, 30 + (200 - buretFillH), 20, buretFillH);
-
-  // Stopcock valve
-  ctx.fillStyle = '#f59e0b';
-  ctx.fillRect(appX - 18, 230, 36, 10);
-
-  // Buret Tip
-  ctx.beginPath();
-  ctx.moveTo(appX - 6, 240);
-  ctx.lineTo(appX + 6, 240);
-  ctx.lineTo(appX + 2, 260);
-  ctx.lineTo(appX - 2, 260);
-  ctx.closePath();
-  ctx.fillStyle = '#cbd5e1';
-  ctx.fill();
-
-  // Droplet falling if dispensing
-  if (titrateVol > 0 && titrateVol < 50) {
-    ctx.beginPath();
-    ctx.arc(appX, 275, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#38bdf8';
-    ctx.fill();
-  }
-
-  // Erlenmeyer Flask below
-  ctx.beginPath();
-  ctx.moveTo(appX - 25, 280);
-  ctx.lineTo(appX + 25, 280);
-  ctx.lineTo(appX + 60, 380);
-  ctx.lineTo(appX - 60, 380);
-  ctx.closePath();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  // Flask Liquid
-  const currentPh = titrateHistory[titrateHistory.length - 1].ph;
-  let flaskColor = 'rgba(241, 245, 249, 0.2)'; // Colorless acidic
-  if (currentPh >= 8.2) {
-    const alpha = Math.min(0.85, (currentPh - 8.2) * 0.2 + 0.3);
-    flaskColor = `rgba(236, 72, 153, ${alpha})`; // Pink phenolphthalein
-  }
-
-  ctx.beginPath();
-  ctx.moveTo(appX - 42, 330);
-  ctx.lineTo(appX + 42, 330);
-  ctx.lineTo(appX + 56, 376);
-  ctx.lineTo(appX - 56, 376);
-  ctx.closePath();
-  ctx.fillStyle = flaskColor;
-  ctx.fill();
-
-  // Right Side Live Dynamic pH Titration Curve Plot
-  const plotX = 360;
-  const plotY = 60;
-  const plotW = 540;
-  const plotH = 320;
-
-  // Graph Background & Axes
-  ctx.fillStyle = '#0a1e34';
-  ctx.strokeStyle = '#1e3a5c';
-  ctx.lineWidth = 2;
-  ctx.roundRect(plotX, plotY, plotW, plotH, 14);
-  ctx.fill();
-  ctx.stroke();
-
-  // Grid lines
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-  ctx.lineWidth = 1;
-  for (let p = 0; p <= 14; p += 2) {
-    const gy = plotY + plotH - (p / 14) * (plotH - 40) - 20;
-    ctx.beginPath();
-    ctx.moveTo(plotX + 40, gy);
-    ctx.lineTo(plotX + plotW - 20, gy);
-    ctx.stroke();
-
-    ctx.font = '12px "Segoe UI", sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.textAlign = 'right';
-    ctx.fillText(`${p}`, plotX + 34, gy + 4);
-  }
-
-  // Equivalence reference line (at pH 7 and 25 mL)
-  const eqX = plotX + 40 + (25.0 / 50.0) * (plotW - 60);
-  ctx.strokeStyle = 'rgba(245, 158, 11, 0.35)';
-  ctx.setLineDash([4, 4]);
-  ctx.beginPath();
-  ctx.moveTo(eqX, plotY + 20);
-  ctx.lineTo(eqX, plotY + plotH - 20);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Titration Curve Line
-  ctx.beginPath();
-  ctx.strokeStyle = '#c084fc';
-  ctx.lineWidth = 3;
-  titrateHistory.forEach((pt, i) => {
-    const px = plotX + 40 + (pt.v / 50.0) * (plotW - 60);
-    const py = plotY + plotH - (pt.ph / 14.0) * (plotH - 40) - 20;
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  });
-  ctx.stroke();
-
-  // Latest Point Glow
-  if (titrateHistory.length > 0) {
-    const last = titrateHistory[titrateHistory.length - 1];
-    const lx = plotX + 40 + (last.v / 50.0) * (plotW - 60);
-    const ly = plotY + plotH - (last.ph / 14.0) * (plotH - 40) - 20;
-
-    ctx.beginPath();
-    ctx.arc(lx, ly, 6, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = '#c084fc';
-    ctx.shadowBlur = 10;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-
-  // Graph Labels
-  ctx.font = 'bold 13px "Segoe UI", sans-serif';
-  ctx.fillStyle = '#cbd5e1';
-  ctx.textAlign = 'center';
-  ctx.fillText('Volume of 0.10 M NaOH Added (mL)', plotX + plotW / 2, plotY + plotH + 20);
-
-  ctx.save();
-  ctx.translate(plotX + 12, plotY + plotH / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('pH', 0, 0);
+  ctx.fillStyle='rgba(255,255,255,.75)';ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;
+  bubbles.forEach(b=>{ctx.beginPath();ctx.arc(cx-bw/2+8+b.x*(bw-16),surf+b.y*lh,b.r,0,7);ctx.stroke()});
+  if(fizz>0){ctx.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<14;i++){ctx.beginPath();ctx.arc(cx-bw/2+10+((i*53+time*20)%(bw-20)),surf-2+Math.sin(i+time*8)*3,5+(i%3)*2,0,7);ctx.fill()}}
   ctx.restore();
+  path();ctx.strokeStyle='rgba(220,242,255,.95)';ctx.lineWidth=4;ctx.stroke();
+  ctx.fillStyle=lg(cx-bw/2,0,cx-bw/2+bw*.22,0,['rgba(255,255,255,.4)','rgba(255,255,255,0)']);ctx.fillRect(cx-bw/2+5,by+8,bw*.2,bh-30);
+  ctx.beginPath();ctx.ellipse(cx,by,bw/2+6,6,0,0,7);ctx.stroke();
+  ctx.fillStyle='#fff';ctx.font='11px "Trebuchet MS"';ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let v=100;v<=400;v+=100){const y=bot-bh*.94*(v/500);ctx.fillRect(cx-bw/2+4,y,16,2);ctx.fillText(v+' mL',cx-bw/2-6,y)}
+  if(labels)pill('Beaker: '+Math.round(V)+' mL',cx,by-48,'rgba(0,0,0,.5)');
+  /* pH meter */
+  const mw=Math.min(130,W*.13),mxx=W*.82,my=bot-170;
+  ctx.fillStyle=lg(0,my,0,my+170,['#455a64','#263238']);ctx.beginPath();ctx.roundRect(mxx-mw/2,my,mw,170,12);ctx.fill();
+  ctx.fillStyle=meter?'#b9f6ca':'#546e7a';ctx.beginPath();ctx.roundRect(mxx-mw/2+10,my+14,mw-20,56,6);ctx.fill();
+  ctx.fillStyle=meter?'#0d3b1e':'#37474f';ctx.font='700 '+Math.min(26,mw*.2)+'px "Courier New",monospace';ctx.textAlign='center';ctx.fillText(meter?'pH '+pHd.toFixed(2):'OFF',mxx,my+42);
+  ['#e53935','#fdd835','#43a047'].forEach((c,i)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(mxx-mw*.25+i*mw*.25,my+100,9,0,7);ctx.fill()});
+  ctx.strokeStyle='#212121';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(mxx-mw/2+8,my+20);
+  if(meter){ctx.bezierCurveTo(mxx-mw,my-80,cx+bw*.4,by-110,cx+bw*.3,by-40);ctx.lineTo(cx+bw*.3,bot-34);ctx.stroke();ctx.fillStyle='#90a4ae';ctx.fillRect(cx+bw*.3-4,by-40,8,bot-34-by+40);ctx.fillStyle='#eceff1';ctx.fillRect(cx+bw*.3-6,bot-60,12,26)}
+  else{ctx.bezierCurveTo(mxx-mw,my-40,mxx-mw,my+10,mxx-mw-40,my+110);ctx.stroke()}
+  if(labels)pill('pH Meter',mxx,my-18,'rgba(0,0,0,.5)');
+  /* test paper */
+  if(PP){const p=PP.t/PP.dur,e=p<.2?p/.2:p<.5?1:p<.7?1-(p-.5)/.2:0,px=cx-bw*.2,btm=(by-60)+e*(surf+34-(by-60)),pl=80,top=btm-pl;
+    ctx.strokeStyle='#37474f';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(px-30,top-70);ctx.lineTo(px-2,top+6);ctx.moveTo(px+30,top-70);ctx.lineTo(px+2,top+6);ctx.stroke();
+    const orig=PP.kind==='red'?REDL:PP.kind==='blue'?BLUEL:STRIPC;ctx.fillStyle=orig;ctx.fillRect(px-7,top,14,pl);
+    PP.wet=Math.max(PP.wet,clamp(btm-surf,0,38));if(PP.fin&&PP.wet>0){ctx.fillStyle=PP.fin;ctx.fillRect(px-7,btm-PP.wet,14,PP.wet)}
+    ctx.strokeStyle='rgba(0,0,0,.35)';ctx.lineWidth=1;ctx.strokeRect(px-7,top,14,pl);
+    if(labels){pill(PP.kind==='red'?'Red litmus paper':PP.kind==='blue'?'Blue litmus paper':'pH test strip',px,top-84,'rgba(0,0,0,.55)');if(p>.72&&PP.msg)pill(PP.msg,px,top-110,'rgba(0,120,60,.95)')}}
+  /* stirring rod */
+  if(stirT>0){const a=time*7,rx=cx+Math.cos(a)*bw*.18;ctx.strokeStyle='rgba(235,250,255,.9)';ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(rx+bw*.12,by-70);ctx.lineTo(rx,bot-26);ctx.stroke();if(labels)pill('Glass rod',cx+bw*.45,by-30,'rgba(0,0,0,.5)')}
+  /* pouring item */
+  if(pour){const it=ALL[pour.i],p=pour.p,e0=p<.25?p/.25:p>.75?(1-p)/.25:1,e=e0*e0*(3-2*e0),drop=it.sp==='drop';
+    let x,y,th,s;
+    if(drop){x=cx;y=lerp(by-250,by-52,e);th=0;s=1.2}
+    else{const idx=pour.i,sx0=slot*(idx+.5),sy0=sh-4,hh=it.h*1.2,mouth=[cx+bw*.1,by-22],O=[mouth[0]+.909*hh,mouth[1]-.416*hh];x=lerp(sx0,O[0],e);y=lerp(sy0,O[1],e);th=-2*e;s=lerp(sc,1.2,e)}
+    ctx.save();ctx.translate(x,y);ctx.rotate(th);ctx.scale(s,s);sprite(it);ctx.restore();
+    if(p>.27&&p<.74){
+      if(drop){for(let k=0;k<3;k++){const yy=y+((time*320+k*80)%Math.max(30,surf-y));ctx.fillStyle=it.col;ctx.beginPath();ctx.ellipse(x,yy,4,6,0,0,7);ctx.fill()}}
+      else{const mx=x+Math.sin(th)*it.h*s,my2=y-Math.cos(th)*it.h*s;ctx.fillStyle=it.col;ctx.globalAlpha=.9;ctx.fillRect(mx-3.5,my2,7,surf-my2);ctx.globalAlpha=1}
+      ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(cx+bw*.1,surf,10+((time*40)%16),3,0,0,7);ctx.stroke()}
+    if(labels)pill(it.n+' (pH '+it.ph+')',cx,by-84,'rgba(0,0,0,.6)')}
 }
-
-// FULLSCREEN HANDLERS
-function openFullscreen(id) {
-  document.getElementById(id).classList.add('active');
-  try {
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: 'GENZ_SIM_REQUEST_FULLSCREEN', simFile: window.location.pathname }, '*');
-    }
-  } catch (e) {}
+const lerp=(a,b,t)=>a+(b-a)*t;
+/* ---------- panel ---------- */
+const TYPES=ph=>ph<3?['STRONG ACID','#e53935']:ph<6.5?['ACID','#fb8c00']:ph<=7.5?['NEUTRAL','#43a047']:ph<=11?['BASE','#1e88e5']:['STRONG BASE','#7b1fa2'];
+const TIPS=['Acids taste sour, but never taste chemicals in a lab!','A pH of 7 is neutral. Lower is more acidic. Higher is more basic.','Mixing an acid with a base can make them cancel each other. This is called neutralization.','Every step down the pH scale means 10 times more acid.','Red cabbage juice changes color. It is a natural indicator.','Water added to an acid makes it weaker. The pH moves closer to 7.'];
+function panel(){
+  const ph=phNow(),t=TYPES(ph),col=INDS.univ(ph);
+  $('badge').textContent='pH '+ph.toFixed(1);$('badge').style.background=`linear-gradient(180deg,${col},${mixc(col,'#000000',.25)})`;
+  $('type').textContent=t[0];$('type').style.color=t[1]==='#43a047'?'#7dff9a':'#fff';
+  $('tip').textContent='💡 '+TIPS[tipI%TIPS.length];
+  $('rows').innerHTML=[['Liquid in beaker',Math.round(V)+' mL'],['Indicator',{univ:'Universal',cab:'Red Cabbage',phen:'Phenolphthalein',meth:'Methyl Orange',none:'None'}[ind]],['More H⁺ or OH⁻?',ph<6.5?'More H⁺ (acid)':ph>7.5?'More OH⁻ (base)':'Equal (neutral)']].map(([a,b])=>`<div class="fact"><span>${a}</span><b>${b}</b></div>`).join('');
+  $('now').textContent=now||lastFact;
+  all.forEach(b=>b.el.classList.toggle('on',!!(b.on&&b.on())));
 }
-
-function closeFullscreen(id) {
-  document.getElementById(id).classList.remove('active');
-}
-
-// INITIALIZATION
-window.addEventListener('DOMContentLoaded', () => {
-  initLiquidChips();
-  drawScaleCanvas();
-  drawTitrationCanvas();
-});
+/* ---------- buttons ---------- */
+const all=[];let fsEl;
+function mk(list,box){list.forEach(([label,color,fn,on,id])=>{const b=document.createElement('button');b.className='btn';b.style.setProperty('--c',color);b.textContent=label;b.onclick=fn;if(id==='fs'){fsEl=b;b.classList.add('span')}$(box).appendChild(b);all.push({el:b,on})})}
+function resetAll(){V=100;N=0;cs=hx('#bfe6ff').map(v=>v*100);pHd=7;pour=null;PP=null;fizz=0;stirT=0;bubbles.length=0;now='';lastFact='';ind='univ'}
+mk(SUBS.map((s,i)=>[s.e+' '+s.n,s.bc,()=>addSub(i)]),'subs');
+mk(DROPS.map((s,i)=>[s.e+' '+s.n,s.bc,()=>addSub(11+i)]),'drops');
+mk([['🌈 Universal','#e53935',()=>ind='univ',()=>ind==='univ'],['🥬 Red Cabbage','#8e24aa',()=>ind='cab',()=>ind==='cab'],['🌸 Phenolphthalein','#ec407a',()=>ind='phen',()=>ind==='phen'],['🟠 Methyl Orange','#fb8c00',()=>ind='meth',()=>ind==='meth'],['💧 No Indicator','#00897b',()=>ind='none',()=>ind==='none']],'inds');
+mk([['🟥 Red Litmus','#d32f2f',()=>startTest('red')],['🟦 Blue Litmus','#1565c0',()=>startTest('blue')],['📏 pH Strip','#f9a825',()=>startTest('strip')],['🔬 pH Meter','#455a64',()=>meter=!meter,()=>meter],['⚛ Show H⁺ and OH⁻','#00acc1',()=>showIons=!showIons,()=>showIons],['🥄 Stir','#7cb342',()=>stirT=3]],'tests');
+mk([['🗑 Empty Beaker','#d50000',()=>{V=100;N=0;cs=hx('#bfe6ff').map(v=>v*100);pour=null;PP=null;fizz=0;bubbles.length=0;now='Beaker emptied and refilled with 100 mL of pure water.'}],['♻ Reset All','#00acc1',resetAll],['⏯ Pause','#ffb300',()=>paused=!paused,()=>paused],['🏷 Labels','#7cb342',()=>labels=!labels,()=>labels],['💡 Next Tip','#3d5afe',()=>tipI++],['📸 Save Picture','#2e7d32',()=>{const a=document.createElement('a');a.download='ph-simulation.png';a.href=cv.toDataURL('image/png');a.click()}],['⛶ Full Screen','#1565c0',()=>{document.fullscreenElement?document.exitFullscreen():app.requestFullscreen().catch(()=>{})},null,'fs']],'tools');
+document.addEventListener('fullscreenchange',()=>{fsEl.textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';setTimeout(resize,60)});
+document.addEventListener('keydown',e=>{if(e.key==='f'||e.key==='F')fsEl.click()});
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;for(const h of hit)if(x>=h[0]&&x<h[0]+h[2]&&y>=h[1]&&y<h[1]+h[3]){addSub(h[4]);break}});
+cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;cv.style.cursor=hit.some(h=>x>=h[0]&&x<h[0]+h[2]&&y>=h[1]&&y<h[1]+h[3])?'pointer':'default'});
+function resize(){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(resize).observe($('stage'));
+let last=performance.now();
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;time+=dt;if(!paused)update(dt);draw();panel();requestAnimationFrame(loop)}
+resize();requestAnimationFrame(loop);
 </script>
-
-<script>
-/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
-</script>
-
-
-
-
-
-<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
-<script id="genz-simulation-fullscreen-engine">
-(function() {
-  'use strict';
-
-  function findSimulationRootContainer(triggerEl) {
-    if (triggerEl) {
-      if (typeof triggerEl === "string") {
-        var cleanId = triggerEl.replace(/^fs-?/, "");
-        var byId = document.getElementById(cleanId) ||
-                   document.getElementById(triggerEl) ||
-                   document.getElementById(cleanId + "SimBox") ||
-                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
-                   document.getElementById("box" + cleanId) ||
-                   document.getElementById("simBox" + cleanId) ||
-                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-        if (byId) return byId;
-      }
-      if (triggerEl.nodeType === 1) {
-        if (triggerEl.dataset && triggerEl.dataset.fs) {
-          var targetByFs = document.getElementById(triggerEl.dataset.fs);
-          if (targetByFs) return targetByFs;
-        }
-        if (triggerEl.dataset && triggerEl.dataset.target) {
-          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
-          if (targetByData) return targetByData;
-        }
-        var found = triggerEl.closest(
-          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
-        );
-        if (found && found !== document.body && found !== document.documentElement) {
-          return found;
-        }
-      }
-    }
-    var candidate = document.querySelector(".sim-box") ||
-                    document.querySelector(".sim-stage") ||
-                    document.getElementById("simContainer") ||
-                    document.getElementById("sim") ||
-                    document.querySelector(".main-stage") ||
-                    document.querySelector(".stage") ||
-                    document.querySelector(".lab") ||
-                    document.querySelector(".card-board") ||
-                    document.querySelector(".simulation") ||
-                    document.querySelector(".sim") ||
-                    document.querySelector(".simulation-wrapper") ||
-                    document.body;
-    return candidate;
-  }
-
-  function toggleSimulationFullscreen(triggerEl) {
-    try {
-      if (!document.fullscreenElement) {
-        var container = findSimulationRootContainer(triggerEl);
-        if (!container) container = document.body;
-
-        container.classList.add("simulation-wrapper");
-        container.classList.add("is-fullscreen");
-        container.setAttribute("data-is-fullscreen", "true");
-        document.documentElement.classList.add("in-fullscreen-mode");
-        document.body.classList.add("in-fullscreen-mode");
-
-        if (container.requestFullscreen) {
-          container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed on container:", err);
-            if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-            } else if (document.body && document.body.requestFullscreen) {
-              document.body.requestFullscreen().catch(function(e) { console.error(e); });
-            }
-          });
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function(err) {
-            console.error("Exit fullscreen error:", err);
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Fullscreen toggle error:", err);
-    }
-  }
-
-  window.toggleFullscreen = function(target) {
-    toggleSimulationFullscreen(target || this);
-  };
-  window.toggleSimFullscreen = function(boxId) {
-    var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el || boxId);
-  };
-  window.toggleFs = function() {
-    toggleSimulationFullscreen(this);
-  };
-  window.openFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) {
-        ov.classList.remove("active");
-        ov.style.display = "none";
-      }
-      var clean = id.replace(/^fs-?/, "");
-      var target = document.getElementById(clean) ||
-                   document.getElementById(clean + "SimBox") ||
-                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
-                   document.getElementById("box" + clean) ||
-                   document.getElementById("simBox" + clean) ||
-                   document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
-                   document.getElementById(id);
-      toggleSimulationFullscreen(target || clean);
-      return;
-    }
-    toggleSimulationFullscreen(this);
-  };
-  window.launchFullscreen = function(topicId) {
-    window.openFullscreen(topicId);
-  };
-  window.closeFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) ov.classList.remove("active");
-    }
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-  window.exitSimFullscreen = function() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-
-  function resizeAndRedrawSimulationCanvases() {
-    window.dispatchEvent(new Event("resize"));
-
-    document.querySelectorAll("canvas").forEach(function(cv) {
-      try {
-        var rect = cv.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          if (cv.width === 0 || cv.height === 0) {
-            cv.width = rect.width;
-            cv.height = rect.height;
-          }
-        }
-      } catch(e) {}
-    });
-
-    var redrawFns = [
-      "resize", "onResize", "onWindowResize", "resizeCanvas",
-      "draw", "render", "animate", "redraw", "update", "drawCanvas",
-      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
-      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
-    ];
-    redrawFns.forEach(function(fn) {
-      if (typeof window[fn] === "function") {
-        try { window[fn](); } catch(e) {}
-      }
-    });
-
-    if (window.camera && window.renderer) {
-      try {
-        var rw = window.innerWidth;
-        var rh = window.innerHeight;
-        window.camera.aspect = rw / rh;
-        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
-        window.renderer.setSize(rw, rh);
-      } catch(e) {}
-    }
-  }
-
-  document.addEventListener("fullscreenchange", function() {
-    var isFs = !!document.fullscreenElement;
-    if (isFs) {
-      document.documentElement.classList.add("in-fullscreen-mode");
-      document.body.classList.add("in-fullscreen-mode");
-      if (document.fullscreenElement) {
-        document.fullscreenElement.classList.add("is-fullscreen");
-        document.fullscreenElement.classList.add("simulation-wrapper");
-        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
-      }
-    } else {
-      document.documentElement.classList.remove("in-fullscreen-mode");
-      document.body.classList.remove("in-fullscreen-mode");
-      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
-        el.classList.remove("is-fullscreen");
-        el.removeAttribute("data-is-fullscreen");
-      });
-    }
-
-    var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
-    );
-    fsButtons.forEach(function(btn) {
-      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
-        return;
-      }
-      if (isFs) {
-        btn.innerHTML = "✕ Exit Fullscreen";
-        btn.classList.add("is-fullscreen-active");
-      } else {
-        btn.innerHTML = "⛶ Fullscreen";
-        btn.classList.remove("is-fullscreen-active");
-      }
-    });
-
-    resizeAndRedrawSimulationCanvases();
-    setTimeout(resizeAndRedrawSimulationCanvases, 50);
-    setTimeout(resizeAndRedrawSimulationCanvases, 150);
-    setTimeout(resizeAndRedrawSimulationCanvases, 300);
-  });
-
-  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
-
-  document.addEventListener("click", function(e) {
-    var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
-    );
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleSimulationFullscreen(btn);
-    }
-  }, true);
-})();
-</script>
-
 </body>
 </html>

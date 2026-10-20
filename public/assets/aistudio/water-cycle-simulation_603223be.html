@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>The Water Cycle – GEN Z EDTECH Interactive Simulations</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;background:#0b2447;color:#fff}
+#app{height:100%;min-width:960px;display:flex;flex-direction:column;background:linear-gradient(160deg,#0b2447,#19376d 60%,#0f4c75)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 18px}
+h1{font-size:22px}
+h1 small{display:block;font-size:12px;font-weight:400;color:#9fd3ff}
+#badge{padding:7px 18px;border-radius:20px;font-weight:700;background:#ffb703;color:#10243e;transition:background .4s}
+main{flex:1;display:flex;gap:12px;padding:0 14px;min-height:0}
+.stage{flex:1;position:relative;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #0009,0 0 0 3px #ffffff30}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+aside{width:290px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.card{background:#ffffff14;border:1px solid #ffffff30;border-radius:14px;padding:12px 14px}
+#stTitle{font-size:18px;margin-bottom:6px}
+#stText{font-size:14px;line-height:1.5;color:#e6f2ff}
+.step{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:10px;font-size:14px;opacity:.6;transition:.3s}
+.step i{width:14px;height:14px;border-radius:50%;background:var(--c)}
+.step.on{opacity:1;background:#ffffff26;font-weight:700}
+.m{font-size:12px;margin-top:7px;color:#bfe0ff}
+.bar{height:10px;border-radius:6px;background:#00000050;overflow:hidden;margin-top:3px}
+.bar b{display:block;height:100%;width:0;border-radius:6px;transition:width .2s}
+#fact{font-size:13px;color:#ffe08a;line-height:1.4}
+#bar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 12px;justify-content:center}
+button{font:700 14px "Trebuchet MS","Segoe UI",Arial,sans-serif;color:var(--t,#fff);cursor:pointer;border:0;border-radius:12px;padding:9px 14px;
+background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 72%,#000));box-shadow:0 5px 0 color-mix(in srgb,var(--c) 45%,#000),0 8px 12px #0006;transition:transform .08s,box-shadow .08s,filter .15s}
+button:hover{filter:brightness(1.12)}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 45%,#000)}
+button.big{padding:11px 18px;font-size:15px}
+.sep{width:2px;background:#ffffff30;border-radius:2px;margin:0 4px}
+</style></head>
+<body>
+<div id="app">
+<header>
+ <h1>The Water Cycle<small>GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+ <div id="badge">Press a button to begin</div>
+</header>
+<main>
+ <div class="stage"><canvas id="c"></canvas></div>
+ <aside>
+  <div class="card"><h2 id="stTitle">Welcome!</h2><p id="stText">Water moves around our planet again and again. Press the big colored buttons below to see each step of the water cycle.</p></div>
+  <div class="card" id="steps"></div>
+  <div class="card">
+   <div class="m">Water in the cloud<div class="bar"><b id="mC" style="background:#8ecbff"></b></div></div>
+   <div class="m">Sun heat<div class="bar"><b id="mH" style="background:#ffb703"></b></div></div>
+   <div class="m">River flow<div class="bar"><b id="mR" style="background:#2fd0c0"></b></div></div>
+   <div class="m">Snow on the mountain<div class="bar"><b id="mS" style="background:#fff"></b></div></div>
+  </div>
+  <div class="card"><div class="m" style="margin:0 0 4px">Did you know?</div><div id="fact">Oceans hold about 97% of all the water on Earth.</div></div>
+ </aside>
+</main>
+<div id="bar"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),rnd=(a,b)=>a+Math.random()*(b-a);
+const cv=$('c'),g=cv.getContext('2d');let W=800,H=500;
+function fit(){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;g.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(fit).observe(cv.parentElement);fit();
+
+const ST=[
+{n:'1. Evaporation',c:'#ff8c00',t:'The Sun heats the ocean, rivers and lakes. Liquid water turns into invisible water vapor and rises into the air. Plants also let out vapor from their leaves.',f:'Oceans hold about 97% of all the water on Earth.'},
+{n:'2. Condensation',c:'#1e9be9',t:'High in the sky the air is cold. Water vapor cools down and turns into tiny water drops. Millions of tiny drops together make a cloud.',f:'A single cloud can weigh as much as 100 elephants!'},
+{n:'3. Precipitation',c:'#6c4cf1',t:'When a cloud gets heavy, the water falls down as rain or snow. Rain, snow, sleet and hail are all kinds of precipitation.',f:'Snow on a mountain melts in the warm Sun and feeds the rivers.'},
+{n:'4. Collection',c:'#00a896',t:'Rain flows down the mountain into rivers. Rivers carry the water back to the ocean. Then the Sun heats it again and the cycle starts once more!',f:'The same water has been used again and again on Earth for billions of years.'}];
+$('steps').innerHTML=ST.map((s,i)=>`<div class="step" id="s${i}" style="--c:${s.c}"><i></i>${s.n}</div>`).join('');
+
+const D={heat:.8,cloud:.25,rain:false,snow:false,wind:false,night:false,pause:false,speed:1,labels:true,auto:false,
+ focus:-1,flow:0,sea:.5,snowAmt:0,flash:0,storm:false,stormT:0,bolt:null,t:0,autoT:0};
+let S={...D},vap=[],drops=[],rip=[];
+
+const GY=()=>H*.7,SX=()=>W*.5;
+function mtY(x){const px=W*.76,py=H*.28,l=W*.5,r=W*1.02,gy=GY();if(x<l||x>r)return gy;return x<px?gy+(py-gy)*(x-l)/(px-l):py+(gy-py)*(x-px)/(r-px)}
+function clouds(){const w=S.wind?30:10;return[{x:W*.46+Math.sin(S.t*.01)*w,y:H*.15,s:1},{x:W*.74+Math.sin(S.t*.012+2)*w,y:H*.12,s:.85}]}
+const mkV=(x,y)=>({x,y,vy:-rnd(.5,1.1),c:0,ph:rnd(0,6),r:rnd(3,7)});
+function mkBolt(){const c=clouds()[Math.random()<.5?0:1];let x=c.x+rnd(-50,50),y=c.y+30;const p=[[x,y]];while(y<GY()){x+=rnd(-22,22);y+=rnd(18,34);p.push([x,y])}return p}
+
+function setFocus(i){
+ S.focus=i;
+ if(i==0){S.heat=Math.max(S.heat,1.1);S.rain=false;S.storm=false;S.stormT=0}
+ if(i==1){S.rain=false;if(vap.length<60)for(let k=0;k<60;k++)vap.push(mkV(rnd(.05,.45)*W,rnd(H*.3,GY())));vap.forEach(v=>v.c=1)}
+ if(i==2){S.rain=true;S.cloud=Math.max(S.cloud,.8)}
+ if(i==3){S.rain=false;S.storm=false;S.stormT=0;S.flow=Math.max(S.flow,.9)}
+ panel()}
+function panel(){const s=ST[S.focus];if(!s)return;
+ $('stTitle').textContent=s.n;$('stText').textContent=s.t;$('fact').textContent=s.f;
+ $('badge').textContent=s.n;$('badge').style.background=s.c;$('badge').style.color='#fff';
+ ST.forEach((_,k)=>$('s'+k).classList.toggle('on',k==S.focus))}
+
+function step(d){
+ S.t+=d;const eff=S.heat*(S.night?.35:1);
+ if(S.auto){S.autoT+=d;if(S.autoT>480){S.autoT=0;setFocus((S.focus+1)%4)}}
+ if(S.stormT>0){S.stormT-=d;if(Math.random()<.012*d){S.flash=1;S.bolt=mkBolt()}if(S.stormT<=0)S.storm=false}
+ S.flash=Math.max(0,S.flash-.05*d);if(S.flash<.2)S.bolt=null;
+ if(vap.length<350){
+  if(Math.random()<eff*.6*d)vap.push(mkV(rnd(.03,.47)*W,GY()+3));
+  if(Math.random()<eff*.25*d)vap.push(mkV(rnd(.6,.97)*W,GY()+H*rnd(.05,.2)))}
+ const C=clouds();
+ for(let i=vap.length-1;i>=0;i--){const v=vap[i];
+  if(v.y<H*.34)v.c=1;
+  if(v.c){const c=v.x<W*.6?C[0]:C[1];v.x+=(c.x-v.x)*.035*d;v.y+=(c.y-v.y)*.035*d;
+   if(Math.hypot(c.x-v.x,c.y-v.y)<25){S.cloud=Math.min(1.3,S.cloud+.01);vap.splice(i,1)}continue}
+  v.y+=v.vy*d*(.7+eff*.6);v.x+=(Math.sin(S.t*.05+v.ph)*.4+(S.wind?.9:.2))*d;
+  if(v.x>W+20)vap.splice(i,1)}
+ if(S.cloud>1.15)S.rain=true;
+ if(S.rain){
+  if(S.cloud<.12&&S.stormT<=0)S.rain=false;
+  else{let n=(S.storm?6:3)*d;n=Math.floor(n)+(Math.random()<n%1?1:0);
+   for(let k=0;k<n&&drops.length<900;k++){const c=C[Math.random()<.55?0:1];
+    drops.push({x:c.x+rnd(-90,90)*c.s,y:c.y+25,vy:S.snow?rnd(1.2,2):rnd(9,13),vx:(S.wind?2.2:.5)*(S.snow?.6:1),dep:Math.random(),snow:S.snow});
+    S.cloud-=.0003}}}
+ for(let i=drops.length-1;i>=0;i--){const p=drops[i];p.y+=p.vy*d;p.x+=p.vx*d;
+  const m=mtY(p.x),gy=p.x<SX()?GY()+p.dep*H*.12:(m<GY()-1?m:GY()+p.dep*H*.24);
+  if(p.x>W+10){drops.splice(i,1);continue}
+  if(p.y>=gy){
+   if(p.x<SX()){S.sea=Math.min(1,S.sea+.0005);if(rip.length<120)rip.push({x:p.x,y:gy,r:1,a:.8})}
+   else if(m<GY()-1){if(p.snow)S.snowAmt=Math.min(1,S.snowAmt+.004);else S.flow=Math.min(1,S.flow+.004)}
+   else{if(!p.snow)S.flow=Math.min(1,S.flow+.0008);if(rip.length<120)rip.push({x:p.x,y:gy,r:1,a:.5,s:1})}
+   drops.splice(i,1)}}
+ if(S.snowAmt>0&&eff>.85){S.snowAmt=Math.max(0,S.snowAmt-.0008*d);S.flow=Math.min(1,S.flow+.0012*d)}
+ S.flow=Math.max(0,S.flow-.0005*d);
+ S.sea=Math.max(.15,Math.min(1,S.sea+(S.flow*.0004-eff*.00015)*d));
+ S.cloud=Math.max(0,S.cloud-.00005*d);
+ rip.forEach(r=>{r.r+=.6*d;r.a-=.02*d});rip=rip.filter(r=>r.a>0)}
+
+/* ---------- drawing ---------- */
+function lg(x0,y0,x1,y1,stops){const o=g.createLinearGradient(x0,y0,x1,y1);stops.forEach((s,i)=>o.addColorStop(i/(stops.length-1),s));return o}
+function sky(){g.fillStyle=S.night?lg(0,0,0,H*.7,['#040a22','#1b2d63']):lg(0,0,0,H*.7,['#1e7bf0','#7cc8ff','#d4f1ff']);g.fillRect(0,0,W,H);
+ if(S.night){g.fillStyle='#fff';for(let i=0;i<70;i++){g.globalAlpha=.4+.6*Math.abs(Math.sin(S.t*.03+i));g.fillRect((i*137.5)%W,(i*71.3)%(H*.5),2,2)}g.globalAlpha=1}}
+function sun(){const x=W*.1,y=H*.14,u=H/700;
+ if(S.night){const r=g.createRadialGradient(x,y,5,x,y,90*u);r.addColorStop(0,'#cfe0ff88');r.addColorStop(1,'#cfe0ff00');g.fillStyle=r;g.beginPath();g.arc(x,y,90*u,0,7);g.fill();
+  g.fillStyle=lg(x-40,y-40,x+40,y+40,['#fff','#c9d6f0']);g.beginPath();g.arc(x,y,34*u,0,7);g.fill();g.fillStyle='#b3c2e0';[[-10,-8,7],[10,6,9],[-4,14,5]].forEach(c=>{g.beginPath();g.arc(x+c[0]*u,y+c[1]*u,c[2]*u,0,7);g.fill()});return}
+ const gr=70*u+S.heat*60*u,r=g.createRadialGradient(x,y,10,x,y,gr);r.addColorStop(0,'#fff3a0ee');r.addColorStop(.4,'#ffcc3366');r.addColorStop(1,'#ffcc3300');g.fillStyle=r;g.beginPath();g.arc(x,y,gr,0,7);g.fill();
+ g.strokeStyle='#ffd23acc';g.lineWidth=4*u;for(let i=0;i<14;i++){const a=i/14*6.283+S.t*.01,r1=44*u,r2=(58+S.heat*22+(i%2)*10)*u;g.beginPath();g.moveTo(x+Math.cos(a)*r1,y+Math.sin(a)*r1);g.lineTo(x+Math.cos(a)*r2,y+Math.sin(a)*r2);g.stroke()}
+ const b=g.createRadialGradient(x-10*u,y-10*u,5,x,y,42*u);b.addColorStop(0,'#fffbd0');b.addColorStop(.6,'#ffd028');b.addColorStop(1,'#ff9d00');g.fillStyle=b;g.beginPath();g.arc(x,y,40*u,0,7);g.fill()}
+function mountain(){const px=W*.76,py=H*.28,l=W*.5,r=W*1.02,gy=GY();
+ g.fillStyle=lg(0,gy-H*.2,0,gy,['#7d93b5','#a9bdd6']);g.beginPath();g.moveTo(-W*.05,gy);g.lineTo(W*.12,gy-H*.17);g.lineTo(W*.27,gy-H*.06);g.lineTo(W*.42,gy-H*.2);g.lineTo(W*.6,gy);g.fill();
+ g.fillStyle=lg(l,py,r,gy,['#9aa5b4','#5b6878','#3f4a59']);g.beginPath();g.moveTo(l,gy);g.lineTo(px,py);g.lineTo(r,gy);g.fill();
+ g.fillStyle='#2a334266';g.beginPath();g.moveTo(px,py);g.lineTo(r,gy);g.lineTo(px+W*.04,gy);g.lineTo(px-W*.02,py+H*.18);g.fill();
+ const f=.2+S.snowAmt*.45,lx=px+(l-px)*f,ly=py+(gy-py)*f,rx=px+(r-px)*f,ry=py+(gy-py)*f;
+ g.fillStyle=lg(0,py,0,ly,['#ffffff','#dbe9f7']);g.beginPath();g.moveTo(px,py);g.lineTo(lx,ly);
+ for(let i=1;i<6;i++){const t=i/6;g.lineTo(lx+(rx-lx)*t,ly+(i%2?1:-1)*H*.02)}g.lineTo(rx,ry);g.fill()}
+function sea(){const top=GY()+(.5-S.sea)*H*.03,u=H/700,x1=SX();
+ g.fillStyle=lg(0,top,0,H,['#4fc3f7','#1976d2','#0b3d91']);g.beginPath();g.moveTo(0,H);g.lineTo(0,top);
+ for(let x=0;x<=x1+8;x+=8)g.lineTo(x,top+Math.sin(x*.03+S.t*.05)*3*u);g.lineTo(x1,H);g.fill();
+ g.strokeStyle='#ffffff55';g.lineWidth=2;for(let i=0;i<7;i++){const y=top+(i+1)*H*.035,o=(S.t*.4+i*60)%x1;g.beginPath();g.moveTo(o,y);g.quadraticCurveTo(o+20,y-4,o+40,y);g.stroke()}
+ for(let i=0;i<3;i++){const fx=(S.t*.6*(1+i*.3)+i*140)%(x1+60)-30,fy=top+H*(.1+i*.06)+Math.sin(S.t*.04+i)*5,s=(14+i*3)*u;
+  g.fillStyle=['#ff9f43','#feca57','#ff6b6b'][i];g.beginPath();g.ellipse(fx,fy,s,s*.5,0,0,7);g.fill();g.beginPath();g.moveTo(fx-s,fy);g.lineTo(fx-s*1.7,fy-s*.5);g.lineTo(fx-s*1.7,fy+s*.5);g.fill();g.fillStyle='#000';g.beginPath();g.arc(fx+s*.5,fy-s*.1,2,0,7);g.fill()}
+ const bx=x1*.55+Math.sin(S.t*.02)*10,by=top+Math.sin(S.t*.05)*2;g.fillStyle='#8b5a2b';g.beginPath();g.moveTo(bx-40*u,by-10*u);g.lineTo(bx+40*u,by-10*u);g.lineTo(bx+28*u,by+8*u);g.lineTo(bx-28*u,by+8*u);g.fill();
+ g.fillStyle='#fff';g.beginPath();g.moveTo(bx,by-62*u);g.lineTo(bx+30*u,by-14*u);g.lineTo(bx,by-14*u);g.fill();g.fillStyle='#e63946';g.beginPath();g.moveTo(bx-4*u,by-52*u);g.lineTo(bx-30*u,by-14*u);g.lineTo(bx-4*u,by-14*u);g.fill();
+ g.strokeStyle='#5a3a18';g.lineWidth=3;g.beginPath();g.moveTo(bx,by-66*u);g.lineTo(bx,by-10*u);g.stroke()}
+function meadow(){const gy=GY(),u=H/700;g.fillStyle=lg(0,gy,0,H,['#6fd35c','#3a9d45','#23702f']);g.fillRect(SX()-1,gy,W,H);
+ const lx=W*.64,ly=gy+H*.2;g.fillStyle=lg(0,ly-18*u,0,ly+18*u,['#7fd6ff','#1e88e5']);g.beginPath();g.ellipse(lx,ly,80*u,18*u,0,0,7);g.fill();g.strokeStyle='#ffffff88';g.beginPath();g.ellipse(lx,ly,50*u,9*u,0,0,7);g.stroke();
+ const hx=W*.79,hy=gy+H*.17;g.fillStyle='#f6e2b8';g.fillRect(hx-45*u,hy-50*u,90*u,50*u);g.fillStyle=lg(0,hy-90*u,0,hy-50*u,['#e4572e','#a63a1d']);g.beginPath();g.moveTo(hx-58*u,hy-50*u);g.lineTo(hx,hy-92*u);g.lineTo(hx+58*u,hy-50*u);g.fill();
+ g.fillStyle='#7b4a21';g.fillRect(hx-9*u,hy-30*u,18*u,30*u);g.fillStyle='#8fd3ff';g.fillRect(hx-38*u,hy-40*u,20*u,18*u);g.fillRect(hx+18*u,hy-40*u,20*u,18*u);g.fillStyle='#8a4b2a';g.fillRect(hx+30*u,hy-110*u,12*u,28*u);
+ [[.9,.12,1],[.6,.1,.9],[.97,.2,1.1]].forEach(t=>tree(W*t[0],gy+H*t[1]+H*.06,t[2]*u))}
+function tree(x,y,s){g.fillStyle='#6d4524';g.fillRect(x-6*s,y-40*s,12*s,40*s);
+ [[0,-70,34],[-22,-50,28],[22,-50,28],[0,-45,30]].forEach(c=>{const r=g.createRadialGradient(x+c[0]*s-8*s,y+c[1]*s-8*s,3,x+c[0]*s,y+c[1]*s,c[2]*s);r.addColorStop(0,'#7be06b');r.addColorStop(1,'#1d7a30');g.fillStyle=r;g.beginPath();g.arc(x+c[0]*s,y+c[1]*s,c[2]*s,0,7);g.fill()})}
+function river(){const f=S.flow;if(f<.02)return;g.lineCap='round';
+ g.strokeStyle='#1c7ed6';g.lineWidth=3+f*9;g.beginPath();g.moveTo(W*.71,H*.41);g.quadraticCurveTo(W*.6,H*.5,W*.5,GY()+2);g.stroke();
+ g.strokeStyle='#e7f5ff';g.lineWidth=2;g.setLineDash([10,14]);g.lineDashOffset=-S.t*2;g.stroke();g.setLineDash([])}
+function cloud(c){const s=c.s*(.55+Math.min(S.cloud,1.2)*.75),col=Math.round(255-Math.min(1,S.cloud*.8)*110);
+ [[-70,10,42],[-30,-14,52],[20,-22,58],[70,0,46],[100,14,34],[-100,20,30],[0,16,50]].forEach(p=>{const px=c.x+p[0]*s,py=c.y+p[1]*s,r=p[2]*s,o=g.createRadialGradient(px-r*.3,py-r*.4,r*.1,px,py,r);
+  o.addColorStop(0,'#fff');o.addColorStop(1,`rgb(${col-20},${col-10},${Math.min(255,col+5)})`);g.fillStyle=o;g.beginPath();g.arc(px,py,r,0,7);g.fill()})}
+function particles(){
+ vap.forEach(v=>{const r=g.createRadialGradient(v.x,v.y,0,v.x,v.y,v.r*2.2);r.addColorStop(0,v.c?'#ffffffcc':'#ffffffaa');r.addColorStop(1,v.c?'#cfeaff00':'#ffe9b000');g.fillStyle=r;g.beginPath();g.arc(v.x,v.y,v.r*2.2,0,7);g.fill()});
+ g.lineCap='round';drops.forEach(p=>{if(p.snow){g.fillStyle='#fff';g.beginPath();g.arc(p.x,p.y,2.6,0,7);g.fill()}else{g.strokeStyle='#bfe3ffcc';g.lineWidth=2;g.beginPath();g.moveTo(p.x,p.y);g.lineTo(p.x-p.vx*1.4,p.y-9);g.stroke()}});
+ rip.forEach(r=>{g.strokeStyle=`rgba(255,255,255,${r.a})`;g.lineWidth=1.5;g.beginPath();g.ellipse(r.x,r.y,r.s?r.r*.6:r.r,(r.s?r.r*.6:r.r)*.35,0,0,7);g.stroke()})}
+function lab(txt,x,y,st,col){if(!S.labels)return;g.font='bold 13px "Trebuchet MS",Arial';const w=g.measureText(txt).width+22,h=26,on=S.focus===st,k=on?1+.05*Math.sin(S.t*.15):1;
+ let px=Math.max(w/2+6,Math.min(W-w/2-6,x)),py=Math.max(h,y-34);g.save();g.translate(px,py);g.scale(k,k);
+ g.strokeStyle=col;g.lineWidth=2;g.beginPath();g.moveTo(0,h/2);g.lineTo(x-px,y-py);g.stroke();g.fillStyle=col;g.beginPath();g.arc(x-px,y-py,4,0,7);g.fill();
+ g.shadowColor='#0007';g.shadowBlur=on?16:6;g.fillStyle=on?'#fff':'#ffffffd9';g.beginPath();g.roundRect(-w/2,-h/2,w,h,13);g.fill();g.shadowBlur=0;g.lineWidth=on?3:2;g.strokeStyle=col;g.stroke();
+ g.fillStyle='#10243e';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,0,1);g.restore()}
+function draw(){
+ g.clearRect(0,0,W,H);sky();sun();mountain();meadow();sea();river();
+ particles();clouds().forEach(cloud);
+ if(S.night){g.fillStyle='#02072a55';g.fillRect(0,0,W,H)}
+ if(S.bolt){g.strokeStyle='#fffbd0';g.shadowColor='#9ad';g.shadowBlur=18;g.lineWidth=4;g.beginPath();S.bolt.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();g.shadowBlur=0}
+ if(S.flash>0){g.fillStyle=`rgba(255,255,255,${S.flash*.45})`;g.fillRect(0,0,W,H)}
+ const C=clouds();
+ lab('Sun gives heat energy',W*.1,H*.22,0,'#ff8c00');
+ lab('Water vapor rises',W*.27,H*.52,0,'#ff8c00');
+ lab('Plants add vapor',W*.9,H*.74,0,'#ff8c00');
+ lab('Cloud (condensation)',C[0].x,C[0].y+40,1,'#1e9be9');
+ lab(S.snow?'Snow falls':'Rain falls',W*.6,H*.3,2,'#6c4cf1');
+ lab('Snow on the mountain',W*.76,H*.31,2,'#6c4cf1');
+ lab('River runoff',W*.6,H*.52,3,'#00a896');
+ lab('Ocean (collection)',W*.2,H*.86,3,'#00a896')}
+function hud(){$('mC').style.width=Math.min(100,S.cloud/1.15*100)+'%';$('mH').style.width=Math.min(100,S.heat/1.5*100)+'%';$('mR').style.width=S.flow*100+'%';$('mS').style.width=S.snowAmt*100+'%'}
+
+/* ---------- buttons ---------- */
+const B=[];function mk(label,c,fn,o={}){const b=document.createElement('button');b.innerHTML=label;b.style.setProperty('--c',c);if(o.t)b.style.setProperty('--t',o.t);if(o.big)b.className='big';
+ b.onclick=()=>fn(b);$('bar').appendChild(b);return b}
+function sep(){const s=document.createElement('div');s.className='sep';$('bar').appendChild(s)}
+mk('☀️ 1 Evaporation','#ff8c00',()=>setFocus(0),{big:1});
+mk('☁️ 2 Condensation','#1e9be9',()=>setFocus(1),{big:1});
+mk('🌧️ 3 Precipitation','#6c4cf1',()=>setFocus(2),{big:1});
+mk('🌊 4 Collection','#00a896',()=>setFocus(3),{big:1});
+mk('🔄 Auto Cycle: OFF','#2fb344',b=>{S.auto=!S.auto;S.autoT=0;b.innerHTML='🔄 Auto Cycle: '+(S.auto?'ON':'OFF');if(S.auto)setFocus(0)},{big:1});
+sep();
+mk('⏸ Pause','#e63946',b=>{S.pause=!S.pause;b.innerHTML=S.pause?'▶ Play':'⏸ Pause'});
+mk('🐢 Slower','#e64980',()=>S.speed=Math.max(.25,S.speed-.25));
+mk('🐇 Faster','#be4bdb',()=>S.speed=Math.min(3,S.speed+.25));
+mk('🔥 Sun Hotter','#fcc419',()=>S.heat=Math.min(1.5,S.heat+.2),{t:'#3b2a00'});
+mk('❄️ Sun Cooler','#15aabf',()=>S.heat=Math.max(.1,S.heat-.2));
+mk('💨 Wind: OFF','#82c91e',b=>{S.wind=!S.wind;b.innerHTML='💨 Wind: '+(S.wind?'ON':'OFF')},{t:'#1d3300'});
+mk('🌙 Night','#3b5bdb',b=>{S.night=!S.night;b.innerHTML=S.night?'☀️ Day':'🌙 Night'});
+mk('🌧 Mode: Rain','#74c0fc',b=>{S.snow=!S.snow;b.innerHTML=S.snow?'❄ Mode: Snow':'🌧 Mode: Rain'},{t:'#08304f'});
+mk('⛈️ Thunderstorm','#5f3dc4',()=>{S.storm=true;S.stormT=480;S.rain=true;S.snow=false;S.cloud=Math.max(S.cloud,1);S.focus=2;panel()});
+mk('🏷️ Labels: ON','#a0522d',b=>{S.labels=!S.labels;b.innerHTML='🏷️ Labels: '+(S.labels?'ON':'OFF')});
+mk('♻️ Reset','#495057',()=>{S={...D};vap=[];drops=[];rip=[];document.querySelectorAll('#bar button').forEach(b=>{if(b.innerHTML.includes('Auto'))b.innerHTML='🔄 Auto Cycle: OFF';if(b.innerHTML.includes('Wind'))b.innerHTML='💨 Wind: OFF';if(b.innerHTML.includes('Day'))b.innerHTML='🌙 Night';if(b.innerHTML.includes('Mode'))b.innerHTML='🌧 Mode: Rain';if(b.innerHTML.includes('Play'))b.innerHTML='⏸ Pause'});
+ $('stTitle').textContent='Welcome!';$('stText').textContent='Press a big colored button to see each step of the water cycle.';$('badge').textContent='Press a button to begin';$('badge').style.background='#ffb703';$('badge').style.color='#10243e';ST.forEach((_,k)=>$('s'+k).classList.remove('on'))});
+const fs=mk('⛶ Full Screen','#f59f00',()=>{document.fullscreenElement?document.exitFullscreen():$('app').requestFullscreen()},{t:'#2b1a00',big:1});
+document.addEventListener('fullscreenchange',()=>{fs.innerHTML=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen'});
+
+let last=performance.now();
+function loop(n){const d=Math.min(3,(n-last)/16.67);last=n;if(!S.pause)step(d*S.speed);draw();hud();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+</script></body></html>

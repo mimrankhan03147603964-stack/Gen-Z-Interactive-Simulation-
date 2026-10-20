@@ -991,6 +991,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fee2e2',
     tagText: '#b91c1c',
     glowColor: 'rgba(220, 38, 38, 0.45)'
+  },
+  '67': {
+    id: '67',
+    name: 'Heating Ice to Steam',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0c4a6e',
+    iconBorder: '#38bdf8',
+    iconColor: '#e0f2fe',
+    badgeBg: '#f0f9ff',
+    badgeText: '#0369a1',
+    badgeBorder: '#bae6fd',
+    tagBg: '#e0f2fe',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.45)'
+  },
+  '68': {
+    id: '68',
+    name: 'The Water Cycle',
+    bgSolid: '#0ea5e9',
+    bgGradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+    borderColor: '#7dd3fc',
+    iconBg: '#082f49',
+    iconBorder: '#38bdf8',
+    iconColor: '#f0f9ff',
+    badgeBg: '#f0f9ff',
+    badgeText: '#075985',
+    badgeBorder: '#bae6fd',
+    tagBg: '#e0f2fe',
+    tagText: '#0284c7',
+    glowColor: 'rgba(14, 165, 233, 0.45)'
+  },
+  '69': {
+    id: '69',
+    name: 'Urdu Grammar: Sifat Ki Aqsam',
+    bgSolid: '#16a34a',
+    bgGradient: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
+    borderColor: '#86efac',
+    iconBg: '#14532d',
+    iconBorder: '#4ade80',
+    iconColor: '#dcfce7',
+    badgeBg: '#f0fdf4',
+    badgeText: '#15803d',
+    badgeBorder: '#bbf7d0',
+    tagBg: '#dcfce7',
+    tagText: '#16a34a',
+    glowColor: 'rgba(34, 197, 94, 0.45)'
   }
 };
 

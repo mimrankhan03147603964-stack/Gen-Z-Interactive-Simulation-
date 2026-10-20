@@ -175,11 +175,11 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     category: 'Chemistry & Matter',
     iconName: 'Layers',
     accentColor: '#d946ef', // Fuchsia
-    description: 'Watch phase changes unfold in a laboratory beaker with realistic Bunsen burner flames, liquid boiling bubbles, crystal ice cubes, molecular inset zoom, and mercury thermometer.',
+    description: 'Interactive states of matter laboratory. Explore solid, liquid, and gas phases with live 3D H₂O molecular lattice vibrations, burner heating, ice cube/water glass/kettle everyday models, phase transition jumps, and digital thermometer.',
     fileUrl: '/simulations/states-of-matter.html',
-    topics: ['Solid Crystal Lattice', 'Liquid Fluid Flow', 'Gas Kinetic Diffusion', 'Freezing & Boiling Points'],
-    features: ['Burner Flame Simulation', 'Celsius Slider (−50°C to 150°C)', 'Molecular Inset Scope', 'True Fullscreen Viewport'],
-    gradeLevel: 'Elementary & Middle'
+    topics: ['Solid Crystal Lattice & Shaking', 'Liquid Fluid Sliding & Boiling', 'Gas High-Speed Molecular Zooming', 'Phase Changes (Melt, Freeze, Boil, Condense)'],
+    features: ['100% Standalone Chrome-Ready Lab', '3D Interactive Rotating Molecules Viewport', 'Heating Burner & Real-time Flame Control', 'Celsius Temperature Slider (−30°C to 130°C)'],
+    gradeLevel: 'Elementary, Middle & Secondary'
   },
   {
     id: 'sim-earth-space',
@@ -455,15 +455,15 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     id: 'sim-acids-bases-ph-titration',
     slug: 'acids-bases-ph-titration',
     indexNumber: '32',
-    title: 'Acids, Bases & pH Titration Lab',
+    title: 'Acids, Bases and the pH Scale Lab',
     subject: 'Chemistry & Solution Science',
     category: 'Chemistry & Matter',
     iconName: 'TestTube',
     accentColor: '#a855f7', // Purple Orchid
-    description: 'Interactive analytical chemistry laboratory. Investigate pH scale (0–14), hydronium [H₃O⁺] and hydroxide [OH⁻] concentrations, universal indicator color transitions, and perform precision burette acid-base neutralization titrations with real-time equivalence point curve plotting.',
-    fileUrl: '/simulations/acids-bases-ph-titration.html',
-    topics: ['pH Scale & Logarithmic Concentration', 'Arrhenius & Brønsted-Lowry Acids/Bases', 'Burette Acid-Base Neutralization Titration', 'Universal Indicator & Phenolphthalein Endpoints'],
-    features: ['Interactive pH Meter & Universal Color Probe', 'Precision Volumetric Burette Titration Simulator', 'Real-Time Equivalence Point & pH Curve Plotter', 'Household & Laboratory Chemical Solutions Catalog'],
+    description: 'Interactive analytical chemistry laboratory for acids, bases, and the pH scale (0–14). Pour household liquids and strong chemical droppers into the beaker, test with Universal, Red Cabbage, Phenolphthalein, and Methyl Orange indicators, litmus papers, and digital pH meter.',
+    fileUrl: '/simulations/acid-base-ph-simulation.html',
+    topics: ['0–14 pH Color Scale & Indicators', 'Acids, Bases & Neutral Solutions', 'Red & Blue Litmus Testing & Digital pH Meter', 'H⁺ and OH⁻ Ion Concentration Visualization'],
+    features: ['100% Standalone Interactive Laboratory', '11 Household Substances & Strong Acid/Base Droppers', '4 Chemical Indicators (Universal, Cabbage, Phenol, Methyl)', 'Red & Blue Litmus Paper, Test Strips & Stirring Rod'],
     gradeLevel: 'Middle, Secondary & High School Chemistry'
   },
   {
@@ -740,15 +740,15 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     id: 'sim-urdu-grammar',
     slug: 'urdu-grammar',
     indexNumber: '53',
-    title: 'Urdu Grammar (اردو گرامر)',
+    title: 'Urdu Grammar: Parts of Speech (اُردو قواعد - اجزائے کلام)',
     subject: 'Urdu Linguistics & Grammar Rules (اردو گرامر)',
     category: 'Urdu & Linguistics',
     iconName: 'BookOpen',
     accentColor: '#10b981', // Emerald
-    description: 'Interactive Urdu Grammar (اردو گرامر) laboratory. Explore complete rules, definitions, and visual examples of لفظ، کلمہ، جملہ، فاعل، مفعول، اسم، ضمیر، صفت، فعل، حروف، رموز اوقاف، محاورات with interactive flashcards and fullscreen study modes.',
-    fileUrl: '/simulations/Urdu_Grammar.html',
-    topics: ['Lafz, Kalma & Jumla (Word & Sentence)', 'Ism, Marfa & Nakra (Nouns)', 'Zameer, Sifat & Feil (Pronouns & Verbs)', 'Huroof, Ramooz-e-Auqaaf & Mahawraat'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Full Nastaliq Typography & Real-time Search', 'Interactive Category Tabs with Visual Cards', 'Fullscreen Immersive Study Environment'],
+    description: 'Interactive Urdu grammar educational game. Sort and classify words from complete sentences into colorful target bins: Ism (اسم), Fe\'l (فعل), Sifat (صفت), Zameer (ضمیر), and Harf (حرف) with animated mascots, audio feedback, star rewards, and score tracking.',
+    fileUrl: '/simulations/Urdu_Grammar_Ajza_e_Kalam.html',
+    topics: ['Ism (اسم - Nouns)', 'Fe\'l (فعل - Verbs)', 'Sifat (صفت - Adjectives)', 'Zameer (ضمیر - Pronouns)', 'Harf (حرف - Particles & Prepositions)'],
+    features: ['Interactive Drag-and-Drop & Tap Word Sorting', 'Full RTL Urdu Nastaliq Typography', 'Animated Butterfly & Book Mascots', 'Live Score Board, Star Rewards & Timer'],
     gradeLevel: 'Primary, Middle & Secondary Urdu'
   },
   {
@@ -830,30 +830,30 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     id: 'sim-photosynthesis-simulation',
     slug: 'photosynthesis-simulation',
     indexNumber: '62',
-    title: 'Photosynthesis Simulation',
+    title: 'Photosynthesis in Flowering Plants Lab',
     subject: 'Biology & Plant Physiology',
     category: 'Biology & Life',
     iconName: 'Sun',
     accentColor: '#22c55e',
-    description: 'Interactive botanical simulation of photosynthesis in green plants. Investigate how light intensity, wavelength color, carbon dioxide levels, and water availability control oxygen bubble production.',
+    description: 'Watch a living flowering plant absorb sunlight, water, and CO₂, and release oxygen and glucose. Explore chloroplast anatomy with thylakoid stacks, grana, Light Reactions, and the Calvin Cycle with real-time molecular animations and environmental presets.',
     fileUrl: '/simulations/photosynthesis-simulation.html',
-    topics: ['Light-Dependent & Dark Reactions', 'Chlorophyll Absorption Spectra', 'CO2 & Water Uptake Mechanisms', 'Oxygen Generation Rate Measurement'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'Simulated Aquatic Plant Oxygen Bubble Counter', 'Spectral Light Filter Color Controls (Red, Blue, Green)', 'Dynamic Temperature & CO2 Environment Sliders'],
+    topics: ['6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂', 'Chloroplast Anatomy (Thylakoid, Grana, Stroma)', 'Light Reactions & Calvin Cycle Dynamics', 'Environmental Conditions (Sunlight, Water, CO₂)'],
+    features: ['Real-time Animated Flowering Plant & Root System', 'Chloroplast Microscopic Zoom Viewport', 'Overcast, Spring, and Ideal Greenhouse Presets', 'Interactive Chemical Equation & Molecule Flows'],
     gradeLevel: 'Middle & High School (Grades 6–12)'
   },
   {
     id: 'sim-solar-system-simulation',
     slug: 'solar-system-simulation',
     indexNumber: '63',
-    title: 'Solar System Celestial Orbits Simulation',
+    title: 'Solar System Simulation',
     subject: 'Astronomy & Planetary Physics',
     category: 'Earth & Space',
     iconName: 'Compass',
     accentColor: '#38bdf8',
-    description: 'Interactive 3D model of our solar system and celestial dynamics. Explore all 8 planets, planetary orbital velocities, axial tilts, day-night cycles, and distance scale comparisons.',
+    description: 'Explore our cosmic neighbourhood: the Sun, 8 planets (Mercury, Venus, Earth, Mars, Jupiter, Saturn with rings, Uranus, Neptune), moons, and the asteroid belt. Click any celestial body to focus, rotate view angle, adjust orbital speed, and inspect planetary data.',
     fileUrl: '/simulations/solar-system-simulation.html',
-    topics: ['Planetary Orbits & Orbital Periods', 'Distance & Size Scale Ratios', 'Axial Tilt & Seasonal Sunlight Variations', 'Gravitational Mechanics of the Sun'],
-    features: ['100% Offline Standalone Chrome-Ready Lab', 'True Keplerian Elliptical Orbit Visualization', 'Speed Control with Reverse & Fast-Forward Modes', 'Detailed Planetary Data Sheets & Exploration Viewpoints'],
+    topics: ['8 Planets, Moons & Asteroid Belt', 'Orbital Velocities & Planetary Years', 'Planetary Physical Dimensions & Temperatures', 'Interactive 3D Perspective & Camera Tilt'],
+    features: ['3D Orbital Motion with Custom Procedural Textures', 'Individual Planet Deep-Dive Exploration Panels', 'Speed Slider & Realistic Day/Year Clock Tracking', 'Smooth Multi-Angle Tilt & Responsive Zoom Engine'],
     gradeLevel: 'Elementary to High School (Grades 4–12)'
   },
   {
@@ -885,6 +885,51 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Systemic & Pulmonary Circulation Loops', 'Deoxygenated & Oxygenated Blood Vectors', 'Ventricular Pumping Mechanics', 'Cardiac Output & Blood Pressure Dynamics'],
     features: ['100% Offline Standalone Chrome-Ready Lab', 'Pulsing Interactive Heart Chambers', 'Oxygenated (Red) vs Deoxygenated (Blue) Blood Flow', 'BPM Heart Rate Controller & Waveform Monitor'],
     gradeLevel: 'Middle & High School (Grades 6–12)'
+  },
+  {
+    id: 'sim-ice-to-water-to-steam-simulation',
+    slug: 'ice-to-water-to-steam-simulation',
+    indexNumber: '67',
+    title: 'Heating Ice: Solid to Liquid to Steam Simulation',
+    subject: 'Chemistry & Thermodynamics',
+    category: 'Chemistry & Matter',
+    iconName: 'Thermometer',
+    accentColor: '#0284c7',
+    description: 'Light the fire and watch ice at −10°C melt into liquid water at 0°C, then heat to 100°C and boil into steam. Features live digital temperature readout, temperature-time heating graph, microscopic particle motion model, and adjustable flame power.',
+    fileUrl: '/simulations/Ice_to_Water_to_Steam_Simulation.html',
+    topics: ['Solid, Liquid and Gas Particle Arrangement', 'Melting at 0°C (Latent Heat of Fusion)', 'Boiling at 100°C (Latent Heat of Vaporization)', 'Temperature vs. Time Phase Transition Curve'],
+    features: ['Interactive Bunsen Burner Flame & Tripod Stand', 'Live Digital LCD Temperature Readout', 'Real-time Temperature vs. Time Graph', 'Microscopic Particle Lattice & Collision Model'],
+    gradeLevel: 'Elementary to High School (Grades 4–10)'
+  },
+  {
+    id: 'sim-water-cycle-simulation',
+    slug: 'water-cycle-simulation',
+    indexNumber: '68',
+    title: 'The Water Cycle Simulation',
+    subject: 'Earth Sciences & Hydrology',
+    category: 'Earth & Space',
+    iconName: 'CloudRain',
+    accentColor: '#0ea5e9',
+    description: 'Follow water as it moves around our planet again and again: Evaporation, Condensation, Precipitation, and Collection. Control Sun heat, wind, day/night mode, rain vs. snow, and thunderstorms with animated clouds, river runoff, and ocean waves.',
+    fileUrl: '/simulations/water-cycle-simulation.html',
+    topics: ['1. Evaporation (Solar-driven vapor)', '2. Condensation (Cloud droplet formation)', '3. Precipitation (Rain, snow & hail)', '4. Collection (River runoff & ocean storage)'],
+    features: ['Interactive 4-Step Water Cycle Navigator', 'Dynamic Weather Sliders (Heat, Wind, Storm, Night)', 'Live Telemetry Gauges (Cloud, Sun, River, Snow)', 'Rain, Snow, Lightning & Animated Watershed Engine'],
+    gradeLevel: 'Elementary & Middle School (Grades 3–9)'
+  },
+  {
+    id: 'sim-urdu-grammar-sifat-ki-aqsam',
+    slug: 'urdu-grammar-sifat-ki-aqsam',
+    indexNumber: '69',
+    title: 'Urdu Grammar: Kinds of Adjectives (اُردو قواعد - صفت کی اقسام)',
+    subject: 'Urdu Language & Linguistics (اردو زبان و قواعد)',
+    category: 'Urdu & Linguistics',
+    iconName: 'BookOpen',
+    accentColor: '#16a34a',
+    description: 'Interactive Urdu grammar game for mastering kinds of adjectives. Identify golden target adjectives in sentences and drop them into flower baskets: Sifat-e-Zati (صفتِ ذاتی), Sifat-e-Nisbati (صفتِ نسبتی), Sifat-e-Adadi (صفتِ عددی), Sifat-e-Miqdari (صفتِ مقداری), and Sifat-e-Ishari (صفتِ اشاری).',
+    fileUrl: '/simulations/Urdu_Grammar_Sifat_Ki_Aqsam.html',
+    topics: ['Sifat-e-Zati (صفتِ ذاتی - Inherent Qualities)', 'Sifat-e-Nisbati (صفتِ نسبتی - Relational Adjectives)', 'Sifat-e-Adadi (صفتِ عددی - Numerical Adjectives)', 'Sifat-e-Miqdari (صفتِ مقداری - Quantitative Adjectives)', 'Sifat-e-Ishari (صفتِ اشاری - Demonstrative Adjectives)'],
+    features: ['5 Beautiful Illustrated Flower Basket Targets', 'Target Adjective Highlighting & Drag-and-Drop', 'Live Urdu Audio Feedback & Star Reward System', 'Authentic RTL Urdu Nastaliq Typography'],
+    gradeLevel: 'Primary, Middle & Secondary (Grades 4–10)'
   }
 ];
 

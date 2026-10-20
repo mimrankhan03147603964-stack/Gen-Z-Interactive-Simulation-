@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>States of Matter: Heating Ice to Boiling Water</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at 25% 0,#1d3a63,#0c1727 70%);color:#e8f1ff;min-height:100vh;padding:14px}
+.hd{text-align:center;margin:4px auto 12px;width:min(1180px,100%);background:linear-gradient(180deg,#2b7bff,#123fa6);border:3px solid #a9d0ff;border-radius:40px;padding:8px 18px;box-shadow:0 7px 0 #0a2a78,0 14px 26px rgba(0,0,0,.5)}
+.hd h1{font-size:34px;text-shadow:0 3px 0 #0a2a78}.hd h1 span{color:#ffd23c}.hd p{font-size:16px;color:#d7e9ff;font-weight:600}
+.wrap{display:grid;grid-template-columns:1fr 350px;gap:14px;width:min(1180px,100%);margin:auto}
+.scene{border-radius:20px;overflow:hidden;border:3px solid #2e4c7a;box-shadow:0 10px 30px rgba(0,0,0,.6);background:#0b1422}
+canvas{display:block;width:100%;height:auto}
+.pan{display:flex;flex-direction:column;gap:10px}
+.box{background:linear-gradient(#17294a,#101d36);border:2px solid #2e4c7a;border-radius:16px;padding:10px}
+#lcd{font-family:'Consolas','Courier New',monospace;font-size:54px;font-weight:700;text-align:center;color:#6dff8a;background:#06130a;border:4px solid #3a4a3f;border-radius:12px;text-shadow:0 0 12px #35d15a;letter-spacing:2px;padding:2px}
+#badge{margin-top:8px;text-align:center;font-weight:800;font-size:18px;padding:7px;border-radius:12px;color:#fff;transition:.3s}
+.row{display:flex;gap:8px}.btn{flex:1;border:none;cursor:pointer;color:#fff;font-weight:800;font-size:16px;padding:11px;border-radius:24px;background:linear-gradient(#ff8a3a,#e0430f);box-shadow:0 4px 0 #8c2606}
+.btn.g{background:linear-gradient(#5a9bff,#1f55c8);box-shadow:0 4px 0 #123a8a}.btn:active{transform:translateY(3px);box-shadow:none}
+label{font-size:14px;font-weight:700;display:block;margin-top:6px}input[type=range]{width:100%}
+#info{font-size:14.5px;line-height:1.45;min-height:70px}
+h3{font-size:14px;color:#ffd23c;margin-bottom:5px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+</style></head><body>
+<div class="hd"><h1>Heating <span>Ice</span>: Solid → Liquid → Gas</h1><p>Light the fire and watch the ice melt, then boil!</p></div>
+<div class="wrap">
+<div class="scene"><canvas id="c" width="760" height="640"></canvas></div>
+<div class="pan">
+ <div class="box"><div id="lcd">-10.0°C</div><div id="badge" style="background:#2b8fd9">SOLID: ICE</div>
+  <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:14px"><span>⏱ Time: <b id="tm">00:00</b></span><span>🔥 Heat: <b id="pw">OFF</b></span></div></div>
+ <div class="box"><div class="row"><button class="btn" id="fire">🔥 Light the Fire</button><button class="btn g" id="rst">⟲ Reset</button></div>
+  <label>Flame size: <span id="fv">80</span>%<input type="range" id="fl" min="20" max="100" value="80"></label>
+  <label>Simulation speed: <span id="sv">8</span>×<input type="range" id="sp" min="1" max="20" value="8"></label></div>
+ <div class="box"><h3>Temperature vs Time</h3><canvas id="g" width="330" height="170"></canvas></div>
+ <div class="box"><h3>Particles (very small view)</h3><canvas id="m" width="330" height="120"></canvas><div id="info"></div></div>
+</div></div>
+<script>
+const $=s=>document.querySelector(s),cv=$("#c"),x=cv.getContext("2d");
+const CX=380,BOT=410,HMAX=170,TOP=140;
+const m=1e2,E1=2100,E2=35500,E3=77300,EMAX=E3+.6*226000;
+let E=0,lit=false,flame=0,tSim=0,lost=0,hist=[],last=performance.now(),acc=0,T=-10,ph=0,melt=0,boil=0,time=0;
+function st(E){if(E<E1)return{T:-10+E/210,ph:0,melt:0,boil:0};
+if(E<E2)return{T:0,ph:1,melt:(E-E1)/33400,boil:0};
+if(E<E3)return{T:(E-E2)/418,ph:2,melt:1,boil:0};
+return{T:100,ph:3,melt:1,boil:Math.min(.6,(E-E3)/226000)}}
+function rr(c,X,Y,w,h,r){c.beginPath();c.moveTo(X+r,Y);c.arcTo(X+w,Y,X+w,Y+h,r);c.arcTo(X+w,Y+h,X,Y+h,r);c.arcTo(X,Y+h,X,Y,r);c.arcTo(X,Y,X+w,Y,r);c.closePath()}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+/* ---------- static scene ---------- */
+function bg(){let g=x.createLinearGradient(0,0,0,640);g.addColorStop(0,"#16263f");g.addColorStop(.9,"#0d1828");g.addColorStop(1,"#0d1828");x.fillStyle=g;x.fillRect(0,0,760,640);
+g=x.createLinearGradient(0,618,0,640);g.addColorStop(0,"#6b4a2b");g.addColorStop(1,"#3b2714");x.fillStyle=g;x.fillRect(0,618,760,22);
+x.fillStyle="rgba(255,255,255,.08)";x.fillRect(0,618,760,2)}
+function tripod(){const mg=x.createLinearGradient(0,0,10,0);mg.addColorStop(0,"#9aa3ad");mg.addColorStop(1,"#4a525a");x.strokeStyle=mg;x.lineCap="round";x.lineWidth=9;
+x.beginPath();x.moveTo(236,430);x.lineTo(176,618);x.moveTo(524,430);x.lineTo(584,618);x.stroke();
+x.lineWidth=5;x.strokeStyle="#3b4249";x.beginPath();x.moveTo(380,430);x.lineTo(380,470);x.stroke();
+x.lineWidth=8;x.strokeStyle="#7d868f";x.beginPath();x.moveTo(190,520);x.lineTo(570,520);x.stroke()}
+function lamp(){let g=x.createRadialGradient(360,580,5,380,584,54);g.addColorStop(0,"rgba(255,255,255,.85)");g.addColorStop(.35,"rgba(210,235,245,.55)");g.addColorStop(1,"rgba(120,170,200,.35)");
+x.fillStyle=g;x.beginPath();x.ellipse(380,584,54,36,0,0,7);x.fill();
+x.save();x.beginPath();x.ellipse(380,584,52,34,0,0,7);x.clip();let a=x.createLinearGradient(0,560,0,620);a.addColorStop(0,"#f5d77a");a.addColorStop(1,"#c98f1d");x.fillStyle=a;x.globalAlpha=.8;x.fillRect(320,566,120,60);x.restore();
+x.strokeStyle="rgba(230,248,255,.9)";x.lineWidth=2.5;x.beginPath();x.ellipse(380,584,54,36,0,0,7);x.stroke();
+x.fillStyle="rgba(255,255,255,.75)";x.beginPath();x.ellipse(352,572,10,5,-.6,0,7);x.fill();
+let c=x.createLinearGradient(362,0,398,0);c.addColorStop(0,"#b9a35a");c.addColorStop(.5,"#f1deA0");c.addColorStop(1,"#8c7632");x.fillStyle=c;rr(x,362,536,36,16,4);x.fill();
+x.fillStyle="#e9d9ae";x.fillRect(376,518,8,20);x.fillStyle=lit?"#ff9a2a":"#2b2118";x.fillRect(376,514,8,6)}
+function gauze(){x.fillStyle="#2c3238";rr(x,226,420,308,10,4);x.fill();x.strokeStyle="#6f7a84";x.lineWidth=1;x.strokeRect(226.5,420.5,307,9);
+x.save();x.beginPath();x.rect(300,420,160,5);x.clip();x.strokeStyle="rgba(200,210,220,.5)";for(let i=300;i<460;i+=5){x.beginPath();x.moveTo(i,420);x.lineTo(i,425);x.stroke()}x.restore()}
+/* ---------- flame ---------- */
+const fp=[];function flameStep(f){const n=Math.round(9*flame);
+for(let i=0;i<n;i++)fp.push({x:CX+rnd(-5,5)*flame,y:512,vx:rnd(-.25,.25),vy:-rnd(1.7,2.7)*(.45+.55*flame),l:1,d:rnd(.019,.03),s:rnd(.7,1.15),o:Math.random()*9});
+x.globalCompositeOperation="lighter";
+for(let i=fp.length-1;i>=0;i--){const p=fp[i];p.l-=p.d*f;if(p.l<=0){fp.splice(i,1);continue}
+p.vx+=(CX-p.x)*.012*f+Math.sin(tSim*0+performance.now()/130+p.o)*.04;p.x+=p.vx*f;p.y+=p.vy*f;
+const pr=1-p.l,r=(5+17*Math.sin(Math.PI*Math.min(1,pr*1.05)))*p.s*(.5+.5*flame),c=p.l>.8?[255,248,215]:p.l>.55?[255,205,70]:p.l>.3?[255,125,25]:[205,40,10],a=Math.min(1,p.l*1.6)*.42;
+const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,r);g.addColorStop(0,`rgba(${c},${a})`);g.addColorStop(1,`rgba(${c},0)`);x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,r,0,7);x.fill()}
+if(flame>.02){let g=x.createRadialGradient(CX,516,0,CX,512,26*flame+4);g.addColorStop(0,`rgba(90,150,255,${.7*flame})`);g.addColorStop(1,"rgba(60,100,255,0)");x.fillStyle=g;x.beginPath();x.ellipse(CX,514,13*flame+3,22*flame+4,0,0,7);x.fill();
+g=x.createRadialGradient(CX,470,0,CX,470,200);g.addColorStop(0,`rgba(255,150,40,${.2*flame})`);g.addColorStop(1,"rgba(255,120,20,0)");x.fillStyle=g;x.fillRect(120,300,520,320)}
+x.globalCompositeOperation="source-over"}
+/* ---------- ice ---------- */
+const cubes=[{r:-48,f:-66,y:1,a:.1},{r:0,f:-33,y:1,a:-.14},{r:48,f:0,y:1,a:.08},{r:-24,f:33,y:2,a:.18},{r:24,f:66,y:2,a:-.1}];
+function ice(cx,cy,s,rot){x.save();x.translate(cx,cy);x.rotate(rot);const d=s*.17,h=s/2;
+x.fillStyle="rgba(150,205,235,.7)";x.beginPath();x.moveTo(h,-h);x.lineTo(h+d,-h-d);x.lineTo(h+d,h-d);x.lineTo(h,h);x.fill();
+x.fillStyle="rgba(240,252,255,.85)";x.beginPath();x.moveTo(-h,-h);x.lineTo(h,-h);x.lineTo(h+d,-h-d);x.lineTo(-h+d,-h-d);x.fill();
+let g=x.createLinearGradient(-h,-h,h,h);g.addColorStop(0,"rgba(225,248,255,.8)");g.addColorStop(.6,"rgba(175,225,248,.65)");g.addColorStop(1,"rgba(130,195,235,.7)");x.fillStyle=g;rr(x,-h,-h,s,s,s*.1);x.fill();
+x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=1.6;x.stroke();x.beginPath();x.moveTo(h,-h);x.lineTo(h+d,-h-d);x.lineTo(h+d,h-d);x.lineTo(h,h);x.moveTo(-h,-h);x.lineTo(-h+d,-h-d);x.lineTo(h+d,-h-d);x.stroke();
+x.strokeStyle="rgba(255,255,255,.55)";x.lineWidth=1;x.beginPath();x.moveTo(-h*.3,-h*.6);x.lineTo(h*.1,0);x.lineTo(-h*.2,h*.5);x.moveTo(h*.4,-h*.2);x.lineTo(h*.1,0);x.stroke();
+x.fillStyle="rgba(255,255,255,.75)";x.beginPath();x.ellipse(-h*.5,-h*.45,s*.14,s*.05,-.6,0,7);x.fill();
+x.fillStyle="rgba(255,255,255,.5)";[[.3,.3],[-.1,.45],[.35,-.35]].forEach(q=>{x.beginPath();x.arc(q[0]*s,q[1]*s,s*.035,0,7);x.fill()});x.restore()}
+/* ---------- bubbles & steam ---------- */
+const bub=[],stm=[];
+function bubbles(f,wh,surf){const rate=ph==3?.9:T>55?(T-55)/45*.22:0;if(wh>20&&Math.random()<rate)bub.push({x:rnd(285,475),y:BOT-4,r:ph==3?rnd(2.5,6.5):rnd(1.2,2.8),v:rnd(.9,2.2)*(ph==3?1.6:1),o:Math.random()*9});
+x.save();rr(x,272,TOP,216,BOT-TOP,10);x.clip();
+for(let i=bub.length-1;i>=0;i--){const b=bub[i];b.y-=b.v*f;b.x+=Math.sin(performance.now()/200+b.o)*.4;b.r+=.004*f;
+if(b.y<surf+4||wh<10){bub.splice(i,1);if(ph==3&&Math.random()<.5&&wh>10)stm.push({x:b.x,y:surf-4,r:8,a:.22,vx:rnd(-.2,.2),vy:-rnd(.5,1)});continue}
+let g=x.createRadialGradient(b.x-b.r*.3,b.y-b.r*.3,0,b.x,b.y,b.r);g.addColorStop(0,"rgba(255,255,255,.9)");g.addColorStop(1,"rgba(200,235,255,.15)");x.fillStyle=g;x.beginPath();x.arc(b.x,b.y,b.r,0,7);x.fill();x.strokeStyle="rgba(255,255,255,.7)";x.lineWidth=.8;x.stroke()}x.restore()}
+function steam(f,wh){const rate=ph==3?1.6:T>65?(T-65)/35*.35:0;if(wh>10&&Math.random()<rate)stm.push({x:rnd(290,470),y:rnd(120,138),r:10,a:rnd(.14,.26),vx:rnd(-.3,.3),vy:-rnd(.6,1.4)});
+for(let i=stm.length-1;i>=0;i--){const s=stm[i];s.x+=(s.vx+Math.sin(performance.now()/500+i)*.25)*f;s.y+=s.vy*f;s.r+=.35*f;s.a-=.0013*f;if(s.a<=0||s.y<-60){stm.splice(i,1);continue}
+const g=x.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r);g.addColorStop(0,`rgba(240,246,252,${s.a})`);g.addColorStop(1,"rgba(240,246,252,0)");x.fillStyle=g;x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill()}}
+/* ---------- beaker ---------- */
+function outer(){x.beginPath();x.moveTo(266,134);x.lineTo(266,400);x.quadraticCurveTo(266,416,282,416);x.lineTo(478,416);x.quadraticCurveTo(494,416,494,400);x.lineTo(494,134)}
+function water(wh,surf,f){if(wh<1)return;x.save();rr(x,272,TOP,216,BOT-TOP,10);x.clip();
+const amp=ph==3?3.5:T>60?1.2:.5,tt=performance.now()/160;
+let g=x.createLinearGradient(0,surf,0,BOT);g.addColorStop(0,"rgba(140,210,250,.5)");g.addColorStop(1,"rgba(30,115,205,.78)");x.fillStyle=g;
+x.beginPath();x.moveTo(272,BOT);for(let i=272;i<=488;i+=6)x.lineTo(i,surf+Math.sin(i/14+tt)*amp+Math.sin(i/6-tt*1.7)*amp*.5);x.lineTo(488,BOT);x.fill();
+x.fillStyle="rgba(215,243,255,.5)";x.beginPath();x.ellipse(CX,surf,108,7+amp,0,0,7);x.fill();x.strokeStyle="rgba(255,255,255,.75)";x.lineWidth=1.5;x.beginPath();x.ellipse(CX,surf,108,7+amp,0,0,7);x.stroke();
+g=x.createLinearGradient(272,0,488,0);g.addColorStop(0,"rgba(255,255,255,.18)");g.addColorStop(.2,"rgba(255,255,255,0)");g.addColorStop(1,"rgba(0,40,90,.18)");x.fillStyle=g;x.fillRect(272,surf,216,wh);x.restore()}
+function therm(){const X=468,tubeTop=80,bulb=396,y=tubeTop+14;
+x.fillStyle="rgba(235,248,255,.55)";rr(x,X-6,tubeTop,12,bulb-tubeTop,6);x.fill();x.beginPath();x.arc(X,bulb,10,0,7);x.fill();
+x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=1.5;rr(x,X-6,tubeTop,12,bulb-tubeTop,6);x.stroke();x.beginPath();x.arc(X,bulb,10,0,7);x.stroke();
+const top=bulb-((T+20)/140)*(bulb-y-10);x.fillStyle="#e3202b";x.beginPath();x.arc(X,bulb,7,0,7);x.fill();x.fillRect(X-2.5,top,5,bulb-top);
+x.fillStyle="rgba(255,255,255,.8)";x.fillRect(X-4,top,1.5,bulb-top);
+x.font="10px Segoe UI";x.fillStyle="#fff";x.textAlign="right";x.strokeStyle="#fff";x.lineWidth=1;
+for(let t=0;t<=100;t+=20){const yy=bulb-((t+20)/140)*(bulb-y-10);x.beginPath();x.moveTo(X-6,yy);x.lineTo(X-12,yy);x.stroke();x.fillText(t,X-14,yy+3)}x.textAlign="left"}
+function glass(){outer();let g=x.createLinearGradient(266,0,494,0);g.addColorStop(0,"rgba(255,255,255,.3)");g.addColorStop(.12,"rgba(255,255,255,.04)");g.addColorStop(.85,"rgba(255,255,255,.03)");g.addColorStop(1,"rgba(255,255,255,.32)");x.fillStyle=g;x.fill();
+x.strokeStyle="rgba(205,238,250,.95)";x.lineWidth=3;x.stroke();x.strokeStyle="rgba(120,180,205,.6)";x.lineWidth=1;x.beginPath();x.moveTo(272,140);x.lineTo(272,398);x.quadraticCurveTo(272,410,284,410);x.lineTo(476,410);x.quadraticCurveTo(488,410,488,398);x.lineTo(488,140);x.stroke();
+x.fillStyle="rgba(200,235,248,.4)";rr(x,268,404,224,12,6);x.fill();
+x.strokeStyle="rgba(215,243,255,.95)";x.lineWidth=2;x.beginPath();x.ellipse(CX,134,114,7,0,0,7);x.stroke();x.beginPath();x.moveTo(258,126);x.lineTo(266,134);x.moveTo(502,126);x.lineTo(494,134);x.stroke();
+g=x.createLinearGradient(0,150,0,400);g.addColorStop(0,"rgba(255,255,255,0)");g.addColorStop(.2,"rgba(255,255,255,.7)");g.addColorStop(1,"rgba(255,255,255,.08)");x.fillStyle=g;rr(x,277,150,7,245,3);x.fill();x.fillStyle="rgba(255,255,255,.22)";rr(x,479,160,3,220,2);x.fill();
+x.strokeStyle="rgba(255,255,255,.8)";x.fillStyle="#fff";x.font="11px Segoe UI";x.lineWidth=1.2;
+for(let k=1;k<=10;k++){const y=BOT-k*26;x.beginPath();x.moveTo(272,y);x.lineTo(k%2?286:300,y);x.stroke();if(k%2==0)x.fillText(k*50,304,y+4)}}
+/* ---------- particle model ---------- */
+const mc=$("#m").getContext("2d"),P=[];for(let i=0;i<28;i++){const c=i%7,r=Math.floor(i/7);P.push({hx:40+c*42,hy:22+r*28,x:40+c*42,y:22+r*28,vx:rnd(-1,1),vy:rnd(-1,1),r:Math.random()})}
+function model(f){mc.clearRect(0,0,330,120);mc.fillStyle="#0a1628";mc.fillRect(0,0,330,120);
+P.forEach(p=>{let s=0;if(ph==0)s=0;else if(ph==1)s=p.r<melt?1:0;else if(ph==2)s=1;else s=p.r<Math.min(1,.25+boil*5)?2:1;
+if(s==0){const a=.6+Math.max(0,(T+10))/10*.5;p.x+=((p.hx+Math.sin(performance.now()/90+p.hx)*a)-p.x)*.4;p.y+=((p.hy+Math.cos(performance.now()/80+p.hy)*a)-p.y)*.4;p.vx=rnd(-1,1);p.vy=rnd(-1,1)}
+else{const sp=s==2?3.2:.7+T/70,lo=s==2?8:50;let l=Math.hypot(p.vx,p.vy)||1;p.vx=p.vx/l*sp+rnd(-.2,.2);p.vy=p.vy/l*sp+rnd(-.2,.2);p.x+=p.vx*f;p.y+=p.vy*f;
+if(p.x<8){p.x=8;p.vx=Math.abs(p.vx)}if(p.x>322){p.x=322;p.vx=-Math.abs(p.vx)}if(p.y<lo){p.y=lo;p.vy=Math.abs(p.vy)}if(p.y>112){p.y=112;p.vy=-Math.abs(p.vy)}}
+const col=s==0?["#bfeaff","#5ab4e8"]:s==1?["#9fd4ff","#2f86d6"]:["#ffd2c9","#e0523f"];
+const g=mc.createRadialGradient(p.x-2,p.y-2,1,p.x,p.y,8);g.addColorStop(0,col[0]);g.addColorStop(1,col[1]);mc.fillStyle=g;mc.beginPath();mc.arc(p.x,p.y,7,0,7);mc.fill()})}
+/* ---------- graph ---------- */
+const gc=$("#g").getContext("2d");
+function graph(){gc.clearRect(0,0,330,170);gc.fillStyle="#0a1628";gc.fillRect(0,0,330,170);const L=36,R=322,Tp=10,B=146,tmax=Math.max(60,tSim*1.05);
+gc.strokeStyle="rgba(255,255,255,.12)";gc.fillStyle="#9fb8dc";gc.font="10px Segoe UI";gc.lineWidth=1;
+for(let t=0;t<=100;t+=20){const y=B-(t+10)/120*(B-Tp);gc.beginPath();gc.moveTo(L,y);gc.lineTo(R,y);gc.stroke();gc.fillText(t+"°",6,y+3)}
+gc.fillText("Time (s)",R-44,164);gc.fillText(Math.round(tmax)+"",R-8,156);
+const col=["#7fd6ff","#bfeeff","#4aa3ff","#ff5a3c"];
+for(let i=1;i<hist.length;i++){const a=hist[i-1],b=hist[i];gc.strokeStyle=col[b.ph];gc.lineWidth=2.5;gc.beginPath();gc.moveTo(L+a.t/tmax*(R-L),B-(a.T+10)/120*(B-Tp));gc.lineTo(L+b.t/tmax*(R-L),B-(b.T+10)/120*(B-Tp));gc.stroke()}
+gc.fillStyle="#ffd23c";const px=L+tSim/tmax*(R-L),py=B-(T+10)/120*(B-Tp);gc.beginPath();gc.arc(px,py,4,0,7);gc.fill()}
+/* ---------- ui ---------- */
+const INFO=["Ice is a <b>solid</b>. Particles are packed in a fixed pattern and only vibrate. Heat raises the temperature of the ice.","<b>Melting at 0°C.</b> The temperature stays constant while heat breaks the ice pattern. Solid ice turns into liquid water.","Now it is <b>liquid water</b>. Particles slide past each other. More heat raises the temperature towards 100°C.","<b>Boiling at 100°C.</b> The temperature stays constant. Particles escape as <b>steam (gas)</b> and the water level drops."];
+const BADGE=[["SOLID: ICE","#2b8fd9"],["MELTING: ICE → WATER","#18a7b8"],["LIQUID: WATER","#2f63d6"],["BOILING: WATER → STEAM","#d8432a"]];
+function ui(){$("#lcd").textContent=T.toFixed(1)+"°C";const b=BADGE[ph];$("#badge").textContent=b[0];$("#badge").style.background=b[1];$("#info").innerHTML=INFO[ph];
+const s=Math.floor(tSim);$("#tm").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");$("#pw").textContent=lit?$("#fl").value+"%":"OFF";
+$("#lcd").style.color=T>=100?"#ff6d5a":T>=0?"#6dd7ff":"#6dff8a"}
+$("#fire").onclick=function(){lit=!lit;this.textContent=lit?"🧯 Put Out Fire":"🔥 Light the Fire"};
+$("#rst").onclick=()=>{E=0;lost=0;tSim=0;hist=[];bub.length=0;stm.length=0;lit=false;$("#fire").textContent="🔥 Light the Fire"};
+$("#fl").oninput=e=>$("#fv").textContent=e.target.value;$("#sp").oninput=e=>$("#sv").textContent=e.target.value;
+function frame(now){let dt=Math.min(.05,(now-last)/1e3);last=now;const f=dt*60,mult=+$("#sp").value;
+flame+=((lit?+$("#fl").value/100:0)-flame)*Math.min(1,dt*4);if(flame<.01&&!lit)flame=0;
+const s0=st(E);let P=lit?900*flame:0,loss=s0.T>30?3*(s0.T-25):0;E=Math.max(0,Math.min(EMAX,E+(P-loss)*dt*mult));if(lit||E>0)tSim+=dt*mult*(lit||s0.T>30?1:0);
+const s=st(E);T=s.T;ph=s.ph;melt=s.melt;boil=s.boil;lost=Math.max(lost,boil);
+acc+=dt*mult;if(acc>.4&&(lit||s.T>30)){acc=0;hist.push({t:tSim,T,ph});if(hist.length>600)hist.shift()}
+const wf=ph<1?0:ph==1?melt:1,wh=HMAX*wf*(1-lost/.6*.55),surf=BOT-wh;
+bg();tripod();lamp();flameStep(f);gauze();
+x.save();rr(x,272,TOP,216,BOT-TOP,10);x.clip();
+const sc=Math.cbrt(Math.max(0,ph<1?1:ph==1?1-melt:0));
+if(sc>.05){const k=Math.min(1,wh/45);cubes.forEach((c,i)=>{const s=46*sc,rest=c.y==1?BOT-s/2:BOT-s*1.5-1,fl=surf+.38*s+Math.sin(performance.now()/700+i*2)*(2.5+(ph==3?3:0))*k;
+ice(CX+c.r+(c.f-c.r)*k,Math.min(rest,fl),s,c.a+Math.sin(performance.now()/900+i)*.06*k)})}
+x.restore();water(wh,surf,f);bubbles(f,wh,surf);therm();glass();steam(f,wh);
+if(flame>.02){x.globalCompositeOperation="lighter";let g=x.createRadialGradient(CX,416,0,CX,416,130);g.addColorStop(0,`rgba(255,150,50,${.22*flame})`);g.addColorStop(1,"rgba(255,120,30,0)");x.fillStyle=g;x.fillRect(240,300,280,160);x.globalCompositeOperation="source-over"}
+if(ph==3&&lost>=.59){x.fillStyle="rgba(0,0,0,.5)";rr(x,150,40,460,34,10);x.fill();x.fillStyle="#ffd23c";x.font="bold 16px Segoe UI";x.textAlign="center";x.fillText("Most of the water has turned into steam!",380,63);x.textAlign="left"}
+model(f);graph();ui();requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

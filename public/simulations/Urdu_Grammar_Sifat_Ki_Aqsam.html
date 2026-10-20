@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اُردو قواعد سیمولیشن - صفت کی اقسام</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;user-select:none}
+html,body{height:100%;overflow:hidden;background:linear-gradient(#27a9f3,#7fd4ff 60%,#9be36b)}
+body{font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq','Alvi Nastaleeq','Urdu Typesetting','Segoe UI',Tahoma,serif}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;overflow:hidden;background:linear-gradient(#1c9be8 0%,#5cc7ff 45%,#bff0ff 80%);border-radius:10px}
+.abs{position:absolute}
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.9;animation:drift 40s linear infinite;box-shadow:inset 0 -8px 0 #dff3ff}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:50%;height:140%;left:12%;top:-60%}.cloud:after{width:38%;height:110%;right:14%;top:-40%}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(1500px)}}
+.tw{position:absolute;font-size:22px;animation:tw 2s ease-in-out infinite}@keyframes tw{50%{transform:scale(1.5) rotate(20deg);opacity:.5}}
+.bob{animation:bob 3s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-12px)}}
+.flap{transform-box:fill-box;transform-origin:center;animation:flap .5s ease-in-out infinite alternate}@keyframes flap{to{transform:scaleX(.72)}}
+.wave{animation:wv 1s ease-in-out infinite alternate}@keyframes wv{to{transform:rotate(22deg)}}
+#title{left:300px;top:16px;width:770px;height:112px;background:linear-gradient(#1b66c9,#0b3c86);border-radius:30px;border:4px solid #7fc2ff;box-shadow:0 10px 0 #072a63,0 20px 30px rgba(0,30,90,.45);color:#fff;font-size:44px;font-weight:700;display:flex;align-items:center;justify-content:center;text-shadow:0 4px 0 #062a66,0 0 20px #4aa8ff;padding-top:26px}
+#title:after{content:"";position:absolute;left:18px;right:18px;top:8px;height:20px;border-radius:14px;background:linear-gradient(rgba(255,255,255,.45),rgba(255,255,255,0))}
+#side{left:30px;top:215px;width:250px;height:385px;background:linear-gradient(#1a5fb8,#0b3c86);border-radius:30px;border:4px solid #7fc2ff;box-shadow:0 10px 0 #072a63,0 18px 28px rgba(0,30,90,.4);color:#fff;text-align:center;padding:12px 14px}
+#side .l{font-size:25px;line-height:2.1}#sc{font-size:40px;color:#ffd23c;font-weight:700;text-shadow:0 3px 0 #a86a00;font-family:'Segoe UI',Arial}
+.sbar{height:24px;border-radius:14px;background:#0a2a63;border:3px solid #cfe8ff;overflow:hidden;box-shadow:inset 0 4px 6px rgba(0,0,0,.5)}.sbar i{display:block;height:100%;width:0;background:linear-gradient(#9dff6b,#25b857);transition:.5s;border-radius:12px;box-shadow:inset 0 5px 0 rgba(255,255,255,.4)}
+#tm{font-size:38px;font-family:'Segoe UI',Arial;font-weight:700;margin-top:2px}
+#panel{left:305px;top:140px;width:880px;height:475px;background:linear-gradient(rgba(238,250,255,.96),rgba(200,232,250,.96));border:5px solid #fff;border-radius:34px;box-shadow:0 12px 0 rgba(20,90,160,.35),0 24px 36px rgba(0,50,110,.35)}
+#row{position:absolute;top:18px;left:14px;right:14px;display:flex;flex-wrap:wrap;gap:14px 12px;justify-content:center;direction:rtl}
+.tile{min-width:78px;height:72px;padding:6px 22px 0;border-radius:18px;background:linear-gradient(#fffdf5,#e9e3d3);border:3px solid #fff;box-shadow:0 7px 0 #a89f86,0 12px 14px rgba(0,0,0,.25);font-size:34px;color:#18243c;display:flex;align-items:center;justify-content:center;cursor:grab;transition:transform .15s;line-height:1.7;position:relative}
+.tile:hover{transform:translateY(-6px) rotate(-2deg)}.tile:active{cursor:grabbing}
+.tile.ctx{background:linear-gradient(#f3f7fb,#dbe6f0);box-shadow:0 4px 0 #aebbc9;color:#4a5b70;cursor:default;font-size:30px}.tile.ctx:hover{transform:none}.tile.tgt{border-color:#ffd23c;box-shadow:0 7px 0 #a89f86,0 0 0 4px rgba(255,210,60,.75),0 12px 14px rgba(0,0,0,.25)}
+.tile.sel{background:linear-gradient(#8fd0ff,#2d9bff);color:#06284f;box-shadow:0 7px 0 #1366b5,0 12px 14px rgba(0,0,0,.25);transform:translateY(-8px)}
+.tile.done{opacity:.4;cursor:default;box-shadow:0 2px 0 #a89f86;transform:translateY(5px)}.tile.done:after{content:"✔";position:absolute;top:-8px;left:-6px;font-size:20px;color:#1faa3a;font-family:Arial}
+.tile.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-6px)}}
+#msg{position:absolute;top:122px;left:30px;right:30px;height:50px;border-radius:25px;background:linear-gradient(#fff,#e6f4ff);border:3px dashed #66b3f0;font-size:21px;color:#0b3c86;display:flex;align-items:center;justify-content:center;padding-top:10px;text-align:center}
+#bins{position:absolute;bottom:14px;left:14px;right:14px;display:flex;justify-content:center;gap:24px;direction:rtl}
+.bin{position:relative;width:160px;height:262px;transition:transform .2s;cursor:pointer;filter:drop-shadow(0 8px 8px rgba(0,40,90,.35))}
+.bin svg{position:absolute;inset:0;width:100%;height:100%}
+.bin:hover,.bin.over{transform:translateY(-8px) scale(1.06) rotate(-1deg)}.bin.over{filter:drop-shadow(0 0 18px #fff200)}
+.bin .lab{position:absolute;top:136px;left:12px;right:12px;height:34px;display:flex;align-items:center;justify-content:center;padding-top:8px;color:#fff;font-size:20px;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.5);pointer-events:none;white-space:nowrap}
+.slot{position:absolute;top:176px;left:30px;width:100px;height:74px;display:flex;flex-wrap:wrap;align-content:flex-end;justify-content:center;gap:4px;direction:rtl;pointer-events:none;overflow:hidden}
+.mini{min-width:40px;height:32px;padding:3px 7px 0;border-radius:10px;background:linear-gradient(#fffdf5,#e9e3d3);border:2px solid #fff;box-shadow:0 3px 0 #8a826a;font-size:17px;color:#18243c;display:flex;align-items:center;justify-content:center;line-height:1.6;animation:pop .5s}
+@keyframes pop{0%{transform:scale(0) rotate(-30deg)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.bin.bounce{animation:bn .6s}@keyframes bn{30%{transform:translateY(-22px) scale(1.1)}60%{transform:translateY(4px)}}
+.bin.hint{animation:hn .5s 5;filter:drop-shadow(0 0 22px #ffd23c)}@keyframes hn{50%{transform:scale(1.14) translateY(-10px)}}
+.bin.bad{animation:sh .4s}
+.btn{position:absolute;bottom:20px;height:64px;border:none;border-radius:22px;color:#fff;font-size:27px;font-weight:700;font-family:inherit;cursor:pointer;padding:12px 26px 0;display:flex;align-items:center;gap:10px;text-shadow:0 3px 0 rgba(0,0,0,.35);transition:.1s}
+.btn:before{content:"";position:absolute;left:12px;right:12px;top:5px;height:14px;border-radius:10px;background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0))}
+.btn:hover{filter:brightness(1.12)}.btn:active{transform:translateY(7px)}
+.b1{background:linear-gradient(#5db0ff,#1d6fe0);box-shadow:0 8px 0 #0f4399,0 14px 16px rgba(0,0,0,.3)}.b1:active{box-shadow:0 1px 0 #0f4399}
+.b2{background:linear-gradient(#ffb04d,#ff6a10);box-shadow:0 8px 0 #a83f00,0 14px 16px rgba(0,0,0,.3)}.b2:active{box-shadow:0 1px 0 #a83f00}
+.b3{background:linear-gradient(#6ee26e,#1fa83a);box-shadow:0 8px 0 #0d6a22,0 14px 16px rgba(0,0,0,.3)}.b3:active{box-shadow:0 1px 0 #0d6a22}
+.b4{background:linear-gradient(#b48bff,#6a35d8);box-shadow:0 8px 0 #3b1a8c,0 14px 16px rgba(0,0,0,.3)}.b4:active{box-shadow:0 1px 0 #3b1a8c}
+.pulse{animation:pl .8s infinite}@keyframes pl{50%{transform:scale(1.1)}}
+#modal{position:absolute;inset:0;background:rgba(5,30,80,.7);display:none;align-items:center;justify-content:center;z-index:50}
+#card{width:560px;padding:26px;text-align:center;border-radius:36px;background:linear-gradient(#fffbe6,#ffe9a6);border:6px solid #ffd23c;box-shadow:0 14px 0 #b8860b,0 30px 50px rgba(0,0,0,.5);color:#5a3200;animation:pop .6s}
+#card h2{font-size:46px;color:#d9480f;margin-bottom:6px;line-height:1.8}#card p{font-size:28px;line-height:2}
+.spark{position:absolute;pointer-events:none;font-size:26px;z-index:40}
+</style></head><body>
+<div id="stage">
+ <div class="cloud" style="left:100px;top:90px;width:120px;height:34px;animation-duration:50s"></div>
+ <div class="cloud" style="left:700px;top:40px;width:160px;height:40px;animation-duration:70s;animation-delay:-30s"></div>
+ <div class="cloud" style="left:300px;top:640px;width:130px;height:34px;animation-duration:60s;animation-delay:-10s"></div>
+ <span class="tw" style="left:60px;top:30px">⭐</span><span class="tw" style="left:1210px;top:160px;animation-delay:.5s">✨</span><span class="tw" style="left:270px;top:150px;animation-delay:1s">✨</span><span class="tw" style="left:1200px;top:650px;animation-delay:.3s">⭐</span>
+ <svg class="abs" style="left:0;bottom:0" width="1280" height="110" viewBox="0 0 1280 110"><path d="M0 50Q160 10 320 45T640 40T960 50T1280 35V110H0Z" fill="#7bd24a"/><path d="M0 75Q200 40 400 70T800 65T1280 70V110H0Z" fill="#4cb82e"/><g fill="#ffe14d"><circle cx="90" cy="80" r="6"/><circle cx="560" cy="90" r="6"/><circle cx="1010" cy="84" r="6"/></g><g fill="#ff6fa8"><circle cx="230" cy="92" r="6"/><circle cx="800" cy="88" r="6"/></g></svg>
+ <div class="abs bob" id="bf1" style="left:20px;top:8px;width:215px;height:235px"></div>
+ <div class="abs bob" id="bk1" style="left:1085px;top:14px;width:150px;height:190px;animation-delay:.6s"></div>
+ <div class="abs bob" id="bf2" style="left:10px;top:495px;width:215px;height:235px;animation-delay:1s"></div>
+ <div class="abs bob" id="bk2" style="left:1125px;top:540px;width:135px;height:175px;animation-delay:.3s"></div>
+ <div class="abs" id="title">اُردو قواعد سیمولیشن - صفت کی اقسام</div>
+ <div class="abs" id="side"><div class="l">اسکور: <span id="sc">0</span></div>
+  <svg width="70" height="70" viewBox="0 0 100 100" id="star" class="bob"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff59d"/><stop offset="1" stop-color="#ff9800"/></linearGradient></defs><path d="M50 6L63 36L96 39L71 61L79 94L50 77L21 94L29 61L4 39L37 36Z" fill="url(#sg)" stroke="#c46a00" stroke-width="4" stroke-linejoin="round"/><path d="M50 16L59 38L40 38Z" fill="rgba(255,255,255,.6)"/></svg>
+  <div class="l">درست جوابات</div><div class="sbar"><i id="pb"></i></div><div style="font-size:18px;font-family:Arial;margin-top:2px" id="pt">0 / 0</div>
+  <div class="l" style="margin-top:2px">وقت</div>
+  <svg width="54" height="54" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#3a8cff" stroke-width="5"/><path d="M30 14V30L42 36" stroke="#0b3c86" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="30" cy="30" r="3" fill="#e0301e"/></svg>
+  <div id="tm">03:00</div></div>
+ <div class="abs" id="panel"><div id="row"></div><div id="msg">سنہری کنارے والے لفظ (صفت) کو صحیح ٹوکری میں ڈالیں</div><div id="bins"></div>
+  <div class="abs" style="left:22px;top:-4px;background:#0b3c86;color:#fff;font-size:16px;padding:6px 16px 0;border-radius:0 0 14px 14px;font-family:'Segoe UI';direction:rtl" id="sn"></div></div>
+ <button class="btn b1" id="hp" style="left:330px">❓ مدد</button>
+ <button class="btn b2" id="rt" style="left:480px">↻ دوبارہ کوشش کریں</button>
+ <button class="btn b3" id="nx" style="left:760px">⏩ اگلا جملہ</button>
+ <button class="btn b4" id="fs" style="left:975px;padding:12px 18px 0">⛶ فل سکرین</button>
+ <button class="btn b1" id="sd" style="left:1100px;width:64px;padding:8px 0 0;justify-content:center;font-size:28px;bottom:150px;height:56px;display:none">🔊</button>
+ <div id="modal"><div id="card"></div></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const BN={z:"صفتِ ذاتی",r:"صفتِ نسبتی",c:"صفتِ عددی",q:"صفتِ مقداری",d:"صفتِ اشاری"};
+const DEF={z:"صفتِ ذاتی: اسم کی اپنی خوبی یا حالت بتائے (خوبصورت، سرخ، محنتی)",r:"صفتِ نسبتی: کسی جگہ یا چیز سے نسبت بتائے (پاکستانی، دیہاتی، ملکی)",c:"صفتِ عددی: اسم کی گنتی یا ترتیب بتائے (دو، چار، پہلا)",q:"صفتِ مقداری: اسم کی مقدار بتائے (تھوڑا، سارا، زیادہ)",d:"صفتِ اشاری: اسم کی طرف اشارہ کرے (یہ، وہ، اس)"};
+const CL={z:{a:"#ff5d8f",b:"#ffffff",c:"#ffd23c",c2:"#ffb300",rb:"#e0457a",n:6},r:{a:"#a56bff",b:"#f4c6ff",c:"#fff3b0",c2:"#ff9ad5",rb:"#7a3fe0",n:5},c:{a:"#ffd400",b:"#ff9f1a",c:"#6b3b00",c2:"#6b3b00",rb:"#f2a900",n:10},q:{a:"#ff8a1f",b:"#ffe14d",c:"#ffe08a",c2:"#b45300",rb:"#e8590c",n:6},d:{a:"#ff4d4d",b:"#3f8cff",c:"#2b1a00",c2:"#fff3b0",rb:"#d62828",n:5}};
+const ORDER=["z","r","c","q","d"];
+const S=["یہ/d کتاب/- خوبصورت/z ہے۔/-","میں/- نے/- دو/c سرخ/z سیب/- خریدے۔/-","ہمیں/- تھوڑا/q دودھ/- چاہیے۔/-","وہ/d لڑکا/- محنتی/z ہے۔/-","پاکستانی/r جھنڈا/- سبز/z اور/- سفید/z ہے۔/-","پہلا/c انعام/- اسے/- ملا۔/-","سارا/q دودھ/- گرم/z ہے۔/-","دیہاتی/r لوگ/- سادہ/z ہوتے/- ہیں۔/-","اس/d کمرے/- میں/- چار/c کرسیاں/- ہیں۔/-","ہمارے/- پاس/- زیادہ/q پیسے/- نہیں/- ہیں۔/-","ملکی/r حالات/- اچھے/z ہیں۔/-","پانچ/c سفید/z کبوتر/- اڑ/- رہے/- ہیں۔/-"].map(s=>s.split(" ").map(t=>{const[w,k]=t.split("/");return{w,k:k==="-"?null:k}}));
+/* ---------- mascots ---------- */
+let uid=0;
+function butterfly(gl){const u="w"+uid++;return `<svg viewBox="0 0 220 240" width="100%" height="100%"><defs><linearGradient id="${u}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7bd0"/><stop offset=".5" stop-color="#9b6bff"/><stop offset="1" stop-color="#3fd2ff"/></linearGradient><linearGradient id="${u}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd23c"/><stop offset="1" stop-color="#ff5fa2"/></linearGradient><radialGradient id="${u}h" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffe3a8"/><stop offset="1" stop-color="#ff9f43"/></radialGradient>
+<g id="${u}w"><path d="M108 100C60 10 5 40 14 100C20 140 80 140 108 125Z" fill="url(#${u}a)" stroke="#6a3fc9" stroke-width="3"/><path d="M108 125C70 130 22 150 44 200C75 225 108 175 108 145Z" fill="url(#${u}b)" stroke="#d63a86" stroke-width="3"/><circle cx="50" cy="70" r="14" fill="#fff" opacity=".7"/><circle cx="45" cy="105" r="8" fill="#ffd23c"/><circle cx="64" cy="178" r="9" fill="#fff" opacity=".7"/><circle cx="38" cy="62" r="5" fill="#3fd2ff"/><circle cx="70" cy="150" r="6" fill="#3fd2ff"/></g></defs>
+<g class="flap"><use href="#${u}w"/><use href="#${u}w" transform="translate(220,0) scale(-1,1)"/></g>
+<ellipse cx="110" cy="178" rx="22" ry="38" fill="url(#${u}h)" stroke="#e08a2b" stroke-width="3"/><path d="M92 170H128M93 185H127M96 200H124" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+<path d="M94 78Q80 44 68 40M126 78Q140 44 152 40" stroke="#b5651d" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="67" cy="38" r="7" fill="#ff7aa2"/><circle cx="153" cy="38" r="7" fill="#ff7aa2"/>
+<circle cx="110" cy="108" r="43" fill="url(#${u}h)" stroke="#e08a2b" stroke-width="3"/>
+<ellipse cx="94" cy="104" rx="12" ry="15" fill="#fff"/><ellipse cx="126" cy="104" rx="12" ry="15" fill="#fff"/><circle cx="96" cy="107" r="8" fill="#3b2314"/><circle cx="124" cy="107" r="8" fill="#3b2314"/><circle cx="99" cy="102" r="3" fill="#fff"/><circle cx="127" cy="102" r="3" fill="#fff"/>
+<circle cx="80" cy="126" r="8" fill="#ff7aa2" opacity=".6"/><circle cx="140" cy="126" r="8" fill="#ff7aa2" opacity=".6"/><path d="M98 124Q110 144 122 124Z" fill="#c0392b"/>
+${gl?`<circle cx="94" cy="104" r="17" fill="rgba(255,255,255,.25)" stroke="#5a3414" stroke-width="4"/><circle cx="126" cy="104" r="17" fill="rgba(255,255,255,.25)" stroke="#5a3414" stroke-width="4"/><path d="M111 104H109" stroke="#5a3414" stroke-width="4"/><path d="M150 170L208 100" stroke="#8b5a2b" stroke-width="6" stroke-linecap="round"/><circle cx="150" cy="170" r="7" fill="#ffc27a"/>`:""}</svg>`}
+function book(c1,c2){const u="k"+uid++;return `<svg viewBox="0 0 130 175" width="100%" height="100%"><defs><linearGradient id="${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
+<g class="wave" style="transform-origin:104px 90px"><path d="M104 90Q124 72 120 42" stroke="#333" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="120" cy="38" r="8" fill="#ffd6a8"/></g>
+<g class="wave" style="transform-origin:26px 90px;animation-direction:alternate-reverse"><path d="M26 90Q6 72 10 42" stroke="#333" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="10" cy="38" r="8" fill="#ffd6a8"/></g>
+<path d="M50 130V156M80 130V156" stroke="#333" stroke-width="6"/><ellipse cx="44" cy="160" rx="14" ry="7" fill="#222"/><ellipse cx="86" cy="160" rx="14" ry="7" fill="#222"/>
+<rect x="22" y="20" width="86" height="112" rx="12" fill="url(#${u})" stroke="#6b3500" stroke-width="3.5"/><rect x="22" y="20" width="15" height="112" rx="8" fill="rgba(0,0,0,.25)"/><rect x="42" y="28" width="60" height="14" rx="6" fill="rgba(255,255,255,.4)"/><path d="M108 26L116 29V129L108 132Z" fill="#fff8e1" stroke="#c9b27a"/>
+<ellipse cx="55" cy="70" rx="10" ry="12" fill="#fff"/><ellipse cx="85" cy="70" rx="10" ry="12" fill="#fff"/><circle cx="57" cy="72" r="6" fill="#222"/><circle cx="83" cy="72" r="6" fill="#222"/><circle cx="59" cy="69" r="2.5" fill="#fff"/><circle cx="85" cy="69" r="2.5" fill="#fff"/><circle cx="44" cy="92" r="7" fill="#ff7aa2" opacity=".6"/><circle cx="96" cy="92" r="7" fill="#ff7aa2" opacity=".6"/><path d="M58 92Q70 108 82 92Z" fill="#7a1f0e"/></svg>`}
+$("#bf1").innerHTML=butterfly(0);$("#bf2").innerHTML=butterfly(1);$("#bk1").innerHTML=book("#ffb347","#ff7a18");$("#bk2").innerHTML=book("#7be87b","#1fa83a");
+/* ---------- flower baskets ---------- */
+function flower(x,y,r,p,c,n){let o=`<g transform="translate(${x} ${y})">`;for(let i=0;i<n;i++)o+=`<ellipse cx="0" cy="${-r*.62}" rx="${r*(n>8?.17:.34)}" ry="${r*.5}" fill="${p}" stroke="rgba(0,0,0,.28)" stroke-width="1" transform="rotate(${i*360/n})"/>`;return o+`<circle r="${r*.34}" fill="${c}" stroke="rgba(0,0,0,.35)"/><circle cx="${-r*.1}" cy="${-r*.1}" r="${r*.1}" fill="rgba(255,255,255,.65)"/></g>`}
+function binSVG(k){const c=CL[k],g="b"+k;const F=[[80,42,20],[50,54,17],[110,54,17],[30,80,15],[130,80,15],[66,80,17],[96,80,17],[80,66,19],[48,100,13],[114,100,13]];
+const fl=F.map((f,i)=>flower(f[0],f[1],f[2],i%3==2?c.b:c.a,i%3==2?c.c2:c.c,i%3==2?6:c.n)).join("");
+const lv=[[22,98,-50],[138,98,50],[58,106,-25],[102,106,25],[80,110,0]].map(l=>`<ellipse cx="${l[0]}" cy="${l[1]}" rx="9" ry="20" fill="#2fa84a" stroke="#1a6a2c" transform="rotate(${l[2]} ${l[0]} ${l[1]})"/>`).join("");
+return `<svg viewBox="0 0 160 262"><defs><linearGradient id="${g}w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0c27d"/><stop offset=".55" stop-color="#cf9145"/><stop offset="1" stop-color="#9a6224"/></linearGradient><pattern id="${g}p" width="14" height="12" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="12" height="4.5" rx="2" fill="rgba(255,235,180,.28)" stroke="rgba(90,50,10,.45)"/><rect x="1" y="7" width="12" height="4.5" rx="2" fill="rgba(0,0,0,.08)" stroke="rgba(90,50,10,.45)"/></pattern></defs>
+<ellipse cx="80" cy="256" rx="62" ry="5" fill="rgba(0,40,90,.3)"/>${lv}${fl}
+<path d="M24 122C10 -30 150 -30 136 122" stroke="#8a5320" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M26 118C14 -22 146 -22 134 118" stroke="rgba(255,225,160,.7)" stroke-width="2.5" fill="none"/>
+<path d="M80 24C56 2 48 32 80 28C112 32 104 2 80 24Z" fill="${c.rb}" stroke="#fff" stroke-width="2"/><circle cx="80" cy="26" r="5.5" fill="${c.rb}" stroke="#fff" stroke-width="2"/>
+<path d="M16 124H144L130 252Q128 260 118 260H42Q32 260 30 252Z" fill="url(#${g}w)" stroke="#6b3d10" stroke-width="3"/><path d="M16 124H144L130 252Q128 260 118 260H42Q32 260 30 252Z" fill="url(#${g}p)"/><path d="M30 134L40 250" stroke="rgba(255,255,255,.35)" stroke-width="6" stroke-linecap="round"/>
+<rect x="5" y="114" width="150" height="20" rx="10" fill="url(#${g}w)" stroke="#6b3d10" stroke-width="3"/><rect x="5" y="114" width="150" height="20" rx="10" fill="url(#${g}p)"/><rect x="12" y="117" width="136" height="4" rx="2" fill="rgba(255,255,255,.5)"/>
+<rect x="12" y="136" width="136" height="34" rx="13" fill="${c.rb}" stroke="#fff" stroke-width="3"/><rect x="18" y="139" width="124" height="7" rx="3.5" fill="rgba(255,255,255,.4)"/></svg>`}
+const binEl={};
+ORDER.forEach(k=>{const d=document.createElement("div");d.className="bin";d.title=DEF[k];d.innerHTML=binSVG(k)+`<div class="lab">${BN[k]}</div><div class="slot"></div>`;$("#bins").appendChild(d);binEl[k]=d;
+d.ondragover=e=>{e.preventDefault();d.classList.add("over")};d.ondragleave=()=>d.classList.remove("over");
+d.ondrop=e=>{e.preventDefault();d.classList.remove("over");const i=e.dataTransfer.getData("text");if(i!=="")drop(+i,k)};
+d.onclick=()=>{if(sel>=0)drop(sel,k)}})
+/* ---------- audio / fx ---------- */
+let ac;function snd(f,d=.15,t="sine",v=.15,when=0){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);const s=ac.currentTime+when;g.gain.exponentialRampToValueAtTime(.001,s+d);o.start(s);o.stop(s+d)}catch(e){}}
+const good=()=>{snd(660,.15,"triangle",.2);snd(880,.2,"triangle",.2,.12)},bad=()=>snd(150,.3,"sawtooth",.12),win=()=>[523,659,784,1047].forEach((f,i)=>snd(f,.3,"triangle",.2,i*.12));
+function burst(el,em){const s=$("#stage").getBoundingClientRect(),r=el.getBoundingClientRect(),k=s.width/1280,cx=(r.left+r.width/2-s.left)/k,cy=(r.top+r.height/2-s.top)/k;
+for(let i=0;i<22;i++){const p=document.createElement("div");p.className="spark";p.textContent=em[i%em.length];p.style.left=cx+"px";p.style.top=cy+"px";$("#stage").appendChild(p);const a=Math.random()*6.28,d=60+Math.random()*130;p.animate([{transform:"translate(0,0) scale(.4)",opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d-60}px) rotate(${Math.random()*360}deg) scale(1.2)`,opacity:0}],{duration:900+Math.random()*600,easing:"ease-out"}).onfinish=()=>p.remove()}}
+/* ---------- game ---------- */
+let si=0,toks=[],placed=[],sel=-1,score=0,base=0,time=180,over=false,tEls=[],timer;
+const say=t=>$("#msg").innerHTML=t,tg=()=>toks.map((t,i)=>t.k?i:-1).filter(i=>i>=0),EM=["🌸","🌼","🌷","✨"];
+function load(){toks=S[si];placed=toks.map(t=>t.k?0:2);sel=-1;over=false;time=180;base=score;ORDER.forEach(k=>binEl[k].querySelector(".slot").innerHTML="");
+$("#row").innerHTML="";tEls=toks.map((t,i)=>{const d=document.createElement("div");d.textContent=t.w;
+if(!t.k){d.className="tile ctx";$("#row").appendChild(d);return d}
+d.className="tile tgt";d.draggable=true;
+d.ondragstart=e=>{if(placed[i]!==0||over){e.preventDefault();return}e.dataTransfer.setData("text",i);sel=i;paint()};
+d.onclick=()=>{if(placed[i]!==0||over)return;sel=sel===i?-1:i;paint();if(sel>=0)say("اب «"+t.w+"» کی صحیح ٹوکری پر کلک کریں")};
+$("#row").appendChild(d);return d});
+$("#sn").textContent="Sentence "+(si+1)+" / "+S.length;$("#nx").classList.remove("pulse");say("سنہری کنارے والے لفظ (صفت) کو صحیح ٹوکری میں ڈالیں");prog();clock();paint()}
+function paint(){tEls.forEach((d,i)=>{d.classList.toggle("done",placed[i]===1);d.classList.toggle("sel",sel===i&&placed[i]===0)})}
+function prog(){const a=tg(),n=a.filter(i=>placed[i]===1).length;$("#pb").style.width=n/a.length*100+"%";$("#pt").textContent=n+" / "+a.length;$("#sc").textContent=score}
+function clock(){const m=Math.floor(time/60),s=time%60;$("#tm").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");$("#tm").style.color=time<30?"#ff8a7a":"#fff"}
+function drop(i,k){if(over||placed[i]!==0)return;const t=toks[i],b=binEl[k];
+if(t.k===k){placed[i]=1;sel=-1;const m=document.createElement("div");m.className="mini";m.textContent=t.w;b.querySelector(".slot").appendChild(m);score+=20;good();b.classList.remove("bounce");void b.offsetWidth;b.classList.add("bounce");burst(b,EM);say("✔ شاباش! «"+t.w+"» "+BN[k]+" ہے");$("#star").animate([{transform:"scale(1.5) rotate(20deg)"},{transform:"scale(1)"}],400);
+paint();prog();if(tg().every(j=>placed[j]===1))finish()}
+else{score=Math.max(0,score-5);bad();tEls[i].classList.remove("shake");void tEls[i].offsetWidth;tEls[i].classList.add("shake");b.classList.remove("bad");void b.offsetWidth;b.classList.add("bad");say("✘ غلط! «"+t.w+"» "+BN[k]+" نہیں ہے۔ دوبارہ کوشش کریں");prog()}}
+function finish(){over=true;const bonus=Math.floor(time/6);score+=bonus;prog();win();burst($("#panel"),["🎉","🌸","🌼","🌷","✨"]);say("🎉 زبردست! سب صفتیں درست ہیں۔ وقت کا بونس: +"+bonus);
+if(si===S.length-1)setTimeout(final,1600);else $("#nx").classList.add("pulse")}
+function final(){const mx=S.flat().filter(t=>t.k).length*20,r=score/mx,st=r>.85?3:r>.55?2:1;$("#card").innerHTML=`<div style="font-size:64px">${"⭐".repeat(st)}${"☆".repeat(3-st)}</div><h2>شاباش! کھیل مکمل</h2><p>آپ کا اسکور: <b style="font-family:Arial;color:#d9480f">${score}</b></p><button class="btn b3" id="again" style="position:static;margin:14px auto 0">↻ دوبارہ کھیلیں</button>`;$("#modal").style.display="flex";$("#again").onclick=()=>{$("#modal").style.display="none";si=0;score=0;load()};win()}
+$("#nx").onclick=()=>{si=(si+1)%S.length;load()};
+$("#rt").onclick=()=>{score=base;load()};
+$("#hp").onclick=()=>{if(over)return;let i=sel>=0&&placed[sel]===0?sel:tg().find(j=>placed[j]===0);if(i===undefined)return;const k=toks[i].k,b=binEl[k];b.classList.remove("hint");void b.offsetWidth;b.classList.add("hint");setTimeout(()=>b.classList.remove("hint"),2600);say("💡 «"+toks[i].w+"» ← "+DEF[k])};
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement}
+$("#fs").onclick=()=>{const a=document.documentElement;if(!fsEl())(a.requestFullscreen||a.webkitRequestFullscreen).call(a);else(document.exitFullscreen||document.webkitExitFullscreen).call(document)};
+function fsUpd(){$("#fs").innerHTML=fsEl()?"⛶ فل سکرین بند کریں":"⛶ فل سکرین";fit()}
+document.addEventListener("fullscreenchange",fsUpd);document.addEventListener("webkitfullscreenchange",fsUpd);
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/720);$("#stage").style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener("resize",fit);fit();
+timer=setInterval(()=>{if(over||$("#modal").style.display==="flex")return;time--;clock();if(time<=0){over=true;bad();say("⏰ وقت ختم ہو گیا! «اگلا جملہ» دبائیں");$("#nx").classList.add("pulse")}},1000);
+load();
+</script></body></html>
