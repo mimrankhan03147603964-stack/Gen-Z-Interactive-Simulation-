@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logic Gates and Binary Circuit Builder</title>
+<style>
+:root{--w1:#dbeafe;--w2:#f8fbff}
+body.dark{--w1:#1b2540;--w2:#080c18}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:#fff;overflow:hidden;background:radial-gradient(circle at 85% 0,#0e7490,#0a1230 70%)}
+#app{height:100vh;min-height:680px;display:grid;grid-template-rows:auto 1fr auto auto;gap:9px;padding:8px 18px}
+h1{text-align:center;font-size:clamp(21px,2.8vw,36px);color:#86efac;letter-spacing:1px;text-shadow:0 1px 0 #22c55e,0 2px 0 #16a34a,0 3px 0 #15803d,0 4px 0 #166534,0 9px 14px #0008}
+h1 small{display:block;font-size:.36em;color:#fde68a;text-shadow:none;letter-spacing:2px;margin-top:2px}
+main{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;min-height:0}
+.col{display:flex;flex-direction:column;gap:9px;min-height:0}
+#right{overflow-y:auto;padding-right:4px}
+.card{background:#ffffff16;border:2px solid #ffffff30;border-radius:16px;padding:8px 11px}
+#stage{flex:1;min-height:0;padding:0;overflow:hidden;border:3px solid #fff}
+#stage svg{width:100%;height:100%;display:block}
+.b{border:0;border-radius:12px;padding:.5em .8em;color:#fff;font:700 clamp(11px,.98vw,15px) "Trebuchet MS","Segoe UI",Arial,sans-serif;background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000),0 7px 12px #0006;cursor:pointer;text-shadow:0 1px 2px #0007;transition:transform .1s,filter .15s}
+.b:hover{filter:brightness(1.13)}
+.b:active,.b.on{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.b.on{outline:3px solid #fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.hd{font-size:clamp(12px,1.05vw,16px);font-weight:700;margin-bottom:6px;color:#fde68a}
+.gl{font-size:clamp(11px,.9vw,14px);color:#a5f3fc;font-weight:700;width:100%;text-align:left;margin-top:3px}
+#ex{background:#fff;color:#14213d;border-radius:14px;padding:9px 12px;font-size:clamp(12px,1.05vw,16px);line-height:1.45;font-weight:600}
+#tt{border-collapse:collapse;margin:0 auto}
+#tt th,#tt td{padding:3px 22px;text-align:center;font-weight:800;font-size:clamp(13px,1.2vw,19px);border:2px solid #ffffff40}
+#tt th{background:#0f172a;color:#fde047}
+#tt td{background:#ffffff18}
+#tt td.o1{background:#16a34a}
+#tt tr.cur td{outline:3px solid #fde047;outline-offset:-3px;background:#facc1540}
+#tt tr.cur td.o1{background:#22c55e}
+.fl{animation:fl .6s linear infinite}
+@keyframes fl{to{stroke-dashoffset:-17}}
+footer{text-align:center;font-size:11px;color:#8fb6e8}
+</style></head>
+<body>
+<div id="app">
+<h1>Logic Gates and Binary Circuit Builder<small>Secondary Computer Science: flip the switches and watch the bulbs think in 1s and 0s</small></h1>
+<main>
+<div class="col">
+<div id="stage" class="card">
+<svg id="sv" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid meet" aria-label="Circuit board with switches, logic gates and lamps">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--w1)"/><stop offset="1" style="stop-color:var(--w2)"/></linearGradient>
+<linearGradient id="bench" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a3a"/><stop offset=".1" stop-color="#7a4f26"/><stop offset="1" stop-color="#4a2e14"/></linearGradient>
+<linearGradient id="pcb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f9d58"/><stop offset="1" stop-color="#066b3a"/></linearGradient>
+<linearGradient id="mt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f5f9"/><stop offset=".5" stop-color="#cbd5e1"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+<linearGradient id="ic" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f4a"/><stop offset="1" stop-color="#0d0f14"/></linearGradient>
+<linearGradient id="bat" x1="0" x2="1"><stop offset="0" stop-color="#1d4ed8"/><stop offset=".5" stop-color="#3b82f6"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient>
+<g id="df"></g>
+</defs>
+<rect width="640" height="345" fill="url(#wall)"/><rect y="345" width="640" height="55" fill="url(#bench)"/><rect y="345" width="640" height="4" fill="#d9a066"/>
+<g id="dyn"></g>
+<rect x="38" y="354" width="62" height="38" rx="6" fill="url(#bat)" stroke="#0b2a6b" stroke-width="2"/><rect x="48" y="348" width="12" height="8" fill="#d1d5db"/><rect x="76" y="348" width="12" height="8" fill="#d1d5db"/><text x="69" y="378" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">5 V</text>
+<text x="350" y="364" text-anchor="middle" font-size="13" font-weight="700" fill="#fde68a">1 = ON = 5 volts      0 = OFF = 0 volts</text>
+<text id="res" x="350" y="388" text-anchor="middle" font-size="17" font-weight="800" fill="#fff"></text>
+</svg></div>
+<div class="card" id="ttc"><table id="tt"></table></div>
+</div>
+<div class="col" id="right">
+<div class="card"><div class="hd">1. Choose a circuit</div><div class="row" id="modes"></div></div>
+<div class="card"><div class="hd">2. Controls</div><div class="row" id="ctl"></div></div>
+<div id="ex"></div>
+</div>
+</main>
+<div class="card" style="padding:7px"><div class="row" id="bar"></div></div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &middot; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const AN="M0 0H55A40 40 0 0 1 55 80H0Z",OR="M0 0Q55 0 110 40Q55 80 0 80Q28 40 0 0Z",XC='<path d="M-12 0Q16 40 -12 80" fill="none"/>',BB=x=>`<circle cx="${x}" cy="40" r="6"/>`;
+const GT=[
+{n:"AND",c:"#f97316",f:(a,b)=>a&b,two:1,e:95,p:`<path d="${AN}"/>`,chip:"74HC08",a:"Door closed",b:"Start pressed",o:"Heater",ex:"Microwave oven: the heater works only when the door is closed AND the start button is pressed.",rule:"AND gives 1 only when both inputs are 1."},
+{n:"OR",c:"#22c55e",f:(a,b)=>a|b,two:1,e:110,p:`<path d="${OR}"/>`,chip:"74HC32",a:"Door opened",b:"Window opened",o:"Alarm",ex:"Burglar alarm: the alarm rings if the door OR the window is opened.",rule:"OR gives 1 when at least one input is 1."},
+{n:"NOT",c:"#3b82f6",f:a=>a^1,two:0,e:102,p:`<path d="M0 0L90 40L0 80Z"/>${BB(96)}`,chip:"74HC04",a:"Daylight (1 = bright)",o:"Street lamp",ex:"Street light: when the sensor says it is NOT bright, the lamp turns on.",rule:"NOT flips the input: 1 becomes 0 and 0 becomes 1."},
+{n:"NAND",c:"#a855f7",f:(a,b)=>(a&b)^1,two:1,e:107,p:`<path d="${AN}"/>${BB(101)}`,chip:"74HC00",a:"High pressure",b:"High temperature",o:"Safe lamp",ex:"Boiler safety: the green safe lamp stays on unless the pressure is high AND the temperature is high.",rule:"NAND is AND turned upside down: it gives 0 only when both inputs are 1."},
+{n:"NOR",c:"#ec4899",f:(a,b)=>(a|b)^1,two:1,e:122,p:`<path d="${OR}"/>${BB(116)}`,chip:"74HC02",a:"Motion",b:"Sound",o:"Sleep lamp",ex:"Baby room lamp: the sleep lamp is on only when there is NO motion and NO sound.",rule:"NOR is OR turned upside down: it gives 1 only when both inputs are 0."},
+{n:"XOR",c:"#eab308",f:(a,b)=>a^b,two:1,e:110,p:`<path d="${OR}"/>${XC}`,chip:"74HC86",a:"Switch downstairs",b:"Switch upstairs",o:"Staircase lamp",ex:"Staircase lamp with two switches: flipping either switch changes the lamp. It is on when the switches are different.",rule:"XOR gives 1 when the two inputs are different."},
+{n:"XNOR",c:"#14b8a6",f:(a,b)=>(a^b)^1,two:1,e:122,p:`<path d="${OR}"/>${XC}${BB(116)}`,chip:"74HC86 + 74HC04",a:"Code bit 1",b:"Code bit 2",o:"Match lamp",ex:"Keypad match: the green lamp turns on when the two code bits are the same.",rule:"XNOR gives 1 when the two inputs are the same."}];
+const LS=[
+[()=>"Real-life example: "+GT[gi].ex,()=>GT[gi].rule,"A switch that is up sends 5 volts, which is 1 (ON). A switch that is down sends 0 volts, which is 0 (OFF).","A truth table lists every possible input and its output. Press ‘Run Truth Table’ to watch each row light up.","NAND and NOR are called universal gates. Every other gate can be built from NAND gates alone."],
+["A half adder adds two single binary digits. It has two inputs, A and B, and two outputs: SUM and CARRY.","The SUM output uses an XOR gate. It is 1 when A and B are different.","The CARRY output uses an AND gate. It is 1 only when A and B are both 1.","In binary, 1 + 1 = 10. The sum is 0 and the carry is 1. Turn both switches ON to see it.",()=>`Right now: ${A} + ${B} = ${A&B}${A^B} in binary.`],
+["Binary uses only 0 and 1. Each switch has a place value: 8, 4, 2 and 1.","Add the place values of the switches that are ON to get the decimal number.",()=>`Your switches show ${bits.join("")} in binary, which is ${val()} in decimal.`,"Four bits can count from 0 to 15. That is 16 different numbers.","Computers use billions of tiny switches like these, called transistors."]];
+let M=0,gi=0,A=0,B=0,bits=[0,0,0,0],les=0,run=null,auto=null;
+const val=()=>bits[0]*8+bits[1]*4+bits[2]*2+bits[3];
+const COL={g:["#bbf7d0","#22c55e","#14532d","#2f4f3a"],b:["#bfdbfe","#3b82f6","#1e3a8a","#2f3f5f"],r:["#fecaca","#ef4444","#7f1d1d","#5a2f2f"],y:["#fef9c3","#facc15","#854d0e","#5a512a"]};
+$("df").innerHTML=Object.keys(COL).map(k=>{const c=COL[k];return `<radialGradient id="l${k}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="${c[0]}"/><stop offset=".5" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient><radialGradient id="o${k}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#8a909c"/><stop offset=".5" stop-color="${c[3]}"/><stop offset="1" stop-color="#1b1f2a"/></radialGradient><radialGradient id="g${k}"><stop offset="0" stop-color="${c[1]}" stop-opacity=".7"/><stop offset="1" stop-color="${c[1]}" stop-opacity="0"/></radialGradient>`}).join("");
+const T=(x,y,s,t,f,a)=>`<text x="${x}" y="${y}" text-anchor="${a||"middle"}" font-size="${s}" font-weight="800" fill="${f}">${t}</text>`;
+const wr=(p,on)=>{const s=p.map(q=>q.join(",")).join(" ");return `<polyline points="${s}" fill="none" stroke="${on?"#4ade80":"#d1d5db"}" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>`+(on?`<polyline class="fl" points="${s}" fill="none" stroke="#fef08a" stroke-width="3" stroke-dasharray="3 14" stroke-linecap="round"/>`:"")};
+function sw(id,x,y,on,l1,l2,dis){return `<g ${dis?'opacity=".3"':`data-sw="${id}" style="cursor:pointer"`}>${T(x,y-40,13,on?"ON  1":"OFF  0",on?"#fde047":"#e2e8f0")}<rect x="${x-36}" y="${y-34}" width="72" height="68" rx="10" fill="url(#mt)" stroke="#475569" stroke-width="3"/><circle cx="${x-27}" cy="${y-25}" r="3" fill="#64748b"/><circle cx="${x+27}" cy="${y+25}" r="3" fill="#64748b"/><rect x="${x-14}" y="${y-24}" width="28" height="48" rx="14" fill="#1e293b"/><line x1="${x}" y1="${y}" x2="${x}" y2="${on?y-24:y+24}" stroke="#e2e8f0" stroke-width="9" stroke-linecap="round"/><circle cx="${x}" cy="${on?y-24:y+24}" r="9" fill="${on?"#ef4444":"#94a3b8"}" stroke="#222" stroke-width="2"/>${T(x,y+52,15,l1,"#fff")}${T(x,y+67,11,l2||"","#d1fae5")}</g>`}
+function led(x,y,on,c,l1,l2){return `<g>${on?`<circle cx="${x}" cy="${y}" r="54" fill="url(#g${c})"/>`:""}<circle cx="${x}" cy="${y}" r="27" fill="#222" stroke="#94a3b8" stroke-width="4"/><circle cx="${x}" cy="${y}" r="22" fill="url(#${on?"l":"o"}${c})"/><ellipse cx="${x-8}" cy="${y-9}" rx="8" ry="5" fill="#fff" opacity=".6"/>${T(x,y+8,22,on?1:0,on?"#14213d":"#cbd5e1")}${T(x,y+48,15,l1,"#fff")}${T(x,y+63,11,l2||"","#d1fae5")}</g>`}
+const pcb=()=>`<rect x="15" y="12" width="610" height="325" rx="18" fill="url(#pcb)" stroke="#064e2b" stroke-width="4"/>`+[[30,27],[610,27],[30,322],[610,322]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#d1fae5" stroke="#064e2b" stroke-width="2"/>`).join("");
+const sym=(p,x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="#fff7d6" stroke="#7c4a03" stroke-width="${3/s}" stroke-linejoin="round">${p}</g>`;
+function chip(x,w,t){let h="";for(let i=0;i<7;i++){const px=x+10+i*(w-30)/6;h+=`<rect x="${px}" y="288" width="8" height="8" fill="#d1d5db"/><rect x="${px}" y="318" width="8" height="8" fill="#d1d5db"/>`}return h+`<rect x="${x}" y="294" width="${w}" height="26" rx="4" fill="url(#ic)" stroke="#000" stroke-width="2"/><path d="M${x} 301A6 6 0 0 1 ${x} 313" fill="#111" stroke="#666"/>`+T(x+w/2+4,312,13,t,"#e5e7eb")}
+function draw(){let h="";
+if(M==0){const g=GT[gi],o=g.two?g.f(A,B):g.f(A);
+h=pcb();
+if(g.two){h+=wr([[121,95],[200,95],[200,160],[270,160]],A)+wr([[121,225],[200,225],[200,210],[270,210]],B)}else h+=wr([[121,95],[200,95],[200,185],[270,185]],A);
+h+=wr([[270+g.e*1.25,185],[533,185]],o)+sym(g.p,270,135,1.25)+T(340,258,19,g.n+" gate","#fff")+chip(220,230,g.chip+"  "+g.n);
+h+=sw("A",85,95,A,"A",g.a)+sw("B",85,225,B,"B",g.b||"Not used",!g.two)+led(560,185,o,"g","Output",g.o);
+$("res").textContent=`A = ${A}${g.two?"   B = "+B:""}   →   Output = ${o}`}
+else if(M==1){const s=A^B,c=A&B;
+h=pcb()+wr([[121,105],[200,105],[200,90],[260,90]],A)+wr([[200,105],[200,230],[260,230]],A)+wr([[121,255],[170,255],[170,130],[260,130]],B)+wr([[170,255],[170,270],[260,270]],B);
+h+=`<circle cx="200" cy="105" r="5" fill="#fff"/><circle cx="170" cy="255" r="5" fill="#fff"/>`+wr([[370,110],[473,110]],s)+wr([[355,250],[473,250]],c);
+h+=sym(GT[5].p,260,70,1)+sym(GT[0].p,260,210,1)+T(315,175,15,"XOR gate (SUM)","#fff")+T(315,315,15,"AND gate (CARRY)","#fff");
+h+=sw("A",85,105,A,"A","Input A")+sw("B",85,255,B,"B","Input B")+led(500,110,s,"b","SUM","A XOR B")+led(500,250,c,"r","CARRY","A AND B");
+$("res").textContent=`${A} + ${B} = ${c}${s}  (binary)   →   Carry ${c}, Sum ${s}`}
+else{const n=val(),xs=[95,190,285,380],w=[8,4,2,1];
+h=pcb();
+xs.forEach((x,i)=>{h+=wr([[x,136],[x,90]],bits[i])+led(x,62,bits[i],"y","","").replace(/<text[^>]*>[^<]*<\/text>$/,"")+sw("b"+i,x,170,bits[i],String(w[i]),bits[i]?"adds "+w[i]:"adds 0")});
+h+=`<rect x="440" y="45" width="170" height="130" rx="12" fill="#0b0b0f" stroke="#94a3b8" stroke-width="5"/>`+dg(458,65,n>=10?1:-1)+dg(534,65,n%10)+T(525,198,13,"Decimal display","#fff");
+h+=T(190,290,52,bits.join(""),"#fff")+T(190,315,13,"Binary number","#d1fae5")+T(525,260,40,n,"#fde047")+T(525,284,13,"Decimal value","#d1fae5");
+$("res").textContent=bits.map((b,i)=>b?w[i]:0).filter((v,i)=>bits[i]).join(" + ")?bits.map((b,i)=>b?w[i]:null).filter(v=>v).join(" + ")+" = "+n:"All switches OFF = 0"}
+$("dyn").innerHTML=h;table();text()}
+const SG={0:"abcdef",1:"bc",2:"abdeg",3:"abcdg",4:"bcfg",5:"acdfg",6:"acdefg",7:"abc",8:"abcdefg",9:"abcdfg","-1":""};
+function dg(x,y,d){const R={a:[6,0,28,6],b:[34,6,6,28],c:[34,42,6,28],d:[6,70,28,6],e:[0,42,6,28],f:[0,6,6,28],g:[6,35,28,6]};let h="";for(const k in R){const on=SG[d].includes(k),r=R[k];h+=`<rect x="${x+r[0]}" y="${y+r[1]}" width="${r[2]}" height="${r[3]}" rx="3" fill="${on?"#ff3b30":"#3a1212"}"${on?' style="filter:drop-shadow(0 0 5px #ff3b30)"':""}/>`}return h}
+function table(){const c=$("ttc");if(M==2){c.style.display="none";return}c.style.display="";let cols,rows,cur;
+if(M==0){const g=GT[gi];if(g.two){cols=["A","B","Output"];rows=[0,1,2,3].map(r=>[r>>1,r&1,g.f(r>>1,r&1)]);cur=A*2+B}else{cols=["A","Output"];rows=[0,1].map(r=>[r,g.f(r)]);cur=A}}
+else{cols=["A","B","SUM","CARRY"];rows=[0,1,2,3].map(r=>[r>>1,r&1,(r>>1)^(r&1),(r>>1)&(r&1)]);cur=A*2+B}
+$("tt").innerHTML="<tr>"+cols.map(x=>`<th>${x}</th>`).join("")+"</tr>"+rows.map((r,i)=>`<tr class="${i==cur?"cur":""}">`+r.map((v,j)=>`<td class="${j>=(M==0?cols.length-1:2)&&v?"o1":""}">${v}</td>`).join("")+"</tr>").join("")}
+function text(){const s=LS[M][les%LS[M].length];$("ex").textContent=typeof s=="function"?s():s}
+function tog(id){if(id=="A")A^=1;else if(id=="B"){if(M==1||GT[gi].two)B^=1}else{const i=+id[1];bits[i]^=1}draw()}
+$("sv").addEventListener("click",e=>{const g=e.target.closest("[data-sw]");if(g)tog(g.dataset.sw)});
+function stop(){clearInterval(run);run=null;clearInterval(auto);auto=null}
+function btn(p,t,c,fn){const b=document.createElement("button");b.className="b";b.style.setProperty("--c",c);b.innerHTML=t;b.onclick=fn;$(p).appendChild(b);return b}
+function setBits(n){n=((n%16)+16)%16;bits=[n>>3&1,n>>2&1,n>>1&1,n&1]}
+function ctl(){$("ctl").innerHTML="";const L=t=>{const d=document.createElement("div");d.className="gl";d.textContent=t;$("ctl").appendChild(d)};
+if(M==0){L("Choose a logic gate");GT.forEach((g,i)=>btn("ctl",g.n,g.c,()=>{gi=i;if(!g.two)B=0;les=0;draw();ctl()}).classList.toggle("on",i==gi))}
+if(M<2){L("Flip the switches");btn("ctl","Flip switch A","#ef4444",()=>tog("A"));btn("ctl","Flip switch B","#3b82f6",()=>tog("B"));
+const r=btn("ctl","▶ Run Truth Table","#22c55e",()=>{if(run){stop();r.innerHTML="▶ Run Truth Table";return}r.innerHTML="⏹ Stop";const two=M==1||GT[gi].two;let i=0;const f=()=>{if(two){A=i>>1&1;B=i&1;i=(i+1)%4}else{A=i;B=0;i=(i+1)%2}draw()};f();run=setInterval(f,1600)});
+btn("ctl","All OFF","#64748b",()=>{A=B=0;draw()});btn("ctl","All ON","#f59e0b",()=>{A=1;B=M==1||GT[gi].two?1:0;draw()});
+if(M==1)btn("ctl","1 + 1 Demo","#ec4899",()=>{A=B=1;les=3;draw()})}
+else{L("Binary counter");btn("ctl","+1 Count up","#22c55e",()=>{setBits(val()+1);draw()});btn("ctl","−1 Count down","#ef4444",()=>{setBits(val()-1);draw()});
+const a=btn("ctl","⏵ Auto Count","#06b6d4",()=>{if(auto){stop();a.innerHTML="⏵ Auto Count";return}a.innerHTML="⏹ Stop";auto=setInterval(()=>{setBits(val()+1);draw()},900)});
+btn("ctl","🎲 Random","#a855f7",()=>{setBits(Math.floor(Math.random()*16));draw()});btn("ctl","Clear all (0)","#64748b",()=>{bits=[0,0,0,0];draw()});btn("ctl","All ones (15)","#f59e0b",()=>{bits=[1,1,1,1];draw()});btn("ctl","⇄ Flip all bits","#ec4899",()=>{bits=bits.map(b=>b^1);draw()});btn("ctl","◀ Shift left (×2)","#14b8a6",()=>{setBits(val()*2);draw()});btn("ctl","Shift right (÷2) ▶","#8b5cf6",()=>{setBits(val()>>1);draw()})}}
+function setMode(m){stop();M=m;les=0;A=B=0;bits=[0,0,0,0];document.querySelectorAll("#modes .b").forEach((b,i)=>b.classList.toggle("on",i==m));ctl();draw()}
+["Logic Gate Lab","Half Adder","Binary Counter"].forEach((n,i)=>btn("modes",["🔌 ","➕ ","🔢 "][i]+n,["#f97316","#22c55e","#a855f7"][i],()=>setMode(i)));
+btn("bar","◀ Previous Step","#f59e0b",()=>{les=(les+LS[M].length-1)%LS[M].length;text()});
+btn("bar","💡 Next Lesson Step","#06b6d4",()=>{les=(les+1)%LS[M].length;text()});
+btn("bar","🔊 Read Aloud","#ec4899",()=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance($("ex").textContent);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)});
+btn("bar","🌙 Lab Lights","#6366f1",()=>document.body.classList.toggle("dark"));
+btn("bar","↺ Reset","#ef4444",()=>setMode(M));
+const fs=btn("bar","⛶ Full Screen","#0ea5e9",()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()});
+document.addEventListener("fullscreenchange",()=>fs.innerHTML=document.fullscreenElement?"✕ Exit Full Screen":"⛶ Full Screen");
+setMode(0);
+</script>
+</body></html>

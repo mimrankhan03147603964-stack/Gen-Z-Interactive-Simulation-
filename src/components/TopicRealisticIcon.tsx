@@ -2082,6 +2082,219 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 70: Alphabet & Phonics Soundboard
+    case 70:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="16" width="22" height="22" rx="4" fill="#3b82f6" stroke="#93c5fd" strokeWidth="1.5" />
+          <text x="19" y="32" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle">A</text>
+          <rect x="34" y="16" width="22" height="22" rx="4" fill="#10b981" stroke="#6ee7b7" strokeWidth="1.5" />
+          <text x="45" y="32" fill="#ffffff" fontSize="13" fontWeight="900" textAnchor="middle">B</text>
+          {/* Audio Speaker below */}
+          <rect x="14" y="44" width="10" height="12" rx="2" fill="#f59e0b" />
+          <polygon points="24,44 34,38 34,62 24,56" fill="#f59e0b" />
+          <path d="M38 46 C42 48 42 58 38 60" stroke="#fcd34d" strokeWidth="2" strokeLinecap="round" />
+          <path d="M43 42 C49 46 49 60 43 64" stroke="#fef08a" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 71: DC Motor, AC Generator and Commutator Dynamics
+    case 71:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Stator Magnets: North (Red) and South (Blue) */}
+          <path d="M8 18 H20 V46 H8 Q14 32 8 18 Z" fill="#ef4444" stroke="#fca5a5" strokeWidth="1.5" />
+          <text x="13" y="35" fill="#ffffff" fontSize="10" fontWeight="900" textAnchor="middle">N</text>
+          <path d="M56 18 H44 V46 H56 Q50 32 56 18 Z" fill="#3b82f6" stroke="#93c5fd" strokeWidth="1.5" />
+          <text x="51" y="35" fill="#ffffff" fontSize="10" fontWeight="900" textAnchor="middle">S</text>
+          {/* Armature Rotating Coil */}
+          <rect x="23" y="24" width="18" height="16" rx="3" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          {/* Central Commutator Shaft & Rotation Arrow */}
+          <line x1="32" y1="12" x2="32" y2="52" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="32" cy="48" r="4" fill="#64748b" stroke="#cbd5e1" strokeWidth="1" />
+          <path d="M28 14 C30 11 34 11 36 14" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 72: English Verb Tenses Timeline: Past, Present and Future
+    case 72:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Timeline Arrow */}
+          <line x1="8" y1="36" x2="54" y2="36" stroke="#8b5cf6" strokeWidth="3" strokeLinecap="round" />
+          <polygon points="56,36 50,32 50,40" fill="#8b5cf6" />
+          {/* Past Milestone */}
+          <circle cx="16" cy="36" r="5" fill="#ec4899" stroke="#fbcfe8" strokeWidth="1.5" />
+          <text x="16" y="24" fill="#f472b6" fontSize="7" fontWeight="bold" textAnchor="middle">PAST</text>
+          {/* Present Milestone (Golden Active) */}
+          <circle cx="32" cy="36" r="7" fill="#f59e0b" stroke="#fef08a" strokeWidth="2" />
+          <circle cx="32" cy="36" r="3" fill="#ffffff" />
+          <text x="32" y="20" fill="#fcd34d" fontSize="7.5" fontWeight="900" textAnchor="middle">NOW</text>
+          {/* Future Milestone */}
+          <circle cx="48" cy="36" r="5" fill="#06b6d4" stroke="#a5f3fc" strokeWidth="1.5" />
+          <text x="48" y="24" fill="#38bdf8" fontSize="7" fontWeight="bold" textAnchor="middle">FUTURE</text>
+          {/* Clock Dial Accent */}
+          <circle cx="32" cy="50" r="8" fill="#1e1b4b" stroke="#a78bfa" strokeWidth="1.5" />
+          <polyline points="32,45 32,50 36,50" stroke="#fef08a" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 73: Haroof-e-Tahajji & Sound Recognition Lab
+    case 73:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Quranic/Urdu Open Manuscript Tablet */}
+          <path d="M12 46 C20 42 28 44 32 46 C36 44 44 42 52 46 V20 C44 16 36 18 32 20 C28 18 20 16 12 20 Z" fill="#064e3b" stroke="#34d399" strokeWidth="2" />
+          <line x1="32" y1="20" x2="32" y2="46" stroke="#6ee7b7" strokeWidth="1.5" />
+          {/* Authentic Nastaliq Letters: Alif, Bay, Tay */}
+          <text x="42" y="34" fill="#fef08a" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ا</text>
+          <text x="22" y="36" fill="#fef08a" fontSize="12" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">ب</text>
+          {/* Audio Wave Sound Crest */}
+          <path d="M26 12 C30 8 34 8 38 12" stroke="#fcd34d" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="32" cy="11" r="1.5" fill="#fcd34d" />
+        </svg>
+      );
+
+    // 74: Hooke's Law & Spring Force Lab
+    case 74:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Top Fixed Rigid Ceiling Mount */}
+          <rect x="14" y="8" width="36" height="4" rx="1" fill="#64748b" stroke="#94a3b8" strokeWidth="1" />
+          <line x1="18" y1="8" x2="15" y2="5" stroke="#94a3b8" strokeWidth="1.5" />
+          <line x1="26" y1="8" x2="23" y2="5" stroke="#94a3b8" strokeWidth="1.5" />
+          <line x1="34" y1="8" x2="31" y2="5" stroke="#94a3b8" strokeWidth="1.5" />
+          <line x1="42" y1="8" x2="39" y2="5" stroke="#94a3b8" strokeWidth="1.5" />
+          {/* Helical Oscillating Spring */}
+          <path d="M30 12 V16 L23 19 L37 23 L23 27 L37 31 L23 35 L37 39 L23 43 L30 46 V48" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          {/* Suspended Hook & Slotted Mass Weight */}
+          <rect x="22" y="48" width="16" height="12" rx="2" fill="#0284c7" stroke="#7dd3fc" strokeWidth="1.5" />
+          <text x="30" y="57" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">100g</text>
+          {/* Precision Ruler on the side */}
+          <line x1="48" y1="14" x2="48" y2="58" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+          <line x1="45" y1="20" x2="48" y2="20" stroke="#f59e0b" strokeWidth="1.5" />
+          <line x1="43" y1="30" x2="48" y2="30" stroke="#f59e0b" strokeWidth="2" />
+          <line x1="45" y1="40" x2="48" y2="40" stroke="#f59e0b" strokeWidth="1.5" />
+          <line x1="43" y1="50" x2="48" y2="50" stroke="#f59e0b" strokeWidth="2" />
+        </svg>
+      );
+
+    // 75: Light Explorer: Reflection, Refraction & Lenses
+    case 75:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Optical Axis Line */}
+          <line x1="6" y1="32" x2="58" y2="32" stroke="#475569" strokeWidth="1" strokeDasharray="3 3" />
+          {/* Biconvex Optical Lens */}
+          <path d="M32 10 Q40 32 32 54 Q24 32 32 10 Z" fill="#38bdf8" fillOpacity="0.3" stroke="#22d3ee" strokeWidth="2" />
+          {/* Incident Laser Beam (Neon Cyan) */}
+          <line x1="8" y1="20" x2="28" y2="28" stroke="#00f5ff" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Refracted Converging Beam */}
+          <line x1="28" y1="28" x2="52" y2="32" stroke="#00f5ff" strokeWidth="2" />
+          <line x1="8" y1="44" x2="28" y2="36" stroke="#00f5ff" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="28" y1="36" x2="52" y2="32" stroke="#00f5ff" strokeWidth="2" />
+          {/* Bright Focal Point Sparkle */}
+          <circle cx="52" cy="32" r="3" fill="#facc15" />
+          <circle cx="52" cy="32" r="1.5" fill="#ffffff" />
+        </svg>
+      );
+
+    // 76: Logic Gates and Binary Circuit Builder
+    case 76:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Input Wires with Binary 1 and 0 */}
+          <line x1="8" y1="24" x2="22" y2="24" stroke="#22d3ee" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="8" y1="40" x2="22" y2="40" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" />
+          <text x="12" y="20" fill="#22d3ee" fontSize="8" fontWeight="bold">1</text>
+          <text x="12" y="50" fill="#94a3b8" fontSize="8" fontWeight="bold">0</text>
+          {/* AND / OR Logic Gate Contour */}
+          <path d="M22 16 H32 C42 16 48 24 48 32 C48 40 42 48 32 48 H22 Z" fill="#083344" stroke="#06b6d4" strokeWidth="2" />
+          {/* Output Line and Illuminated Indicator Bulb */}
+          <line x1="48" y1="32" x2="56" y2="32" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="58" cy="32" r="4" fill="#fbbf24" stroke="#fef08a" strokeWidth="1.5" />
+        </svg>
+      );
+
+    // 77: Nuclear Fission, Fusion and Half-Life Decay
+    case 77:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Atomic Energy Radiation Burst Glow */}
+          <circle cx="32" cy="32" r="24" fill="#f59e0b" fillOpacity="0.15" />
+          {/* Splitting Heavy Nucleus (U-235) */}
+          <circle cx="26" cy="30" r="10" fill="#d97706" stroke="#fbbf24" strokeWidth="2" />
+          <circle cx="40" cy="34" r="8" fill="#ea580c" stroke="#fed7aa" strokeWidth="1.5" />
+          {/* Ejected Neutrons with Trajectory Rays */}
+          <circle cx="14" cy="18" r="3" fill="#38bdf8" stroke="#ffffff" strokeWidth="1" />
+          <line x1="22" y1="24" x2="16" y2="20" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="2 2" />
+          <circle cx="50" cy="16" r="3" fill="#38bdf8" stroke="#ffffff" strokeWidth="1" />
+          <line x1="42" y1="26" x2="48" y2="18" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="2 2" />
+          <circle cx="34" cy="52" r="3" fill="#38bdf8" stroke="#ffffff" strokeWidth="1" />
+          {/* Trefoil Radiation Blades Accent */}
+          <path d="M32 20 L29 27 H35 Z" fill="#facc15" />
+          <path d="M22 38 L28 34 L25 40 Z" fill="#facc15" />
+          <path d="M42 38 L36 34 L39 40 Z" fill="#facc15" />
+        </svg>
+      );
+
+    // 78: Interactive Periodic Table of Elements
+    case 78:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Periodic Element Card Tile (Gold / Chemical Theme) */}
+          <rect x="12" y="10" width="40" height="44" rx="5" fill="#1e1b4b" stroke="#818cf8" strokeWidth="2" />
+          {/* Atomic Number */}
+          <text x="18" y="22" fill="#a5b4fc" fontSize="9" fontWeight="bold">79</text>
+          {/* Atomic Weight */}
+          <text x="46" y="22" fill="#c7d2fe" fontSize="7" textAnchor="end">196.9</text>
+          {/* Element Chemical Symbol (Au - Gold) */}
+          <text x="32" y="38" fill="#facc15" fontSize="17" fontWeight="900" textAnchor="middle">Au</text>
+          {/* Element Name */}
+          <text x="32" y="48" fill="#e0e7ff" fontSize="7.5" fontWeight="bold" textAnchor="middle">GOLD</text>
+        </svg>
+      );
+
+    // 79: 2D & 3D Shapes Builder
+    case 79:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Isometric 3D Geometric Cube */}
+          {/* Top Face */}
+          <polygon points="32,12 48,20 32,28 16,20" fill="#818cf8" stroke="#c7d2fe" strokeWidth="1.5" />
+          {/* Left Face */}
+          <polygon points="16,20 32,28 32,48 16,40" fill="#4f46e5" stroke="#a5b4fc" strokeWidth="1.5" />
+          {/* Right Face */}
+          <polygon points="32,28 48,20 48,40 32,48" fill="#3730a3" stroke="#818cf8" strokeWidth="1.5" />
+          {/* Glowing Vertex Spheres */}
+          <circle cx="32" cy="12" r="2.5" fill="#facc15" />
+          <circle cx="48" cy="20" r="2.5" fill="#facc15" />
+          <circle cx="16" cy="20" r="2.5" fill="#facc15" />
+          <circle cx="32" cy="28" r="3" fill="#ffffff" />
+          <circle cx="32" cy="48" r="2.5" fill="#facc15" />
+        </svg>
+      );
+
+    // 80: Cambridge Scholar: Solar & Lunar Eclipse Interactive Lab
+    case 80:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Glowing Golden Sun on Left */}
+          <circle cx="12" cy="32" r="10" fill="#f59e0b" stroke="#fef08a" strokeWidth="2" />
+          <line x1="12" y1="16" x2="12" y2="20" stroke="#fef08a" strokeWidth="1.5" />
+          <line x1="12" y1="44" x2="12" y2="48" stroke="#fef08a" strokeWidth="1.5" />
+          {/* Moon casting Shadow Cone */}
+          <polygon points="26,30 52,24 52,40 26,34" fill="#1e293b" fillOpacity="0.4" stroke="#38bdf8" strokeWidth="1" strokeDasharray="2 2" />
+          <circle cx="28" cy="32" r="4" fill="#94a3b8" stroke="#e2e8f0" strokeWidth="1" />
+          {/* Earth in Shadow Cone (Total Solar Eclipse) */}
+          <circle cx="48" cy="32" r="8" fill="#0284c7" stroke="#38bdf8" strokeWidth="1.5" />
+          {/* Earth Continents Accent */}
+          <path d="M45 28 Q48 30 50 28 Q52 33 47 35 Z" fill="#22c55e" />
+          {/* Corona Rays / Diamond Ring Effect */}
+          <circle cx="28" cy="32" r="6" stroke="#fef08a" strokeWidth="1" strokeDasharray="1 2" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

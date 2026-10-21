@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interactive Periodic Table | Gen Z Edtech Interactive Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:#0d1230;color:#13204a;overflow:hidden}
+#app{height:100vh;min-height:640px;display:flex;flex-direction:column;background:linear-gradient(135deg,#0d1230,#251a6b 55%,#0b5d7a)}
+header{display:flex;align-items:center;justify-content:space-between;padding:6px 20px;color:#fff}
+header h1{font-size:23px}header small{opacity:.85;font-size:13px}
+#score{background:#ffd43b;color:#3b2f00;border-radius:20px;padding:5px 16px;font-weight:700;display:none}
+main{flex:1;display:flex;gap:12px;padding:0 14px;min-height:0}
+#tw{flex:1;min-width:0;border-radius:20px;background:rgba(255,255,255,.1);border:3px solid rgba(255,255,255,.55);padding:8px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+#tbl{display:grid;gap:3px;justify-content:center;align-content:start;font-size:40px}
+.cell{position:relative;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#10204a;overflow:hidden;line-height:1.05;box-shadow:0 2px 4px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.6);background-image:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.1));transition:transform .12s,opacity .25s,filter .25s}
+.cell:hover{transform:scale(1.28);z-index:5;box-shadow:0 6px 16px rgba(0,0,0,.6)}
+.cell.dim{opacity:.13;filter:saturate(.2)}
+.cell.sel{outline:3px solid #fff;z-index:6;transform:scale(1.2);box-shadow:0 0 20px #fff}
+.cell.hl{outline:2px dashed #fff;outline-offset:-2px}
+.cell.ok{animation:ok .8s}.cell.bad{animation:bad .5s}
+@keyframes ok{50%{transform:scale(1.5);box-shadow:0 0 30px #51cf66}}
+@keyframes bad{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.num{position:absolute;left:.12em;top:.07em;font-size:.2em;font-weight:700;opacity:.8}
+.sym{font-size:.42em;font-weight:800}
+.nm{font-size:.145em;font-weight:700;white-space:nowrap}.ms{font-size:.135em;opacity:.85}
+.em{display:none;font-size:.38em}
+#tbl.obj .em{display:block}#tbl.obj .sym{font-size:.24em}
+#tbl.nonm .nm{display:none}#tbl:not(.mass) .ms{display:none}
+.lab-g,.lab-p{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.2em;visibility:hidden}
+#tbl.lab .lab-g,#tbl.lab .lab-p{visibility:visible}
+.ph{border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.17em;font-weight:800;color:#10204a;cursor:pointer;opacity:.9}
+#board{grid-row:2/5;grid-column:4/14;background:rgba(10,15,50,.72);border-radius:14px;border:2px solid rgba(255,255,255,.4);padding:.1em .2em;display:flex;flex-direction:column;min-height:0;overflow:hidden;color:#fff}
+#leg{display:flex;flex-wrap:wrap;gap:.06em .1em;font-size:.15em;padding-top:.3em}
+#leg span{border-radius:.5em;padding:.1em .6em;color:#10204a;font-weight:700}
+#bm{flex:1;display:flex;align-items:center;gap:.25em;min-height:0}
+#bem{font-size:1.5em;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+#btx{font-size:.26em;line-height:1.25}#btx b{font-size:1.25em;color:#ffd43b;display:block}
+#side{width:310px;display:flex;flex-direction:column;gap:9px;overflow:auto}
+.card{background:#fff;border-radius:18px;padding:11px;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+#top{display:flex;gap:10px;align-items:center}
+#tile{width:92px;height:96px;border-radius:12px;position:relative;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;box-shadow:inset 0 2px 0 rgba(255,255,255,.6),0 4px 8px rgba(0,0,0,.3);flex:none}
+#tile i{position:absolute;left:7px;top:4px;font-size:14px;font-style:normal}#tile u{position:absolute;bottom:3px;font-size:11px;text-decoration:none}
+#nm2{font-size:22px;font-weight:800;color:#1d2a7a}#cat{display:inline-block;border-radius:10px;padding:2px 10px;font-size:12px;font-weight:700;color:#10204a;margin-top:4px}
+#vals{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.val{border-radius:9px;padding:4px 8px;color:#fff;font-size:11px}.val b{display:block;font-size:14px}
+#cvw{background:#050a24;border-radius:16px;padding:4px;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+canvas{display:block;width:100%;height:250px}
+#bar{margin:8px 14px 12px;background:rgba(255,255,255,.13);border-radius:16px;padding:7px 10px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;max-height:32vh;overflow:auto}
+.grp{display:flex;flex-wrap:wrap;gap:5px;align-items:center}.gl{color:#fff;font-weight:700;font-size:12px}
+.b{--c:#4c6ef5;border:0;border-radius:10px;padding:6px 10px;font:700 12px "Trebuchet MS",Verdana,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(var(--c),color-mix(in srgb,var(--c),#000 25%));box-shadow:0 3px 0 color-mix(in srgb,var(--c),#000 50%),0 5px 8px rgba(0,0,0,.3);text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .08s,filter .15s}
+.b:hover{filter:brightness(1.15)}.b:active{transform:translateY(3px);box-shadow:0 0 0 #000}
+.b.on{outline:3px solid #fff;outline-offset:1px}.b:focus-visible{outline:3px solid #fff}
+#q{border:0;border-radius:10px;padding:6px 10px;font:700 12px "Trebuchet MS",Verdana,sans-serif;width:130px}
+@media (max-width:1100px){#side{width:240px}}
+</style></head>
+<body>
+<div id="app">
+<header><div><h1>⚛️ Interactive Periodic Table of Elements</h1><small>Gen Z Edtech Interactive Simulations · Chemistry</small></div><div id="score">⭐ Score: 0</div></header>
+<main>
+<div id="tw"><div id="tbl"></div></div>
+<div id="side">
+<div class="card"><div id="top"><div id="tile"></div><div><div id="nm2"></div><span id="cat"></span></div></div><div id="vals"></div></div>
+<div id="cvw"><canvas id="cv"></canvas></div>
+</div></main>
+<div id="bar">
+<div class="grp"><span class="gl">Screen:</span><span class="grp" id="gScr"></span></div>
+<div class="grp"><span class="gl">Colour by:</span><span class="grp" id="gCol"></span></div>
+<div class="grp"><span class="gl">Show only:</span><span class="grp" id="gFil"></span></div>
+<div class="grp"><span class="gl">Table:</span><span class="grp" id="gTab"></span></div>
+<div class="grp"><span class="gl">Explore:</span><span class="grp" id="gExp"></span></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const RAW=`H|Hydrogen|1.008|n|🚀|Rocket fuel and fuel-cell cars
+He|Helium|4.003|g|🎈|Party balloons and airships
+Li|Lithium|6.94|a|🔋|Phone and laptop batteries
+Be|Beryllium|9.012|e|🔭|Space telescope mirrors
+B|Boron|10.81|m|🍳|Heat-proof glass cookware
+C|Carbon|12.011|n|✏️|Pencil lead (graphite) and diamonds
+N|Nitrogen|14.007|n|🌱|Plant food (fertiliser). It is 78% of the air
+O|Oxygen|15.999|n|🫁|We breathe it to stay alive
+F|Fluorine|18.998|h|🦷|Toothpaste for strong teeth
+Ne|Neon|20.180|g|💡|Bright glowing shop signs
+Na|Sodium|22.990|a|🧂|Table salt (with chlorine)
+Mg|Magnesium|24.305|e|🎇|Sparklers and bright flares
+Al|Aluminium|26.982|p|🥫|Drink cans and kitchen foil
+Si|Silicon|28.085|m|💻|Computer chips and solar panels
+P|Phosphorus|30.974|n|🔥|Match heads and plant food
+S|Sulfur|32.06|n|🌋|Found near volcanoes. Makes tyres strong
+Cl|Chlorine|35.45|h|🏊|Keeps swimming pools clean
+Ar|Argon|39.95|g|💡|Fills light bulbs
+K|Potassium|39.098|a|🍌|Found in bananas
+Ca|Calcium|40.078|e|🥛|Makes strong bones and teeth. Found in milk
+Sc|Scandium|44.956|t|🚲|Light, strong sports gear
+Ti|Titanium|47.867|t|✈️|Aeroplane parts and joint replacements
+V|Vanadium|50.942|t|🔧|Makes steel tools very tough
+Cr|Chromium|51.996|t|🚗|Shiny car bumpers
+Mn|Manganese|54.938|t|🔋|Steel and batteries
+Fe|Iron|55.845|t|🌉|Bridges, buildings and steel
+Co|Cobalt|58.933|t|🎨|Blue paint and blue glass
+Ni|Nickel|58.693|t|🪙|Coins and stainless steel
+Cu|Copper|63.546|t|🔌|Electric wires and water pipes
+Zn|Zinc|65.38|t|🔩|Protects iron from rust
+Ga|Gallium|69.723|p|💡|LED lights. It melts in your hand
+Ge|Germanium|72.630|m|📡|Fibre-optic cables and night-vision lenses
+As|Arsenic|74.922|m|☠️|A poison once used to kill pests
+Se|Selenium|78.971|n|🥜|Found in Brazil nuts
+Br|Bromine|79.904|h|🧯|Fire-safety chemicals
+Kr|Krypton|83.798|g|📸|Bright camera flash lamps
+Rb|Rubidium|85.468|a|⏱️|Very exact atomic clocks
+Sr|Strontium|87.62|e|🎆|Makes red fireworks
+Y|Yttrium|88.906|t|📺|Colour TV screens and LED lights
+Zr|Zirconium|91.224|t|💍|Fake diamonds (cubic zirconia)
+Nb|Niobium|92.906|t|🏥|Magnets in MRI scanners
+Mo|Molybdenum|95.95|t|🔧|Strong steel for tools
+Tc|Technetium|98|t|🏥|Hospital scans (made by people)
+Ru|Ruthenium|101.07|t|✒️|Hard pen tips
+Rh|Rhodium|102.906|t|🚗|Cleans car exhaust gases
+Pd|Palladium|106.42|t|📱|Phones and car exhaust cleaners
+Ag|Silver|107.868|t|🍴|Cutlery, jewellery and mirrors
+Cd|Cadmium|112.414|t|🔋|Rechargeable batteries
+In|Indium|114.818|p|📱|Touch screens
+Sn|Tin|118.710|p|🥫|Tin cans
+Sb|Antimony|121.760|m|🧯|Fire-proof materials
+Te|Tellurium|127.60|m|☀️|Solar panels
+I|Iodine|126.904|h|🩹|Antiseptic for cuts
+Xe|Xenon|131.293|g|🚘|Very bright car headlights
+Cs|Caesium|132.905|a|⏱️|The most exact clocks in the world
+Ba|Barium|137.327|e|🩻|Drink for stomach X-rays
+La|Lanthanum|138.905|l|📷|Camera lenses
+Ce|Cerium|140.116|l|🔥|Lighter flints
+Pr|Praseodymium|140.908|l|🕶️|Yellow glass and welding goggles
+Nd|Neodymium|144.242|l|🧲|Super-strong magnets
+Pm|Promethium|145|l|⌚|Old glow-in-the-dark paint
+Sm|Samarium|150.36|l|🎧|Magnets in headphones
+Eu|Europium|151.964|l|💶|Hidden glowing ink on banknotes
+Gd|Gadolinium|157.25|l|🏥|Dye for MRI scans
+Tb|Terbium|158.925|l|📺|Green glow in screens
+Dy|Dysprosium|162.500|l|🚗|Electric car motors
+Ho|Holmium|164.930|l|🔬|Medical lasers
+Er|Erbium|167.259|l|🌐|Internet fibre-optic cables
+Tm|Thulium|168.934|l|🩻|Portable X-ray machines
+Yb|Ytterbium|173.045|l|⏱️|Atomic clocks
+Lu|Lutetium|174.967|l|🏥|Cancer treatment medicine
+Hf|Hafnium|178.49|t|💻|Computer chips
+Ta|Tantalum|180.948|t|📱|Tiny parts inside phones
+W|Tungsten|183.84|t|💡|Old light bulb wires
+Re|Rhenium|186.207|t|✈️|Jet engine parts
+Os|Osmium|190.23|t|🖋️|Very hard pen tips
+Ir|Iridium|192.217|t|🚗|Long-lasting spark plugs
+Pt|Platinum|195.084|t|💍|Jewellery and car exhaust cleaners
+Au|Gold|196.967|t|🥇|Jewellery, medals and coins
+Hg|Mercury|200.592|t|🌡️|Old thermometers. It is a liquid metal
+Tl|Thallium|204.38|p|☠️|Very poisonous. Used in some electronics
+Pb|Lead|207.2|p|🎣|Fishing weights and car batteries
+Bi|Bismuth|208.980|p|💊|Stomach medicine
+Po|Polonium|209|p|☢️|Radioactive. Removes static electricity
+At|Astatine|210|h|☢️|Very rare and radioactive
+Rn|Radon|222|g|☢️|A radioactive gas from rocks
+Fr|Francium|223|a|☢️|Extremely rare and radioactive
+Ra|Radium|226|e|⌚|Old glow-in-the-dark watch dials
+Ac|Actinium|227|c|☢️|Used in medical research
+Th|Thorium|232.038|c|🔦|Old lantern mantles
+Pa|Protactinium|231.036|c|☢️|Used only in science research
+U|Uranium|238.029|c|⚡|Fuel for nuclear power stations
+Np|Neptunium|237|c|☢️|Made inside nuclear reactors
+Pu|Plutonium|244|c|🛰️|Power for space probes
+Am|Americium|243|c|🚨|Smoke alarms
+Cm|Curium|247|c|🛰️|Power for space missions
+Bk|Berkelium|247|c|🧪|Made in laboratories for research
+Cf|Californium|251|c|🛢️|Helps find oil underground
+Es|Einsteinium|252|c|🧪|Made in laboratories only
+Fm|Fermium|257|c|🧪|Made in laboratories only
+Md|Mendelevium|258|c|🧪|Made in laboratories only
+No|Nobelium|259|c|🧪|Made in laboratories only
+Lr|Lawrencium|266|c|🧪|Made in laboratories only
+Rf|Rutherfordium|267|t|🧪|Made in labs. It lasts only seconds
+Db|Dubnium|268|t|🧪|Made in labs. It lasts only seconds
+Sg|Seaborgium|269|t|🧪|Made in labs. It lasts only seconds
+Bh|Bohrium|270|t|🧪|Made in labs. It lasts only seconds
+Hs|Hassium|277|t|🧪|Made in labs. It lasts only seconds
+Mt|Meitnerium|278|t|🧪|Made in labs. It lasts only seconds
+Ds|Darmstadtium|281|t|🧪|Made in labs. It lasts only seconds
+Rg|Roentgenium|282|t|🧪|Made in labs. It lasts only seconds
+Cn|Copernicium|285|t|🧪|Made in labs. It lasts only seconds
+Nh|Nihonium|286|p|🧪|Made in labs. It lasts only seconds
+Fl|Flerovium|289|p|🧪|Made in labs. It lasts only seconds
+Mc|Moscovium|290|p|🧪|Made in labs. It lasts only seconds
+Lv|Livermorium|293|p|🧪|Made in labs. It lasts only seconds
+Ts|Tennessine|294|h|🧪|Made in labs. It lasts only seconds
+Og|Oganesson|294|g|🧪|Made in labs. It lasts only seconds`;
+const EL=RAW.split('\n').map((r,i)=>{const[s,n,m,k,e,u]=r.split('|');return{z:i+1,s,n,m:+m,k,e,u}});
+const CATS={a:['Alkali Metals','#ff6b6b'],e:['Alkaline Earth Metals','#ff9f43'],t:['Transition Metals','#f9c74f'],p:['Post-Transition Metals','#2ec4b6'],m:['Metalloids','#4cc9f0'],n:['Nonmetals','#4895ef'],h:['Halogens','#9d8df1'],g:['Noble Gases','#f15bb5'],l:['Lanthanides','#ff85a1'],c:['Actinides','#c08457']};
+const STC={Solid:'#8b7cf6',Liquid:'#20c997',Gas:'#ff7a9c',Unknown:'#b0b8c4'},MTC={Metal:'#ffa94d',Metalloid:'#38d9a9',Nonmetal:'#4dabf7'};
+const GAS=[1,2,7,8,9,10,17,18,36,54,86],LIQ=[35,80];
+const state=e=>GAS.includes(e.z)?'Gas':LIQ.includes(e.z)?'Liquid':e.z>=104?'Unknown':'Solid';
+const mtype=e=>'aetplc'.includes(e.k)?'Metal':e.k==='m'?'Metalloid':'Nonmetal';
+function pos(z){if(z===1)return[1,1];if(z===2)return[1,18];
+ for(const[a,b,p]of[[3,10,2],[11,18,3],[19,36,4],[37,54,5]])if(z>=a&&z<=b){const i=z-a;return[p,b-a===7?(i<2?i+1:i+11):i+1]}
+ if(z<=56)return[6,z-54];if(z<=71)return[9,z-54];if(z<=86)return[6,z-68];if(z<=88)return[7,z-86];if(z<=103)return[10,z-86];return[7,z-100]}
+const SUB=[[1,2],[2,2],[2,6],[3,2],[3,6],[4,2],[3,10],[4,6],[5,2],[4,10],[5,6],[6,2],[4,14],[5,10],[6,6],[7,2],[5,14],[6,10],[7,6]];
+const EX={24:[2,8,13,1],29:[2,8,18,1],41:[2,8,18,12,1],42:[2,8,18,13,1],44:[2,8,18,15,1],45:[2,8,18,16,1],46:[2,8,18,18],47:[2,8,18,18,1],57:[2,8,18,18,9,2],58:[2,8,18,19,9,2],64:[2,8,18,25,9,2],78:[2,8,18,32,17,1],79:[2,8,18,32,18,1],89:[2,8,18,32,18,9,2],90:[2,8,18,32,18,10,2],91:[2,8,18,32,20,9,2],92:[2,8,18,32,21,9,2],93:[2,8,18,32,22,9,2],96:[2,8,18,32,25,9,2]};
+function shells(z){if(EX[z])return EX[z];let r=z;const s=[];for(const[n,cap]of SUB){if(r<=0)break;const k=Math.min(cap,r);s[n-1]=(s[n-1]||0)+k;r-=k}return s.map(x=>x||0)}
+/* state */
+let sel=79,cmode='cat',filt=null,samePer=false,sameGrp=false,spin=true,quiz=false,qa=null,score=0,at=0;
+const tbl=$('tbl');
+/* build table */
+const mkd=(cls,h,r,c,sty)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;d.style.gridRow=r;d.style.gridColumn=c;if(sty)Object.assign(d.style,sty);tbl.appendChild(d);return d};
+for(let g=1;g<=18;g++)mkd('lab-g',g,1,g+1);for(let p=1;p<=7;p++)mkd('lab-p',p,p+1,1);
+const massTxt=m=>Number.isInteger(m)?'('+m+')':m.toFixed(2);
+EL.forEach(e=>{const[r,c]=pos(e.z);e.r=r;e.c=c;e.gr=r<=7?c:null;e.pd=r<=7?r:(r===9?6:7);
+ e.el=mkd('cell',`<span class="num">${e.z}</span><span class="em">${e.e}</span><span class="sym">${e.s}</span><span class="nm">${e.n}</span><span class="ms">${massTxt(e.m)}</span>`,r+1,c+1);e.el.title=e.n;e.el.onclick=()=>click(e.z)});
+const phL=mkd('ph','57–71',7,4),phA=mkd('ph','89–103',8,4);phL.onclick=()=>setFilt('cat','l');phA.onclick=()=>setFilt('cat','c');
+phL.style.background=CATS.l[1];phA.style.background=CATS.c[1];
+const board=mkd('','<div id="leg"></div><div id="bm"><div id="bem"></div><div id="btx"></div></div>',2,4);board.id='board';board.style.gridRow='2/5';board.style.gridColumn='4/14';
+/* colours */
+function colorOf(e){if(cmode==='cat')return CATS[e.k][1];if(cmode==='state')return STC[state(e)];if(cmode==='metal')return MTC[mtype(e)];return`hsl(${e.z*3},85%,62%)`}
+function match(e){return!filt||(filt[0]==='cat'?e.k===filt[1]:state(e)===filt[1])}
+function paint(){const s=EL[sel-1];EL.forEach(e=>{const d=e.el;d.style.backgroundColor=colorOf(e);d.classList.toggle('dim',!match(e));d.classList.toggle('sel',e.z===sel);d.classList.toggle('hl',e.z!==sel&&((samePer&&e.pd===s.pd&&e.r<=7)||(sameGrp&&e.gr&&e.gr===s.gr)))});
+ const ch=cmode==='cat'?Object.values(CATS):cmode==='state'?Object.entries(STC).map(([k,v])=>[k,v]):cmode==='metal'?Object.entries(MTC).map(([k,v])=>[k,v]):[['Low atomic number → High atomic number','#ffd43b']];
+ $('leg').innerHTML=ch.map(x=>`<span style="background:${x[1]}">${x[0]}</span>`).join('')}
+function board_(){if(quiz&&qa){$('bem').textContent='🎯';$('btx').innerHTML=`<b>Find it!</b>${qa.q}`;return}
+ const e=EL[sel-1];$('bem').textContent=e.e;$('btx').innerHTML=`<b>${e.n} (${e.s})</b>In real life: ${e.u}`}
+function click(z){if(quiz&&qa){const el=EL[z-1].el;if(z===qa.z){score++;$('score').textContent='⭐ Score: '+score;el.classList.add('ok');pick(z);say('Correct! '+EL[z-1].n);qa=null;$('btx').innerHTML='<b>Great job!</b>Get ready for the next one…';setTimeout(()=>{el.classList.remove('ok');nextQ()},1500)}
+  else{el.classList.remove('bad');void el.offsetWidth;el.classList.add('bad');$('btx').innerHTML=`<b>Not quite!</b>That is ${EL[z-1].n}. Try again.<br>${qa.q}`;say('Try again')}return}
+ pick(z);say(EL[z-1].n)}
+function pick(z){sel=z;info();paint();board_()}
+function info(){const e=EL[sel-1],sh=shells(sel),pr=sel,ne=Math.max(0,Math.round(e.m)-pr);
+ $('tile').style.background=CATS[e.k][1];$('tile').innerHTML=`<i>${e.z}</i>${e.s}<u>${massTxt(e.m)}</u>`;$('nm2').textContent=e.n;$('cat').textContent=CATS[e.k][0];$('cat').style.background=CATS[e.k][1];
+ const V=[['Atomic Number',e.z,'#e8590c'],['Atomic Mass',massTxt(e.m),'#1c7ed6'],['State (room temp.)',state(e)==='Unknown'?'Unknown (made in labs)':state(e),'#7048e8'],['Group / Period',(e.gr||'f-block')+' / '+e.pd,'#0ca678'],['Protons (+)',pr,'#e03131'],['Neutrons',ne,'#495057'],['Electrons (−)',pr,'#1971c2'],['Electron shells',sh.join(' , '),'#c2255c']];
+ $('vals').innerHTML=V.map(v=>`<div class="val" style="background:${v[2]}">${v[0]}<b>${v[1]}</b></div>`).join('')}
+function say(s){try{speechSynthesis.cancel();const q=new SpeechSynthesisUtterance(s);q.lang='en-US';q.rate=.9;speechSynthesis.speak(q)}catch(e){}}
+function sayFull(){const e=EL[sel-1];say(`${e.n}. Symbol ${e.s}. Atomic number ${e.z}. It is a ${CATS[e.k][0].toLowerCase()}. ${e.u}.`)}
+/* filters */
+function setFilt(t,v){filt=filt&&filt[0]===t&&filt[1]===v?null:(t?[t,v]:null);document.querySelectorAll('#gFil .b').forEach(b=>b.classList.toggle('on',!!filt&&b.dataset.f===t+':'+v));paint()}
+/* quiz */
+function nextQ(){let e,ty;do{e=EL[Math.random()*118|0];ty=Math.random()*3|0}while(ty===2&&(e.e==='🧪'||e.e==='☢️'));
+ const q=ty===0?`Click the element named <b style="display:inline">${e.n}</b>`:ty===1?`Click the element with symbol <b style="display:inline">${e.s}</b>`:`Which element? <b style="display:inline">${e.u}</b>`;qa={z:e.z,q};board_();say(ty===0?'Find '+e.n:ty===1?'Find the symbol '+e.s.split('').join(' '):'Which element is used for: '+e.u)}
+/* atom canvas */
+const cv=$('cv'),c=cv.getContext('2d');let CW=0,CH=0;
+function rs(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;CW=r.width;CH=r.height;cv.width=CW*d;cv.height=CH*d;c.setTransform(d,0,0,d,0,0);fit()}
+function atom(){c.clearRect(0,0,CW,CH);const e=EL[sel-1],sh=shells(sel),cx=CW/2,cy=CH/2-6,R=Math.min(CW,CH)/2-16,n=sh.length,ne=Math.max(0,Math.round(e.m)-sel);
+ const g=c.createRadialGradient(cx,cy,10,cx,cy,R*1.4);g.addColorStop(0,'#1b2a7a');g.addColorStop(1,'#050a24');c.fillStyle=g;c.fillRect(0,0,CW,CH);
+ const rn=9+Math.min(14,Math.sqrt(sel)*1.3);
+ sh.forEach((cnt,k)=>{const r=n===1?R*.55:rn+14+(R-rn-14)*k/(n-1||1);c.strokeStyle='rgba(160,190,255,.45)';c.lineWidth=1.5;c.beginPath();c.arc(cx,cy,r,0,7);c.stroke();
+  const val=k===n-1;for(let i=0;i<cnt;i++){const a=at*(1.1/(k+1)+.15)*(k%2?-1:1)+i*2*Math.PI/cnt;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);c.fillStyle=val?'#ffd43b':'#4dd9ff';c.shadowColor=c.fillStyle;c.shadowBlur=val?14:8;c.beginPath();c.arc(x,y,4.6,0,7);c.fill()}c.shadowBlur=0});
+ const ng=c.createRadialGradient(cx-rn*.3,cy-rn*.3,2,cx,cy,rn);ng.addColorStop(0,'#ff9aa2');ng.addColorStop(.6,'#e03131');ng.addColorStop(1,'#6b1010');c.fillStyle=ng;c.beginPath();c.arc(cx,cy,rn,0,7);c.fill();
+ if(ne>0){c.fillStyle='rgba(180,190,210,.85)';c.beginPath();c.arc(cx+rn*.45,cy+rn*.35,rn*.45,0,7);c.fill()}
+ c.font='bold 12px Trebuchet MS,Verdana';c.textAlign='left';c.fillStyle='#fff';c.fillText(e.s+' atom model',10,16);c.textAlign='right';c.fillStyle='#ffd43b';c.fillText('● Outer electrons: '+sh[n-1],CW-8,16);c.textAlign='center';c.fillStyle='#ff9aa2';c.fillText('Red = protons',CW*.28,CH-8);c.fillStyle='#b8c1d6';c.fillText('Grey = neutrons',CW*.7,CH-8)}
+function loop(){if(spin)at+=.016;atom();requestAnimationFrame(loop)}
+/* layout */
+function fit(){const w=$('tw').clientWidth-16,h=$('tw').clientHeight-16,cw=Math.max(22,Math.min((w-60)/18.5,(h-40)/10.8));
+ tbl.style.fontSize=cw+'px';tbl.style.gridTemplateColumns=`${cw*.5}px repeat(18,${cw-3}px)`;tbl.style.gridTemplateRows=`${cw*.5}px repeat(7,${cw*1.1-3}px) ${cw*.3}px repeat(2,${cw*1.1-3}px)`}
+/* UI */
+function mk(p,l,col,fn,cls){const b=document.createElement('button');b.className='b'+(cls?' '+cls:'');b.style.setProperty('--c',col);b.innerHTML=l;b.onclick=()=>fn(b);$(p).appendChild(b);return b}
+function tog(p,l,col,get,set){const b=mk(p,l,col,b=>{set(!get());b.classList.toggle('on',get())});b.classList.toggle('on',get());return b}
+const fsb=mk('gScr','⛶ Full Screen','#e8590c',()=>{const a=$('app');document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)});
+document.addEventListener('fullscreenchange',()=>{fsb.innerHTML=document.fullscreenElement?'🗗 Exit Full Screen':'⛶ Full Screen';setTimeout(rs,150)});
+const cm={};[['cat','🎨 Category','#7048e8'],['state','🧊 State of Matter','#1c7ed6'],['metal','🔩 Metal or Not','#f59f00'],['rain','🌈 Rainbow Order','#d6336c']].forEach(([k,l,col])=>cm[k]=mk('gCol',l,col,()=>{cmode=k;Object.entries(cm).forEach(([q,b])=>b.classList.toggle('on',q===k));paint()}));cm.cat.classList.add('on');
+Object.entries(CATS).forEach(([k,[n,col]])=>{const b=mk('gFil',n,col,()=>setFilt('cat',k));b.dataset.f='cat:'+k});
+[['Solid','🧱 Solids','#7c6cf0'],['Liquid','💧 Liquids','#12b886'],['Gas','💨 Gases','#f06595']].forEach(([k,l,col])=>{const b=mk('gFil',l,col,()=>setFilt('state',k));b.dataset.f='state:'+k});
+mk('gFil','✖ Show All','#495057',()=>{filt=null;document.querySelectorAll('#gFil .b').forEach(b=>b.classList.remove('on'));paint()});
+tog('gTab','🏷️ Names','#0ca678',()=>!tbl.classList.contains('nonm'),v=>tbl.classList.toggle('nonm',!v));
+tog('gTab','⚖️ Atomic Mass','#1c7ed6',()=>tbl.classList.contains('mass'),v=>tbl.classList.toggle('mass',v));
+tog('gTab','🧸 Real Objects','#f76707',()=>tbl.classList.contains('obj'),v=>tbl.classList.toggle('obj',v));
+tog('gTab','🔢 Group & Period','#e03131',()=>tbl.classList.contains('lab'),v=>tbl.classList.toggle('lab',v));
+mk('gExp','◀ Previous','#4263eb',()=>pick(sel>1?sel-1:118));mk('gExp','Next ▶','#4263eb',()=>pick(sel<118?sel+1:1));
+mk('gExp','🎲 Random','#ae3ec9',()=>pick(1+Math.random()*118|0));
+mk('gExp','🔊 Say About It','#d6336c',sayFull);
+tog('gExp','↔ Same Period','#12b886',()=>samePer,v=>{samePer=v;paint()});tog('gExp','↕ Same Group','#fd7e14',()=>sameGrp,v=>{sameGrp=v;paint()});
+tog('gExp','⚛️ Spin Atom','#f59f00',()=>spin,v=>spin=v);
+const qb=tog('gExp','🎯 Quiz Game','#c2255c',()=>quiz,v=>{quiz=v;qa=null;$('score').style.display=v?'block':'none';if(v){score=0;$('score').textContent='⭐ Score: 0';nextQ()}else board_()});
+mk('gExp','⏭ Skip Question','#e67700',()=>{if(quiz)nextQ()});
+const inp=document.createElement('input');inp.id='q';inp.placeholder='Name, symbol or number';$('gExp').appendChild(inp);
+function find(){const v=inp.value.trim().toLowerCase();if(!v)return;const e=EL.find(x=>String(x.z)===v||x.s.toLowerCase()===v||x.n.toLowerCase()===v)||EL.find(x=>x.n.toLowerCase().startsWith(v));if(e){pick(e.z);say(e.n)}else{inp.value='';inp.placeholder='Not found. Try again'}}
+inp.onkeydown=ev=>{ev.stopPropagation();if(ev.key==='Enter')find()};mk('gExp','🔎 Find','#1098ad',find);
+mk('gExp','↺ Reset','#343a40',()=>{filt=null;cmode='cat';samePer=sameGrp=false;quiz=false;qa=null;$('score').style.display='none';document.querySelectorAll('#bar .b.on').forEach(b=>{if(!/Names|Spin|Category|Group/.test(b.textContent))b.classList.remove('on')});Object.values(cm).forEach((b,i)=>b.classList.toggle('on',i===0));tbl.classList.remove('obj','mass','nonm');pick(79)});
+document.querySelectorAll('#gTab .b')[3].click();
+addEventListener('keydown',e=>{if(e.key==='ArrowRight')pick(sel<118?sel+1:1);if(e.key==='ArrowLeft')pick(sel>1?sel-1:118)});
+addEventListener('resize',rs);
+pick(79);rs();loop();
+</script>
+</body></html>

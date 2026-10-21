@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2D & 3D Shapes Builder | Gen Z Edtech Interactive Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:#1b1f4b;color:#1b1f4b;overflow:hidden}
+#app{height:100vh;min-height:620px;display:flex;flex-direction:column;background:linear-gradient(135deg,#2b2f77,#4a2c8a 60%,#1f6f9c)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 22px;color:#fff}
+header h1{font-size:24px;letter-spacing:.5px}
+header small{opacity:.85;font-size:13px}
+#score{background:#ffd43b;color:#3b2f00;border-radius:20px;padding:6px 16px;font-weight:700;display:none}
+main{flex:1;display:flex;gap:14px;padding:0 18px;min-height:0}
+#stage{flex:1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.4);border:4px solid #fff}
+canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#badge{position:absolute;left:16px;top:14px;background:rgba(255,255,255,.92);border-radius:16px;padding:8px 18px;font-size:30px;font-weight:800;color:#3d2c8d;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+#hint{position:absolute;right:14px;top:14px;background:rgba(27,31,75,.75);color:#fff;border-radius:12px;padding:6px 12px;font-size:13px}
+#side{width:330px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.card h2{font-size:18px;margin-bottom:8px;color:#3d2c8d}
+.facts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.fact{border-radius:12px;padding:8px 4px;text-align:center;color:#fff;font-weight:700}
+.fact b{display:block;font-size:24px}.fact span{font-size:12px}
+#desc{font-size:15px;line-height:1.4}
+#objs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.obj{border:0;border-radius:14px;background:linear-gradient(#f3f0ff,#e2dcff);padding:8px 4px;cursor:pointer;font-family:inherit;color:#1b1f4b;font-size:14px;font-weight:700;transition:transform .15s}
+.obj:hover{transform:scale(1.07) rotate(-2deg)}.obj i{display:block;font-style:normal;font-size:46px;line-height:1.1}
+#quiz{display:none}#quiz p{font-size:16px;font-weight:700;margin-bottom:8px}
+#qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}#qmsg{margin-top:8px;font-weight:700;min-height:22px}
+#bar{margin:10px 18px 14px;background:rgba(255,255,255,.14);border-radius:18px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl{color:#fff;font-weight:700;font-size:13px;margin-right:2px}
+.b{--c:#4c6ef5;border:0;border-radius:12px;padding:8px 12px;font:700 14px "Trebuchet MS",Verdana,sans-serif;color:#fff;cursor:pointer;
+background:linear-gradient(var(--c),color-mix(in srgb,var(--c),#000 25%));box-shadow:0 4px 0 color-mix(in srgb,var(--c),#000 50%),0 6px 10px rgba(0,0,0,.3);text-shadow:0 1px 2px rgba(0,0,0,.35);transition:transform .08s,filter .15s}
+.b:hover{filter:brightness(1.15)}.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c),#000 50%)}
+.b.on{outline:3px solid #fff;outline-offset:1px}.b.sel{outline:3px solid #ffd43b;outline-offset:1px;transform:translateY(-2px)}
+.sw{width:30px;height:30px;padding:0;border-radius:50%}
+.b:focus-visible{outline:3px solid #fff}
+@media (max-width:1000px){#side{width:250px}}
+</style></head>
+<body>
+<div id="app">
+<header><div><h1>🔷 2D & 3D Shapes Builder</h1><small>Gen Z Edtech Interactive Simulations · Early Years Maths</small></div><div id="score">⭐ Score: 0</div></header>
+<main>
+<div id="stage"><canvas id="cv"></canvas><div id="badge">Cube</div><div id="hint">🖱️ Drag the shape to turn it</div></div>
+<div id="side">
+<div class="card"><h2 id="mt">About this shape</h2><div class="facts" id="facts"></div><p id="desc"></p></div>
+<div class="card"><h2>Look around you! Real things with this shape</h2><div id="objs"></div></div>
+<div class="card" id="quiz"><h2>Quiz Time</h2><p>What is the name of this shape?</p><div id="qopts"></div><div id="qmsg"></div></div>
+</div></main>
+<div id="bar">
+<div class="grp"><span class="gl">Mode:</span><span id="gMode"></span></div>
+<div class="grp"><span class="gl">Shapes:</span><span class="grp" id="shapes"></span></div>
+<div class="grp"><span class="gl">Colour:</span><span class="grp" id="gCol"></span></div>
+<div class="grp"><span class="gl">Actions:</span><span class="grp" id="gAct"></span></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),c=cv.getContext('2d');
+let W=0,H=0,mode='3d',key='cube',color='#ff4d6d',rx=-.5,ry=.7,ra=0,zoom=1,spin=true,wire=false,edges=false,corners=false,rainbow=false,labels=true,objOn=false,objI=0,quiz=false,score=0,answer=null;
+const P=Math.PI;
+/* ---------- 3D mesh builders ---------- */
+function prism(n,r,h,off,sx=1,sz=1,sm=false){const v=[],f=[];
+ for(let k=0;k<2;k++)for(let i=0;i<n;i++){const a=off+i*2*P/n;v.push([Math.cos(a)*r*sx,k?h/2:-h/2,Math.sin(a)*r*sz])}
+ for(let i=0;i<n;i++)f.push({p:[i,(i+1)%n,n+(i+1)%n,n+i]});
+ f.push({p:[...Array(n).keys()],cap:1},{p:[...Array(n).keys()].map(i=>n+i),cap:1});
+ return{v,f,sm,kv:sm?[]:v.map((_,i)=>i)}}
+function cone(n,r,h,off,sm=false){const v=[],f=[];
+ for(let i=0;i<n;i++){const a=off+i*2*P/n;v.push([Math.cos(a)*r,h/2,Math.sin(a)*r])}
+ v.push([0,-h/2,0]);
+ for(let i=0;i<n;i++)f.push({p:[i,(i+1)%n,n]});
+ f.push({p:[...Array(n).keys()],cap:1});
+ return{v,f,sm,kv:sm?[n]:v.map((_,i)=>i)}}
+function sphere(){const L=14,S=28,v=[],f=[];
+ for(let i=0;i<=L;i++){const p=P*i/L;for(let j=0;j<S;j++){const t=2*P*j/S;v.push([1.15*Math.sin(p)*Math.cos(t),-1.15*Math.cos(p),1.15*Math.sin(p)*Math.sin(t)])}}
+ for(let i=0;i<L;i++)for(let j=0;j<S;j++){const j2=(j+1)%S;f.push({p:[i*S+j,i*S+j2,(i+1)*S+j2,(i+1)*S+j]})}
+ return{v,f,sm:true,sph:true,kv:[]}}
+const D3={
+ cube:{n:'Cube',f:'6',e:'12',v:'8',d:'A cube has 6 flat faces. Every face is a square and all the edges are the same length.',g:()=>prism(4,.99,1.4,P/4),o:[['🎲','Dice'],['🧊','Ice Cube'],['🎁','Gift Box'],['🧩','Puzzle Block']]},
+ cuboid:{n:'Cuboid',f:'6',e:'12',v:'8',d:'A cuboid has 6 flat faces. The faces are rectangles. It looks like a stretched cube.',g:()=>prism(4,.99,.95,P/4,1.6,.95),o:[['📦','Cardboard Box'],['📚','Book'],['🧱','Brick'],['📱','Mobile Phone']]},
+ sphere:{n:'Sphere',f:'1 curved',e:'0',v:'0',d:'A sphere is perfectly round like a ball. It has one curved surface, no edges and no corners.',g:sphere,o:[['⚽','Football'],['🏀','Basketball'],['🌍','Globe'],['🍊','Orange']]},
+ cylinder:{n:'Cylinder',f:'2 flat + 1 curved',e:'2',v:'0',d:'A cylinder has 2 flat circle faces and 1 curved surface. It can stand up or roll on its side.',g:()=>prism(40,.8,1.7,0,1,1,true),o:[['🥫','Tin Can'],['🛢️','Barrel'],['🔋','Battery'],['🥁','Drum']]},
+ cone:{n:'Cone',f:'1 flat + 1 curved',e:'1',v:'1',d:'A cone has 1 flat circle face, 1 curved surface and 1 pointed tip called a vertex.',g:()=>cone(40,.9,1.9,0,true),o:[['🍦','Ice Cream Cone'],['🎉','Party Hat'],['🚧','Traffic Cone'],['🎄','Pine Tree']]},
+ pyramid:{n:'Square Pyramid',f:'5',e:'8',v:'5',d:'A square pyramid has a square base and 4 triangle faces that meet at one point at the top.',g:()=>cone(4,1.05,1.7,P/4),o:[['🏜️','Egyptian Pyramid'],['🛖','Pointed Roof'],['🔺','Pyramid Block'],['🗻','Mountain Peak']]},
+ tripyramid:{n:'Triangular Pyramid',f:'4',e:'6',v:'4',d:'A triangular pyramid has 4 faces and every face is a triangle.',g:()=>cone(3,1.1,1.7,-P/2),o:[['🔺','Pyramid Block'],['🥪','Sandwich Corner'],['🏔️','Sharp Peak'],['🧊','Triangle Gem']]},
+ prism:{n:'Triangular Prism',f:'5',e:'9',v:'6',d:'A triangular prism has 2 triangle faces and 3 rectangle faces.',g:()=>prism(3,1.05,1.9,-P/2),o:[['⛺','Camping Tent'],['🧀','Cheese Wedge'],['🍫','Triangle Chocolate'],['🏠','Roof Frame']]}
+};
+/* ---------- 2D shapes ---------- */
+const D2={
+ circle:{n:'Circle',s:'1 curved',k:'0',d:'A circle is perfectly round. It has no straight sides and no corners.',e:0,sx:1,sy:1,o:[['🕐','Clock Face'],['🍪','Cookie'],['🪙','Coin'],['🍕','Pizza']]},
+ oval:{n:'Oval',s:'1 curved',k:'0',d:'An oval is a squashed circle, like an egg. It has no corners.',e:0,sx:.75,sy:1.1,o:[['🥚','Egg'],['🏈','Rugby Ball'],['🥑','Avocado'],['🪞','Mirror']]},
+ square:{n:'Square',s:'4',k:'4',d:'A square has 4 equal straight sides and 4 square corners.',n_:4,off:P/4,sx:1,sy:1,o:[['🪟','Window'],['🧇','Waffle'],['♟️','Chess Board'],['🧀','Cheese Slice']]},
+ rectangle:{n:'Rectangle',s:'4',k:'4',d:'A rectangle has 4 sides. Opposite sides are equal. It has 4 square corners.',n_:4,off:P/4,sx:1.45,sy:.8,o:[['🚪','Door'],['📱','Phone'],['🍫','Chocolate Bar'],['📺','Television']]},
+ triangle:{n:'Triangle',s:'3',k:'3',d:'A triangle has 3 straight sides and 3 corners.',n_:3,off:-P/2,sx:1.1,sy:1.1,o:[['🚩','Flag'],['📐','Set Square'],['🍕','Pizza Slice'],['⚠️','Warning Sign']]},
+ diamond:{n:'Diamond',s:'4',k:'4',d:'A diamond shape has 4 equal sides. It looks like a square standing on its corner.',n_:4,off:0,sx:.75,sy:1.15,o:[['🪁','Kite'],['♦️','Playing Card Suit'],['💎','Jewel'],['🔶','Road Sign']]},
+ pentagon:{n:'Pentagon',s:'5',k:'5',d:'A pentagon has 5 straight sides and 5 corners.',n_:5,off:-P/2,sx:1.1,sy:1.1,o:[['🏛️','Pentagon Building'],['⚾','Baseball Home Plate'],['🌸','Flower Petals'],['🛡️','Badge']]},
+ hexagon:{n:'Hexagon',s:'6',k:'6',d:'A hexagon has 6 straight sides and 6 corners. Bees build hexagon homes!',n_:6,off:0,sx:1.1,sy:1.1,o:[['🍯','Honeycomb'],['🔩','Nut and Bolt'],['❄️','Snowflake'],['🐝','Bee Cells']]},
+ octagon:{n:'Octagon',s:'8',k:'8',d:'An octagon has 8 straight sides and 8 corners.',n_:8,off:P/8,sx:1.1,sy:1.1,o:[['🛑','Stop Sign'],['☂️','Umbrella (top view)'],['🕸️','Spider Web'],['🍘','Rice Cracker']]},
+ star:{n:'Star',s:'10',k:'10',d:'A star has 5 sharp points. It has 10 straight sides.',n_:5,star:1,off:-P/2,sx:1.2,sy:1.2,o:[['⭐','Star'],['🌟','Shining Star'],['🎇','Sparkler'],['🏅','Medal']]}
+};
+const cache={};const mesh=k=>cache[k]||(cache[k]=D3[k].g());
+const data=()=>mode==='3d'?D3[key]:D2[key];
+/* ---------- helpers ---------- */
+function hex(h){return[1,3,5].map(i=>parseInt(h.substr(i,2),16))}
+function shade(col,b){const[r,g,bl]=hex(col),m=Math.max(0,b-.82)*3;const f=x=>Math.min(255,Math.round(x*b+(255-x*b)*m));return`rgb(${f(r)},${f(g)},${f(bl)})`}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function resize(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0)}
+function pill(x,y,t,col){c.font='bold 16px Trebuchet MS,Verdana';const w=c.measureText(t).width+18;c.fillStyle=col;c.beginPath();c.roundRect(x-w/2,y-14,w,28,14);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y+1)}
+function callout(px,py,dx,dy,t,col){c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(px,py);c.lineTo(px+dx,py+dy);c.stroke();c.fillStyle=col;c.beginPath();c.arc(px,py,5,0,7);c.fill();pill(px+dx*1.0+(dx>0?50:-50)*0,py+dy-(dy<0?16:-16),t,col)}
+/* ---------- scene ---------- */
+function background(){
+ const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#bfe7ff');g.addColorStop(.62,'#f4fbff');g.addColorStop(.62,'#e0b987');g.addColorStop(1,'#b2824f');c.fillStyle=g;c.fillRect(0,0,W,H);
+ c.strokeStyle='rgba(90,55,20,.18)';c.lineWidth=2;for(let i=1;i<8;i++){const y=H*.62+i*i*H*.0065+4;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+ c.fillStyle='rgba(255,255,255,.7)';[[.12,.15],[.45,.1],[.8,.2]].forEach(([x,y])=>{c.beginPath();c.ellipse(W*x,H*y,70,22,0,0,7);c.ellipse(W*x+40,H*y+6,50,18,0,0,7);c.fill()})}
+function shadow(x,y,r){const g=c.createRadialGradient(x,y,2,x,y,r);g.addColorStop(0,'rgba(40,20,0,.45)');g.addColorStop(1,'rgba(40,20,0,0)');c.fillStyle=g;c.save();c.translate(x,y);c.scale(1,.22);c.translate(-x,-y);c.beginPath();c.arc(x,y,r,0,7);c.fill();c.restore()}
+function draw3(){
+ const m=mesh(key),sz=Math.min(W*.27,H*.23)*zoom,cx=W/2,cy=H*.4;
+ shadow(cx,H*.4+sz*1.12,sz*1.5);
+ const cy_=Math.cos(ry),sy_=Math.sin(ry),cx_=Math.cos(rx),sx_=Math.sin(rx);
+ const T=m.v.map(([x,y,z])=>{x*=sz;y*=sz;z*=sz;const a=x*cy_+z*sy_,z1=-x*sy_+z*cy_,b=y*cx_-z1*sx_,d=y*sx_+z1*cx_,k=700/(700+d);return{X:a,Y:b,Z:d,x:cx+a*k,y:cy+b*k}});
+ const L=[-.45,-.6,-.66],ll=Math.hypot(...L),fs=[];
+ m.f.forEach((f,i)=>{const q=f.p.map(j=>T[j]),n=q.length;let mx=0,my=0,mz=0;q.forEach(t=>{mx+=t.X;my+=t.Y;mz+=t.Z});mx/=n;my/=n;mz/=n;
+  let nv;if(m.sph)nv=[mx,my,mz];else{const a=q[0],b=q[1],d=q[2];const u=[b.X-a.X,b.Y-a.Y,b.Z-a.Z],w=[d.X-a.X,d.Y-a.Y,d.Z-a.Z];nv=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]]}
+  const len=Math.hypot(...nv);if(len<1e-6)return;nv=nv.map(v=>v/len);if(nv[0]*mx+nv[1]*my+nv[2]*mz<0)nv=nv.map(v=>-v);
+  fs.push({f,q,i,z:mz,nv,vis:nv[2]<0,cx:mx,cy:my})});
+ fs.sort((a,b)=>b.z-a.z);
+ let front=null;
+ fs.forEach(o=>{if(!wire&&!o.vis)return;const b=.38+.62*Math.max(0,-(o.nv[0]*L[0]+o.nv[1]*L[1]+o.nv[2]*L[2])/ll);
+  let fill=rainbow?`hsl(${o.i*47%360},80%,${28+38*b}%)`:shade(color,b);
+  c.beginPath();o.q.forEach((t,j)=>j?c.lineTo(t.x,t.y):c.moveTo(t.x,t.y));c.closePath();
+  if(wire){c.fillStyle=rainbow?fill:color+'33';c.globalAlpha=rainbow?.35:1;c.fill();c.globalAlpha=1;c.strokeStyle='#243';c.lineWidth=1.6;c.stroke()}
+  else{c.fillStyle=fill;c.fill();const sharp=!m.sm||o.f.cap;c.strokeStyle=edges&&sharp?'#fff':(sharp?'rgba(0,0,0,.28)':fill);c.lineWidth=edges&&sharp?3.5:(sharp?1.2:1);c.lineJoin='round';c.stroke()}
+  if(o.vis&&(!front||o.nv[2]<front.nv[2]))front=o});
+ if(corners)m.kv.forEach(i=>{const t=T[i];if(!wire&&t.Z>sz*.15)return;c.globalAlpha=t.Z>0?.4:1;c.fillStyle='#ffd43b';c.strokeStyle='#222';c.lineWidth=2;c.beginPath();c.arc(t.x,t.y,8,0,7);c.fill();c.stroke();c.globalAlpha=1});
+ if(labels&&front){const q=front.q;
+  if(m.sm){callout(front.cx*0+(q.reduce((s,t)=>s+t.x,0)/q.length),(q.reduce((s,t)=>s+t.y,0)/q.length),-sz*.9,-sz*.25,front.f.cap?'Flat Face':'Curved Surface','#e03131');
+   if(m.kv.length){const t=T[m.kv[0]];if(t.Z<sz*.3)callout(t.x,t.y,sz*.8,-sz*.1,'Vertex (Corner)','#2b8a3e')}}
+  else{callout(q.reduce((s,t)=>s+t.x,0)/q.length,q.reduce((s,t)=>s+t.y,0)/q.length,-sz*1.1,-sz*.2,'Face','#e03131');
+   callout((q[0].x+q[1].x)/2,(q[0].y+q[1].y)/2,sz*1.1,sz*.25,'Edge','#1971c2');
+   callout(q[2].x,q[2].y,sz*1.0,-sz*.35,'Vertex (Corner)','#2b8a3e')}}}
+function draw2(){
+ const d=D2[key],R=Math.min(W*.2,H*.19)*zoom,cx=W/2,cy=H*.4;
+ shadow(cx,H*.4+R*1.25,R*1.6);
+ const pts=[];
+ if(d.e===0){for(let i=0;i<72;i++){const a=i*P/36+ra;pts.push([Math.cos(a)*R*d.sx,Math.sin(a)*R*d.sy])}}
+ else if(d.star){for(let i=0;i<10;i++){const a=d.off+i*P/5,r=i%2?.45:1;pts.push([Math.cos(a)*R*r*d.sx,Math.sin(a)*R*r*d.sy])}}
+ else for(let i=0;i<d.n_;i++){const a=d.off+i*2*P/d.n_;pts.push([Math.cos(a)*R*d.sx,Math.sin(a)*R*d.sy])}
+ const rot=d.e===0?0:ra,cs=Math.cos(rot),sn=Math.sin(rot);
+ const Q=pts.map(([x,y])=>[cx+x*cs-y*sn,cy+x*sn+y*cs]);
+ const g=c.createLinearGradient(cx-R,cy-R,cx+R,cy+R);g.addColorStop(0,shade(color,1.15));g.addColorStop(1,shade(color,.62));
+ c.beginPath();Q.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();
+ c.fillStyle=rainbow?(()=>{const r=c.createLinearGradient(cx-R,cy,cx+R,cy);['#ff4d6d','#ff922b','#fcc419','#51cf66','#22b8cf','#4c6ef5','#be4bdb'].forEach((h,i)=>r.addColorStop(i/6,h));return r})():g;c.fill();
+ c.lineJoin='round';c.strokeStyle=edges||wire?'#fff':'rgba(0,0,0,.35)';c.lineWidth=edges?7:4;c.stroke();
+ if(wire){c.fillStyle='rgba(255,255,255,.75)';c.fill();c.strokeStyle=color;c.lineWidth=5;c.stroke()}
+ if(corners&&d.e!==0)Q.forEach((p,i)=>{if(d.star&&i%2)return;c.fillStyle='#ffd43b';c.strokeStyle='#222';c.lineWidth=2;c.beginPath();c.arc(p[0],p[1],9,0,7);c.fill();c.stroke()});
+ if(labels){if(d.e===0)callout(cx+R*d.sx*.7,cy-R*d.sy*.7,R*.9,-R*.4,'Curved Side','#1971c2');
+  else{const a=Q[0],b=Q[1];callout((a[0]+b[0])/2,(a[1]+b[1])/2,R*1.1,R*.4,'Side','#1971c2');callout(Q[2%Q.length][0],Q[2%Q.length][1],-R*1.1,-R*.5,'Corner','#2b8a3e')}}}
+function drawObj(){if(!objOn)return;const o=data().o[objI%4];c.fillStyle='rgba(255,255,255,.93)';c.beginPath();c.roundRect(18,H-150,150,136,18);c.fill();c.strokeStyle='#3d2c8d';c.lineWidth=3;c.stroke();
+ c.font='72px "Segoe UI Emoji","Apple Color Emoji",sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#000';c.fillText(o[0],93,H-95);
+ c.font='bold 15px Trebuchet MS,Verdana';c.fillStyle='#3d2c8d';c.fillText(o[1],93,H-34)}
+function frame(){if(spin){if(mode==='3d')ry+=.012;else ra+=.01}
+ c.clearRect(0,0,W,H);background();mode==='3d'?draw3():draw2();drawObj();requestAnimationFrame(frame)}
+/* ---------- UI building ---------- */
+function mk(parent,label,col,fn,cls){const b=document.createElement('button');b.className='b'+(cls?' '+cls:'');b.style.setProperty('--c',col);b.innerHTML=label;b.onclick=()=>fn(b);parent.appendChild(b);return b}
+function tog(label,col,get,set){const b=mk($('gAct'),label,col,b=>{set(!get());b.classList.toggle('on',get())});b.classList.toggle('on',get());return b}
+let modeBtns={};
+function buildShapes(){const box=$('shapes');box.innerHTML='';const src=mode==='3d'?D3:D2,cols=['#ff4d6d','#ff922b','#f59f00','#37b24d','#12b886','#1c7ed6','#7048e8','#d6336c','#e8590c','#0ca678'];
+ Object.keys(src).forEach((k,i)=>{const b=mk(box,src[k].o[0][0]+' '+src[k].n,cols[i%cols.length],()=>pick(k));b.dataset.k=k;if(k===key)b.classList.add('sel')})}
+function pick(k){key=k;objI=0;document.querySelectorAll('#shapes .b').forEach(b=>b.classList.toggle('sel',b.dataset.k===k));info();if(!quiz)say(data().n)}
+function info(){const d=data(),q=quiz;$('badge').textContent=q?'❓ What shape is this?':d.n;
+ const f=mode==='3d'?[['Faces',d.f,'#e03131'],['Edges',d.e,'#1971c2'],['Vertices',d.v,'#2b8a3e']]:[['Sides',d.s,'#1971c2'],['Corners',d.k,'#2b8a3e']];
+ $('facts').style.gridTemplateColumns=mode==='3d'?'1fr 1fr 1fr':'1fr 1fr';
+ $('facts').innerHTML=f.map(x=>`<div class="fact" style="background:${x[2]}"><b style="font-size:${String(x[1]).length>3?14:24}px">${q?'?':x[1]}</b><span>${x[0]}</span></div>`).join('');
+ $('desc').textContent=q?'Look at the shape carefully, then choose its name!':d.d;
+ $('mt').textContent=q?'Mystery shape':d.n;
+ $('objs').innerHTML=q?'':d.o.map((o,i)=>`<button class="obj" data-i="${i}"><i>${o[0]}</i>${o[1]}</button>`).join('');
+ document.querySelectorAll('.obj').forEach(b=>b.onclick=()=>{objI=+b.dataset.i;objOn=true;say(data().o[objI][1])})}
+function setMode(m){mode=m;key=Object.keys(m==='3d'?D3:D2)[0];quiz=false;$('quiz').style.display='none';$('score').style.display='none';
+ Object.entries(modeBtns).forEach(([k,b])=>b.classList.toggle('on',k===m));buildShapes();info();say(m==='3d'?'Three D shapes':'Two D shapes')}
+function nextQ(){const keys=Object.keys(mode==='3d'?D3:D2);answer=keys[Math.random()*keys.length|0];key=answer;
+ const opts=[answer];while(opts.length<4)opts.push(keys[Math.random()*keys.length|0]),opts.splice(0,opts.length,...new Set(opts));
+ opts.sort(()=>Math.random()-.5);const src=mode==='3d'?D3:D2;$('qopts').innerHTML='';
+ opts.forEach((k,i)=>mk($('qopts'),src[k].n,['#ff4d6d','#1c7ed6','#37b24d','#f59f00'][i],()=>{if(k===answer){score++;$('score').textContent='⭐ Score: '+score;$('qmsg').textContent='🎉 Great job! It is a '+src[k].n+'!';say('Great job! It is a '+src[k].n);setTimeout(()=>{$('qmsg').textContent='';nextQ();info()},1600)}else{$('qmsg').textContent='🤔 Not quite. Try again!';say('Try again')}}));
+ info()}
+function toggleQuiz(){quiz=!quiz;$('quiz').style.display=quiz?'block':'none';$('score').style.display=quiz?'block':'none';if(quiz){score=0;$('score').textContent='⭐ Score: 0';nextQ()}else info();return quiz}
+function turn(dx,dy){if(mode==='3d'){ry+=dx;rx=Math.max(-1.5,Math.min(1.5,rx+dy))}else ra+=dx||dy}
+function fs(){const a=$('app');document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}
+/* mode + colour buttons */
+modeBtns['3d']=mk($('gMode'),'🧊 3D Shapes','#7048e8',()=>setMode('3d'));
+modeBtns['2d']=mk($('gMode'),'🟦 2D Shapes','#1c7ed6',()=>setMode('2d'));
+const fsb=mk($('gMode'),'⛶ Full Screen','#e8590c',fs);
+document.addEventListener('fullscreenchange',()=>{fsb.innerHTML=document.fullscreenElement?'🗗 Exit Full Screen':'⛶ Full Screen';setTimeout(resize,100)});
+['#ff4d6d','#ff922b','#fcc419','#51cf66','#22b8cf','#4c6ef5','#be4bdb','#f06595','#868e96'].forEach(col=>mk($('gCol'),'',col,()=>{color=col;rainbow=false;rbBtn.classList.remove('on')},'sw'));
+/* action buttons */
+tog('🔄 Auto Spin','#f59f00',()=>spin,v=>spin=v);
+mk($('gAct'),'⬅ Left','#12b886',()=>turn(-.3,0));
+mk($('gAct'),'➡ Right','#12b886',()=>turn(.3,0));
+mk($('gAct'),'⬆ Up','#15aabf',()=>turn(0,-.3));
+mk($('gAct'),'⬇ Down','#15aabf',()=>turn(0,.3));
+mk($('gAct'),'➕ Zoom In','#37b24d',()=>zoom=Math.min(1.8,zoom+.12));
+mk($('gAct'),'➖ Zoom Out','#d6336c',()=>zoom=Math.max(.5,zoom-.12));
+tog('▦ Wireframe','#7048e8',()=>wire,v=>wire=v);
+tog('✏️ Show Edges','#1c7ed6',()=>edges,v=>edges=v);
+tog('● Show Corners','#e67700',()=>corners,v=>corners=v);
+const rbBtn=tog('🌈 Rainbow','#e03131',()=>rainbow,v=>rainbow=v);
+tog('🏷️ Labels','#0ca678',()=>labels,v=>labels=v);
+tog('🧸 Real Object','#f76707',()=>objOn,v=>{objOn=v;if(v)objI=(objI+1)%4});
+mk($('gAct'),'🔊 Say Name','#ae3ec9',()=>say(data().n+'. '+data().d));
+mk($('gAct'),'◀ Previous','#4263eb',()=>{const k=Object.keys(mode==='3d'?D3:D2),i=k.indexOf(key);pick(k[(i+k.length-1)%k.length])});
+mk($('gAct'),'Next ▶','#4263eb',()=>{const k=Object.keys(mode==='3d'?D3:D2),i=k.indexOf(key);pick(k[(i+1)%k.length])});
+const qb=mk($('gAct'),'❓ Quiz','#c2255c',b=>b.classList.toggle('on',toggleQuiz()));
+mk($('gAct'),'↺ Reset','#495057',()=>{rx=-.5;ry=.7;ra=0;zoom=1;wire=edges=corners=rainbow=objOn=false;spin=true;labels=true;document.querySelectorAll('#gAct .b.on').forEach(b=>b.classList.remove('on'));document.querySelectorAll('#gAct .b').forEach(b=>{if(/Spin|Labels/.test(b.textContent))b.classList.add('on')})});
+/* drag to rotate */
+let drag=null;
+cv.onpointerdown=e=>{drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'};
+cv.onpointermove=e=>{if(!drag)return;turn((e.clientX-drag[0])*.012,(e.clientY-drag[1])*.012);drag=[e.clientX,e.clientY]};
+cv.onpointerup=()=>{drag=null;cv.style.cursor='grab'};
+cv.onwheel=e=>{e.preventDefault();zoom=Math.max(.5,Math.min(1.8,zoom-e.deltaY*.001))};
+addEventListener('resize',resize);
+setMode('3d');setTimeout(()=>{document.querySelector('#gAct .b').classList.add('on');document.querySelectorAll('#gAct .b').forEach(b=>{if(/Labels/.test(b.textContent))b.classList.add('on')})},0);
+resize();frame();
+</script>
+</body></html>

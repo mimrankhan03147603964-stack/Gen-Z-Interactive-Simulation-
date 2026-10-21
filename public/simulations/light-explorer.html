@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Light Explorer: Reflection, Refraction & Lenses | Gen Z Edtech Interactive Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:#0b1030;color:#13204a;overflow:hidden}
+#app{height:100vh;min-height:640px;display:flex;flex-direction:column;background:linear-gradient(135deg,#0b1030,#1d2a7a 60%,#0b6b8f)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 22px;color:#fff}
+header h1{font-size:24px}header small{opacity:.85;font-size:13px}
+#tag{background:#ffd43b;color:#3b2f00;border-radius:20px;padding:6px 16px;font-weight:700}
+main{flex:1;display:flex;gap:14px;padding:0 18px;min-height:0}
+#stage{flex:1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);border:4px solid #fff}
+canvas{width:100%;height:100%;display:block}
+#badge{position:absolute;left:14px;top:12px;background:rgba(255,255,255,.93);border-radius:14px;padding:6px 16px;font-size:24px;font-weight:800;color:#1d2a7a}
+#legend{position:absolute;right:12px;top:12px;display:none;gap:8px}
+#legend span{border-radius:10px;padding:4px 10px;color:#111;font-weight:700;font-size:13px}
+#side{width:340px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.card{background:#fff;border-radius:18px;padding:13px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.card h2{font-size:18px;margin-bottom:6px;color:#1d2a7a}
+#law{background:linear-gradient(135deg,#7048e8,#1c7ed6);color:#fff;border-radius:12px;padding:8px 10px;font-weight:700;font-size:15px;margin-bottom:8px;text-align:center}
+#vals{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.val{border-radius:10px;padding:5px 8px;color:#fff;font-size:12px}.val b{display:block;font-size:16px}
+#desc{font-size:14px;line-height:1.4}
+#objs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.obj{border:0;border-radius:14px;background:linear-gradient(#eef2ff,#d9e0ff);padding:6px 4px;cursor:pointer;font-family:inherit;color:#13204a;font-size:13px;font-weight:700;transition:transform .15s}
+.obj:hover{transform:scale(1.07) rotate(-2deg)}.obj i{display:block;font-style:normal;font-size:40px;line-height:1.1}
+#bar{margin:10px 18px 14px;background:rgba(255,255,255,.13);border-radius:18px;padding:9px 12px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;max-height:34vh;overflow:auto}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl{color:#fff;font-weight:700;font-size:13px}
+.b{--c:#4c6ef5;border:0;border-radius:12px;padding:7px 11px;font:700 13px "Trebuchet MS",Verdana,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(var(--c),color-mix(in srgb,var(--c),#000 25%));box-shadow:0 4px 0 color-mix(in srgb,var(--c),#000 50%),0 6px 10px rgba(0,0,0,.3);text-shadow:0 1px 2px rgba(0,0,0,.35);transition:transform .08s,filter .15s}
+.b:hover{filter:brightness(1.15)}.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c),#000 50%)}
+.b.on{outline:3px solid #fff;outline-offset:1px}.b.sel{outline:3px solid #ffd43b;outline-offset:1px;transform:translateY(-2px)}
+.sw{width:28px;height:28px;padding:0;border-radius:50%}
+.b:focus-visible{outline:3px solid #fff}
+@media (max-width:1000px){#side{width:260px}}
+</style></head>
+<body>
+<div id="app">
+<header><div><h1>🔦 Light Explorer: Reflection, Refraction & Lenses</h1><small>Gen Z Edtech Interactive Simulations · Physics</small></div><div id="tag">Experiment lab</div></header>
+<main>
+<div id="stage"><canvas id="cv"></canvas><div id="badge">Plane Mirror</div>
+<div id="legend"><span style="background:#ff6b6b">Ray 1: parallel</span><span style="background:#51e08a">Ray 2: centre</span><span style="background:#ffd43b">Ray 3: focus</span></div></div>
+<div id="side">
+<div class="card"><h2 id="mt"></h2><div id="law"></div><div id="vals"></div><p id="desc"></p></div>
+<div class="card"><h2>Where do we use it?</h2><div id="objs"></div></div>
+</div></main>
+<div id="bar">
+<div class="grp"><span class="gl">Experiment:</span><span class="grp" id="gExp"></span></div>
+<div class="grp" data-m="ang"><span class="gl">Angle:</span><span class="grp" id="gAng"></span></div>
+<div class="grp" data-m="ang"><span class="gl">Laser colour:</span><span class="grp" id="gCol"></span></div>
+<div class="grp" data-m="refr"><span class="gl">Material:</span><span class="grp" id="gMed"></span></div>
+<div class="grp" data-m="opt"><span class="gl">Object:</span><span class="grp" id="gObj"></span></div>
+<div class="grp" data-m="opt"><span class="gl">Rays:</span><span class="grp" id="gRay"></span></div>
+<div class="grp"><span class="gl">Tools:</span><span class="grp" id="gTool"></span></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),c=cv.getContext('2d'),PI=Math.PI,rad=d=>d*PI/180,deg=r=>r*180/PI;
+let W=0,H=0,mode='plane',ang=40,nm=1.5,medName='Glass',dirOut=false,col='#ff3b3b',u=30,fm=15,fl=15,
+ r1=true,r2=true,r3=true,labels=true,normal=true,virt=true,partial=true,anim=false,dark=true,sweep=1,t=0,last=0,msg='',msgT=0;
+const TY={concave:{k:'mirror',s:1},convex:{k:'mirror',s:-1},convexL:{k:'lens',s:1},concaveL:{k:'lens',s:-1}};
+const M={
+ plane:{n:'Plane Mirror',law:'Angle of incidence (i) = Angle of reflection (r)',d:'A smooth mirror bounces light back. The dotted line at 90° to the mirror is called the normal. Both angles are measured from the normal. The image you see looks as far behind the mirror as the object is in front.',o:[['🪞','Wall Mirror'],['🔭','Periscope'],['🪩','Disco Ball'],['🚗','Rear-View Mirror']]},
+ concave:{n:'Concave Mirror',law:'1/f = 1/v + 1/u',d:'A concave mirror curves inwards like the inside of a spoon. It can make a real image (can be caught on a screen) or a virtual image (only seen inside the mirror). Move the candle to see how the image changes.',o:[['🔦','Torch Reflector'],['🦷','Dentist Mirror'],['🛰️','Dish Antenna'],['💄','Shaving Mirror']]},
+ convex:{n:'Convex Mirror',law:'1/f = 1/v + 1/u',d:'A convex mirror curves outwards. It always makes a small, upright, virtual image and shows a very wide view. That is why it is used for safety.',o:[['🚗','Car Side Mirror'],['🏬','Shop Security Mirror'],['🛣️','Road Corner Mirror'],['🅿️','Parking Mirror']]},
+ convexL:{n:'Convex Lens',law:'1/f = 1/v − 1/u',d:'A convex lens is thicker in the middle. It brings parallel rays together at the focus F. Put the candle inside F and it works like a magnifying glass.',o:[['🔍','Magnifying Glass'],['👓','Reading Glasses'],['📷','Camera'],['🔬','Microscope']]},
+ concaveL:{n:'Concave Lens',law:'1/f = 1/v − 1/u',d:'A concave lens is thinner in the middle. It spreads light rays apart. It always makes a small, upright, virtual image.',o:[['👓','Glasses for Short Sight'],['🚪','Door Peephole'],['🔦','LED Torch Lens'],['📸','Camera Lens Set']]},
+ refr:{n:'Refraction',law:'n₁ sin θ₁ = n₂ sin θ₂',d:'Light changes speed when it moves from one material to another, so it bends. It bends towards the normal in a denser material and away from the normal in a lighter material. At a big angle, light can bounce back completely. This is Total Internal Reflection.',o:[['🥤','Straw Looks Bent'],['🐟','Fish in Water'],['💎','Sparkling Diamond'],['🌈','Rainbow']]}
+};
+const MEDS={Water:[1.33,'#2f9be8'],Glass:[1.5,'#6fe0c8'],Diamond:[2.42,'#b8c7ff'],Oil:[1.47,'#e8b82a']};
+function resize(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0)}
+const tx=()=>dark?'#fff':'#13204a';
+function pill(x,y,s,bg){c.font='bold 15px Trebuchet MS,Verdana';const w=c.measureText(s).width+16;c.fillStyle=bg;c.beginPath();c.roundRect(x-w/2,y-13,w,26,13);c.fill();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(s,x,y+1)}
+function txt(s,x,y,col,size=14,al='center'){c.font=`bold ${size}px Trebuchet MS,Verdana`;c.fillStyle=col||tx();c.textAlign=al;c.textBaseline='middle';c.fillText(s,x,y)}
+function bg(){const g=c.createLinearGradient(0,0,0,H);if(dark){g.addColorStop(0,'#070b24');g.addColorStop(1,'#14265a')}else{g.addColorStop(0,'#f2f8ff');g.addColorStop(1,'#cfe3ff')}c.fillStyle=g;c.fillRect(0,0,W,H);
+ c.fillStyle=dark?'rgba(255,255,255,.06)':'rgba(0,40,120,.07)';for(let x=20;x<W;x+=40)for(let y=20;y<H;y+=40)c.fillRect(x,y,2,2)}
+function ray(pts,color,o={}){c.save();c.strokeStyle=color;c.globalAlpha=o.a||1;c.lineWidth=o.w||3;if(o.dash)c.setLineDash([9,8]);c.shadowColor=color;c.shadowBlur=o.dash?0:(dark?14:4);c.lineCap='round';c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.stroke();c.setLineDash([]);c.shadowBlur=0;
+ if(!o.dash){for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<70||L>2500&&0)continue;const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,an=Math.atan2(b[1]-a[1],b[0]-a[0]);if(Math.abs(mx)>W*2)continue;c.save();c.translate(Math.min(Math.max(mx,40),W-40),Math.min(Math.max(my,40),H-40));c.rotate(an);c.fillStyle=color;c.beginPath();c.moveTo(8,0);c.lineTo(-6,-6);c.lineTo(-6,6);c.fill();c.restore()}
+  if(o.pulse){let off=(t*130)%90;for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],L=Math.min(Math.hypot(b[0]-a[0],b[1]-a[1]),1500);for(let d=off;d<L;d+=90){const k=d/L*Math.min(1,1500/Math.hypot(b[0]-a[0],b[1]-a[1]));c.fillStyle='#fff';c.shadowColor=color;c.shadowBlur=12;c.beginPath();c.arc(a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k,3.5,0,7);c.fill()}off=(off+L)%90}}}
+ c.restore()}
+function laser(x,y,dx,dy){const a=Math.atan2(dy,dx);c.save();c.translate(x,y);c.rotate(a);const g=c.createLinearGradient(0,-9,0,9);g.addColorStop(0,'#7b8aa0');g.addColorStop(.5,'#e3e9f2');g.addColorStop(1,'#4a5568');c.fillStyle=g;c.beginPath();c.roundRect(-115,-9,105,18,7);c.fill();c.fillStyle='#e03131';c.beginPath();c.roundRect(-85,-12,22,24,4);c.fill();c.fillStyle='#222';c.fillRect(-10,-6,10,12);c.fillStyle=col;c.shadowColor=col;c.shadowBlur=20;c.beginPath();c.arc(0,0,6,0,7);c.fill();c.restore()}
+function arcL(x,y,a0,a1,r,s,color){c.strokeStyle=color;c.lineWidth=3;c.beginPath();c.arc(x,y,r,Math.min(a0,a1),Math.max(a0,a1));c.stroke();const m=(a0+a1)/2;pill(x+Math.cos(m)*(r+38),y+Math.sin(m)*(r+38),s,color)}
+/* ---------- plane mirror ---------- */
+function drawPlane(){const O=[W/2,H*.66],D=Math.min(H*.5,W*.34),s=Math.sin(rad(ang)),k=Math.cos(rad(ang));
+ const tb=c.createLinearGradient(0,O[1]+18,0,H);tb.addColorStop(0,'#8a5a2b');tb.addColorStop(1,'#5b3a1a');c.fillStyle=tb;c.fillRect(0,O[1]+18,W,H);
+ const mg=c.createLinearGradient(0,O[1],0,O[1]+18);mg.addColorStop(0,'#fafcff');mg.addColorStop(.5,'#aab8c8');mg.addColorStop(1,'#667');c.fillStyle=mg;c.beginPath();c.roundRect(W*.14,O[1],W*.72,18,6);c.fill();
+ c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=3;c.beginPath();c.moveTo(W*.16,O[1]+2);c.lineTo(W*.84,O[1]+2);c.stroke();
+ txt('Plane mirror',W*.84,O[1]+42,'#f7e6c8',14,'right');
+ const P=[O[0]-D*s,O[1]-D*k],R=[O[0]+D*s,O[1]-D*k];
+ if(normal){c.strokeStyle=dark?'#cfd8ff':'#334';c.lineWidth=1.8;c.setLineDash([7,6]);c.beginPath();c.moveTo(O[0],O[1]+D*.45);c.lineTo(O[0],O[1]-D*1.05);c.stroke();c.setLineDash([]);txt('Normal',O[0]+6,O[1]-D*1.07,tx(),13,'left')}
+ if(virt){const Pv=[P[0],2*O[1]-P[1]];c.save();c.globalAlpha=.35;laser(Pv[0],Pv[1],O[0]-Pv[0],O[1]-Pv[1]);c.restore();ray([O,Pv],col,{dash:1,a:.7,w:2});txt('Virtual image',Pv[0]-20,Pv[1]+34,tx(),13)}
+ ray([P,O],col,{pulse:1});ray([O,R],col,{pulse:1});laser(P[0],P[1],O[0]-P[0],O[1]-P[1]);
+ if(labels&&ang>2){arcL(O[0],O[1],-PI/2-rad(ang),-PI/2,62,'i = '+Math.round(ang)+'°','#e8590c');arcL(O[0],O[1],-PI/2,-PI/2+rad(ang),62,'r = '+Math.round(ang)+'°','#2b8a3e')}
+ txt('Incident ray',P[0]+10,P[1]-30,tx(),13);txt('Reflected ray',R[0]-10,R[1]-30,tx(),13)}
+/* ---------- refraction ---------- */
+function drawRefr(){const O=[W/2,H*.5],D=Math.min(H*.42,W*.3),n1=dirOut?nm:1,n2=dirOut?1:nm,a1=rad(ang),s2=n1*Math.sin(a1)/n2,tir=s2>1,a2=tir?0:Math.asin(s2),sg=dirOut?1:-1;
+ const mc=MEDS[medName][1],g=c.createLinearGradient(0,O[1],0,H);g.addColorStop(0,mc+'cc');g.addColorStop(1,mc+'55');c.fillStyle=g;c.fillRect(0,O[1],W,H);
+ if(medName==='Water'){c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=3;c.beginPath();for(let x=0;x<=W;x+=8)c.lineTo(x,O[1]+Math.sin(x/28+t*2)*2.5);c.stroke()}
+ else{c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=3;c.beginPath();c.moveTo(0,O[1]);c.lineTo(W,O[1]);c.stroke()}
+ if(medName==='Diamond'){c.fillStyle='rgba(255,255,255,.35)';for(let i=0;i<14;i++){const x=(i*173)%W,y=O[1]+30+(i*97)%(H*.4),r=3+Math.abs(Math.sin(t*3+i))*5;c.fillRect(x-r,y-1,2*r,2);c.fillRect(x-1,y-r,2,2*r)}}
+ c.font='60px "Segoe UI Emoji","Apple Color Emoji",sans-serif';c.textAlign='center';c.fillStyle='#000';c.fillText({Water:'🐟',Glass:'🥛',Diamond:'💎',Oil:'🫒'}[medName],W*.1,H*.85);
+ txt('Air  (n = 1.00)',14,O[1]-16,tx(),15,'left');txt(medName+'  (n = '+nm.toFixed(2)+')',14,O[1]+22,'#fff',15,'left');
+ if(normal){c.strokeStyle=dark?'#e3e8ff':'#334';c.lineWidth=1.8;c.setLineDash([7,6]);c.beginPath();c.moveTo(O[0],O[1]-D*1.05);c.lineTo(O[0],O[1]+D*1.05);c.stroke();c.setLineDash([]);txt('Normal',O[0]+8,O[1]-D*1.07,tx(),13,'left')}
+ const P=[O[0]-D*Math.sin(a1),O[1]+sg*D*Math.cos(a1)],R=[O[0]+D*Math.sin(a1),O[1]+sg*D*Math.cos(a1)];
+ if(tir)ray([O,R],col,{pulse:1});else{if(partial)ray([O,R],col,{a:.4,w:2});ray([O,[O[0]+D*Math.sin(a2),O[1]-sg*D*Math.cos(a2)]],col,{pulse:1})}
+ ray([P,O],col,{pulse:1});laser(P[0],P[1],O[0]-P[0],O[1]-P[1]);
+ if(labels){const nA=sg>0?PI/2:-PI/2;arcL(O[0],O[1],nA,nA+sg*a1,56,'θ₁ = '+Math.round(ang)+'°','#e8590c');
+  if(!tir)arcL(O[0],O[1],-nA,-nA+sg*a2,56,'θ₂ = '+Math.round(deg(a2))+'°','#2b8a3e')}
+ if(tir)pill(W/2,H*.12,'Total Internal Reflection!','#e03131');
+ return{n1,n2,a2,tir}}
+function critical(){const n1=dirOut?nm:1,n2=dirOut?1:nm;return n1>n2?deg(Math.asin(n2/n1)):null}
+/* ---------- mirrors & lenses ---------- */
+function candle(x,AY,SC,k,a){k=Math.max(-6,Math.min(6,k));const hp=7*SC,bw=hp*.28,bh=hp*.76;c.save();c.translate(x,AY);c.scale(Math.abs(k),k);c.globalAlpha=a;
+ c.fillStyle='#9aa4b5';c.beginPath();c.ellipse(0,0,bw*.95,bw*.28,0,0,7);c.fill();
+ const g=c.createLinearGradient(-bw/2,0,bw/2,0);g.addColorStop(0,'#e8cc96');g.addColorStop(.5,'#fff7e0');g.addColorStop(1,'#d3ae70');c.fillStyle=g;c.fillRect(-bw/2,-bh,bw,bh);
+ c.strokeStyle='#222';c.lineWidth=2/Math.max(.3,Math.abs(k));c.beginPath();c.moveTo(0,-bh);c.lineTo(0,-bh-hp*.05);c.stroke();
+ const fg=c.createRadialGradient(0,-bh-hp*.12,1,0,-bh-hp*.12,hp*.22);fg.addColorStop(0,'#fffbd0');fg.addColorStop(.35,'#ffc21a');fg.addColorStop(1,'rgba(255,90,0,0)');c.fillStyle=fg;c.beginPath();c.ellipse(0,-bh-hp*.12,hp*.1,hp*.12,0,0,7);c.fill();c.restore()}
+function drawOptics(){const T=TY[mode],isM=T.k==='mirror',x0=isM?W*.8:W*.5,half=Math.min(H*.3,150),AY=H*.46,s=isM?(x0-W*.07)/52:(W*.46)/47,h=7;
+ fl=T.s*fm;if(fl>0&&Math.abs(u-fl)<.3)u=fl+.3;const v=u*fl/(u-fl),m=-v/u,X=x=>x0+x*s,Y=y=>AY-y*s;
+ /* bench */
+ const bg2=c.createLinearGradient(0,H-70,0,H-24);bg2.addColorStop(0,'#c99a5b');bg2.addColorStop(1,'#7c5427');c.fillStyle=bg2;c.fillRect(0,H-70,W,46);
+ c.fillStyle='#2b1a08';c.font='bold 11px Trebuchet MS';c.textAlign='center';for(let cm=-65;cm<=65;cm+=5){const x=X(cm);if(x<4||x>W-4)continue;c.fillRect(x-.5,H-70,1.2,cm%10?8:14);if(cm%10==0&&cm!==0)c.fillText(Math.abs(cm),x,H-45)}
+ txt('Distance from the '+(isM?'mirror':'lens')+' (cm)',W/2,H-31,'#fbeacc',12);
+ c.strokeStyle=dark?'rgba(255,255,255,.5)':'rgba(0,0,40,.5)';c.lineWidth=1.5;c.beginPath();c.moveTo(0,AY);c.lineTo(W,AY);c.stroke();
+ /* marks */
+ const mk=(x,s2)=>{if(!labels)return;c.fillStyle='#ffd43b';c.beginPath();c.arc(X(x),AY,5,0,7);c.fill();txt(s2,X(x),AY+(isM?-18:20),'#ffd43b',14)};
+ if(isM){mk(-fl,'F');mk(-2*fl,'C')}else{mk(fl,'F');mk(-fl,'F');mk(2*fl,'2F');mk(-2*fl,'2F')}
+ /* element */
+ if(isM){const Rv=Math.max(Math.abs(2*fl)*s,half*1.15),a=Math.asin(half/Rv),cc=fl>0?x0-Rv:x0+Rv;
+  c.lineCap='round';c.strokeStyle='#dfe7f1';c.lineWidth=9;c.shadowColor='#9cf';c.shadowBlur=10;c.beginPath();if(fl>0)c.arc(cc,AY,Rv,-a,a);else c.arc(cc,AY,Rv,PI-a,PI+a);c.stroke();c.shadowBlur=0;
+  c.strokeStyle='#6b7480';c.lineWidth=2;for(let i=-9;i<=9;i++){const q=i/9*a,ph=fl>0?q:PI+q,px=cc+Rv*Math.cos(ph),py=AY+Rv*Math.sin(ph),sg=fl>0?1:-1;c.beginPath();c.moveTo(px+sg*5*Math.cos(ph),py+sg*5*Math.sin(ph));c.lineTo(px+sg*16*Math.cos(ph)+8,py+sg*16*Math.sin(ph)+8);c.stroke()}}
+ else{const gl=c.createLinearGradient(x0-30,0,x0+30,0);gl.addColorStop(0,'rgba(170,230,255,.55)');gl.addColorStop(.5,'rgba(235,250,255,.8)');gl.addColorStop(1,'rgba(130,200,255,.5)');c.fillStyle=gl;c.strokeStyle='#bfefff';c.lineWidth=3;c.shadowColor='#7df';c.shadowBlur=12;c.beginPath();
+  if(fl>0){c.moveTo(x0,AY-half);c.quadraticCurveTo(x0+34,AY,x0,AY+half);c.quadraticCurveTo(x0-34,AY,x0,AY-half)}else{c.moveTo(x0-18,AY-half);c.lineTo(x0+18,AY-half);c.quadraticCurveTo(x0,AY,x0+18,AY+half);c.lineTo(x0-18,AY+half);c.quadraticCurveTo(x0,AY,x0-18,AY-half)}c.fill();c.stroke();c.shadowBlur=0}
+ /* object + rays */
+ const tip=[X(-u),Y(h)],far=(p,d)=>{const L=Math.hypot(d[0],d[1]);return[p[0]+d[0]/L*3500,p[1]-d[1]/L*3500]},sgn=Math.sign(fl);
+ const hits=[],cols=['#ff6b6b','#51e08a','#ffd43b'],on=[r1,r2,r3];
+ const y3=-h*fl/(u-fl);
+ const list=[];
+ list.push({hit:[0,h],after:isM?[-fl*sgn,-h*sgn]:[fl*sgn,-h*sgn]});
+ list.push({hit:[0,0],after:isM?[-u,-h]:[u,-h]});
+ if(Math.abs(y3*s)<half*1.5)list.push({hit:[0,y3],after:isM?[-1,0]:[1,0]});else list.push(null);
+ const imgx=isM?-v:v,imgTip=[X(imgx),Y(m*h)],far_=Math.abs(v*s)>4000;
+ list.forEach((r,i)=>{if(!r||!on[i])return;const H_=[X(r.hit[0]),Y(r.hit[1])];ray([tip,H_],cols[i],{pulse:1});ray([H_,far(H_,r.after)],cols[i],{pulse:1});if(v<0&&!far_)ray([H_,imgTip],cols[i],{dash:1,a:.8,w:2})});
+ candle(X(-u),AY,s,1,1);
+ if(!far_){candle(X(imgx),AY,s,m,v>0?.9:.5);if(labels){const hh=Math.min(Math.abs(m),6)*h*s;txt('Image ('+(v>0?'real':'virtual')+')',X(imgx),AY+(m<0?hh+20:20),'#7ee0ff',14)}}
+ if(labels)txt('Object',X(-u),AY+22,'#ffe08a',14);
+ return{u,v,m,fl,far_}}
+/* ---------- info ---------- */
+let lastInfo='';
+function info(r){const d=M[mode],V=[];
+ const add=(a,b,cc)=>V.push(`<div class="val" style="background:${cc}">${a}<b>${b}</b></div>`);
+ if(mode==='plane'){add('Angle of incidence (i)',Math.round(ang)+'°','#e8590c');add('Angle of reflection (r)',Math.round(ang)+'°','#2b8a3e');add('Angle between the rays',Math.round(2*ang)+'°','#1c7ed6');add('Image','Virtual, same size','#7048e8')}
+ else if(mode==='refr'){const cr=critical();add('Angle θ₁',Math.round(ang)+'°','#e8590c');add('Angle θ₂',r.tir?'No refraction':Math.round(deg(r.a2))+'°','#2b8a3e');add('n₁ → n₂',r.n1.toFixed(2)+' → '+r.n2.toFixed(2),'#1c7ed6');add('Critical angle',cr?cr.toFixed(1)+'°':'None','#7048e8');
+  add('What happens',r.tir?'Total Internal Reflection':(r.n2>r.n1?'Bends towards normal':'Bends away from normal'),'#c2255c')}
+ else{const real=r.v>0,fmt=x=>Math.abs(x)>200?'very far':x.toFixed(1)+' cm';add('Object distance u',r.u.toFixed(1)+' cm','#e8590c');add('Image distance v',r.far_?'very far':Math.abs(r.v).toFixed(1)+' cm','#2b8a3e');add('Focal length f',Math.abs(r.fl)+' cm'+(r.fl<0?' (−)':''),'#1c7ed6');add('Magnification m',r.far_?'very large':r.m.toFixed(2)+'×','#7048e8');
+  add('Image type',r.far_?'At infinity':(real?'Real':'Virtual')+', '+(r.m<0?'inverted':'upright')+', '+(Math.abs(r.m)>1.02?'bigger':Math.abs(r.m)<.98?'smaller':'same size'),'#c2255c')}
+ const html=V.join('');if(html!==lastInfo){$('vals').innerHTML=html;lastInfo=html}}
+function setInfo(){const d=M[mode];$('mt').textContent=d.n;$('badge').textContent=d.n;$('law').textContent=d.law;$('desc').textContent=d.d;lastInfo='';
+ $('objs').innerHTML=d.o.map(o=>`<button class="obj" data-t="${o[1]}"><i>${o[0]}</i>${o[1]}</button>`).join('');
+ document.querySelectorAll('.obj').forEach(b=>b.onclick=()=>say(b.dataset.t));$('legend').style.display=TY[mode]?'flex':'none'}
+function say(s){try{speechSynthesis.cancel();const q=new SpeechSynthesisUtterance(s);q.lang='en-US';q.rate=.9;speechSynthesis.speak(q)}catch(e){}}
+/* ---------- loop ---------- */
+function frame(now){t=now/1000;const dt=Math.min(.05,t-last);last=t;
+ if(anim){if(TY[mode]){u+=sweep*9*dt;const hi=TY[mode].k==='mirror'?50:46;if(u>hi){u=hi;sweep=-1}if(u<6){u=6;sweep=1}}else{ang+=sweep*18*dt;if(ang>80){ang=80;sweep=-1}if(ang<2){ang=2;sweep=1}}}
+ c.clearRect(0,0,W,H);bg();let r;if(mode==='plane')drawPlane();else if(mode==='refr')r=drawRefr();else r=drawOptics();
+ if(msgT>t){pill(W/2,H*.9-60,msg,'#e03131')}
+ info(r);requestAnimationFrame(frame)}
+/* ---------- UI ---------- */
+function mk(parent,label,color,fn,cls){const b=document.createElement('button');b.className='b'+(cls?' '+cls:'');b.style.setProperty('--c',color);b.innerHTML=label;b.onclick=()=>fn(b);$(parent).appendChild(b);return b}
+function tog(parent,label,color,get,set,on){const b=mk(parent,label,color,b=>{set(!get());b.classList.toggle('on',get())});b.classList.toggle('on',get());return b}
+const expB={};
+function setMode(m){mode=m;anim=false;sweep=1;document.querySelectorAll('.anim').forEach(b=>b.classList.remove('on'));
+ if(TY[m]){fm=15;u=30}else if(m==='plane')ang=40;else{ang=45;dirOut=false}
+ Object.entries(expB).forEach(([k,b])=>b.classList.toggle('sel',k===m));
+ const tk=['all',m];if(TY[m])tk.push('opt');if(m==='plane'||m==='refr')tk.push('ang');
+ document.querySelectorAll('[data-m]').forEach(e=>{e.style.display=e.dataset.m.split(',').some(x=>tk.includes(x))?'flex':'none'});
+ document.querySelectorAll('.only').forEach(b=>{b.style.display=b.dataset.o.split(',').includes(m)?'':'none'});setInfo()}
+[['plane','🪞 Plane Mirror','#e8590c'],['concave','🥄 Concave Mirror','#d6336c'],['convex','🚗 Convex Mirror','#7048e8'],['convexL','🔍 Convex Lens','#1c7ed6'],['concaveL','👓 Concave Lens','#0ca678'],['refr','🥤 Refraction','#f59f00']].forEach(([k,l,cl])=>expB[k]=mk('gExp',l,cl,()=>setMode(k)));
+const fsb=mk('gExp','⛶ Full Screen','#c2255c',()=>{const a=$('app');document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)});
+document.addEventListener('fullscreenchange',()=>{fsb.innerHTML=document.fullscreenElement?'🗗 Exit Full Screen':'⛶ Full Screen';setTimeout(resize,120)});
+/* angle buttons */
+const setA=v=>ang=Math.max(0,Math.min(85,v));
+[['−10°',-10,'#e03131'],['−5°',-5,'#f76707'],['−1°',-1,'#f59f00'],['+1°',1,'#37b24d'],['+5°',5,'#1c7ed6'],['+10°',10,'#7048e8']].forEach(([l,d,cl])=>mk('gAng',l,cl,()=>setA(ang+d)));
+mk('gAng','0° Straight','#495057',()=>ang=0);mk('gAng','45°','#0ca678',()=>ang=45);
+['#ff3b3b','#ff922b','#51cf66','#339af0','#be4bdb','#f8f9fa'].forEach(cl=>mk('gCol','',cl,()=>col=cl,'sw'));
+/* materials */
+Object.entries(MEDS).forEach(([k,[n,cl]])=>mk('gMed',k+' ('+n+')',{Water:'#1c7ed6',Glass:'#0ca678',Diamond:'#7048e8',Oil:'#e67700'}[k],()=>{medName=k;nm=n}));
+mk('gMed','⬇ Air → Material','#37b24d',()=>dirOut=false);mk('gMed','⬆ Material → Air','#d6336c',()=>dirOut=true);
+mk('gMed','🎯 Critical Angle','#e8590c',()=>{const cr=critical();if(cr)ang=cr;else{msg='No critical angle: light must start in the denser material.';msgT=t+2.6}});
+mk('gMed','🔁 Total Reflection','#c2255c',()=>{dirOut=true;const cr=critical();ang=Math.min(80,cr+8)});
+/* optics */
+const hi=()=>TY[mode].k==='mirror'?50:46,setU=v=>u=Math.max(5,Math.min(hi(),v));
+mk('gObj','◀ Closer','#e8590c',()=>setU(u-2));mk('gObj','Farther ▶','#1c7ed6',()=>setU(u+2));
+mk('gObj','At F','#d6336c',()=>setU(fm));mk('gObj','At 2F','#7048e8',()=>setU(2*fm));
+mk('gObj','Inside F','#f59f00',()=>setU(fm*.55));mk('gObj','Beyond 2F','#0ca678',()=>setU(Math.min(hi(),2.6*fm)));
+mk('gObj','Focal Length +','#37b24d',()=>fm=Math.min(28,fm+2));mk('gObj','Focal Length −','#e03131',()=>fm=Math.max(6,fm-2));
+tog('gRay','Ray 1 Parallel','#e03131',()=>r1,v=>r1=v);tog('gRay','Ray 2 Centre','#2f9e44',()=>r2,v=>r2=v);tog('gRay','Ray 3 Focus','#e67700',()=>r3,v=>r3=v);
+/* tools */
+const an=tog('gTool','▶ Animate','#f59f00',()=>anim,v=>anim=v);an.classList.add('anim');
+tog('gTool','🏷️ Labels','#0ca678',()=>labels,v=>labels=v);
+{const b=tog('gTool','📏 Normal Line','#4263eb',()=>normal,v=>normal=v);b.dataset.m='ang'}
+{const b=tog('gTool','👻 Virtual Image','#ae3ec9',()=>virt,v=>virt=v);b.dataset.m='plane'}
+{const b=tog('gTool','◑ Partial Reflection','#12b886',()=>partial,v=>partial=v);b.dataset.m='refr'}
+tog('gTool','🌙 Dark Room','#343a40',()=>dark,v=>dark=v);
+mk('gTool','🔊 Explain','#d6336c',()=>say(M[mode].n+'. '+M[mode].law.replace(/[₁₂θ]/g,' ')+'. '+M[mode].d));
+mk('gTool','↺ Reset','#495057',()=>{setMode(mode);r1=r2=r3=labels=normal=virt=partial=true;document.querySelectorAll('#gRay .b,#gTool .b').forEach(b=>{if(/Labels|Normal|Virtual|Partial|Ray|Dark/.test(b.textContent))b.classList.add('on')});dark=true;col='#ff3b3b'});
+document.querySelectorAll('#gTool .b,#gRay .b').forEach(b=>{if(/Dark|Ray|Labels|Normal|Virtual|Partial/.test(b.textContent))b.classList.add('on')});
+/* per-button visibility inside shared groups */
+document.querySelectorAll('#gTool .b').forEach(b=>{if(b.dataset.m){b.classList.add('only');b.dataset.o=b.dataset.m==='ang'?'plane,refr':b.dataset.m;b.removeAttribute('data-m')}});
+addEventListener('resize',resize);
+setMode('plane');resize();requestAnimationFrame(frame);
+</script>
+</body></html>

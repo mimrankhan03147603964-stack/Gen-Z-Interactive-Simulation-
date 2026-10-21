@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alphabet and Phonics Soundboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Tahoma,sans-serif;background:#0b1a33;color:#fff}
+#app{height:100vh;min-height:620px;display:flex;flex-direction:column;overflow:auto;background:radial-gradient(1100px 600px at 15% -10%,#2a5bd7,#0b1a33 62%)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:10px 24px 2px;gap:10px}
+.brand{font-size:12px;letter-spacing:.1em;color:#8fd3ff;font-weight:700}
+h1{margin:0;font-size:30px;font-weight:900;text-shadow:0 1px 0 #e8590c,0 2px 0 #e8590c,0 3px 0 #b8430a,0 7px 10px rgba(0,0,0,.5)}
+#stat{display:flex;gap:10px;font-weight:700}
+#stat span{background:#12305f;border:2px solid #3b6bc4;border-radius:12px;padding:6px 14px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(300px,36%) 1fr;gap:18px;padding:8px 24px}
+#card{border-radius:26px;background:linear-gradient(160deg,#fff,#dbe8ff);color:#16254a;text-align:center;padding:12px 14px;box-shadow:0 14px 0 #2149a3,0 26px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:center;gap:2px}
+#big{font-size:clamp(70px,13vh,130px);font-weight:900;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.18),0 8px 0 rgba(0,0,0,.08)}
+#obj{font-size:clamp(80px,17vh,160px);line-height:1.1;filter:drop-shadow(0 12px 10px rgba(0,0,0,.35));cursor:pointer;min-height:1.1em}
+#obj.pop{animation:pop .5s}
+@keyframes pop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.2) rotate(6deg)}100%{transform:scale(1)}}
+#word{font-size:clamp(28px,5vh,46px);font-weight:900}
+#chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+#chips b{min-width:34px;height:40px;line-height:40px;border-radius:9px;background:#e9f0ff;border:2px solid #9db8f0;font-size:24px}
+#chips b.on{background:#ffb703;border-color:#e08a00}
+#ph{font-size:20px;font-weight:700;color:#3c4f86}
+#msg{min-height:26px;font-size:20px;font-weight:800}
+#grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-content:center}
+.t{border:0;border-radius:16px;font:900 clamp(22px,4.6vh,40px) "Trebuchet MS",sans-serif;color:#fff;background:var(--c);aspect-ratio:1.15;box-shadow:0 6px 0 rgba(0,0,0,.38),inset 0 3px 0 rgba(255,255,255,.35);cursor:pointer;text-shadow:0 2px 0 rgba(0,0,0,.25);transition:transform .08s}
+.t:hover{filter:brightness(1.12)}.t:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.t.cur{outline:4px solid #fff;outline-offset:2px;transform:scale(1.08)}
+.t.vow{box-shadow:0 6px 0 rgba(0,0,0,.38),0 0 0 4px #ffe066,0 0 18px #ffe066}
+.t.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#ctl{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;padding:6px 24px 8px}
+.b{border:0;border-radius:12px;padding:10px 15px;font:800 15px "Trebuchet MS",sans-serif;color:var(--t,#fff);background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.3);cursor:pointer}
+.b:hover{filter:brightness(1.12)}.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.4)}.b.on{outline:3px solid #fff;outline-offset:2px}
+footer{text-align:center;font-size:12px;color:#8fb2e8;padding:2px 0 8px}
+.xy{display:flex;justify-content:center;gap:6px;align-items:flex-end;height:1.1em;font-size:0}
+.xy i{width:16px;border-radius:5px;box-shadow:0 4px 6px rgba(0,0,0,.4)}
+.conf{position:fixed;top:-20px;width:12px;height:16px;z-index:9;animation:fall 1.6s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+</style></head><body>
+<div id="app">
+<header><div><div class="brand">GEN Z EDTECH INTERACTIVE SIMULATIONS</div><h1>Alphabet &amp; Phonics Soundboard</h1></div>
+<div id="stat"><span>Stars: <b id="sc">0</b></span><span id="mode">Explore mode</span></div></header>
+<main>
+<section id="card"><div id="big">Aa</div><div id="obj"></div><div id="word"></div><div id="chips"></div><div id="ph"></div><div id="msg"></div></section>
+<section id="grid"></section>
+</main>
+<div id="ctl"></div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science. Turn your speaker on to hear the sounds.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const D=[["A","🍎","Apple","ah"],["B","⚽","Ball","buh"],["C","🐱","Cat","kuh"],["D","🐶","Dog","duh"],["E","🐘","Elephant","eh"],["F","🐟","Fish","fff"],["G","🦒","Giraffe","guh"],["H","🐴","Horse","huh"],["I","🍦","Ice cream","ih"],["J","🧃","Juice","juh"],["K","🪁","Kite","kuh"],["L","🦁","Lion","lll"],["M","🌙","Moon","mmm"],["N","🥜","Nut","nnn"],["O","🍊","Orange","oh"],["P","✏️","Pencil","puh"],["Q","👑","Queen","kwuh"],["R","🐰","Rabbit","rrr"],["S","☀️","Sun","sss"],["T","🐯","Tiger","tuh"],["U","☂️","Umbrella","uh"],["V","🎻","Violin","vvv"],["W","⌚","Watch","wuh"],["X","","Xylophone","ks"],["Y","🪀","Yo-yo","yuh"],["Z","🦓","Zebra","zzz"]];
+const VOW="AEIOU";let cur=0,upper=true,slow=false,vow=false,quiz=null,score=0,auto=null,sound=true;
+const grid=$('#grid');
+D.forEach((d,i)=>{const b=document.createElement('button');b.className='t';b.style.setProperty('--c',`hsl(${i*13.8},78%,50%)`);b.onclick=()=>tile(i);grid.appendChild(b)});
+const tiles=[...grid.children];
+function say(t,r){if(!sound||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=(r||.85)*(slow?.65:1);u.pitch=1.15;speechSynthesis.speak(u)}
+function stopS(){window.speechSynthesis&&speechSynthesis.cancel()}
+function beep(ok){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type='triangle';o.frequency.value=ok?660:180;g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.4);o.start();if(ok)o.frequency.setValueAtTime(880,a.currentTime+.15);o.stop(a.currentTime+.4)}catch(e){}}
+function conf(){for(let i=0;i<40;i++){const c=document.createElement('div');c.className='conf';c.style.left=Math.random()*100+'vw';c.style.background=`hsl(${Math.random()*360},85%,58%)`;c.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2200)}}
+function lab(i){return upper?D[i][0]:D[i][0].toLowerCase()}
+function paintTiles(){tiles.forEach((t,i)=>{t.textContent=lab(i);t.classList.toggle('cur',i==cur&&!quiz);t.classList.toggle('vow',vow&&VOW.includes(D[i][0]))})}
+function show(){const[L,e,w,p]=D[cur];$('#big').textContent=L+L.toLowerCase();
+$('#obj').innerHTML=L=='X'?'<div class="xy" style="height:1.1em"></div>':e;
+if(L=='X'){const xy=$('#obj').firstChild;xy.style.cssText='display:flex;justify-content:center;gap:6px;align-items:flex-end;height:.9em;font-size:inherit';[100,88,76,64,52,40].forEach((h,k)=>{const i=document.createElement('i');i.style.cssText=`width:.16em;height:${h*.009}em;border-radius:6px;box-shadow:0 4px 6px rgba(0,0,0,.4);background:hsl(${k*55},85%,52%)`;xy.appendChild(i)})}
+$('#obj').classList.remove('pop');void $('#obj').offsetWidth;$('#obj').classList.add('pop');
+$('#word').textContent=w;$('#chips').innerHTML=[...w.replace(/[^A-Za-z]/g,'')].map((c,k)=>`<b class="${k?'':'on'}">${upper?c.toUpperCase():c.toLowerCase()}</b>`).join('');
+$('#ph').textContent=`${L} says "${p}"`;paintTiles()}
+function go(i,speak){cur=(i+26)%26;quiz=null;$('#mode').textContent='Explore mode';$('#msg').textContent='';show();if(speak)saySeq()}
+function saySeq(){stopS();const[L,,w,p]=D[cur];say(L);say(p,.6);say(w)}
+function tile(i){if(quiz!=null){if(i==quiz){score++;$('#sc').textContent=score;beep(1);conf();$('#msg').textContent='Great job! That is '+D[i][0]+'!';$('#msg').style.color='#1a9a4b';stopS();say('Well done! '+D[i][0]+' for '+D[i][2]);cur=i;show();setTimeout(newQ,2300)}else{beep(0);tiles[i].classList.remove('shake');void tiles[i].offsetWidth;tiles[i].classList.add('shake');$('#msg').textContent='Try again!';$('#msg').style.color='#d6336c';say('Try again')}return}
+go(i,true)}
+function newQ(){if(quiz==null)return;quiz=Math.floor(Math.random()*26);$('#mode').textContent='Quiz mode';$('#big').textContent='?';$('#obj').textContent='🔍';$('#word').textContent='Find the letter '+D[quiz][0];$('#chips').innerHTML='';$('#ph').textContent='Hint: it says "'+D[quiz][3]+'"';$('#msg').textContent='';stopS();say('Find the letter '+D[quiz][0]);paintTiles()}
+function startQuiz(){stopAuto();quiz=0;newQ()}
+function stopAuto(){if(auto){clearInterval(auto);auto=null;$('#bAuto').classList.remove('on')}}
+const B=[
+['Speak Letter','#e8590c',()=>{stopS();say(D[cur][0])}],
+['Phonics Sound','#d6336c',()=>{stopS();say(D[cur][3],.6)}],
+['Say Word','#7048e8',()=>{stopS();say(D[cur][2])}],
+['Spell Word','#1c7ed6',()=>{stopS();[...D[cur][2].replace(/[^A-Za-z]/g,'')].forEach(c=>say(c,.7))}],
+['Say Everything','#0ca678',()=>saySeq()],
+['Previous','#f08c00',()=>go(cur-1,true),'#2b1700'],
+['Next','#2f9e44',()=>go(cur+1,true)],
+['Random Letter','#ae3ec9',()=>go(Math.floor(Math.random()*26),true)],
+['Auto Play','#1098ad',function(){if(auto)return stopAuto();quiz=null;$('#bAuto').classList.add('on');go(cur,true);auto=setInterval(()=>go(cur+1,true),4500)},null,'bAuto'],
+['Quiz Game','#e03131',startQuiz],
+['Repeat Question','#fa5252',()=>{if(quiz!=null){stopS();say('Find the letter '+D[quiz][0])}}],
+['Vowels Glow','#fcc419',function(e){vow=!vow;e.target.classList.toggle('on',vow);paintTiles()},'#2b1700'],
+['ABC / abc','#4263eb',()=>{upper=!upper;if(quiz==null)show();else paintTiles()}],
+['Slow Voice','#5f3dc4',function(e){slow=!slow;e.target.classList.toggle('on',slow)}],
+['Sound On / Off','#495057',function(e){sound=!sound;if(!sound)stopS();e.target.textContent=sound?'Sound On / Off':'Sound is OFF'}],
+['Stop','#c92a2a',()=>{stopS();stopAuto()}],
+['Reset Stars','#868e96',()=>{score=0;$('#sc').textContent=0;go(0,false)}],
+['Full Screen','#f03e8e',()=>{const a=$('#app');if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}]];
+B.forEach(([l,c,f,t,id])=>{const e=document.createElement('button');e.className='b';e.textContent=l;e.style.setProperty('--c',c);if(t)e.style.setProperty('--t',t);if(id)e.id=id;e.onclick=f;$('#ctl').appendChild(e)});
+$('#obj').onclick=()=>{if(quiz==null)saySeq()};
+document.addEventListener('keydown',e=>{if(quiz==null&&/^[a-z]$/i.test(e.key))go(e.key.toUpperCase().charCodeAt(0)-65,true);if(e.key=='ArrowRight')go(cur+1,true);if(e.key=='ArrowLeft')go(cur-1,true)});
+show();
+</script></body></html>

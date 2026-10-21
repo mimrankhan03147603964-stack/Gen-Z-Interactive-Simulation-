@@ -1,0 +1,1052 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge Scholar Edtech – Solar & Lunar Eclipse (Full Interactive)</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cyan:#22d3ee; --violet:#a855f7; --amber:#fbbf24; --rose:#fb7185;
+      --text:#e9eefb; --muted:#93a4c4;
+      --glass:rgba(255,255,255,.055); --stroke:rgba(255,255,255,.13);
+    }
+    body{
+      min-height:100vh;color:var(--text);
+      font-family:'Segoe UI',Tahoma,sans-serif;
+      background:#04040d;
+      background-image:
+        radial-gradient(2px 2px at 8% 14%, #fff, transparent 65%),
+        radial-gradient(1.4px 1.4px at 22% 62%, #cfe9ff, transparent 65%),
+        radial-gradient(1.8px 1.8px at 38% 28%, #fff, transparent 65%),
+        radial-gradient(1.2px 1.2px at 52% 78%, #ffe9b0, transparent 65%),
+        radial-gradient(2px 2px at 66% 18%, #fff, transparent 65%),
+        radial-gradient(1.4px 1.4px at 78% 56%, #d8ccff, transparent 65%),
+        radial-gradient(1.6px 1.6px at 90% 32%, #fff, transparent 65%),
+        radial-gradient(1.2px 1.2px at 14% 86%, #bff0ff, transparent 65%);
+      background-attachment:fixed;
+      overflow-x:hidden;
+    }
+    .app{max-width:1400px;margin:0 auto;padding:14px 16px 24px}
+
+    .program-header{
+      text-align:center;padding:14px 18px;margin-bottom:14px;border-radius:16px;
+      background:linear-gradient(120deg,rgba(251,191,36,.18),rgba(251,113,133,.18),rgba(168,85,247,.18),rgba(34,211,238,.18));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 8px 30px rgba(0,0,0,.5);
+    }
+    .program-header h1{
+      font-size:clamp(1rem,2.2vw,1.55rem);letter-spacing:2px;font-weight:900;
+      background:linear-gradient(100deg,#fbbf24,#fb7185,#a855f7,#22d3ee);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .program-header .sub{font-size:.75rem;color:#a9c4e6;letter-spacing:3px;margin-top:3px;text-transform:uppercase}
+
+    .topic-hero{text-align:center;padding:4px 10px 14px}
+    .topic-hero h2{
+      font-size:clamp(1.3rem,3.2vw,2rem);
+      background:linear-gradient(100deg,#22d3ee,#a855f7,#fb7185,#fbbf24);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .topic-hero p{margin-top:4px;color:var(--muted);font-size:.9rem}
+
+    .tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+    .tab{
+      border:1px solid var(--stroke);background:var(--glass);color:var(--text);
+      padding:11px 22px;border-radius:999px;font-size:.95rem;font-family:inherit;
+      cursor:pointer;transition:.25s;font-weight:600;
+    }
+    .tab:hover{transform:translateY(-2px);border-color:rgba(34,211,238,.55)}
+    .tab.active{
+      background:linear-gradient(120deg,rgba(34,211,238,.28),rgba(168,85,247,.28));
+      border-color:rgba(34,211,238,.75);box-shadow:0 0 22px rgba(34,211,238,.30);font-weight:700;
+    }
+
+    .panel{display:none;animation:fade .4s ease}
+    .panel.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    .card{
+      background:var(--glass);border:1px solid var(--stroke);border-radius:18px;
+      padding:20px 22px;backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(0,0,0,.45);
+      margin-bottom:16px;
+    }
+    .card h2{font-size:1.2rem;color:var(--amber);margin-bottom:12px}
+    .card h3{font-size:1rem;color:var(--cyan);margin:14px 0 6px}
+    .card p,.card li{line-height:1.9;font-size:.96rem;color:#dbe4f7}
+    .card ul{padding-left:22px}
+    .card li{margin-bottom:5px}
+    .hl{color:var(--cyan);font-weight:700}
+    .hl2{color:var(--amber);font-weight:700}
+    .hl3{color:var(--rose);font-weight:700}
+
+    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+    .mini{background:rgba(255,255,255,.045);border:1px solid var(--stroke);border-radius:12px;padding:13px 15px;border-left:3px solid var(--cyan)}
+    .mini b{color:var(--amber);display:block;margin-bottom:4px;font-size:.95rem}
+    .mini span{font-size:.9rem;color:#c8d4ec;line-height:1.8}
+
+    /* ============ SIMULATION CANVAS ============ */
+    .canvas-holder{
+      position:relative;width:100%;height:70vh;min-height:520px;
+      border-radius:18px;overflow:hidden;
+      border:2px solid rgba(34,211,238,.35);
+      box-shadow:0 0 60px rgba(34,211,238,.14),inset 0 0 80px rgba(0,0,0,.75);
+      background:radial-gradient(circle at 50% 50%, #050818 0%, #02030a 60%, #000 100%);
+      touch-action:none;
+    }
+    canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+    canvas:active{cursor:grabbing}
+
+    .hud{
+      position:absolute;top:14px;left:14px;background:rgba(5,8,20,.85);
+      border:1px solid rgba(34,211,238,.4);border-radius:12px;padding:10px 16px;
+      backdrop-filter:blur(10px);font-size:.85rem;color:#bfe9ff;line-height:1.9;
+      pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.5);z-index:5;
+    }
+    .hud b{color:var(--amber)}
+    .hud .status-in{color:#34d399;font-weight:700}
+    .hud .status-out{color:#fb7185;font-weight:700}
+
+    .hint{
+      position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+      background:rgba(5,8,20,.82);border:1px solid var(--stroke);
+      padding:7px 18px;border-radius:999px;font-size:.82rem;color:#a9c4e6;
+      backdrop-filter:blur(8px);pointer-events:none;white-space:nowrap;z-index:5;
+    }
+
+    .fs-btn{
+      position:absolute;top:14px;right:14px;
+      background:rgba(5,8,20,.85);border:1px solid rgba(34,211,238,.6);
+      color:#bff0ff;padding:10px 18px;border-radius:10px;cursor:pointer;
+      font-family:inherit;font-size:.9rem;font-weight:700;
+      backdrop-filter:blur(8px);transition:.22s;z-index:20;
+    }
+    .fs-btn:hover{background:rgba(34,211,238,.30)}
+
+    /* Fullscreen styles */
+    .canvas-holder:fullscreen,
+    .canvas-holder:-webkit-full-screen{
+      width:100vw !important;height:100vh !important;
+      max-width:100vw !important;max-height:100vh !important;
+      border-radius:0 !important;border:none !important;
+      min-height:100vh !important;margin:0 !important;padding:0 !important;
+      background: #02030a;
+    }
+    .canvas-holder:fullscreen .hud,
+    .canvas-holder:-webkit-full-screen .hud{
+      font-size:1rem;padding:14px 22px;
+    }
+    .canvas-holder:fullscreen .hint,
+    .canvas-holder:-webkit-full-screen .hint{
+      font-size:1rem;padding:10px 26px;
+    }
+    .canvas-holder:fullscreen .fs-btn,
+    .canvas-holder:-webkit-full-screen .fs-btn{
+      padding:14px 24px;font-size:1.1rem;
+    }
+
+    /* Fullscreen control panel overlay */
+    .fs-controls{
+      position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+      display:none;flex-wrap:wrap;gap:10px;justify-content:center;
+      background:rgba(5,8,20,.92);border:1px solid rgba(34,211,238,.5);
+      border-radius:18px;padding:14px 22px;backdrop-filter:blur(16px);
+      box-shadow:0 8px 40px rgba(0,0,0,.8);z-index:30;max-width:94vw;
+    }
+    .canvas-holder:fullscreen .fs-controls,
+    .canvas-holder:-webkit-full-screen .fs-controls{
+      display:flex;
+    }
+    .fs-controls .cbtn{
+      padding:10px 16px;font-size:.9rem;border-radius:10px;
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);
+      color:#e9eefb;font-weight:600;cursor:pointer;transition:.2s;
+      font-family:inherit;white-space:nowrap;
+    }
+    .fs-controls .cbtn:hover{background:rgba(34,211,238,.25);border-color:rgba(34,211,238,.7)}
+    .fs-controls .cbtn.on{background:linear-gradient(120deg,rgba(34,211,238,.5),rgba(168,85,247,.5));border-color:rgba(34,211,238,.9);box-shadow:0 0 16px rgba(34,211,238,.5)}
+
+    .controls{
+      margin-top:14px;display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:12px;
+      background:rgba(255,255,255,.045);border:1px solid var(--stroke);
+      border-radius:16px;padding:14px;
+    }
+    .ctrl-item{
+      display:flex;flex-direction:column;gap:6px;
+      background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;padding:10px 12px;
+    }
+    .ctrl-item label{
+      font-size:.72rem;color:#93a4c4;letter-spacing:.6px;
+      text-transform:uppercase;font-weight:700;
+    }
+    .cbtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 14px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:.9rem;
+      transition:.2s;font-weight:600;
+    }
+    .cbtn:hover{background:rgba(34,211,238,.20);border-color:rgba(34,211,238,.65)}
+    .cbtn.on{background:linear-gradient(120deg,rgba(34,211,238,.4),rgba(168,85,247,.4));border-color:rgba(34,211,238,.9);box-shadow:0 0 14px rgba(34,211,238,.4)}
+
+    .slider-row{display:flex;align-items:center;gap:8px}
+    input[type=range]{
+      -webkit-appearance:none;appearance:none;height:6px;border-radius:999px;outline:none;
+      background:linear-gradient(90deg,var(--cyan),var(--violet));cursor:pointer;flex:1;
+    }
+    input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+      background:#fff;box-shadow:0 0 12px rgba(34,211,238,.9);cursor:pointer;border:none;
+    }
+    input[type=range]::-moz-range-thumb{
+      width:18px;height:18px;border-radius:50%;background:#fff;border:none;
+    }
+    .slider-val{color:var(--amber);font-weight:700;font-size:.88rem;min-width:48px;text-align:right}
+
+    .zoom-btns{display:flex;gap:6px;align-items:center}
+    .zoom-btns .cbtn{padding:6px 12px;font-size:1rem;min-width:36px}
+
+    .footer{
+      margin-top:24px;padding:20px;border-radius:18px;text-align:center;
+      background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px dashed rgba(255,255,255,.20);
+    }
+    .f-name{font-size:1.3rem;font-weight:700;color:var(--cyan);text-shadow:0 0 18px rgba(34,211,238,.55)}
+    .f-deg{color:var(--amber);font-weight:600;margin-top:4px}
+    .f-role{color:#cfd9ee;margin-top:3px;font-size:.96rem}
+    .f-tags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+    .f-tag{
+      background:linear-gradient(120deg,rgba(251,113,133,.28),rgba(168,85,247,.28));
+      border:1px solid rgba(251,113,133,.4);
+      padding:7px 16px;border-radius:999px;font-size:.88rem;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header class="program-header">
+    <h1>🎓 CAMBRIDGE SCHOLAR EDTECH SCHOOLS PROGRAM</h1>
+    <div class="sub">Interactive Science Simulation</div>
+  </header>
+
+  <div class="topic-hero">
+    <h2>🌑 Solar &amp; Lunar Eclipse</h2>
+    <p>Learn how the Sun, Earth, and Moon line up to make an eclipse</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="p-def">📘 Definition</button>
+    <button class="tab" data-tab="p-exp">🔭 Explanation</button>
+    <button class="tab" data-tab="p-sim">🌘 Live Simulation</button>
+  </nav>
+
+  <section id="p-def" class="panel active">
+    <div class="card">
+      <h2>📘 Definition</h2>
+      <p>
+        An <span class="hl2">Eclipse</span> happens when one space object moves into the
+        <span class="hl">shadow</span> of another space object. In our Solar System,
+        eclipses happen when the <span class="hl">Sun</span>, the
+        <span class="hl">Earth</span>, and the <span class="hl">Moon</span> line up
+        in a straight line.
+      </p>
+      <div class="grid2">
+        <div class="mini"><b>🌞 Solar Eclipse</b><span>The Moon comes between the Sun and the Earth. The Moon blocks the Sun's light. This happens during a New Moon.</span></div>
+        <div class="mini"><b>🌕 Lunar Eclipse</b><span>The Earth comes between the Sun and the Moon. The Earth's shadow falls on the Moon. This happens during a Full Moon.</span></div>
+        <div class="mini"><b>🌑 Umbra</b><span>The dark inner part of a shadow. Light is fully blocked here.</span></div>
+        <div class="mini"><b>🌘 Penumbra</b><span>The light outer part of a shadow. Light is only partly blocked here.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="p-exp" class="panel">
+    <div class="card">
+      <h2>🔭 Explanation — How Eclipses Work</h2>
+
+      <h3>1️⃣ The Sun, Earth and Moon Line Up</h3>
+      <p>An eclipse only happens when the <span class="hl">Sun</span>, <span class="hl">Earth</span>, and <span class="hl">Moon</span> come in a straight line. The Moon's orbit is tilted about 5°, so this perfect line-up does not happen every month.</p>
+
+      <h3>2️⃣ Solar Eclipse — Moon Blocks the Sun</h3>
+      <p>A <span class="hl2">Solar Eclipse</span> happens when the Moon moves between the Sun and the Earth. The Moon covers the Sun's bright face. This only happens during a <span class="hl">New Moon</span>.</p>
+
+      <h3>3️⃣ Lunar Eclipse — Earth Blocks the Moon</h3>
+      <p>A <span class="hl2">Lunar Eclipse</span> happens when the Earth moves between the Sun and the Moon. The Earth's shadow falls on the Moon. This only happens during a <span class="hl">Full Moon</span>.</p>
+
+      <h3>4️⃣ Two Parts of a Shadow</h3>
+      <ul>
+        <li><span class="hl3">Umbra</span> — dark center. Light fully blocked.</li>
+        <li><span class="hl">Penumbra</span> — light outer part. Light partly blocked.</li>
+      </ul>
+
+      <h3>5️⃣ Types of Solar Eclipse</h3>
+      <ul>
+        <li><span class="hl2">Total</span> — Moon fully covers the Sun.</li>
+        <li><span class="hl">Partial</span> — Moon covers only part of the Sun.</li>
+        <li><span class="hl3">Annular</span> — A bright ring of Sun light stays visible around the Moon.</li>
+      </ul>
+
+      <h3>6️⃣ Types of Lunar Eclipse</h3>
+      <ul>
+        <li><span class="hl2">Total</span> — Moon fully enters Earth's umbra. It looks red (Blood Moon).</li>
+        <li><span class="hl">Partial</span> — Only part of Moon enters umbra.</li>
+        <li><span class="hl3">Penumbral</span> — Moon only passes through penumbra. Looks slightly dim.</li>
+      </ul>
+
+      <h3>7️⃣ Why the Moon Looks Red</h3>
+      <p>Sun light passes through Earth's atmosphere and bends. Blue light scatters away, but red light bends toward the Moon. That is why the Moon looks <span class="hl3">reddish</span> during a total lunar eclipse.</p>
+
+      <h3>8️⃣ Safety Rule</h3>
+      <p><span class="hl3">Never</span> look at the Sun with bare eyes. Always use special eclipse glasses.</p>
+    </div>
+  </section>
+
+  <section id="p-sim" class="panel">
+    <div class="canvas-holder" id="holder">
+      <canvas id="sky"></canvas>
+      <button class="fs-btn" id="btnFull" type="button">⛶ Full Screen</button>
+
+      <div class="hud">
+        🌞 <b>Mode:</b> <span id="hudMode">Solar Eclipse</span><br>
+        📅 <b>Earth Days:</b> <span id="hudDays">0</span><br>
+        🎯 <b>Status:</b> <span id="hudStatus" class="status-out">No Alignment</span>
+      </div>
+
+      <div class="hint">🖱️ Drag to pan • Scroll to zoom • Use buttons below</div>
+
+      <!-- Fullscreen overlay controls -->
+      <div class="fs-controls" id="fsControls">
+        <button class="cbtn on" id="fsPlay" type="button">⏸️ Pause</button>
+        <button class="cbtn on" id="fsSolar" type="button">🌞 Solar</button>
+        <button class="cbtn" id="fsLunar" type="button">🌕 Lunar</button>
+        <button class="cbtn on" id="fsShadows" type="button">🌑 Shadows</button>
+        <button class="cbtn on" id="fsLabels" type="button">🏷️ Labels</button>
+        <button class="cbtn" id="fsZoomIn" type="button">🔍+</button>
+        <button class="cbtn" id="fsZoomOut" type="button">🔍−</button>
+        <button class="cbtn" id="fsReset" type="button">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl-item">
+        <label>▶ Animation</label>
+        <button class="cbtn on" id="btnPlay" type="button">⏸️ Pause</button>
+      </div>
+
+      <div class="ctrl-item">
+        <label>🌞 Eclipse Type</label>
+        <div style="display:flex;gap:8px">
+          <button class="cbtn on" id="btnSolar" type="button" style="flex:1">🌞 Solar</button>
+          <button class="cbtn" id="btnLunar" type="button" style="flex:1">🌕 Lunar</button>
+        </div>
+      </div>
+
+      <div class="ctrl-item">
+        <label>🚀 Speed</label>
+        <div class="slider-row">
+          <input type="range" id="speedSlider" min="0.1" max="5" step="0.1" value="1">
+          <span class="slider-val" id="speedVal">1.0×</span>
+        </div>
+      </div>
+
+      <div class="ctrl-item">
+        <label>🔍 Zoom</label>
+        <div class="zoom-btns">
+          <button class="cbtn" id="btnZoomOut" type="button">−</button>
+          <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1" style="flex:1">
+          <button class="cbtn" id="btnZoomIn" type="button">+</button>
+        </div>
+      </div>
+
+      <div class="ctrl-item">
+        <label>🌑 Shadows</label>
+        <button class="cbtn on" id="btnShadows" type="button">🌑 Show Shadows</button>
+      </div>
+
+      <div class="ctrl-item">
+        <label>🏷️ Labels</label>
+        <button class="cbtn on" id="btnLabels" type="button">🏷️ Show Labels</button>
+      </div>
+
+      <div class="ctrl-item">
+        <label>↺ Reset</label>
+        <button class="cbtn" id="btnReset" type="button">↺ Reset Simulation</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="f-name">Muhammad Imran Khan</div>
+    <div class="f-deg">MSc (Computer Science)</div>
+    <div class="f-role">Regional Manager Sahiwal</div>
+    <div class="f-tags">
+      <span class="f-tag">📞 03007603964</span>
+      <span class="f-tag">📞 03147603964</span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+
+/* ==================== CANVAS SETUP ==================== */
+const TAU = Math.PI * 2;
+const canvas = document.getElementById('sky');
+const ctx = canvas.getContext('2d', { alpha:false });
+const holder = document.getElementById('holder');
+
+let W = 0, H = 0, DPR = 1, baseScale = 1;
+
+function resize(){
+  const rect = holder.getBoundingClientRect();
+  W = Math.max(rect.width, 1);
+  H = Math.max(rect.height, 1);
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width  = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  baseScale = Math.min(W/1200, H/700);
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 120));
+document.addEventListener('fullscreenchange', () => setTimeout(resize, 150));
+document.addEventListener('webkitfullscreenchange', () => setTimeout(resize, 150));
+if(window.ResizeObserver) new ResizeObserver(resize).observe(holder);
+
+/* ==================== STATE ==================== */
+let simDays = 0;
+let playing = true;
+let speed = 1;
+let showShadows = true;
+let showLabels = true;
+let mode = 'solar';
+
+let camX = 0, camY = 0;
+let isPanning = false, panStartX = 0, panStartY = 0, panStartCamX = 0, panStartCamY = 0;
+let zoom = 1, targetZoom = 1;
+
+/* ==================== REALISTIC SIZES ==================== */
+const SUN_R      = 42;
+const EARTH_R    = 16;
+const MOON_R     = 6;
+const SUN_X      = -480;
+const EARTH_DIST = 380;
+const MOON_DIST  = 55;
+
+/* ==================== STARS ==================== */
+const stars = [];
+for(let i=0;i<450;i++){
+  stars.push({
+    x: Math.random(), y: Math.random(),
+    r: Math.random()*1.3 + 0.25,
+    tw: Math.random()*TAU,
+    sp: 0.5 + Math.random()*1.6,
+    hue: Math.random()<0.18 ? (Math.random()<0.5 ? '#bcd8ff' : '#ffe6bb') : '#ffffff'
+  });
+}
+
+/* ==================== POSITIONS ==================== */
+function sunPos(){ return { x: SUN_X, y: 0 }; }
+
+function earthPos(){
+  const ang = simDays * 0.0005;
+  return {
+    x: SUN_X + EARTH_DIST + Math.cos(ang) * 40,
+    y: Math.sin(ang) * 60
+  };
+}
+
+function moonPos(){
+  const earth = earthPos();
+  const sun = sunPos();
+  let dx = earth.x - sun.x;
+  let dy = earth.y - sun.y;
+  const dl = Math.hypot(dx, dy) || 1;
+  dx /= dl; dy /= dl;
+
+  if(mode === 'solar'){
+    return { x: earth.x - dx * MOON_DIST, y: earth.y - dy * MOON_DIST };
+  } else {
+    return { x: earth.x + dx * MOON_DIST, y: earth.y + dy * MOON_DIST };
+  }
+}
+
+/* ==================== DRAW STARS ==================== */
+function drawStars(now){
+  for(const st of stars){
+    const a = 0.25 + 0.70 * Math.abs(Math.sin(now*0.0006*st.sp + st.tw));
+    ctx.globalAlpha = a;
+    ctx.fillStyle = st.hue;
+    ctx.beginPath();
+    ctx.arc(st.x*W, st.y*H, st.r, 0, TAU);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ==================== DRAW SUN ==================== */
+function drawSun(sx, sy, s, now){
+  const r = SUN_R * s;
+
+  const g0 = ctx.createRadialGradient(sx, sy, r*0.5, sx, sy, r*8);
+  g0.addColorStop(0,    'rgba(255,190,70,.32)');
+  g0.addColorStop(0.20, 'rgba(255,150,40,.14)');
+  g0.addColorStop(0.50, 'rgba(255,120,25,.055)');
+  g0.addColorStop(1,    'rgba(255,90,0,0)');
+  ctx.beginPath(); ctx.arc(sx, sy, r*8, 0, TAU); ctx.fillStyle = g0; ctx.fill();
+
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.rotate(now*0.00008);
+  for(let i=0;i<18;i++){
+    const ang = (i/18)*TAU;
+    const len = r*(2.0 + Math.sin(now*0.002 + i)*0.3);
+    const grd = ctx.createLinearGradient(
+      Math.cos(ang)*r, Math.sin(ang)*r,
+      Math.cos(ang)*len, Math.sin(ang)*len
+    );
+    grd.addColorStop(0,'rgba(255,215,110,.30)');
+    grd.addColorStop(1,'rgba(255,160,40,0)');
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(ang)*r, Math.sin(ang)*r);
+    ctx.lineTo(Math.cos(ang)*len, Math.sin(ang)*len);
+    ctx.strokeStyle = grd;
+    ctx.lineWidth = Math.max(r*0.12, 1);
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const g1 = ctx.createRadialGradient(sx, sy, r*0.85, sx, sy, r*1.35);
+  g1.addColorStop(0,'rgba(255,196,60,.80)');
+  g1.addColorStop(1,'rgba(255,120,20,0)');
+  ctx.beginPath(); ctx.arc(sx, sy, r*1.35, 0, TAU); ctx.fillStyle = g1; ctx.fill();
+
+  const g2 = ctx.createRadialGradient(sx - r*0.22, sy - r*0.22, r*0.05, sx, sy, r);
+  g2.addColorStop(0,    '#fffdf2');
+  g2.addColorStop(0.30, '#ffe98a');
+  g2.addColorStop(0.62, '#ffc42e');
+  g2.addColorStop(0.86, '#ff8c12');
+  g2.addColorStop(1,    '#ff5c00');
+  ctx.beginPath(); ctx.arc(sx, sy, r, 0, TAU); ctx.fillStyle = g2; ctx.fill();
+
+  const g3 = ctx.createRadialGradient(sx, sy, 0, sx, sy, r*0.62);
+  g3.addColorStop(0,'rgba(255,255,255,.90)');
+  g3.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.arc(sx, sy, r*0.62, 0, TAU); ctx.fillStyle = g3; ctx.fill();
+}
+
+/* ==================== DRAW EARTH ==================== */
+function drawEarth(ex, ey, s, sunSX, sunSY){
+  const r = EARTH_R * s;
+
+  const ag = ctx.createRadialGradient(ex, ey, r*0.95, ex, ey, r*1.7);
+  ag.addColorStop(0,'rgba(120,200,255,.60)');
+  ag.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath(); ctx.arc(ex, ey, r*1.7, 0, TAU);
+  ctx.globalAlpha = 0.65; ctx.fillStyle = ag; ctx.fill(); ctx.globalAlpha = 1;
+
+  ctx.beginPath(); ctx.arc(ex, ey, r, 0, TAU);
+  ctx.fillStyle = '#1a6fd4'; ctx.fill();
+
+  ctx.save();
+  ctx.beginPath(); ctx.arc(ex, ey, r, 0, TAU); ctx.clip();
+  ctx.fillStyle = '#2f8b3e';
+  ctx.beginPath(); ctx.ellipse(ex - r*0.25, ey - r*0.2, r*0.42, r*0.30, 0.3, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex + r*0.30, ey + r*0.15, r*0.35, r*0.45, -0.2, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex + r*0.05, ey + r*0.55, r*0.30, r*0.20, 0, 0, TAU); ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,.30)';
+  ctx.beginPath(); ctx.ellipse(ex - r*0.4, ey + r*0.1, r*0.30, r*0.12, 0.2, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(ex + r*0.35, ey - r*0.25, r*0.28, r*0.10, -0.1, 0, TAU); ctx.fill();
+
+  let lx = sunSX - ex, ly = sunSY - ey;
+  const ll = Math.hypot(lx, ly) || 1; lx /= ll; ly /= ll;
+  const cx = ex + lx * r * 0.75, cy = ey + ly * r * 0.75;
+  const g = ctx.createRadialGradient(cx, cy, r*0.05, cx, cy, r*1.9);
+  g.addColorStop(0,    'rgba(255,255,255,.32)');
+  g.addColorStop(0.26, 'rgba(255,255,255,.02)');
+  g.addColorStop(0.48, 'rgba(0,0,0,.20)');
+  g.addColorStop(0.70, 'rgba(0,0,0,.65)');
+  g.addColorStop(0.90, 'rgba(0,0,0,.88)');
+  g.addColorStop(1,    'rgba(0,0,0,.96)');
+  ctx.fillStyle = g;
+  ctx.fillRect(ex - r, ey - r, r*2, r*2);
+  ctx.restore();
+}
+
+/* ==================== DRAW MOON ==================== */
+function drawMoon(mx, my, s, sunSX, sunSY, inUmbra){
+  const r = MOON_R * s;
+
+  const g0 = ctx.createRadialGradient(mx, my, r*0.9, mx, my, r*2.2);
+  g0.addColorStop(0,'rgba(230,235,255,.22)');
+  g0.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath(); ctx.arc(mx, my, r*2.2, 0, TAU); ctx.fillStyle = g0; ctx.fill();
+
+  ctx.beginPath(); ctx.arc(mx, my, r, 0, TAU);
+  ctx.fillStyle = inUmbra ? '#8a2a1a' : '#d8d8dc';
+  ctx.fill();
+
+  ctx.save();
+  ctx.beginPath(); ctx.arc(mx, my, r, 0, TAU); ctx.clip();
+  const craters = [
+    [-0.3,-0.2,0.18], [0.25,0.15,0.22], [0.05,-0.45,0.12],
+    [-0.45,0.35,0.15], [0.40,-0.35,0.10], [-0.1,0.50,0.14]
+  ];
+  ctx.fillStyle = inUmbra ? 'rgba(80,20,10,.65)' : 'rgba(140,140,150,.55)';
+  for(const c of craters){
+    ctx.beginPath();
+    ctx.arc(mx + c[0]*r, my + c[1]*r, c[2]*r, 0, TAU);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  if(inUmbra){
+    ctx.beginPath(); ctx.arc(mx, my, r, 0, TAU);
+    ctx.fillStyle = 'rgba(180,50,20,.55)'; ctx.fill();
+  }
+
+  let lx = sunSX - mx, ly = sunSY - my;
+  const ll = Math.hypot(lx, ly) || 1; lx /= ll; ly /= ll;
+  const cx = mx + lx * r * 0.7, cy = my + ly * r * 0.7;
+  const g = ctx.createRadialGradient(cx, cy, r*0.05, cx, cy, r*1.9);
+  g.addColorStop(0,    'rgba(255,255,255,.32)');
+  g.addColorStop(0.30, 'rgba(255,255,255,.02)');
+  g.addColorStop(0.55, 'rgba(0,0,0,.30)');
+  g.addColorStop(0.80, 'rgba(0,0,0,.75)');
+  g.addColorStop(1,    'rgba(0,0,0,.92)');
+  ctx.fillStyle = g;
+  ctx.fillRect(mx - r, my - r, r*2, r*2);
+}
+
+/* ==================== SHADOW CONE ==================== */
+function drawShadowCone(occX, occY, occR, sunSX, sunSY){
+  let dx = occX - sunSX;
+  let dy = occY - sunSY;
+  const dist = Math.hypot(dx, dy) || 1;
+  dx /= dist; dy /= dist;
+  const px = -dy, py = dx;
+
+  const coneLen = dist * 1.15;
+  const umbraTipX = occX + dx * coneLen;
+  const umbraTipY = occY + dy * coneLen;
+
+  const penLen = dist * 1.40;
+  const penTipX = occX + dx * penLen;
+  const penTipY = occY + dy * penLen;
+
+  /* Penumbra */
+  ctx.beginPath();
+  ctx.moveTo(occX + px * occR, occY + py * occR);
+  ctx.lineTo(penTipX + px * occR * 1.8, penTipY + py * occR * 1.8);
+  ctx.lineTo(penTipX - px * occR * 1.8, penTipY - py * occR * 1.8);
+  ctx.lineTo(occX - px * occR, occY - py * occR);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(60,60,90,.30)';
+  ctx.fill();
+
+  /* Umbra */
+  ctx.beginPath();
+  ctx.moveTo(occX + px * occR, occY + py * occR);
+  ctx.lineTo(umbraTipX + px * occR * 0.15, umbraTipY + py * occR * 0.15);
+  ctx.lineTo(umbraTipX - px * occR * 0.15, umbraTipY - py * occR * 0.15);
+  ctx.lineTo(occX - px * occR, occY - py * occR);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(8,8,20,.88)';
+  ctx.fill();
+
+  return { occX, occY, dx, dy, occR, coneLen, umbraTipX, umbraTipY };
+}
+
+function isInUmbra(px, py, cone){
+  if(!cone) return false;
+  const vx = px - cone.occX;
+  const vy = py - cone.occY;
+  const along = vx * cone.dx + vy * cone.dy;
+  if(along < 0 || along > cone.coneLen * 1.05) return false;
+
+  const perp = Math.abs(vx * (-cone.dy) + vy * cone.dx);
+  const halfAtPoint = cone.occR * (1 - 0.85 * (along / cone.coneLen));
+  return perp < Math.max(halfAtPoint, 0);
+}
+
+/* ==================== MAIN LOOP ==================== */
+let lastTime = performance.now();
+
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt = Math.min((now - lastTime) / 1000, 0.05);
+  lastTime = now;
+
+  if(W < 2 || H < 2) return;
+
+  if(playing) simDays += dt * speed * 60;
+  zoom += (targetZoom - zoom) * 0.12;
+
+  const s = baseScale * zoom;
+
+  const sun   = sunPos();
+  const earth = earthPos();
+  const moon  = moonPos();
+
+  const sunSX = W/2 + (sun.x   - camX) * s;
+  const sunSY = H/2 + (sun.y   - camY) * s;
+  const earSX = W/2 + (earth.x - camX) * s;
+  const earSY = H/2 + (earth.y - camY) * s;
+  const mooSX = W/2 + (moon.x  - camX) * s;
+  const mooSY = H/2 + (moon.y  - camY) * s;
+
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const bg = ctx.createRadialGradient(W*0.5, H*0.5, 0, W*0.5, H*0.5, Math.max(W,H)*0.85);
+  bg.addColorStop(0,   '#050818');
+  bg.addColorStop(0.55,'#02030a');
+  bg.addColorStop(1,   '#000000');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  drawStars(now);
+
+  if(showLabels){
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,210,120,.20)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([8, 10]);
+    ctx.beginPath();
+    ctx.moveTo(sunSX, sunSY);
+    ctx.lineTo(earSX, earSY);
+    ctx.stroke();
+    if(mode === 'solar'){
+      ctx.beginPath();
+      ctx.moveTo(sunSX, sunSY);
+      ctx.lineTo(mooSX, mooSY);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  drawSun(sunSX, sunSY, s, now);
+  drawEarth(earSX, earSY, s, sunSX, sunSY);
+
+  let cone = null;
+  let targetInUmbra = false;
+
+  if(showShadows){
+    if(mode === 'solar'){
+      cone = drawShadowCone(mooSX, mooSY, MOON_R * s, sunSX, sunSY);
+      targetInUmbra = isInUmbra(earSX, earSY, cone);
+    } else {
+      cone = drawShadowCone(earSX, earSY, EARTH_R * s, sunSX, sunSY);
+      targetInUmbra = isInUmbra(mooSX, mooSY, cone);
+    }
+  }
+
+  drawMoon(mooSX, mooSY, s, sunSX, sunSY, targetInUmbra && mode === 'lunar');
+
+  /* ---- Enhanced labels with arrows and annotations ---- */
+  if(showLabels){
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const labelData = [
+      { x: sunSX, y: sunSY + SUN_R*s + 28, name:'☀ Sun',   color:'#ffd166', desc:'Light Source' },
+      { x: earSX, y: earSY + EARTH_R*s + 24, name:'🌍 Earth', color:'#7fd3ff', desc: mode==='solar'?'Target':'Occluder' },
+      { x: mooSX, y: mooSY + MOON_R*s + 22, name:'🌙 Moon',  color:'#e5e7eb', desc: mode==='solar'?'Occluder':'Target' }
+    ];
+
+    for(const L of labelData){
+      ctx.font = '700 14px "Segoe UI", Tahoma, sans-serif';
+      const wdt = ctx.measureText(L.name).width;
+      const pad = 10;
+      ctx.fillStyle = 'rgba(5,10,24,.85)';
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(L.x - wdt/2 - pad, L.y - 13, wdt + pad*2, 26, 8);
+      else ctx.rect(L.x - wdt/2 - pad, L.y - 13, wdt + pad*2, 26);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.25)';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+      ctx.fillStyle = L.color;
+      ctx.fillText(L.name, L.x, L.y + 0.5);
+
+      /* Description below */
+      ctx.font = '600 11px "Segoe UI", Tahoma, sans-serif';
+      ctx.fillStyle = 'rgba(200,220,255,.75)';
+      ctx.fillText(L.desc, L.x, L.y + 22);
+    }
+
+    /* UMBRA label with arrow */
+    if(showShadows && cone){
+      const midX = (cone.occX + cone.umbraTipX) / 2;
+      const midY = (cone.occY + cone.umbraTipY) / 2;
+      
+      /* Draw arrow pointer */
+      ctx.beginPath();
+      ctx.moveTo(midX + 60, midY - 20);
+      ctx.lineTo(midX + 15, midY - 5);
+      ctx.strokeStyle = 'rgba(255,80,80,.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(midX + 10, midY - 3, 4, 0, TAU);
+      ctx.fillStyle = 'rgba(255,80,80,.9)';
+      ctx.fill();
+
+      ctx.font = '700 14px "Segoe UI", Tahoma, sans-serif';
+      ctx.fillStyle = 'rgba(255,80,80,.95)';
+      ctx.strokeStyle = 'rgba(0,0,0,.9)';
+      ctx.lineWidth = 3;
+      ctx.strokeText('UMBRA', midX + 65, midY - 25);
+      ctx.fillText('UMBRA', midX + 65, midY - 25);
+      
+      ctx.font = '600 10px "Segoe UI", Tahoma, sans-serif';
+      ctx.fillStyle = 'rgba(255,150,150,.8)';
+      ctx.fillText('(Full Shadow)', midX + 65, midY - 10);
+    }
+
+    /* PENUMBRA label */
+    if(showShadows && cone){
+      const penMidX = cone.occX + cone.dx * cone.coneLen * 0.6;
+      const penMidY = cone.occY + cone.dy * cone.coneLen * 0.6;
+      ctx.font = '700 12px "Segoe UI", Tahoma, sans-serif';
+      ctx.fillStyle = 'rgba(180,180,255,.7)';
+      ctx.strokeStyle = 'rgba(0,0,0,.8)';
+      ctx.lineWidth = 3;
+      ctx.strokeText('PENUMBRA', penMidX + 80, penMidY + 10);
+      ctx.fillText('PENUMBRA', penMidX + 80, penMidY + 10);
+    }
+
+    /* Mode title */
+    ctx.textAlign = 'left';
+    ctx.font = '700 18px "Segoe UI", Tahoma, sans-serif';
+    ctx.fillStyle = mode === 'solar' ? '#ffd166' : '#a855f7';
+    ctx.strokeStyle = 'rgba(0,0,0,.9)';
+    ctx.lineWidth = 4;
+    const title = mode === 'solar'
+      ? '🌞 SOLAR ECLIPSE — Sun → Moon → Earth'
+      : '🌕 LUNAR ECLIPSE — Sun → Earth → Moon';
+    ctx.strokeText(title, 20, H - 70);
+    ctx.fillText(title, 20, H - 70);
+
+    /* Alignment indicator */
+    if(targetInUmbra){
+      ctx.font = '700 15px "Segoe UI", Tahoma, sans-serif';
+      ctx.fillStyle = mode === 'solar' ? '#34d399' : '#fb7185';
+      ctx.strokeStyle = 'rgba(0,0,0,.9)';
+      ctx.lineWidth = 3;
+      const msg = mode === 'solar' 
+        ? '✅ PERFECT ALIGNMENT — Total Solar Eclipse!'
+        : '✅ PERFECT ALIGNMENT — Total Lunar Eclipse!';
+      ctx.strokeText(msg, 20, H - 40);
+      ctx.fillText(msg, 20, H - 40);
+    }
+  }
+
+  /* ---- HUD update ---- */
+  document.getElementById('hudMode').textContent = mode === 'solar' ? 'Solar Eclipse' : 'Lunar Eclipse';
+  document.getElementById('hudDays').textContent = Math.floor(simDays).toLocaleString('en-US');
+
+  const stEl = document.getElementById('hudStatus');
+  if(targetInUmbra){
+    if(mode === 'solar'){
+      stEl.textContent = '🌑 Total Solar Eclipse!';
+      stEl.className = 'status-in';
+    } else {
+      stEl.textContent = '🔴 Total Lunar Eclipse (Blood Moon)!';
+      stEl.className = 'status-in';
+    }
+  } else {
+    stEl.textContent = 'No Alignment';
+    stEl.className = 'status-out';
+  }
+}
+
+/* ==================== CONTROLS ==================== */
+const btnPlay = document.getElementById('btnPlay');
+const btnSolar = document.getElementById('btnSolar');
+const btnLunar = document.getElementById('btnLunar');
+const btnShadows = document.getElementById('btnShadows');
+const btnLabels = document.getElementById('btnLabels');
+const btnReset = document.getElementById('btnReset');
+const btnZoomIn = document.getElementById('btnZoomIn');
+const btnZoomOut = document.getElementById('btnZoomOut');
+const btnFull = document.getElementById('btnFull');
+const speedSlider = document.getElementById('speedSlider');
+const speedVal = document.getElementById('speedVal');
+const zoomSlider = document.getElementById('zoomSlider');
+
+/* Fullscreen overlay controls */
+const fsPlay = document.getElementById('fsPlay');
+const fsSolar = document.getElementById('fsSolar');
+const fsLunar = document.getElementById('fsLunar');
+const fsShadows = document.getElementById('fsShadows');
+const fsLabels = document.getElementById('fsLabels');
+const fsZoomIn = document.getElementById('fsZoomIn');
+const fsZoomOut = document.getElementById('fsZoomOut');
+const fsReset = document.getElementById('fsReset');
+
+/* ===== Shared actions ===== */
+function togglePlay(){
+  playing = !playing;
+  const txt = playing ? '⏸️ Pause' : '▶️ Play';
+  const cls = playing ? 'on' : '';
+  btnPlay.textContent = txt; btnPlay.classList.toggle('on', playing);
+  fsPlay.textContent = txt; fsPlay.classList.toggle('on', playing);
+}
+
+function setSolar(){
+  mode = 'solar';
+  btnSolar.classList.add('on'); btnLunar.classList.remove('on');
+  fsSolar.classList.add('on'); fsLunar.classList.remove('on');
+}
+function setLunar(){
+  mode = 'lunar';
+  btnLunar.classList.add('on'); btnSolar.classList.remove('on');
+  fsLunar.classList.add('on'); fsSolar.classList.remove('on');
+}
+
+function toggleShadows(){
+  showShadows = !showShadows;
+  const txt = showShadows ? '🌑 Shadows' : '🌑 Shadows Off';
+  btnShadows.textContent = showShadows ? '🌑 Show Shadows' : '🌑 Hide Shadows';
+  btnShadows.classList.toggle('on', showShadows);
+  fsShadows.textContent = txt;
+  fsShadows.classList.toggle('on', showShadows);
+}
+
+function toggleLabels(){
+  showLabels = !showLabels;
+  btnLabels.textContent = showLabels ? '🏷️ Show Labels' : '🏷️ Hide Labels';
+  btnLabels.classList.toggle('on', showLabels);
+  fsLabels.textContent = showLabels ? '🏷️ Labels' : '🏷️ Labels Off';
+  fsLabels.classList.toggle('on', showLabels);
+}
+
+function doReset(){
+  simDays = 0; camX = 0; camY = 0;
+  zoom = 1; targetZoom = 1;
+  zoomSlider.value = 1;
+  speedSlider.value = 1; speed = 1;
+  speedVal.textContent = '1.0×';
+}
+
+function zoomIn(){
+  targetZoom = Math.min(3, targetZoom + 0.2);
+  zoomSlider.value = targetZoom;
+}
+function zoomOut(){
+  targetZoom = Math.max(0.5, targetZoom - 0.2);
+  zoomSlider.value = targetZoom;
+}
+
+/* ===== Bind main controls ===== */
+btnPlay.addEventListener('click', togglePlay);
+btnSolar.addEventListener('click', setSolar);
+btnLunar.addEventListener('click', setLunar);
+btnShadows.addEventListener('click', toggleShadows);
+btnLabels.addEventListener('click', toggleLabels);
+btnReset.addEventListener('click', doReset);
+btnZoomIn.addEventListener('click', zoomIn);
+btnZoomOut.addEventListener('click', zoomOut);
+
+/* ===== Bind fullscreen overlay controls ===== */
+fsPlay.addEventListener('click', togglePlay);
+fsSolar.addEventListener('click', setSolar);
+fsLunar.addEventListener('click', setLunar);
+fsShadows.addEventListener('click', toggleShadows);
+fsLabels.addEventListener('click', toggleLabels);
+fsReset.addEventListener('click', doReset);
+fsZoomIn.addEventListener('click', zoomIn);
+fsZoomOut.addEventListener('click', zoomOut);
+
+/* ===== Sliders ===== */
+speedSlider.addEventListener('input', () => {
+  speed = parseFloat(speedSlider.value);
+  speedVal.textContent = speed.toFixed(1) + '×';
+});
+zoomSlider.addEventListener('input', () => {
+  targetZoom = parseFloat(zoomSlider.value);
+});
+
+/* ===== Fullscreen ===== */
+btnFull.addEventListener('click', function(){
+  const el = holder;
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+  if(!isFs){
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } else {
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  btnFull.textContent = document.fullscreenElement ? '⛶ Exit Full Screen' : '⛶ Full Screen';
+  setTimeout(resize, 150);
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  btnFull.textContent = document.webkitFullscreenElement ? '⛶ Exit Full Screen' : '⛶ Full Screen';
+  setTimeout(resize, 150);
+});
+
+/* ===== Pan (drag) ===== */
+holder.addEventListener('pointerdown', e => {
+  if(e.target.closest('.fs-controls') || e.target.closest('.fs-btn')) return;
+  isPanning = true;
+  const rect = holder.getBoundingClientRect();
+  panStartX = e.clientX - rect.left;
+  panStartY = e.clientY - rect.top;
+  panStartCamX = camX;
+  panStartCamY = camY;
+  try{ holder.setPointerCapture(e.pointerId); }catch(err){}
+});
+
+holder.addEventListener('pointermove', e => {
+  if(!isPanning) return;
+  const rect = holder.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const s = baseScale * zoom;
+  camX = panStartCamX - (mx - panStartX) / s;
+  camY = panStartCamY - (my - panStartY) / s;
+});
+
+holder.addEventListener('pointerup', e => {
+  isPanning = false;
+  try{ holder.releasePointerCapture(e.pointerId); }catch(err){}
+});
+holder.addEventListener('pointercancel', () => { isPanning = false; });
+
+holder.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = e.deltaY > 0 ? 0.92 : 1.08;
+  targetZoom = Math.max(0.5, Math.min(3, targetZoom * factor));
+  zoomSlider.value = targetZoom;
+}, { passive:false });
+
+/* ==================== TABS ==================== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab === 'p-sim'){
+      requestAnimationFrame(() => { resize(); setTimeout(resize, 60); });
+    }
+  });
+});
+
+/* ==================== START ==================== */
+resize();
+requestAnimationFrame(frame);
+setTimeout(resize, 120);
+setTimeout(resize, 500);
+
+})();
+</script>
+</body>
+</html>

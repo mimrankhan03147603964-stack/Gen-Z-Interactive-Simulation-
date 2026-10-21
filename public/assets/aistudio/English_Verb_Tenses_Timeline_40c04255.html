@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Verb Tenses Timeline: Past, Present and Future</title>
+<style>
+:root{--w1:#bfe4ff;--w2:#f4fbff}
+body.night{--w1:#1d2b64;--w2:#0b1236}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:#fff;overflow:hidden;background:radial-gradient(circle at 15% 0,#4a35c9,#160b4d 70%)}
+#app{height:100vh;min-height:660px;display:grid;grid-template-rows:auto 1fr auto auto;gap:10px;padding:8px 18px}
+h1{text-align:center;font-size:clamp(22px,3vw,38px);color:#ffd54a;letter-spacing:1px;text-shadow:0 1px 0 #f5b301,0 2px 0 #e09a00,0 3px 0 #c27c00,0 4px 0 #a06000,0 9px 14px #0008}
+h1 small{display:block;font-size:.36em;color:#bfe3ff;text-shadow:none;letter-spacing:2px;margin-top:2px}
+main{display:grid;grid-template-columns:1.45fr 1fr;gap:14px;min-height:0}
+.col{display:flex;flex-direction:column;gap:10px;min-height:0}
+.card{background:#ffffff14;border:2px solid #ffffff30;border-radius:18px;padding:10px;backdrop-filter:blur(4px)}
+#stage{flex:1;min-height:0;padding:0;overflow:hidden;border:3px solid #fff}
+#stage svg{width:100%;height:100%;display:block}
+#tlc{padding:6px 10px}
+#tl{width:100%;height:clamp(110px,17vh,160px);display:block}
+.b{border:0;border-radius:13px;padding:.55em .9em;color:#fff;font:700 clamp(12px,1.05vw,16px) "Trebuchet MS","Segoe UI",Arial,sans-serif;background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000),0 8px 14px #0006;cursor:pointer;text-shadow:0 1px 2px #0007;transition:transform .1s,filter .15s}
+.b:hover{filter:brightness(1.13)}
+.b:active,.b.on{transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.b.on{outline:3px solid #fff}
+.row{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.hd{font-size:clamp(13px,1.1vw,17px);font-weight:700;margin-bottom:7px;color:#ffe9a8}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 8px}
+#grid .b{padding:.7em .3em;font-size:clamp(11px,.95vw,15px)}
+#grid .dim{opacity:.22;filter:grayscale(.7);pointer-events:none}
+.zh{text-align:center;font-weight:700;border-radius:10px;padding:4px;font-size:clamp(13px,1.1vw,17px)}
+#sent{background:#fff;color:#1b1b3a;border-radius:16px;padding:12px 14px;box-shadow:0 6px 0 #0004}
+#sent .big{font-size:clamp(18px,2vw,28px);font-weight:800;line-height:1.3}
+.ax{color:#e63946}.vb{color:#1565c0}.wh{color:#2e9e5b}
+#tn{font-size:clamp(13px,1.1vw,17px);font-weight:700;margin-bottom:4px}
+#note{font-size:clamp(12px,1vw,15px);margin-top:5px;color:#444}
+#fm{display:none;margin-top:6px;padding:6px 10px;border-radius:10px;background:#fff3c4;font-weight:700;font-size:clamp(12px,1vw,15px)}
+#bar{padding:8px 10px}
+footer{text-align:center;font-size:11px;color:#b9b2ff}
+#flame path{transform-box:fill-box;transform-origin:50% 100%;animation:fl .22s infinite alternate ease-in-out}
+@keyframes fl{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(.9,1.1) rotate(2deg)}}
+#smoke{animation:sm 2.2s infinite ease-out}
+@keyframes sm{from{opacity:.8;transform:translateY(0)}to{opacity:0;transform:translateY(-34px)}}
+.hand{transition:transform 1.2s cubic-bezier(.5,0,.2,1)}
+</style></head>
+<body>
+<div id="app">
+<h1>English Verb Tenses Timeline<small>Past, Present and Future: tap a tense and watch the object change</small></h1>
+<main>
+<div class="col">
+<div id="stage" class="card">
+<svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid meet" aria-label="Scene with a clock, a calendar and a real object on a table">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--w1)"/><stop offset="1" style="stop-color:var(--w2)"/></linearGradient>
+<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c98a4b"/><stop offset=".15" stop-color="#a86a32"/><stop offset="1" stop-color="#6e4219"/></linearGradient>
+<radialGradient id="apl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ff6b6b"/><stop offset=".55" stop-color="#d62828"/><stop offset="1" stop-color="#7a0c12"/></radialGradient>
+<linearGradient id="wax" x1="0" x2="1"><stop offset="0" stop-color="#e9dcc0"/><stop offset=".4" stop-color="#fffaf0"/><stop offset="1" stop-color="#cdbb97"/></linearGradient>
+<linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#8a6417"/><stop offset=".4" stop-color="#f4d77a"/><stop offset="1" stop-color="#7a560f"/></linearGradient>
+<radialGradient id="flm" cx=".5" cy=".75" r=".7"><stop offset="0" stop-color="#fff7b0"/><stop offset=".45" stop-color="#ffb300"/><stop offset="1" stop-color="#ff5400"/></radialGradient>
+<radialGradient id="glow"><stop offset="0" stop-color="#ffd54a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd54a" stop-opacity="0"/></radialGradient>
+<linearGradient id="wat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd0ff" stop-opacity=".9"/><stop offset="1" stop-color="#1e78d6" stop-opacity=".95"/></linearGradient>
+<linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4d77a"/><stop offset=".5" stop-color="#8a6417"/><stop offset="1" stop-color="#f4d77a"/></linearGradient>
+<mask id="m1"><rect x="180" y="100" width="280" height="230" fill="#fff"/><g id="b1" fill="#000"></g></mask>
+<mask id="m2"><rect x="180" y="100" width="280" height="230" fill="#fff"/><g id="b2" fill="#000"></g></mask>
+<clipPath id="gl"><path d="M262 170H378L364 300Q364 306 358 306H282Q276 306 276 300Z"/></clipPath>
+</defs>
+<rect width="640" height="300" fill="url(#wall)"/>
+<circle id="sun" cx="590" cy="190" r="0" fill="#fff"/>
+<rect y="300" width="640" height="100" fill="url(#wood)"/>
+<rect y="300" width="640" height="6" fill="#e3a868"/>
+<path d="M0 345H640M0 380H640" stroke="#0003" stroke-width="2"/>
+<!-- clock -->
+<g id="clk"><circle cx="105" cy="98" r="66" fill="url(#rim)"/><circle cx="105" cy="98" r="55" fill="#fff"/></g>
+<line class="hand" id="hh" x1="105" y1="98" x2="105" y2="68" stroke="#222" stroke-width="6" stroke-linecap="round" style="transform-origin:105px 98px"/>
+<line class="hand" id="mh" x1="105" y1="98" x2="105" y2="52" stroke="#c1121f" stroke-width="3.5" stroke-linecap="round" style="transform-origin:105px 98px"/>
+<circle cx="105" cy="98" r="5" fill="#222"/>
+<!-- calendar -->
+<g id="cal"><rect x="478" y="36" width="130" height="126" rx="10" fill="#fff" stroke="#999" stroke-width="2"/><path d="M478 46Q478 36 488 36H598Q608 36 608 46V68H478Z" fill="#e63946"/><circle cx="505" cy="36" r="5" fill="#555"/><circle cx="581" cy="36" r="5" fill="#555"/>
+<text id="cz" x="543" y="58" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Present</text>
+<text id="cd" x="543" y="115" text-anchor="middle" font-size="25" font-weight="800" fill="#1b1b3a">Today</text>
+<text id="cs" x="543" y="145" text-anchor="middle" font-size="14" fill="#555">Now</text></g>
+<ellipse cx="320" cy="304" rx="95" ry="12" fill="#0005"/>
+<!-- apple -->
+<g id="oApple">
+<path d="M320 120V300" stroke="none"/>
+<g><rect x="311" y="178" width="18" height="108" rx="9" fill="#e9d9a2"/><ellipse cx="320" cy="215" rx="4" ry="7" fill="#4a2a10"/><ellipse cx="320" cy="245" rx="4" ry="7" fill="#4a2a10"/><rect x="316" y="150" width="8" height="34" rx="4" fill="#5a3a1a"/></g>
+<g mask="url(#m2)"><path d="M320 165C290 140 240 160 245 225C250 285 290 305 320 292C350 305 390 285 395 225C400 160 350 140 320 165Z" fill="#fff3c4"/></g>
+<g mask="url(#m1)"><path d="M320 165C290 140 240 160 245 225C250 285 290 305 320 292C350 305 390 285 395 225C400 160 350 140 320 165Z" fill="url(#apl)"/><ellipse cx="285" cy="195" rx="14" ry="30" fill="#fff" opacity=".28" transform="rotate(15 285 195)"/><path d="M320 120C318 135 320 150 320 168" stroke="#5a3a1a" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M322 138C345 112 372 120 378 128C360 148 338 148 322 138Z" fill="#3e9b3e"/></g>
+</g>
+<!-- candle -->
+<g id="oCandle" style="display:none">
+<ellipse cx="320" cy="298" rx="62" ry="10" fill="url(#brass)"/><path d="M262 296Q320 312 378 296L372 286H268Z" fill="url(#brass)"/>
+<rect id="cw" x="290" y="130" width="60" height="160" fill="url(#wax)"/><ellipse id="ct" cx="320" cy="130" rx="30" ry="7" fill="#fffdf6"/>
+<path id="wick" d="M320 130V114" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+<g id="flame"><circle r="46" cy="-26" fill="url(#glow)"/><path d="M0 0C-14-16-11-34 0-52C11-34 14-16 0 0Z" fill="url(#flm)"/></g>
+<path id="smoke" d="M320 108C312 94 330 86 320 70" stroke="#999" stroke-width="3" fill="none" style="display:none"/>
+</g>
+<!-- glass -->
+<g id="oGlass" style="display:none">
+<g clip-path="url(#gl)"><rect id="wr" x="250" y="178" width="140" height="130" fill="url(#wat)"/><ellipse id="we" cx="320" cy="178" rx="56" ry="6" fill="#bfeaff" opacity=".85"/></g>
+<path d="M262 170H378L364 300Q364 306 358 306H282Q276 306 276 300Z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".85" stroke-width="3"/>
+<ellipse cx="320" cy="170" rx="58" ry="7" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3"/>
+<path d="M276 185L286 290" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round"/>
+<path d="M282 300H358" stroke="#fff" stroke-opacity=".7" stroke-width="4"/>
+</g>
+</svg></div>
+<div id="tlc" class="card">
+<svg id="tl" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMid meet">
+<rect x="0" y="0" width="333" height="150" rx="12" fill="#ff5a5f" opacity=".28"/><rect x="333" y="0" width="334" height="150" fill="#14b86a" opacity=".28"/><rect x="667" y="0" width="333" height="150" rx="12" fill="#3b82f6" opacity=".3"/>
+<text x="166" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#ffd0d1">Past</text><text x="500" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#b8f5d4">Present</text><text x="833" y="26" text-anchor="middle" font-size="24" font-weight="800" fill="#c5dcff">Future</text>
+<line x1="20" y1="75" x2="975" y2="75" stroke="#fff" stroke-width="6" opacity=".55" stroke-linecap="round"/>
+<polygon points="990,75 968,63 968,87" fill="#fff" opacity=".7"/>
+<line x1="500" y1="38" x2="500" y2="148" stroke="#fff" stroke-width="3" stroke-dasharray="6 6"/>
+<rect x="470" y="34" width="60" height="22" rx="11" fill="#fff"/><text x="500" y="50" text-anchor="middle" font-size="16" font-weight="800" fill="#1b1b3a">Now</text>
+<g id="dyn"></g></svg></div>
+</div>
+<div class="col">
+<div class="card">
+<div class="hd">1. Choose an object and an action</div>
+<div class="row" id="verbs"></div>
+</div>
+<div class="card">
+<div class="hd">2. Choose a tense</div>
+<div class="row" id="flt" style="margin-bottom:9px"></div>
+<div id="grid"></div>
+</div>
+<div id="sent"><div id="tn"></div><div class="big" id="sl"></div><div id="note"></div><div id="fm"></div></div>
+</div>
+</main>
+<div id="bar" class="card"><div class="row" id="acts"></div></div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &middot; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id),clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const V=[{k:"Eat the apple",c:"#e63946",s:"Sara",b:"eat",p:"ate",pp:"eaten",g:"eating",t:"eats",o:" the apple"},
+{k:"Burn the candle",c:"#ff8a00",s:"The candle",b:"burn",p:"burned",pp:"burned",g:"burning",t:"burns",o:""},
+{k:"Drink the water",c:"#1e90ff",s:"Sam",b:"drink",p:"drank",pp:"drunk",g:"drinking",t:"drinks",o:" the water"}];
+const T=[
+{n:"Simple Past",z:0,c:"#ff5a5f",a:"",f:"p",fm:"Subject + verb (V2)",note:"A finished action in the past.",w:"yesterday",x:[160],lab:"Finished then",from:0,to:1},
+{n:"Past Continuous",z:0,c:"#ff8a00",a:"was ",f:"g",fm:"Subject + was/were + verb-ing",note:"An action that was in progress at a time in the past.",w:"at 6 o’clock yesterday",sp:[80,240],lab:"In progress then",from:.15,to:.65},
+{n:"Past Perfect",z:0,c:"#e0a800",a:"had ",f:"pp",fm:"Subject + had + verb (V3)",note:"An action finished before another action in the past.",w:"before dinner yesterday",x:[100],rf:260,rl:"Dinner",lab:"Done before",from:0,to:1},
+{n:"Past Perfect Continuous",z:0,c:"#e6397d",a:"had been ",f:"g",fm:"Subject + had been + verb-ing",note:"An action that went on for a time before another past moment.",w:"for ten minutes before dinner",sp:[50,225],rf:260,rl:"Dinner",lab:"Going on before",from:0,to:.8},
+{n:"Simple Present",z:1,c:"#14b86a",a:"",f:"t",fm:"Subject + verb (add s or es for he, she, it)",note:"A habit, a routine or a fact.",w:"every day",x:[400,500,600],lab:"Again and again",from:0,to:1},
+{n:"Present Continuous",z:1,c:"#00bcd4",a:"is ",f:"g",fm:"Subject + am/is/are + verb-ing",note:"An action happening right now.",w:"right now",sp:[430,570],lab:"Happening now",from:.15,to:.65},
+{n:"Present Perfect",z:1,c:"#7ac70c",a:"has ",f:"pp",fm:"Subject + has/have + verb (V3)",note:"A finished action that matters now.",w:"already",x:[250],rf:500,rl:"Now",lab:"Done, result now",from:0,to:1},
+{n:"Present Perfect Continuous",z:1,c:"#00a896",a:"has been ",f:"g",fm:"Subject + has/have been + verb-ing",note:"An action that started in the past and goes on until now.",w:"for ten minutes",sp:[250,500],rf:500,rl:"Now",lab:"Started then, still going",from:0,to:.8},
+{n:"Simple Future",z:2,c:"#3b82f6",a:"will ",f:"b",fm:"Subject + will + verb",note:"An action that will happen later.",w:"tomorrow",x:[830],lab:"Will happen",from:0,to:1},
+{n:"Future Continuous",z:2,c:"#7c4dff",a:"will be ",f:"g",fm:"Subject + will be + verb-ing",note:"An action that will be in progress at a future time.",w:"at 6 o’clock tomorrow",sp:[750,910],lab:"Will be in progress",from:.15,to:.65},
+{n:"Future Perfect",z:2,c:"#d500f9",a:"will have ",f:"pp",fm:"Subject + will have + verb (V3)",note:"An action that will be finished before a future time.",w:"by tomorrow evening",x:[730],rf:920,rl:"Evening",lab:"Will be done",from:0,to:1},
+{n:"Future Perfect Continuous",z:2,c:"#0d47a1",a:"will have been ",f:"g",fm:"Subject + will have been + verb-ing",note:"An action that will have gone on for a time up to a future moment.",w:"for ten minutes by tomorrow noon",sp:[700,890],rf:920,rl:"Noon",lab:"Will have been going on",from:0,to:.8}];
+const ZN=[["Past","Yesterday","Past","#ff5a5f",270],["Present","Today","Now","#14b86a",0],["Future","Tomorrow","Later","#3b82f6",90]];
+let vi=0,ti=0,P=0,raf,tour=null,fmOn=false;
+// clock ticks
+(()=>{let h="";for(let i=0;i<12;i++){const a=i*30*Math.PI/180,l=i%3?6:11;h+=`<line x1="${105+Math.sin(a)*(53-l)}" y1="${98-Math.cos(a)*(53-l)}" x2="${105+Math.sin(a)*53}" y2="${98-Math.cos(a)*53}" stroke="#222" stroke-width="${i%3?2:4}"/>`}
+[[12,0,-38],[3,40,5],[6,0,46],[9,-40,5]].forEach(n=>h+=`<text x="${105+n[1]}" y="${98+n[2]}" text-anchor="middle" font-size="14" font-weight="700" fill="#222">${n[0]}</text>`);$("clk").insertAdjacentHTML("beforeend",h)})();
+function setP(p){P=p;
+$("oApple").style.display=vi==0?"":"none";$("oCandle").style.display=vi==1?"":"none";$("oGlass").style.display=vi==2?"":"none";
+if(vi==0){const B=[[395,200,45],[392,255,52],[248,235,55],[320,290,70],[320,225,130]];let a="",b="";B.forEach((c,i)=>{const k=clamp(p*5-i,0,1);a+=`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]*k}"/>`;b+=`<circle cx="${c[0]}" cy="${c[1]}" r="${Math.max(0,c[2]*k-7)}"/>`});$("b1").innerHTML=a;$("b2").innerHTML=b}
+if(vi==1){const h=170*(1-.7*p),y=290-h;$("cw").setAttribute("y",y);$("cw").setAttribute("height",h);$("ct").setAttribute("cy",y);$("wick").setAttribute("d",`M320 ${y}V${y-16}`);$("flame").setAttribute("transform",`translate(320 ${y-15})`);$("flame").style.display=p<.98?"":"none";$("smoke").setAttribute("transform",`translate(0 ${y-130+0})`);$("smoke").style.display=p<.98?"none":""}
+if(vi==2){const s=178+p*122;$("wr").setAttribute("y",s);$("we").setAttribute("cy",s);$("we").style.display=p>.97?"none":""}}
+function play(){cancelAnimationFrame(raf);const t=T[ti],st=performance.now();(function f(n){const k=Math.min(1,(n-st)/2800);setP(t.from+(t.to-t.from)*k);if(k<1)raf=requestAnimationFrame(f)})(st)}
+function drawTL(t){const c=t.c,y=75;let h="";
+if(t.sp)h+=`<rect x="${t.sp[0]}" y="${y-17}" width="${t.sp[1]-t.sp[0]}" height="34" rx="17" fill="${c}" stroke="#fff" stroke-width="3"/>`;
+(t.x||[]).forEach(x=>h+=`<circle cx="${x}" cy="${y}" r="16" fill="${c}" stroke="#fff" stroke-width="4"/>`);
+const mid=t.sp?(t.sp[0]+t.sp[1])/2:t.x.reduce((a,b)=>a+b)/t.x.length;
+if(t.rf){const r=t.rf,s=t.sp?t.sp[1]-12:t.x[0]+8;h+=`<path d="M${s} ${y-20}Q${(s+r)/2} ${y-62} ${r} ${y-34}" fill="none" stroke="${c}" stroke-width="5" stroke-dasharray="10 8"/><polygon points="${r},${y-23} ${r-10},${y-40} ${r+10},${y-40}" fill="${c}"/><polygon points="${r},${y-20} ${r+16},${y+2} ${r},${y+24} ${r-16},${y+2}" fill="#fff" stroke="${c}" stroke-width="4"/><text x="${r}" y="${y+50}" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">${t.rl}</text>`}
+h+=`<text x="${mid}" y="${y+(t.rf?44:42)}" text-anchor="middle" font-size="20" font-weight="800" fill="#fff" stroke="#0007" stroke-width=".6">${t.lab}</text>`;$("dyn").innerHTML=h}
+function render(){const t=T[ti],v=V[vi],z=ZN[t.z];
+document.querySelectorAll("#grid .b").forEach((b,i)=>b.classList.toggle("on",+b.dataset.i==ti));
+document.querySelectorAll("#verbs .b").forEach((b,i)=>b.classList.toggle("on",i==vi));
+$("tn").innerHTML=`<span style="color:${t.c}">${t.n}</span>`;
+$("sl").innerHTML=`${v.s} ${t.a?`<span class="ax">${t.a.trim()}</span> `:""}<span class="vb">${v[t.f]}</span>${v.o} <span class="wh">${t.w}</span>.`;
+$("note").textContent=t.note;$("fm").textContent="Formula: "+t.fm;
+$("cz").textContent=z[0];$("cd").textContent=z[1];$("cs").textContent=z[2];$("cd").setAttribute("fill",z[3]);
+$("hh").style.transform=`rotate(${z[4]}deg)`;$("mh").style.transform=`rotate(${z[4]==0?360:0}deg)`;
+drawTL(t);play()}
+function go(i){ti=(i+12)%12;render()}
+function speak(){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance($("sl").textContent);u.lang="en-US";u.rate=.85;speechSynthesis.speak(u)}
+function btn(parent,txt,c,fn,cls){const b=document.createElement("button");b.className="b "+(cls||"");b.style.setProperty("--c",c);b.innerHTML=txt;b.onclick=fn;$(parent).appendChild(b);return b}
+V.forEach((v,i)=>btn("verbs",v.k,v.c,()=>{vi=i;render()}));
+[["All","#8e44ad",-1],["Past only","#ff5a5f",0],["Present only","#14b86a",1],["Future only","#3b82f6",2]].forEach(f=>btn("flt",f[0],f[1],()=>{document.querySelectorAll("#grid .b").forEach(b=>b.classList.toggle("dim",f[2]>=0&&T[b.dataset.i].z!=f[2]));if(f[2]>=0&&T[ti].z!=f[2])go(f[2]*4)}));
+ZN.forEach(z=>{const d=document.createElement("div");d.className="zh";d.style.background=z[3];d.textContent=z[0];$("grid").appendChild(d)});
+for(let r=0;r<4;r++)for(let c=0;c<3;c++){const i=c*4+r,b=btn("grid",T[i].n.replace(/^(Simple|Past|Present|Future) /,""),T[i].c,()=>go(i));b.dataset.i=i}
+btn("acts","▶ Play","#22c55e",play);
+btn("acts","↺ Reset","#ef4444",()=>{cancelAnimationFrame(raf);setP(T[ti].from)});
+btn("acts","◀ Previous","#f59e0b",()=>go(ti-1));
+btn("acts","Next ▶","#06b6d4",()=>go(ti+1));
+btn("acts","🔊 Speak","#a855f7",speak);
+btn("acts","Formula","#ec4899",()=>{fmOn=!fmOn;$("fm").style.display=fmOn?"block":"none"});
+const dn=btn("acts","🌙 Night","#6366f1",()=>{const n=document.body.classList.toggle("night");dn.innerHTML=n?"☀ Day":"🌙 Night";$("sun").setAttribute("r",0)});
+const tb=btn("acts","⏵ Auto Tour","#84a30a",()=>{if(tour){clearInterval(tour);tour=null;tb.innerHTML="⏵ Auto Tour";return}tb.innerHTML="⏹ Stop Tour";tour=setInterval(()=>go(ti+1),5000)});
+const fs=btn("acts","⛶ Full Screen","#0ea5e9",()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()});
+document.addEventListener("fullscreenchange",()=>fs.innerHTML=document.fullscreenElement?"✕ Exit Full Screen":"⛶ Full Screen");
+render();
+</script>
+</body></html>

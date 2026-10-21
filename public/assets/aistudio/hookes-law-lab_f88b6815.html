@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hooke's Law & Spring Force Lab | Gen Z Edtech Interactive Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:#0b1030;color:#13204a;overflow:hidden}
+#app{height:100vh;min-height:660px;display:flex;flex-direction:column;background:linear-gradient(135deg,#0b1030,#1d2a7a 60%,#0b6b8f)}
+header{display:flex;align-items:center;justify-content:space-between;padding:7px 22px;color:#fff}
+header h1{font-size:23px}header small{opacity:.85;font-size:13px}
+#tag{background:#ffd43b;color:#3b2f00;border-radius:20px;padding:5px 16px;font-weight:700;font-size:14px}
+main{flex:1;display:flex;gap:12px;padding:0 16px;min-height:0}
+#stage{flex:1;position:relative;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);border:4px solid #fff}
+#cv{width:100%;height:100%;display:block;cursor:default;touch-action:none}
+#badge{position:absolute;left:12px;top:10px;background:rgba(255,255,255,.93);border-radius:14px;padding:5px 14px;font-size:20px;font-weight:800;color:#1d2a7a}
+#side{width:340px;display:flex;flex-direction:column;gap:9px;overflow:auto}
+.card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.card h2{font-size:16px;color:#1d2a7a;margin-bottom:6px}
+#law{background:linear-gradient(135deg,#7048e8,#1c7ed6);color:#fff;border-radius:12px;padding:8px;text-align:center}
+#law big{display:block;font-size:26px;font-weight:800}#law span{font-size:13px;font-weight:700}
+#state{margin-top:7px;border-radius:10px;padding:5px 8px;font-weight:700;font-size:13px;color:#fff;text-align:center}
+#vals{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.val{border-radius:9px;padding:4px 8px;color:#fff;font-size:11px}.val b{display:block;font-size:14px}
+#gcv{width:100%;height:230px;display:block;background:#f6f9ff;border-radius:12px}
+#fit{font-size:13px;font-weight:700;color:#7048e8;margin-top:4px;text-align:center}
+#bar{margin:8px 16px 12px;background:rgba(255,255,255,.13);border-radius:16px;padding:7px 10px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;max-height:33vh;overflow:auto}
+.grp{display:flex;flex-wrap:wrap;gap:5px;align-items:center}.gl{color:#fff;font-weight:700;font-size:12px}
+.b{--c:#4c6ef5;border:0;border-radius:10px;padding:6px 10px;font:700 12px "Trebuchet MS",Verdana,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(var(--c),color-mix(in srgb,var(--c),#000 25%));box-shadow:0 3px 0 color-mix(in srgb,var(--c),#000 50%),0 5px 8px rgba(0,0,0,.3);text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .08s,filter .15s}
+.b:hover{filter:brightness(1.15)}.b:active{transform:translateY(3px);box-shadow:0 0 0 #000}
+.b.on{outline:3px solid #fff;outline-offset:1px}.b:focus-visible{outline:3px solid #fff}
+@media (max-width:1100px){#side{width:260px}}
+</style></head>
+<body>
+<div id="app">
+<header><div><h1>🧲 Hooke's Law & Spring Force Lab</h1><small>Gen Z Edtech Interactive Simulations · Secondary Physics</small></div><div id="tag">Tip: drag the hanger down with your mouse!</div></header>
+<main>
+<div id="stage"><canvas id="cv"></canvas><div id="badge">Soft spring · 1 spring</div></div>
+<div id="side">
+<div class="card"><div id="law"><big>F = k × x</big><span id="eq"></span></div><div id="state"></div><div id="vals"></div></div>
+<div class="card"><h2>Force–Extension Graph</h2><canvas id="gcv"></canvas><div id="fit">Record readings to draw the graph</div></div>
+</div></main>
+<div id="bar">
+<div class="grp"><span class="gl">Screen:</span><span class="grp" id="gScr"></span></div>
+<div class="grp"><span class="gl">Spring:</span><span class="grp" id="gSp"></span></div>
+<div class="grp"><span class="gl">Arrangement:</span><span class="grp" id="gAr"></span></div>
+<div class="grp"><span class="gl">Add masses:</span><span class="grp" id="gMs"></span></div>
+<div class="grp"><span class="gl">Real objects:</span><span class="grp" id="gOb"></span></div>
+<div class="grp"><span class="gl">Planet:</span><span class="grp" id="gPl"></span></div>
+<div class="grp"><span class="gl">Lab tools:</span><span class="grp" id="gTl"></span></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),c=cv.getContext('2d'),gv=$('gcv'),gc=gv.getContext('2d'),PI=Math.PI;
+/* ---------- state ---------- */
+const SP={Soft:{k:40,F:3.5,col:'#f76707'},Medium:{k:80,F:4.5,col:'#1c7ed6'},Stiff:{k:160,F:5.5,col:'#2f9e44'}};
+const PL={Earth:[9.8,'🌍'],Moon:[1.6,'🌙'],Mars:[3.7,'🔴'],Jupiter:[24.8,'🪐']};
+const L0=.08,MAXL=.49,MAXM=.6;
+let W=0,H=0,GW=0,GH=0,spr='Soft',arr='single',planet='Earth',g=9.8,items=[],len=L0,v=0,lastA=0,maxE=0,
+ limitOn=false,calm=false,slow=false,ruler=true,arrows=true,data=[],drag=null,auto=null,msg='',msgT=0,tNow=0,lastT=0,clampMsg=0;
+const nS=()=>arr==='series'?2:1;
+const kEff=()=>arr==='parallel'?2*SP[spr].k:arr==='series'?SP[spr].k/2:SP[spr].k;
+const mass=()=>items.reduce((s,i)=>s+i.m,0);
+const ext0=l=>(l-nS()*L0)/nS();
+const perm=()=>limitOn?.5*Math.max(0,maxE-SP[spr].F/SP[spr].k):0;
+function springF(l){const k=SP[spr].k,xl=SP[spr].F/k,e=ext0(l)-perm();let f=e<=0?k*e:(limitOn&&e>xl?k*xl+.25*k*(e-xl):k*e);return arr==='parallel'?2*f:f}
+function step(dt){const M=Math.max(mass(),.01),c_=2*(calm?.8:.1)*Math.sqrt(kEff()*M),F=springF(len),a=(mass()*g-F-c_*v)/M;lastA=a;v+=a*dt;len+=v*dt;
+ const lo=nS()*L0*.5;if(len>MAXL){len=MAXL;if(v>0)v=0;if(tNow-clampMsg>3){toast('The spring is fully stretched!');clampMsg=tNow}}if(len<lo){len=lo;if(v<0)v=0}
+ maxE=Math.max(maxE,ext0(len))}
+const settled=()=>!drag&&Math.abs(v)<.004&&Math.abs(lastA)<.08;
+const xcm=()=>(len-nS()*L0)*100;
+function toast(s){msg=s;msgT=tNow+2.8}
+/* ---------- sizes ---------- */
+function rs(){let r=cv.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0);
+ r=gv.getBoundingClientRect();GW=r.width;GH=r.height;gv.width=GW*d;gv.height=GH*d;gc.setTransform(d,0,0,d,0,0)}
+const geo=()=>{const y0=H*.15,s=Math.min(9,(H-y0-200)/50);return{cx:W*.42,y0,s}};
+/* ---------- drawing helpers ---------- */
+function txt(s,x,y,col,size=13,al='center'){c.font=`bold ${size}px Trebuchet MS,Verdana`;c.fillStyle=col;c.textAlign=al;c.textBaseline='middle';c.fillText(s,x,y)}
+function pill(x,y,s,bg,size=13){c.font=`bold ${size}px Trebuchet MS,Verdana`;const w=c.measureText(s).width+16;c.fillStyle=bg;c.beginPath();c.roundRect(x-w/2,y-12,w,24,12);c.fill();txt(s,x,y+1,'#fff',size)}
+function coil(x,y1,y2,col,n=18,w=15){const L=y2-y1;if(L<6)return;const ep=Math.min(10,L*.2),a=y1+ep,b=y2-ep,N=n*14;
+ const path=()=>{c.beginPath();c.moveTo(x,y1);c.lineTo(x,a);for(let i=0;i<=N;i++){const t=i/N;c.lineTo(x+w*Math.sin(t*n*2*PI),a+(b-a)*t)}c.lineTo(x,b);c.lineTo(x,y2)};
+ c.lineJoin='round';c.lineCap='round';path();c.strokeStyle='#1b2430';c.lineWidth=6;c.stroke();path();c.strokeStyle=col;c.lineWidth=3.6;c.stroke();
+ path();c.strokeStyle='rgba(255,255,255,.45)';c.lineWidth=1.2;c.stroke()}
+function arrow(x,y1,y2,col){const d=Math.sign(y2-y1);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=5;c.beginPath();c.moveTo(x,y1);c.lineTo(x,y2-d*10);c.stroke();c.beginPath();c.moveTo(x,y2);c.lineTo(x-9,y2-d*16);c.lineTo(x+9,y2-d*16);c.fill()}
+function hanger(x,yb){c.strokeStyle='#cfd5dd';c.lineWidth=3;c.beginPath();c.ellipse(x,yb+6,5,6,0,0,7);c.stroke();
+ const slots=items.filter(i=>i.slot);let y=yb+18;const rodEnd=y+slots.reduce((s,i)=>s+10+i.m*30+1,0)+10;
+ c.strokeStyle='#aeb7c2';c.lineWidth=4;c.beginPath();c.moveTo(x,yb+12);c.lineTo(x,rodEnd);c.stroke();
+ slots.forEach(i=>{const h=10+i.m*30,w=34+i.m*120,g_=c.createLinearGradient(x-w/2,0,x+w/2,0);g_.addColorStop(0,'#a8780f');g_.addColorStop(.35,'#f3cf5a');g_.addColorStop(.7,'#d9a521');g_.addColorStop(1,'#8f6408');c.fillStyle=g_;c.beginPath();c.roundRect(x-w/2,y,w,h,3);c.fill();c.strokeStyle='#6b4a05';c.lineWidth=1;c.stroke();c.fillStyle='#3b2700';c.font='bold 9px Trebuchet MS';c.textAlign='center';c.textBaseline='middle';c.fillText(Math.round(i.m*1000)+' g',x,y+h/2+.5);y+=h+1});
+ c.strokeStyle='#aeb7c2';c.lineWidth=4;c.beginPath();c.moveTo(x-22,rodEnd);c.lineTo(x+22,rodEnd);c.stroke();
+ const ob=items.filter(i=>!i.slot);ob.forEach((o,j)=>{const ox=x+(j-(ob.length-1)/2)*46,oy=rodEnd+46;c.strokeStyle='#8a8f98';c.lineWidth=1.5;c.beginPath();c.moveTo(x,rodEnd);c.lineTo(ox,oy-20);c.stroke();c.font='38px "Segoe UI Emoji","Apple Color Emoji",sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#000';c.fillText(o.e,ox,oy);txt(Math.round(o.m*1000)+' g',ox,oy+26,'#13204a',11)});
+ return rodEnd+(ob.length?80:0)}
+/* ---------- scene ---------- */
+function scene(){const{cx,y0,s}=geo(),k=SP[spr].k,col=SP[spr].col,yb=y0+len*100*s,nsx=cx-190;
+ const bgd=c.createLinearGradient(0,0,0,H);bgd.addColorStop(0,'#eef5ff');bgd.addColorStop(1,'#d3e2f5');c.fillStyle=bgd;c.fillRect(0,0,W,H);
+ c.strokeStyle='rgba(60,100,160,.1)';c.lineWidth=1;for(let x=0;x<W;x+=60){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke()}for(let y=0;y<H;y+=60){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+ const bn=c.createLinearGradient(0,H-44,0,H);bn.addColorStop(0,'#b98650');bn.addColorStop(1,'#7a5128');c.fillStyle=bn;c.fillRect(0,H-44,W,44);c.fillStyle='rgba(255,255,255,.25)';c.fillRect(0,H-44,W,3);
+ /* stand */
+ const sg=c.createLinearGradient(nsx-6,0,nsx+6,0);sg.addColorStop(0,'#8c96a3');sg.addColorStop(.5,'#eef1f5');sg.addColorStop(1,'#7c8693');
+ c.fillStyle='#2f3946';c.beginPath();c.roundRect(nsx-75,H-58,150,16,5);c.fill();c.fillStyle=sg;c.fillRect(nsx-6,y0-30,12,H-84);
+ c.fillStyle='#39434f';c.fillRect(nsx-12,y0-38,24,22);c.fillStyle=sg;c.fillRect(nsx,y0-34,cx-nsx+24,9);
+ c.fillStyle='#39434f';c.fillRect(cx+16,y0-36,16,14);
+ /* ruler */
+ const xR=cx+120;if(ruler){const rg=c.createLinearGradient(xR-20,0,xR+20,0);rg.addColorStop(0,'#f1d28a');rg.addColorStop(1,'#e3b65c');c.fillStyle=rg;c.beginPath();c.roundRect(xR-20,y0-6,40,50*s+12,4);c.fill();c.strokeStyle='#8a6a1f';c.lineWidth=1;c.stroke();
+  c.strokeStyle='#3a2a07';for(let i=0;i<=50;i++){const y=y0+i*s,L=i%10?(i%5?8:13):20;c.lineWidth=i%10?1:1.6;c.beginPath();c.moveTo(xR-20,y);c.lineTo(xR-20+L,y);c.stroke();if(i%10===0&&i)txt(i,xR+4,y,'#3a2a07',11)}txt('cm',xR+4,y0-16,'#3a2a07',11);
+  c.setLineDash([5,5]);c.strokeStyle='#868e96';c.lineWidth=1.5;const yn=y0+nS()*L0*100*s;c.beginPath();c.moveTo(cx-95,yn);c.lineTo(xR-20,yn);c.stroke();
+  const p=perm();if(p>0){const yp=y0+(nS()*L0+nS()*p)*100*s;c.strokeStyle='#e03131';c.beginPath();c.moveTo(cx-95,yp);c.lineTo(xR-20,yp);c.stroke();txt('New natural length (damaged)',cx-95,yp+11,'#e03131',11,'left')}
+  c.setLineDash([]);txt('Natural length',cx-95,yn-9,'#495057',11,'left')}
+ /* springs */
+ let bot;
+ if(arr==='single'){c.strokeStyle='#555';c.lineWidth=3;c.beginPath();c.moveTo(cx,y0-22);c.lineTo(cx,y0);c.stroke();coil(cx,y0,yb,col);bot=yb}
+ else if(arr==='parallel'){c.fillStyle='#4b5563';c.fillRect(cx-40,y0-5,80,7);c.fillRect(cx-40,yb-2,80,7);c.strokeStyle='#555';c.lineWidth=3;c.beginPath();c.moveTo(cx,y0-22);c.lineTo(cx,y0-4);c.stroke();coil(cx-30,y0+2,yb-2,col,16,12);coil(cx+30,y0+2,yb-2,col,16,12);bot=yb+4}
+ else{const ym=y0+(yb-y0)/2;c.strokeStyle='#555';c.lineWidth=3;c.beginPath();c.moveTo(cx,y0-22);c.lineTo(cx,y0);c.stroke();coil(cx,y0,ym-4,col,10);c.fillStyle='#4b5563';c.beginPath();c.roundRect(cx-14,ym-5,28,10,4);c.fill();coil(cx,ym+4,yb,col,10);bot=yb}
+ const hb=hanger(cx,bot);
+ /* pointer */
+ if(ruler){c.strokeStyle='#e03131';c.lineWidth=2;c.beginPath();c.moveTo(cx+20,bot);c.lineTo(xR-20,bot);c.stroke();c.fillStyle='#e03131';c.beginPath();c.moveTo(xR-20,bot);c.lineTo(xR-31,bot-6);c.lineTo(xR-31,bot+6);c.fill();pill(xR+95,bot,'Length = '+(len*100).toFixed(1)+' cm','#e03131')}
+ /* force arrows */
+ if(arrows){const ax=cx-70,ay=bot+50,Wn=mass()*g,Fs=springF(len),sc=Math.min(7,110/Math.max(Wn,Fs,1));if(Wn>.01||Math.abs(Fs)>.01){arrow(ax,ay,ay+Wn*sc,'#e03131');arrow(ax,ay,ay-Math.max(0,Fs)*sc,'#1c7ed6');txt('Weight W = '+Wn.toFixed(2)+' N',ax-8,ay+Wn*sc+14,'#e03131',12,'right');txt('Spring force F = '+Math.max(0,Fs).toFixed(2)+' N',ax-8,ay-Math.max(0,Fs)*sc-14,'#1c7ed6',12,'right')}}
+ /* planet badge */
+ c.font='34px "Segoe UI Emoji","Apple Color Emoji"';c.textAlign='right';c.textBaseline='middle';c.fillStyle='#000';c.fillText(PL[planet][1],W-14,32);txt(planet+'  g = '+g+' N/kg',W-54,32,'#1d2a7a',14,'right');
+ if(drag)pill(cx,y0-60,'Let go to see the spring bounce!','#7048e8');
+ if(msgT>tNow)pill(W/2,H-72,msg,'#e03131',15)}
+/* ---------- graph ---------- */
+function graph(){gc.clearRect(0,0,GW,GH);const L=42,B=34,T=14,R=12,pw=GW-L-R,ph=GH-T-B;const cur={x:xcm(),F:mass()*g};
+ const mx=Math.max(20,Math.ceil(Math.max(cur.x,...data.map(d=>d.x))/10)*10),my=Math.max(6,Math.ceil(Math.max(cur.F,...data.map(d=>d.F))/2)*2);
+ const X=x=>L+x/mx*pw,Y=f=>T+ph-f/my*ph;gc.font='11px Trebuchet MS';gc.textBaseline='middle';
+ gc.strokeStyle='#d5def0';gc.lineWidth=1;gc.fillStyle='#495057';for(let i=0;i<=5;i++){const x=L+i*pw/5,y=T+i*ph/5;gc.beginPath();gc.moveTo(x,T);gc.lineTo(x,T+ph);gc.stroke();gc.beginPath();gc.moveTo(L,y);gc.lineTo(L+pw,y);gc.stroke();gc.textAlign='center';gc.fillText((mx*i/5).toFixed(0),x,T+ph+10);gc.textAlign='right';gc.fillText((my*(5-i)/5).toFixed(1),L-4,y)}
+ gc.strokeStyle='#1d2a7a';gc.lineWidth=2;gc.beginPath();gc.moveTo(L,T);gc.lineTo(L,T+ph);gc.lineTo(L+pw,T+ph);gc.stroke();
+ gc.fillStyle='#1d2a7a';gc.font='bold 11px Trebuchet MS';gc.textAlign='center';gc.fillText('Extension x (cm)',L+pw/2,GH-8);gc.save();gc.translate(10,T+ph/2);gc.rotate(-PI/2);gc.fillText('Force F (N)',0,0);gc.restore();
+ const ok=data.filter(d=>!d.over);let fit='Record readings to draw the graph';
+ if(ok.length>=1){const sxy=ok.reduce((s,d)=>s+d.x*d.F,0),sxx=ok.reduce((s,d)=>s+d.x*d.x,0);if(sxx>0){const sl=sxy/sxx;gc.setLineDash([6,5]);gc.strokeStyle='#f59f00';gc.lineWidth=3;gc.beginPath();gc.moveTo(X(0),Y(0));const xe=Math.min(mx,my/sl);gc.lineTo(X(xe),Y(sl*xe));gc.stroke();gc.setLineDash([]);fit='Gradient of the line = '+(sl*100).toFixed(0)+' N/m  (this is k)'}}
+ data.forEach(d=>{gc.fillStyle=d.over?'#e03131':'#2f9e44';gc.strokeStyle='#fff';gc.lineWidth=2;gc.beginPath();gc.arc(X(d.x),Y(d.F),5.5,0,7);gc.fill();gc.stroke()});
+ gc.strokeStyle='#1c7ed6';gc.lineWidth=2.5;gc.beginPath();gc.arc(X(Math.max(0,cur.x)),Y(cur.F),8+Math.sin(tNow*6)*1.5,0,7);gc.stroke();
+ if($('fit').textContent!==fit)$('fit').textContent=fit}
+/* ---------- panel ---------- */
+let lastH='';
+function panel(){const m=mass(),Wn=m*g,kE=kEff(),x=xcm(),Fs=Math.max(0,springF(len)),xl=SP[spr].F/SP[spr].k,over=limitOn&&(perm()>0||ext0(len)-perm()>xl),E=.5*Fs*Math.max(0,x)/100;
+ $('eq').textContent=`${Fs.toFixed(2)} N = ${kE} N/m × ${(Math.max(0,x)/100).toFixed(3)} m`;
+ const st=$('state'),sm=over?'✗ Beyond the elastic limit. The spring is damaged!':limitOn?'✓ Within the elastic limit. Hooke’s Law works.':'✓ Ideal spring (elastic limit is OFF)';st.textContent=sm;st.style.background=over?'#e03131':'#2f9e44';
+ const V=[['Load (mass)',(m*1000).toFixed(0)+' g','#e8590c'],['Weight W = m × g',Wn.toFixed(2)+' N','#e03131'],['Spring constant k',kE+' N/m','#1c7ed6'],['Extension x',x.toFixed(1)+' cm','#7048e8'],['Spring length',(len*100).toFixed(1)+' cm','#0ca678'],['Energy stored',E<.01?(E*1000).toFixed(1)+' mJ':E.toFixed(3)+' J','#c2255c'],['Hooke predicts x = F ÷ k',(Wn/kE*100).toFixed(1)+' cm','#f59f00'],['Gravity g',g+' N/kg','#495057']];
+ const h=V.map(a=>`<div class="val" style="background:${a[2]}">${a[0]}<b>${a[1]}</b></div>`).join('');if(h!==lastH){$('vals').innerHTML=h;lastH=h}
+ $('badge').textContent=spr+' spring · '+({single:'1 spring',parallel:'2 in parallel',series:'2 in series'})[arr]}
+/* ---------- actions ---------- */
+function addSlot(m){if(mass()+m>MAXM+1e-9){toast('Maximum load is 600 g');return}items.push({m,slot:1})}
+function addObj(e,m,n){if(items.filter(i=>!i.slot).length>=4){toast('The hanger is full of objects');return}if(mass()+m>MAXM+1e-9){toast('Maximum load is 600 g');return}items.push({m,e,n})}
+function record(){if(mass()<=0){toast('Add a mass first');return false}if(!settled()){toast('Wait until the spring stops moving!');return false}
+ const xl=SP[spr].F/SP[spr].k;data.push({x:xcm(),F:mass()*g,over:limitOn&&(perm()>0||ext0(len)-perm()>xl)});return true}
+function say(s){try{speechSynthesis.cancel();const q=new SpeechSynthesisUtterance(s);q.lang='en-US';q.rate=.9;speechSynthesis.speak(q)}catch(e){}}
+function newSpring(){maxE=0;len=Math.max(len,nS()*L0);v=0}
+function reset(){items=[];len=nS()*L0;v=0;maxE=0;data=[];auto=null;limitOn=false;calm=false;slow=false;ruler=true;arrows=true;spr='Soft';arr='single';planet='Earth';g=9.8;len=L0;
+ document.querySelectorAll('#bar .b.on').forEach(b=>b.classList.remove('on'));['Soft','single','Earth'].forEach(n=>document.querySelectorAll('[data-n="'+n+'"]').forEach(b=>b.classList.add('on')));document.querySelectorAll('.t1').forEach(b=>b.classList.add('on'))}
+/* ---------- loop ---------- */
+function frame(now){tNow=now/1000;const dt=Math.min(.05,tNow-lastT);lastT=tNow;
+ if(!drag){const ts=slow?.25:1;for(let i=0;i<10;i++)step(dt*ts/10*(dt>0?1:0)||1/600)}
+ if(auto){auto.w+=dt;if(auto.w>.7&&(settled()||auto.w>5)){if(!settled()){}record();if(mass()>=.3-1e-6){auto=null;calm=false;toast('Experiment complete! The points make a straight line.')}else{addSlot(.05);auto.w=0}}}
+ scene();graph();panel();requestAnimationFrame(frame)}
+/* ---------- UI ---------- */
+function mk(p,l,col,fn,n){const b=document.createElement('button');b.className='b';b.style.setProperty('--c',col);b.innerHTML=l;if(n)b.dataset.n=n;b.onclick=()=>fn(b);$(p).appendChild(b);return b}
+function tog(p,l,col,get,set,cls){const b=mk(p,l,col,b=>{set(!get());b.classList.toggle('on',get())});b.classList.toggle('on',get());if(cls)b.classList.add(cls);return b}
+function radio(p,l,col,key,fn){const b=mk(p,l,col,b=>{b.parentNode.querySelectorAll('.b').forEach(x=>x.classList.remove('on'));b.classList.add('on');fn()},key);return b}
+const fsb=mk('gScr','⛶ Full Screen','#e8590c',()=>{const a=$('app');document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)});
+document.addEventListener('fullscreenchange',()=>{fsb.innerHTML=document.fullscreenElement?'🗗 Exit Full Screen':'⛶ Full Screen';setTimeout(rs,150)});
+[['Soft','Soft (40 N/m)','#f76707'],['Medium','Medium (80 N/m)','#1c7ed6'],['Stiff','Stiff (160 N/m)','#2f9e44']].forEach(([k,l,col])=>radio('gSp',l,col,k,()=>{spr=k;maxE=0;data=[]}));
+$('gSp').firstChild.classList.add('on');
+mk('gSp','🔧 New Spring','#7048e8',()=>{newSpring();toast('A brand new spring is fitted')});
+[['single','1 Spring','#f59f00'],['parallel','2 in Parallel','#d6336c'],['series','2 in Series','#0ca678']].forEach(([k,l,col])=>radio('gAr',l,col,k,()=>{arr=k;len=nS()*L0+(len-nS()*L0>0?0:0);maxE=0;data=[];v=0}));
+$('gAr').firstChild.classList.add('on');
+[['+50 g',.05,'#e8590c'],['+100 g',.1,'#f59f00'],['+200 g',.2,'#37b24d']].forEach(([l,m,col])=>mk('gMs',l,col,()=>addSlot(m)));
+mk('gMs','−50 g Remove Last','#d6336c',()=>{const i=items.map(x=>x.slot).lastIndexOf(true);if(i>=0)items.splice(i,1);else items.pop()});
+mk('gMs','🗑 Remove All','#495057',()=>{items=[]});
+[['🍎 Apple 100 g','🍎',.1,'#e03131'],['🍊 Orange 150 g','🍊',.15,'#f76707'],['🍌 Banana 120 g','🍌',.12,'#e0a800'],['🥫 Tin Can 400 g','🥫',.4,'#1c7ed6'],['📚 Book 500 g','📚',.5,'#7048e8']].forEach(([l,e,m,col])=>mk('gOb',l,col,()=>{addObj(e,m);say(l.replace(/[^\w ]/g,''))}));
+[['Earth','#1c7ed6'],['Moon','#868e96'],['Mars','#e8590c'],['Jupiter','#c2255c']].forEach(([k,col])=>radio('gPl',PL[k][1]+' '+k,col,k,()=>{planet=k;g=PL[k][0];data=[];say(k+'. Gravity is '+g+' newtons per kilogram')}));
+$('gPl').firstChild.classList.add('on');
+mk('gTl','📝 Record Reading','#2f9e44',()=>{if(record())toast('Reading recorded!')});
+mk('gTl','🧹 Clear Graph','#e67700',()=>data=[]);
+mk('gTl','🤖 Auto Experiment','#7048e8',()=>{items=[];data=[];maxE=0;limitOn=false;calm=true;auto={w:0};addSlot(.05);toast('Adding 50 g at a time and recording…')});
+mk('gTl','⬇ Pull & Release','#d6336c',()=>{len=Math.min(MAXL,len+.05);v=0});
+mk('gTl','⏫ Bounce','#f59f00',()=>{v+=.8});
+tog('gTl','⚠ Elastic Limit','#e03131',()=>limitOn,v=>{limitOn=v;maxE=Math.max(maxE,0);if(v)toast('Heavy loads can now damage the spring!')});
+tog('gTl','🍯 Calm Damping','#12b886',()=>calm,v=>calm=v);
+tog('gTl','🐌 Slow Motion','#1c7ed6',()=>slow,v=>slow=v);
+tog('gTl','📏 Ruler','#e67700',()=>ruler,v=>ruler=v,'t1');tog('gTl','➡ Force Arrows','#c2255c',()=>arrows,v=>arrows=v,'t1');
+mk('gTl','🔊 Explain','#ae3ec9',()=>say("Hooke's Law says that the extension of a spring is directly proportional to the force pulling it, as long as the spring is not stretched past its elastic limit. In symbols, F equals k times x. The graph of force against extension is a straight line, and its gradient is the spring constant k."));
+mk('gTl','↺ Reset Lab','#343a40',()=>reset());
+/* drag */
+function mpos(e){const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]}
+cv.onpointerdown=e=>{const[px,py]=mpos(e),{cx,y0,s}=geo(),yb=y0+len*100*s;if(Math.abs(px-cx)<80&&py>yb-10&&py<yb+170){drag={o:py-yb};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing';v=0;auto=null}};
+cv.onpointermove=e=>{const[px,py]=mpos(e),{cx,y0,s}=geo();if(drag){len=Math.max(nS()*L0*.5,Math.min(MAXL,(py-drag.o-y0)/s/100));v=0;maxE=Math.max(maxE,ext0(len))}else{const yb=y0+len*100*s;cv.style.cursor=Math.abs(px-cx)<80&&py>yb-10&&py<yb+170?'grab':'default'}};
+cv.onpointerup=()=>{drag=null;cv.style.cursor='default'};
+addEventListener('resize',rs);
+document.querySelectorAll('#gTl .t1').forEach(b=>b.classList.add('on'));
+rs();requestAnimationFrame(t=>{lastT=t/1000;requestAnimationFrame(frame)});
+</script>
+</body></html>

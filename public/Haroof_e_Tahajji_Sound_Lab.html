@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haroof-e-Tahajji and Sound Recognition Lab</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Tahoma,sans-serif;background:#10182f;color:#fff}
+.ur{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Urdu Typesetting","Segoe UI","Arial",serif;direction:rtl;line-height:1.9}
+#app{height:100vh;min-height:640px;display:flex;flex-direction:column;overflow:auto;background:radial-gradient(1100px 600px at 85% -10%,#0f9d7a,#10182f 62%)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:10px 24px 2px;gap:10px}
+.brand{font-size:12px;letter-spacing:.1em;color:#7ff0cf;font-weight:700}
+h1{margin:0;font-size:29px;font-weight:900;text-shadow:0 1px 0 #7048e8,0 2px 0 #7048e8,0 3px 0 #4c2db3,0 7px 10px rgba(0,0,0,.5)}
+#stat{display:flex;gap:10px;font-weight:700}
+#stat span{background:#16305a;border:2px solid #2f9e8a;border-radius:12px;padding:6px 14px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(320px,35%) 1fr;gap:18px;padding:8px 24px}
+#card{border-radius:26px;background:linear-gradient(160deg,#fff,#d9fff2);color:#12284a;text-align:center;padding:10px 14px;box-shadow:0 14px 0 #0b7a5e,0 26px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:center}
+#big{font-size:clamp(70px,14vh,130px);line-height:1.5;font-weight:700;color:#d6336c;text-shadow:0 4px 0 rgba(0,0,0,.15)}
+#nm{font-size:clamp(22px,3.8vh,34px);font-weight:900}
+#obj{font-size:clamp(70px,14vh,130px);line-height:1.15;filter:drop-shadow(0 12px 10px rgba(0,0,0,.35));cursor:pointer}
+#obj.pop{animation:pop .5s}@keyframes pop{0%{transform:scale(.5) rotate(-12deg)}60%{transform:scale(1.2) rotate(6deg)}100%{transform:scale(1)}}
+#uw{font-size:clamp(34px,6vh,54px);font-weight:700;color:#1c7ed6}
+#en{font-size:20px;font-weight:800;color:#3c4f86}
+#msg{min-height:26px;font-size:19px;font-weight:800}
+#grid{display:grid;direction:rtl;grid-template-columns:repeat(9,1fr);gap:9px;align-content:center}
+.t{border:0;border-radius:15px;font-size:clamp(26px,5vh,46px);color:#fff;background:var(--c);aspect-ratio:1.1;box-shadow:0 6px 0 rgba(0,0,0,.38),inset 0 3px 0 rgba(255,255,255,.35);cursor:pointer;text-shadow:0 2px 0 rgba(0,0,0,.25);padding:0;line-height:1.3}
+.t:hover{filter:brightness(1.12)}.t:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.t.cur{outline:4px solid #fff;outline-offset:2px;transform:scale(1.08)}
+.t.fam{box-shadow:0 6px 0 rgba(0,0,0,.38),0 0 0 4px #ffe066,0 0 18px #ffe066}
+.t.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#ctl{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;padding:6px 24px 6px}
+.b{border:0;border-radius:12px;padding:10px 15px;font:800 15px "Trebuchet MS",sans-serif;color:var(--t,#fff);background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.3);cursor:pointer}
+.b:hover{filter:brightness(1.12)}.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.4)}.b.on{outline:3px solid #fff;outline-offset:2px}
+footer{text-align:center;font-size:12px;color:#8fd8c4;padding:2px 0 8px}
+.conf{position:fixed;top:-20px;width:12px;height:16px;z-index:9;animation:fall 1.6s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+</style></head><body>
+<div id="app">
+<header><div><div class="brand">GEN Z EDTECH INTERACTIVE SIMULATIONS</div><h1>Haroof-e-Tahajji &amp; Sound Recognition Lab</h1></div>
+<div id="stat"><span>Stars: <b id="sc">0</b></span><span id="mode">Explore mode</span></div></header>
+<main>
+<section id="card"><div id="big" class="ur"></div><div id="nm"></div><div id="obj"></div><div id="uw" class="ur"></div><div id="en"></div><div id="msg"></div></section>
+<section id="grid"></section>
+</main>
+<div id="ctl"></div>
+<footer id="ft">Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science. Turn your speaker on to hear the sounds.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+/* letter, English name, Urdu name, picture, Urdu word, spoken word, meaning, family */
+const D=[["ا","Alif","الف","🐪","اونٹ","Oont","Camel",0],["ب","Bay","بے","🦆","بطخ","Batakh","Duck",1],["پ","Pay","پے","🥣","پیالہ","Pyala","Bowl",1],["ت","Tay","تے","🦋","تتلی","Titli","Butterfly",1],["ٹ","Ttay","ٹے","🧢","ٹوپی","Topi","Cap",1],["ث","Say","ثے","🍇","ثمر","Samar","Fruit",1],["ج","Jeem","جیم","✈️","جہاز","Jahaz","Airplane",2],["چ","Chay","چے","🐦","چڑیا","Chirya","Sparrow",2],["ح","Bari Hay","بڑی حے","🍮","حلوہ","Halwa","Halwa (sweet)",2],["خ","Khay","خے","🐰","خرگوش","Khargosh","Rabbit",2],["د","Daal","دال","🚪","دروازہ","Darwaza","Door",3],["ڈ","Ddaal","ڈال","📦","ڈبہ","Dabba","Box",3],["ذ","Zaal","ذال","🦒","ذرافہ","Zarafa","Giraffe",3],["ر","Ray","رے","🪢","رسی","Rassi","Rope",4],["ڑ","Rray","ڑے","⛰️","پہاڑ","Pahar","Mountain",4],["ز","Zay","زے","🦓","زیبرا","Zebra","Zebra",4],["ژ","Zhay","ژے","🌨️","ژالہ","Zhala","Hail",4],["س","Seen","سین","🍑","سیب","Seb","Apple",5],["ش","Sheen","شین","🦁","شیر","Sher","Lion",5],["ص","Suad","صاد","🧼","صابن","Saboon","Soap",6],["ض","Zuad","ضاد","🥊","ضرب","Zarb","Punch",6],["ط","Toay","طوئے","🦜","طوطا","Tota","Parrot",7],["ظ","Zoay","ظوئے","🍽️","ظرف","Zarf","Dish",7],["ع","Ain","عین","👓","عینک","Ainak","Glasses",8],["غ","Ghain","غین","🎈","غبارہ","Ghubara","Balloon",8],["ف","Fay","فے","🐘","فیل","Feel","Elephant",9],["ق","Qaaf","قاف","🖊️","قلم","Qalam","Pen",9],["ک","Kaaf","کاف","📖","کتاب","Kitab","Book",10],["گ","Gaaf","گاف","🥕","گاجر","Gajar","Carrot",10],["ل","Laam","لام","🍋","لیموں","Lemon","Lemon",11],["م","Meem","میم","🐟","مچھلی","Machli","Fish",12],["ن","Noon","نون","🍐","ناشپاتی","Nashpati","Pear",12],["و","Wao","واؤ","🐋","وہیل","Whale","Whale",13],["ہ","Chhoti Hay","چھوٹی ہے","🖐️","ہاتھ","Haath","Hand",14],["ی","Chhoti Yay","چھوٹی یے","💎","یاقوت","Yaqoot","Ruby",15],["ے","Bari Yay","بڑی یے","🍌","کیلے","Kele","Bananas",15]];
+D[17][3]="🍎";D[17][4]="سیب";
+let cur=0,slow=false,fam=false,quiz=null,qtype=0,score=0,auto=null,sound=true,warned=false;
+const grid=$('#grid');
+D.forEach((d,i)=>{const b=document.createElement('button');b.className='t ur';b.style.setProperty('--c',`hsl(${i*10},75%,48%)`);b.textContent=d[0];b.onclick=()=>tile(i);grid.appendChild(b)});
+const tiles=[...grid.children];
+function urV(){return(window.speechSynthesis?speechSynthesis.getVoices():[]).find(v=>/^ur/i.test(v.lang))}
+function say(t,r){if(!sound||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=(r||.8)*(slow?.65:1);u.pitch=1.1;speechSynthesis.speak(u)}
+function sayU(ur,en,r){if(!sound||!window.speechSynthesis)return;const v=urV();if(v){const u=new SpeechSynthesisUtterance(ur);u.voice=v;u.lang=v.lang;u.rate=(r||.75)*(slow?.65:1);speechSynthesis.speak(u)}else{say(en,r);if(!warned){warned=true;$('#ft').textContent='No Urdu voice was found on this computer, so an English voice reads the sound names. Install an Urdu voice in your system settings for the best result.'}}}
+function stopS(){window.speechSynthesis&&speechSynthesis.cancel()}
+function beep(ok){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type='triangle';o.frequency.value=ok?660:180;g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.4);if(ok)o.frequency.setValueAtTime(880,a.currentTime+.15);o.start();o.stop(a.currentTime+.4)}catch(e){}}
+function conf(){for(let i=0;i<40;i++){const c=document.createElement('div');c.className='conf';c.style.left=Math.random()*100+'vw';c.style.background=`hsl(${Math.random()*360},85%,58%)`;c.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2200)}}
+function paint(){tiles.forEach((t,i)=>{t.classList.toggle('cur',i==cur&&quiz==null);t.classList.toggle('fam',fam&&D[i][7]==D[cur][7]&&D[cur][7]!=null&&quiz==null)})}
+function show(){const d=D[cur];$('#big').textContent=d[0];$('#nm').textContent=d[1]+'  /  sound: '+d[1];$('#nm').textContent=d[1];$('#obj').textContent=d[3];$('#uw').textContent=d[4];$('#en').textContent=d[5]+' = '+d[6];const o=$('#obj');o.classList.remove('pop');void o.offsetWidth;o.classList.add('pop');paint()}
+function go(i,sp){cur=(i+36)%36;quiz=null;$('#mode').textContent='Explore mode';$('#msg').textContent='';show();if(sp)all()}
+function letter(){sayU(D[cur][2],D[cur][1])}
+function word(){sayU(D[cur][4],D[cur][5])}
+function mean(){say(D[cur][6])}
+function all(){stopS();letter();word();mean()}
+function newQ(){if(quiz==null)return;quiz=Math.floor(Math.random()*36);const d=D[quiz];$('#mode').textContent=qtype?'Picture quiz':'Name quiz';$('#msg').textContent='';$('#big').textContent='?';
+if(qtype){$('#nm').textContent='Which letter starts this word?';$('#obj').textContent=d[3];$('#uw').textContent=d[4];$('#en').textContent=d[5]+' = '+d[6]}
+else{$('#nm').textContent='Find the letter '+d[1];$('#obj').textContent='🔍';$('#uw').textContent='';$('#en').textContent='Hint: listen to the sound'}
+paint();ask()}
+function ask(){if(quiz==null)return;stopS();const d=D[quiz];if(qtype){word();say('Which letter starts this word?')}else{letter();say('Find the letter '+d[1])}}
+function startQuiz(t){stopAuto();qtype=t;quiz=0;newQ()}
+function tile(i){if(quiz!=null){if(i==quiz){score++;$('#sc').textContent=score;beep(1);conf();$('#msg').textContent='Great job! That is '+D[i][1]+'!';$('#msg').style.color='#1a9a4b';stopS();say('Well done! '+D[i][1]);cur=i;const q=quiz;quiz=null;show();$('#mode').textContent='Well done!';quiz=q;setTimeout(()=>{if(quiz!=null)newQ()},2400)}else{beep(0);const t=tiles[i];t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');$('#msg').textContent='Try again!';$('#msg').style.color='#d6336c';say('Try again')}return}
+go(i,true)}
+function stopAuto(){if(auto){clearInterval(auto);auto=null;$('#bAuto').classList.remove('on')}}
+const B=[
+['Say Letter Name','#e8590c',()=>{stopS();letter()}],
+['Say Urdu Word','#d6336c',()=>{stopS();word()}],
+['English Meaning','#7048e8',()=>{stopS();mean()}],
+['Say Everything','#0ca678',()=>all()],
+['Previous','#f08c00',()=>go(cur-1,true),'#2b1700'],
+['Next','#2f9e44',()=>go(cur+1,true)],
+['Random Letter','#ae3ec9',()=>go(Math.floor(Math.random()*36),true)],
+['Auto Play','#1098ad',()=>{if(auto)return stopAuto();quiz=null;$('#bAuto').classList.add('on');go(cur,true);auto=setInterval(()=>go(cur+1,true),6000)},null,'bAuto'],
+['Name Quiz','#e03131',()=>startQuiz(0)],
+['Picture Quiz','#1c7ed6',()=>startQuiz(1)],
+['Repeat Question','#fa5252',ask],
+['Similar Shapes','#fcc419',function(e){fam=!fam;e.target.classList.toggle('on',fam);paint()},'#2b1700'],
+['Slow Voice','#5f3dc4',function(e){slow=!slow;e.target.classList.toggle('on',slow)}],
+['Sound On / Off','#495057',function(e){sound=!sound;if(!sound)stopS();e.target.textContent=sound?'Sound On / Off':'Sound is OFF'}],
+['Stop','#c92a2a',()=>{stopS();stopAuto()}],
+['Reset Stars','#868e96',()=>{score=0;$('#sc').textContent=0;go(0,false)}],
+['Full Screen','#f03e8e',()=>{const a=$('#app');if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}]];
+B.forEach(([l,c,f,t,id])=>{const e=document.createElement('button');e.className='b';e.textContent=l;e.style.setProperty('--c',c);if(t)e.style.setProperty('--t',t);if(id)e.id=id;e.onclick=f;$('#ctl').appendChild(e)});
+$('#obj').onclick=()=>{if(quiz==null)all()};
+document.addEventListener('keydown',e=>{if(quiz==null){if(e.key=='ArrowLeft')go(cur+1,true);if(e.key=='ArrowRight')go(cur-1,true)}});
+if(window.speechSynthesis)speechSynthesis.getVoices();
+show();
+</script></body></html>

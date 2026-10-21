@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DC Motor, AC Generator and Commutator Dynamics</title>
+<style>
+:root{--w1:#dbe9f7;--w2:#f7fbff}
+body.dark{--w1:#16213a;--w2:#070b16}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:#fff;overflow:hidden;background:radial-gradient(circle at 15% 0,#1e3a8a,#0a1128 70%)}
+#app{height:100vh;min-height:680px;display:grid;grid-template-rows:auto 1fr auto auto;gap:9px;padding:8px 18px}
+h1{text-align:center;font-size:clamp(21px,2.8vw,36px);color:#7dd3fc;letter-spacing:1px;text-shadow:0 1px 0 #0ea5e9,0 2px 0 #0284c7,0 3px 0 #0369a1,0 4px 0 #075985,0 9px 14px #0008}
+h1 small{display:block;font-size:.36em;color:#fde68a;text-shadow:none;letter-spacing:2px;margin-top:2px}
+main{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;min-height:0}
+.col{display:flex;flex-direction:column;gap:9px;min-height:0}
+#right{overflow-y:auto;padding-right:4px}
+.card{background:#ffffff16;border:2px solid #ffffff30;border-radius:16px;padding:8px 11px}
+#stage{flex:1;min-height:0;padding:0;overflow:hidden;border:3px solid #fff}
+#stage svg{width:100%;height:100%;display:block}
+#gr{width:100%;height:clamp(80px,13vh,118px);display:block}
+.b{border:0;border-radius:12px;padding:.5em .8em;color:#fff;font:700 clamp(11px,.98vw,15px) "Trebuchet MS","Segoe UI",Arial,sans-serif;background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000),0 7px 12px #0006;cursor:pointer;text-shadow:0 1px 2px #0007;transition:transform .1s,filter .15s}
+.b:hover{filter:brightness(1.13)}
+.b:active,.b.on{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.b.on{outline:3px solid #fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.hd{font-size:clamp(12px,1.05vw,16px);font-weight:700;margin-bottom:6px;color:#fde68a}
+.gl{font-size:clamp(11px,.9vw,14px);color:#bae6fd;font-weight:700;width:100%;text-align:left;margin-top:3px}
+#ex{background:#fff;color:#14213d;border-radius:14px;padding:9px 12px;font-size:clamp(12px,1.05vw,16px);line-height:1.45;font-weight:600}
+#rd{display:flex;gap:8px;margin-top:7px}
+#rd div{flex:1;background:#0f172a;border-radius:10px;padding:5px;text-align:center;font-size:clamp(11px,.9vw,14px);color:#a5f3fc}
+#rd b{display:block;font-size:clamp(15px,1.5vw,22px);color:#fde047}
+footer{text-align:center;font-size:11px;color:#8fb6e8}
+</style></head>
+<body>
+<div id="app">
+<h1>DC Motor, AC Generator and Commutator<small>Secondary Physics: see how electricity and magnetism make things move</small></h1>
+<main>
+<div class="col">
+<div id="stage" class="card">
+<svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid meet" aria-label="Rotating coil between two magnets">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--w1)"/><stop offset="1" style="stop-color:var(--w2)"/></linearGradient>
+<linearGradient id="bench" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a8f99"/><stop offset=".12" stop-color="#5b616c"/><stop offset="1" stop-color="#2c3038"/></linearGradient>
+<linearGradient id="mn" x1="0" x2="1"><stop offset="0" stop-color="#7f1018"/><stop offset=".4" stop-color="#ef4444"/><stop offset="1" stop-color="#8d1119"/></linearGradient>
+<linearGradient id="ms" x1="0" x2="1"><stop offset="0" stop-color="#0b3a8a"/><stop offset=".4" stop-color="#3b82f6"/><stop offset="1" stop-color="#0c3a86"/></linearGradient>
+<linearGradient id="cu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a24a1c"/><stop offset=".5" stop-color="#f1a56b"/><stop offset="1" stop-color="#8d3e14"/></linearGradient>
+<linearGradient id="br" x1="0" x2="1"><stop offset="0" stop-color="#8a6417"/><stop offset=".45" stop-color="#f7de8b"/><stop offset="1" stop-color="#7a560f"/></linearGradient>
+<linearGradient id="cell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset=".5" stop-color="#15803d"/><stop offset="1" stop-color="#14532d"/></linearGradient>
+<radialGradient id="gls" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#cfe8ff" stop-opacity=".35"/></radialGradient>
+<radialGradient id="glow"><stop offset="0" stop-color="#fff3a0" stop-opacity=".95"/><stop offset="1" stop-color="#ffd54a" stop-opacity="0"/></radialGradient>
+<marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#22d3ee"/></marker>
+<marker id="ar2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#fb923c"/></marker>
+<marker id="ar3" markerWidth="7" markerHeight="7" refX="4" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#7dd3fc"/></marker>
+</defs>
+<rect width="640" height="300" fill="url(#wall)"/><rect y="300" width="640" height="100" fill="url(#bench)"/><rect y="300" width="640" height="5" fill="#b9bec8"/>
+<g id="fld"></g>
+<polyline points="450,350 610,350 610,45 320,45 320,116" fill="none" stroke="#b91c1c" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="320,224 320,282 200,282 200,350 250,350" fill="none" stroke="#1f2937" stroke-width="6" stroke-linejoin="round"/>
+<rect x="125" y="105" width="82" height="130" rx="8" fill="url(#mn)" stroke="#450a0a" stroke-width="3"/><rect x="125" y="105" width="14" height="130" rx="5" fill="#c9ced6"/>
+<text x="168" y="178" text-anchor="middle" font-size="44" font-weight="800" fill="#fff">N</text><text x="168" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#ffe4e4">North pole</text>
+<rect x="433" y="105" width="82" height="130" rx="8" fill="url(#ms)" stroke="#0a1f4d" stroke-width="3"/><rect x="501" y="105" width="14" height="130" rx="5" fill="#c9ced6"/>
+<text x="470" y="178" text-anchor="middle" font-size="44" font-weight="800" fill="#fff">S</text><text x="470" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#dbe9ff">South pole</text>
+<circle cx="320" cy="170" r="72" fill="none" stroke="#fff" stroke-opacity=".12" stroke-dasharray="4 6"/>
+<g id="dots"></g>
+<line id="cl" x1="248" y1="170" x2="392" y2="170" stroke="url(#cu)" stroke-width="11" stroke-linecap="round"/>
+<g id="ring" transform="translate(320 170)"></g>
+<circle cx="320" cy="170" r="7" fill="#444" stroke="#999" stroke-width="2"/>
+<g id="brs"><rect id="bt" x="308" y="122" width="24" height="16" rx="3" fill="url(#br)" stroke="#5a410b" stroke-width="2"/><rect id="bb" x="308" y="202" width="24" height="16" rx="3" fill="url(#br)" stroke="#5a410b" stroke-width="2"/></g>
+<g id="cdA"><circle id="cA" r="14" fill="#f59e0b" stroke="#7c2d12" stroke-width="3"/><g id="sA" stroke="#111" stroke-width="3"/></g>
+<g id="cdB"><circle id="cB" r="14" fill="#38bdf8" stroke="#0c4a6e" stroke-width="3"/><g id="sB" stroke="#111" stroke-width="3"/></g>
+<line id="fA" stroke="#22d3ee" stroke-width="5" marker-end="url(#ar)"/><line id="fB" stroke="#22d3ee" stroke-width="5" marker-end="url(#ar)"/>
+<!-- battery -->
+<g id="dBat"><rect x="244" y="342" width="12" height="16" fill="#9ca3af"/><g id="cells"></g><text id="btx" x="350" y="330" text-anchor="middle" font-size="15" font-weight="800" fill="#fde047">3 V</text></g>
+<!-- bulb -->
+<g id="dBulb" style="display:none"><circle id="bgl" cx="350" cy="318" r="95" fill="url(#glow)" opacity="0"/><rect x="250" y="346" width="200" height="12" rx="4" fill="url(#br)" stroke="#5a410b" stroke-width="2"/><rect x="326" y="334" width="48" height="14" rx="3" fill="url(#br)"/><path d="M332 334V318A30 30 0 1 1 368 318V334Z" fill="url(#gls)" stroke="#fff" stroke-opacity=".7" stroke-width="2"/><path id="fil" d="M340 334V312L346 304L354 312L360 304V334" fill="none" stroke="#555" stroke-width="2.5"/><text x="350" y="283" text-anchor="middle" font-size="12" font-weight="700" fill="#14213d">Bulb</text></g>
+<!-- wheel -->
+<g transform="translate(75 340)"><circle r="38" fill="#2f3640" stroke="#9aa3b2" stroke-width="5"/><g id="wh"><line x1="-30" x2="30" stroke="#9aa3b2" stroke-width="4"/><line y1="-30" y2="30" stroke="#9aa3b2" stroke-width="4"/><circle cx="28" cy="0" r="7" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/></g><circle r="6" fill="#ddd"/><text id="whl" y="-46" text-anchor="middle" font-size="12" font-weight="700" fill="#e5e7eb">Pulley</text></g>
+<!-- gauge -->
+<g transform="translate(75 68)"><circle r="48" fill="#111827" stroke="#9aa3b2" stroke-width="5"/><g id="gt"></g><line id="gn" x1="0" y1="0" x2="0" y2="-36" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" style="transform:rotate(-120deg)"/><circle r="5" fill="#ddd"/><text y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#93c5fd">RPM</text><text id="gv" y="-14" text-anchor="middle" font-size="14" font-weight="800" fill="#fde047">0</text></g>
+<g id="lb" font-size="12" font-weight="700" fill="#14213d"><text x="350" y="132">Brush</text><text x="350" y="216">Brush</text><text id="lr" x="396" y="270">Commutator</text><text x="320" y="27" text-anchor="middle" fill="#7dd3fc" stroke="none">Magnetic field: North to South</text></g>
+</svg></div>
+<div class="card"><svg id="gr" viewBox="0 0 1000 120" preserveAspectRatio="none"><rect width="1000" height="120" rx="10" fill="#0b1226"/><line x1="0" y1="60" x2="1000" y2="60" stroke="#475569" stroke-dasharray="6 6"/><polyline id="gp" fill="none" stroke="#facc15" stroke-width="3"/><text id="gtt" x="12" y="20" font-size="15" font-weight="700" fill="#7dd3fc"></text></svg></div>
+</div>
+<div class="col" id="right">
+<div class="card"><div class="hd">1. Choose a machine</div><div class="row" id="modes"></div></div>
+<div class="card"><div class="hd">2. Controls</div><div class="row" id="ctl"></div></div>
+<div class="card"><div class="hd">3. Show or hide</div><div class="row" id="tg"></div></div>
+<div id="ex"></div>
+<div id="rd"><div>Speed<b id="r1">0 RPM</b></div><div>Voltage<b id="r2">0 V</b></div><div>Coil angle<b id="r3">0°</b></div></div>
+</div>
+</main>
+<div class="card" style="padding:7px"><div class="row" id="bar"></div></div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &middot; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",CX=320,CY=170,R=72,K=Math.PI/180;
+const MN=["DC Motor","AC Generator","DC Generator (Commutator)"];
+const LS=[
+["A DC motor changes electrical energy into movement. A battery pushes current through a coil placed between two magnets.","A wire that carries current inside a magnetic field feels a force. Fleming’s left-hand rule links the field, the current and the motion.","The two sides of the coil carry current in opposite directions. One side is pushed up and the other is pushed down, so the coil spins.","When the coil is upright, the push would turn it back. The split-ring commutator swaps the contacts at that moment and reverses the current.","Now the push always keeps the same turning direction. Press ‘Slip rings’ to see the coil stop without a commutator.","A stronger magnet, more turns or a higher voltage give a bigger force and a faster motor."],
+["A generator changes movement into electricity. Turning the crank spins the coil between the magnets.","When the wires cut through magnetic field lines, a voltage is induced. This is called electromagnetic induction.","The voltage is zero when the coil is upright and biggest when it is flat.","Slip rings keep the brushes touching the turning coil. The voltage reverses every half turn: this is alternating current (AC).","Turn faster, add more turns or use a stronger magnet to get a higher voltage and a brighter bulb."],
+["Replace the slip rings with a split-ring commutator and the generator gives direct current (DC).","Inside the coil, the current still reverses every half turn.","The commutator swaps the brush contacts at the same moment, so the bulb always gets current in one direction.","The output is bumpy but never reverses. Compare the graph with the AC generator.","Reverse the crank and the output polarity reverses too."]];
+let M=0,th=.35,w=0,tgt=0,sw=false,V=3,Bm=2,N=5,dir=1,brake=false,mr="split",slow=false,les=0,sh={f:1,a:1,c:1,l:1},hist=[],off=0,vtop=0,tq=0,iE=0;
+const pts=[[450,350],[610,350],[610,45],[320,45],[320,116],[320,224],[320,282],[200,282],[200,350],[250,350]];let LEN=0;const SG=[];for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);SG.push([LEN,d,i]);LEN+=d}
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||$("dots")).appendChild(e);return e};
+const dots=[];for(let i=0;i<18;i++)dots.push(el("circle",{r:4.5,fill:"#fde047",stroke:"#a16207","stroke-width":1.5}));
+for(let y of[120,145,170,195,220]){el("line",{x1:212,y1:y,x2:424,y2:y,stroke:"#7dd3fc","stroke-width":2,"stroke-dasharray":"8 7","marker-end":"url(#ar3)"},$("fld"))}
+for(let i=0;i<=10;i++){const a=(-120+i*24)*K;el("line",{x1:Math.sin(a)*40,y1:-Math.cos(a)*40,x2:Math.sin(a)*46,y2:-Math.cos(a)*46,stroke:"#cbd5e1","stroke-width":2},$("gt"))}
+function ringType(){return M==0?mr:(M==1?"slip":"split")}
+function buildRing(){const t=ringType(),g=$("ring");if(t=="split"){g.innerHTML=`<path d="M32 0A32 32 0 0 1 -32 0" fill="none" stroke="#f59e0b" stroke-width="13"/><path d="M-32 0A32 32 0 0 1 32 0" fill="none" stroke="#38bdf8" stroke-width="13"/><circle cx="-32" r="3" fill="#111"/><circle cx="32" r="3" fill="#111"/>`}else{g.innerHTML=`<circle r="40" fill="none" stroke="#f59e0b" stroke-width="8"/><circle r="26" fill="none" stroke="#38bdf8" stroke-width="8"/><circle cx="40" r="3" fill="#111"/>`}
+const slip=t=="slip";$("bb").setAttribute("y",slip?206:202);$("bt").setAttribute("y",slip?114:122);$("lr").textContent=slip?"Slip rings":"Split-ring commutator";$("wh").parentNode.querySelector("circle")}
+function mkCells(){let h="";for(let i=0;i<3;i++){const on=i<V/1.5;h+=`<rect x="${450-(i+1)*64+2}" y="338" width="60" height="24" rx="5" fill="url(#cell)" opacity="${on?1:.12}"/><text x="${450-(i+1)*64+32}" y="355" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" opacity="${on?1:0}">1.5 V</text>`}h+=`<rect x="450" y="344" width="6" height="12" fill="#e5e7eb"/>`;$("cells").innerHTML=h;$("btx").textContent=V+" V battery"}
+function iSplit(deg){const s=(((270-deg)%360)+360)%360;if(s<5||s>175)return 0;return s<180?1:-1}
+function step(dt){const deg=th/K;
+if(M==0){const ty=ringType();iE=sw?dir*(ty=="split"?iSplit(deg):-1):0;const a=-.42*Math.cos(th)*iE*V*Bm*N;w+=(a-(1+(brake?6:0))*w)*dt;w=Math.max(-22,Math.min(22,w));tq=-Math.cos(th)*iE}
+else{w+=(tgt-w)*Math.min(1,dt*3)}
+th+=w*dt;
+const d2=(((th/K)%360)+360)%360,eA=.1*N*Bm*w*Math.cos(th);
+if(M==0)vtop=sw?dir*V:0;else if(M==1)vtop=eA;else{const s=(((270-d2)%360)+360)%360;vtop=s<180?eA:-eA}
+if(M>0)tq=vtop}
+function pos(s){s=((s%LEN)+LEN)%LEN;for(const g of SG){if(s<=g[0]+g[1]){const f=(s-g[0])/g[1],a=pts[g[2]-1],b=pts[g[2]];return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}}return pts[0]}
+let tick=0;
+function draw(dt){const d=(((th/K)%360)+360)%360,c=Math.cos(th),s=Math.sin(th);
+const ax=CX+R*c,ay=CY+R*s,bx=CX-R*c,by=CY-R*s;
+$("cl").setAttribute("x1",ax);$("cl").setAttribute("y1",ay);$("cl").setAttribute("x2",bx);$("cl").setAttribute("y2",by);
+$("cdA").setAttribute("transform",`translate(${ax} ${ay})`);$("cdB").setAttribute("transform",`translate(${bx} ${by})`);
+$("ring").setAttribute("transform",`translate(${CX} ${CY}) rotate(${d})`);
+let ia;if(M==0)ia=iE;else ia=Math.abs(.1*N*Bm*w*c)<.15?0:Math.sign(w*c);
+const sym=(g,v)=>{g.innerHTML=v==0?"":(v>0?`<circle r="3.5" fill="#111" stroke="none"/>`:`<path d="M-6-6L6 6M6-6L-6 6"/>`)};
+sym($("sA"),ia);sym($("sB"),-ia);
+const fa=$("fA"),fb=$("fB"),on=sh.a&&ia!=0;
+if(M==0){const l=ia*34;set(fa,ax,ay-0,ax,ay-l);set(fb,bx,by,bx,by+l)}
+else{const tx=-s*Math.sign(w||1)*30,ty=c*Math.sign(w||1)*30;set(fa,ax,ay,ax+tx,ay+ty);set(fb,bx,by,bx-tx,by-ty);fa.setAttribute("stroke","#fb923c");fb.setAttribute("stroke","#fb923c");fa.setAttribute("marker-end","url(#ar2)");fb.setAttribute("marker-end","url(#ar2)");if(Math.abs(w)<.1){fa.style.display=fb.style.display="none"}}
+if(M==0){fa.setAttribute("stroke","#22d3ee");fb.setAttribute("stroke","#22d3ee");fa.setAttribute("marker-end","url(#ar)");fb.setAttribute("marker-end","url(#ar)")}
+if(M==0||Math.abs(w)>=.1){fa.style.display=fb.style.display=on||(M>0&&sh.a)?"":"none"}
+if(!sh.a){fa.style.display=fb.style.display="none"}
+// flow dots
+let f=M==0?(sw?dir*(iE==0?.15:1):0):(Math.abs(vtop)<.05?0:(vtop>0?-1:1)*Math.min(1,Math.abs(vtop)/3));
+off+=f*dt*90;dots.forEach((e,i)=>{const p=pos(off+i*LEN/18);e.setAttribute("cx",p[0]);e.setAttribute("cy",p[1]);e.style.display=sh.c&&Math.abs(f)>.04?"":"none"});
+// bulb
+const br=Math.min(1,Math.abs(vtop)/12);$("bgl").setAttribute("opacity",M?br:0);$("fil").setAttribute("stroke",br>.05?"#ffd54a":"#555");$("fil").setAttribute("stroke-width",2.5+br*2);
+$("wh").setAttribute("transform",`rotate(${d})`);
+const rpm=Math.abs(w)*60/(2*Math.PI);$("gn").style.transform=`rotate(${Math.min(120,-120+rpm/220*240)}deg)`;$("gv").textContent=Math.round(rpm);
+$("fld").style.display=sh.f?"":"none";$("lb").style.display=sh.l?"":"none";
+// graph
+hist.push(M==0?tq:Math.max(-1.2,Math.min(1.2,vtop/20)*(M?1:1)));if(hist.length>300)hist.shift();
+$("gp").setAttribute("points",hist.map((v,i)=>`${i*1000/300},${60-v*50}`).join(" "));
+$("gtt").textContent=M==0?"Torque on the coil (turning force) over time":(M==1?"Output voltage over time: alternating (AC)":"Output voltage over time: direct (DC), never below zero line");
+if((tick++%6)==0){$("r1").textContent=Math.round(rpm)+" RPM";$("r2").textContent=(M==0?(sw?dir*V:0):vtop).toFixed(1)+" V";$("r3").textContent=Math.round(d)+"°"}}
+function set(e,a,b,c,d){e.setAttribute("x1",a);e.setAttribute("y1",b);e.setAttribute("x2",c);e.setAttribute("y2",d)}
+let last=performance.now();(function lp(n){const dt=Math.min(.05,(n-last)/1000)*(slow?.25:1);last=n;step(dt);draw(dt);requestAnimationFrame(lp)})(last);
+// UI
+function btn(p,t,c,fn){const b=document.createElement("button");b.className="b";b.style.setProperty("--c",c);b.innerHTML=t;b.onclick=fn;$(p).appendChild(b);return b}
+function lab(t){const d=document.createElement("div");d.className="gl";d.textContent=t;$("ctl").appendChild(d)}
+function setMode(m){M=m;w=0;tgt=0;sw=false;les=0;hist=[];buildRing();$("dBat").style.display=m?"none":"";$("dBulb").style.display=m?"":"none";$("whl").textContent=m?"Hand crank":"Pulley";
+document.querySelectorAll("#modes .b").forEach((b,i)=>b.classList.toggle("on",i==m));ctl();text()}
+function text(){$("ex").textContent=LS[M][les%LS[M].length]}
+function ctl(){$("ctl").innerHTML="";const T=(l,items)=>{lab(l);items.forEach(i=>btn("ctl",i[0],i[1],i[2]))};
+if(M==0){const s=btn("ctl","⏻ Switch ON","#22c55e",()=>{sw=!sw;if(sw&&Math.abs(w)<.05)w=dir*.5;s.innerHTML=sw?"⏻ Switch OFF":"⏻ Switch ON";s.style.setProperty("--c",sw?"#ef4444":"#22c55e")});
+btn("ctl","⇄ Reverse battery","#f97316",()=>{dir=-dir});btn("ctl","✋ Brake","#64748b",()=>{brake=true;setTimeout(()=>brake=false,1500)});
+T("Battery voltage",[["1.5 V","#eab308",()=>{V=1.5;mkCells()}],["3 V","#f59e0b",()=>{V=3;mkCells()}],["4.5 V","#ea580c",()=>{V=4.5;mkCells()}]]);
+T("Commutator",[["Split ring","#a855f7",()=>{mr="split";buildRing()}],["Slip rings","#14b8a6",()=>{mr="slip";buildRing()}]])}
+else{T("Hand crank speed",[["Stop","#ef4444",()=>tgt=0],["Slow","#22c55e",()=>tgt=3*Math.sign(tgt||1)],["Medium","#eab308",()=>tgt=7*Math.sign(tgt||1)],["Fast","#f97316",()=>tgt=14*Math.sign(tgt||1)]]);
+btn("ctl","⇄ Reverse crank","#a855f7",()=>{tgt=-tgt;if(!tgt)tgt=-3})}
+T("Magnet strength",[["Weak","#38bdf8",()=>Bm=1],["Medium","#3b82f6",()=>Bm=2],["Strong","#6366f1",()=>Bm=3]]);
+T("Turns of wire in coil",[["2 turns","#f472b6",()=>N=2],["5 turns","#ec4899",()=>N=5],["10 turns","#be185d",()=>N=10]]);
+T("Turn the coil by hand (15° steps)",[["⟲ 15°","#06b6d4",()=>th-=15*K],["15° ⟳","#0ea5e9",()=>th+=15*K],["Flat coil","#84cc16",()=>th=0],["Upright coil","#f43f5e",()=>th=90*K+.001]])}
+function tg(){[["Field lines","f","#38bdf8"],["Arrows","a","#fb923c"],["Current flow","c","#facc15"],["Labels","l","#34d399"]].forEach(x=>{const b=btn("tg",x[0],x[2],()=>{sh[x[1]]^=1;b.classList.toggle("on",sh[x[1]])});b.classList.add("on")});
+const s=btn("tg","🐢 Slow motion","#8b5cf6",()=>{slow=!slow;s.classList.toggle("on",slow)})}
+MN.forEach((n,i)=>btn("modes",["⚙ ","⚡ ","🔋 "][i]+n,["#f97316","#22c55e","#a855f7"][i],()=>setMode(i)));
+tg();
+btn("bar","💡 Next Lesson Step","#06b6d4",()=>{les=(les+1)%LS[M].length;text()});
+btn("bar","◀ Previous Step","#f59e0b",()=>{les=(les+LS[M].length-1)%LS[M].length;text()});
+btn("bar","🔊 Read Aloud","#ec4899",()=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance($("ex").textContent);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)});
+btn("bar","🌙 Lab Lights","#6366f1",()=>document.body.classList.toggle("dark"));
+let at=null;const ab=btn("bar","⏵ Auto Demo","#84a30a",()=>{if(at){clearInterval(at);at=null;ab.innerHTML="⏵ Auto Demo";return}ab.innerHTML="⏹ Stop Demo";at=setInterval(()=>{les++;if(les>=LS[M].length){les=0;setMode((M+1)%3)}if(M==0&&!sw){sw=true;w=.5}if(M>0&&!tgt)tgt=7;text()},6000)});
+btn("bar","↺ Reset","#ef4444",()=>{V=3;Bm=2;N=5;dir=1;mr="split";th=.35;slow=false;setMode(M);mkCells()});
+const fs=btn("bar","⛶ Full Screen","#0ea5e9",()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()});
+document.addEventListener("fullscreenchange",()=>fs.innerHTML=document.fullscreenElement?"✕ Exit Full Screen":"⛶ Full Screen");
+mkCells();setMode(0);
+</script>
+</body></html>

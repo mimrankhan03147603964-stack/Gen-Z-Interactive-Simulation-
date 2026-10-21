@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nuclear Fission, Fusion and Half-Life Decay</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Tahoma,Verdana,sans-serif;background:#07131f;color:#e8f1f8}
+#app{min-height:100vh;display:flex;flex-direction:column;overflow:auto;background:radial-gradient(1200px 600px at 20% -10%,#12395a,#07131f 60%)}
+header{padding:12px 24px 4px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.brand{font-size:12px;letter-spacing:.1em;color:#7fd3ff;font-weight:700}
+h1{margin:2px 0 0;font-size:30px;font-weight:900;color:#fff;text-shadow:0 1px 0 #1b6fb0,0 2px 0 #1b6fb0,0 3px 0 #155a90,0 7px 10px rgba(0,0,0,.55)}
+.row{display:flex;flex-wrap:wrap;gap:10px;padding:8px 24px;align-items:center}
+.b{border:0;border-radius:12px;padding:10px 16px;font:700 15px "Segoe UI",Tahoma,sans-serif;color:var(--t,#fff);background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.3);cursor:pointer;transition:transform .08s,filter .15s}
+.b:hover{filter:brightness(1.12)}.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.b.sel{outline:3px solid #fff;outline-offset:2px}
+.pane{display:none;padding:6px 24px 10px;flex:1}.pane.on{display:block}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+.card{border-radius:18px;padding:20px 22px;font-size:17px;line-height:1.55;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.card h2{margin:0 0 8px;font-size:24px}.card ul{padding-left:20px;margin:8px 0}
+.f{background:linear-gradient(160deg,#ff7a45,#c2260f)}.u{background:linear-gradient(160deg,#ffc933,#d97a00);color:#2b1700}.h{background:linear-gradient(160deg,#35d98a,#0b7d55)}
+.steps{counter-reset:s;list-style:none;padding:0}.steps li{counter-increment:s;margin:8px 0;padding-left:38px;position:relative}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;color:#111;font-weight:800;text-align:center;line-height:28px}
+canvas{display:block;margin:0 auto;width:100%;max-width:calc((100vh - 390px)*1.846);min-width:560px;border-radius:18px;border:4px solid #2d5b82;box-shadow:0 14px 34px rgba(0,0,0,.55)}
+#ro{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0 2px}
+#ro span{background:#0f2a42;border:1px solid #2d5b82;border-radius:10px;padding:6px 14px;font-size:15px}
+#ro b{color:#ffd24d}
+#ctl{justify-content:center}
+footer{text-align:center;padding:10px;font-size:13px;color:#8fb2cc}
+</style></head><body>
+<div id="app">
+<header><div><div class="brand">GEN Z EDTECH INTERACTIVE SIMULATIONS</div><h1>Nuclear Fission, Fusion &amp; Half-Life Decay</h1></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="b" style="--c:#2f80ff" onclick="tab(0)">Definition</button>
+<button class="b" style="--c:#a64dff" onclick="tab(1)">Explanation</button>
+<button class="b" style="--c:#12b886" onclick="tab(2)">Simulation</button>
+<button class="b" style="--c:#ff3d8b" onclick="fs()">Full Screen</button></div></header>
+
+<div class="pane" id="p0"><div class="cards">
+<div class="card f"><h2>Nuclear Fission</h2>Fission means <b>splitting</b>. A heavy nucleus, such as Uranium-235, is hit by a neutron and breaks into two smaller nuclei. It also releases 2 or 3 new neutrons and a huge amount of energy.<ul><li>Used in nuclear power stations</li><li>Can start a chain reaction</li></ul></div>
+<div class="card u"><h2>Nuclear Fusion</h2>Fusion means <b>joining</b>. Two light nuclei, such as hydrogen isotopes, join to make a heavier nucleus (helium) and release even more energy per kilogram.<ul><li>Powers the Sun and all stars</li><li>Needs millions of degrees</li></ul></div>
+<div class="card h"><h2>Half-Life Decay</h2>Some atoms are unstable and decay by giving out radiation. The <b>half-life</b> is the time taken for half of the unstable atoms in a sample to decay.<ul><li>After 1 half-life: 1/2 is left</li><li>After 2 half-lives: 1/4 is left</li></ul></div>
+</div></div>
+
+<div class="pane" id="p1"><div class="cards">
+<div class="card f"><h2>How fission works</h2><ol class="steps"><li>A slow neutron hits a Uranium-235 nucleus.</li><li>The nucleus splits into Barium-141 and Krypton-92.</li><li>2 or 3 neutrons and about 200 MeV of energy are released.</li><li>The new neutrons hit more nuclei: a chain reaction.</li><li>Control rods absorb neutrons to keep the reaction safe.</li></ol></div>
+<div class="card u"><h2>How fusion works</h2><ol class="steps"><li>Deuterium and Tritium nuclei are both positive, so they repel each other.</li><li>Very high temperature makes them move fast enough to get close.</li><li>They fuse into Helium-4 and a fast neutron.</li><li>About 17.6 MeV of energy is released.</li></ol></div>
+<div class="card h"><h2>How half-life works</h2>Each atom decays at a random moment, but a big sample decays in a very predictable way.<ul><li>Carbon-14: 5,730 years (dating old wood and bones)</li><li>Iodine-131: 8 days (thyroid medicine)</li><li>Cobalt-60: 5.27 years (sterilising medical tools)</li><li>Uranium-238: 4.5 billion years (dating rocks)</li></ul>Tip: click any red atom in the simulation to make it decay.</div>
+</div></div>
+
+<div class="pane on" id="p2">
+<div class="row" style="justify-content:center;padding-bottom:4px">
+<button class="b" id="m0" style="--c:#ff5a36" onclick="setMode('fission')">Fission</button>
+<button class="b" id="m1" style="--c:#ffb400;--t:#2b1700" onclick="setMode('fusion')">Fusion</button>
+<button class="b" id="m2" style="--c:#22c55e" onclick="setMode('half')">Half-Life</button></div>
+<canvas id="cv" width="960" height="520"></canvas>
+<div id="ro"></div>
+<div class="row" id="ctl"></div></div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s),C=$('#cv'),x=C.getContext('2d'),W=960,H=520,R=Math.random,PI=Math.PI;
+let mode='fission',slow=false,paused=false,T=0,S={},auto=null;
+function tab(i){[0,1,2].forEach(k=>$('#p'+k).classList.toggle('on',k==i))}
+function fs(){const a=$('#app');if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}
+function sph(px,py,r,a,b){const g=x.createRadialGradient(px-r*.35,py-r*.4,r*.1,px,py,r);g.addColorStop(0,a);g.addColorStop(1,b);x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill()}
+function txt(t,px,py,c,sz,al){x.fillStyle=c||'#cfe6f7';x.font=(sz||13)+'px Segoe UI,Tahoma,sans-serif';x.textAlign=al||'left';x.fillText(t,px,py)}
+function bg(){const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d2a44');g.addColorStop(1,'#061320');x.fillStyle=g;x.fillRect(0,0,W,H);x.fillStyle='#14304a';x.fillRect(0,472,W,48);x.fillStyle='#2a5578';x.fillRect(0,470,W,4)}
+function leg(a,px){a.forEach(([n,c1,c2])=>{sph(px+7,497,7,c1,c2);txt(n,px+19,502,'#cfe6f7',13);px+=txt.w=x.measureText(n).width+44})}
+function rr(a,b,c,d,r){x.beginPath();x.roundRect(a,b,c,d,r)}
+function tower(px){x.save();const g=x.createLinearGradient(px-55,0,px+55,0);g.addColorStop(0,'#8c98a3');g.addColorStop(.45,'#eef2f5');g.addColorStop(1,'#6d7a86');x.fillStyle=g;x.beginPath();x.moveTo(px-55,470);x.bezierCurveTo(px-30,390,px-30,330,px-38,270);x.lineTo(px+38,270);x.bezierCurveTo(px+30,330,px+30,390,px+55,470);x.fill();x.fillStyle='rgba(60,70,80,.35)';for(let i=0;i<8;i++)x.fillRect(px-50+i*2,300+i*20,100-i*4,2);
+for(let i=0;i<5;i++){const p=(T*.5+i*18)%90,r=14+p*.35;x.fillStyle=`rgba(235,243,250,${.4*(1-p/90)})`;x.beginPath();x.arc(px+Math.sin(p/12+i)*10,262-p,r,0,7);x.fill()}x.restore();txt('Cooling tower',px,490,'#cfe6f7',12,'center')}
+function bulb(bx,by,gl){x.save();if(gl>.02){const g=x.createRadialGradient(bx,by,10,bx,by,130);g.addColorStop(0,`rgba(255,235,140,${.9*gl})`);g.addColorStop(1,'rgba(255,200,60,0)');x.fillStyle=g;x.fillRect(bx-140,by-140,280,280)}
+x.fillStyle='#8a929a';rr(bx-17,by+30,34,46,5);x.fill();x.strokeStyle='#555e66';x.lineWidth=2;for(let i=0;i<4;i++){x.beginPath();x.moveTo(bx-17,by+38+i*9);x.lineTo(bx+17,by+38+i*9);x.stroke()}
+x.fillStyle='#caa04a';rr(bx-8,by+76,16,8,3);x.fill();
+const gg=x.createRadialGradient(bx-12,by-14,4,bx,by,44);gg.addColorStop(0,`rgba(255,255,${230-gl*80|0},${.4+.55*gl})`);gg.addColorStop(1,`rgba(255,${210+gl*30|0},${150-gl*50|0},${.18+.6*gl})`);x.fillStyle=gg;x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=2;x.beginPath();x.arc(bx,by,38,.62*PI,2.38*PI);x.lineTo(bx+13,by+34);x.lineTo(bx-13,by+34);x.closePath();x.fill();x.stroke();
+x.strokeStyle=gl>.2?'#fff3b0':'#9a7b3a';x.lineWidth=2;x.beginPath();x.moveTo(bx-10,by+30);x.lineTo(bx-10,by-6);for(let i=0;i<6;i++)x.lineTo(bx-8+i*3.4,by-6+(i%2?-7:7));x.lineTo(bx+10,by-6);x.lineTo(bx+10,by+30);x.stroke();x.restore();txt('Light bulb',bx,by+104,'#cfe6f7',12,'center')}
+function nuc(n,r,c1,c2){sph(n.x,n.y,r,c1,c2);n.d.forEach(d=>sph(n.x+d[0]*r/30,n.y+d[1]*r/30,6*r/30+1,d[2]?'#ff9a9a':'#9db8ff',d[2]?'#c21f1f':'#2547c9'))}
+function dots(){return[...Array(9)].map((_,k)=>{const t=R()*6.28,q=R()*17;return[Math.cos(t)*q,Math.sin(t)*q,k%2]})}
+function ring(a){a.forEach(f=>{x.strokeStyle=`rgba(255,225,110,${f.t/40})`;x.lineWidth=4;x.beginPath();x.arc(f.x,f.y,(40-f.t)*2.2,0,7);x.stroke();f.t--});return a.filter(f=>f.t>0)}
+
+/* ---------- FISSION ---------- */
+const RODX=[300,400,500,600];
+function iniF(){S={n:[],ne:[],fr:[],fx:[],split:0,en:0,rod:0,rt:0,gl:0};for(let i=0;i<5;i++)for(let j=0;j<4;j++)S.n.push({x:250+i*100,y:110+j*100,a:1,d:dots()})}
+function fire(){S.ne.push({x:215,y:110+R()*300,vx:4,vy:(R()-.5)*.6})}
+function stepF(k){S.rt+=(S.rod-S.rt)*.06*k;S.gl*=Math.pow(.99,k);
+S.ne.forEach(n=>{n.x+=n.vx*k;n.y+=n.vy*k;if(S.rt>.03&&n.y<60+S.rt*380&&n.y>40&&RODX.some(r=>Math.abs(n.x-r)<8)){n.dead=1;S.fx.push({x:n.x,y:n.y,t:14})}
+S.n.forEach(u=>{if(u.a&&!n.dead&&Math.hypot(n.x-u.x,n.y-u.y)<30){u.a=0;n.dead=1;S.split++;S.en+=200;S.gl=Math.min(1,S.gl+.4);S.fx.push({x:u.x,y:u.y,t:40});
+S.fr.push({x:u.x,y:u.y,vx:-1.1,vy:-.7,r:20,c:['#ffc58a','#c4570a'],l:260},{x:u.x,y:u.y,vx:1.1,vy:.7,r:16,c:['#e3b3ff','#7a2cc4'],l:260});
+for(let q=0;q<(R()<.5?2:3);q++){const a=R()*6.28;S.ne.push({x:u.x,y:u.y,vx:Math.cos(a)*4,vy:Math.sin(a)*4})}}})});
+S.ne=S.ne.filter(n=>!n.dead&&n.x>0&&n.x<W&&n.y>0&&n.y<H-50);S.fr.forEach(f=>{f.x+=f.vx*k;f.y+=f.vy*k;f.l-=k});S.fr=S.fr.filter(f=>f.l>0)}
+function drawF(){bg();tower(95);
+x.strokeStyle='#d6a24a';x.lineWidth=5;x.beginPath();x.moveTo(700,300);x.bezierCurveTo(770,300,800,330,830,260);x.stroke();bulb(830,200,S.gl);
+const wg=x.createLinearGradient(0,50,0,460);wg.addColorStop(0,'#2a86c9');wg.addColorStop(1,'#0c3b66');x.fillStyle=wg;rr(200,50,500,410,18);x.fill();x.strokeStyle='#9fb6c8';x.lineWidth=8;x.stroke();
+txt('Reactor core (water pool)',450,44,'#cfe6f7',13,'center');
+S.n.forEach(u=>{if(u.a)nuc(u,30,'rgba(140,255,210,.9)','rgba(10,140,110,.9)')});
+S.fr.forEach(f=>{x.globalAlpha=Math.min(1,f.l/80);sph(f.x,f.y,f.r,f.c[0],f.c[1])});x.globalAlpha=1;
+S.ne.forEach(n=>{x.strokeStyle='rgba(255,255,255,.35)';x.lineWidth=2;x.beginPath();x.moveTo(n.x,n.y);x.lineTo(n.x-n.vx*3,n.y-n.vy*3);x.stroke();sph(n.x,n.y,6,'#fff','#8aa')});
+S.fx=ring(S.fx);
+RODX.forEach(r=>{const g=x.createLinearGradient(r-6,0,r+6,0);g.addColorStop(0,'#555');g.addColorStop(.5,'#ddd');g.addColorStop(1,'#444');x.fillStyle=g;x.fillRect(r-6,40,12,20+S.rt*380);x.fillStyle='#e8a317';x.fillRect(r-9,36,18,10)});
+txt('Control rods',RODX[0]-30,32,'#cfe6f7',12);
+leg([['Uranium-235','#8fffd8','#0a8c6e'],['Neutron','#fff','#8aa'],['Barium-141','#ffc58a','#c4570a'],['Krypton-92','#e3b3ff','#7a2cc4']],200);
+$('#ro').innerHTML=`<span>Nuclei split: <b>${S.split}</b></span><span>Neutrons flying: <b>${S.ne.length}</b></span><span>Energy: <b>${S.en.toLocaleString()} MeV</b></span><span>Control rods: <b>${S.rod?'Inserted':'Removed'}</b></span><span>Fuel left: <b>${S.n.filter(u=>u.a).length}</b></span>`}
+function btnF(){return[['Fire Neutron','#ff5a36',fire],['Chain Reaction','#ff2d6f',()=>{if(!S.n.some(u=>u.a))iniF();const t=S.n.filter(u=>u.a)[0];S.ne.push({x:t.x-40,y:t.y,vx:4,vy:0})}],['Insert Rods','#6b7a8c',()=>S.rod=1],['Remove Rods','#f5a300',()=>S.rod=0,'#2b1700'],['Fire 5 Neutrons','#a64dff',()=>{for(let i=0;i<5;i++)setTimeout(fire,i*250)}],['Reload Fuel','#22b8cf',()=>{const r=S.rod;iniF();S.rod=r;S.rt=r}],['Slow Motion','#2f80ff',tglSlow],['Pause / Play','#12b886',tglPause],['Reset All','#e03131',iniF]]}
+
+/* ---------- FUSION ---------- */
+const CH={x:60,y:60,w:640,h:390},R_={D:13,T:15,He:18,n:6};
+function sp(){return .8+S.t*.5}
+function addP(ty,a,px,py,k){S.p.push({ty,a:a==null?R()*6.28:a,k:k||.7+R()*.6,x:px||CH.x+40+R()*(CH.w-80),y:py||CH.y+40+R()*(CH.h-80)})}
+function iniU(){S={p:[],t:2,fx:[],fus:0,en:0};for(let i=0;i<7;i++){addP('D');addP('T')}}
+function stepU(k){S.p.forEach(p=>{const v=sp()*p.k*k*(p.ty=='n'?2:1);p.x+=Math.cos(p.a)*v;p.y+=Math.sin(p.a)*v;const r=R_[p.ty];
+if(p.x<CH.x+r){p.x=CH.x+r;p.a=PI-p.a}if(p.x>CH.x+CH.w-r){p.x=CH.x+CH.w-r;p.a=PI-p.a}if(p.y<CH.y+r){p.y=CH.y+r;p.a=-p.a}if(p.y>CH.y+CH.h-r){p.y=CH.y+CH.h-r;p.a=-p.a}});
+const hy=S.p.filter(p=>p.ty=='D'||p.ty=='T');
+for(let i=0;i<hy.length;i++)for(let j=i+1;j<hy.length;j++){const a=hy[i],b=hy[j];if(a.dead||b.dead)continue;const d=Math.hypot(a.x-b.x,a.y-b.y);
+if(d<R_[a.ty]+R_[b.ty]+4){if(a.ty!=b.ty&&S.t>=5){a.dead=b.dead=1;const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,ang=R()*6.28;addP('He',ang,mx,my,.8);addP('n',ang+PI,mx,my,1.2);S.fus++;S.en=+(S.en+17.6).toFixed(1);S.fx.push({x:mx,y:my,t:40})}
+else{const t=Math.atan2(a.y-b.y,a.x-b.x);a.a=t;b.a=t+PI;a.x+=Math.cos(t)*3;b.x-=Math.cos(t)*3}}}
+S.p=S.p.filter(p=>!p.dead);while(S.p.length>70)S.p.shift()}
+function drawU(){bg();const hot=S.t/10;
+x.fillStyle='#b87333';for(let i=0;i<10;i++){x.fillRect(CH.x+10+i*64,CH.y-16,26,14);x.fillRect(CH.x+10+i*64,CH.y+CH.h+2,26,14)}
+rr(CH.x,CH.y,CH.w,CH.h,40);x.fillStyle='#0a0f1c';x.fill();const g=x.createRadialGradient(380,255,20,380,255,330);g.addColorStop(0,`rgba(255,${130+hot*60|0},90,${.12+hot*.5})`);g.addColorStop(1,'rgba(120,40,200,0)');x.fillStyle=g;x.fill();x.strokeStyle='#9fb6c8';x.lineWidth=8;x.stroke();
+txt('Plasma chamber',380,CH.y-24,'#cfe6f7',13,'center');
+S.p.forEach(p=>{if(p.ty=='D'){sph(p.x,p.y,13,'#8fd0ff','#1b62d6');sph(p.x-3,p.y,4,'#ff9a9a','#c21f1f');sph(p.x+4,p.y+2,4,'#ddd','#789')}
+else if(p.ty=='T'){sph(p.x,p.y,15,'#9bf5b8','#13a051');sph(p.x-4,p.y-3,4,'#ff9a9a','#c21f1f');sph(p.x+4,p.y-1,4,'#ddd','#789');sph(p.x,p.y+5,4,'#ddd','#789')}
+else if(p.ty=='He'){sph(p.x,p.y,18,'#ffe58a','#e09500');sph(p.x-5,p.y-4,4.5,'#ff9a9a','#c21f1f');sph(p.x+5,p.y-3,4.5,'#ff9a9a','#c21f1f');sph(p.x-4,p.y+5,4.5,'#ddd','#789');sph(p.x+5,p.y+5,4.5,'#ddd','#789')}
+else sph(p.x,p.y,6,'#fff','#8aa')});
+S.fx=ring(S.fx);
+const sx=850,sy=120,sg=x.createRadialGradient(sx,sy,30,sx,sy,120);sg.addColorStop(0,'rgba(255,200,60,.8)');sg.addColorStop(1,'rgba(255,120,0,0)');x.fillStyle=sg;x.fillRect(sx-130,sy-130,260,260);
+x.strokeStyle='rgba(255,170,40,.6)';x.lineWidth=4;for(let i=0;i<14;i++){const a=i*PI/7+T*.01,l=62+Math.sin(T*.05+i)*8;x.beginPath();x.moveTo(sx+Math.cos(a)*50,sy+Math.sin(a)*50);x.lineTo(sx+Math.cos(a)*l,sy+Math.sin(a)*l);x.stroke()}
+sph(sx,sy,50,'#fff7b0','#ff8a00');txt('The Sun fuses hydrogen',sx,sy+82,'#cfe6f7',12,'center');
+const tx=790,ty=250,th=190;x.fillStyle='rgba(255,255,255,.85)';rr(tx-8,ty,16,th,8);x.fill();x.fillStyle='#e03131';x.fillRect(tx-4,ty+th-hot*(th-10),8,hot*(th-10)+4);sph(tx,ty+th+8,18,'#ff8a8a','#c21f1f');
+x.strokeStyle='#333';x.lineWidth=1;for(let i=0;i<=10;i++){x.beginPath();x.moveTo(tx+10,ty+th-i*(th-10)/10);x.lineTo(tx+(i%5?16:22),ty+th-i*(th-10)/10);x.stroke()}txt('Thermometer',tx,ty+th+42,'#cfe6f7',12,'center');
+txt(S.t>=5?'Hot enough: nuclei can fuse!':'Too cold: nuclei repel',860,300,S.t>=5?'#7dffa8':'#ffb27d',14,'left');
+leg([['Deuterium','#8fd0ff','#1b62d6'],['Tritium','#9bf5b8','#13a051'],['Helium-4','#ffe58a','#e09500'],['Neutron','#fff','#8aa']],60);
+$('#ro').innerHTML=`<span>Temperature: <b>${S.t*15} million °C</b></span><span>Fusions: <b>${S.fus}</b></span><span>Energy: <b>${S.en} MeV</b></span><span>Particles: <b>${S.p.length}</b></span>`}
+function btnU(){return[['Heat Up','#ff4d2e',()=>S.t=Math.min(10,S.t+1)],['Cool Down','#2f9bff',()=>S.t=Math.max(1,S.t-1)],['Add Deuterium','#1c7ed6',()=>{addP('D');addP('D')}],['Add Tritium','#12b886',()=>{addP('T');addP('T')}],['Add 10 Pairs','#a64dff',()=>{for(let i=0;i<10;i++){addP('D');addP('T')}}],['Ignite (Max Heat)','#ff9f1c',()=>S.t=10,'#2b1700'],['Slow Motion','#4263eb',tglSlow],['Pause / Play','#0ca678',tglPause],['Reset All','#e03131',iniU]]}
+
+/* ---------- HALF-LIFE ---------- */
+const ISO=[['Carbon-14',5730,'years','dating old wood and bones','#ff8a3d'],['Iodine-131',8,'days','thyroid medicine','#c056ff'],['Cobalt-60',5.27,'years','sterilising medical tools','#2f9bff'],['Uranium-238',4.5,'billion years','dating ancient rocks','#ff4d6d']];
+function iniH(i){stopAuto();S={i:i==null?(S.i||0):i,a:Array.from({length:100},()=>({u:1,f:0})),h:[100],s:0}}
+function alive(){return S.a.filter(a=>a.u)}
+function kill(a){a.u=0;a.f=30}
+function nextH(){if(S.s>=7||!alive().length)return stopAuto();const al=alive(),m=al.length==1?1:Math.round(al.length/2);al.sort(()=>R()-.5).slice(0,m).forEach(kill);S.s++;S.h.push(alive().length)}
+function stopAuto(){clearInterval(auto);auto=null}
+function drawH(){bg();const I=ISO[S.i];
+S.a.forEach((a,k)=>{const px=90+(k%10)*38,py=85+Math.floor(k/10)*38;a.px=px;a.py=py;if(a.u)sph(px,py,15,'#ffb0b0','#d1202f');else{x.globalAlpha=.7;sph(px,py,11,'#b4c3cb','#56666e');x.globalAlpha=1}
+if(a.f>0){x.strokeStyle=`rgba(255,240,120,${a.f/30})`;x.lineWidth=3;x.beginPath();x.arc(px,py,28-a.f*.6,0,7);x.stroke();a.f--}});
+txt('Red = unstable atom   Grey = decayed (stable)',90,462,'#cfe6f7',13);
+x.strokeStyle='#5d89ad';x.lineWidth=2;x.beginPath();x.moveTo(520,60);x.lineTo(520,400);x.lineTo(790,400);x.stroke();
+[50,25].forEach(v=>{const y=400-v*3;x.setLineDash([5,5]);x.strokeStyle='rgba(255,255,255,.2)';x.beginPath();x.moveTo(520,y);x.lineTo(790,y);x.stroke();x.setLineDash([]);txt(v+'%',490,y+4,'#8fb2cc',11)});
+S.h.forEach((v,i)=>{const bx=530+i*33,bh=v*3,g=x.createLinearGradient(0,400-bh,0,400);g.addColorStop(0,I[4]);g.addColorStop(1,'#16324b');x.fillStyle=g;rr(bx,400-bh,26,bh,4);x.fill();txt(v,bx+13,394-bh,'#fff',12,'center');txt(i,bx+13,418,'#cfe6f7',12,'center')});
+txt('Half-lives passed',655,440,'#cfe6f7',13,'center');txt('Atoms left',500,48,'#cfe6f7',13);
+const cx=870,cy=110,ang=S.s*PI*2/7-PI/2;sph(cx,cy,56,'#ffffff','#b9c6d0');x.strokeStyle='#3b3b3b';x.lineWidth=6;x.beginPath();x.arc(cx,cy,56,0,7);x.stroke();x.lineWidth=2;for(let i=0;i<12;i++){const a=i*PI/6;x.beginPath();x.moveTo(cx+Math.cos(a)*46,cy+Math.sin(a)*46);x.lineTo(cx+Math.cos(a)*52,cy+Math.sin(a)*52);x.stroke()}
+x.strokeStyle='#d1202f';x.lineWidth=4;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(ang)*42,cy+Math.sin(ang)*42);x.stroke();sph(cx,cy,5,'#333','#000');txt('Wall clock',cx,cy+80,'#cfe6f7',12,'center');
+txt(I[0],cx,230,I[4],20,'center');txt('Half-life: '+I[1].toLocaleString()+' '+I[2],cx,254,'#fff',14,'center');txt('Used for:',cx,282,'#8fb2cc',13,'center');txt(I[3],cx,302,'#fff',13,'center');
+const tm=+(S.s*I[1]).toFixed(2);
+$('#ro').innerHTML=`<span>Isotope: <b>${I[0]}</b></span><span>Time passed: <b>${tm.toLocaleString()} ${I[2]}</b></span><span>Unstable atoms: <b>${alive().length}</b></span><span>Decayed atoms: <b>${100-alive().length}</b></span><span>Fraction left: <b>${(alive().length)}%</b></span>`}
+function btnH(){const b=[['Next Half-Life','#22c55e',nextH],['Auto Run','#ff9f1c',()=>{if(auto)return stopAuto();auto=setInterval(nextH,1100)},'#2b1700'],['Decay 1 Atom','#e8590c',()=>{const al=alive();if(al.length)kill(al[Math.floor(R()*al.length)])}],['Decay 10 Atoms','#ff2d6f',()=>alive().sort(()=>R()-.5).slice(0,10).forEach(kill)]];
+ISO.forEach((o,i)=>b.push([o[0],o[4],()=>iniH(i)]));b.push(['Pause / Play','#0ca678',tglPause],['Reset','#e03131',()=>iniH()]);return b}
+
+/* ---------- shared ---------- */
+function tglSlow(){slow=!slow}
+function tglPause(){paused=!paused}
+function setMode(m){mode=m;stopAuto();paused=false;slow=false;if(m=='fission')iniF();if(m=='fusion')iniU();if(m=='half')iniH(0);
+['fission','fusion','half'].forEach((n,i)=>$('#m'+i).classList.toggle('sel',n==m));
+const c=$('#ctl');c.innerHTML='';({fission:btnF,fusion:btnU,half:btnH})[m]().forEach(([l,col,fn,t])=>{const e=document.createElement('button');e.className='b';e.textContent=l;e.style.setProperty('--c',col);if(t)e.style.setProperty('--t',t);e.onclick=fn;c.appendChild(e)})}
+C.addEventListener('click',e=>{if(mode!='half')return;const r=C.getBoundingClientRect(),mx=(e.clientX-r.left)*W/r.width,my=(e.clientY-r.top)*H/r.height;S.a.forEach(a=>{if(a.u&&Math.hypot(a.px-mx,a.py-my)<17)kill(a)})});
+document.addEventListener('keydown',e=>{if(e.code=='Space'&&mode=='fission'){e.preventDefault();fire()}});
+function loop(){T++;if(!paused){const k=slow?.3:1;if(mode=='fission')stepF(k);if(mode=='fusion')stepU(k)}
+if(mode=='fission')drawF();else if(mode=='fusion')drawU();else drawH();requestAnimationFrame(loop)}
+setMode('fission');loop();
+</script></body></html>
