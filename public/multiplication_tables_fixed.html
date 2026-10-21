@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiplication Tables • GEN Z EDTECH INTERACTIVE</title>
+<style>
+:root{--ink:#0b1437;--ink2:#34457a;--muted:#7a88b3;--line:#e2e8fb;--card:#fff;
+--a:#ff3d81;--b:#7c3aed;--c:#06b6d4;--d:#ffb703;--e:#22c55e;
+--font:"Trebuchet MS","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);min-height:100vh;
+background:radial-gradient(900px 600px at 0% 0%,rgba(6,182,212,.18),transparent 60%),radial-gradient(900px 600px at 100% 10%,rgba(255,61,129,.15),transparent 60%),linear-gradient(180deg,#f3f6ff,#fff)}
+.app{width:min(1400px,calc(100% - 48px));margin:20px auto 30px}
+.topbar{display:flex;align-items:center;gap:20px;padding:16px 26px;border-radius:26px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 40px rgba(124,58,237,.12)}
+.logo{width:66px;height:66px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b) 60%,var(--c));box-shadow:0 12px 28px rgba(124,58,237,.4);font-size:34px;font-weight:900;color:#fff;animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-4deg)}}
+.brand{flex:1}
+.brand h1{font-size:26px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,var(--b),var(--a),var(--d));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{margin-top:4px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.chip{padding:10px 20px;border-radius:99px;font-weight:900;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--c),var(--b))}
+.tabs{display:flex;gap:10px;margin:16px 0;padding:8px;background:#fff;border:1px solid var(--line);border-radius:99px;box-shadow:0 6px 18px rgba(124,58,237,.08)}
+.tab{flex:1;border:0;cursor:pointer;font:inherit;font-weight:900;font-size:15px;color:var(--muted);background:transparent;padding:14px;border-radius:99px;transition:.25s}
+.tab:hover{background:#eef0ff;color:var(--ink)}
+.tab.active{color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 10px 24px rgba(255,61,129,.35)}
+.panel{display:none}.panel.active{display:block;animation:rise .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1}}
+.hero{position:relative;overflow:hidden;padding:44px 48px;border-radius:28px;color:#fff;background:linear-gradient(120deg,#06b6d4,#7c3aed 55%,#ff3d81);box-shadow:0 26px 60px rgba(124,58,237,.3)}
+.hero::after{content:"×";position:absolute;right:40px;top:-60px;font-size:340px;font-weight:900;color:rgba(255,255,255,.14);animation:spin 20s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero small{font-weight:900;letter-spacing:3px;font-size:12px;opacity:.9}
+.hero h2{font-size:52px;line-height:1.05;margin:10px 0 14px;font-weight:900}
+.hero p{max-width:640px;font-size:18px;line-height:1.7}
+.eq{position:relative;z-index:1;display:inline-flex;gap:14px;align-items:center;margin-top:22px;padding:14px 26px;border-radius:20px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);font-size:30px;font-weight:900}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 12px 34px rgba(124,58,237,.1);transition:.3s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 46px rgba(124,58,237,.2)}
+.card::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--g)}
+.card .em{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:32px;background:var(--g);margin-bottom:14px;color:#fff;font-weight:900}
+.card h4{font-size:22px;margin-bottom:6px}
+.card .def{font-size:13px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.card p{line-height:1.7;color:var(--ink2);font-size:15.5px}
+.facts{margin-top:14px;display:grid;gap:8px}
+.facts span{padding:9px 13px;border-radius:12px;background:#f3f5ff;font-size:14px;font-weight:700;color:var(--ink2)}
+.g1{--g:linear-gradient(135deg,#06b6d4,#3b82f6)}.g2{--g:linear-gradient(135deg,#ff3d81,#ff8a3d)}.g3{--g:linear-gradient(135deg,#7c3aed,#c026d3)}
+.g4{--g:linear-gradient(135deg,#22c55e,#06b6d4)}.g5{--g:linear-gradient(135deg,#ffb703,#ff3d81)}.g6{--g:linear-gradient(135deg,#3b82f6,#7c3aed)}
+
+/* SIMULATION — everything overlays the stage so it works in full screen */
+.sim{position:relative;height:calc(100vh - 210px);min-height:600px;border-radius:28px;overflow:hidden;background:#0b1437;box-shadow:0 26px 60px rgba(11,20,55,.4);user-select:none}
+.sim:fullscreen{border-radius:0;height:100vh}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.glass{background:rgba(255,255,255,.1);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.ov{position:absolute;color:#fff}
+.title{left:22px;top:20px;padding:12px 22px;border-radius:99px;font-weight:900;letter-spacing:1px;font-size:16px;display:flex;gap:10px;align-items:center}
+.title i{width:12px;height:12px;border-radius:50%;background:#22c55e;box-shadow:0 0 14px #22c55e;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{transform:scale(1.5);opacity:.6}}
+.equation{left:50%;top:14px;transform:translateX(-50%);padding:10px 34px;border-radius:26px;font-size:clamp(32px,4.2vw,58px);font-weight:900;white-space:nowrap;text-shadow:0 0 24px rgba(255,255,255,.5)}
+.equation b{color:var(--d)}.equation em{font-style:normal;color:#5eead4}
+.fs{right:22px;top:20px;padding:12px 20px;border-radius:99px;font:inherit;font-weight:900;font-size:14px;cursor:pointer;color:#fff}
+.fs:hover{background:rgba(255,255,255,.25)}
+.list{right:22px;top:84px;width:330px;padding:16px;border-radius:22px;display:grid;gap:6px}
+.list h5{font-size:15px;letter-spacing:2px;text-align:center;margin-bottom:4px;opacity:.85}
+.list button{border:0;cursor:pointer;font:inherit;font-weight:900;font-size:20px;color:#fff;padding:7px 16px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;justify-content:space-between;transition:.2s}
+.list button:hover{background:rgba(255,255,255,.22);transform:translateX(-4px)}
+.list button.on{background:linear-gradient(90deg,var(--a),var(--b));box-shadow:0 0 20px rgba(255,61,129,.6)}
+.list button.lock{opacity:.65}
+.dock{left:22px;bottom:18px;padding:14px 18px;border-radius:28px;display:grid;gap:12px;width:calc(100% - 394px)}
+.nums{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+.nums button{border:0;cursor:pointer;font:inherit;font-weight:900;font-size:22px;color:#fff;padding:10px 0;border-radius:16px;background:var(--g);box-shadow:0 6px 0 rgba(0,0,0,.28);transition:.15s}
+.nums button:hover{transform:translateY(-3px)}
+.nums button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.nums button.on{outline:4px solid #fff;transform:translateY(-6px) scale(1.08);box-shadow:0 0 26px #fff}
+.ctl{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ctl button{border:0;cursor:pointer;font:inherit;font-weight:900;font-size:15px;color:#fff;padding:11px 20px;border-radius:99px;background:rgba(255,255,255,.16);transition:.2s;display:flex;gap:8px;align-items:center}
+.ctl button:hover{background:rgba(255,255,255,.3);transform:translateY(-2px)}
+.ctl .play{background:linear-gradient(135deg,#22c55e,#06b6d4);padding:12px 32px;font-size:17px;box-shadow:0 8px 22px rgba(34,197,94,.5)}
+.ctl .mode.on{background:linear-gradient(135deg,var(--d),var(--a))}
+.ctl label{font-size:13px;font-weight:900;letter-spacing:1px;display:flex;gap:8px;align-items:center}
+.ctl input{accent-color:#ff3d81;width:110px}
+.profile{margin-top:22px;text-align:center;padding:26px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 30px rgba(124,58,237,.1)}
+.profile .name{font-size:24px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,var(--b),var(--a));-webkit-background-clip:text;background-clip:text;color:transparent}
+.profile .line{margin-top:7px;font-weight:800;color:var(--ink2);font-size:15px}
+.profile .ph{display:inline-flex;gap:12px;margin-top:12px}
+.profile .ph span{padding:8px 18px;border-radius:99px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--c),var(--b));letter-spacing:1px}
+footer{text-align:center;margin-top:18px;font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:800}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="logo">×</div>
+  <div class="brand"><h1>GEN Z EDTECH INTERACTIVE</h1><p>Interactive Learning • Simple Maths • Smart Education</p></div>
+  <div class="chip">Multiplication Tables</div>
+</header>
+<nav class="tabs">
+  <button class="tab active" data-tab="definition">📘 Definition</button>
+  <button class="tab" data-tab="explanation">💡 Explanation</button>
+  <button class="tab" data-tab="simulation">🎮 Interactive Simulation</button>
+</nav>
+
+<section id="definition" class="panel active">
+  <div class="hero">
+    <small>CLASS 3 • MATHS</small>
+    <h2>Multiplication Tables</h2>
+    <p>Multiplication is a fast way of adding the <b>same number again and again</b>. A table shows the answers when we multiply one number by 1, 2, 3 … up to 10.</p>
+    <div class="eq">3 × 4 = 3 + 3 + 3 + 3 = 12</div>
+  </div>
+  <div class="grid3">
+    <article class="card g1"><div class="em">👥</div><h4>Equal Groups</h4><div class="def">Same number in every group</div><p>3 baskets with 4 mangoes in each basket is <b>3 × 4</b>. Every group must have the same amount.</p></article>
+    <article class="card g2"><div class="em">➕</div><h4>Repeated Addition</h4><div class="def">Add again and again</div><p>4 + 4 + 4 = 12 is the same as <b>3 × 4 = 12</b>. Multiplication is just quicker!</p></article>
+    <article class="card g3"><div class="em">📋</div><h4>Times Table</h4><div class="def">A list of answers</div><p>The table of 5 is 5, 10, 15, 20 … Each answer grows by <b>5</b>.</p></article>
+  </div>
+</section>
+
+<section id="explanation" class="panel">
+  <div class="grid3">
+    <article class="card g4"><div class="em">🦘</div><h4>Skip Counting</h4><div class="def">Jump by the same number</div><p>Table of 3 means jumping in 3s.</p><div class="facts"><span>3 → 6 → 9 → 12 → 15</span><span>Table of 10: 10, 20, 30, 40 …</span><span>Table of 2: 2, 4, 6, 8, 10 …</span></div></article>
+    <article class="card g5"><div class="em">🔄</div><h4>Swap the Numbers</h4><div class="def">Order does not change the answer</div><p>3 × 4 and 4 × 3 both make 12. Learn one and you know two!</p><div class="facts"><span>2 × 7 = 7 × 2 = 14</span><span>5 × 6 = 6 × 5 = 30</span><span>Rows and columns give the same total</span></div></article>
+    <article class="card g6"><div class="em">⚡</div><h4>Magic Tricks</h4><div class="def">Learn tables faster</div><p>Use these easy patterns to remember answers.</p><div class="facts"><span>×2 → double the number</span><span>×5 → ends in 0 or 5</span><span>×10 → put a zero at the end</span></div></article>
+  </div>
+  <div class="hero" style="margin-top:18px;padding:30px 40px;background:linear-gradient(120deg,#ffb703,#ff3d81 60%,#7c3aed)">
+    <small>REAL LIFE</small><p style="margin-top:8px">5 packets with 6 biscuits each? That is <b>5 × 6 = 30</b> biscuits. We use multiplication in shops, at school and at home!</p>
+  </div>
+</section>
+
+<section id="simulation" class="panel">
+  <div class="sim" id="sim">
+    <canvas id="cv"></canvas>
+    <div class="ov title glass"><i></i><span id="ttl">Table of 3</span></div>
+    <div class="ov equation glass" id="eq"></div>
+    <button class="ov fs glass" id="fs">⛶ Full Screen</button>
+    <div class="ov list glass"><h5>TABLE LIST</h5><div id="rows" style="display:grid;gap:5px"></div></div>
+    <div class="ov dock glass">
+      <div class="nums" id="nums"></div>
+      <div class="ctl">
+        <button id="prev">⏮ Back</button>
+        <button class="play" id="play">▶ Play</button>
+        <button id="next">Next ⏭</button>
+        <button id="reset">↺ Reset</button>
+        <button class="mode on" id="m1">👥 Groups</button>
+        <button class="mode" id="m2">▦ Array</button>
+        <label>SPEED <input type="range" id="spd" min="1" max="5" value="3"></label>
+        <button id="snd">🔊</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="profile">
+  <div class="name">MUHAMMAD IMRAN KHAN</div>
+  <div class="line">MSc Computer Science</div>
+  <div class="ph"><span>03007603964</span><span>03147603964</span></div>
+</div>
+<footer>GEN Z EDTECH INTERACTIVE • Interactive Educational Simulation</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$(b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='simulation')requestAnimationFrame(resize);
+});
+const cv=$('cv'),ctx=cv.getContext('2d'),sim=$('sim');
+let W=1200,H=700,N=3,K=0,mode=1,playing=false,last=0,sound=true,shown=0;
+const birth=[],conf=[];
+const grads=['#06b6d4,#3b82f6','#ff3d81,#ff8a3d','#7c3aed,#c026d3','#22c55e,#06b6d4','#ffb703,#ff3d81','#3b82f6,#7c3aed','#ff8a3d,#ffb703','#ec4899,#8b5cf6','#14b8a6,#22c55e','#f43f5e,#f59e0b','#6366f1,#06b6d4','#d946ef,#f97316'];
+const hue=i=>(i*36+200)%360;
+const nums=$('nums');
+for(let i=1;i<=12;i++){const b=document.createElement('button');b.textContent=i;b.style.setProperty('--g','linear-gradient(135deg,'+grads[i-1]+')');b.onclick=()=>{N=i;setK(0,true)};nums.appendChild(b)}
+function beep(f){if(!sound)return;try{const a=beep.a||(beep.a=new(window.AudioContext||window.webkitAudioContext)());const o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.type='triangle';g.gain.value=.12;g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.3)}catch(e){}}
+function setK(v,fresh){
+  v=Math.max(0,Math.min(10,v));
+  if(fresh){birth.length=0;shown=0}
+  for(let i=K+1;i<=v;i++)birth[i]=performance.now()+(i-K-1)*120;
+  if(v>K)beep(330+v*45);
+  if(v===10&&K<10)burst();
+  K=v;ui();
+}
+function burst(){for(let i=0;i<120;i++)conf.push({x:W/2,y:H/2,vx:(Math.random()-.5)*16,vy:-Math.random()*14-2,h:Math.random()*360,l:120})}
+function ui(){
+  [...nums.children].forEach((b,i)=>b.classList.toggle('on',i+1===N));
+  $('ttl').textContent='Table of '+N;
+  $('eq').innerHTML=K?`${N} × <b>${K}</b> = <em>${N*K}</em>`:`${N} × <b>?</b> = ?`;
+  const r=$('rows');r.innerHTML='';
+  for(let i=1;i<=10;i++){const b=document.createElement('button');
+    b.className=i===K?'on':(i>K?'lock':'');
+    b.innerHTML=`<span>${N} × ${i}</span><span>${i<=K?'= '+N*i:'= ?'}</span>`;
+    b.onclick=()=>{setK(i)};r.appendChild(b)}
+  $('play').textContent=playing?'⏸ Pause':'▶ Play';
+}
+$('play').onclick=()=>{if(K>=10)setK(0,true);playing=!playing;last=performance.now();ui()};
+$('next').onclick=()=>setK(K+1);
+$('prev').onclick=()=>{setK(K-1)};
+$('reset').onclick=()=>{playing=false;setK(0,true)};
+$('m1').onclick=()=>{mode=1;$('m1').classList.add('on');$('m2').classList.remove('on')};
+$('m2').onclick=()=>{mode=2;$('m2').classList.add('on');$('m1').classList.remove('on')};
+$('snd').onclick=()=>{sound=!sound;$('snd').textContent=sound?'🔊':'🔇'};
+$('fs').onclick=()=>document.fullscreenElement?document.exitFullscreen():sim.requestFullscreen();
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'✕ Exit Full Screen':'⛶ Full Screen';setTimeout(resize,80)});
+document.addEventListener('keydown',e=>{if(!$('simulation').classList.contains('active'))return;
+  if(e.key==='ArrowRight')setK(K+1);if(e.key==='ArrowLeft')setK(K-1);if(e.key===' '){e.preventDefault();$('play').click()}});
+function resize(){const d=Math.min(devicePixelRatio||1,2),r=sim.getBoundingClientRect();if(!r.width)return;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(resize).observe(sim);
+const ease=t=>{t=Math.max(0,Math.min(1,t));const c=2.2;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+const orbs=[...Array(22)].map((_,i)=>({x:Math.random(),y:Math.random(),r:20+Math.random()*60,s:.2+Math.random()*.5,h:i*30}));
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function ball(x,y,r,h,s,label){ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+  const g=ctx.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r);g.addColorStop(0,`hsl(${h},100%,78%)`);g.addColorStop(1,`hsl(${h},90%,48%)`);
+  ctx.shadowColor=`hsl(${h},100%,60%)`;ctx.shadowBlur=8;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.shadowBlur=0;
+  ctx.lineWidth=Math.max(2,r*.12);ctx.strokeStyle='#fff';ctx.stroke();
+  if(label){ctx.font=`900 ${Math.round(r*1.05)}px Trebuchet MS`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=r*.24;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(label,0,r*.05);ctx.fillStyle='#fff';ctx.fillText(label,0,r*.05)}
+  ctx.restore()}
+function draw(t){
+  const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0b1437');g.addColorStop(.5,'#2a1466');g.addColorStop(1,'#560b47');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  orbs.forEach(o=>{const y=((o.y-t*.00002*o.s*60)%1+1)%1;ctx.fillStyle=`hsla(${o.h+t*.01},90%,60%,.10)`;ctx.beginPath();ctx.arc(o.x*W,y*H,o.r,0,7);ctx.fill()});
+  const x0=30,y0=112,x1=W-380,y1=H-175,aw=x1-x0,ah=y1-y0;
+  if(mode===1){
+    const cols=5,rows=2,cw=aw/cols,ch=ah/rows,aW=cw-32,aH=ch-66;let nc=1,nr=N,r=0;for(let c=1;c<=N;c++){const w=Math.ceil(N/c),q=Math.min(aW/(c*2.25),aH/(w*2.25),44);if(q>r){r=q;nc=c;nr=w}}
+    for(let i=1;i<=10;i++){
+      const cx=x0+((i-1)%cols)*cw,cy=y0+Math.floor((i-1)/cols)*ch;
+      const p=i<=K?ease((t-birth[i])/600):0;
+      ctx.save();ctx.globalAlpha=i<=K?.35:.12;ctx.strokeStyle='#fff';ctx.setLineDash([6,6]);rr(cx+8,cy+8,cw-16,ch-16,24);ctx.stroke();ctx.restore();
+      if(p<=0)continue;
+      ctx.save();ctx.translate(cx+cw/2,cy+ch/2);ctx.scale(p,p);ctx.translate(-cw/2,-ch/2);
+      const gg=ctx.createLinearGradient(0,0,cw,ch);gg.addColorStop(0,`hsla(${hue(i)},55%,22%,.92)`);gg.addColorStop(1,`hsla(${hue(i)+30},55%,12%,.92)`);
+      ctx.fillStyle=gg;ctx.shadowColor=`hsl(${hue(i)},100%,60%)`;ctx.shadowBlur=22;rr(8,8,cw-16,ch-16,24);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=`hsl(${hue(i)},100%,65%)`;ctx.lineWidth=3;ctx.stroke();
+      ctx.fillStyle='#fff';ctx.font='900 19px Trebuchet MS';ctx.fillText('Group '+i,22,34);
+      for(let j=0;j<N;j++){const dp=ease((t-birth[i]-250-j*45)/450);
+        ball(cw/2+(j%nc-(nc-1)/2)*r*2.25,46+aH/2+(Math.floor(j/nc)-(nr-1)/2)*r*2.25,r,hue(i),Math.max(0,dp),j+1)}
+      ctx.restore();
+    }
+  }else{
+    const cs=Math.min(aw/(N+2),ah/10),ox=x0+(aw-cs*(N+2))/2,oy=y0+(ah-cs*10)/2;
+    for(let i=1;i<=10;i++){
+      ctx.fillStyle='rgba(255,255,255,.14)';ctx.font=`900 ${Math.min(cs*.42,26)}px Trebuchet MS`;ctx.textAlign='right';ctx.fillText(i,ox+cs*.7,oy+(i-.3)*cs);ctx.textAlign='left';
+      for(let j=0;j<N;j++){
+        ctx.fillStyle='rgba(255,255,255,.07)';ctx.beginPath();ctx.arc(ox+(j+1.5)*cs,oy+(i-.5)*cs,cs*.14,0,7);ctx.fill();
+        if(i<=K)ball(ox+(j+1.5)*cs,oy+(i-.5)*cs,cs*.38,hue(i),Math.max(0,ease((t-birth[i]-j*40)/450)),j+1)}
+      if(i<=K){const a=Math.min(1,(t-birth[i]-N*40)/300);if(a>0){ctx.globalAlpha=a;ctx.fillStyle='#ffb703';ctx.font=`900 ${Math.min(cs*.5,30)}px Trebuchet MS`;ctx.fillText('= '+N*i,ox+(N+1.6)*cs,oy+(i-.3)*cs);ctx.globalAlpha=1}}
+    }
+  }
+  for(let i=conf.length-1;i>=0;i--){const c=conf[i];c.x+=c.vx;c.y+=c.vy;c.vy+=.35;c.l--;ctx.fillStyle=`hsl(${c.h},100%,60%)`;ctx.fillRect(c.x,c.y,9,9);if(c.l<=0)conf.splice(i,1)}
+}
+function loop(t){
+  t=performance.now();
+  if(playing&&t-last>1900-$('spd').value*300){last=t;if(K<10)setK(K+1);else{playing=false;ui()}}
+  if(W>0)draw(t);requestAnimationFrame(loop);
+}
+ui();resize();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

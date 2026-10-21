@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Earth Rotation & Revolution Simulation</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a29;--ink:#fff;--panel:#111a55;--line:#3b4cc0;box-sizing:border-box}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(ellipse at 50% -10%,#2a1a7a 0,#0b1040 45%,var(--bg) 100%);color:var(--ink);font-family:Fredoka,"Trebuchet MS",Arial,sans-serif;min-width:1100px;min-height:100vh;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.wrap{max-width:1500px;margin:0 auto;padding:14px 24px 0;perspective:1200px}
+header{text-align:center}
+.site{display:inline-block;margin:6px 0 0;font-size:clamp(28px,3.6vw,54px);font-weight:700;letter-spacing:3px;color:#ff4d8d;transform:perspective(700px) rotateX(20deg);
+text-shadow:0 1px 0 #b3104a,0 2px 0 #b3104a,0 3px 0 #a00f43,0 4px 0 #a00f43,0 5px 0 #8c0d3a,0 6px 0 #8c0d3a,0 7px 0 #780b32,0 8px 0 #780b32,0 16px 18px rgba(0,0,0,.7),0 0 30px rgba(255,77,141,.6);animation:hue 7s linear infinite}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+.topic{display:block;margin:10px auto 14px;width:max-content;font-size:clamp(26px,3.2vw,48px);font-weight:700;color:#ffe44d;transform-style:preserve-3d;
+text-shadow:0 1px 0 #f2b600,0 2px 0 #f2b600,0 3px 0 #e89a00,0 4px 0 #e89a00,0 5px 0 #d97f00,0 6px 0 #d97f00,0 7px 0 #c46500,0 8px 0 #c46500,0 9px 0 #a94f00,0 18px 20px rgba(0,0,0,.65),0 0 26px rgba(255,228,77,.55);animation:sway 6s ease-in-out infinite alternate}
+@keyframes sway{from{transform:perspective(800px) rotateX(14deg) rotateY(-12deg)}to{transform:perspective(800px) rotateX(14deg) rotateY(12deg)}}
+.tabs{display:flex;justify-content:center;gap:22px;margin:6px 0 18px}
+button{font-family:inherit;cursor:pointer;color:#fff;border:0}
+.tab{font-size:22px;font-weight:700;padding:14px 34px;border-radius:18px;background:linear-gradient(#ff8fb1,#ff2e72);box-shadow:0 8px 0 #a3104a,0 14px 22px rgba(0,0,0,.55);transition:transform .12s,box-shadow .12s;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.tab:nth-child(2){background:linear-gradient(#7be0ff,#1592e6);box-shadow:0 8px 0 #0a5a99,0 14px 22px rgba(0,0,0,.55)}
+.tab:nth-child(3){background:linear-gradient(#9dff8a,#22b845);box-shadow:0 8px 0 #0f7a2a,0 14px 22px rgba(0,0,0,.55)}
+.tab:hover{transform:translateY(-3px) rotateX(10deg)}
+.tab:active,.tab.on{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.5),0 0 28px #fff8}
+.tab.on{outline:4px solid #fff}
+section{display:none}section.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.card{border-radius:22px;padding:22px 26px;background:linear-gradient(145deg,var(--c1),var(--c2));box-shadow:0 10px 0 rgba(0,0,0,.35),0 22px 34px rgba(0,0,0,.5);transition:transform .15s;transform-style:preserve-3d}
+.card h2{margin:0 0 8px;font-size:30px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.card p{margin:0;font-size:21px;line-height:1.5}
+.big{font-size:60px;float:right;margin-left:14px;filter:drop-shadow(0 8px 6px rgba(0,0,0,.5))}
+table{width:100%;border-collapse:separate;border-spacing:8px;font-size:20px;margin-top:22px}
+th,td{padding:12px 14px;border-radius:14px;text-align:left;box-shadow:0 5px 0 rgba(0,0,0,.35)}
+th{background:#8338ec}td{background:#1d2a8a}td:first-child{background:#ff6b35;font-weight:700}
+#sim{background:linear-gradient(#0c1348,#070b2c);border:4px solid var(--line);border-radius:22px;box-shadow:0 12px 0 #1a2388,0 26px 40px rgba(0,0,0,.6);overflow:hidden}
+#stage{position:relative;height:520px;background:#02041a}
+#cv{position:absolute;inset:0}
+#hud{position:absolute;left:12px;top:12px;display:grid;grid-template-columns:auto auto;gap:4px 12px;background:rgba(10,14,60,.85);border:3px solid #4cc9f0;border-radius:16px;padding:10px 14px;font-size:17px;box-shadow:0 6px 0 rgba(0,0,0,.4)}
+#hud b{color:#ffe44d}
+#ctl{display:flex;flex-wrap:wrap;gap:10px 18px;padding:12px 14px;background:#0d1550}
+.grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.07)}
+.grp>span{font-weight:700;color:#ffe44d;font-size:15px;margin-right:2px}
+.b{padding:8px 14px;font-size:15px;font-weight:600;border-radius:12px;background:var(--c,#3a86ff);box-shadow:0 5px 0 rgba(0,0,0,.45);text-shadow:0 1px 0 rgba(0,0,0,.4);transition:transform .1s,box-shadow .1s}
+.b:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.45)}
+.b.off{filter:grayscale(.85) brightness(.75)}
+label.s{display:flex;align-items:center;gap:8px;font-size:15px}
+input[type=range]{width:120px;accent-color:#ffe44d}
+.tk{display:flex;align-items:center;background:#000;border-top:3px solid #4cc9f0;height:42px;overflow:hidden}
+.tk>i{flex:none;font-style:normal;font-weight:700;background:#e63946;padding:0 14px;height:100%;display:flex;align-items:center;z-index:2;box-shadow:6px 0 12px #000}
+.tk div{flex:1;overflow:hidden;white-space:nowrap}
+.tk span{display:inline-block;padding-left:100%;font-size:18px;color:#7dff9b;animation:mq 38s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+#sim:fullscreen{display:flex;flex-direction:column;border:0;border-radius:0;background:#070b2c}
+#sim:fullscreen #stage{height:auto;flex:1}
+footer{margin:26px -24px 0;padding:14px 10px;text-align:center;font-size:19px;font-weight:600;letter-spacing:1px;background:linear-gradient(90deg,#6a11cb,#2575fc,#00c9a7,#ffb703,#ff2e72);text-shadow:0 2px 0 rgba(0,0,0,.5)}
+footer span{margin:0 14px}
+@media (prefers-reduced-motion:reduce){.site,.topic,.tk span{animation:none}}
+</style></head><body>
+<div class="wrap">
+<header>
+<h1 class="site" style="margin:6px 0 0">GEN Z EDTECH INTERACTIVE SIMULATIONS</h1>
+<span class="topic">Earth Rotation &amp; Revolution Simulation</span>
+</header>
+<div class="tabs">
+<button class="tab on" data-t="def">📖 Definition</button>
+<button class="tab" data-t="exp">💡 Explanation</button>
+<button class="tab" data-t="simu">🚀 Simulation</button>
+</div>
+
+<section id="def" class="on"><div class="grid">
+<div class="card" style="--c1:#ff9a3c;--c2:#e8590c"><span class="big">🌍</span><h2>Rotation</h2><p>Rotation is the spinning of the Earth on its own axis. Earth completes one full spin in about 24 hours. This gives us day and night.</p></div>
+<div class="card" style="--c1:#26c6da;--c2:#0277bd"><span class="big">☀️</span><h2>Revolution</h2><p>Revolution is the journey of the Earth around the Sun. Earth completes one trip in about 365 and a quarter days. This is one year, and it gives us seasons.</p></div>
+<div class="card" style="--c1:#ef476f;--c2:#9d0a3a"><span class="big">📍</span><h2>Axis</h2><p>The axis is an imaginary line that goes through the North Pole and the South Pole. The Earth spins around this line. The axis is tilted by 23.5 degrees.</p></div>
+<div class="card" style="--c1:#7bd63a;--c2:#1b8a3a"><span class="big">⭕</span><h2>Orbit</h2><p>The orbit is the path that the Earth follows around the Sun. It looks like a big oval circle. The Earth always moves along this path.</p></div>
+</div></section>
+
+<section id="exp"><div class="grid">
+<div class="card" style="--c1:#ffb703;--c2:#d97706"><span class="big">🌗</span><h2>Why do we have day and night?</h2><p>The Sun lights only one half of the Earth at a time. The bright half has day. The dark half has night. As the Earth rotates, every place moves from the bright side to the dark side.</p></div>
+<div class="card" style="--c1:#4cc9f0;--c2:#1565c0"><span class="big">➡️</span><h2>Which way does the Earth spin?</h2><p>The Earth spins from west to east. That is why the Sun looks like it rises in the east and sets in the west.</p></div>
+<div class="card" style="--c1:#8338ec;--c2:#4a148c"><span class="big">🍂</span><h2>Why do we have seasons?</h2><p>The Earth's axis is tilted 23.5 degrees and always points to the North Star. When the North Pole leans toward the Sun, the north has summer. When it leans away, the north has winter.</p></div>
+<div class="card" style="--c1:#06d6a0;--c2:#047857"><span class="big">📅</span><h2>Year and leap year</h2><p>One trip around the Sun takes 365 days and about 6 hours. We add one extra day to February every 4 years. That year is called a leap year and has 366 days.</p></div>
+<div class="card" style="--c1:#ff6b6b;--c2:#b71c1c"><span class="big">⚡</span><h2>How fast is the Earth?</h2><p>At the equator, the Earth spins at about 1,670 kilometres per hour. Around the Sun, it travels at about 107,000 kilometres per hour. We do not feel it because everything moves together.</p></div>
+<div class="card" style="--c1:#f72585;--c2:#7209b7"><span class="big">🎮</span><h2>How to use the simulation</h2><p>Click the Simulation button. Use Play, Pause, Faster and Slower. Turn Rotation and Revolution ON or OFF. Jump to each season. Press Full Screen for a big view.</p></div>
+</div>
+<table><tr><th>Topic</th><th>Rotation</th><th>Revolution</th></tr>
+<tr><td>What moves?</td><td>Earth spins on its axis</td><td>Earth goes around the Sun</td></tr>
+<tr><td>Time taken</td><td>24 hours (1 day)</td><td>365 days (1 year)</td></tr>
+<tr><td>Result</td><td>Day and night</td><td>Seasons and years</td></tr></table>
+</section>
+
+<section id="simu">
+<div id="sim">
+<div id="stage"><canvas id="cv"></canvas>
+<div id="hud"><span>📅 Date</span><b id="h1"></b><span>🌦 Season (North)</span><b id="h2"></b><span>🔄 Earth spin</span><b id="h3"></b><span>🛰 Orbit done</span><b id="h4"></b></div></div>
+<div id="ctl">
+<div class="grp"><span>Play</span>
+<button class="b" id="pp" style="--c:#22b845" onclick="A('play')">⏸ Pause</button>
+<button class="b" style="--c:#3a86ff" onclick="A('slow')">⏪ Slower</button>
+<button class="b" style="--c:#3a86ff" onclick="A('fast')">⏩ Faster</button>
+<button class="b" style="--c:#e63946" onclick="A('reset')">↺ Reset</button></div>
+<div class="grp" id="tg"><span>Show / Hide</span></div>
+<div class="grp"><span>Go to season</span>
+<button class="b" style="--c:#2fae4f" onclick="A('s0')">🌸 Mar 20</button>
+<button class="b" style="--c:#e0a800" onclick="A('s1')">☀️ Jun 21</button>
+<button class="b" style="--c:#e8590c" onclick="A('s2')">🍂 Sep 22</button>
+<button class="b" style="--c:#1592e6" onclick="A('s3')">❄️ Dec 21</button></div>
+<div class="grp"><span>Camera</span>
+<button class="b" style="--c:#8338ec" onclick="A('top')">⬇ Top View</button>
+<button class="b" style="--c:#8338ec" onclick="A('ang')">◣ Angle View</button>
+<button class="b" style="--c:#8338ec" onclick="A('side')">➡ Side View</button></div>
+<div class="grp"><span>Sliders</span>
+<label class="s">Speed <input id="sp" type="range" min="1" max="100" value="5"></label>
+<label class="s">Tilt <input id="tl" type="range" min="10" max="95" value="50"></label>
+<label class="s">Zoom <input id="zm" type="range" min="60" max="150" value="100"></label></div>
+<div class="grp"><button class="b" id="fsb" style="--c:#ff2e72" onclick="A('fs')">⛶ Full Screen</button></div>
+</div>
+<div class="tk"><i>▶ NOW</i><div><span id="tkt"></span></div></div>
+</div>
+</section>
+
+<footer><span>Developed by MUHAMMAD IMRAN KHAN MSc Computer Science</span>◆<span>📞 03007603964</span>◆<span>📞 03147603964</span></footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id),PI2=Math.PI*2,TILT=23.5*Math.PI/180;
+// tabs
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,section').forEach(e=>e.classList.remove('on'));b.classList.add('on');$(b.dataset.t).classList.add('on')});
+// card 3D tilt
+document.querySelectorAll('.card').forEach(k=>{k.onmousemove=e=>{const r=k.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;k.style.transform=`perspective(700px) rotateY(${x*14}deg) rotateX(${-y*14}deg) translateZ(10px)`};k.onmouseleave=()=>k.style.transform=''});
+
+const cv=$('cv'),c=cv.getContext('2d');let W=1000,H=520,K=1;
+new ResizeObserver(()=>{const b=$('stage').getBoundingClientRect(),d=devicePixelRatio||1;if(!b.width)return;W=b.width;H=b.height;cv.width=W*d;cv.height=H*d;cv.style.width=W+'px';cv.style.height=H+'px';c.setTransform(d,0,0,d,0,0)}).observe($('stage'));
+
+const S={play:1,v:5,rot:1,rev:1,orbit:1,axis:1,labels:1,dn:1,ang:0,tilt:.5,zoom:1,dO:78,rF:0,ev:'Simulation started'};
+const ML=[31,28,31,30,31,30,31,31,30,31,30,31],MN='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+const season=d=>{d=(d%365+365)%365;return d>=354||d<78?['Winter','❄️']:d<171?['Spring','🌸']:d<264?['Summer','☀️']:['Autumn','🍂']};
+const dstr=d=>{let n=Math.floor((d%365+365)%365),i=0;while(n>=ML[i]){n-=ML[i];i++}return MN[i]+' '+(n+1)};
+
+const TG=[['rot','Rotation','#ff9f1c'],['rev','Revolution','#1592e6'],['orbit','Orbit Path','#2a9d8f'],['axis','Axis & Equator','#e63946'],['labels','Labels','#8338ec'],['dn','Day & Night','#e8590c'],['ang','Tilt Angle','#d6336c']];
+TG.forEach(([k,n,col])=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',col);b.dataset.k=k;b.dataset.n=n;b.onclick=()=>{S[k]=!S[k];S.ev=n+(S[k]?' turned ON':' turned OFF');sync()};$('tg').append(b)});
+function sync(){document.querySelectorAll('[data-k]').forEach(b=>{const on=S[b.dataset.k];b.classList.toggle('off',!on);b.textContent=(on?'✔ ':'✖ ')+b.dataset.n});$('pp').textContent=S.play?'⏸ Pause':'▶ Play';$('sp').value=S.v;$('tl').value=S.tilt*100;$('zm').value=S.zoom*100}
+$('sp').oninput=e=>{S.v=+e.target.value;S.ev='Speed changed to '+(S.v*.1).toFixed(1)+' days per second'};
+$('tl').oninput=e=>{S.tilt=e.target.value/100;S.ev='Camera tilt changed'};
+$('zm').oninput=e=>{S.zoom=e.target.value/100;S.ev='Zoom changed'};
+function A(n){
+ if(n=='play'){S.play=!S.play;S.ev=S.play?'Simulation is playing':'Simulation is paused'}
+ else if(n=='slow'){S.v=Math.max(1,S.v-4);S.ev='Slower speed'}
+ else if(n=='fast'){S.v=Math.min(100,S.v+6);S.ev='Faster speed'}
+ else if(n=='reset'){Object.assign(S,{play:1,v:5,rot:1,rev:1,orbit:1,axis:1,labels:1,dn:1,ang:0,tilt:.5,zoom:1,dO:78,rF:0,ev:'Simulation was reset'})}
+ else if(n[0]=='s'){S.dO=[78,171,264,354][n[1]];S.ev='Jumped to '+['Spring start (Mar 20)','Summer start (Jun 21)','Autumn start (Sep 22)','Winter start (Dec 21)'][n[1]]}
+ else if(n=='top'){S.tilt=.95;S.ev='Top View: looking down from above'}
+ else if(n=='ang'){S.tilt=.5;S.ev='Angle View'}
+ else if(n=='side'){S.tilt=.15;S.ev='Side View: looking from the side'}
+ else if(n=='fs'){document.fullscreenElement?document.exitFullscreen():$('sim').requestFullscreen();S.ev='Full Screen button pressed'}
+ sync()}
+document.onfullscreenchange=()=>{$('fsb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen'};
+sync();
+
+const ST=Array.from({length:160},()=>[Math.random(),Math.random(),['#fff','#bfe3ff','#ffe9a6','#ffc2e0'][Math.random()*4|0],Math.random()*6,Math.random()*1.6+.6]);
+const LAND=[
+[[-17,15,-5,35,10,37,32,31,43,12,51,11,40,-10,35,-25,20,-35,12,-18,9,4,-8,5],'#f4a62a'],
+[[-10,36,-9,43,5,50,10,58,25,70,60,70,100,77,140,72,170,66,140,50,122,30,120,22,105,10,98,16,80,8,70,22,58,25,45,28,35,35,25,38,10,44],'#8fe04a'],
+[[-165,62,-140,70,-95,72,-70,60,-55,50,-75,38,-82,25,-97,18,-85,10,-78,8,-105,20,-118,32,-125,48,-140,58],'#2fc76a'],
+[[-78,8,-60,10,-35,-6,-40,-22,-58,-38,-68,-54,-74,-45,-72,-20,-81,-5],'#1fa85a'],
+[[114,-22,130,-12,143,-11,153,-27,146,-39,130,-32,115,-34],'#ffc04d'],
+[[-180,-70,-90,-70,0,-70,90,-70,180,-70,180,-90,-180,-90],'#f4fbff'],
+[[-180,76,-90,76,0,76,90,76,180,76,180,90,-180,90],'#f4fbff']];
+function poly(p,r,rot,col){c.beginPath();for(let i=0;i<p.length;i+=2){const lo=p[i]*Math.PI/180+rot,la=p[i+1]*Math.PI/180;let x=Math.cos(la)*Math.sin(lo),y=-Math.sin(la);const z=Math.cos(la)*Math.cos(lo);if(z<0){const m=Math.hypot(x,y)||1;x/=m;y/=m}i?c.lineTo(x*r,y*r):c.moveTo(x*r,y*r)}c.closePath();c.fillStyle=col;c.fill()}
+function rr(x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function lab(t,x,y,col,sz=14){const f=sz*K;c.font='600 '+f+'px Fredoka,Arial,sans-serif';const w=c.measureText(t).width+16*K,h=f+10*K;x=Math.max(w/2+4,Math.min(W-w/2-4,x));y=Math.max(h/2+4,Math.min(H-h/2-4,y));c.fillStyle='rgba(5,8,40,.88)';c.strokeStyle=col;c.lineWidth=2.5;rr(x-w/2,y-h/2,w,h,h/2);c.fill();c.stroke();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y+1)}
+function sun(x,y,R,t){let g=c.createRadialGradient(x,y,R*.8,x,y,R*2.8);g.addColorStop(0,'rgba(255,190,40,.65)');g.addColorStop(1,'rgba(255,140,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,R*2.8,0,PI2);c.fill();
+ c.save();c.translate(x,y);c.rotate(t*.08);c.lineCap='round';for(let i=0;i<32;i++){c.rotate(PI2/32);const L=i%2?1.45:1.85,p=.75+.25*Math.sin(t*3+i);c.strokeStyle=i%2?'rgba(255,225,90,.85)':'rgba(255,170,30,.9)';c.lineWidth=(i%2?2.5:3.5)*K;c.beginPath();c.moveTo(0,-R*1.12);c.lineTo(0,-R*(1.12+(L-1.12)*p));c.stroke()}c.restore();
+ g=c.createRadialGradient(x-R*.3,y-R*.3,R*.1,x,y,R);g.addColorStop(0,'#fffbb0');g.addColorStop(.5,'#ffd000');g.addColorStop(1,'#ff7b00');c.fillStyle=g;c.beginPath();c.arc(x,y,R,0,PI2);c.fill()}
+function earth(ex,ey,r,sx,sy){
+ c.save();c.translate(ex,ey);let g=c.createRadialGradient(0,0,r*.9,0,0,r*1.4);g.addColorStop(0,'rgba(90,200,255,.6)');g.addColorStop(1,'rgba(90,200,255,0)');c.fillStyle=g;c.beginPath();c.arc(0,0,r*1.4,0,PI2);c.fill();
+ c.rotate(-TILT);c.save();c.beginPath();c.arc(0,0,r,0,PI2);c.clip();
+ g=c.createRadialGradient(-r*.3,-r*.3,r*.1,0,0,r);g.addColorStop(0,'#6fdcff');g.addColorStop(1,'#0a5bd0');c.fillStyle=g;c.fillRect(-r,-r,2*r,2*r);
+ LAND.forEach(l=>poly(l[0],r,S.rF*PI2,l[1]));c.restore();
+ if(S.axis){c.strokeStyle='#fff200';c.lineWidth=2.5*K;c.setLineDash([6*K,4*K]);c.beginPath();c.ellipse(0,0,r,r*.22,0,0,Math.PI);c.stroke();c.setLineDash([]);
+  c.strokeStyle='#ff2d2d';c.lineWidth=4*K;c.beginPath();c.moveTo(0,-r*1.7);c.lineTo(0,r*1.7);c.stroke();c.fillStyle='#ff2d2d';[-1,1].forEach(q=>{c.beginPath();c.arc(0,q*r*1.7,5*K,0,PI2);c.fill()})}
+ c.restore();
+ const dx=sx-ex,dy=sy-ey,m=Math.hypot(dx,dy)||1,ux=dx/m,uy=dy/m;
+ if(S.dn){c.save();c.translate(ex,ey);c.beginPath();c.arc(0,0,r,0,PI2);c.clip();g=c.createLinearGradient(ux*r,uy*r,-ux*r,-uy*r);g.addColorStop(0,'rgba(255,240,150,.2)');g.addColorStop(.42,'rgba(0,0,30,0)');g.addColorStop(.58,'rgba(0,0,40,.55)');g.addColorStop(1,'rgba(0,0,25,.9)');c.fillStyle=g;c.fillRect(-r,-r,2*r,2*r);c.restore()}
+ const sT=Math.sin(TILT),cT=Math.cos(TILT);
+ if(S.ang){c.save();c.strokeStyle='#fff';c.lineWidth=2*K;c.setLineDash([5*K,5*K]);c.beginPath();c.moveTo(ex,ey);c.lineTo(ex,ey-r*2);c.stroke();c.setLineDash([]);c.strokeStyle='#ffe44d';c.lineWidth=3*K;c.beginPath();c.arc(ex,ey,r*1.25,-Math.PI/2-TILT,-Math.PI/2);c.stroke();c.restore();lab('23.5° tilt',ex-r*2.8,ey-r*1.5,'#ffe44d')}
+ if(S.labels){lab('North Pole',ex-sT*r*2.25,ey-cT*r*2.25,'#ff6b6b');lab('South Pole',ex+sT*r*2.25,ey+cT*r*2.25,'#ff6b6b');
+  lab(S.rot&&S.play?'🌍 Earth (spinning)':'🌍 Earth',ex,ey+r*3.1,'#4cc9f0',15);
+  lab('☀ Day side',ex+ux*r*2.3,ey+uy*r*2.3,'#ffd60a',12);lab('🌙 Night side',ex-ux*r*2.3,ey-uy*r*2.3,'#9aa5ff',12);
+  if(S.axis)lab('Equator',ex+r*1.9,ey+r*.45,'#fff200',12)}}
+function draw(t){
+ K=Math.max(.85,Math.min(W/1000,H/560));const cx=W/2,cy=H/2+6,z=S.zoom,tl=S.tilt;c.clearRect(0,0,W,H);
+ ST.forEach(s=>{c.globalAlpha=.45+.55*Math.abs(Math.sin(t*1.5+s[3]));c.fillStyle=s[2];c.fillRect(s[0]*W,s[1]*H,s[4]*K,s[4]*K)});c.globalAlpha=1;
+ const RX=Math.min(W*.36,H*.42/tl)*z,RY=RX*tl;
+ if(S.orbit){c.strokeStyle='#4cc9f0';c.lineWidth=3*K;c.setLineDash([12*K,8*K]);c.beginPath();c.ellipse(cx,cy,RX,RY,0,0,PI2);c.stroke();c.setLineDash([])}
+ const th=PI2*(S.dO-171)/365,ex=cx+RX*Math.cos(th),ey=cy-RY*Math.sin(th),near=-Math.sin(th),r=28*K*z*(1+.18*near),sr=50*K*z;
+ const SM=[[78,'Mar 20 · Spring starts','#2fc76a'],[171,'Jun 21 · Summer starts','#ffd60a'],[264,'Sep 22 · Autumn starts','#ff8c42'],[354,'Dec 21 · Winter starts','#8ecae6']];
+ SM.forEach(m=>{const a=PI2*(m[0]-171)/365,px=cx+RX*Math.cos(a),py=cy-RY*Math.sin(a);c.fillStyle=m[2];c.beginPath();c.arc(px,py,6*K,0,PI2);c.fill();
+  if(S.labels&&S.orbit){const dx=Math.cos(a),dy=-Math.sin(a)*tl,n=Math.hypot(dx,dy)||1;lab(m[1],px+dx/n*(92*K),py+dy/n*(26*K)+(dy>0?6*K:-6*K),m[2],12)}});
+ if(near<0)earth(ex,ey,r,cx,cy);sun(cx,cy,sr,t);if(near>=0)earth(ex,ey,r,cx,cy);
+ if(S.labels){lab('☀ Sun',cx,cy+sr*1.5,'#ffd60a',16);if(S.orbit)lab("Earth's Orbit · 1 year",cx+RX*Math.cos(3.5),cy-RY*Math.sin(3.5),'#4cc9f0',13);
+  if(S.axis)lab('⭐ The axis always points to the North Star',W/2,H-22*K,'#ff6b6b',13);lab('Sizes and distances are not to scale',W-150*K,22*K,'#aab',12)}}
+function hud(){$('h1').textContent=dstr(S.dO);const s=season(S.dO);$('h2').textContent=s[1]+' '+s[0];$('h3').textContent=Math.round(S.rF*360)+'° of 360°';$('h4').textContent=Math.round(S.dO/365*100)+'%'}
+let last=0,lastT='';
+function loop(t){const dt=Math.min((t-last)/1000||0,.1);last=t;
+ if(S.play){const a=S.v*.1*dt;if(S.rot)S.rF=(S.rF+a)%1;if(S.rev)S.dO=(S.dO+a)%365}
+ draw(t/1000);hud();
+ const m=[];if(!S.play)m.push('Simulation is PAUSED');else{m.push(S.rot?'Earth is ROTATING on its axis: one spin = one day (24 hours)':'Rotation is OFF');m.push(S.rev?'Earth is REVOLVING around the Sun: one trip = one year (365 days)':'Revolution is OFF')}
+ m.push(S.dn?'The Sun lights one half of the Earth: DAY on the bright side and NIGHT on the dark side':'Day and Night shading is OFF');
+ m.push('Season in the Northern Hemisphere: '+season(S.dO)[0]);m.push('Speed: '+(S.v*.1).toFixed(1)+' days per second');
+ const txt='LAST ACTION: '+S.ev+'   ◆   '+m.join('   ◆   ');if(txt!==lastT){$('tkt').textContent=txt;lastT=txt}
+ requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+</script></body></html>

@@ -305,61 +305,61 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     id: 'sim-basic-maths-multiplication',
     slug: 'basic-maths-multiplication',
     indexNumber: '22',
-    title: 'Basic Maths & Multiplication Lab',
+    title: 'Basic Maths Fun Lab: Add, Subtract, Multiply & Divide',
     subject: 'Elementary Mathematics & Arithmetic',
     category: 'Mathematics & Logic',
     iconName: 'Calculator',
     accentColor: '#4f46e5', // Indigo
-    description: 'Interactive visual mathematics lab featuring dynamic Area Array blocks, 12x12 times tables matrix, skip-counting number line, fact families, and speed challenge quiz.',
-    fileUrl: '/simulations/basic-maths-multiplication.html',
-    topics: ['Multiplication Area Model', '12×12 Times Table Matrix', 'Skip-Counting Number Line', 'Fact Families (× & ÷)'],
-    features: ['Dynamic Area Array Canvas', 'Clickable Times Table Matrix', 'Animated Number Line Jumps', 'Speed Challenge Quiz'],
-    gradeLevel: 'Elementary & Middle School'
+    description: 'Learn addition, subtraction, multiplication, and division by counting colourful balls. Features interactive groups, step-by-step counting, full-screen stage, and animated real-world problems.',
+    fileUrl: '/simulations/Basic_Maths_Fun_Lab.html',
+    topics: ['Addition: Putting Groups Together (+)', 'Subtraction: Taking Away (−)', 'Multiplication: Quick Repeated Addition (×)', 'Division: Sharing Equally into Boxes (÷)'],
+    features: ['Counting Balls Animation with Live Sounds', 'Interactive Group & Box Sharing Stage', 'Full-Screen Presentation Mode', 'Customizable Input Numbers for All 4 Operations'],
+    gradeLevel: 'Elementary & Primary School (Grades 1–5)'
   },
   {
     id: 'sim-interactive-geometry',
     slug: 'interactive-geometry-shapes',
     indexNumber: '23',
-    title: 'Interactive Geometry, Shapes & Angles',
+    title: 'Cambridge Scholar: Geometry Lab',
     subject: 'Geometry & Measurement',
     category: 'Mathematics & Logic',
     iconName: 'Shapes',
     accentColor: '#0284c7', // Ocean Sky Blue
-    description: 'Explore 2D polygons, dynamic area & perimeter calculations, 360° protractor angle classifications, visual Pythagorean theorem proof, and coordinate geometry.',
-    fileUrl: '/simulations/interactive-geometry-shapes.html',
-    topics: ['2D Polygon Area & Perimeter', '360° Protractor Angles', 'Pythagorean Theorem (a²+b²=c²)', 'Cartesian Coordinate Plane'],
-    features: ['Real-time Geometric Render', 'Interactive 360° Protractor', 'Visual Area Squares Proof', 'Draggable Grid Vertices'],
-    gradeLevel: 'Middle & High School'
+    description: 'Comprehensive geometry laboratory exploring 2D Shapes (area & perimeter formulas), Angles (acute, right, obtuse, reflex, 360°), Triangles (angle sum 180°), Circles (radius, diameter, chord, tangent, sector), Pythagoras Theorem (a² + b² = c²), and Transformations (reflection, rotation, translation, enlargement).',
+    fileUrl: '/simulations/GEOMETRY_LAB.html',
+    topics: ['2D Shapes: Area & Perimeter Formulas', 'Angles: Acute, Right, Obtuse, Straight & Reflex (0°–360°)', 'Triangles: Equilateral, Isosceles, Scalene & Angle Sum 180°', 'Circle Parts: Radius, Diameter, Chord, Tangent & Sector', 'Pythagoras Theorem: a² + b² = c² Visual Square Proof', 'Transformations: Reflection, Rotation, Translation & Enlargement'],
+    features: ['6 Full Interactive Geometric Modules', 'Live Coordinate Plane & Grid Transformation', 'Dynamic Sliders for All Shapes & Dimensions', 'Visual Proof Animations & Real-World Contexts'],
+    gradeLevel: 'Middle & Secondary School (Grades 5–12)'
   },
   {
     id: 'sim-algebra-equation-balancer',
     slug: 'algebra-equation-balancer',
     indexNumber: '24',
-    title: 'Algebra & Equation Balancing Lab',
+    title: 'Cambridge Scholar: Algebra Equations Lab',
     subject: 'Algebra & Functions',
     category: 'Mathematics & Logic',
     iconName: 'Scale',
     accentColor: '#7c3aed', // Purple
-    description: 'Balance linear algebraic equations on a physical dual-pan beam scale, deduce unknown variables step-by-step, and explore linear and quadratic function graphs.',
-    fileUrl: '/simulations/algebra-equation-balancer.html',
-    topics: ['Dual-Pan Balance Scale', 'Linear Equation Solving', 'Slope-Intercept Form (y = mx + c)', 'Quadratic Curves & Roots'],
-    features: ['Interactive Pan Balance Beam', 'Step-by-Step Algebraic Solver', 'Cartesian Graph with Slope', 'Dynamic Parabola Roots'],
-    gradeLevel: 'Middle & Secondary School'
+    description: 'Master algebra step-by-step with five interactive modules: Balance Model scale, Linear Equations (ax + b = c), Two-Step Equations (SADMEG reverse operations), Equations with Brackets (distributive law), and Unknown on Both Sides with live balance scale and graph displays.',
+    fileUrl: '/simulations/ALGEBRA_EQUATIONS_LAB.html',
+    topics: ['Balance Model: The Golden Rule of Equations', 'Linear Equations: ax + b = c Step-by-Step Solver', 'Two-Step Equations: SADMEG Reverse Order', 'Equations with Brackets: Distributive Law a(x + b)', 'Unknown on Both Sides: ax + b = cx + d'],
+    features: ['Interactive Dual-Pan Balance Scale Simulation', 'Step-by-Step Equation Solution Highlighting', 'Dynamic Live Coordinate Graphing of y = ax + b', 'Area Model & Visual Distribution Proofs'],
+    gradeLevel: 'Middle & Secondary School (Grades 6–12)'
   },
   {
     id: 'sim-measurement-units-scale',
     slug: 'measurement-units-scale',
     indexNumber: '25',
-    title: 'Measurement, Scale & Units Lab',
+    title: 'Measurement Fun Lab: Length, Weight & Capacity',
     subject: 'Applied Mathematics & Metric Units',
     category: 'Mathematics & Logic',
     iconName: 'Ruler',
     accentColor: '#059669', // Emerald
-    description: 'Precision measurement lab featuring calibrated metric/imperial rulers, digital tare mass balance scale, Archimedes water displacement cylinder, and unit converters.',
-    fileUrl: '/simulations/measurement-units-scale.html',
-    topics: ['Metric & Imperial Ruler', 'Digital Mass Scale & Tare', 'Liquid Volume Meniscus', 'Archimedes Fluid Displacement'],
-    features: ['Draggable Objects to Measure', 'Precision Electronic Scale', 'Fluid Displacement Density Test', 'Instant Unit Converter Matrix'],
-    gradeLevel: 'Elementary & Middle School'
+    description: 'Interactive measurement laboratory for elementary science. Measure Length of pencils and ribbons with centimetre rulers, measure Weight on balance scales with 10kg and 1kg weights, and measure liquid Capacity with 10L buckets and 1L cups in graded tanks.',
+    fileUrl: '/simulations/Measurement_Fun_Lab.html',
+    topics: ['Length: Millimetres, Centimetres & Metres (Ruler Measurement)', 'Weight: Grams, Kilograms & Tonnes (Balance Scale & Weights)', 'Capacity: Millilitres & Litres (Water Tank, Buckets & Cups)'],
+    features: ['Interactive Ruler with Millimetre & Centimetre Markers', 'Realistic Balance Scale with Dual Weighing Pans', 'Graded Liquid Tank with Realistic Pouring Animations', 'Full-Screen Classroom Mode & Step-by-Step Prompts'],
+    gradeLevel: 'Elementary & Middle School (Grades 2–7)'
   },
   {
     id: 'sim-computer-parts-hardware',
@@ -1095,6 +1095,21 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     topics: ['Solar Eclipse Mechanics (Total, Partial & Annular)', 'Lunar Eclipse Phases (Blood Moon & Earth Umbra)', 'Umbra vs. Penumbra Geometry & Shadow Cones', 'Orbital Inclination (5° Lunar Orbit Tilt & Nodes)'],
     features: ['Full Dual Perspective: Cosmic View & Earth Observer View', 'Interactive Time & Moon Orbit Scrubbing Controls', 'Umbra / Penumbra Ray Tracing Shader Overlay', 'Educational Annotation Layers & Celestial Telemetry HUD'],
     gradeLevel: 'Middle & Secondary School (Grades 6–12)'
+  },
+  {
+    id: 'sim-multiplication-tables-studio',
+    slug: 'multiplication-tables-interactive-studio',
+    indexNumber: '81',
+    title: 'Multiplication Tables Interactive Studio',
+    subject: 'Elementary Mathematics & Arithmetic',
+    category: 'Mathematics & Logic',
+    iconName: 'Grid',
+    accentColor: '#ec4899',
+    description: 'Master multiplication tables from 1 to 12 with interactive visual animations. Toggle between Equal Groups and Array grid views, use the live multiplier stepper, listen to audio feedback, adjust auto-play speeds, and celebrate completed tables with animated confetti.',
+    fileUrl: '/simulations/multiplication_tables_fixed.html',
+    topics: ['Multiplication Tables 1 through 12', 'Equal Groups Visual Multiplication', 'Array Grid Rectangular Representation', 'Skip Counting & Multiplication Memory Patterns'],
+    features: ['Direct 1 to 12 Multiplication Table Buttons', 'Equal Groups & Rectangular Array Dual Modes', 'Live Multiplication Step-by-Step Audio & Counter', 'Full-screen Interactive Stage & Confetti Celebrations'],
+    gradeLevel: 'Primary & Elementary Mathematics (Grades 1–6)'
   }
 ];
 

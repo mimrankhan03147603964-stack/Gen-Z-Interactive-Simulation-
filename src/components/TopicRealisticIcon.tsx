@@ -2295,6 +2295,26 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 81: Multiplication Tables Interactive Studio
+    case 81:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Card Base */}
+          <rect x="10" y="10" width="44" height="44" rx="8" fill="#831843" stroke="#f472b6" strokeWidth="2" />
+          {/* Bold Multiplication Cross */}
+          <path d="M22 22 L42 42 M42 22 L22 42" stroke="#fbbf24" strokeWidth="4" strokeLinecap="round" />
+          {/* Array Grid Dots */}
+          <circle cx="18" cy="18" r="2.5" fill="#38bdf8" />
+          <circle cx="32" cy="16" r="2.5" fill="#34d399" />
+          <circle cx="46" cy="18" r="2.5" fill="#38bdf8" />
+          <circle cx="18" cy="46" r="2.5" fill="#f43f5e" />
+          <circle cx="32" cy="48" r="2.5" fill="#a855f7" />
+          <circle cx="46" cy="46" r="2.5" fill="#f43f5e" />
+          {/* Center Glow */}
+          <circle cx="32" cy="32" r="3.5" fill="#ffffff" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

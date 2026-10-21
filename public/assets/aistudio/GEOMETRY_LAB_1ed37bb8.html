@@ -1,0 +1,1125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cambridge Scholar – Geometry Lab</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#0a1628; color:#e8f4ff; min-height:100vh; }
+.main-header { width:100%; background:linear-gradient(135deg,#001a33,#003d66,#006699); padding:28px 30px 20px; text-align:center; border-bottom:5px solid #ffc107; }
+.main-header h1 { font-size:2.2rem; font-weight:900; color:#fff; }
+.main-header .sub { font-size:1rem; color:#a8d8ff; margin-top:6px; }
+.container { max-width:1400px; margin:0 auto; padding:26px 20px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; background:#0f2440; border-radius:14px; padding:8px 12px; }
+.tab-btn { padding:13px 24px; border:none; border-radius:40px; font-size:1.05rem; font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer; transition:all .25s; flex:1 0 auto; }
+.tab-btn:hover { background:rgba(255,255,255,.07); color:#fff; }
+.tab-btn.active { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; box-shadow:0 6px 20px rgba(255,143,0,.45); }
+.tab-btn .icon { margin-right:8px; }
+.topic { display:none; } .topic.active { display:block; }
+.card { background:linear-gradient(160deg,#122a44,#0a1e34); border-radius:22px; padding:24px 26px 28px; margin-bottom:24px; box-shadow:0 14px 40px rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.05); }
+.card h2 { font-size:1.9rem; font-weight:800; margin-bottom:6px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
+.card .desc { font-size:1rem; color:#a8c4e0; margin-bottom:18px; border-left:5px solid #ffc107; padding-left:14px; background:rgba(255,255,255,.03); border-radius:0 12px 12px 0; line-height:1.6; }
+.section-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:18px 0 14px; }
+.section-tab { padding:9px 18px; border:none; border-radius:30px; font-weight:700; font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer; transition:.2s; }
+.section-tab:hover { background:#234468; color:#fff; } .section-tab.active { background:#1976d2; color:#fff; }
+.panel { display:none; padding:16px 0 6px; } .panel.active{display:block}
+.panel h3 { font-size:1.5rem; font-weight:700; color:#ffd54f; margin-bottom:12px; }
+.panel p,.panel li { font-size:1rem; line-height:1.7; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:7px 0 7px 32px; position:relative; }
+.panel ul li::before { content:'✓'; position:absolute; left:0; top:7px; width:20px; height:20px; border-radius:50%; background:#ffc107; color:#0a1628; font-weight:900; text-align:center; line-height:20px; font-size:.8rem; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:10px; }
+.grid-item { background:rgba(255,255,255,.04); padding:14px; border-radius:14px; border-left:5px solid #ff9800; }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:4px; } .grid-item p{font-size:.92rem;color:#b8d4f0}
+.sim-box { background:#06121f; border-radius:18px; padding:20px 16px 16px; margin-top:8px; border:1px solid #1e3a5c; }
+.sim-controls { display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center; justify-content:center; margin-bottom:16px; background:#0a1a2e; padding:14px 20px; border-radius:36px; border:1px solid #1e3a5c; }
+.sim-controls label { display:flex; align-items:center; gap:10px; font-weight:600; color:#90b8e0; font-size:.92rem; }
+.sim-controls input[type=range]{width:150px;accent-color:#ff9800;cursor:pointer}
+.sim-controls input[type=number]{width:80px;padding:6px 10px;border-radius:8px;border:1px solid #1e3a5c;background:#0a1a2e;color:#ffd54f;font-weight:700;font-size:.9rem;}
+.sim-controls select,.sim-controls button { padding:8px 18px; border-radius:28px; border:none; font-weight:700; background:#1a3550; color:#c8e0f8; cursor:pointer; transition:.2s; font-size:.9rem; }
+.sim-controls button { background:#1976d2; color:#fff; }
+.sim-controls button:hover{transform:scale(1.05);filter:brightness(1.2)}
+.sim-controls button.green{background:linear-gradient(135deg,#00c853,#00e676);color:#002200}
+.sim-controls button.red{background:linear-gradient(135deg,#d32f2f,#f44336);color:#fff}
+.sim-controls button.purple{background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff}
+.sim-controls button.orange{background:linear-gradient(135deg,#ff8f00,#ff6f00);color:#0a1628}
+canvas { width:100%; height:auto; background:#040e1a; border-radius:14px; border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%; }
+.sim-readout{text-align:center;font-size:1.4rem;font-weight:700;color:#ffd54f;margin:14px 0 6px}
+.sim-readout small{display:block;font-size:.92rem;color:#7a9cc0;font-weight:400}
+.sim-info{background:#0a1a2e;padding:12px 18px;border-radius:36px;margin-top:14px;text-align:center;font-size:.95rem;color:#a8c8e8;border:1px solid #1a3550}
+.teacher-note { background:linear-gradient(135deg,#0d2018,#0a1a14); border-left:5px solid #4caf50; border-radius:0 14px 14px 0; padding:14px 18px; margin-top:14px; font-size:.92rem; color:#b8e6c8; line-height:1.7; }
+.teacher-note strong { color:#66bb6a; }
+.copy-btn { position:fixed; top:16px; left:16px; z-index:1000; padding:11px 22px; border-radius:30px; border:none; background:linear-gradient(135deg,#00c853,#00e676); color:#002200; font-weight:900; font-size:.95rem; cursor:pointer; box-shadow:0 6px 20px rgba(0,200,80,.5); transition:.2s; }
+.copy-btn:hover { transform:scale(1.05); }
+.copy-btn.copied { background:linear-gradient(135deg,#ffc107,#ff8f00); color:#0a1628; }
+.main-footer{width:100%;background:#00101f;padding:18px 30px;text-align:center;border-top:3px solid #ffc107;color:#6a8ca8;font-size:.92rem;margin-top:20px;}
+.main-footer .highlight{color:#ffc107;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:10px 0;padding:10px 16px;background:#0a1a2e;border-radius:14px;border:1px solid #1e3a5c;font-size:.9rem;}
+.legend span{display:flex;align-items:center;gap:6px;color:#c8ddf0;}
+.legend .dot{width:16px;height:16px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor;}
+@media(max-width:800px){.main-header h1{font-size:1.4rem}.tab-btn{font-size:.85rem;padding:10px 12px}.card{padding:14px}.copy-btn{top:10px;left:10px;padding:8px 14px;font-size:.78rem}}
+</style>
+</head>
+<body>
+
+<button class="copy-btn" id="copyCodeBtn">📋 Copy Code</button>
+
+<header class="main-header">
+<h1>📐 CAMBRIDGE SCHOLAR GEOMETRY LAB</h1>
+<div class="sub">Interactive Simulations · Shapes · Angles · Theorems · Live Measurements</div>
+</header>
+
+<div class="container">
+<div class="tabs" id="topicTabs">
+<button class="tab-btn active" data-topic="shapes"><span class="icon">🔷</span> 2D Shapes</button>
+<button class="tab-btn" data-topic="angles"><span class="icon">📐</span> Angles</button>
+<button class="tab-btn" data-topic="triangles"><span class="icon">🔺</span> Triangles</button>
+<button class="tab-btn" data-topic="circles"><span class="icon">⭕</span> Circles</button>
+<button class="tab-btn" data-topic="pythagoras"><span class="icon">📏</span> Pythagoras</button>
+<button class="tab-btn" data-topic="transform"><span class="icon">🔄</span> Transformations</button>
+</div>
+
+<!-- ================= 2D SHAPES ================= -->
+<div class="topic active" id="topic-shapes"><div class="card">
+<h2>🔷 2D Shapes <small>area & perimeter explorer</small></h2>
+<div class="desc">Choose a shape, drag the sliders to resize it, and instantly see area, perimeter, and formulas update.</div>
+<div class="section-tabs" data-topic="shapes">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Formulas</button>
+<button class="section-tab" data-section="types">Types</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="shapes-def"><h3>📖 Definition</h3>
+<p><strong>2D shapes</strong> are flat figures with only two dimensions — length and width. They have <strong>area</strong> (space inside) and <strong>perimeter</strong> (distance around the edge).</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Every shape has a unique formula. Rectangle = length × width, Triangle = ½ × base × height. Practice identifying each shape by its sides and angles.</div>
+</div>
+<div class="panel" id="shapes-exp"><h3>💡 Formulas</h3>
+<ul>
+<li><strong>Rectangle:</strong> Area = l × w, Perimeter = 2(l + w)</li>
+<li><strong>Square:</strong> Area = s², Perimeter = 4s</li>
+<li><strong>Triangle:</strong> Area = ½ × b × h</li>
+<li><strong>Circle:</strong> Area = πr², Circumference = 2πr</li>
+<li><strong>Parallelogram:</strong> Area = b × h</li>
+<li><strong>Trapezium:</strong> Area = ½(a + b) × h</li>
+</ul>
+</div>
+<div class="panel" id="shapes-types"><h3>🧩 Types of 2D Shapes</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Rectangle</h4><p>4 sides, opposite sides equal, 4 right angles.</p></div>
+<div class="grid-item"><h4>Square</h4><p>4 equal sides, 4 right angles.</p></div>
+<div class="grid-item"><h4>Triangle</h4><p>3 sides, angles sum to 180°.</p></div>
+<div class="grid-item"><h4>Circle</h4><p>All points equidistant from centre.</p></div>
+<div class="grid-item"><h4>Parallelogram</h4><p>Opposite sides parallel and equal.</p></div>
+<div class="grid-item"><h4>Trapezium</h4><p>One pair of parallel sides.</p></div>
+</div>
+</div>
+<div class="panel" id="shapes-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Shape:
+<select id="shapeType">
+<option value="rectangle">Rectangle</option>
+<option value="square">Square</option>
+<option value="triangle">Triangle</option>
+<option value="circle">Circle</option>
+<option value="parallelogram">Parallelogram</option>
+<option value="trapezium">Trapezium</option>
+</select></label>
+<label>Size 1: <input type="range" id="shapeSize1" min="40" max="280" value="180"><span id="size1Val" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">180</span></label>
+<label>Size 2: <input type="range" id="shapeSize2" min="40" max="280" value="130"><span id="size2Val" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">130</span></label>
+<button id="shapeResetBtn" class="orange">⟳ Reset</button>
+<button id="shapeColorBtn" class="purple">🎨 Random Color</button>
+</div>
+<div class="sim-readout" id="shapeReadout">RECTANGLE <small>Drag the sliders to resize</small></div>
+<canvas id="shapeCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Shape Area</span>
+<span><span class="dot" style="background:#ffd54f"></span> Dimensions</span>
+<span><span class="dot" style="background:#4fc3f7"></span> Formula Box</span>
+</div>
+<div class="sim-info" id="shapeInfo">The shape is drawn to scale. Yellow arrows show dimensions.</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Tiles (square), doors (rectangle), coins (circle), traffic signs (triangle). Try each shape and watch the formula change.</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= ANGLES ================= -->
+<div class="topic" id="topic-angles"><div class="card">
+<h2>📐 Angles <small>types & measurement</small></h2>
+<div class="desc">See acute, right, obtuse, straight, and reflex angles drawn clearly with an animated rotating arm.</div>
+<div class="section-tabs" data-topic="angles">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Types</button>
+<button class="section-tab" data-section="types">Real Life</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="angles-def"><h3>📖 Definition</h3>
+<p>An <strong>angle</strong> is formed when two rays meet at a common point called the <strong>vertex</strong>. It is measured in <strong>degrees (°)</strong>.</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Hold your arms out — the gap between them is an angle. A full turn = 360°, half turn = 180°, quarter turn = 90°.</div>
+</div>
+<div class="panel" id="angles-exp"><h3>💡 Types of Angles</h3>
+<ul>
+<li><strong>Acute:</strong> Less than 90° (sharp corner)</li>
+<li><strong>Right:</strong> Exactly 90° (corner of a book)</li>
+<li><strong>Obtuse:</strong> Between 90° and 180°</li>
+<li><strong>Straight:</strong> Exactly 180° (a line)</li>
+<li><strong>Reflex:</strong> Between 180° and 360°</li>
+<li><strong>Full:</strong> Exactly 360° (full circle)</li>
+</ul>
+</div>
+<div class="panel" id="angles-types"><h3>🌍 Real-Life Examples</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Acute</h4><p>Pizza slice tip, clock at 2 o'clock.</p></div>
+<div class="grid-item"><h4>Right</h4><p>Door frame, laptop corner.</p></div>
+<div class="grid-item"><h4>Obtuse</h4><p>Open laptop wider, sofa back.</p></div>
+<div class="grid-item"><h4>Straight</h4><p>Road, ruler edge.</p></div>
+<div class="grid-item"><h4>Reflex</h4><p>Steering wheel turn, door opening wide.</p></div>
+<div class="grid-item"><h4>Full</h4><p>Fan rotation, clock hands full circle.</p></div>
+</div>
+</div>
+<div class="panel" id="angles-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Angle: <input type="range" id="angleRange" min="0" max="360" value="45"><span id="angleVal" style="color:#ffd54f;font-weight:700;width:50px;display:inline-block;">45°</span></label>
+<button id="angleAcute" class="green">Acute (45°)</button>
+<button id="angleRight" class="orange">Right (90°)</button>
+<button id="angleObtuse" class="purple">Obtuse (120°)</button>
+<button id="angleStraight" class="orange">Straight (180°)</button>
+<button id="angleReflex" class="red">Reflex (270°)</button>
+<button id="angleFull" class="green">Full (360°)</button>
+<button id="angleAuto" class="purple">▶ Auto Rotate</button>
+</div>
+<div class="sim-readout" id="angleReadout">ACUTE ANGLE <small>45° — less than 90°</small></div>
+<canvas id="angleCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Fixed Arm</span>
+<span><span class="dot" style="background:#4caf50"></span> Rotating Arm</span>
+<span><span class="dot" style="background:#ffd54f"></span> Angle Arc</span>
+</div>
+<div class="sim-info" id="angleInfo">The green arm rotates. The yellow arc shows the angle at the vertex.</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Clock hands, door opening, scissors, clock tower. Watch how the angle type changes as the arm rotates.</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= TRIANGLES ================= -->
+<div class="topic" id="topic-triangles"><div class="card">
+<h2>🔺 Triangles <small>types & angle sum</small></h2>
+<div class="desc">Explore equilateral, isosceles, scalene, and right triangles. The three angles always add up to 180°.</div>
+<div class="section-tabs" data-topic="triangles">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Properties</button>
+<button class="section-tab" data-section="types">Types</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="triangles-def"><h3>📖 Definition</h3>
+<p>A <strong>triangle</strong> is a 3-sided polygon. The sum of its interior angles is always <strong>180°</strong>.</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Tear the three corners of a paper triangle and place them together — they always form a straight line (180°).</div>
+</div>
+<div class="panel" id="triangles-exp"><h3>💡 Properties</h3>
+<ul>
+<li>Sum of interior angles = 180°</li>
+<li>Sum of exterior angles = 360°</li>
+<li>Longest side is opposite the largest angle</li>
+<li>Equilateral = all sides and angles equal (60° each)</li>
+<li>Isosceles = two sides equal, two angles equal</li>
+<li>Scalene = all sides and angles different</li>
+</ul>
+</div>
+<div class="panel" id="triangles-types"><h3>🔺 Types of Triangles</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Equilateral</h4><p>All 3 sides equal, all angles 60°.</p></div>
+<div class="grid-item"><h4>Isosceles</h4><p>2 sides equal, 2 base angles equal.</p></div>
+<div class="grid-item"><h4>Scalene</h4><p>No equal sides, no equal angles.</p></div>
+<div class="grid-item"><h4>Right-Angled</h4><p>One angle is exactly 90°.</p></div>
+<div class="grid-item"><h4>Acute</h4><p>All angles less than 90°.</p></div>
+<div class="grid-item"><h4>Obtuse</h4><p>One angle greater than 90°.</p></div>
+</div>
+</div>
+<div class="panel" id="triangles-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Triangle Type:
+<select id="triType">
+<option value="equilateral">Equilateral</option>
+<option value="isosceles">Isosceles</option>
+<option value="scalene">Scalene</option>
+<option value="right">Right-Angled</option>
+</select></label>
+<button id="triAngleBtn" class="purple">📐 Show Angles</button>
+<button id="triSidesBtn" class="orange">📏 Show Sides</button>
+<button id="triColorBtn" class="green">🎨 Random Color</button>
+<button id="triResetBtn" class="red">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="triReadout">EQUILATERAL TRIANGLE <small>All angles = 60°</small></div>
+<canvas id="triCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#4fc3f7"></span> Vertices (A, B, C)</span>
+<span><span class="dot" style="background:#ffd54f"></span> Angles</span>
+<span><span class="dot" style="background:#ff5252"></span> Sides</span>
+</div>
+<div class="sim-info" id="triInfo">Angles always sum to 180°. Click buttons to toggle labels.</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Roofs (isosceles), pyramids (equilateral faces), ramps (right-angled), warning signs (equilateral).</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= CIRCLES ================= -->
+<div class="topic" id="topic-circles"><div class="card">
+<h2>⭕ Circles <small>parts & properties</small></h2>
+<div class="desc">Explore radius, diameter, chord, tangent, secant, arc, and sector — all clearly labelled with colours.</div>
+<div class="section-tabs" data-topic="circles">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Parts</button>
+<button class="section-tab" data-section="types">Formulas</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="circles-def"><h3>📖 Definition</h3>
+<p>A <strong>circle</strong> is a set of all points at an equal distance (radius) from a fixed point (centre).</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> π (pi) ≈ 3.14159. It is the ratio of circumference to diameter for ANY circle.</div>
+</div>
+<div class="panel" id="circles-exp"><h3>💡 Parts of a Circle</h3>
+<ul>
+<li><strong>Radius:</strong> Centre to edge</li>
+<li><strong>Diameter:</strong> Across through centre (= 2r)</li>
+<li><strong>Chord:</strong> Line joining two points on circle</li>
+<li><strong>Tangent:</strong> Touches circle at one point</li>
+<li><strong>Secant:</strong> Cuts circle at two points</li>
+<li><strong>Arc:</strong> Part of the circumference</li>
+<li><strong>Sector:</strong> "Pizza slice" region</li>
+</ul>
+</div>
+<div class="panel" id="circles-types"><h3>📊 Formulas</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Circumference</h4><p>C = 2πr = πd</p></div>
+<div class="grid-item"><h4>Area</h4><p>A = πr²</p></div>
+<div class="grid-item"><h4>Arc Length</h4><p>(θ/360°) × 2πr</p></div>
+<div class="grid-item"><h4>Sector Area</h4><p>(θ/360°) × πr²</p></div>
+<div class="grid-item"><h4>Chord</h4><p>c = 2√(r² − d²)</p></div>
+<div class="grid-item"><h4>Tangent</h4><p>Perpendicular to radius at contact</p></div>
+</div>
+</div>
+<div class="panel" id="circles-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Radius: <input type="range" id="circleRadius" min="40" max="200" value="140"><span id="radiusVal" style="color:#ffd54f;font-weight:700;width:40px;display:inline-block;">140</span></label>
+<label>Show:
+<select id="circlePart">
+<option value="all">All Parts</option>
+<option value="radius">Radius</option>
+<option value="diameter">Diameter</option>
+<option value="chord">Chord</option>
+<option value="tangent">Tangent</option>
+<option value="secant">Secant</option>
+<option value="arc">Arc & Sector</option>
+</select></label>
+<button id="circleRotateBtn" class="purple">🔄 Rotate Point</button>
+<button id="circleResetBtn" class="orange">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="circleReadout">CIRCLE <small>Radius = 140 px · Diameter = 280 px</small></div>
+<canvas id="circleCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Radius</span>
+<span><span class="dot" style="background:#4caf50"></span> Diameter</span>
+<span><span class="dot" style="background:#ffd54f"></span> Chord</span>
+<span><span class="dot" style="background:#ab47bc"></span> Tangent</span>
+<span><span class="dot" style="background:#4fc3f7"></span> Secant</span>
+<span><span class="dot" style="background:#ff9800"></span> Arc / Sector</span>
+</div>
+<div class="sim-info" id="circleInfo">All parts of a circle clearly labelled with distinct colours.</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Wheels (radius), pizzas (sector), clock face (arc), wheels on roads (tangent).</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= PYTHAGORAS ================= -->
+<div class="topic" id="topic-pythagoras"><div class="card">
+<h2>📏 Pythagoras Theorem <small>a² + b² = c²</small></h2>
+<div class="desc">Drag the sliders to change the two legs. See the hypotenuse and the areas of the three squares update live.</div>
+<div class="section-tabs" data-topic="pythagoras">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Explanation</button>
+<button class="section-tab" data-section="types">Proof</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="pythagoras-def"><h3>📖 Definition</h3>
+<p>In a <strong>right-angled triangle</strong>, the square of the hypotenuse equals the sum of squares of the other two sides: <strong>a² + b² = c²</strong>.</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> Used by builders for thousands of years to make perfect right angles — the "3-4-5" rule.</div>
+</div>
+<div class="panel" id="pythagoras-exp"><h3>💡 Explanation</h3>
+<ul>
+<li><strong>a</strong> and <strong>b</strong> are the two shorter sides (legs)</li>
+<li><strong>c</strong> is the longest side (hypotenuse), opposite the right angle</li>
+<li>Only works for right-angled triangles</li>
+<li>Common triples: (3,4,5), (5,12,13), (8,15,17), (7,24,25)</li>
+</ul>
+</div>
+<div class="panel" id="pythagoras-types"><h3>🔍 Visual Proof</h3>
+<p>The area of the square on the hypotenuse equals the sum of the areas of the squares on the other two sides.</p>
+<div class="grid-3">
+<div class="grid-item"><h4>Small Square</h4><p>Area = a² (on side a)</p></div>
+<div class="grid-item"><h4>Medium Square</h4><p>Area = b² (on side b)</p></div>
+<div class="grid-item"><h4>Large Square</h4><p>Area = c² = a² + b²</p></div>
+</div>
+</div>
+<div class="panel" id="pythagoras-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Side a: <input type="range" id="pythA" min="30" max="160" value="90"><span id="pythAVal" style="color:#ffd54f;font-weight:700;width:35px;display:inline-block;">90</span></label>
+<label>Side b: <input type="range" id="pythB" min="30" max="160" value="120"><span id="pythBVal" style="color:#ffd54f;font-weight:700;width:35px;display:inline-block;">120</span></label>
+<button id="pythTriple1" class="green">3-4-5</button>
+<button id="pythTriple2" class="orange">5-12-13</button>
+<button id="pythTriple3" class="purple">8-15-17</button>
+<button id="pythResetBtn" class="red">⟳ Reset</button>
+</div>
+<div class="sim-readout" id="pythReadout">a² + b² = c² <small>90² + 120² = 150²</small></div>
+<canvas id="pythCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Side a (red square)</span>
+<span><span class="dot" style="background:#4caf50"></span> Side b (green square)</span>
+<span><span class="dot" style="background:#4fc3f7"></span> Hypotenuse c (blue square)</span>
+</div>
+<div class="sim-info" id="pythInfo">The three squares show a² + b² = c². Try the preset triples!</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Builders use 3-4-5 to make right angles. TV screens measured diagonally — that's the hypotenuse!</div>
+</div>
+</div>
+</div></div>
+
+<!-- ================= TRANSFORMATIONS ================= -->
+<div class="topic" id="topic-transform"><div class="card">
+<h2>🔄 Transformations <small>reflection, rotation, translation, enlargement</small></h2>
+<div class="desc">See how a shape moves on a coordinate grid. Choose the transformation and watch the shape and its image.</div>
+<div class="section-tabs" data-topic="transform">
+<button class="section-tab active" data-section="def">Definition</button>
+<button class="section-tab" data-section="exp">Types</button>
+<button class="section-tab" data-section="types">Rules</button>
+<button class="section-tab" data-section="sim">Simulation</button>
+</div>
+<div class="panel active" id="transform-def"><h3>📖 Definition</h3>
+<p>A <strong>transformation</strong> changes the position, size, or orientation of a shape on a coordinate plane.</p>
+<div class="teacher-note"><strong>Teacher's Note:</strong> The original shape is called the <strong>object</strong>; the new shape is the <strong>image</strong>.</div>
+</div>
+<div class="panel" id="transform-exp"><h3>💡 Types of Transformations</h3>
+<ul>
+<li><strong>Reflection:</strong> Mirror image over a line</li>
+<li><strong>Rotation:</strong> Turn around a fixed point</li>
+<li><strong>Translation:</strong> Slide without turning</li>
+<li><strong>Enlargement:</strong> Resize by a scale factor</li>
+</ul>
+</div>
+<div class="panel" id="transform-types"><h3>📊 Rules</h3>
+<div class="grid-3">
+<div class="grid-item"><h4>Reflection</h4><p>Over x-axis: (x, y) → (x, −y)</p></div>
+<div class="grid-item"><h4>Rotation 90°</h4><p>(x, y) → (−y, x)</p></div>
+<div class="grid-item"><h4>Rotation 180°</h4><p>(x, y) → (−x, −y)</p></div>
+<div class="grid-item"><h4>Translation</h4><p>(x, y) → (x + a, y + b)</p></div>
+<div class="grid-item"><h4>Enlargement</h4><p>(x, y) → (kx, ky)</p></div>
+<div class="grid-item"><h4>Reflection y=x</h4><p>(x, y) → (y, x)</p></div>
+</div>
+</div>
+<div class="panel" id="transform-sim"><h3>🎮 Interactive Simulation</h3>
+<div class="sim-box">
+<div class="sim-controls">
+<label>Transformation:
+<select id="transType">
+<option value="reflectX">Reflect over x-axis</option>
+<option value="reflectY">Reflect over y-axis</option>
+<option value="reflectDiag">Reflect over y = x</option>
+<option value="rotate90">Rotate 90°</option>
+<option value="rotate180">Rotate 180°</option>
+<option value="rotate270">Rotate 270°</option>
+<option value="translate">Translate</option>
+<option value="enlarge">Enlarge (k=2)</option>
+</select></label>
+<button id="transAnimate" class="green">▶ Animate</button>
+<button id="transReset" class="orange">⟳ Reset</button>
+<button id="transShowGrid" class="purple">📐 Toggle Grid</button>
+</div>
+<div class="sim-readout" id="transReadout">REFLECTION OVER X-AXIS <small>(x, y) → (x, −y)</small></div>
+<canvas id="transCanvas" width="1100" height="480"></canvas>
+<div class="legend">
+<span><span class="dot" style="background:#ff5252"></span> Object (original)</span>
+<span><span class="dot" style="background:#4caf50"></span> Image (transformed)</span>
+<span><span class="dot" style="background:#ffd54f"></span> Mirror Line / Centre</span>
+</div>
+<div class="sim-info" id="transInfo">Red = original, Green = image. The yellow line shows the mirror/centre.</div>
+<div class="teacher-note"><strong>Real-Life:</strong> Mirrors (reflection), clock hands (rotation), sliding doors (translation), photocopier zoom (enlargement).</div>
+</div>
+</div>
+</div></div>
+
+</div>
+
+<footer class="main-footer"><span class="highlight">Muhammad Imran Khan</span> · MSc (Computer Science) · Regional Manager Sahiwal<br>Cambridge Scholar EdTech Schools Program · <span class="highlight">CANTAB PUBLISHER</span></footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ---- COPY BUTTON ---- */
+document.getElementById('copyCodeBtn').addEventListener('click',function(){
+ const code=document.documentElement.outerHTML;
+ navigator.clipboard.writeText(code).then(()=>{
+  this.textContent='✅ Copied!';this.classList.add('copied');
+  setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
+ }).catch(()=>{
+  const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  this.textContent='✅ Copied!';this.classList.add('copied');
+  setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
+ });
+});
+
+/* ---- TABS ---- */
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={shapes:document.getElementById('topic-shapes'),angles:document.getElementById('topic-angles'),triangles:document.getElementById('topic-triangles'),circles:document.getElementById('topic-circles'),pythagoras:document.getElementById('topic-pythagoras'),transform:document.getElementById('topic-transform')};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+ topicTabs.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+ const topic=this.dataset.topic;Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+}));
+document.querySelectorAll('.section-tabs').forEach(group=>{
+ const topic=group.dataset.topic,btns=group.querySelectorAll('.section-tab');
+ btns.forEach(btn=>btn.addEventListener('click',function(){
+  btns.forEach(b=>b.classList.remove('active'));this.classList.add('active');
+  const section=this.dataset.section,parent=this.closest('.card');
+  parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+ }));
+});
+
+/* ================= SHAPES ================= */
+let shapeCtx,currentColor='#ff5252';
+function drawShape(){
+ const c=document.getElementById('shapeCanvas');shapeCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ shapeCtx.clearRect(0,0,w,h);
+ // grid
+ shapeCtx.fillStyle='#040e1a';shapeCtx.fillRect(0,0,w,h);
+ shapeCtx.strokeStyle='rgba(255,255,255,.05)';shapeCtx.lineWidth=1;
+ for(let x=0;x<w;x+=40){shapeCtx.beginPath();shapeCtx.moveTo(x,0);shapeCtx.lineTo(x,h);shapeCtx.stroke()}
+ for(let y=0;y<h;y+=40){shapeCtx.beginPath();shapeCtx.moveTo(0,y);shapeCtx.lineTo(w,y);shapeCtx.stroke()}
+
+ const type=document.getElementById('shapeType').value;
+ const s1=+document.getElementById('shapeSize1').value;
+ const s2=+document.getElementById('shapeSize2').value;
+ const cx=w/2,cy=h/2;
+ let readout='',info='';
+
+ shapeCtx.shadowColor=currentColor;shapeCtx.shadowBlur=25;
+ shapeCtx.fillStyle=currentColor;shapeCtx.strokeStyle='#ffffff';shapeCtx.lineWidth=4;
+
+ if(type==='rectangle'){
+  const rw=s1,rh=s2;
+  shapeCtx.beginPath();shapeCtx.rect(cx-rw/2,cy-rh/2,rw,rh);shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  drawDim(cx-rw/2,cy-rh/2-25,cx+rw/2,cy-rh/2-25,'l = '+rw,'#ffd54f');
+  drawDim(cx+rw/2+25,cy-rh/2,cx+rw/2+25,cy+rh/2,'w = '+rh,'#ffd54f');
+  readout='RECTANGLE <small>Area = l × w = '+(rw*rh)+' px² · Perimeter = '+(2*(rw+rh))+' px</small>';
+  info='Area = length × width. Perimeter = 2(l + w).';
+ }
+ else if(type==='square'){
+  const s=s1;
+  shapeCtx.beginPath();shapeCtx.rect(cx-s/2,cy-s/2,s,s);shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  drawDim(cx-s/2,cy-s/2-25,cx+s/2,cy-s/2-25,'s = '+s,'#ffd54f');
+  drawDim(cx+s/2+25,cy-s/2,cx+s/2+25,cy+s/2,'s = '+s,'#ffd54f');
+  readout='SQUARE <small>Area = s² = '+(s*s)+' px² · Perimeter = '+(4*s)+' px</small>';
+  info='All sides equal. Area = s², Perimeter = 4s.';
+ }
+ else if(type==='triangle'){
+  const base=s1,ht=s2;
+  shapeCtx.beginPath();
+  shapeCtx.moveTo(cx-base/2,cy+ht/2);
+  shapeCtx.lineTo(cx+base/2,cy+ht/2);
+  shapeCtx.lineTo(cx-base/2+20,cy-ht/2);
+  shapeCtx.closePath();shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  drawDim(cx-base/2,cy+ht/2+30,cx+base/2,cy+ht/2+30,'base = '+base,'#ffd54f');
+  drawDim(cx-base/2-30,cy+ht/2,cx-base/2-30,cy-ht/2,'h = '+ht,'#ffd54f');
+  readout='TRIANGLE <small>Area = ½ × b × h = '+(0.5*base*ht).toFixed(0)+' px²</small>';
+  info='Area = ½ × base × height.';
+ }
+ else if(type==='circle'){
+  const r=s1/2;
+  shapeCtx.beginPath();shapeCtx.arc(cx,cy,r,0,7);shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  shapeCtx.strokeStyle='#ffd54f';shapeCtx.lineWidth=3;shapeCtx.setLineDash([6,6]);
+  shapeCtx.beginPath();shapeCtx.moveTo(cx,cy);shapeCtx.lineTo(cx+r,cy);shapeCtx.stroke();shapeCtx.setLineDash([]);
+  shapeCtx.fillStyle='#ffd54f';shapeCtx.font='bold 18px sans-serif';shapeCtx.fillText('r = '+r.toFixed(0),cx+r/2-15,cy-8);
+  readout='CIRCLE <small>Area = πr² = '+(Math.PI*r*r).toFixed(0)+' px² · Circumference = '+(2*Math.PI*r).toFixed(0)+' px</small>';
+  info='Area = πr², Circumference = 2πr.';
+ }
+ else if(type==='parallelogram'){
+  const base=s1,ht=s2,skew=50;
+  shapeCtx.beginPath();
+  shapeCtx.moveTo(cx-base/2+skew,cy-ht/2);
+  shapeCtx.lineTo(cx+base/2+skew,cy-ht/2);
+  shapeCtx.lineTo(cx+base/2,cy+ht/2);
+  shapeCtx.lineTo(cx-base/2,cy+ht/2);
+  shapeCtx.closePath();shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  drawDim(cx-base/2,cy+ht/2+30,cx+base/2,cy+ht/2+30,'base = '+base,'#ffd54f');
+  drawDim(cx+base/2+skew+25,cy-ht/2,cx+base/2+skew+25,cy+ht/2,'h = '+ht,'#ffd54f');
+  readout='PARALLELOGRAM <small>Area = b × h = '+(base*ht)+' px²</small>';
+  info='Opposite sides parallel and equal. Area = base × height.';
+ }
+ else if(type==='trapezium'){
+  const a=s1,b=s2,ht=140;
+  shapeCtx.beginPath();
+  shapeCtx.moveTo(cx-a/2,cy-ht/2);
+  shapeCtx.lineTo(cx+a/2,cy-ht/2);
+  shapeCtx.lineTo(cx+b/2,cy+ht/2);
+  shapeCtx.lineTo(cx-b/2,cy+ht/2);
+  shapeCtx.closePath();shapeCtx.fill();shapeCtx.stroke();
+  shapeCtx.shadowBlur=0;
+  drawDim(cx-a/2,cy-ht/2-25,cx+a/2,cy-ht/2-25,'a = '+a,'#ffd54f');
+  drawDim(cx-b/2,cy+ht/2+30,cx+b/2,cy+ht/2+30,'b = '+b,'#ffd54f');
+  drawDim(cx-b/2-30,cy-ht/2,cx-b/2-30,cy+ht/2,'h = '+ht,'#ffd54f');
+  readout='TRAPEZIUM <small>Area = ½(a + b) × h = '+(0.5*(a+b)*ht).toFixed(0)+' px²</small>';
+  info='One pair of parallel sides. Area = ½(a + b) × h.';
+ }
+ document.getElementById('shapeReadout').innerHTML=readout;
+ document.getElementById('shapeInfo').textContent=info;
+}
+function drawDim(x1,y1,x2,y2,label,col){
+ shapeCtx.save();
+ shapeCtx.strokeStyle=col;shapeCtx.lineWidth=3;shapeCtx.setLineDash([6,4]);
+ shapeCtx.beginPath();shapeCtx.moveTo(x1,y1);shapeCtx.lineTo(x2,y2);shapeCtx.stroke();
+ shapeCtx.setLineDash([]);
+ // arrowheads
+ const ang=Math.atan2(y2-y1,x2-x1);
+ shapeCtx.beginPath();shapeCtx.moveTo(x1,y1);shapeCtx.lineTo(x1+12*Math.cos(ang-0.4),y1+12*Math.sin(ang-0.4));shapeCtx.lineTo(x1+12*Math.cos(ang+0.4),y1+12*Math.sin(ang+0.4));shapeCtx.closePath();shapeCtx.fillStyle=col;shapeCtx.fill();
+ shapeCtx.beginPath();shapeCtx.moveTo(x2,y2);shapeCtx.lineTo(x2-12*Math.cos(ang-0.4),y2-12*Math.sin(ang-0.4));shapeCtx.lineTo(x2-12*Math.cos(ang+0.4),y2-12*Math.sin(ang+0.4));shapeCtx.closePath();shapeCtx.fill();
+ // label
+ const mx=(x1+x2)/2,my=(y1+y2)/2;
+ shapeCtx.fillStyle='#06121f';shapeCtx.fillRect(mx-40,my-14,80,24);
+ shapeCtx.fillStyle=col;shapeCtx.font='bold 16px sans-serif';shapeCtx.textAlign='center';
+ shapeCtx.fillText(label,mx,my+4);shapeCtx.textAlign='left';
+ shapeCtx.restore();
+}
+document.getElementById('shapeType').addEventListener('change',()=>{drawShape();updateShapeReadoutTitle()});
+document.getElementById('shapeSize1').addEventListener('input',e=>{document.getElementById('size1Val').textContent=e.target.value;drawShape()});
+document.getElementById('shapeSize2').addEventListener('input',e=>{document.getElementById('size2Val').textContent=e.target.value;drawShape()});
+document.getElementById('shapeResetBtn').addEventListener('click',()=>{document.getElementById('shapeSize1').value=180;document.getElementById('shapeSize2').value=130;document.getElementById('size1Val').textContent='180';document.getElementById('size2Val').textContent='130';drawShape()});
+document.getElementById('shapeColorBtn').addEventListener('click',()=>{
+ const cols=['#ff5252','#4caf50','#4fc3f7','#ff9800','#ab47bc','#ffd54f','#26c6da','#ec407a'];
+ currentColor=cols[Math.floor(Math.random()*cols.length)];
+ drawShape();
+});
+function updateShapeReadoutTitle(){
+ const t=document.getElementById('shapeType').value.toUpperCase();
+ document.getElementById('shapeReadout').innerHTML=t+' <small>Drag the sliders to resize</small>';
+}
+
+/* ================= ANGLES ================= */
+let angleCtx,angleAuto=false,angleVal=45;
+function drawAngle(){
+ const c=document.getElementById('angleCanvas');angleCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ angleCtx.clearRect(0,0,w,h);
+ angleCtx.fillStyle='#040e1a';angleCtx.fillRect(0,0,w,h);
+ angleCtx.strokeStyle='rgba(255,255,255,.05)';
+ for(let x=0;x<w;x+=40){angleCtx.beginPath();angleCtx.moveTo(x,0);angleCtx.lineTo(x,h);angleCtx.stroke()}
+ for(let y=0;y<h;y+=40){angleCtx.beginPath();angleCtx.moveTo(0,y);angleCtx.lineTo(w,y);angleCtx.stroke()}
+
+ const vx=w/2,vy=h/2+80;
+ const armLen=280;
+ const rad=angleVal*Math.PI/180;
+
+ // Fixed arm (red)
+ angleCtx.strokeStyle='#ff5252';angleCtx.lineWidth=8;angleCtx.shadowColor='#ff5252';angleCtx.shadowBlur=20;
+ angleCtx.beginPath();angleCtx.moveTo(vx,vy);angleCtx.lineTo(vx+armLen,vy);angleCtx.stroke();
+ angleCtx.shadowBlur=0;
+
+ // Rotating arm (green)
+ angleCtx.strokeStyle='#4caf50';angleCtx.lineWidth=8;angleCtx.shadowColor='#4caf50';angleCtx.shadowBlur=20;
+ angleCtx.beginPath();angleCtx.moveTo(vx,vy);angleCtx.lineTo(vx+armLen*Math.cos(-rad),vy+armLen*Math.sin(-rad));angleCtx.stroke();
+ angleCtx.shadowBlur=0;
+
+ // Angle arc (yellow)
+ angleCtx.strokeStyle='#ffd54f';angleCtx.lineWidth=5;angleCtx.shadowColor='#ffd54f';angleCtx.shadowBlur=15;
+ angleCtx.beginPath();angleCtx.arc(vx,vy,80,0,-rad,angleVal>180);angleCtx.stroke();
+ angleCtx.shadowBlur=0;
+
+ // Vertex dot
+ angleCtx.fillStyle='#fff';angleCtx.beginPath();angleCtx.arc(vx,vy,10,0,7);angleCtx.fill();
+ angleCtx.fillStyle='#0a1628';angleCtx.font='bold 14px sans-serif';angleCtx.textAlign='center';angleCtx.fillText('O',vx,vy+5);angleCtx.textAlign='left';
+
+ // Labels
+ angleCtx.fillStyle='#ff5252';angleCtx.font='bold 20px sans-serif';
+ angleCtx.fillText('Fixed Arm',vx+armLen-160,vy-15);
+ angleCtx.fillStyle='#4caf50';
+ angleCtx.fillText('Rotating Arm',vx+armLen*Math.cos(-rad)*0.7-80,vy+armLen*Math.sin(-rad)*0.7-15);
+
+ // Angle text
+ angleCtx.fillStyle='#ffd54f';angleCtx.font='bold 32px sans-serif';
+ const angleType=getAngleType(angleVal);
+ angleCtx.fillText(angleVal+'°',vx+120,vy-160);
+ angleCtx.font='bold 22px sans-serif';angleCtx.fillStyle=getAngleColor(angleType);
+ angleCtx.fillText(angleType.toUpperCase()+' ANGLE',vx+110,vy-120);
+
+ // Compass marks
+ drawCompass(vx,vy,armLen+30);
+}
+function getAngleType(a){
+ if(a===0)return 'Zero';
+ if(a<90)return 'Acute';
+ if(a===90)return 'Right';
+ if(a<180)return 'Obtuse';
+ if(a===180)return 'Straight';
+ if(a<360)return 'Reflex';
+ return 'Full';
+}
+function getAngleColor(t){
+ return {Acute:'#4caf50',Right:'#ff9800',Obtuse:'#ab47bc',Straight:'#4fc3f7',Reflex:'#ff5252',Full:'#ffd54f',Zero:'#888'}[t]||'#fff';
+}
+function drawCompass(cx,cy,r){
+ angleCtx.strokeStyle='rgba(255,255,255,.15)';angleCtx.lineWidth=2;angleCtx.setLineDash([4,6]);
+ angleCtx.beginPath();angleCtx.arc(cx,cy,r,0,7);angleCtx.stroke();angleCtx.setLineDash([]);
+ for(let a=0;a<360;a+=90){
+  const rad=a*Math.PI/180;
+  const x=cx+r*Math.cos(-rad),y=cy+r*Math.sin(-rad);
+  angleCtx.fillStyle='rgba(255,255,255,.4)';angleCtx.font='bold 14px sans-serif';
+  angleCtx.fillText(a+'°',x-15,y+5);
+ }
+}
+function updateAngleReadout(){
+ const t=getAngleType(angleVal);
+ const desc={Acute:'less than 90°',Right:'exactly 90°',Obtuse:'between 90° and 180°',Straight:'exactly 180°',Reflex:'between 180° and 360°',Full:'exactly 360°',Zero:'0°'}[t];
+ document.getElementById('angleReadout').innerHTML=t.toUpperCase()+' ANGLE <small>'+angleVal+'° — '+desc+'</small>';
+ document.getElementById('angleInfo').textContent='The green arm rotates '+angleVal+'° from the red fixed arm.';
+}
+document.getElementById('angleRange').addEventListener('input',e=>{angleVal=+e.target.value;document.getElementById('angleVal').textContent=angleVal+'°';drawAngle();updateAngleReadout()});
+document.getElementById('angleAcute').addEventListener('click',()=>setAngle(45));
+document.getElementById('angleRight').addEventListener('click',()=>setAngle(90));
+document.getElementById('angleObtuse').addEventListener('click',()=>setAngle(120));
+document.getElementById('angleStraight').addEventListener('click',()=>setAngle(180));
+document.getElementById('angleReflex').addEventListener('click',()=>setAngle(270));
+document.getElementById('angleFull').addEventListener('click',()=>setAngle(360));
+function setAngle(v){angleVal=v;document.getElementById('angleRange').value=v;document.getElementById('angleVal').textContent=v+'°';drawAngle();updateAngleReadout()}
+document.getElementById('angleAuto').addEventListener('click',function(){
+ angleAuto=!angleAuto;
+ this.textContent=angleAuto?'⏸ Stop':'▶ Auto Rotate';
+});
+function angleAutoLoop(){
+ if(angleAuto){
+  angleVal=(angleVal+1)%361;
+  document.getElementById('angleRange').value=angleVal;
+  document.getElementById('angleVal').textContent=angleVal+'°';
+  drawAngle();updateAngleReadout();
+ }
+ requestAnimationFrame(angleAutoLoop);
+}
+
+/* ================= TRIANGLES ================= */
+let triCtx,triShowAngles=true,triShowSides=true,triColor='#4fc3f7';
+function drawTriangle(){
+ const c=document.getElementById('triCanvas');triCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ triCtx.clearRect(0,0,w,h);
+ triCtx.fillStyle='#040e1a';triCtx.fillRect(0,0,w,h);
+ triCtx.strokeStyle='rgba(255,255,255,.05)';
+ for(let x=0;x<w;x+=40){triCtx.beginPath();triCtx.moveTo(x,0);triCtx.lineTo(x,h);triCtx.stroke()}
+ for(let y=0;y<h;y+=40){triCtx.beginPath();triCtx.moveTo(0,y);triCtx.lineTo(w,y);triCtx.stroke()}
+
+ const type=document.getElementById('triType').value;
+ let A,B,C;
+ const cx=w/2,cy=h/2+40;
+ if(type==='equilateral'){
+  const s=260;
+  A={x:cx-s/2,y:cy};
+  B={x:cx+s/2,y:cy};
+  C={x:cx,y:cy-s*0.866};
+ }
+ else if(type==='isosceles'){
+  A={x:cx-140,y:cy};
+  B={x:cx+140,y:cy};
+  C={x:cx,y:cy-240};
+ }
+ else if(type==='scalene'){
+  A={x:cx-180,y:cy};
+  B={x:cx+160,y:cy};
+  C={x:cx-40,y:cy-220};
+ }
+ else {
+  A={x:cx-160,y:cy};
+  B={x:cx+160,y:cy};
+  C={x:cx-160,y:cy-200};
+ }
+
+ // Fill triangle
+ triCtx.shadowColor=triColor;triCtx.shadowBlur=25;
+ triCtx.fillStyle=triColor+'aa';
+ triCtx.beginPath();triCtx.moveTo(A.x,A.y);triCtx.lineTo(B.x,B.y);triCtx.lineTo(C.x,C.y);triCtx.closePath();
+ triCtx.fill();triCtx.shadowBlur=0;
+ triCtx.strokeStyle='#ffffff';triCtx.lineWidth=4;
+ triCtx.beginPath();triCtx.moveTo(A.x,A.y);triCtx.lineTo(B.x,B.y);triCtx.lineTo(C.x,C.y);triCtx.closePath();triCtx.stroke();
+
+ // Right angle mark
+ if(type==='right'){
+  triCtx.strokeStyle='#ffd54f';triCtx.lineWidth=4;
+  triCtx.beginPath();
+  triCtx.moveTo(A.x,A.y-30);triCtx.lineTo(A.x+30,A.y-30);triCtx.lineTo(A.x+30,A.y);
+  triCtx.stroke();
+  triCtx.fillStyle='#ffd54f';triCtx.font='bold 18px sans-serif';triCtx.fillText('90°',A.x+35,A.y-10);
+ }
+
+ // Vertices
+ [[A,'A','#ff5252'],[B,'B','#4caf50'],[C,'C','#ffd54f']].forEach(([p,label,col])=>{
+  triCtx.fillStyle=col;triCtx.shadowColor=col;triCtx.shadowBlur=15;
+  triCtx.beginPath();triCtx.arc(p.x,p.y,12,0,7);triCtx.fill();triCtx.shadowBlur=0;
+  triCtx.fillStyle='#fff';triCtx.font='bold 18px sans-serif';triCtx.textAlign='center';
+  const dx=label==='A'?-25:label==='B'?25:0;
+  const dy=label==='C'?-25:25;
+  triCtx.fillText(label,p.x+dx,p.y+dy);triCtx.textAlign='left';
+ });
+
+ // Angles
+ if(triShowAngles){
+  const angles=computeAngles(A,B,C);
+  drawAngleAtVertex(A,B,C,angles.A,'#ff5252');
+  drawAngleAtVertex(B,C,A,angles.B,'#4caf50');
+  drawAngleAtVertex(C,A,B,angles.C,'#ffd54f');
+ }
+ // Sides
+ if(triShowSides){
+  const lab=(p,q,c)=>midLabel(p,q,c);
+  lab(A,B,'c');lab(B,C,'a');lab(C,A,'b');
+ }
+ // Sum
+ triCtx.fillStyle='#fff';triCtx.font='bold 22px sans-serif';
+ triCtx.fillText('Sum of angles = 180°',30,40);
+}
+function computeAngles(A,B,C){
+ const ang=(P,Q,R)=>{
+  const v1={x:Q.x-P.x,y:Q.y-P.y},v2={x:R.x-P.x,y:R.y-P.y};
+  const d=v1.x*v2.x+v1.y*v2.y;
+  const m1=Math.hypot(v1.x,v1.y),m2=Math.hypot(v2.x,v2.y);
+  return Math.acos(d/(m1*m2))*180/Math.PI;
+ };
+ return {A:ang(A,B,C),B:ang(B,A,C),C:ang(C,A,B)};
+}
+function drawAngleAtVertex(V,P,Q,ang,col){
+ const r=50;
+ const a1=Math.atan2(P.y-V.y,P.x-V.x);
+ const a2=Math.atan2(Q.y-V.y,Q.x-V.x);
+ triCtx.strokeStyle=col;triCtx.lineWidth=4;triCtx.shadowColor=col;triCtx.shadowBlur=12;
+ triCtx.beginPath();triCtx.arc(V.x,V.y,r,a1,a2,false);triCtx.stroke();triCtx.shadowBlur=0;
+ const mid=(a1+a2)/2;
+ triCtx.fillStyle=col;triCtx.font='bold 18px sans-serif';triCtx.textAlign='center';
+ triCtx.fillText(ang.toFixed(0)+'°',V.x+(r+28)*Math.cos(mid),V.y+(r+28)*Math.sin(mid)+6);
+ triCtx.textAlign='left';
+}
+function midLabel(p,q,label){
+ const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;
+ triCtx.fillStyle='#06121f';triCtx.fillRect(mx-20,my-14,40,26);
+ triCtx.fillStyle='#ff5252';triCtx.font='bold 18px sans-serif';triCtx.textAlign='center';
+ triCtx.fillText(label,mx,my+4);triCtx.textAlign='left';
+}
+function updateTriReadout(){
+ const t=document.getElementById('triType').value;
+ const info={equilateral:['EQUILATERAL TRIANGLE','All angles = 60°, all sides equal'],isosceles:['ISOSCELES TRIANGLE','Two equal sides, two equal angles'],scalene:['SCALENE TRIANGLE','All sides and angles different'],right:['RIGHT-ANGLED TRIANGLE','One angle = 90°']}[t];
+ document.getElementById('triReadout').innerHTML=info[0]+' <small>'+info[1]+'</small>';
+ document.getElementById('triInfo').textContent=info[1]+' Angles always sum to 180°.';
+}
+document.getElementById('triType').addEventListener('change',()=>{drawTriangle();updateTriReadout()});
+document.getElementById('triAngleBtn').addEventListener('click',()=>{triShowAngles=!triShowAngles;drawTriangle()});
+document.getElementById('triSidesBtn').addEventListener('click',()=>{triShowSides=!triShowSides;drawTriangle()});
+document.getElementById('triColorBtn').addEventListener('click',()=>{
+ const cols=['#4fc3f7','#ff9800','#ab47bc','#ff5252','#4caf50','#ffd54f'];
+ triColor=cols[Math.floor(Math.random()*cols.length)];
+ drawTriangle();
+});
+document.getElementById('triResetBtn').addEventListener('click',()=>{triShowAngles=true;triShowSides=true;triColor='#4fc3f7';document.getElementById('triType').value='equilateral';drawTriangle();updateTriReadout()});
+
+/* ================= CIRCLES ================= */
+let circleCtx,circleAngle=45;
+function drawCircle(){
+ const c=document.getElementById('circleCanvas');circleCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ circleCtx.clearRect(0,0,w,h);
+ circleCtx.fillStyle='#040e1a';circleCtx.fillRect(0,0,w,h);
+ circleCtx.strokeStyle='rgba(255,255,255,.05)';
+ for(let x=0;x<w;x+=40){circleCtx.beginPath();circleCtx.moveTo(x,0);circleCtx.lineTo(x,h);circleCtx.stroke()}
+ for(let y=0;y<h;y+=40){circleCtx.beginPath();circleCtx.moveTo(0,y);circleCtx.lineTo(w,y);circleCtx.stroke()}
+
+ const r=+document.getElementById('circleRadius').value;
+ const cx=w/2,cy=h/2;
+ const part=document.getElementById('circlePart').value;
+
+ // Circle fill
+ circleCtx.fillStyle='rgba(79,195,247,.12)';
+ circleCtx.beginPath();circleCtx.arc(cx,cy,r,0,7);circleCtx.fill();
+ circleCtx.strokeStyle='#4fc3f7';circleCtx.lineWidth=4;circleCtx.shadowColor='#4fc3f7';circleCtx.shadowBlur=15;
+ circleCtx.beginPath();circleCtx.arc(cx,cy,r,0,7);circleCtx.stroke();circleCtx.shadowBlur=0;
+ // Centre
+ circleCtx.fillStyle='#fff';circleCtx.beginPath();circleCtx.arc(cx,cy,8,0,7);circleCtx.fill();
+ circleCtx.fillStyle='#ffd54f';circleCtx.font='bold 16px sans-serif';circleCtx.fillText('O (centre)',cx+14,cy-10);
+
+ // Radius
+ if(part==='all'||part==='radius'){
+  circleCtx.strokeStyle='#ff5252';circleCtx.lineWidth=5;circleCtx.shadowColor='#ff5252';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.moveTo(cx,cy);circleCtx.lineTo(cx+r,cy);circleCtx.stroke();circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#ff5252';circleCtx.font='bold 18px sans-serif';circleCtx.fillText('Radius r = '+r,cx+r/2-50,cy-12);
+ }
+ // Diameter
+ if(part==='all'||part==='diameter'){
+  circleCtx.strokeStyle='#4caf50';circleCtx.lineWidth=5;circleCtx.shadowColor='#4caf50';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.moveTo(cx-r,cy+20);circleCtx.lineTo(cx+r,cy+20);circleCtx.stroke();circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#4caf50';circleCtx.font='bold 18px sans-serif';circleCtx.fillText('Diameter d = '+(2*r),cx-60,cy+45);
+ }
+ // Chord
+ if(part==='all'||part==='chord'){
+  const ca=circleAngle*Math.PI/180;
+  const x1=cx+r*Math.cos(ca),y1=cy+r*Math.sin(ca);
+  const x2=cx+r*Math.cos(ca+2.2),y2=cy+r*Math.sin(ca+2.2);
+  circleCtx.strokeStyle='#ffd54f';circleCtx.lineWidth=5;circleCtx.shadowColor='#ffd54f';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.moveTo(x1,y1);circleCtx.lineTo(x2,y2);circleCtx.stroke();circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#ffd54f';circleCtx.font='bold 18px sans-serif';
+  circleCtx.fillText('Chord',(x1+x2)/2-30,(y1+y2)/2-12);
+ }
+ // Tangent
+ if(part==='all'||part==='tangent'){
+  const ta=-Math.PI/2;
+  const tx=cx,ty=cy+r;
+  const tlen=180;
+  circleCtx.strokeStyle='#ab47bc';circleCtx.lineWidth=5;circleCtx.shadowColor='#ab47bc';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.moveTo(tx-tlen,ty);circleCtx.lineTo(tx+tlen,ty);circleCtx.stroke();
+  // radius to tangent point
+  circleCtx.strokeStyle='#ff5252';circleCtx.lineWidth=3;circleCtx.setLineDash([6,4]);
+  circleCtx.beginPath();circleCtx.moveTo(cx,cy);circleCtx.lineTo(tx,ty);circleCtx.stroke();
+  circleCtx.setLineDash([]);circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#ab47bc';circleCtx.font='bold 18px sans-serif';circleCtx.fillText('Tangent',tx+30,ty-8);
+  circleCtx.fillStyle='#ff5252';circleCtx.font='bold 14px sans-serif';circleCtx.fillText('90°',tx-40,ty-20);
+ }
+ // Secant
+ if(part==='all'||part==='secant'){
+  const sa=circleAngle*Math.PI/180+0.8;
+  const sx1=cx-r*Math.cos(sa),sy1=cy-r*Math.sin(sa);
+  const sx2=cx+r*Math.cos(sa),sy2=cy+r*Math.sin(sa);
+  circleCtx.strokeStyle='#4fc3f7';circleCtx.lineWidth=5;circleCtx.shadowColor='#4fc3f7';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.moveTo(sx1-r*0.3,sy1-r*0.3*Math.tan(sa));circleCtx.lineTo(sx2+r*0.3,sy2+r*0.3*Math.tan(sa));circleCtx.stroke();circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#4fc3f7';circleCtx.font='bold 18px sans-serif';circleCtx.fillText('Secant',sx2+20,sy2);
+ }
+ // Arc & Sector
+ if(part==='all'||part==='arc'){
+  const a0=circleAngle*Math.PI/180+0.6;
+  const a1=a0+1.5;
+  circleCtx.fillStyle='rgba(255,152,0,.35)';
+  circleCtx.beginPath();circleCtx.moveTo(cx,cy);circleCtx.arc(cx,cy,r,a0,a1);circleCtx.closePath();circleCtx.fill();
+  circleCtx.strokeStyle='#ff9800';circleCtx.lineWidth=5;circleCtx.shadowColor='#ff9800';circleCtx.shadowBlur=12;
+  circleCtx.beginPath();circleCtx.arc(cx,cy,r,a0,a1);circleCtx.stroke();circleCtx.shadowBlur=0;
+  circleCtx.fillStyle='#ff9800';circleCtx.font='bold 18px sans-serif';
+  const mAng=(a0+a1)/2;
+  circleCtx.fillText('Sector',cx+(r*0.6)*Math.cos(mAng)-30,cy+(r*0.6)*Math.sin(mAng));
+  circleCtx.fillText('Arc',cx+(r+25)*Math.cos(mAng),cy+(r+25)*Math.sin(mAng));
+ }
+
+ // Readout
+ document.getElementById('circleReadout').innerHTML='CIRCLE <small>Radius = '+r+' px · Diameter = '+(2*r)+' px · Area = '+(Math.PI*r*r).toFixed(0)+' px²</small>';
+}
+document.getElementById('circleRadius').addEventListener('input',e=>{document.getElementById('radiusVal').textContent=e.target.value;drawCircle()});
+document.getElementById('circlePart').addEventListener('change',drawCircle);
+document.getElementById('circleRotateBtn').addEventListener('click',()=>{circleAngle=(circleAngle+30)%360;drawCircle()});
+document.getElementById('circleResetBtn').addEventListener('click',()=>{document.getElementById('circleRadius').value=140;document.getElementById('radiusVal').textContent='140';circleAngle=45;document.getElementById('circlePart').value='all';drawCircle()});
+
+/* ================= PYTHAGORAS ================= */
+let pythCtx;
+function drawPyth(){
+ const c=document.getElementById('pythCanvas');pythCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ pythCtx.clearRect(0,0,w,h);
+ pythCtx.fillStyle='#040e1a';pythCtx.fillRect(0,0,w,h);
+ pythCtx.strokeStyle='rgba(255,255,255,.05)';
+ for(let x=0;x<w;x+=40){pythCtx.beginPath();pythCtx.moveTo(x,0);pythCtx.lineTo(x,h);pythCtx.stroke()}
+ for(let y=0;y<h;y+=40){pythCtx.beginPath();pythCtx.moveTo(0,y);pythCtx.lineTo(w,y);pythCtx.stroke()}
+
+ const a=+document.getElementById('pythA').value;
+ const b=+document.getElementById('pythB').value;
+ const cLen=Math.sqrt(a*a+b*b);
+ // Triangle position
+ const scale=1.0;
+ const ax=200,ay=380;
+ const bx=ax+a*scale,by=ay;
+ const cx2=ax,cy2=ay-b*scale;
+
+ // Square on a (below)
+ pythCtx.fillStyle='rgba(255,82,82,.35)';
+ pythCtx.strokeStyle='#ff5252';pythCtx.lineWidth=3;
+ pythCtx.beginPath();
+ pythCtx.rect(ax,ay,a*scale,a*scale);pythCtx.fill();pythCtx.stroke();
+ pythCtx.fillStyle='#ff5252';pythCtx.font='bold 20px sans-serif';
+ pythCtx.fillText('a² = '+(a*a),ax+a*scale/2-40,ay+a*scale/2+6);
+
+ // Square on b (left)
+ pythCtx.fillStyle='rgba(76,175,80,.35)';
+ pythCtx.strokeStyle='#4caf50';pythCtx.lineWidth=3;
+ pythCtx.beginPath();
+ pythCtx.rect(ax-b*scale,cy2,b*scale,b*scale);pythCtx.fill();pythCtx.stroke();
+ pythCtx.fillStyle='#4caf50';pythCtx.font='bold 20px sans-serif';
+ pythCtx.fillText('b² = '+(b*b),ax-b*scale/2-40,cy2+b*scale/2+6);
+
+ // Square on c (hypotenuse) — rotated
+ const dx=bx-cx2,dy=by-cy2;
+ const len=Math.hypot(dx,dy);
+ const ux=dx/len,uy=dy/len;
+ const nx=-uy,ny=ux;
+ const s1x=cx2,s1y=cy2;
+ const s2x=bx,s2y=by;
+ const s3x=bx+nx*cLen*scale,s3y=by+ny*cLen*scale;
+ const s4x=cx2+nx*cLen*scale,s4y=cy2+ny*cLen*scale;
+ pythCtx.fillStyle='rgba(79,195,247,.35)';
+ pythCtx.strokeStyle='#4fc3f7';pythCtx.lineWidth=3;
+ pythCtx.beginPath();pythCtx.moveTo(s1x,s1y);pythCtx.lineTo(s2x,s2y);pythCtx.lineTo(s3x,s3y);pythCtx.lineTo(s4x,s4y);pythCtx.closePath();
+ pythCtx.fill();pythCtx.stroke();
+ pythCtx.fillStyle='#4fc3f7';pythCtx.font='bold 20px sans-serif';
+ const mcx=(s1x+s2x+s3x+s4x)/4,mcy=(s1y+s2y+s3y+s4y)/4;
+ pythCtx.fillText('c² = '+(a*a+b*b),mcx-40,mcy+6);
+
+ // Triangle
+ pythCtx.fillStyle='rgba(255,255,255,.15)';
+ pythCtx.strokeStyle='#ffffff';pythCtx.lineWidth=4;
+ pythCtx.beginPath();pythCtx.moveTo(ax,ay);pythCtx.lineTo(bx,by);pythCtx.lineTo(cx2,cy2);pythCtx.closePath();
+ pythCtx.fill();pythCtx.stroke();
+
+ // Right angle
+ pythCtx.strokeStyle='#ffd54f';pythCtx.lineWidth=4;
+ pythCtx.beginPath();pythCtx.moveTo(ax,ay-28);pythCtx.lineTo(ax+28,ay-28);pythCtx.lineTo(ax+28,ay);pythCtx.stroke();
+
+ // Side labels
+ pythCtx.fillStyle='#ff5252';pythCtx.font='bold 20px sans-serif';
+ pythCtx.fillText('a = '+a,ax+a*scale/2-30,ay-12);
+ pythCtx.fillStyle='#4caf50';
+ pythCtx.fillText('b = '+b,ax-70,cy2+b*scale/2);
+ pythCtx.fillStyle='#4fc3f7';
+ pythCtx.fillText('c = '+cLen.toFixed(1),bx-40,cy2-15);
+
+ // Readout
+ document.getElementById('pythReadout').innerHTML='a² + b² = c² <small>'+a+'² + '+b+'² = '+cLen.toFixed(1)+'²  →  '+(a*a)+' + '+(b*b)+' = '+(a*a+b*b)+'  ✓</small>';
+ document.getElementById('pythInfo').textContent='a='+a+', b='+b+', c='+cLen.toFixed(2)+'. The areas of the red and green squares add up to the blue square.';
+}
+document.getElementById('pythA').addEventListener('input',e=>{document.getElementById('pythAVal').textContent=e.target.value;drawPyth()});
+document.getElementById('pythB').addEventListener('input',e=>{document.getElementById('pythBVal').textContent=e.target.value;drawPyth()});
+document.getElementById('pythTriple1').addEventListener('click',()=>{document.getElementById('pythA').value=90;document.getElementById('pythB').value=120;document.getElementById('pythAVal').textContent='90';document.getElementById('pythBVal').textContent='120';drawPyth()});
+document.getElementById('pythTriple2').addEventListener('click',()=>{document.getElementById('pythA').value=60;document.getElementById('pythB').value=144;document.getElementById('pythAVal').textContent='60';document.getElementById('pythBVal').textContent='144';drawPyth()});
+document.getElementById('pythTriple3').addEventListener('click',()=>{document.getElementById('pythA').value=80;document.getElementById('pythB').value=150;document.getElementById('pythAVal').textContent='80';document.getElementById('pythBVal').textContent='150';drawPyth()});
+document.getElementById('pythResetBtn').addEventListener('click',()=>{document.getElementById('pythA').value=90;document.getElementById('pythB').value=120;document.getElementById('pythAVal').textContent='90';document.getElementById('pythBVal').textContent='120';drawPyth()});
+
+/* ================= TRANSFORMATIONS ================= */
+let transCtx,transShowGrid=true,transAnim=0,transAnimating=false;
+const baseShape=[{x:-2,y:-1},{x:2,y:-1},{x:2,y:2},{x:-2,y:2}];
+function transformPoint(p,mode,prog){
+ // prog 0..1 interpolates from original to transformed
+ const [x,y]=[p.x,p.y];
+ let tx=x,ty=y;
+ switch(mode){
+  case 'reflectX': tx=x;ty=-y;break;
+  case 'reflectY': tx=-x;ty=y;break;
+  case 'reflectDiag': tx=y;ty=x;break;
+  case 'rotate90': tx=-y;ty=x;break;
+  case 'rotate180': tx=-x;ty=-y;break;
+  case 'rotate270': tx=y;ty=-x;break;
+  case 'translate': tx=x+3;ty=y+2;break;
+  case 'enlarge': tx=x*2;ty=y*2;break;
+ }
+ return {x:x+(tx-x)*prog, y:y+(ty-y)*prog};
+}
+function drawTrans(){
+ const c=document.getElementById('transCanvas');transCtx=c.getContext('2d');
+ const w=c.width,h=c.height;
+ transCtx.clearRect(0,0,w,h);
+ transCtx.fillStyle='#040e1a';transCtx.fillRect(0,0,w,h);
+ const cx=w/2,cy=h/2;
+ const scale=35;
+
+ // Grid
+ if(transShowGrid){
+  transCtx.strokeStyle='rgba(255,255,255,.08)';transCtx.lineWidth=1;
+  for(let x=cx%scale;x<w;x+=scale){transCtx.beginPath();transCtx.moveTo(x,0);transCtx.lineTo(x,h);transCtx.stroke()}
+  for(let y=cy%scale;y<h;y+=scale){transCtx.beginPath();transCtx.moveTo(0,y);transCtx.lineTo(w,y);transCtx.stroke()}
+  // Axes
+  transCtx.strokeStyle='rgba(255,255,255,.4)';transCtx.lineWidth=2;
+  transCtx.beginPath();transCtx.moveTo(0,cy);transCtx.lineTo(w,cy);transCtx.stroke();
+  transCtx.beginPath();transCtx.moveTo(cx,0);transCtx.lineTo(cx,h);transCtx.stroke();
+  transCtx.fillStyle='rgba(255,255,255,.7)';transCtx.font='bold 14px sans-serif';
+  for(let i=-8;i<=8;i++){if(i!==0){transCtx.fillText(i,cx+i*scale-6,cy+18);transCtx.fillText(i,cx+8,cy-i*scale+5)}}
+ }
+
+ const mode=document.getElementById('transType').value;
+
+ // Mirror line / centre
+ transCtx.strokeStyle='#ffd54f';transCtx.lineWidth=4;transCtx.setLineDash([10,6]);transCtx.shadowColor='#ffd54f';transCtx.shadowBlur=15;
+ if(mode==='reflectX'){transCtx.beginPath();transCtx.moveTo(0,cy);transCtx.lineTo(w,cy);transCtx.stroke()}
+ else if(mode==='reflectY'){transCtx.beginPath();transCtx.moveTo(cx,0);transCtx.lineTo(cx,h);transCtx.stroke()}
+ else if(mode==='reflectDiag'){transCtx.beginPath();transCtx.moveTo(0,h);transCtx.lineTo(w,0);transCtx.stroke()}
+ else if(mode==='enlarge'){transCtx.beginPath();transCtx.arc(cx,cy,10,0,7);transCtx.fillStyle='#ffd54f';transCtx.fill()}
+ transCtx.setLineDash([]);transCtx.shadowBlur=0;
+
+ // Object (red)
+ drawShapePoly(baseShape,cx,cy,scale,'#ff5252','rgba(255,82,82,.3)','OBJECT');
+ // Image (green)
+ const imgShape=baseShape.map(p=>transformPoint(p,mode,transAnim));
+ drawShapePoly(imgShape,cx,cy,scale,'#4caf50','rgba(76,175,80,.3)','IMAGE');
+
+ // Readout
+ const labels={
+  reflectX:'REFLECTION OVER X-AXIS <small>(x, y) → (x, −y)</small>',
+  reflectY:'REFLECTION OVER Y-AXIS <small>(x, y) → (−x, y)</small>',
+  reflectDiag:'REFLECTION OVER y = x <small>(x, y) → (y, x)</small>',
+  rotate90:'ROTATION 90° CLOCKWISE <small>(x, y) → (−y, x)</small>',
+  rotate180:'ROTATION 180° <small>(x, y) → (−x, −y)</small>',
+  rotate270:'ROTATION 270° <small>(x, y) → (y, −x)</small>',
+  translate:'TRANSLATION <small>(x, y) → (x + 3, y + 2)</small>',
+  enlarge:'ENLARGEMENT k = 2 <small>(x, y) → (2x, 2y)</small>'
+ };
+ document.getElementById('transReadout').innerHTML=labels[mode];
+ document.getElementById('transInfo').textContent='Red = original object, Green = image after transformation.';
+}
+function drawShapePoly(pts,cx,cy,scale,stroke,fill,label){
+ transCtx.fillStyle=fill;transCtx.strokeStyle=stroke;transCtx.lineWidth=4;
+ transCtx.shadowColor=stroke;transCtx.shadowBlur=15;
+ transCtx.beginPath();
+ pts.forEach((p,i)=>{const x=cx+p.x*scale,y=cy-p.y*scale;i?transCtx.lineTo(x,y):transCtx.moveTo(x,y)});
+ transCtx.closePath();transCtx.fill();transCtx.stroke();transCtx.shadowBlur=0;
+ // Vertices
+ pts.forEach(p=>{
+  const x=cx+p.x*scale,y=cy-p.y*scale;
+  transCtx.fillStyle=stroke;transCtx.beginPath();transCtx.arc(x,y,6,0,7);transCtx.fill();
+ });
+ // Label
+ const mcx=pts.reduce((s,p)=>s+p.x,0)/pts.length;
+ const mcy=pts.reduce((s,p)=>s+p.y,0)/pts.length;
+ transCtx.fillStyle=stroke;transCtx.font='bold 16px sans-serif';transCtx.textAlign='center';
+ transCtx.fillText(label,cx+mcx*scale,cy-mcy*scale-15);transCtx.textAlign='left';
+}
+document.getElementById('transType').addEventListener('change',()=>{transAnim=1;drawTrans()});
+document.getElementById('transShowGrid').addEventListener('click',()=>{transShowGrid=!transShowGrid;drawTrans()});
+document.getElementById('transReset').addEventListener('click',()=>{transAnim=0;transAnimating=false;drawTrans()});
+document.getElementById('transAnimate').addEventListener('click',()=>{transAnimating=true;transAnim=0});
+function transLoop(){
+ if(transAnimating){
+  transAnim+=0.02;
+  if(transAnim>=1){transAnim=1;transAnimating=false}
+  drawTrans();
+ }
+ requestAnimationFrame(transLoop);
+}
+
+/* ================= START EVERYTHING ================= */
+window.addEventListener('load',()=>{
+ drawShape();
+ const ac=document.getElementById('angleCanvas');angleCtx=ac.getContext('2d');
+ drawAngle();updateAngleReadout();angleAutoLoop();
+ const tc=document.getElementById('triCanvas');triCtx=tc.getContext('2d');
+ drawTriangle();updateTriReadout();
+ const cc=document.getElementById('circleCanvas');circleCtx=cc.getContext('2d');
+ drawCircle();
+ const pc=document.getElementById('pythCanvas');pythCtx=pc.getContext('2d');
+ drawPyth();
+ const trc=document.getElementById('transCanvas');transCtx=trc.getContext('2d');
+ transAnim=1;drawTrans();transLoop();
+});
+})();
+</script>
+</body>
+</html>

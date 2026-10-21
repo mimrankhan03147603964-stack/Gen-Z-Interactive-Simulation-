@@ -1,1600 +1,2011 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Interactive Algebra & Equation Balancing Lab</title>
+<title>Cambridge Scholar – Algebra Equations Lab</title>
 <style>
-/* Zero-monochrome & 100% desktop color fidelity enforcement */
-*, *::before, *::after {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-}
-html, body, canvas, svg {
-  forced-color-adjust: none !important;
-  -ms-high-contrast-adjust: none !important;
-}
-@media screen and (min-width: 640px), screen and (min-width: 768px), screen and (min-width: 1024px), screen and (min-width: 1280px), print, (forced-colors: active), (prefers-contrast) {
-  html, body, canvas, svg, div {
-    forced-color-adjust: none !important;
-    -ms-high-contrast-adjust: none !important;
-  }
-}
-
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: #060e1f;
-  color: #e2e8f0;
-  min-height: 100vh;
-  padding: 16px;
-  overflow-x: hidden;
-}
-.container {
-  max-width: 1540px;
-  margin: 0 auto;
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:radial-gradient(ellipse at top,#0d1f35 0%,#050b14 70%);
+  color:#e8f4ff; min-height:100vh; overflow-x:hidden;
 }
 
-/* TOP NAVIGATION TABS */
+/* ===== ANIMATED BACKGROUND ===== */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,143,0,.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(25,118,210,.10) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(0,200,83,.05) 0%, transparent 55%);
+  animation:bgPulse 12s ease-in-out infinite alternate;
+}
+@keyframes bgPulse {
+  0%   { transform:scale(1); opacity:.8; }
+  100% { transform:scale(1.08); opacity:1; }
+}
+
+/* ===== HEADER ===== */
+.main-header {
+  position:relative; z-index:2; width:100%;
+  background:linear-gradient(135deg,#001a33 0%,#003d66 50%,#006699 100%);
+  padding:30px 30px 22px; text-align:center;
+  border-bottom:5px solid #ffc107;
+  box-shadow:0 12px 40px rgba(0,0,0,.7);
+}
+.main-header::after {
+  content:''; position:absolute; left:0; right:0; bottom:-5px; height:5px;
+  background:linear-gradient(90deg,#ffc107,#ff8f00,#ffc107,#ff8f00,#ffc107);
+  background-size:200% 100%; animation:slide 4s linear infinite;
+}
+@keyframes slide { 0%{background-position:0% 0} 100%{background-position:200% 0} }
+.main-header h1 {
+  font-size:2.3rem; font-weight:900; color:#fff; letter-spacing:1px;
+  text-shadow:0 0 25px rgba(255,193,7,.5), 0 4px 12px rgba(0,0,0,.8);
+}
+.main-header .sub { font-size:1rem; color:#a8d8ff; margin-top:8px; letter-spacing:.5px; }
+
+/* ===== CONTAINER ===== */
+.container { position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:26px 20px; }
+
+/* ===== MAIN TABS ===== */
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 18px;
-  background: #0a1630;
-  border: 1.5px solid #1e3a8a;
-  border-radius: 16px;
-  padding: 8px 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;
+  background:rgba(15,36,64,.75); backdrop-filter:blur(12px);
+  border-radius:16px; padding:8px 12px; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
 }
 .tab-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 30px;
-  font-size: 0.92rem;
-  font-weight: 800;
-  color: #93c5fd;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  padding:13px 24px; border:none; border-radius:40px; font-size:1.02rem;
+  font-weight:700; color:#b8d4f0; background:transparent; cursor:pointer;
+  transition:all .28s cubic-bezier(.4,0,.2,1); flex:1 0 auto; position:relative;
 }
-.tab-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  color: #ffffff;
-}
+.tab-btn:hover { background:rgba(255,255,255,.08); color:#fff; transform:translateY(-2px); }
 .tab-btn.active {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  background:linear-gradient(135deg,#ff8f00,#ff6f00);
+  color:#0a1628; box-shadow:0 8px 24px rgba(255,143,0,.5);
+  transform:translateY(-2px);
 }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+.tab-btn .icon { margin-right:8px; }
 
-/* DEFINITION & EXPLANATION CARD */
+/* ===== TOPIC ===== */
+.topic { display:none; } .topic.active { display:block; animation:fadeIn .5s ease; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(15px)} to{opacity:1; transform:translateY(0)} }
+
+/* ===== CARD ===== */
 .card {
-  background: linear-gradient(160deg, #1b0d38 0%, #0d061f 100%);
-  border: 1.5px solid #7c3aed;
-  border-radius: 20px;
-  padding: 20px 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background:linear-gradient(160deg,rgba(18,42,68,.95),rgba(10,30,52,.98));
+  border-radius:24px; padding:26px 28px 30px; margin-bottom:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
 }
-.card h2 {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #c4b5fd;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.card h2 small {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-left: 8px;
-}
+.card h2 { font-size:1.95rem; font-weight:800; margin-bottom:8px; }
+.card h2 small { font-size:.9rem; font-weight:400; color:#7a9cc0; margin-left:8px; }
 .card .desc {
-  font-size: 0.95rem;
-  color: #cbd5e1;
-  margin: 10px 0 16px;
-  border-left: 4px solid #a78bfa;
-  padding-left: 14px;
-  line-height: 1.6;
-  background: rgba(167, 139, 250, 0.05);
-  border-radius: 0 10px 10px 0;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  font-size:1rem; color:#a8c4e0; margin-bottom:20px;
+  border-left:5px solid #ffc107; padding:10px 16px;
+  background:rgba(255,255,255,.03); border-radius:0 12px 12px 0;
+  line-height:1.7;
 }
-.section-tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 12px 0 14px;
-}
+
+/* ===== SECTION TABS ===== */
+.section-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0 16px; }
 .section-tab {
-  padding: 7px 16px;
-  border: 1px solid #4c1d95;
-  border-radius: 24px;
-  font-weight: 700;
-  font-size: 0.82rem;
-  background: #2e1065;
-  color: #ddd6fe;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding:10px 20px; border:none; border-radius:30px; font-weight:700;
+  font-size:.88rem; background:#1a3550; color:#a8c8e8; cursor:pointer;
+  transition:all .25s; border:1px solid transparent;
 }
-.section-tab:hover {
-  background: #5b21b6;
-  color: #ffffff;
-}
+.section-tab:hover { background:#234468; color:#fff; transform:translateY(-2px); }
 .section-tab.active {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: #ffffff;
-  border-color: #a78bfa;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35);
+  background:linear-gradient(135deg,#1976d2,#42a5f5); color:#fff;
+  box-shadow:0 6px 18px rgba(25,118,210,.5);
 }
-.panel { display: none; padding: 10px 0; }
-.panel.active { display: block; }
-.panel h3 { font-size: 1.25rem; font-weight: 800; color: #fde047; margin-bottom: 10px; }
-.panel p, .panel li { font-size: 0.92rem; line-height: 1.65; color: #cbd5e1; }
-.panel ul { list-style: none; padding-left: 0; }
-.panel ul li { padding: 5px 0 5px 28px; position: relative; }
+
+/* ===== PANELS ===== */
+.panel { display:none; padding:18px 0 8px; animation:fadeIn .4s ease; }
+.panel.active { display:block; }
+.panel h3 { font-size:1.5rem; font-weight:700; color:#ffd54f; margin-bottom:14px; }
+.panel p, .panel li { font-size:1rem; line-height:1.75; color:#c8ddf0; }
+.panel ul { list-style:none; padding-left:0; }
+.panel ul li { padding:8px 0 8px 34px; position:relative; }
 .panel ul li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  top: 6px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #7c3aed;
-  color: #ffffff;
-  font-weight: 900;
-  text-align: center;
-  line-height: 18px;
-  font-size: 0.72rem;
+  content:'✓'; position:absolute; left:0; top:8px; width:22px; height:22px;
+  border-radius:50%; background:linear-gradient(135deg,#ffc107,#ff8f00);
+  color:#0a1628; font-weight:900; text-align:center; line-height:22px;
+  font-size:.8rem; box-shadow:0 3px 10px rgba(255,193,7,.4);
 }
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-top: 12px;
-}
+
+/* ===== GRID ===== */
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px; margin-top:12px; }
 .grid-item {
-  background: rgba(46, 16, 101, 0.4);
-  padding: 12px 14px;
-  border-radius: 12px;
-  border-left: 4px solid #a78bfa;
-  border-top: 1px solid #4c1d95;
-  border-right: 1px solid #4c1d95;
-  border-bottom: 1px solid #4c1d95;
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  padding:16px; border-radius:16px; border-left:5px solid #ff9800;
+  transition:transform .25s, box-shadow .25s;
 }
-.grid-item h4 { font-size: 1rem; color: #c4b5fd; margin-bottom: 4px; font-weight: 800; }
-.grid-item p { font-size: 0.85rem; color: #94a3b8; }
-.formula-box {
-  background: linear-gradient(135deg, #2e1065 0%, #170836 100%);
-  border: 1.5px solid #a78bfa;
-  border-radius: 14px;
-  padding: 14px 18px;
-  margin: 12px 0;
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: 900;
-  color: #ddd6fe;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
-}
-.formula-box small {
-  display: block;
-  font-size: 0.82rem;
-  color: #94a3b8;
-  font-weight: 500;
-  margin-top: 4px;
-}
+.grid-item:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(255,152,0,.25); }
+.grid-item h4 { font-size:1.15rem; color:#ffb74d; margin-bottom:6px; }
+.grid-item p { font-size:.92rem; color:#b8d4f0; line-height:1.5; }
 
-/* INTERACTIVE SIMULATION BOX */
+/* ===== SIM BOX ===== */
 .sim-box {
-  background: #0d061f;
-  border: 1.5px solid #7c3aed;
-  border-radius: 20px;
-  padding: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background:linear-gradient(160deg,#06121f,#040e1a);
+  border-radius:20px; padding:22px 18px 18px; margin-top:10px;
+  border:1px solid #1e3a5c; box-shadow:inset 0 0 40px rgba(0,0,0,.5);
 }
 
-/* TOP FULLSCREEN BUTTON */
-.fs-btn {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  z-index: 30;
-  padding: 9px 18px;
-  border-radius: 30px;
-  border: 1.5px solid #a78bfa;
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 0.85rem;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-}
-.fs-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
-  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
-}
-
-/* SIMULATION CONTROLS & PERFORMANCE BAR */
+/* ===== CONTROLS ===== */
 .sim-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 16px;
-  align-items: center;
-  margin-bottom: 14px;
-  background: #170b33;
-  padding: 12px 18px;
-  border-radius: 16px;
-  border: 1.5px solid #4c1d95;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-  padding-right: 180px;
+  display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center;
+  justify-content:center; margin-bottom:16px; background:rgba(10,26,46,.85);
+  padding:16px 20px; border-radius:20px; border:1px solid #1e3a5c;
+  backdrop-filter:blur(8px);
 }
-.ctrl-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+.sim-controls label {
+  display:flex; align-items:center; gap:10px; font-weight:600;
+  color:#90b8e0; font-size:.92rem;
 }
-.ctrl-btn {
-  padding: 7px 14px;
-  border-radius: 10px;
-  border: 1.5px solid;
-  font-weight: 800;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.sim-controls input[type=range] { width:160px; accent-color:#ff9800; cursor:pointer; }
+.sim-controls input[type=number] {
+  width:90px; padding:8px 12px; border-radius:10px; border:1px solid #1e3a5c;
+  background:#0a1a2e; color:#ffd54f; font-weight:700; font-size:.95rem;
+  transition:.2s;
 }
-.ctrl-btn:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.15);
+.sim-controls input[type=number]:focus { outline:none; border-color:#ff9800; box-shadow:0 0 12px rgba(255,152,0,.4); }
+.sim-controls select, .sim-controls button {
+  padding:9px 20px; border-radius:28px; border:none; font-weight:700;
+  background:#1a3550; color:#c8e0f8; cursor:pointer; transition:all .22s;
+  font-size:.9rem;
 }
-.btn-purple { background: #7c3aed; color: #fff; border-color: #a78bfa; }
-.btn-emerald { background: #059669; color: #fff; border-color: #34d399; }
-.btn-rose { background: #e11d48; color: #fff; border-color: #fb7185; }
-.btn-amber { background: #d97706; color: #fff; border-color: #fcd34d; }
-.btn-sky { background: #0284c7; color: #fff; border-color: #38bdf8; }
+.sim-controls button { background:linear-gradient(135deg,#1976d2,#2196f3); color:#fff; }
+.sim-controls button:hover { transform:translateY(-2px) scale(1.04); filter:brightness(1.18); box-shadow:0 8px 22px rgba(33,150,243,.4); }
+.sim-controls button:active { transform:translateY(0) scale(.98); }
+.sim-controls button.green  { background:linear-gradient(135deg,#00c853,#00e676); color:#002200; }
+.sim-controls button.green:hover  { box-shadow:0 8px 22px rgba(0,200,83,.5); }
+.sim-controls button.red    { background:linear-gradient(135deg,#d32f2f,#f44336); color:#fff; }
+.sim-controls button.red:hover    { box-shadow:0 8px 22px rgba(244,67,54,.5); }
+.sim-controls button.purple { background:linear-gradient(135deg,#7b1fa2,#9c27b0); color:#fff; }
+.sim-controls button.purple:hover { box-shadow:0 8px 22px rgba(156,39,176,.5); }
+.sim-controls button.orange { background:linear-gradient(135deg,#ff8f00,#ff6f00); color:#0a1628; }
+.sim-controls button.orange:hover { box-shadow:0 8px 22px rgba(255,143,0,.5); }
 
-/* STAGE CANVAS CONTAINER */
-.canvas-holder {
-  background: radial-gradient(circle at center, #170b33 0%, #090317 100%);
-  border: 1.5px solid #4c1d95;
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 480px;
-}
-#scaleCanvas {
-  display: block;
-  width: 100%;
-  height: 480px;
-}
-
-/* READOUT BAR */
+/* ===== READOUT ===== */
 .sim-readout {
-  margin-top: 14px;
-  background: #170b33;
-  border: 1.5px solid #4c1d95;
-  border-radius: 14px;
-  padding: 10px 16px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #c4b5fd;
+  text-align:center; font-size:1.5rem; font-weight:800; color:#ffd54f;
+  margin:16px 0 8px; text-shadow:0 0 18px rgba(255,213,79,.5);
+  letter-spacing:1px;
 }
-.readout-pill {
-  background: #0d061f;
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid #4c1d95;
-  color: #f1f5f9;
+.sim-readout small { display:block; font-size:.95rem; color:#7a9cc0; font-weight:400; margin-top:4px; letter-spacing:0; }
+
+/* ===== CANVAS ===== */
+canvas {
+  width:100%; height:auto; background:#040e1a; border-radius:16px;
+  border:2px solid #1e3a5c; display:block; margin:0 auto; max-width:100%;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.6), 0 8px 30px rgba(0,0,0,.5);
 }
 
+/* ===== INFO ===== */
+.sim-info {
+  background:rgba(10,26,46,.85); padding:12px 20px; border-radius:20px;
+  margin-top:14px; text-align:center; font-size:.95rem; color:#a8c8e8;
+  border:1px solid #1a3550;
+}
+
+/* ===== TEACHER NOTE ===== */
 .teacher-note {
-  background: linear-gradient(135deg, #071f16 0%, #05150f 100%);
-  border-left: 4px solid #10b981;
-  border-radius: 0 14px 14px 0;
-  padding: 12px 16px;
-  margin-top: 14px;
-  font-size: 0.86rem;
-  color: #a7f3d0;
-  line-height: 1.6;
+  background:linear-gradient(135deg,rgba(13,32,24,.95),rgba(10,26,20,.95));
+  border-left:5px solid #4caf50; border-radius:0 16px 16px 0;
+  padding:16px 20px; margin-top:16px; font-size:.95rem;
+  color:#b8e6c8; line-height:1.75; box-shadow:0 6px 20px rgba(0,0,0,.4);
 }
-.teacher-note strong { color: #34d399; }
+.teacher-note strong { color:#66bb6a; }
 
-/* FULLSCREEN IMMERSION STYLES */
-.sim-box.is-fullscreen,
-.sim-box:fullscreen,
-.sim-box:-webkit-full-screen {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 999999 !important;
-  background: #090317 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  padding: 16px 20px !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  flex-direction: column !important;
+/* ===== COPY BUTTON ===== */
+.copy-btn {
+  position:fixed; top:16px; left:16px; z-index:1000; padding:11px 22px;
+  border-radius:30px; border:none;
+  background:linear-gradient(135deg,#00c853,#00e676); color:#002200;
+  font-weight:900; font-size:.95rem; cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,200,80,.5); transition:all .2s;
 }
-.sim-box.is-fullscreen .canvas-holder,
-.sim-box:fullscreen .canvas-holder,
-.sim-box:-webkit-full-screen .canvas-holder {
-  flex: 1 !important;
-  height: calc(100vh - 170px) !important;
+.copy-btn:hover { transform:translateY(-2px) scale(1.05); }
+.copy-btn.copied { background:linear-gradient(135deg,#ffc107,#ff8f00); color:#0a1628; }
+
+/* ===== LEGEND ===== */
+.legend {
+  display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin:14px 0;
+  padding:12px 18px; background:rgba(10,26,46,.85); border-radius:16px;
+  border:1px solid #1e3a5c; font-size:.9rem;
 }
-.sim-box.is-fullscreen #scaleCanvas,
-.sim-box:fullscreen #scaleCanvas,
-.sim-box:-webkit-full-screen #scaleCanvas {
-  height: 100% !important;
+.legend span { display:flex; align-items:center; gap:7px; color:#c8ddf0; }
+.legend .dot {
+  width:16px; height:16px; border-radius:50%; display:inline-block;
+  box-shadow:0 0 10px currentColor;
 }
 
-/* FLOATING PERFORMANCE DOCK IN FULLSCREEN */
-.fs-bar {
-  display: none;
+/* ===== FOOTER ===== */
+.main-footer {
+  position:relative; z-index:2; width:100%; background:#00101f;
+  padding:20px 30px; text-align:center; border-top:3px solid #ffc107;
+  color:#6a8ca8; font-size:.92rem; margin-top:24px;
 }
-.sim-box.is-fullscreen .fs-bar,
-.sim-box:fullscreen .fs-bar,
-.sim-box:-webkit-full-screen .fs-bar {
-  display: flex !important;
-  position: fixed !important;
-  bottom: 16px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  background: rgba(23, 11, 51, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 2px solid #a78bfa !important;
-  border-radius: 40px !important;
-  padding: 8px 18px !important;
-  gap: 10px !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(167, 139, 250, 0.3) !important;
-  z-index: 1000000 !important;
-  max-width: 95vw !important;
-  flex-wrap: wrap !important;
-}
-.fs-exit-btn {
-  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
-  color: #ffffff !important;
-  border: 1.5px solid #fb7185 !important;
-  padding: 8px 18px !important;
-  border-radius: 30px !important;
-  font-weight: 800 !important;
-  font-size: 0.85rem !important;
-  cursor: pointer !important;
-}
+.main-footer .highlight { color:#ffc107; font-weight:700; }
 
-/* FULLSCREEN VISIBILITY & BUTTON GUARANTEE */
-.sim-box.is-fullscreen,
-.sim-box:fullscreen,
-.sim-box:-webkit-full-screen {
-  padding-bottom: 8px !important;
-  display: flex !important;
-  flex-direction: column !important;
+/* ===== STEP DISPLAY ===== */
+.eq-display {
+  background:linear-gradient(135deg,rgba(0,26,51,.9),rgba(0,61,102,.7));
+  border-radius:18px; padding:22px 26px; margin:14px 0;
+  border:2px solid rgba(255,193,7,.3);
+  box-shadow:inset 0 0 40px rgba(255,193,7,.08), 0 8px 30px rgba(0,0,0,.5);
 }
-.sim-box.is-fullscreen .sim-controls,
-.sim-box:fullscreen .sim-controls,
-.sim-box:-webkit-full-screen .sim-controls {
-  display: flex !important;
-  position: relative !important;
-  z-index: 100 !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  flex-shrink: 0 !important;
+.eq-display .step {
+  font-size:1.6rem; font-weight:800; color:#fff; text-align:center;
+  font-family:'Courier New',monospace; letter-spacing:2px;
+  text-shadow:0 0 20px rgba(79,195,247,.6);
+  transition:all .3s;
 }
-.sim-box.is-fullscreen .fs-btn,
-.sim-box:fullscreen .fs-btn,
-.sim-box:-webkit-full-screen .fs-btn {
-  display: inline-flex !important;
-  z-index: 101 !important;
+.eq-display .step.highlight {
+  color:#ffd54f;
+  text-shadow:0 0 25px rgba(255,213,79,.8);
+  animation:stepPop .6s ease;
+}
+@keyframes stepPop {
+  0%   { transform:scale(.9); opacity:.5; }
+  50%  { transform:scale(1.08); }
+  100% { transform:scale(1); opacity:1; }
+}
+.eq-display .note { text-align:center; color:#7fb8e8; font-size:.9rem; margin-top:8px; }
+
+/* ===== BALANCE VISUAL ===== */
+.balance-wrap {
+  display:flex; justify-content:center; margin:14px 0;
 }
 
-
-/* ================= GOLD-STANDARD FULLSCREEN BLUEPRINT (BREATHING PROCESS ARCHITECTURE) ================= */
-:root {
-  --blue: #2ea8ff;
-  --red: #ff4d67;
-  --grn: #22d3a0;
-  --amb: #ffc247;
-  --vio: #9b7bff;
-  --line: #2a3d80;
-  --mut: #a3b4e0;
+/* ===== RESPONSIVE ===== */
+@media(max-width:800px){
+  .main-header h1 { font-size:1.4rem; }
+  .tab-btn { font-size:.85rem; padding:10px 12px; }
+  .card { padding:16px; }
+  .copy-btn { top:10px; left:10px; padding:8px 14px; font-size:.78rem; }
+  .eq-display .step { font-size:1.2rem; }
+  .sim-readout { font-size:1.15rem; }
 }
-
-/* Universal 3D Tactile Buttons & Docked Control Overlay */
-.ctl {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-  max-width: 1180px !important;
-  margin: 10px auto 0 !important;
-  padding: 8px 14px !important;
-  background: rgba(5, 10, 30, 0.78) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55) !important;
-  box-sizing: border-box !important;
-  z-index: 99999 !important;
-}
-.row {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-.row span {
-  color: var(--mut) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  padding-right: 4px !important;
-  user-select: none !important;
-}
-.btn {
-  border: 0 !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  color: #04102a !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  user-select: none !important;
-  white-space: nowrap !important;
-  text-decoration: none !important;
-}
-.btn:hover {
-  filter: brightness(1.15) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 0 #0007, 0 10px 20px #0006 !important;
-}
-.btn:active {
-  transform: translateY(3px) !important;
-  box-shadow: 0 1px 0 #0007 !important;
-}
-.b-in { background: var(--blue) !important; color: #04102a !important; }
-.b-out { background: var(--red) !important; color: #ffffff !important; }
-.b-auto { background: var(--grn) !important; color: #04102a !important; }
-.b-play { background: var(--amb) !important; color: #04102a !important; }
-.b-hold { background: #cfd9ff !important; color: #04102a !important; }
-.b-set { background: #3d509a !important; color: #ffffff !important; }
-.b-fs {
-  background: linear-gradient(90deg, var(--vio), #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(155, 123, 255, 0.4) !important;
-}
-.b-exit {
-  background: linear-gradient(90deg, #ff4d67, #ff7eb6) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.5) !important;
-}
-.tg {
-  background: #1c2b63 !important;
-  color: #d4e0ff !important;
-  border: 2px solid #3a4f9a !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
-  font: 800 15px "Segoe UI", Arial, sans-serif !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 0 #0007, 0 8px 16px #0006 !important;
-  transition: all 0.12s ease !important;
-}
-.tg:hover { filter: brightness(1.15) !important; transform: translateY(-2px) !important; }
-.tg.on {
-  background: var(--vio) !important;
-  color: #ffffff !important;
-  border-color: #cbbcff !important;
-  box-shadow: 0 0 18px #9b7bffaa !important;
-}
-
-/* Legacy Full-Bleed CSS replaced by unified fullscreen engine */
-:fullscreen,
-:-webkit-full-screen,
-:-moz-full-screen,
-:-ms-fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  padding: 8px 18px 12px !important;
-  box-sizing: border-box !important;
-  background: radial-gradient(circle at 50% 0, #14286e, #050a1e 70%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  overflow: hidden !important;
-  border-radius: 0 !important;
-  border: none !important;
-  margin: 0 !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen canvas,
-:fullscreen svg,
-:-webkit-full-screen canvas,
-:-webkit-full-screen svg {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  height: 100% !important;
-  max-height: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  object-fit: contain !important;
-  display: block !important;
-  margin: 0 auto !important;
-}
-
-:fullscreen .ctl,
-:-webkit-full-screen .ctl {
-  flex-shrink: 0 !important;
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 4px auto 0 !important;
-  padding: 8px 16px !important;
-  background: rgba(5, 10, 30, 0.94) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(2, 132, 199, 0.25) !important;
-  z-index: 999999 !important;
-}
-
-:fullscreen .btn,
-:-webkit-full-screen .btn {
-  padding: 11px 18px !important;
-  font-size: 16px !important;
-}
-
-:fullscreen .teacher-note,
-:fullscreen .sim-info,
-:fullscreen nav,
-:fullscreen .tabs,
-:fullscreen .section-tabs,
-:-webkit-full-screen .teacher-note,
-:-webkit-full-screen .sim-info,
-:-webkit-full-screen nav,
-:-webkit-full-screen .tabs,
-:-webkit-full-screen .section-tabs {
-  display: none !important;
-}
-/* ================= END BLUEPRINT CSS ================= */
-
-</style>
-
-<!-- ================= FULLSCREEN ENGINE STYLES ================= -->
-<style id="genz-simulation-fullscreen-styles">
-  /* 1. RESTORE NATURAL SCROLLBARS (Normal & Fullscreen Flexibility) */
-  html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 100vh !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen, ::backdrop {
-    background-color: #060e1d !important;
-  }
-
-  html:fullscreen,
-  body:fullscreen,
-  :fullscreen,
-  :-webkit-full-screen,
-  :-moz-full-screen,
-  :-ms-fullscreen,
-  .simulation-wrapper:fullscreen,
-  .is-fullscreen,
-  [data-is-fullscreen="true"] {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* Allows natural vertical scrolling so nothing is ever clipped */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    padding: 10px 16px !important;
-    background-color: #060e1d !important;
-    background: radial-gradient(circle at 50% 0%, #0d1e3d 0%, #040915 100%) !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 999999 !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #0284c7 rgba(15, 23, 42, 0.6) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar,
-  :-webkit-full-screen::-webkit-scrollbar,
-  ::-webkit-scrollbar {
-    display: block !important;
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-track,
-  :-webkit-full-screen::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-track {
-    background: rgba(10, 15, 30, 0.7) !important;
-  }
-
-  :fullscreen::-webkit-scrollbar-thumb,
-  :-webkit-full-screen::-webkit-scrollbar-thumb,
-  ::-webkit-scrollbar-thumb {
-    background: #0284c7 !important;
-    border-radius: 4px !important;
-  }
-
-  /* 2. AUTO-SCALE MAIN CANVAS & VISUAL WORKSPACE */
-  :fullscreen canvas,
-  :fullscreen svg,
-  :-webkit-full-screen canvas,
-  :-webkit-full-screen svg,
-  .is-fullscreen canvas,
-  .is-fullscreen svg {
-    display: block !important;
-    object-fit: contain !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 70vh !important;
-    min-height: 280px !important;
-    flex-shrink: 0 !important;
-    margin: 4px auto !important;
-  }
-
-  /* 3. PINNED & VISIBLE CONTROLS: docked neatly with natural auto-height */
-  :fullscreen .ctl,
-  :fullscreen .controls,
-  :fullscreen .sim-controls,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .controls-bar,
-  :fullscreen .fs-bar,
-  :fullscreen .fs-topbar,
-  :fullscreen .fullscreen-overlay-controls,
-  :fullscreen .floating-controls,
-  :fullscreen .preset-chips,
-  :fullscreen .stats-bar,
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :fullscreen header,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .controls,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .controls-bar,
-  :-webkit-full-screen .fs-bar,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen .fullscreen-overlay-controls,
-  :-webkit-full-screen .floating-controls,
-  :-webkit-full-screen .preset-chips,
-  :-webkit-full-screen .stats-bar,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  :-webkit-full-screen header,
-  .is-fullscreen .ctl,
-  .is-fullscreen .controls,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .controls-bar,
-  .is-fullscreen .fs-bar,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen .fullscreen-overlay-controls,
-  .is-fullscreen .floating-controls,
-  .is-fullscreen .preset-chips,
-  .is-fullscreen .stats-bar,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout,
-  .is-fullscreen header {
-    flex-shrink: 0 !important;
-    position: relative !important;
-    z-index: 100 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
-    box-sizing: border-box !important;
-    margin: 4px auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Bottom docked toolbars */
-  :fullscreen .ctl,
-  :fullscreen .dock,
-  :fullscreen .control-panel,
-  :fullscreen .fs-bar,
-  :-webkit-full-screen .ctl,
-  :-webkit-full-screen .dock,
-  :-webkit-full-screen .control-panel,
-  :-webkit-full-screen .fs-bar,
-  .is-fullscreen .ctl,
-  .is-fullscreen .dock,
-  .is-fullscreen .control-panel,
-  .is-fullscreen .fs-bar {
-    padding: 8px 14px !important;
-    background: rgba(5, 10, 30, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 132, 199, 0.25) !important;
-  }
-
-  /* Top docked toolbars */
-  :fullscreen .sim-controls,
-  :fullscreen .fs-topbar,
-  :fullscreen header,
-  :fullscreen .stats-bar,
-  :-webkit-full-screen .sim-controls,
-  :-webkit-full-screen .fs-topbar,
-  :-webkit-full-screen header,
-  :-webkit-full-screen .stats-bar,
-  .is-fullscreen .sim-controls,
-  .is-fullscreen .fs-topbar,
-  .is-fullscreen header,
-  .is-fullscreen .stats-bar {
-    padding: 8px 14px !important;
-    background: rgba(6, 14, 34, 0.92) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  }
-
-  /* Readouts between top toolbar and simulation canvas */
-  :fullscreen .sim-readout,
-  :fullscreen .readout,
-  :-webkit-full-screen .sim-readout,
-  :-webkit-full-screen .readout,
-  .is-fullscreen .sim-readout,
-  .is-fullscreen .readout {
-    margin: 4px auto !important;
-    padding: 4px 10px !important;
-    font-size: clamp(12px, 1.2vw, 15px) !important;
-  }
-
-  /* Ensure all buttons, controls, and sliders remain visible and easily clickable */
-  :fullscreen .btn,
-  :fullscreen button,
-  :-webkit-full-screen .btn,
-  :-webkit-full-screen button,
-  .is-fullscreen .btn,
-  .is-fullscreen button {
-    font-size: clamp(11px, 1.1vw, 15px) !important;
-    padding: 6px 12px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  :fullscreen .row,
-  :-webkit-full-screen .row,
-  .is-fullscreen .row {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  :fullscreen .ctrl-group,
-  :-webkit-full-screen .ctrl-group,
-  .is-fullscreen .ctrl-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-  }
-
-  :fullscreen input[type="range"],
-  :-webkit-full-screen input[type="range"],
-  .is-fullscreen input[type="range"] {
-    max-width: 140px !important;
-    cursor: pointer !important;
-  }
-
-  :fullscreen select,
-  :-webkit-full-screen select,
-  .is-fullscreen select {
-    cursor: pointer !important;
-    font-size: clamp(11px, 1.1vw, 14px) !important;
-  }
-
-  /* Keep teacher notes and explanations visible and reachable in scrolling view */
-  :fullscreen .teacher-note,
-  :fullscreen .sim-info,
-  :fullscreen .desc,
-  :-webkit-full-screen .teacher-note,
-  :-webkit-full-screen .sim-info,
-  :-webkit-full-screen .desc,
-  .is-fullscreen .teacher-note,
-  .is-fullscreen .sim-info,
-  .is-fullscreen .desc {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
 </style>
 </head>
 <body>
+
+<button class="copy-btn" id="copyCodeBtn">📋 Copy Code</button>
+
+<header class="main-header">
+<h1>🧮 CAMBRIDGE SCHOLAR ALGEBRA EQUATIONS LAB</h1>
+<div class="sub">Interactive Balance · Solve for x · Step-by-Step · Live Animation</div>
+</header>
+
 <div class="container">
 
-  <!-- TOP TOPIC TABS -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTopic('topic-scale', this)">
-      <span>⚖️</span> Dual-Pan Balance Scale & Equation Balancer
-    </button>
-    <button class="tab-btn" onclick="switchTopic('topic-graph', this)">
-      <span>📈</span> Linear Equations & Graph Visualizer ($y = mx + b$)
-    </button>
-    <button class="tab-btn" onclick="switchTopic('topic-rules', this)">
-      <span>🧩</span> Algebraic Properties of Equality
-    </button>
+<!-- ================= MAIN TABS ================= -->
+<div class="tabs" id="topicTabs">
+  <button class="tab-btn active" data-topic="basics"><span class="icon">⚖️</span> Balance Model</button>
+  <button class="tab-btn" data-topic="linear"><span class="icon">➗</span> Linear Equations</button>
+  <button class="tab-btn" data-topic="twostep"><span class="icon">🔢</span> Two-Step Equations</button>
+  <button class="tab-btn" data-topic="brackets"><span class="icon">🔲</span> Brackets</button>
+  <button class="tab-btn" data-topic="unknown"><span class="icon">❓</span> Both Sides</button>
+</div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 1: BALANCE MODEL ==================== -->
+<!-- ============================================================= -->
+<div class="topic active" id="topic-basics"><div class="card">
+<h2>⚖️ Balance Model <small>the golden rule of equations</small></h2>
+<div class="desc">An equation is like a balanced scale. Whatever you do to one side, you must do to the other. Watch the scale tilt and balance as you perform operations!</div>
+
+<div class="section-tabs" data-topic="basics">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">Rules</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="sim">Simulation</button>
+</div>
+
+<div class="panel active" id="basics-def">
+  <h3>📖 Definition</h3>
+  <p>An <strong>equation</strong> is a mathematical statement that two expressions are equal. The <strong>balance model</strong> shows an equation as a scale: the left side must always equal the right side.</p>
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Think of a see-saw. If you add weight to one side, you must add the same to the other to keep it balanced. That is exactly what we do when solving equations!</div>
+</div>
+
+<div class="panel" id="basics-exp">
+  <h3>💡 Golden Rules of Equations</h3>
+  <ul>
+    <li><strong>Add</strong> the same number to both sides</li>
+    <li><strong>Subtract</strong> the same number from both sides</li>
+    <li><strong>Multiply</strong> both sides by the same number</li>
+    <li><strong>Divide</strong> both sides by the same number</li>
+    <li>The equation stays balanced — the solution never changes</li>
+    <li>Goal: get the variable <strong>x</strong> alone on one side</li>
+  </ul>
+</div>
+
+<div class="panel" id="basics-types">
+  <h3>🧩 Simple Examples</h3>
+  <div class="grid-3">
+    <div class="grid-item"><h4>x + 3 = 7</h4><p>Subtract 3 → x = 4</p></div>
+    <div class="grid-item"><h4>x − 5 = 2</h4><p>Add 5 → x = 7</p></div>
+    <div class="grid-item"><h4>3x = 12</h4><p>Divide by 3 → x = 4</p></div>
+    <div class="grid-item"><h4>x / 4 = 5</h4><p>Multiply by 4 → x = 20</p></div>
+    <div class="grid-item"><h4>2x + 1 = 9</h4><p>Subtract 1, ÷2 → x = 4</p></div>
+    <div class="grid-item"><h4>5x − 3 = 22</h4><p>Add 3, ÷5 → x = 5</p></div>
   </div>
+</div>
 
-  <!-- TAB 1: BALANCE SCALE LAB -->
-  <div id="topic-scale" class="tab-content active">
+<div class="panel active" id="basics-sim">
+  <h3>🎮 Interactive Balance Simulation</h3>
+  <div class="sim-box">
 
-    <!-- DEFINITION CARD -->
-    <div class="card">
-      <h2>
-        Algebra & Equation Balancing Physics
-        <small>Middle School &bull; Pre-Algebra &bull; Variables & Constants</small>
-      </h2>
-      <p class="desc">
-        An algebraic equation states that two expressions are equal ($LHS = RHS$). Like a dual-pan mechanical balance scale, whatever mathematical operation is applied to one side must be equally applied to the other side to preserve equality.
-      </p>
-
-      <div class="section-tabs">
-        <button class="section-tab active" onclick="switchSection(this, 'a-def')">Balancing Axioms</button>
-        <button class="section-tab" onclick="switchSection(this, 'a-solve')">Isolating Variables</button>
-        <button class="section-tab" onclick="switchSection(this, 'a-linear')">Linear Form $y = mx + b$</button>
-        <button class="section-tab" onclick="switchSection(this, 'a-uses')">Everyday Applications</button>
-      </div>
-
-      <div id="a-def" class="panel active">
-        <h3>Axioms of Equality</h3>
-        <ul>
-          <li><strong>Addition Property:</strong> If $a = b$, then $a + c = b + c$.</li>
-          <li><strong>Subtraction Property:</strong> If $a = b$, then $a - c = b - c$.</li>
-          <li><strong>Multiplication Property:</strong> If $a = b$, then $a \times c = b \times c$ ($c \neq 0$).</li>
-          <li><strong>Division Property:</strong> If $a = b$, then $a / c = b / c$ ($c \neq 0$).</li>
-        </ul>
-      </div>
-
-      <div id="a-solve" class="panel">
-        <h3>Step-by-Step Solving Strategy</h3>
-        <div class="formula-box">
-          Goal: Isolate $x$ on one side of the equal sign
-          <small>Example: $2x + 3 = 11 \rightarrow$ Subtract 3 from both sides: $2x = 8 \rightarrow$ Divide by 2: $x = 4$</small>
-        </div>
-      </div>
-
-      <div id="a-linear" class="panel">
-        <h3>Slope-Intercept Geometry</h3>
-        <p>In $y = mx + b$, $m$ represents the rate of change (slope) and $b$ denotes the initial value ($y$-intercept at $x=0$).</p>
-      </div>
-
-      <div id="a-uses" class="panel">
-        <h3>Real-World Utility</h3>
-        <ul>
-          <li><strong>Finance & Breakeven:</strong> Equating Revenues to Fixed Costs + Variable Costs to determine minimum sales volume.</li>
-          <li><strong>Physics (Kinematics):</strong> Rearranging $v = u + at$ to solve for acceleration $a = (v - u) / t$.</li>
-        </ul>
-      </div>
+    <div class="sim-controls">
+      <label>Left weight (a): <input type="range" id="balA" min="1" max="12" value="5"><span id="balAVal" style="color:#ffd54f;font-weight:700;width:30px;">5</span></label>
+      <label>Right weight (b): <input type="range" id="balB" min="1" max="12" value="9"><span id="balBVal" style="color:#ffd54f;font-weight:700;width:30px;">9</span></label>
     </div>
 
-    <!-- INTERACTIVE SIMULATION BOX -->
-    <div class="sim-box" id="simBox24">
-      
-      <!-- PROMINENT FULLSCREEN BUTTON -->
-      <button class="fs-btn" id="fsToggleBtn24" onclick="toggleSimFullscreen('simBox24')">
-        <span>⛶</span> Full Screen Display
-      </button>
-
-      <!-- SIMULATION CONTROLS & PERFORMANCE BAR -->
-      <div class="sim-controls">
-        <div class="ctrl-group">
-          
-          <span style="font-size:0.8rem; font-weight:800; color:#c4b5fd;">Left Pan:</span>
-          <button class="ctrl-btn btn-purple" onclick="modifyLeftX(1)">+x</button>
-          <button class="ctrl-btn btn-purple" onclick="modifyLeftX(-1)">-x</button>
-          <button class="ctrl-btn btn-amber" onclick="modifyLeftConst(1)">+1</button>
-          <button class="ctrl-btn btn-amber" onclick="modifyLeftConst(-1)">-1</button>
-
-          <span style="font-size:0.8rem; font-weight:800; color:#c4b5fd; margin-left:8px;">Right Pan:</span>
-          <button class="ctrl-btn btn-amber" onclick="modifyRightConst(1)">+1</button>
-          <button class="ctrl-btn btn-amber" onclick="modifyRightConst(-1)">-1</button>
-          <button class="ctrl-btn btn-amber" onclick="modifyRightConst(5)">+5</button>
-
-          <button class="ctrl-btn btn-emerald" onclick="solveStepByStep()">
-            ⚡ Auto-Solve Step
-          </button>
-
-          <button class="ctrl-btn btn-sky" onclick="loadEquationPreset(2, 3, 11)">2x + 3 = 11</button>
-          <button class="ctrl-btn btn-sky" onclick="loadEquationPreset(3, 2, 14)">3x + 2 = 14</button>
-          <button class="ctrl-btn btn-sky" onclick="loadEquationPreset(1, 5, 12)">x + 5 = 12</button>
-
-          <button class="ctrl-btn btn-rose" onclick="resetAlgebraSim()">↺ Reset</button>
-        </div>
-      </div>
-
-      <!-- MAIN SIMULATION CANVAS -->
-      <div class="canvas-holder">
-        <canvas id="scaleCanvas" width="1200" height="480"></canvas>
-
-
-
-      </div>
-
-      <!-- LIVE METRIC READOUT -->
-      <div class="sim-readout">
-        <span class="readout-pill" id="liveEquation">Active Equation: 2x + 3 = 11</span>
-        <span class="readout-pill" id="liveWeightCompare">Left Weight: 11 units &bull; Right Weight: 11 units</span>
-        <span class="readout-pill" id="liveBalanceState" style="color:#34d399">Scale Status: PERFECT EQUILIBRIUM (Balanced)</span>
-        <span class="readout-pill" id="liveSolution">Solution: x = 4</span>
-      </div>
-
-      <div class="teacher-note">
-        <strong>💡 Laboratory Observation:</strong> Each purple cube represents the unknown variable $x$ (currently holding the secret value $x = 4$). Notice that whenever both pans possess equal total weight, the scale sits perfectly level! Adding or removing blocks on either pan tilts the balance beam, visually proving why equations must always remain balanced on both sides!
-      </div>
-
-      <!-- FLOATING PERFORMANCE DOCK (VISIBLE DURING FULLSCREEN) -->
-      <div class="fs-bar" id="fsFloatingBar24">
-        <button class="ctrl-btn btn-purple" onclick="modifyLeftX(1)"><span>+x Left</span></button>
-        <button class="ctrl-btn btn-amber" onclick="modifyLeftConst(1)"><span>+1 Left</span></button>
-        <button class="ctrl-btn btn-amber" onclick="modifyRightConst(1)"><span>+1 Right</span></button>
-        <button class="ctrl-btn btn-emerald" onclick="solveStepByStep()"><span>⚡ Auto Solve</span></button>
-        <button class="ctrl-btn btn-sky" onclick="loadEquationPreset(2, 3, 11)"><span>2x + 3 = 11</span></button>
-        <button class="fs-exit-btn" onclick="exitSimFullscreen('simBox24')">
-          ✖ Exit Fullscreen [Esc]
-        </button>
-      </div>
-
+    <div class="sim-controls">
+      <button id="balAdd1" class="green">➕ Add 1 Both</button>
+      <button id="balSub1" class="red">➖ Sub 1 Both</button>
+      <button id="balAdd5" class="green">➕ Add 5 Both</button>
+      <button id="balSub5" class="red">➖ Sub 5 Both</button>
+      <button id="balMul2" class="purple">✖️ ×2 Both</button>
+      <button id="balDiv2" class="orange">➗ ÷2 Both</button>
+      <button id="balBalance" class="orange">⚖️ Balance It</button>
+      <button id="balReset" class="red">⟳ Reset</button>
     </div>
 
-  </div>
-
-  <!-- TAB 2: LINEAR GRAPH -->
-  <div id="topic-graph" class="tab-content">
-    <div class="card">
-      <h2>Linear Functions on the Cartesian Plane</h2>
-      <p class="desc">A linear equation $y = mx + b$ graphs as a straight line with slope $m = \frac{\Delta y}{\Delta x}$.</p>
-      <div class="grid-3">
-        <div class="grid-item">
-          <h4>Positive Slope ($m > 0$)</h4>
-          <p>Line rises from bottom-left to top-right. As $x$ increases, $y$ increases.</p>
-        </div>
-        <div class="grid-item">
-          <h4>Negative Slope ($m < 0$)</h4>
-          <p>Line falls from top-left to bottom-right. Inverse relationship.</p>
-        </div>
-        <div class="grid-item">
-          <h4>Y-Intercept ($b$)</h4>
-          <p>The coordinate $(0, b)$ where the line intersects the vertical $y$-axis.</p>
-        </div>
-      </div>
+    <div class="sim-controls">
+      <button id="balAutoTilt" class="purple">▶ Auto Tilt Animation</button>
+      <button id="balShowValues" class="green">👁️ Toggle Values</button>
+      <button id="balShowBlocks" class="orange">🧱 Toggle Blocks</button>
+      <button id="balZoomIn" class="purple">🔍 Zoom In</button>
+      <button id="balZoomOut" class="purple">🔍 Zoom Out</button>
     </div>
-  </div>
 
-  <!-- TAB 3: ALGEBRAIC RULES -->
-  <div id="topic-rules" class="tab-content">
-    <div class="card">
-      <h2>Key Algebraic Manipulations</h2>
-      <p class="desc">Common techniques for simplifying complex multi-step equations.</p>
-      <div class="grid-3">
-        <div class="grid-item">
-          <h4>Combine Like Terms</h4>
-          <p>Add coefficients of identical variable terms ($3x + 5x = 8x$).</p>
-        </div>
-        <div class="grid-item">
-          <h4>Distributive Expansion</h4>
-          <p>Multiply external factor across parentheses: $2(x + 4) = 2x + 8$.</p>
-        </div>
-        <div class="grid-item">
-          <h4>Cross-Multiplication</h4>
-          <p>For fractions $\frac{a}{b} = \frac{c}{d} \rightarrow ad = bc$.</p>
-        </div>
-      </div>
+    <div class="sim-readout" id="balReadout">⚖️ BALANCED <small>Left = 5 · Right = 9</small></div>
+    <canvas id="balCanvas" width="1100" height="480"></canvas>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#4fc3f7"></span> Left Pan</span>
+      <span><span class="dot" style="background:#ff5252"></span> Right Pan</span>
+      <span><span class="dot" style="background:#ffd54f"></span> Balance Beam</span>
+      <span><span class="dot" style="background:#4caf50"></span> Balanced State</span>
     </div>
+
+    <div class="sim-info" id="balInfo">The scale tilts when the two sides are not equal. Balance them to restore equilibrium!</div>
+
+    <div class="teacher-note"><strong>Real-Life:</strong> A see-saw, a market scale, a justice balance — all use the same principle: equal on both sides.</div>
   </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 2: LINEAR EQUATIONS ================= -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-linear"><div class="card">
+<h2>➗ Linear Equations <small>solve for x step by step</small></h2>
+<div class="desc">Watch how an equation is solved step-by-step. Each operation is applied to both sides to isolate x.</div>
+
+<div class="section-tabs" data-topic="linear">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">Method</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="sim">Simulation</button>
+</div>
+
+<div class="panel active" id="linear-def">
+  <h3>📖 Definition</h3>
+  <p>A <strong>linear equation</strong> is an equation of the form <strong>ax + b = c</strong>, where x is the unknown and a, b, c are numbers. It has exactly one solution.</p>
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Linear means "straight line" — when graphed, these equations make a straight line. The highest power of x is 1.</div>
+</div>
+
+<div class="panel" id="linear-exp">
+  <h3>💡 Method to Solve</h3>
+  <ul>
+    <li><strong>Step 1:</strong> Simplify both sides if needed</li>
+    <li><strong>Step 2:</strong> Add or subtract to move constants</li>
+    <li><strong>Step 3:</strong> Multiply or divide to isolate x</li>
+    <li><strong>Step 4:</strong> Check your answer by substitution</li>
+  </ul>
+</div>
+
+<div class="panel" id="linear-types">
+  <h3>🔢 Worked Examples</h3>
+  <div class="grid-3">
+    <div class="grid-item"><h4>x + 5 = 12</h4><p>Subtract 5 → x = 7</p></div>
+    <div class="grid-item"><h4>x − 4 = 9</h4><p>Add 4 → x = 13</p></div>
+    <div class="grid-item"><h4>4x = 20</h4><p>Divide by 4 → x = 5</p></div>
+    <div class="grid-item"><h4>x/3 = 6</h4><p>Multiply by 3 → x = 18</p></div>
+    <div class="grid-item"><h4>2x + 3 = 11</h4><p>−3 then ÷2 → x = 4</p></div>
+    <div class="grid-item"><h4>7x − 2 = 33</h4><p>+2 then ÷7 → x = 5</p></div>
+  </div>
+</div>
+
+<div class="panel active" id="linear-sim">
+  <h3>🎮 Solve Linear Equation ax + b = c</h3>
+  <div class="sim-box">
+
+    <div class="sim-controls">
+      <label>a: <input type="number" id="linA" value="2" min="1" max="9"></label>
+      <label>b: <input type="number" id="linB" value="3" min="-20" max="20"></label>
+      <label>c: <input type="number" id="linC" value="11" min="-50" max="50"></label>
+    </div>
+
+    <div class="sim-controls">
+      <button id="linNext" class="green">▶ Next Step</button>
+      <button id="linAuto" class="purple">▶▶ Auto Play</button>
+      <button id="linSolve" class="orange">⚡ Solve Instantly</button>
+      <button id="linCheck" class="green">✅ Check Answer</button>
+      <button id="linHint" class="purple">💡 Hint</button>
+      <button id="linRandom" class="orange">🎲 Random</button>
+      <button id="linReset" class="red">⟳ Reset</button>
+    </div>
+
+    <div class="sim-controls">
+      <button id="linZoomIn" class="purple">🔍 Zoom In</button>
+      <button id="linZoomOut" class="purple">🔍 Zoom Out</button>
+      <button id="linToggleGraph" class="green">📈 Toggle Graph</button>
+      <button id="linToggleGrid" class="orange">📐 Toggle Grid</button>
+    </div>
+
+    <div class="eq-display">
+      <div class="step" id="linEqStep">2x + 3 = 11</div>
+      <div class="note" id="linEqNote">Click "Next Step" to begin solving</div>
+    </div>
+
+    <div class="sim-readout" id="linReadout">STEP 0 / 3 <small>Ready to solve</small></div>
+    <canvas id="linCanvas" width="1100" height="480"></canvas>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#4fc3f7"></span> Equation Steps</span>
+      <span><span class="dot" style="background:#ff5252"></span> Constant term</span>
+      <span><span class="dot" style="background:#ffd54f"></span> Coefficient of x</span>
+      <span><span class="dot" style="background:#4caf50"></span> Solution</span>
+    </div>
+
+    <div class="sim-info" id="linInfo">Each step follows the golden rule: do to one side what you do to the other.</div>
+
+    <div class="teacher-note"><strong>Real-Life:</strong> Linear equations solve problems like "If 2 pens and 3 pencils cost 11 rupees, and each pencil is 1 rupee, what's the cost of a pen?"</div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 3: TWO-STEP EQUATIONS =============== -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-twostep"><div class="card">
+<h2>🔢 Two-Step Equations <small>two operations to isolate x</small></h2>
+<div class="desc">Two-step equations require two inverse operations to solve. Learn the order: undo addition/subtraction first, then multiplication/division.</div>
+
+<div class="section-tabs" data-topic="twostep">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">Order</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="sim">Simulation</button>
+</div>
+
+<div class="panel active" id="twostep-def">
+  <h3>📖 Definition</h3>
+  <p>A <strong>two-step equation</strong> needs exactly two operations to solve. Example: <strong>3x + 4 = 19</strong>. You must subtract 4, then divide by 3.</p>
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Always undo addition/subtraction FIRST (the "outer" operation), then multiplication/division (the "inner" operation).</div>
+</div>
+
+<div class="panel" id="twostep-exp">
+  <h3>💡 Order of Operations (Reverse)</h3>
+  <ul>
+    <li><strong>Step 1:</strong> Undo + or − (move constant to other side)</li>
+    <li><strong>Step 2:</strong> Undo × or ÷ (isolate x)</li>
+    <li><strong>Step 3:</strong> Check by substituting back</li>
+    <li>Think <strong>SADMEG</strong>: Subtract, Add, Divide, Multiply, Exponents, Group</li>
+  </ul>
+</div>
+
+<div class="panel" id="twostep-types">
+  <h3>🔢 Worked Examples</h3>
+  <div class="grid-3">
+    <div class="grid-item"><h4>2x + 5 = 13</h4><p>−5 → 2x = 8 → x = 4</p></div>
+    <div class="grid-item"><h4>3x − 7 = 14</h4><p>+7 → 3x = 21 → x = 7</p></div>
+    <div class="grid-item"><h4>5x + 2 = 27</h4><p>−2 → 5x = 25 → x = 5</p></div>
+    <div class="grid-item"><h4>4x − 6 = 18</h4><p>+6 → 4x = 24 → x = 6</p></div>
+    <div class="grid-item"><h4>x/2 + 3 = 8</h4><p>−3 → x/2 = 5 → x = 10</p></div>
+    <div class="grid-item"><h4>x/4 − 1 = 4</h4><p>+1 → x/4 = 5 → x = 20</p></div>
+  </div>
+</div>
+
+<div class="panel active" id="twostep-sim">
+  <h3>🎮 Two-Step Equation Solver</h3>
+  <div class="sim-box">
+
+    <div class="sim-controls">
+      <label>Equation type:
+        <select id="tsType">
+          <option value="plus">ax + b = c</option>
+          <option value="minus">ax − b = c</option>
+          <option value="fracPlus">x/a + b = c</option>
+          <option value="fracMinus">x/a − b = c</option>
+        </select>
+      </label>
+      <label>a: <input type="number" id="tsA" value="3" min="1" max="12"></label>
+      <label>b: <input type="number" id="tsB" value="4" min="1" max="20"></label>
+      <label>c: <input type="number" id="tsC" value="19" min="-50" max="100"></label>
+    </div>
+
+    <div class="sim-controls">
+      <button id="tsStep1" class="green">▶ Step 1: Undo +/−</button>
+      <button id="tsStep2" class="orange">▶ Step 2: Undo ×/÷</button>
+      <button id="tsAuto" class="purple">▶▶ Auto Solve</button>
+      <button id="tsCheck" class="green">✅ Check</button>
+      <button id="tsHint" class="purple">💡 Hint</button>
+      <button id="tsRandom" class="orange">🎲 Random</button>
+      <button id="tsReset" class="red">⟳ Reset</button>
+    </div>
+
+    <div class="sim-controls">
+      <button id="tsShowVisual" class="green">🧱 Visual Blocks</button>
+      <button id="tsShowSteps" class="orange">📝 Show All Steps</button>
+      <button id="tsAnimate" class="purple">✨ Animate</button>
+    </div>
+
+    <div class="eq-display">
+      <div class="step" id="tsEqStep">3x + 4 = 19</div>
+      <div class="note" id="tsEqNote">Choose an operation to begin</div>
+    </div>
+
+    <div class="sim-readout" id="tsReadout">TWO-STEP EQUATION <small>Click Step 1 to start</small></div>
+    <canvas id="tsCanvas" width="1100" height="480"></canvas>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#4fc3f7"></span> Current Step</span>
+      <span><span class="dot" style="background:#ff5252"></span> Constants</span>
+      <span><span class="dot" style="background:#4caf50"></span> Variable</span>
+    </div>
+
+    <div class="sim-info" id="tsInfo">Follow the steps carefully: undo the constant first, then the coefficient.</div>
+
+    <div class="teacher-note"><strong>Real-Life:</strong> Taxi fare = base + (rate × km). If fare is 19 and base is 4, how many km did you travel?</div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 4: BRACKETS ========================= -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-brackets"><div class="card">
+<h2>🔲 Equations with Brackets <small>expand then solve</small></h2>
+<div class="desc">When equations contain brackets, expand first using the distributive law, then solve.</div>
+
+<div class="section-tabs" data-topic="brackets">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">Distributive Law</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="sim">Simulation</button>
+</div>
+
+<div class="panel active" id="brackets-def">
+  <h3>📖 Definition</h3>
+  <p>An equation with <strong>brackets</strong> looks like <strong>a(x + b) = c</strong>. First expand the bracket, then solve.</p>
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Brackets are like a shopping bag — everything inside must be multiplied by the number outside.</div>
+</div>
+
+<div class="panel" id="brackets-exp">
+  <h3>💡 Distributive Law</h3>
+  <ul>
+    <li><strong>a(b + c) = ab + ac</strong></li>
+    <li><strong>a(b − c) = ab − ac</strong></li>
+    <li>Multiply EVERY term inside by the outside number</li>
+    <li>Watch out for negative signs!</li>
+    <li>After expanding, solve like a normal linear equation</li>
+  </ul>
+</div>
+
+<div class="panel" id="brackets-types">
+  <h3>🔢 Worked Examples</h3>
+  <div class="grid-3">
+    <div class="grid-item"><h4>2(x + 3) = 14</h4><p>2x + 6 = 14 → x = 4</p></div>
+    <div class="grid-item"><h4>3(x − 2) = 9</h4><p>3x − 6 = 9 → x = 5</p></div>
+    <div class="grid-item"><h4>4(x + 1) = 20</h4><p>4x + 4 = 20 → x = 4</p></div>
+    <div class="grid-item"><h4>5(x − 3) = 10</h4><p>5x − 15 = 10 → x = 5</p></div>
+    <div class="grid-item"><h4>2(3x + 1) = 20</h4><p>6x + 2 = 20 → x = 3</p></div>
+    <div class="grid-item"><h4>3(2x − 4) = 18</h4><p>6x − 12 = 18 → x = 5</p></div>
+  </div>
+</div>
+
+<div class="panel active" id="brackets-sim">
+  <h3>🎮 Bracket Equation Simulator</h3>
+  <div class="sim-box">
+
+    <div class="sim-controls">
+      <label>a: <input type="number" id="brA" value="2" min="1" max="9"></label>
+      <label>Sign:
+        <select id="brSign">
+          <option value="+">+</option>
+          <option value="-">−</option>
+        </select>
+      </label>
+      <label>b: <input type="number" id="brB" value="3" min="1" max="15"></label>
+      <label>c: <input type="number" id="brC" value="14" min="-50" max="80"></label>
+    </div>
+
+    <div class="sim-controls">
+      <button id="brExpand" class="green">🔓 Expand Bracket</button>
+      <button id="brStep1" class="green">▶ Undo Constant</button>
+      <button id="brStep2" class="orange">▶ Divide by a</button>
+      <button id="brAuto" class="purple">▶▶ Auto Solve</button>
+      <button id="brCheck" class="green">✅ Check</button>
+      <button id="brRandom" class="orange">🎲 Random</button>
+      <button id="brReset" class="red">⟳ Reset</button>
+    </div>
+
+    <div class="sim-controls">
+      <button id="brShowArea" class="purple">🧱 Area Model</button>
+      <button id="brShowDist" class="orange">📐 Show Distribution</button>
+      <button id="brZoomIn" class="purple">🔍 Zoom In</button>
+      <button id="brZoomOut" class="purple">🔍 Zoom Out</button>
+    </div>
+
+    <div class="eq-display">
+      <div class="step" id="brEqStep">2(x + 3) = 14</div>
+      <div class="note" id="brEqNote">Click "Expand Bracket" to begin</div>
+    </div>
+
+    <div class="sim-readout" id="brReadout">BRACKET EQUATION <small>Ready to expand</small></div>
+    <canvas id="brCanvas" width="1100" height="480"></canvas>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#4fc3f7"></span> Bracket</span>
+      <span><span class="dot" style="background:#ff5252"></span> Expanded terms</span>
+      <span><span class="dot" style="background:#4caf50"></span> Solution</span>
+    </div>
+
+    <div class="sim-info" id="brInfo">Expand first, then solve using inverse operations.</div>
+
+    <div class="teacher-note"><strong>Real-Life:</strong> Buying 2 packs each containing (x + 3) items — total is 2x + 6 items.</div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============================================================= -->
+<!-- ================ TOPIC 5: UNKNOWN BOTH SIDES =============== -->
+<!-- ============================================================= -->
+<div class="topic" id="topic-unknown"><div class="card">
+<h2>❓ Unknown on Both Sides <small>collect x terms together</small></h2>
+<div class="desc">When x appears on both sides, move all x terms to one side and all constants to the other.</div>
+
+<div class="section-tabs" data-topic="unknown">
+  <button class="section-tab active" data-section="def">Definition</button>
+  <button class="section-tab" data-section="exp">Strategy</button>
+  <button class="section-tab" data-section="types">Examples</button>
+  <button class="section-tab" data-section="sim">Simulation</button>
+</div>
+
+<div class="panel active" id="unknown-def">
+  <h3>📖 Definition</h3>
+  <p>Some equations have the unknown on <strong>both sides</strong>: <strong>ax + b = cx + d</strong>. We must gather all x terms on one side.</p>
+  <div class="teacher-note"><strong>Teacher's Note:</strong> Think of it as moving all the "x boxes" to one side of the balance and all the "number boxes" to the other.</div>
+</div>
+
+<div class="panel" id="unknown-exp">
+  <h3>💡 Strategy</h3>
+  <ul>
+    <li><strong>Step 1:</strong> Subtract cx from both sides (move x terms left)</li>
+    <li><strong>Step 2:</strong> Subtract b from both sides (move constants right)</li>
+    <li><strong>Step 3:</strong> Divide by (a − c) to isolate x</li>
+    <li><strong>Step 4:</strong> Check your solution</li>
+    <li>Tip: Always move the SMALLER x coefficient to avoid negatives</li>
+  </ul>
+</div>
+
+<div class="panel" id="unknown-types">
+  <h3>🔢 Worked Examples</h3>
+  <div class="grid-3">
+    <div class="grid-item"><h4>5x + 2 = 3x + 10</h4><p>2x = 8 → x = 4</p></div>
+    <div class="grid-item"><h4>4x − 3 = 2x + 7</h4><p>2x = 10 → x = 5</p></div>
+    <div class="grid-item"><h4>7x + 1 = 4x + 13</h4><p>3x = 12 → x = 4</p></div>
+    <div class="grid-item"><h4>6x − 5 = 3x + 7</h4><p>3x = 12 → x = 4</p></div>
+    <div class="grid-item"><h4>8x + 3 = 5x + 18</h4><p>3x = 15 → x = 5</p></div>
+    <div class="grid-item"><h4>9x − 4 = 4x + 16</h4><p>5x = 20 → x = 4</p></div>
+  </div>
+</div>
+
+<div class="panel active" id="unknown-sim">
+  <h3>🎮 Both Sides Equation Solver</h3>
+  <div class="sim-box">
+
+    <div class="sim-controls">
+      <label>a (left x coeff): <input type="number" id="unkA" value="5" min="2" max="12"></label>
+      <label>b (left constant): <input type="number" id="unkB" value="2" min="-20" max="20"></label>
+      <label>c (right x coeff): <input type="number" id="unkC" value="3" min="1" max="11"></label>
+      <label>d (right constant): <input type="number" id="unkD" value="10" min="-20" max="30"></label>
+    </div>
+
+    <div class="sim-controls">
+      <button id="unkStep1" class="green">▶ Move x Terms</button>
+      <button id="unkStep2" class="orange">▶ Move Constants</button>
+      <button id="unkStep3" class="purple">▶ Divide</button>
+      <button id="unkAuto" class="purple">▶▶ Auto Solve</button>
+      <button id="unkCheck" class="green">✅ Check</button>
+      <button id="unkHint" class="orange">💡 Hint</button>
+      <button id="unkRandom" class="orange">🎲 Random</button>
+      <button id="unkReset" class="red">⟳ Reset</button>
+    </div>
+
+    <div class="sim-controls">
+      <button id="unkShowBalance" class="green">⚖️ Balance View</button>
+      <button id="unkShowGraph" class="purple">📈 Graph View</button>
+      <button id="unkShowSteps" class="orange">📝 All Steps</button>
+    </div>
+
+    <div class="eq-display">
+      <div class="step" id="unkEqStep">5x + 2 = 3x + 10</div>
+      <div class="note" id="unkEqNote">Click "Move x Terms" to begin</div>
+    </div>
+
+    <div class="sim-readout" id="unkReadout">BOTH SIDES <small>Collect x terms first</small></div>
+    <canvas id="unkCanvas" width="1100" height="480"></canvas>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#ff5252"></span> Left side</span>
+      <span><span class="dot" style="background:#4caf50"></span> Right side</span>
+      <span><span class="dot" style="background:#ffd54f"></span> Solution x</span>
+    </div>
+
+    <div class="sim-info" id="unkInfo">Collect all x terms on one side, then solve.</div>
+
+    <div class="teacher-note"><strong>Real-Life:</strong> Two phone plans: Plan A = 5x + 2, Plan B = 3x + 10. When are they equal?</div>
+  </div>
+</div>
+</div></div>
 
 </div>
 
-<script>
-// STATE
-let leftX = 2;
-let leftConst = 3;
-let rightConst = 11;
-const xValue = 4; // True weight of x
-
-let currentTiltAngle = 0;
-let targetTiltAngle = 0;
-
-const canvas = document.getElementById('scaleCanvas');
-const ctx = canvas.getContext('2d');
-
-function resizeScaleCanvas() {
-  const holder = canvas.parentElement;
-  canvas.width = holder.clientWidth || 1200;
-  canvas.height = holder.clientHeight || 480;
-  drawBalanceScale();
-}
-window.addEventListener('resize', resizeScaleCanvas);
-
-// CONTROLS
-function modifyLeftX(delta) {
-  leftX = Math.max(0, Math.min(6, leftX + delta));
-  updateSimulation();
-}
-
-function modifyLeftConst(delta) {
-  leftConst = Math.max(0, Math.min(20, leftConst + delta));
-  updateSimulation();
-}
-
-function modifyRightConst(delta) {
-  rightConst = Math.max(0, Math.min(25, rightConst + delta));
-  updateSimulation();
-}
-
-function loadEquationPreset(lx, lc, rc) {
-  leftX = lx;
-  leftConst = lc;
-  rightConst = rc;
-  updateSimulation();
-}
-
-function solveStepByStep() {
-  // If left has constant, subtract it from both sides
-  if (leftConst > 0 && rightConst >= leftConst) {
-    rightConst -= leftConst;
-    leftConst = 0;
-    updateSimulation();
-    return;
-  }
-  // If left has multiple x, divide
-  if (leftX > 1 && rightConst % leftX === 0) {
-    rightConst = rightConst / leftX;
-    leftX = 1;
-    updateSimulation();
-    return;
-  }
-  // If already x = answer, load a new preset
-  loadEquationPreset(2, 3, 11);
-}
-
-function resetAlgebraSim() {
-  loadEquationPreset(2, 3, 11);
-}
-
-function updateSimulation() {
-  const leftWeight = (leftX * xValue) + leftConst;
-  const rightWeight = rightConst;
-  const diff = rightWeight - leftWeight;
-
-  // Compute tilt target angle (-0.25 to +0.25 rad)
-  targetTiltAngle = Math.max(-0.25, Math.min(0.25, diff * 0.04));
-
-  // Update readouts
-  const leftEqText = `${leftX > 0 ? (leftX === 1 ? 'x' : `${leftX}x`) : ''}${leftConst > 0 ? (leftX > 0 ? ` + ${leftConst}` : `${leftConst}`) : ''}` || '0';
-  document.getElementById('liveEquation').innerText = `Equation: ${leftEqText} = ${rightConst}`;
-  document.getElementById('liveWeightCompare').innerText = `Left Weight: ${leftWeight} units • Right Weight: ${rightWeight} units`;
-
-  const statusEl = document.getElementById('liveBalanceState');
-  if (diff === 0) {
-    statusEl.innerText = 'Scale Status: PERFECT EQUILIBRIUM (Balanced)';
-    statusEl.style.color = '#34d399';
-  } else if (diff > 0) {
-    statusEl.innerText = 'Scale Status: Tilted RIGHT (Right side heavier)';
-    statusEl.style.color = '#fbbf24';
-  } else {
-    statusEl.innerText = 'Scale Status: Tilted LEFT (Left side heavier)';
-    statusEl.style.color = '#fbbf24';
-  }
-
-  // Solution
-  if (leftX > 0) {
-    const sol = (rightConst - leftConst) / leftX;
-    document.getElementById('liveSolution').innerText = `Solved: x = ${Number.isInteger(sol) ? sol : sol.toFixed(2)}`;
-  } else {
-    document.getElementById('liveSolution').innerText = leftConst === rightConst ? 'Identity (Infinite solutions)' : 'No solution';
-  }
-}
-
-// DRAW BALANCE SCALE
-function drawBalanceScale() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const w = canvas.width;
-  const h = canvas.height;
-
-  // Smooth tilt interpolation
-  currentTiltAngle += (targetTiltAngle - currentTiltAngle) * 0.12;
-
-  const fulcrumX = w / 2;
-  const fulcrumY = h * 0.65;
-  const beamLength = Math.min(w * 0.65, 520);
-  const halfBeam = beamLength / 2;
-
-  // Fulcrum Base
-  ctx.fillStyle = '#334155';
-  ctx.beginPath();
-  ctx.moveTo(fulcrumX, fulcrumY - 20);
-  ctx.lineTo(fulcrumX - 45, fulcrumY + 80);
-  ctx.lineTo(fulcrumX + 45, fulcrumY + 80);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#64748b';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Fulcrum Pivot Pin
-  ctx.beginPath();
-  ctx.arc(fulcrumX, fulcrumY - 20, 8, 0, Math.PI * 2);
-  ctx.fillStyle = '#fde047';
-  ctx.fill();
-
-  // Rotating Beam
-  ctx.save();
-  ctx.translate(fulcrumX, fulcrumY - 20);
-  ctx.rotate(currentTiltAngle);
-
-  // Beam bar
-  ctx.fillStyle = '#7c3aed';
-  ctx.fillRect(-halfBeam, -8, beamLength, 16);
-  ctx.strokeStyle = '#c4b5fd';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(-halfBeam, -8, beamLength, 16);
-
-  // Left & Right Suspension Hook Pins
-  const leftHookX = -halfBeam + 15;
-  const rightHookX = halfBeam - 15;
-
-  ctx.restore();
-
-  // Calculate World Coordinates for Pan Suspensions
-  const cosT = Math.cos(currentTiltAngle);
-  const sinT = Math.sin(currentTiltAngle);
-
-  const leftWorldX = fulcrumX + (leftHookX * cosT);
-  const leftWorldY = (fulcrumY - 20) + (leftHookX * sinT);
-
-  const rightWorldX = fulcrumX + (rightHookX * cosT);
-  const rightWorldY = (fulcrumY - 20) + (rightHookX * sinT);
-
-  // Draw Hanging Strings & Pans
-  const panDrop = 90;
-  drawPan(leftWorldX, leftWorldY + panDrop, leftX, leftConst, 'Left Pan');
-  drawPan(rightWorldX, rightWorldY + panDrop, 0, rightConst, 'Right Pan');
-
-  requestAnimationFrame(drawBalanceScale);
-}
-
-// DRAW INDIVIDUAL PAN
-function drawPan(x, y, xCount, constCount, label) {
-  // Suspension Strings
-  ctx.strokeStyle = 'rgba(167, 139, 250, 0.7)';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(x - 55, y);
-  ctx.lineTo(x, y - 90);
-  ctx.lineTo(x + 55, y);
-  ctx.stroke();
-
-  // Pan Dish
-  ctx.fillStyle = '#1e1b4b';
-  ctx.beginPath();
-  ctx.ellipse(x, y, 65, 14, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#a78bfa';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-
-  // Draw Blocks on Pan
-  // 1. Draw Variable x Cubes (Purple)
-  for (let i = 0; i < xCount; i++) {
-    const bx = x - 40 + (i * 22);
-    const by = y - 30;
-    ctx.fillStyle = '#7c3aed';
-    ctx.fillRect(bx, by, 20, 20);
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(bx, by, 20, 20);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('x', bx + 10, by + 10);
-  }
-
-  // 2. Draw Constant 1 Units (Gold Balls)
-  const startConstX = x - 45;
-  for (let c = 0; c < constCount; c++) {
-    const row = Math.floor(c / 6);
-    const col = c % 6;
-    const cx = startConstX + (col * 16);
-    const cy = y - 10 - (row * 16);
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.fillStyle = '#f59e0b';
-    ctx.fill();
-    ctx.strokeStyle = '#fde047';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  // Pan Label
-  ctx.fillStyle = '#c4b5fd';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(label, x, y + 26);
-}
-
-// FULLSCREEN HANDLER
-function toggleSimFullscreen(boxId) {
-  try {
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: "GENZ_SIM_REQUEST_FULLSCREEN", simFile: window.location.pathname }, "*");
-    }
-  } catch(e) {}
-  const box = document.getElementById(boxId);
-  if (!document.fullscreenElement && !box.classList.contains("is-fullscreen")) {
-    const el = document.documentElement || box;
-    if (el.requestFullscreen) {
-      el.requestFullscreen().then(() => { resizeScaleCanvas(); }).catch(() => {
-        box.classList.add("is-fullscreen");
-        resizeScaleCanvas();
-      });
-    } else if (box.requestFullscreen) {
-      box.requestFullscreen().then(() => { resizeScaleCanvas(); }).catch(() => {
-        box.classList.add("is-fullscreen");
-        resizeScaleCanvas();
-      });
-    } else {
-      box.classList.add("is-fullscreen");
-      resizeScaleCanvas();
-    }
-  } else {
-    exitSimFullscreen(boxId);
-  }
-}
-
-function exitSimFullscreen(boxId) {
-  const box = document.getElementById(boxId);
-  if (document.fullscreenElement) {
-    document.exitFullscreen().catch(() => {});
-  }
-  box.classList.remove('is-fullscreen');
-  setTimeout(resizeScaleCanvas, 100);
-}
-
-document.addEventListener('fullscreenchange', () => {
-  const box = document.getElementById('simBox24');
-  if (!document.fullscreenElement) {
-    box.classList.remove('is-fullscreen');
-  }
-  setTimeout(resizeScaleCanvas, 100);
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    exitSimFullscreen('simBox24');
-  }
-});
-
-// TOP TABS NAVIGATION
-function switchTopic(topicId, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(topicId).classList.add('active');
-}
-
-function switchSection(btn, panelId) {
-  const card = btn.closest('.card');
-  card.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
-  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId).classList.add('active');
-}
-
-// INIT
-resizeScaleCanvas();
-updateSimulation();
-drawBalanceScale();
-</script>
+<footer class="main-footer">
+<span class="highlight">Muhammad Imran Khan</span> · MSc (Computer Science) · Regional Manager Sahiwal<br>
+Cambridge Scholar EdTech Schools Program · <span class="highlight">CANTAB PUBLISHER</span>
+</footer>
 
 <script>
-/* Legacy blueprint fullscreen replaced by unified fullscreen engine */
-</script>
+(function(){
+'use strict';
 
-
-
-
-
-<!-- ================= FULLSCREEN ENGINE CONTROLLER ================= -->
-<script id="genz-simulation-fullscreen-engine">
-(function() {
-  'use strict';
-
-  function findSimulationRootContainer(triggerEl) {
-    if (triggerEl) {
-      if (typeof triggerEl === "string") {
-        var cleanId = triggerEl.replace(/^fs-?/, "");
-        var byId = document.getElementById(cleanId) ||
-                   document.getElementById(triggerEl) ||
-                   document.getElementById(cleanId + "SimBox") ||
-                   document.getElementById("box" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1)) ||
-                   document.getElementById("box" + cleanId) ||
-                   document.getElementById("simBox" + cleanId) ||
-                   document.getElementById("sim" + cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-        if (byId) return byId;
-      }
-      if (triggerEl.nodeType === 1) {
-        if (triggerEl.dataset && triggerEl.dataset.fs) {
-          var targetByFs = document.getElementById(triggerEl.dataset.fs);
-          if (targetByFs) return targetByFs;
-        }
-        if (triggerEl.dataset && triggerEl.dataset.target) {
-          var cleanTargetId = triggerEl.dataset.target.replace(/^fs-?/, "");
-          var targetByData = document.getElementById(cleanTargetId) || document.getElementById(triggerEl.dataset.target);
-          if (targetByData) return targetByData;
-        }
-        var found = triggerEl.closest(
-          ".sim-box, .sim-stage, .simulation, #simContainer, #sim, .main-stage, .stage, .lab, .sim, .card-board, .card, .container"
-        );
-        if (found && found !== document.body && found !== document.documentElement) {
-          return found;
-        }
-      }
-    }
-    var candidate = document.querySelector(".sim-box") ||
-                    document.querySelector(".sim-stage") ||
-                    document.getElementById("simContainer") ||
-                    document.getElementById("sim") ||
-                    document.querySelector(".main-stage") ||
-                    document.querySelector(".stage") ||
-                    document.querySelector(".lab") ||
-                    document.querySelector(".card-board") ||
-                    document.querySelector(".simulation") ||
-                    document.querySelector(".sim") ||
-                    document.querySelector(".simulation-wrapper") ||
-                    document.body;
-    return candidate;
-  }
-
-  function toggleSimulationFullscreen(triggerEl) {
-    try {
-      if (!document.fullscreenElement) {
-        var container = findSimulationRootContainer(triggerEl);
-        if (!container) container = document.body;
-
-        container.classList.add("simulation-wrapper");
-        container.classList.add("is-fullscreen");
-        container.setAttribute("data-is-fullscreen", "true");
-        document.documentElement.classList.add("in-fullscreen-mode");
-        document.body.classList.add("in-fullscreen-mode");
-
-        if (container.requestFullscreen) {
-          container.requestFullscreen().catch(function(err) {
-            console.error("Fullscreen request failed on container:", err);
-            if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch(function(e) { console.error(e); });
-            } else if (document.body && document.body.requestFullscreen) {
-              document.body.requestFullscreen().catch(function(e) { console.error(e); });
-            }
-          });
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function(err) {
-            console.error("Exit fullscreen error:", err);
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Fullscreen toggle error:", err);
-    }
-  }
-
-  window.toggleFullscreen = function(target) {
-    toggleSimulationFullscreen(target || this);
-  };
-  window.toggleSimFullscreen = function(boxId) {
-    var el = boxId ? document.getElementById(boxId) : this;
-    toggleSimulationFullscreen(el || boxId);
-  };
-  window.toggleFs = function() {
-    toggleSimulationFullscreen(this);
-  };
-  window.openFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) {
-        ov.classList.remove("active");
-        ov.style.display = "none";
-      }
-      var clean = id.replace(/^fs-?/, "");
-      var target = document.getElementById(clean) ||
-                   document.getElementById(clean + "SimBox") ||
-                   document.getElementById("box" + clean.charAt(0).toUpperCase() + clean.slice(1)) ||
-                   document.getElementById("box" + clean) ||
-                   document.getElementById("simBox" + clean) ||
-                   document.getElementById("t-" + clean) ||
-                   document.querySelector("[data-topic=\"" + clean + "\"]") ||
-                   document.getElementById(id);
-      toggleSimulationFullscreen(target || clean);
-      return;
-    }
-    toggleSimulationFullscreen(this);
-  };
-  window.launchFullscreen = function(topicId) {
-    window.openFullscreen(topicId);
-  };
-  window.closeFullscreen = function(id) {
-    if (id) {
-      var ov = document.getElementById(id);
-      if (ov) ov.classList.remove("active");
-    }
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-  window.exitSimFullscreen = function() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(function() {});
-    }
-  };
-
-  function resizeAndRedrawSimulationCanvases() {
-    window.dispatchEvent(new Event("resize"));
-
-    document.querySelectorAll("canvas").forEach(function(cv) {
-      try {
-        var rect = cv.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          if (cv.width === 0 || cv.height === 0) {
-            cv.width = rect.width;
-            cv.height = rect.height;
-          }
-        }
-      } catch(e) {}
-    });
-
-    var redrawFns = [
-      "resize", "onResize", "onWindowResize", "resizeCanvas",
-      "draw", "render", "animate", "redraw", "update", "drawCanvas",
-      "drawBohrModel", "drawScaleCanvas", "drawTitrationCanvas",
-      "resizeMeasureCanvas", "updateSimulation", "drawScene", "drawOrbit",
-      "drawWaves", "drawField", "drawCircuit", "drawGenetics", "updateCanvasSize"
-    ];
-    redrawFns.forEach(function(fn) {
-      if (typeof window[fn] === "function") {
-        try { window[fn](); } catch(e) {}
-      }
-    });
-
-    if (window.camera && window.renderer) {
-      try {
-        var rw = window.innerWidth;
-        var rh = window.innerHeight;
-        window.camera.aspect = rw / rh;
-        if (window.camera.updateProjectionMatrix) window.camera.updateProjectionMatrix();
-        window.renderer.setSize(rw, rh);
-      } catch(e) {}
-    }
-  }
-
-  document.addEventListener("fullscreenchange", function() {
-    var isFs = !!document.fullscreenElement;
-    if (isFs) {
-      document.documentElement.classList.add("in-fullscreen-mode");
-      document.body.classList.add("in-fullscreen-mode");
-      if (document.fullscreenElement) {
-        document.fullscreenElement.classList.add("is-fullscreen");
-        document.fullscreenElement.classList.add("simulation-wrapper");
-        document.fullscreenElement.setAttribute("data-is-fullscreen", "true");
-      }
-    } else {
-      document.documentElement.classList.remove("in-fullscreen-mode");
-      document.body.classList.remove("in-fullscreen-mode");
-      document.querySelectorAll(".is-fullscreen, [data-is-fullscreen]").forEach(function(el) {
-        el.classList.remove("is-fullscreen");
-        el.removeAttribute("data-is-fullscreen");
-      });
-    }
-
-    var fsButtons = document.querySelectorAll(
-      ".b-fs, .b-exit, [data-role=\"fs-btn\"], .fs-btn, .btn-fs, .fullscreen-btn, #bFs, #fsExitBtn, .fs-exit, #btnFullscreen, #fullscreenBtn, [data-fs], #psFsBtn, #fsToggleBtn, [id*=\"fsToggleBtn\"], #fsBtn, #btnFsMoon, #seFsBtn, #dnFsBtn, #waterFsBtn, #lightFullscreenBtn, #pressureFullscreenBtn, #soundFullscreenBtn"
-    );
-    fsButtons.forEach(function(btn) {
-      if (btn.classList.contains("fs-exit-btn") || btn.classList.contains("fs-exit")) {
-        return;
-      }
-      if (isFs) {
-        btn.innerHTML = "✕ Exit Fullscreen";
-        btn.classList.add("is-fullscreen-active");
-      } else {
-        btn.innerHTML = "⛶ Fullscreen";
-        btn.classList.remove("is-fullscreen-active");
-      }
-    });
-
-    resizeAndRedrawSimulationCanvases();
-    setTimeout(resizeAndRedrawSimulationCanvases, 50);
-    setTimeout(resizeAndRedrawSimulationCanvases, 150);
-    setTimeout(resizeAndRedrawSimulationCanvases, 300);
+/* =================================================================
+   COPY BUTTON
+   ================================================================= */
+document.getElementById('copyCodeBtn').addEventListener('click',function(){
+  const code=document.documentElement.outerHTML;
+  navigator.clipboard.writeText(code).then(()=>{
+    this.textContent='✅ Copied!';this.classList.add('copied');
+    setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=code;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    this.textContent='✅ Copied!';this.classList.add('copied');
+    setTimeout(()=>{this.textContent='📋 Copy Code';this.classList.remove('copied')},2000);
   });
+});
 
-  window.addEventListener("resize", resizeAndRedrawSimulationCanvases);
+/* =================================================================
+   TABS
+   ================================================================= */
+const topicTabs=document.querySelectorAll('.tab-btn');
+const topics={
+  basics:document.getElementById('topic-basics'),
+  linear:document.getElementById('topic-linear'),
+  twostep:document.getElementById('topic-twostep'),
+  brackets:document.getElementById('topic-brackets'),
+  unknown:document.getElementById('topic-unknown')
+};
+topicTabs.forEach(btn=>btn.addEventListener('click',function(){
+  topicTabs.forEach(b=>b.classList.remove('active'));
+  this.classList.add('active');
+  const topic=this.dataset.topic;
+  Object.keys(topics).forEach(k=>topics[k].classList.toggle('active',k===topic));
+}));
 
-  document.addEventListener("click", function(e) {
-    var btn = e.target.closest(
-      "button.b-fs, button.b-exit, button[data-role=\"fs-btn\"], button.fs-btn, button.btn-fs, button.fullscreen-btn, button#bFs, button#fsExitBtn, button.fs-exit, button#btnFullscreen, button#fullscreenBtn, button[data-fs], button#psFsBtn, button#fsToggleBtn, button[id*=\"fsToggleBtn\"], button#fsBtn, button#btnFsMoon, button#seFsBtn, button#dnFsBtn, button#waterFsBtn, button#lightFullscreenBtn, button#pressureFullscreenBtn, button#soundFullscreenBtn, button.icon-btn[onclick*=\"toggleSimFullscreen\"], button[onclick*=\"openFullscreen\"], button[onclick*=\"toggleFullscreen\"], button[onclick*=\"toggleFs\"], button[onclick*=\"toggleSimFullscreen\"]"
-    );
-    if (btn) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleSimulationFullscreen(btn);
+document.querySelectorAll('.section-tabs').forEach(group=>{
+  const topic=group.dataset.topic;
+  const btns=group.querySelectorAll('.section-tab');
+  btns.forEach(btn=>btn.addEventListener('click',function(){
+    btns.forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const section=this.dataset.section;
+    const parent=this.closest('.card');
+    parent.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===topic+'-'+section));
+  }));
+});
+
+/* =================================================================
+   HELPER: GRID BACKGROUND
+   ================================================================= */
+function drawGrid(ctx,w,h,step=40){
+  ctx.fillStyle='#040e1a';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(255,255,255,.045)';
+  ctx.lineWidth=1;
+  for(let x=0;x<w;x+=step){
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();
+  }
+  for(let y=0;y<h;y+=step){
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+  }
+  // subtle glowing center
+  const g=ctx.createRadialGradient(w/2,h/2,50,w/2,h/2,Math.max(w,h)/2);
+  g.addColorStop(0,'rgba(79,195,247,.05)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,w,h);
+}
+
+/* =================================================================
+   TOPIC 1: BALANCE MODEL
+   ================================================================= */
+let balCtx;
+let balLeft=5, balRight=9;
+let balTilt=0, balTargetTilt=0;
+let balAnimating=false;
+let balAutoTilt=false;
+let balShowValues=true;
+let balShowBlocks=true;
+let balZoom=1;
+
+function drawBalance(){
+  const c=document.getElementById('balCanvas');
+  balCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  drawGrid(balCtx,w,h);
+
+  const cx=w/2, cy=h/2+40;
+
+  // --- Ground line ---
+  balCtx.strokeStyle='rgba(255,255,255,.15)';
+  balCtx.lineWidth=3;
+  balCtx.beginPath();
+  balCtx.moveTo(cx-360,cy+160);
+  balCtx.lineTo(cx+360,cy+160);
+  balCtx.stroke();
+
+  // --- Stand ---
+  const standGrad=balCtx.createLinearGradient(cx-15,cy+160,cx+15,cy-40);
+  standGrad.addColorStop(0,'#1a3550');
+  standGrad.addColorStop(.5,'#4fc3f7');
+  standGrad.addColorStop(1,'#1a3550');
+  balCtx.fillStyle=standGrad;
+  balCtx.beginPath();
+  balCtx.moveTo(cx-20,cy+160);
+  balCtx.lineTo(cx+20,cy+160);
+  balCtx.lineTo(cx+10,cy-40);
+  balCtx.lineTo(cx-10,cy-40);
+  balCtx.closePath();
+  balCtx.fill();
+
+  // Base
+  balCtx.fillStyle='#0a1a2e';
+  balCtx.fillRect(cx-90,cy+150,180,20);
+  balCtx.strokeStyle='#4fc3f7';
+  balCtx.lineWidth=2;
+  balCtx.strokeRect(cx-90,cy+150,180,20);
+
+  // --- Beam with tilt ---
+  balCtx.save();
+  balCtx.translate(cx,cy-40);
+  balCtx.rotate(balTilt*Math.PI/180);
+
+  // Beam
+  const beamGrad=balCtx.createLinearGradient(-340,0,340,0);
+  beamGrad.addColorStop(0,'#ff8f00');
+  beamGrad.addColorStop(.5,'#ffd54f');
+  beamGrad.addColorStop(1,'#ff8f00');
+  balCtx.fillStyle=beamGrad;
+  balCtx.shadowColor='#ffd54f';
+  balCtx.shadowBlur=25;
+  balCtx.beginPath();
+  balCtx.rect(-340,-10,680,20);
+  balCtx.fill();
+  balCtx.shadowBlur=0;
+
+  // Pivot triangle
+  balCtx.fillStyle='#0a1a2e';
+  balCtx.strokeStyle='#4fc3f7';
+  balCtx.lineWidth=3;
+  balCtx.beginPath();
+  balCtx.moveTo(-20,10);
+  balCtx.lineTo(20,10);
+  balCtx.lineTo(0,-20);
+  balCtx.closePath();
+  balCtx.fill();balCtx.stroke();
+
+  // Left pan (attached to -280)
+  drawPan(-280,10,balLeft,'#4fc3f7');
+  // Right pan (attached to +280)
+  drawPan(280,10,balRight,'#ff5252');
+
+  balCtx.restore();
+
+  // --- Status ---
+  const diff=balLeft-balRight;
+  let status='BALANCED',statusColor='#4caf50';
+  if(diff!==0){
+    status='UNBALANCED';
+    statusColor='#ff5252';
+  }
+  balCtx.fillStyle=statusColor;
+  balCtx.font='900 34px sans-serif';
+  balCtx.textAlign='center';
+  balCtx.shadowColor=statusColor;
+  balCtx.shadowBlur=25;
+  balCtx.fillText(status,w/2,70);
+  balCtx.shadowBlur=0;
+
+  balCtx.fillStyle='#fff';
+  balCtx.font='bold 22px sans-serif';
+  balCtx.fillText('Left = '+balLeft+'    Right = '+balRight,w/2,110);
+
+  balCtx.fillStyle='#7a9cc0';
+  balCtx.font='16px sans-serif';
+  balCtx.fillText('Difference = '+Math.abs(diff),w/2,140);
+  balCtx.textAlign='left';
+
+  // Update readout
+  const readEl=document.getElementById('balReadout');
+  if(diff===0){
+    readEl.innerHTML='⚖️ BALANCED <small>Left = '+balLeft+' · Right = '+balRight+'</small>';
+  }else{
+    readEl.innerHTML='⚠️ UNBALANCED <small>Left = '+balLeft+' · Right = '+balRight+' · Diff = '+Math.abs(diff)+'</small>';
+  }
+
+  const infoEl=document.getElementById('balInfo');
+  if(diff===0){
+    infoEl.textContent='Perfectly balanced! Both sides are equal.';
+  }else if(diff>0){
+    infoEl.textContent='Left side is heavier by '+diff+'. Add weight to the right or remove from left.';
+  }else{
+    infoEl.textContent='Right side is heavier by '+Math.abs(diff)+'. Add weight to the left or remove from right.';
+  }
+}
+
+function drawPan(x,y,value,color){
+  balCtx.save();
+  // string
+  balCtx.strokeStyle=color;
+  balCtx.lineWidth=3;
+  balCtx.beginPath();
+  balCtx.moveTo(x,0);
+  balCtx.lineTo(x,y+40);
+  balCtx.stroke();
+
+  // pan
+  balCtx.fillStyle=color+'44';
+  balCtx.strokeStyle=color;
+  balCtx.lineWidth=3;
+  balCtx.beginPath();
+  balCtx.ellipse(x,y+50,90,18,0,0,Math.PI*2);
+  balCtx.fill();balCtx.stroke();
+
+  // blocks
+  if(balShowBlocks){
+    const n=Math.min(value,15);
+    for(let i=0;i<n;i++){
+      const bx=x-70+((i%5)*35);
+      const by=y+38-Math.floor(i/5)*26;
+      balCtx.fillStyle=color;
+      balCtx.shadowColor=color;
+      balCtx.shadowBlur=10;
+      balCtx.fillRect(bx,by,26,22);
+      balCtx.shadowBlur=0;
+      balCtx.strokeStyle='#fff';
+      balCtx.lineWidth=1.5;
+      balCtx.strokeRect(bx,by,26,22);
     }
-  }, true);
+  }
+
+  // value label
+  if(balShowValues){
+    balCtx.fillStyle='#06121f';
+    balCtx.fillRect(x-40,y+80,80,34);
+    balCtx.strokeStyle=color;
+    balCtx.lineWidth=2;
+    balCtx.strokeRect(x-40,y+80,80,34);
+    balCtx.fillStyle=color;
+    balCtx.font='900 22px sans-serif';
+    balCtx.textAlign='center';
+    balCtx.fillText(value,x,y+105);
+    balCtx.textAlign='left';
+  }
+
+  balCtx.restore();
+}
+
+function updateBalance(){
+  const diff=balLeft-balRight;
+  // tilt proportional to diff, max 12 degrees
+  balTargetTilt=Math.max(-12,Math.min(12,diff*1.5));
+  // If equal, level
+  if(diff===0)balTargetTilt=0;
+}
+
+/* --- Balance Buttons --- */
+document.getElementById('balA').addEventListener('input',e=>{
+  balLeft=+e.target.value;
+  document.getElementById('balAVal').textContent=balLeft;
+  updateBalance();
+});
+document.getElementById('balB').addEventListener('input',e=>{
+  balRight=+e.target.value;
+  document.getElementById('balBVal').textContent=balRight;
+  updateBalance();
+});
+
+document.getElementById('balAdd1').addEventListener('click',()=>{
+  balLeft=Math.min(99,balLeft+1);
+  balRight=Math.min(99,balRight+1);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balSub1').addEventListener('click',()=>{
+  balLeft=Math.max(0,balLeft-1);
+  balRight=Math.max(0,balRight-1);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balAdd5').addEventListener('click',()=>{
+  balLeft=Math.min(99,balLeft+5);
+  balRight=Math.min(99,balRight+5);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balSub5').addEventListener('click',()=>{
+  balLeft=Math.max(0,balLeft-5);
+  balRight=Math.max(0,balRight-5);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balMul2').addEventListener('click',()=>{
+  balLeft=Math.min(99,balLeft*2);
+  balRight=Math.min(99,balRight*2);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balDiv2').addEventListener('click',()=>{
+  balLeft=Math.floor(balLeft/2);
+  balRight=Math.floor(balRight/2);
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balBalance').addEventListener('click',()=>{
+  // make both equal to the average
+  const avg=Math.round((balLeft+balRight)/2);
+  balLeft=avg;balRight=avg;
+  syncBalanceSliders();updateBalance();
+});
+document.getElementById('balReset').addEventListener('click',()=>{
+  balLeft=5;balRight=9;
+  syncBalanceSliders();
+  balTargetTilt=0;balTilt=0;
+  updateBalance();
+});
+document.getElementById('balAutoTilt').addEventListener('click',function(){
+  balAutoTilt=!balAutoTilt;
+  this.textContent=balAutoTilt?'⏸ Stop Tilt':'▶ Auto Tilt Animation';
+});
+document.getElementById('balShowValues').addEventListener('click',()=>{
+  balShowValues=!balShowValues;drawBalance();
+});
+document.getElementById('balShowBlocks').addEventListener('click',()=>{
+  balShowBlocks=!balShowBlocks;drawBalance();
+});
+document.getElementById('balZoomIn').addEventListener('click',()=>{
+  balZoom=Math.min(1.6,balZoom+0.1);drawBalance();
+});
+document.getElementById('balZoomOut').addEventListener('click',()=>{
+  balZoom=Math.max(0.6,balZoom-0.1);drawBalance();
+});
+function syncBalanceSliders(){
+  const aEl=document.getElementById('balA');
+  const bEl=document.getElementById('balB');
+  aEl.max=Math.max(12,balLeft);
+  bEl.max=Math.max(12,balRight);
+  aEl.value=balLeft;
+  bEl.value=balRight;
+  document.getElementById('balAVal').textContent=balLeft;
+  document.getElementById('balBVal').textContent=balRight;
+}
+
+/* Balance animation loop */
+function balanceLoop(){
+  if(balAutoTilt){
+    // oscillate target slightly
+    balTargetTilt = Math.sin(Date.now()/400)*10;
+  }
+  const diff=balTargetTilt-balTilt;
+  if(Math.abs(diff)>0.05){
+    balTilt+=diff*0.12;
+  }else{
+    balTilt=balTargetTilt;
+  }
+  drawBalance();
+  requestAnimationFrame(balanceLoop);
+}
+
+/* =================================================================
+   TOPIC 2: LINEAR EQUATIONS
+   ================================================================= */
+let linCtx;
+let linStep=0;          // 0..3
+let linA=2, linB=3, linC=11;
+let linSolution=0;
+let linAutoPlaying=false;
+let linLastTime=0;
+let linShowGraph=true;
+let linShowGrid=true;
+let linZoom=1;
+
+function computeLinSolution(){
+  if(linA===0) return null;
+  linSolution=(linC-linB)/linA;
+}
+
+function drawLinear(){
+  const c=document.getElementById('linCanvas');
+  linCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+
+  drawGrid(linCtx,w,h,linShowGrid?40:0);
+
+  const cx=w/2, cy=h/2;
+
+  if(linShowGraph){
+    drawLinearGraph(w,h);
+  }
+
+  // Title
+  linCtx.fillStyle='#4fc3f7';
+  linCtx.font='900 26px sans-serif';
+  linCtx.textAlign='center';
+  linCtx.fillText('Solving: '+linA+'x + '+linB+' = '+linC, w/2, 50);
+  linCtx.textAlign='left';
+
+  // Show current step content
+  drawLinStepContent(w,h);
+
+  // Step indicator
+  const steps=['Start: '+linA+'x + '+linB+' = '+linC,
+                'Subtract '+linB+': '+linA+'x = '+(linC-linB),
+                'Divide by '+linA+': x = '+((linC-linB)/linA).toFixed(2),
+                'Solution: x = '+((linC-linB)/linA).toFixed(2)+' ✓'];
+  linCtx.fillStyle='#7a9cc0';
+  linCtx.font='bold 16px sans-serif';
+  linCtx.fillText('Step '+(linStep+1)+' of 4', 30, h-30);
+
+  document.getElementById('linReadout').innerHTML='STEP '+linStep+' / 3 <small>'+(linStep===0?'Ready':linStep===1?'Constant moved':linStep===2?'Coefficient removed':'Solution found!')+'</small>';
+}
+
+function drawLinearGraph(w,h){
+  // Draw y = ax + b as a straight line, showing solution x
+  const graphX=w-280, graphY=h-200, graphW=240, graphH=140;
+  linCtx.fillStyle='rgba(0,0,0,.4)';
+  linCtx.fillRect(graphX,graphY,graphW,graphH);
+  linCtx.strokeStyle='#4fc3f7';
+  linCtx.lineWidth=2;
+  linCtx.strokeRect(graphX,graphY,graphW,graphH);
+
+  linCtx.fillStyle='#4fc3f7';
+  linCtx.font='bold 14px sans-serif';
+  linCtx.fillText('Graph of y = '+linA+'x + '+linB,graphX+10,graphY+20);
+
+  // axes
+  linCtx.strokeStyle='rgba(255,255,255,.3)';
+  linCtx.beginPath();
+  linCtx.moveTo(graphX+10,graphY+graphH-20);
+  linCtx.lineTo(graphX+graphW-10,graphY+graphH-20);
+  linCtx.moveTo(graphX+30,graphY+10);
+  linCtx.lineTo(graphX+30,graphY+graphH-10);
+  linCtx.stroke();
+
+  // draw line
+  const gx0=graphX+30, gy0=graphY+graphH-20;
+  const spanX=graphW-50;
+  const stepPx=spanX/20;
+  linCtx.strokeStyle='#ffd54f';
+  linCtx.lineWidth=2.5;
+  linCtx.beginPath();
+  for(let px=0;px<=spanX;px++){
+    const xv=(px-gx0+graphX+30-graphX-30)/stepPx; // not used, simpler below
+  }
+  // simpler: draw from x=-5 to x=15
+  linCtx.beginPath();
+  let first=true;
+  for(let xv=-5;xv<=15;xv+=0.5){
+    const yv=linA*xv+linB;
+    const px=gx0+xv*10;
+    const py=gy0-yv*3;
+    if(px<graphX+10||px>graphX+graphW-10||py<graphY+10||py>graphY+graphH-10) continue;
+    if(first){linCtx.moveTo(px,py);first=false}
+    else linCtx.lineTo(px,py);
+  }
+  linCtx.stroke();
+}
+
+function drawLinStepContent(w,h){
+  const cx=w/2, cy=h/2;
+  linCtx.textAlign='center';
+
+  let mainText='';
+  let color='#fff';
+  let subText='';
+
+  if(linStep===0){
+    mainText=linA+'x + '+linB+' = '+linC;
+    color='#4fc3f7';
+    subText='The equation as given';
+  } else if(linStep===1){
+    mainText=linA+'x = '+(linC-linB);
+    color='#4caf50';
+    subText='Subtract '+linB+' from both sides';
+  } else if(linStep===2){
+    const sol=(linC-linB)/linA;
+    mainText='x = '+sol.toFixed(2);
+    color='#ffd54f';
+    subText='Divide both sides by '+linA;
+  } else {
+    const sol=(linC-linB)/linA;
+    mainText='x = '+sol.toFixed(2)+' ✓';
+    color='#ff5252';
+    subText='Verified: '+linA+' × '+sol.toFixed(2)+' + '+linB+' = '+linC;
+  }
+
+  linCtx.font='900 62px "Courier New", monospace';
+  linCtx.shadowColor=color;
+  linCtx.shadowBlur=30;
+  linCtx.fillStyle=color;
+  linCtx.fillText(mainText,cx,cy+15);
+  linCtx.shadowBlur=0;
+
+  linCtx.font='bold 20px sans-serif';
+  linCtx.fillStyle='#a8c8e8';
+  linCtx.fillText(subText,cx,cy+70);
+
+  linCtx.textAlign='left';
+}
+
+function syncLinEqDisplay(){
+  const eqEl=document.getElementById('linEqStep');
+  const noteEl=document.getElementById('linEqNote');
+  if(linStep===0){
+    eqEl.textContent=linA+'x + '+linB+' = '+linC;
+    noteEl.textContent='Click "Next Step" to begin solving';
+  } else if(linStep===1){
+    eqEl.textContent=linA+'x = '+(linC-linB);
+    noteEl.textContent='Subtracted '+linB+' from both sides';
+  } else if(linStep===2){
+    eqEl.textContent='x = '+((linC-linB)/linA).toFixed(2);
+    noteEl.textContent='Divided both sides by '+linA;
+  } else {
+    eqEl.textContent='x = '+((linC-linB)/linA).toFixed(2)+'  ✓';
+    noteEl.textContent='Check: '+linA+' × '+((linC-linB)/linA).toFixed(2)+' + '+linB+' = '+linC;
+  }
+  eqEl.classList.remove('highlight');
+  void eqEl.offsetWidth;
+  eqEl.classList.add('highlight');
+}
+
+/* --- Linear Buttons --- */
+document.getElementById('linA').addEventListener('input',e=>{
+  linA=+e.target.value; linStep=0; computeLinSolution(); syncLinEqDisplay();
+});
+document.getElementById('linB').addEventListener('input',e=>{
+  linB=+e.target.value; linStep=0; computeLinSolution(); syncLinEqDisplay();
+});
+document.getElementById('linC').addEventListener('input',e=>{
+  linC=+e.target.value; linStep=0; computeLinSolution(); syncLinEqDisplay();
+});
+
+document.getElementById('linNext').addEventListener('click',()=>{
+  if(linStep<3){linStep++;syncLinEqDisplay();}
+});
+document.getElementById('linAuto').addEventListener('click',function(){
+  linAutoPlaying=!linAutoPlaying;
+  this.textContent=linAutoPlaying?'⏸ Stop':'▶▶ Auto Play';
+  if(linAutoPlaying){linStep=0;linLastTime=0;syncLinEqDisplay();}
+});
+document.getElementById('linSolve').addEventListener('click',()=>{
+  linStep=3;syncLinEqDisplay();
+});
+document.getElementById('linCheck').addEventListener('click',()=>{
+  const sol=(linC-linB)/linA;
+  const lhs=linA*sol+linB;
+  const ok=Math.abs(lhs-linC)<0.0001;
+  alert(ok
+    ? '✅ Correct!\n\n'+linA+' × '+sol.toFixed(2)+' + '+linB+' = '+lhs.toFixed(2)+'\n= '+linC+' ✓'
+    : '❌ Check your work.\nExpected '+linC+', got '+lhs.toFixed(2));
+});
+document.getElementById('linHint').addEventListener('click',()=>{
+  const hints=[
+    'Hint: The goal is to get x alone on one side.',
+    'Hint: Undo the "+'+linB+'" by subtracting '+linB+' from both sides.',
+    'Hint: Now divide both sides by '+linA+' to isolate x.',
+    'Hint: Solution is x = '+((linC-linB)/linA).toFixed(2)+'. Substitute back to check.'
+  ];
+  alert(hints[linStep]);
+});
+document.getElementById('linRandom').addEventListener('click',()=>{
+  linA=Math.floor(Math.random()*8)+2;
+  linB=Math.floor(Math.random()*15)-5;
+  const sol=Math.floor(Math.random()*10)+1;
+  linC=linA*sol+linB;
+  document.getElementById('linA').value=linA;
+  document.getElementById('linB').value=linB;
+  document.getElementById('linC').value=linC;
+  linStep=0;computeLinSolution();syncLinEqDisplay();
+});
+document.getElementById('linReset').addEventListener('click',()=>{
+  linA=2;linB=3;linC=11;
+  document.getElementById('linA').value=2;
+  document.getElementById('linB').value=3;
+  document.getElementById('linC').value=11;
+  linStep=0;computeLinSolution();syncLinEqDisplay();
+});
+document.getElementById('linZoomIn').addEventListener('click',()=>{linZoom=Math.min(1.6,linZoom+.1);});
+document.getElementById('linZoomOut').addEventListener('click',()=>{linZoom=Math.max(.6,linZoom-.1);});
+document.getElementById('linToggleGraph').addEventListener('click',()=>{linShowGraph=!linShowGraph;drawLinear();});
+document.getElementById('linToggleGrid').addEventListener('click',()=>{linShowGrid=!linShowGrid;drawLinear();});
+
+/* Linear auto-play loop */
+function linLoop(t){
+  if(linAutoPlaying){
+    if(!linLastTime)linLastTime=t;
+    if(t-linLastTime>1200){
+      linLastTime=t;
+      if(linStep<3){linStep++;syncLinEqDisplay();}
+      else {linAutoPlaying=false;
+        const btn=document.getElementById('linAuto');
+        if(btn)btn.textContent='▶▶ Auto Play';}
+    }
+  } else {
+    linLastTime=0;
+  }
+  requestAnimationFrame(linLoop);
+}
+
+/* =================================================================
+   TOPIC 3: TWO-STEP EQUATIONS
+   ================================================================= */
+let tsCtx;
+let tsStep=0;
+let tsA=3,tsB=4,tsC=19,tsType='plus';
+let tsAutoPlaying=false;
+let tsLastTime=0;
+let tsShowVisual=true;
+let tsZoom=1;
+
+function tsGetSolution(){
+  if(tsType==='plus')    return (tsC-tsB)/tsA;
+  if(tsType==='minus')   return (tsC+tsB)/tsA;
+  if(tsType==='fracPlus')return (tsC-tsB)*tsA;
+  if(tsType==='fracMinus')return (tsC+tsB)*tsA;
+  return 0;
+}
+function tsGetEquation(step){
+  if(step===0){
+    if(tsType==='plus')    return tsA+'x + '+tsB+' = '+tsC;
+    if(tsType==='minus')   return tsA+'x − '+tsB+' = '+tsC;
+    if(tsType==='fracPlus')return 'x/'+tsA+' + '+tsB+' = '+tsC;
+    if(tsType==='fracMinus')return 'x/'+tsA+' − '+tsB+' = '+tsC;
+  } else if(step===1){
+    if(tsType==='plus')    return tsA+'x = '+(tsC-tsB);
+    if(tsType==='minus')   return tsA+'x = '+(tsC+tsB);
+    if(tsType==='fracPlus')return 'x/'+tsA+' = '+(tsC-tsB);
+    if(tsType==='fracMinus')return 'x/'+tsA+' = '+(tsC+tsB);
+  } else if(step===2){
+    return 'x = '+tsGetSolution().toFixed(2);
+  } else {
+    return 'x = '+tsGetSolution().toFixed(2)+' ✓';
+  }
+  return '';
+}
+function tsGetNote(step){
+  if(step===0)return 'Choose an operation to begin';
+  if(step===1)return 'Undo the constant term on the left';
+  if(step===2)return 'Undo the coefficient (multiply or divide)';
+  return 'Verified solution';
+}
+
+function drawTwoStep(){
+  const c=document.getElementById('tsCanvas');
+  tsCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  drawGrid(tsCtx,w,h);
+
+  const cx=w/2, cy=h/2;
+
+  // Title
+  tsCtx.fillStyle='#4fc3f7';
+  tsCtx.font='900 24px sans-serif';
+  tsCtx.textAlign='center';
+  tsCtx.fillText('Two-Step Equation: '+tsGetEquation(0),w/2,50);
+
+  // Main step display
+  tsCtx.font='900 56px "Courier New", monospace';
+  let color='#fff';
+  if(tsStep===0)color='#4fc3f7';
+  else if(tsStep===1)color='#4caf50';
+  else if(tsStep===2)color='#ffd54f';
+  else color='#ff5252';
+
+  tsCtx.shadowColor=color;
+  tsCtx.shadowBlur=30;
+  tsCtx.fillStyle=color;
+  tsCtx.fillText(tsGetEquation(tsStep),cx,cy);
+  tsCtx.shadowBlur=0;
+
+  tsCtx.font='bold 20px sans-serif';
+  tsCtx.fillStyle='#a8c8e8';
+  tsCtx.fillText(tsGetNote(tsStep),cx,cy+60);
+
+  // Visual blocks (bars showing ax + b)
+  if(tsShowVisual){
+    drawTwoStepVisual(cx,h-100);
+  }
+
+  tsCtx.textAlign='left';
+
+  document.getElementById('tsReadout').innerHTML='STEP '+tsStep+' / 3 <small>'+tsGetNote(tsStep)+'</small>';
+}
+
+function drawTwoStepVisual(cx,baseY){
+  const a=tsA,b=tsB;
+  const totalW=Math.min(800,a*40+b*24+100);
+  let startX=cx-totalW/2;
+  // Draw x blocks
+  for(let i=0;i<a;i++){
+    tsCtx.fillStyle='#4fc3f7';
+    tsCtx.shadowColor='#4fc3f7';
+    tsCtx.shadowBlur=15;
+    tsCtx.fillRect(startX+i*44,baseY-40,38,38);
+    tsCtx.shadowBlur=0;
+    tsCtx.strokeStyle='#fff';
+    tsCtx.lineWidth=2;
+    tsCtx.strokeRect(startX+i*44,baseY-40,38,38);
+    tsCtx.fillStyle='#0a1628';
+    tsCtx.font='bold 18px sans-serif';
+    tsCtx.textAlign='center';
+    tsCtx.fillText('x',startX+i*44+19,baseY-15);
+  }
+  startX+=a*44+20;
+  tsCtx.fillStyle='#fff';
+  tsCtx.font='bold 28px sans-serif';
+  tsCtx.textAlign='center';
+  tsCtx.fillText('+',startX,baseY-12);
+  startX+=30;
+  // Draw b unit blocks
+  for(let i=0;i<b;i++){
+    tsCtx.fillStyle='#ff5252';
+    tsCtx.shadowColor='#ff5252';
+    tsCtx.shadowBlur=12;
+    tsCtx.fillRect(startX+i*24,baseY-30,20,20);
+    tsCtx.shadowBlur=0;
+    tsCtx.strokeStyle='#fff';
+    tsCtx.strokeRect(startX+i*24,baseY-30,20,20);
+  }
+  tsCtx.textAlign='left';
+}
+
+function syncTsEqDisplay(){
+  const eqEl=document.getElementById('tsEqStep');
+  eqEl.textContent=tsGetEquation(tsStep);
+  eqEl.classList.remove('highlight');
+  void eqEl.offsetWidth;
+  eqEl.classList.add('highlight');
+  document.getElementById('tsEqNote').textContent=tsGetNote(tsStep);
+}
+
+document.getElementById('tsType').addEventListener('change',e=>{
+  tsType=e.target.value;tsStep=0;syncTsEqDisplay();
+});
+document.getElementById('tsA').addEventListener('input',e=>{tsA=+e.target.value;tsStep=0;syncTsEqDisplay();});
+document.getElementById('tsB').addEventListener('input',e=>{tsB=+e.target.value;tsStep=0;syncTsEqDisplay();});
+document.getElementById('tsC').addEventListener('input',e=>{tsC=+e.target.value;tsStep=0;syncTsEqDisplay();});
+
+document.getElementById('tsStep1').addEventListener('click',()=>{
+  if(tsStep<1)tsStep=1; else tsStep=0; syncTsEqDisplay();
+});
+document.getElementById('tsStep2').addEventListener('click',()=>{
+  if(tsStep<2)tsStep=2; else tsStep=0; syncTsEqDisplay();
+});
+document.getElementById('tsAuto').addEventListener('click',function(){
+  tsAutoPlaying=!tsAutoPlaying;
+  this.textContent=tsAutoPlaying?'⏸ Stop':'▶▶ Auto Solve';
+  if(tsAutoPlaying){tsStep=0;tsLastTime=0;syncTsEqDisplay();}
+});
+document.getElementById('tsCheck').addEventListener('click',()=>{
+  const sol=tsGetSolution();
+  const lhs=(tsType==='fracPlus'||tsType==='fracMinus')?(sol/tsA):(tsA*sol);
+  const sign=(tsType==='plus'||tsType==='fracPlus')?'+':'−';
+  const total=sign==='+'?lhs+tsB:lhs-tsB;
+  const ok=Math.abs(total-tsC)<0.0001;
+  alert(ok?'✅ Correct!\nx = '+sol.toFixed(2):'❌ Not quite. Check your steps.');
+});
+document.getElementById('tsHint').addEventListener('click',()=>{
+  const hints=[
+    'Hint: Undo the +'+tsB+' first.',
+    'Hint: Now divide by '+tsA+' (or multiply if it is x/'+tsA+').',
+    'Hint: Solution is x = '+tsGetSolution().toFixed(2),
+    'Hint: Already solved!'
+  ];
+  alert(hints[tsStep]);
+});
+document.getElementById('tsRandom').addEventListener('click',()=>{
+  tsA=Math.floor(Math.random()*6)+2;
+  tsB=Math.floor(Math.random()*12)+1;
+  const sol=Math.floor(Math.random()*9)+1;
+  tsType=['plus','minus','fracPlus','fracMinus'][Math.floor(Math.random()*4)];
+  if(tsType==='plus')tsC=tsA*sol+tsB;
+  else if(tsType==='minus')tsC=tsA*sol-tsB;
+  else if(tsType==='fracPlus')tsC=sol/tsA+tsB;
+  else tsC=sol/tsA-tsB;
+  tsC=Math.round(tsC*100)/100;
+  document.getElementById('tsA').value=tsA;
+  document.getElementById('tsB').value=tsB;
+  document.getElementById('tsC').value=tsC;
+  document.getElementById('tsType').value=tsType;
+  tsStep=0;syncTsEqDisplay();
+});
+document.getElementById('tsReset').addEventListener('click',()=>{
+  tsA=3;tsB=4;tsC=19;tsType='plus';tsStep=0;
+  document.getElementById('tsA').value=3;
+  document.getElementById('tsB').value=4;
+  document.getElementById('tsC').value=19;
+  document.getElementById('tsType').value='plus';
+  syncTsEqDisplay();
+});
+document.getElementById('tsShowVisual').addEventListener('click',()=>{tsShowVisual=!tsShowVisual;});
+document.getElementById('tsShowSteps').addEventListener('click',()=>{
+  alert('Step 1: ' + tsGetEquation(1) + '\nStep 2: ' + tsGetEquation(2) + '\nStep 3: ' + tsGetEquation(3));
+});
+document.getElementById('tsAnimate').addEventListener('click',()=>{
+  tsStep=0;tsAutoPlaying=true;tsLastTime=0;
+  document.getElementById('tsAuto').textContent='⏸ Stop';
+});
+
+function tsLoop(t){
+  if(tsAutoPlaying){
+    if(!tsLastTime)tsLastTime=t;
+    if(t-tsLastTime>1100){
+      tsLastTime=t;
+      if(tsStep<3){tsStep++;syncTsEqDisplay();}
+      else {
+        tsAutoPlaying=false;
+        document.getElementById('tsAuto').textContent='▶▶ Auto Solve';
+      }
+    }
+  } else tsLastTime=0;
+  requestAnimationFrame(tsLoop);
+}
+
+/* =================================================================
+   TOPIC 4: BRACKETS
+   ================================================================= */
+let brCtx;
+let brStep=0; // 0=start, 1=expanded, 2=solved constant, 3=solution
+let brA=2,brB=3,brC=14,brSign='+';
+let brAutoPlaying=false;
+let brLastTime=0;
+let brShowArea=false;
+let brZoom=1;
+
+function brSolution(){
+  if(brSign==='+')return (brC-brA*brB)/brA;
+  return (brC+brA*brB)/brA;
+}
+function brGetEquation(step){
+  const signStr=brSign==='+'?'+':'−';
+  if(step===0)return brA+'(x '+signStr+' '+brB+') = '+brC;
+  if(step===1){
+    if(brSign==='+')return brA+'x + '+(brA*brB)+' = '+brC;
+    return brA+'x − '+(brA*brB)+' = '+brC;
+  }
+  if(step===2){
+    if(brSign==='+')return brA+'x = '+(brC-brA*brB);
+    return brA+'x = '+(brC+brA*brB);
+  }
+  return 'x = '+brSolution().toFixed(2);
+}
+function brGetNote(step){
+  if(step===0)return 'Click "Expand Bracket" to begin';
+  if(step===1)return 'Expand using the distributive law';
+  if(step===2)return 'Undo the constant term';
+  return 'Solution found!';
+}
+function drawBrackets(){
+  const c=document.getElementById('brCanvas');
+  brCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  drawGrid(brCtx,w,h);
+
+  const cx=w/2,cy=h/2;
+
+  brCtx.fillStyle='#4fc3f7';
+  brCtx.font='900 24px sans-serif';
+  brCtx.textAlign='center';
+  brCtx.fillText('Bracket Equation Solver',w/2,50);
+
+  // Step display
+  let color='#fff';
+  if(brStep===0)color='#4fc3f7';
+  else if(brStep===1)color='#ff5252';
+  else if(brStep===2)color='#4caf50';
+  else color='#ffd54f';
+
+  brCtx.font='900 56px "Courier New", monospace';
+  brCtx.shadowColor=color;
+  brCtx.shadowBlur=30;
+  brCtx.fillStyle=color;
+  brCtx.fillText(brGetEquation(brStep),cx,cy);
+  brCtx.shadowBlur=0;
+
+  brCtx.font='bold 20px sans-serif';
+  brCtx.fillStyle='#a8c8e8';
+  brCtx.fillText(brGetNote(brStep),cx,cy+60);
+
+  // area model
+  if(brShowArea){
+    drawAreaModel(cx,h-110);
+  }
+  brCtx.textAlign='left';
+  document.getElementById('brReadout').innerHTML='STEP '+brStep+' / 3 <small>'+brGetNote(brStep)+'</small>';
+}
+function drawAreaModel(cx,baseY){
+  const side=70;
+  // Outer rectangle split into a*x and a*b
+  const totalW=side*2+40;
+  const startX=cx-totalW/2;
+  brCtx.fillStyle='rgba(79,195,247,.25)';
+  brCtx.fillRect(startX,baseY-side,side,side);
+  brCtx.fillStyle='rgba(255,82,82,.25)';
+  brCtx.fillRect(startX+side,baseY-side,side,side);
+  brCtx.strokeStyle='#4fc3f7';
+  brCtx.lineWidth=3;
+  brCtx.strokeRect(startX,baseY-side,totalW,side);
+  brCtx.beginPath();
+  brCtx.moveTo(startX+side,baseY-side);
+  brCtx.lineTo(startX+side,baseY);
+  brCtx.stroke();
+
+  brCtx.fillStyle='#4fc3f7';
+  brCtx.font='900 26px sans-serif';
+  brCtx.textAlign='center';
+  brCtx.fillText(brA+'x',startX+side/2,baseY-side/2+10);
+  brCtx.fillStyle='#ff5252';
+  brCtx.fillText(brA+'·'+brB,startX+side+side/2,baseY-side/2+10);
+  brCtx.textAlign='left';
+}
+function syncBrEqDisplay(){
+  const eqEl=document.getElementById('brEqStep');
+  eqEl.textContent=brGetEquation(brStep);
+  eqEl.classList.remove('highlight');
+  void eqEl.offsetWidth;
+  eqEl.classList.add('highlight');
+  document.getElementById('brEqNote').textContent=brGetNote(brStep);
+}
+
+document.getElementById('brA').addEventListener('input',e=>{brA=+e.target.value;brStep=0;syncBrEqDisplay();});
+document.getElementById('brB').addEventListener('input',e=>{brB=+e.target.value;brStep=0;syncBrEqDisplay();});
+document.getElementById('brC').addEventListener('input',e=>{brC=+e.target.value;brStep=0;syncBrEqDisplay();});
+document.getElementById('brSign').addEventListener('change',e=>{brSign=e.target.value;brStep=0;syncBrEqDisplay();});
+
+document.getElementById('brExpand').addEventListener('click',()=>{brStep=1;syncBrEqDisplay();});
+document.getElementById('brStep1').addEventListener('click',()=>{if(brStep<1)brStep=1;else brStep=0;syncBrEqDisplay();});
+document.getElementById('brStep2').addEventListener('click',()=>{
+  if(brStep<1)brStep=1;
+  if(brStep<2)brStep=2;
+  syncBrEqDisplay();
+});
+document.getElementById('brAuto').addEventListener('click',function(){
+  brAutoPlaying=!brAutoPlaying;
+  this.textContent=brAutoPlaying?'⏸ Stop':'▶▶ Auto Solve';
+  if(brAutoPlaying){brStep=0;brLastTime=0;syncBrEqDisplay();}
+});
+document.getElementById('brCheck').addEventListener('click',()=>{
+  const sol=brSolution();
+  const lhs=brA*(brSign==='+'?sol+brB:sol-brB);
+  const ok=Math.abs(lhs-brC)<0.0001;
+  alert(ok?'✅ Correct! x = '+sol.toFixed(2):'❌ Got '+lhs+', expected '+brC);
+});
+document.getElementById('brRandom').addEventListener('click',()=>{
+  brA=Math.floor(Math.random()*6)+2;
+  brB=Math.floor(Math.random()*8)+1;
+  const sol=Math.floor(Math.random()*8)+1;
+  brSign=Math.random()<.5?'+':'−';
+  brC=brSign==='+'?brA*(sol+brB):brA*(sol-brB);
+  document.getElementById('brA').value=brA;
+  document.getElementById('brB').value=brB;
+  document.getElementById('brC').value=brC;
+  document.getElementById('brSign').value=brSign;
+  brStep=0;syncBrEqDisplay();
+});
+document.getElementById('brReset').addEventListener('click',()=>{
+  brA=2;brB=3;brC=14;brSign='+';brStep=0;
+  document.getElementById('brA').value=2;
+  document.getElementById('brB').value=3;
+  document.getElementById('brC').value=14;
+  document.getElementById('brSign').value='+';
+  syncBrEqDisplay();
+});
+document.getElementById('brShowArea').addEventListener('click',()=>{brShowArea=!brShowArea;});
+document.getElementById('brShowDist').addEventListener('click',()=>{
+  alert('Distribute: '+brA+'(x '+brSign+' '+brB+')\n= '+brA+'·x '+brSign+' '+brA+'·'+brB+'\n= '+brA+'x '+brSign+' '+(brA*brB));
+});
+document.getElementById('brZoomIn').addEventListener('click',()=>{brZoom=Math.min(1.6,brZoom+.1);});
+document.getElementById('brZoomOut').addEventListener('click',()=>{brZoom=Math.max(.6,brZoom-.1);});
+
+function brLoop(t){
+  if(brAutoPlaying){
+    if(!brLastTime)brLastTime=t;
+    if(t-brLastTime>1100){
+      brLastTime=t;
+      if(brStep<3){brStep++;syncBrEqDisplay();}
+      else {brAutoPlaying=false;
+        document.getElementById('brAuto').textContent='▶▶ Auto Solve';}
+    }
+  } else brLastTime=0;
+  requestAnimationFrame(brLoop);
+}
+
+/* =================================================================
+   TOPIC 5: UNKNOWN ON BOTH SIDES
+   ================================================================= */
+let unkCtx;
+let unkStep=0; // 0=start, 1=x moved, 2=constants moved, 3=solution
+let unkA=5,unkB=2,unkC=3,unkD=10;
+let unkAutoPlaying=false;
+let unkLastTime=0;
+let unkShowBalance=true;
+let unkShowGraph=false;
+let unkZoom=1;
+
+function unkSolution(){
+  const denom=unkA-unkC;
+  if(denom===0)return null;
+  return (unkD-unkB)/denom;
+}
+function unkGetEquation(step){
+  if(step===0)return unkA+'x + '+unkB+' = '+unkC+'x + '+unkD;
+  if(step===1)return (unkA-unkC)+'x + '+unkB+' = '+unkD;
+  if(step===2)return (unkA-unkC)+'x = '+(unkD-unkB);
+  return 'x = '+unkSolution().toFixed(2);
+}
+function unkGetNote(step){
+  if(step===0)return 'Click "Move x Terms" to begin';
+  if(step===1)return 'Subtract '+unkC+'x from both sides';
+  if(step===2)return 'Subtract '+unkB+' from both sides';
+  return 'Divide both sides by '+(unkA-unkC);
+}
+
+function drawUnknown(){
+  const c=document.getElementById('unkCanvas');
+  unkCtx=c.getContext('2d');
+  const w=c.width,h=c.height;
+  drawGrid(unkCtx,w,h);
+
+  const cx=w/2, cy=h/2;
+
+  unkCtx.fillStyle='#4fc3f7';
+  unkCtx.font='900 24px sans-serif';
+  unkCtx.textAlign='center';
+  unkCtx.fillText('Unknown on Both Sides',w/2,50);
+
+  let color='#fff';
+  if(unkStep===0)color='#4fc3f7';
+  else if(unkStep===1)color='#4caf50';
+  else if(unkStep===2)color='#ffd54f';
+  else color='#ff5252';
+
+  unkCtx.font='900 52px "Courier New", monospace';
+  unkCtx.shadowColor=color;
+  unkCtx.shadowBlur=30;
+  unkCtx.fillStyle=color;
+  unkCtx.fillText(unkGetEquation(unkStep),cx,cy);
+  unkCtx.shadowBlur=0;
+
+  unkCtx.font='bold 20px sans-serif';
+  unkCtx.fillStyle='#a8c8e8';
+  unkCtx.fillText(unkGetNote(unkStep),cx,cy+60);
+
+  if(unkShowBalance){
+    drawUnknownBalance(cx,h-90);
+  }
+  unkCtx.textAlign='left';
+
+  document.getElementById('unkReadout').innerHTML='STEP '+unkStep+' / 3 <small>'+unkGetNote(unkStep)+'</small>';
+}
+function drawUnknownBalance(cx,baseY){
+  // Left side: unkA x's and unkB
+  // Right: unkC x's and unkD
+  const leftTotal=Math.min(unkA,8)*34+Math.min(Math.abs(unkB),8)*20;
+  const rightTotal=Math.min(unkC,8)*34+Math.min(Math.abs(unkD),8)*20;
+  const maxW=Math.max(leftTotal,rightTotal);
+  const startLX=cx-maxW/2-20, startRX=cx+20;
+
+  unkCtx.fillStyle='#4fc3f7';
+  unkCtx.font='bold 16px sans-serif';
+  unkCtx.fillText('LEFT',startLX,baseY-50);
+  unkCtx.fillStyle='#4caf50';
+  unkCtx.fillText('RIGHT',startRX,baseY-50);
+
+  // left x blocks
+  for(let i=0;i<Math.min(unkA,8);i++){
+    unkCtx.fillStyle='#ff5252';
+    unkCtx.fillRect(startLX+i*30,baseY-40,24,24);
+    unkCtx.strokeStyle='#fff';
+    unkCtx.lineWidth=1.5;
+    unkCtx.strokeRect(startLX+i*30,baseY-40,24,24);
+    unkCtx.fillStyle='#fff';
+    unkCtx.font='bold 14px sans-serif';
+    unkCtx.textAlign='center';
+    unkCtx.fillText('x',startLX+i*30+12,baseY-23);
+  }
+  // left constants
+  for(let i=0;i<Math.abs(unkB);i++){
+    unkCtx.fillStyle='#ff9800';
+    unkCtx.fillRect(startLX+Math.min(unkA,8)*30+i*16,baseY-30,12,12);
+  }
+  // right x blocks
+  for(let i=0;i<Math.min(unkC,8);i++){
+    unkCtx.fillStyle='#4caf50';
+    unkCtx.fillRect(startRX+i*30,baseY-40,24,24);
+    unkCtx.strokeStyle='#fff';
+    unkCtx.strokeRect(startRX+i*30,baseY-40,24,24);
+    unkCtx.fillStyle='#fff';
+    unkCtx.font='bold 14px sans-serif';
+    unkCtx.textAlign='center';
+    unkCtx.fillText('x',startRX+i*30+12,baseY-23);
+  }
+  // right constants
+  for(let i=0;i<Math.abs(unkD);i++){
+    unkCtx.fillStyle='#ff9800';
+    unkCtx.fillRect(startRX+Math.min(unkC,8)*30+i*16,baseY-30,12,12);
+  }
+  unkCtx.textAlign='left';
+}
+function syncUnkEqDisplay(){
+  const eqEl=document.getElementById('unkEqStep');
+  eqEl.textContent=unkGetEquation(unkStep);
+  eqEl.classList.remove('highlight');
+  void eqEl.offsetWidth;
+  eqEl.classList.add('highlight');
+  document.getElementById('unkEqNote').textContent=unkGetNote(unkStep);
+}
+
+document.getElementById('unkA').addEventListener('input',e=>{unkA=+e.target.value;unkStep=0;syncUnkEqDisplay();});
+document.getElementById('unkB').addEventListener('input',e=>{unkB=+e.target.value;unkStep=0;syncUnkEqDisplay();});
+document.getElementById('unkC').addEventListener('input',e=>{unkC=+e.target.value;unkStep=0;syncUnkEqDisplay();});
+document.getElementById('unkD').addEventListener('input',e=>{unkD=+e.target.value;unkStep=0;syncUnkEqDisplay();});
+
+document.getElementById('unkStep1').addEventListener('click',()=>{if(unkStep<1)unkStep=1;else unkStep=0;syncUnkEqDisplay();});
+document.getElementById('unkStep2').addEventListener('click',()=>{
+  if(unkStep<1)unkStep=1;
+  if(unkStep<2)unkStep=2;
+  syncUnkEqDisplay();
+});
+document.getElementById('unkStep3').addEventListener('click',()=>{
+  unkStep=3;syncUnkEqDisplay();
+});
+document.getElementById('unkAuto').addEventListener('click',function(){
+  unkAutoPlaying=!unkAutoPlaying;
+  this.textContent=unkAutoPlaying?'⏸ Stop':'▶▶ Auto Solve';
+  if(unkAutoPlaying){unkStep=0;unkLastTime=0;syncUnkEqDisplay();}
+});
+document.getElementById('unkCheck').addEventListener('click',()=>{
+  const sol=unkSolution();
+  if(sol===null){alert('No unique solution (denominator = 0)');return;}
+  const lhs=unkA*sol+unkB;
+  const rhs=unkC*sol+unkD;
+  const ok=Math.abs(lhs-rhs)<0.0001;
+  alert(ok
+    ? '✅ Correct!\nx = '+sol.toFixed(2)+'\nLeft = '+lhs.toFixed(2)+'\nRight = '+rhs.toFixed(2)
+    : '❌ Not equal. Left = '+lhs.toFixed(2)+', Right = '+rhs.toFixed(2));
+});
+document.getElementById('unkHint').addEventListener('click',()=>{
+  const hints=[
+    'Hint: Move all x terms to the left. Subtract '+unkC+'x from both sides.',
+    'Hint: Now move constants. Subtract '+unkB+' from both sides.',
+    'Hint: Divide both sides by '+(unkA-unkC)+'.',
+    'Hint: Solution is x = '+ (unkSolution()!==null?unkSolution().toFixed(2):'undefined')
+  ];
+  alert(hints[unkStep]);
+});
+document.getElementById('unkRandom').addEventListener('click',()=>{
+  const sol=Math.floor(Math.random()*9)+1;
+  unkA=Math.floor(Math.random()*6)+3;
+  unkC=Math.floor(Math.random()*4)+1;
+  while(unkC>=unkA)unkC=Math.floor(Math.random()*4)+1;
+  unkB=Math.floor(Math.random()*10)-3;
+  unkD=(unkA-unkC)*sol+unkB;
+  document.getElementById('unkA').value=unkA;
+  document.getElementById('unkB').value=unkB;
+  document.getElementById('unkC').value=unkC;
+  document.getElementById('unkD').value=unkD;
+  unkStep=0;syncUnkEqDisplay();
+});
+document.getElementById('unkReset').addEventListener('click',()=>{
+  unkA=5;unkB=2;unkC=3;unkD=10;unkStep=0;
+  document.getElementById('unkA').value=5;
+  document.getElementById('unkB').value=2;
+  document.getElementById('unkC').value=3;
+  document.getElementById('unkD').value=10;
+  syncUnkEqDisplay();
+});
+document.getElementById('unkShowBalance').addEventListener('click',()=>{unkShowBalance=!unkShowBalance;drawUnknown();});
+document.getElementById('unkShowGraph').addEventListener('click',()=>{unkShowGraph=!unkShowGraph;});
+document.getElementById('unkShowSteps').addEventListener('click',()=>{
+  alert(
+    'Step 1: '+unkGetEquation(1)+'\n'+
+    'Step 2: '+unkGetEquation(2)+'\n'+
+    'Step 3: '+unkGetEquation(3)
+  );
+});
+
+function unkLoop(t){
+  if(unkAutoPlaying){
+    if(!unkLastTime)unkLastTime=t;
+    if(t-unkLastTime>1100){
+      unkLastTime=t;
+      if(unkStep<3){unkStep++;syncUnkEqDisplay();}
+      else {unkAutoPlaying=false;
+        document.getElementById('unkAuto').textContent='▶▶ Auto Solve';}
+    }
+  } else unkLastTime=0;
+  requestAnimationFrame(unkLoop);
+}
+
+/* =================================================================
+   START EVERYTHING
+   ================================================================= */
+window.addEventListener('load',()=>{
+  // Balance
+  balCtx=document.getElementById('balCanvas').getContext('2d');
+  syncBalanceSliders();
+  updateBalance();
+  balanceLoop();
+
+  // Linear
+  linCtx=document.getElementById('linCanvas').getContext('2d');
+  computeLinSolution();
+  syncLinEqDisplay();
+  linLoop(0);
+
+  // Two-Step
+  tsCtx=document.getElementById('tsCanvas').getContext('2d');
+  syncTsEqDisplay();
+  tsLoop(0);
+
+  // Brackets
+  brCtx=document.getElementById('brCanvas').getContext('2d');
+  syncBrEqDisplay();
+  brLoop(0);
+
+  // Unknown Both Sides
+  unkCtx=document.getElementById('unkCanvas').getContext('2d');
+  syncUnkEqDisplay();
+  unkLoop(0);
+
+  // Re-draw static scenes when tabs change
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setTimeout(()=>{
+        drawBalance();
+        drawLinear();
+        drawTwoStep();
+        drawBrackets();
+        drawUnknown();
+      },50);
+    });
+  });
+  // also section tab change for panel visuals
+  document.querySelectorAll('.section-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setTimeout(()=>{
+        drawBalance();drawLinear();drawTwoStep();drawBrackets();drawUnknown();
+      },60);
+    });
+  });
+});
 })();
 </script>
-
 </body>
 </html>

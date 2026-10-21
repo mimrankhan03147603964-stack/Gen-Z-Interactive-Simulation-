@@ -1215,6 +1215,22 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#e0f2fe',
     tagText: '#0284c7',
     glowColor: 'rgba(14, 165, 233, 0.45)'
+  },
+  '81': {
+    id: '81',
+    name: 'Multiplication Tables Studio',
+    bgSolid: '#ec4899',
+    bgGradient: 'linear-gradient(135deg, #f43f5e 0%, #db2777 100%)',
+    borderColor: '#fbcfe8',
+    iconBg: '#831843',
+    iconBorder: '#f472b6',
+    iconColor: '#fdf2f8',
+    badgeBg: '#fdf2f8',
+    badgeText: '#be185d',
+    badgeBorder: '#fbcfe8',
+    tagBg: '#fce7f3',
+    tagText: '#db2777',
+    glowColor: 'rgba(236, 72, 153, 0.45)'
   }
 };
 

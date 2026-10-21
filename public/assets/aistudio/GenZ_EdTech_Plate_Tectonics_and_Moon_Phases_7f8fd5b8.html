@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEN Z EDTECH INTERACTIVE - Plate Tectonics &amp; Phases of the Moon</title>
+<style>
+:root{--bg:#050a1e;--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--red:#ff4d67;--grn:#22d3a0;--amb:#ffc247;--vio:#9b7bff;--org:#ff8f3a;--teal:#19d3da;--pink:#ff7eb6}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:17px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.bub{position:fixed;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 30% 30%,#fff5,#5b8cff22 60%,transparent 70%);animation:fl linear infinite;z-index:0}
+@keyframes fl{from{transform:translateY(105vh)}to{transform:translateY(-30vh)}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:18px 16px 30px}
+header{text-align:center;padding:10px 0 4px;perspective:700px}
+.brand{font:900 clamp(30px,6.4vw,66px)/1.05 "Arial Black",Impact,Arial,sans-serif;color:#ff3b5c;letter-spacing:1px;text-shadow:1px 1px 0 #b0102b,2px 2px 0 #a00e26,3px 3px 0 #8f0c22,4px 4px 0 #7f0a1e,5px 5px 0 #6f091a,6px 6px 0 #5f0716,8px 12px 22px #000a,0 0 30px #ff3b5c66;transform:rotateX(12deg);animation:sw 6s ease-in-out infinite alternate}
+@keyframes sw{to{transform:rotateX(4deg) rotateY(3deg)}}
+header p{color:var(--mut);margin-top:10px;font-size:19px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0 8px}
+.tp{border:0;border-radius:18px;padding:14px 28px;font:900 20px "Segoe UI",Arial,sans-serif;color:#fff;background:linear-gradient(180deg,#3a4f9a,#1c2b63);box-shadow:0 6px 0 #0a1233,0 12px 26px #0008;cursor:pointer;transition:.15s}
+.tp:hover{transform:translateY(-3px)}
+.tp.on[data-t=p]{background:linear-gradient(180deg,#5fe0b0,#12a97a);box-shadow:0 6px 0 #0a5c44,0 12px 30px #22d3a077}
+.tp.on[data-t=m]{background:linear-gradient(180deg,#b9a2ff,#6a4ce0);box-shadow:0 6px 0 #33218f,0 12px 30px #9b7bff88}
+.tab{border:0;border-radius:16px;padding:12px 24px;font:800 18px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab.on{background:linear-gradient(180deg,#ff7a93,#ff3b5c);color:#fff;box-shadow:0 5px 0 #8f0c22,0 10px 26px #ff3b5c66}
+.pg{display:none;animation:in .5s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(18px) rotateX(8deg)}}
+h2{font-family:Georgia,serif;font-size:30px;margin:14px 0;text-align:center}
+.card{background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-radius:22px;padding:22px 26px;box-shadow:0 18px 40px #0009,inset 0 1px 0 #ffffff22;transition:transform .15s;transform-style:preserve-3d}
+.def{font-size:21px;border-left:7px solid var(--blue)}.def b{color:#7fd0ff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}
+.stat{text-align:center;font-weight:700;font-size:18px}.stat i{display:block;font:900 40px/1.2 Georgia,serif;font-style:normal}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card h3{font-size:23px;margin-bottom:8px}
+.c-b{border-top:6px solid var(--blue)}.c-b h3{color:var(--blue)}
+.c-r{border-top:6px solid var(--red)}.c-r h3{color:var(--red)}
+.c-a{border-top:6px solid var(--amb)}.c-a h3{color:var(--amb)}
+.c-g{border-top:6px solid var(--grn)}.c-g h3{color:var(--grn)}
+.c-v{border-top:6px solid var(--vio)}.c-v h3{color:var(--vio)}
+ol,ul{padding-left:22px}li{margin:6px 0}
+.ex{margin-top:8px;color:var(--mut);font-size:15px}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px}
+.term{background:#0b1436;border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:16px}.term b{display:block;color:var(--amb)}
+.layers{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center}
+.layers svg{width:300px;max-width:100%;height:auto}
+.layers .tx{flex:1;min-width:250px}
+.spin{transform-origin:200px 200px;animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
+.pc{text-align:center;padding:14px}.pc svg{width:110px;height:110px;filter:drop-shadow(0 8px 12px #000a)}.pc b{display:block;font-size:18px;margin-top:4px}.pc span{font-size:14px;color:var(--mut)}
+.sim{background:radial-gradient(circle at 50% 0,#14286e,#050a1e 70%);border:1px solid var(--line);border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px #000b}
+.st{text-align:center;font:800 24px Georgia,serif;min-height:36px}
+.sim svg.main{width:100%;height:auto;max-height:68vh;display:block}
+.ctl{display:flex;flex-direction:column;gap:9px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.row span{color:var(--mut);font-size:14px;min-width:54px;text-align:right}
+.btn{border:0;border-radius:14px;padding:11px 16px;font:800 16px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+.btn.sel{outline:3px solid #fff;outline-offset:2px}
+.b-in{background:var(--blue)}.b-out{background:var(--red);color:#fff}.b-auto{background:var(--grn)}.b-play{background:var(--amb)}.b-hold{background:#cfd9ff}.b-set{background:#3d509a;color:#fff}.b-org{background:var(--org)}.b-teal{background:var(--teal)}.b-pink{background:var(--pink)}.b-vio{background:var(--vio);color:#fff}
+.b-fs{background:linear-gradient(90deg,var(--vio),#ff7eb6);color:#fff}
+.tg{background:#1c2b63;color:#d4e0ff;border:2px solid #3a4f9a}.tg.on{background:var(--vio);color:#fff;border-color:#cbbcff;box-shadow:0 0 18px #9b7bffaa}
+.lab rect{fill:#0a1230e6;stroke:#6f8fd8;stroke-width:1}.lab text{fill:#eaf0ff;font:600 13px "Segoe UI",Arial,sans-serif}.lab line{stroke:#c9dcff;stroke-width:1.4}
+.sim:fullscreen{border-radius:0;height:100vh;padding:10px 20px;background:radial-gradient(circle at 50% 0,#14286e,#050a1e 70%)}
+.sim:fullscreen svg.main{flex:1;min-height:0;height:100%;max-height:none}
+.sim:fullscreen .btn{padding:12px 18px;font-size:17px}.sim:fullscreen .st{font-size:30px}
+footer{text-align:center;color:#7f92c4;font-size:12px;margin-top:26px;padding-top:12px;border-top:1px solid #1d2b5c}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body>
+
+<!-- Shared drawing definitions (gradients and clip shapes) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8cf0"/><stop offset="1" stop-color="#cfeeff"/></linearGradient>
+<linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3bb4ff"/><stop offset="1" stop-color="#0a4ea8"/></linearGradient>
+<linearGradient id="mantle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a3c"/><stop offset=".5" stop-color="#e04a1c"/><stop offset="1" stop-color="#7d1408"/></linearGradient>
+<linearGradient id="magma" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff27a"/><stop offset=".5" stop-color="#ff8a1f"/><stop offset="1" stop-color="#e02a10"/></linearGradient>
+<linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#37a046"/><stop offset="1" stop-color="#1b6528"/></linearGradient>
+<linearGradient id="plA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b676"/><stop offset="1" stop-color="#a87b48"/></linearGradient>
+<linearGradient id="plB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d5cf85"/><stop offset="1" stop-color="#93884a"/></linearGradient>
+<linearGradient id="land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a67c56"/><stop offset="1" stop-color="#6a4b33"/></linearGradient>
+<radialGradient id="mg" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fffdf0"/><stop offset=".6" stop-color="#e4dfcd"/><stop offset="1" stop-color="#b3ad9c"/></radialGradient>
+<radialGradient id="eg" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#7fd0ff"/><stop offset="1" stop-color="#1250b8"/></radialGradient>
+<radialGradient id="sg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff9c4"/><stop offset=".6" stop-color="#ffc83a"/><stop offset="1" stop-color="#ff7a1a"/></radialGradient>
+<clipPath id="clL"><rect x="0" y="320" width="545" height="90"/></clipPath>
+<clipPath id="clR"><rect x="635" y="320" width="545" height="90"/></clipPath>
+<clipPath id="clA"><rect x="20" y="110" width="560" height="590" rx="14"/></clipPath>
+<clipPath id="clB"><rect x="600" y="110" width="560" height="590" rx="14"/></clipPath>
+<clipPath id="ec"><circle r="44"/></clipPath>
+</defs></svg>
+
+<div class="wrap">
+<header><div class="brand">GEN Z EDTECH INTERACTIVE</div><p>Learn science by seeing it move</p></header>
+<nav><button class="tp on" data-t="p">🌍 Plate Tectonics</button><button class="tp" data-t="m">🌙 Phases of the Moon</button></nav>
+<nav><button class="tab on" data-pg="d">📖 Definition</button><button class="tab" data-pg="e">💡 Explanation</button><button class="tab" data-pg="s">🎮 Simulation</button></nav>
+
+<!-- ============ PLATE TECTONICS ============ -->
+<section class="pg on" id="pd"><h2>🌍 Plate Tectonics: Definition</h2>
+<div class="card def tilt"><b>Plate tectonics</b> is the idea that the hard outer shell of Earth is broken into huge pieces called <b>plates</b>. The plates float on hot, soft rock under them and move very slowly. Where the plates meet, we get <b>mountains</b>, <b>volcanoes</b> and <b>earthquakes</b>.</div>
+<div class="stats">
+<div class="card stat tilt" style="color:#22d3a0"><i>7</i>Big plates cover Earth</div>
+<div class="card stat tilt" style="color:#ffc247"><i>2 - 10 cm</i>Plates move every year (as slow as your nails grow)</div>
+<div class="card stat tilt" style="color:#ff4d67"><i>3</i>Kinds of plate edges</div>
+<div class="card stat tilt" style="color:#2ea8ff"><i>4</i>Layers inside Earth</div></div></section>
+
+<section class="pg" id="pe"><h2>🌍 Plate Tectonics: Explanation</h2>
+<div class="three">
+<div class="card c-b tilt"><h3>🔵 Divergent edge</h3><p>Two plates move <b>apart</b>.</p><ol>
+<li>Hot magma rises from the mantle into the gap.</li><li>The magma cools and becomes new rock.</li><li>New sea floor and a mountain ridge are made.</li></ol>
+<p class="ex">Example: Mid-Atlantic Ridge, East African Rift.</p></div>
+<div class="card c-r tilt"><h3>🔴 Convergent edge</h3><p>Two plates move <b>together</b>.</p><ol>
+<li>The heavy ocean plate sinks under the light land plate. This is called <b>subduction</b>.</li><li>The sinking plate melts and makes magma.</li><li>Magma rises to make <b>volcanoes</b>. Pushing makes <b>mountains</b>.</li></ol>
+<p class="ex">Example: Andes Mountains, Japan.</p></div>
+<div class="card c-a tilt"><h3>🟡 Transform edge</h3><p>Two plates <b>slide past</b> each other.</p><ol>
+<li>The plates get stuck on the rough edge.</li><li>Stress builds up more and more.</li><li>They slip all at once. The ground shakes. This is an <b>earthquake</b>!</li></ol>
+<p class="ex">Example: San Andreas Fault, USA.</p></div></div>
+
+<div class="card c-g tilt layers" style="margin-top:16px">
+<svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="172" fill="#7a5a3a"/><circle cx="200" cy="200" r="160" fill="url(#mantle)"/>
+<circle cx="200" cy="200" r="100" fill="#ffb020"/><circle class="spin" cx="200" cy="200" r="82" fill="none" stroke="#fff3b0" stroke-width="6" stroke-dasharray="26 18"/>
+<circle cx="200" cy="200" r="52" fill="#fff2a8"/>
+<g class="lab"><line x1="200" y1="34" x2="200" y2="30"/><rect x="165" y="8" width="70" height="22" rx="7"/><text x="200" y="23" text-anchor="middle">Crust</text>
+<line x1="290" y1="110" x2="330" y2="80"/><rect x="298" y="58" width="70" height="22" rx="7"/><text x="333" y="73" text-anchor="middle">Mantle</text>
+<line x1="245" y1="245" x2="300" y2="300"/><rect x="255" y="298" width="100" height="22" rx="7"/><text x="305" y="313" text-anchor="middle">Outer core</text>
+<line x1="200" y1="200" x2="90" y2="330"/><rect x="30" y="328" width="100" height="22" rx="7"/><text x="80" y="343" text-anchor="middle">Inner core</text></g></svg>
+<div class="tx"><h3>Inside the Earth</h3><ul><li><b>Crust:</b> the thin, hard skin. We live on it.</li><li><b>Mantle:</b> thick, hot, soft rock. It slowly flows.</li><li><b>Outer core:</b> very hot liquid metal.</li><li><b>Inner core:</b> a solid metal ball, the hottest part.</li></ul></div></div>
+
+<div class="terms">
+<div class="term"><b>Plate</b>A giant slab of Earth's hard outer shell.</div>
+<div class="term"><b>Magma</b>Hot melted rock under the ground.</div>
+<div class="term"><b>Lava</b>Magma that comes out of a volcano.</div>
+<div class="term"><b>Volcano</b>A mountain where magma comes out.</div>
+<div class="term"><b>Earthquake</b>Shaking of the ground.</div>
+<div class="term"><b>Fault</b>A big crack where plates meet.</div>
+<div class="term"><b>Trench</b>A very deep valley in the ocean floor.</div>
+<div class="term"><b>Ridge</b>A long line of mountains on the sea floor.</div>
+<div class="term"><b>Subduction</b>One plate sinks under another plate.</div>
+<div class="term"><b>Convection</b>Hot rock rises, cool rock sinks, again and again.</div></div></section>
+
+<section class="pg" id="ps"><h2>🌍 Plate Tectonics: Simulation</h2>
+<div class="sim" id="simP">
+<div class="st" id="pst"></div>
+<svg class="main" viewBox="0 0 1180 760" preserveAspectRatio="xMidYMid meet">
+<g id="pw"></g>
+<text x="590" y="50" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#f4f7ff" style="filter:drop-shadow(0 4px 6px #000)">MOVING PLATES OF THE EARTH</text>
+</svg>
+<div class="ctl">
+<div class="row"><span>Edge</span>
+<button class="btn b-in sel" data-m="div">🔵 Divergent (apart)</button><button class="btn b-out" data-m="conv">🔴 Convergent (together)</button><button class="btn b-play" data-m="tra">🟡 Transform (slide)</button><button class="btn b-auto" id="pAuto">⟳ Auto tour</button></div>
+<div class="row"><span>Action</span>
+<button class="btn b-org" id="pPlay">⏸ Pause</button><button class="btn b-teal" id="pVol">🌋 Erupt</button><button class="btn b-pink" id="pQuake">💥 Earthquake</button><button class="btn b-set" id="pReset">⏮ Reset</button></div>
+<div class="row"><span>Speed</span>
+<button class="btn b-set" id="pSlow">− Slower</button><button class="btn b-set" id="pFast">+ Faster</button><button class="btn b-auto" data-s="0.5">🐢 Slow</button><button class="btn b-play" data-s="1">🚶 Normal</button><button class="btn b-out" data-s="2.5">🚀 Fast</button></div>
+<div class="row"><span>Show</span>
+<button class="btn tg on" data-k="lab">🏷 Labels</button><button class="btn tg on" data-k="ar">➜ Arrows</button><button class="btn tg on" data-k="mg">🔥 Magma flow</button><button class="btn tg on" data-k="fx">✨ Effects</button><button class="btn b-fs" data-fs="simP">⛶ Full screen</button></div>
+</div></div></section>
+
+<!-- ============ PHASES OF THE MOON ============ -->
+<section class="pg" id="md"><h2>🌙 Phases of the Moon: Definition</h2>
+<div class="card def tilt"><b>Moon phases</b> are the different shapes of the bright part of the Moon that we see from Earth. The Moon makes no light of its own. It only <b>reflects sunlight</b>. Half of the Moon is always lit by the Sun, but as the Moon goes around Earth we see a different amount of the lit half.</div>
+<div class="stats">
+<div class="card stat tilt" style="color:#ffc247"><i>29.5</i>Days from one New Moon to the next</div>
+<div class="card stat tilt" style="color:#9b7bff"><i>8</i>Main phases</div>
+<div class="card stat tilt" style="color:#22d3a0"><i>½</i>The Moon is always half lit by the Sun</div>
+<div class="card stat tilt" style="color:#2ea8ff"><i>1</i>Same side of the Moon always faces Earth</div></div></section>
+
+<section class="pg" id="me"><h2>🌙 Phases of the Moon: Explanation</h2>
+<div class="two">
+<div class="card c-g tilt"><h3>🌱 Waxing (growing bigger)</h3><ol>
+<li><b>New Moon:</b> the Moon is between Earth and Sun. The lit side faces away, so we see no Moon.</li>
+<li>Each night a bit more of the <b>right side</b> shines. This is a <b>crescent</b>.</li>
+<li><b>First Quarter:</b> half of the Moon we see is bright.</li>
+<li>More than half is bright. This is <b>gibbous</b>. Then comes the <b>Full Moon</b>.</li></ol></div>
+<div class="card c-v tilt"><h3>🍂 Waning (getting smaller)</h3><ol>
+<li><b>Full Moon:</b> Earth is between Sun and Moon. The whole face is bright.</li>
+<li>The bright part starts to shrink from the right side. Still more than half: <b>gibbous</b>.</li>
+<li><b>Last Quarter:</b> again half is bright, on the <b>left side</b>.</li>
+<li>A thin <b>crescent</b> is left. Then it is a New Moon again.</li></ol></div></div>
+<p class="ex" style="text-align:center;margin-top:8px">These pictures are for people in the Northern Hemisphere. In the Southern Hemisphere the bright side is on the other side.</p>
+<div class="pgrid" id="mgrid"></div>
+<div class="terms">
+<div class="term"><b>Orbit</b>The path the Moon takes around Earth.</div>
+<div class="term"><b>Crescent</b>A thin bright curve, less than half.</div>
+<div class="term"><b>Quarter</b>Half of the Moon's face is bright.</div>
+<div class="term"><b>Gibbous</b>More than half is bright.</div>
+<div class="term"><b>Waxing</b>The bright part is growing.</div>
+<div class="term"><b>Waning</b>The bright part is shrinking.</div>
+<div class="term"><b>Crater</b>A round hole made when a rock hit the Moon.</div>
+<div class="term"><b>Reflect</b>To bounce light back, like a mirror.</div></div></section>
+
+<section class="pg" id="ms"><h2>🌙 Phases of the Moon: Simulation</h2>
+<div class="sim" id="simM">
+<div class="st" id="mst"></div>
+<svg class="main" viewBox="0 0 1180 760" preserveAspectRatio="xMidYMid meet">
+<rect width="1180" height="760" rx="18" fill="#03061a"/>
+<g id="stars"></g>
+<g id="mw"></g>
+<text x="590" y="50" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#f4f7ff" style="filter:drop-shadow(0 4px 6px #000)">PHASES OF THE MOON</text>
+</svg>
+<div class="ctl">
+<div class="row"><span>Play</span>
+<button class="btn b-org" id="mPlay">⏸ Pause</button><button class="btn b-set" id="mReset">⏮ Reset</button><button class="btn b-set" id="mSlow">− Slower</button><button class="btn b-set" id="mFast">+ Faster</button></div>
+<div class="row"><span>Go to</span>
+<button class="btn" style="background:#9b7bff;color:#fff" data-p="0">🌑 New</button><button class="btn b-in" data-p="1">🌒 Waxing crescent</button><button class="btn b-teal" data-p="2">🌓 First quarter</button><button class="btn b-auto" data-p="3">🌔 Waxing gibbous</button>
+<button class="btn b-play" data-p="4">🌕 Full</button><button class="btn b-org" data-p="5">🌖 Waning gibbous</button><button class="btn b-out" data-p="6">🌗 Last quarter</button><button class="btn b-pink" data-p="7">🌘 Waning crescent</button></div>
+<div class="row"><span>Show</span>
+<button class="btn tg on" data-k="lab">🏷 Labels</button><button class="btn tg on" data-k="or">⭕ Orbit</button><button class="btn tg on" data-k="sun">☀ Sunlight</button><button class="btn tg on" data-k="ph">🌙 Phase moons</button><button class="btn tg on" data-k="vl">👁 View line</button><button class="btn tg on" data-k="st">🎞 Phase strip</button><button class="btn b-fs" data-fs="simM">⛶ Full screen</button></div>
+</div></div></section>
+
+<footer>Developed by MUHAMMAD IMRAN KHAN · MSc Computer Science · 03007603964 · 03147603964</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+/* floating bubbles + 3D card tilt */
+for(let i=0;i<14;i++){const b=document.createElement("div");b.className="bub";const s=30+Math.random()*90;b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}vw;animation-duration:${18+Math.random()*24}s;animation-delay:-${Math.random()*30}s`;document.body.appendChild(b)}
+document.querySelectorAll(".tilt").forEach(c=>{c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`});c.addEventListener("mouseleave",()=>c.style.transform="")});
+
+/* topic + page switching */
+let topic="p",page="d";
+function show(){document.querySelectorAll(".pg").forEach(e=>e.classList.toggle("on",e.id===topic+page));document.querySelectorAll(".tp").forEach(b=>b.classList.toggle("on",b.dataset.t===topic));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.pg===page));window.scrollTo(0,0)}
+document.querySelectorAll(".tp").forEach(b=>b.onclick=()=>{topic=b.dataset.t;show()});
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{page=b.dataset.pg;show()});
+document.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>{const s=$(b.dataset.fs);document.fullscreenElement?document.exitFullscreen():s.requestFullscreen&&s.requestFullscreen()});
+document.addEventListener("fullscreenchange",()=>document.querySelectorAll("[data-fs]").forEach(b=>b.textContent=document.fullscreenElement?"✕ Exit full screen":"⛶ Full screen"));
+
+/* drawing helpers */
+const lab=(t,x,y,tx,ty)=>{const w=t.length*7+18;return `<g class="lab"><line x1="${tx}" y1="${ty}" x2="${x}" y2="${y}"/><rect x="${x-w/2}" y="${y-11}" width="${w}" height="22" rx="7"/><text x="${x}" y="${y+4.5}" text-anchor="middle">${t}</text></g>`};
+const arr=(x1,y1,x2,y2,c,w=10)=>{const a=Math.atan2(y2-y1,x2-x1),h=w*2.4,p=k=>`${x2-h*Math.cos(a+k)},${y2-h*Math.sin(a+k)}`;return `<g style="filter:drop-shadow(0 0 6px ${c})"><line x1="${x1}" y1="${y1}" x2="${x2-h*.6*Math.cos(a)}" y2="${y2-h*.6*Math.sin(a)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/><polygon points="${x2},${y2} ${p(.5)} ${p(-.5)}" fill="${c}"/></g>`};
+const wave=(y,a,ph)=>{let d=`M0 ${y}`;for(let x=0;x<=1180;x+=20)d+=` L${x} ${y+Math.sin(x/60+ph)*a}`;return d};
+const cloud=(x,y,s)=>`<g transform="translate(${x},${y}) scale(${s})" fill="#fff" opacity=".92"><ellipse rx="50" ry="20"/><ellipse cx="-30" cy="8" rx="30" ry="15"/><ellipse cx="32" cy="6" rx="34" ry="16"/></g>`;
+const sky=t=>`<rect width="1180" height="760" fill="url(#sky)"/><circle cx="1075" cy="95" r="44" fill="#ffe27a" style="filter:drop-shadow(0 0 26px #ffd54a)"/>${cloud((t*10)%1400-100,130,1)}${cloud((t*6+600)%1400-100,90,.8)}`;
+const rings=(cx,cy,t,c="#ffc247")=>[0,1,2].map(i=>{const u=(t*.6+i/3)%1;return `<circle cx="${cx}" cy="${cy}" r="${10+u*130}" fill="none" stroke="${c}" stroke-width="${5*(1-u)+.5}" opacity="${1-u}"/>`}).join("");
+const cell=(cx,cy,rx,ry,cw,t,c)=>{const d=cw?`M${cx-rx} ${cy} A${rx} ${ry} 0 0 1 ${cx+rx} ${cy} A${rx} ${ry} 0 0 1 ${cx-rx} ${cy}`:`M${cx+rx} ${cy} A${rx} ${ry} 0 0 0 ${cx-rx} ${cy} A${rx} ${ry} 0 0 0 ${cx+rx} ${cy}`;const s=cw?1:-1;
+ return `<path d="${d}" fill="none" stroke="${c}" stroke-width="7" stroke-dasharray="18 16" stroke-dashoffset="${-t*70}" opacity=".85" stroke-linecap="round"/><polygon points="${cx+s*16},${cy-ry} ${cx-s*8},${cy-ry-14} ${cx-s*8},${cy-ry+14}" fill="${c}"/><polygon points="${cx-s*16},${cy+ry} ${cx+s*8},${cy+ry-14} ${cx+s*8},${cy+ry+14}" fill="${c}"/>`};
+
+/* =================== PLATE TECTONICS =================== */
+const P={mode:"div",t:0,speed:1,paused:false,auto:false,at:0,stress:0,snap:0,quake:0,off:0,erupt:0,tog:{lab:1,ar:1,mg:1,fx:1}};
+const MODES={div:["Divergent edge: plates move APART","#2ea8ff"],conv:["Convergent edge: plates push TOGETHER","#ff4d67"],tra:["Transform edge: plates SLIDE past each other","#ffc247"]};
+function setMode(m,keep){P.mode=m;if(!keep)P.auto=false;P.stress=0;P.snap=0;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("sel",b.dataset.m===m));$("pAuto").classList.toggle("sel",P.auto)}
+document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+$("pAuto").onclick=()=>{P.auto=!P.auto;P.at=0;$("pAuto").classList.toggle("sel",P.auto)};
+$("pPlay").onclick=()=>{P.paused=!P.paused;$("pPlay").textContent=P.paused?"▶ Play":"⏸ Pause"};
+$("pVol").onclick=()=>{P.erupt=1;if(P.mode!=="conv")setMode("conv")};
+$("pQuake").onclick=()=>{P.quake=2;if(P.mode==="tra")P.stress=1};
+$("pReset").onclick=()=>{Object.assign(P,{t:0,speed:1,stress:0,snap:0,quake:0,off:0,erupt:0,paused:false});$("pPlay").textContent="⏸ Pause"};
+$("pSlow").onclick=()=>P.speed=clamp(P.speed-.3,.2,4);$("pFast").onclick=()=>P.speed=clamp(P.speed+.4,.2,4);
+document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>P.speed=+b.dataset.s);
+document.querySelectorAll("#simP .tg").forEach(b=>b.onclick=()=>{b.classList.toggle("on");P.tog[b.dataset.k]=b.classList.contains("on")?1:0});
+
+function plateStep(dt){
+ if(P.quake>0)P.quake=Math.max(0,P.quake-dt);P.erupt=Math.max(0,P.erupt-dt*.3);
+ if(P.paused)return;const s=dt*P.speed;P.t+=s;
+ if(P.auto){P.at+=dt;if(P.at>14){P.at=0;setMode(P.mode==="div"?"conv":P.mode==="conv"?"tra":"div",true)}}
+ if(P.mode==="tra"){if(P.snap>0){const inc=Math.min(P.snap,dt*300);P.off+=inc;P.snap-=inc}else{P.off+=s*14;P.stress+=s*.1;if(P.stress>=1){P.stress=0;P.snap=46;P.quake=1.8}}}
+}
+function dDiv(t){
+ const L=545,R=635,ph=(t*38)%160,tg=P.tog;
+ let s=sky(t)+`<rect y="400" width="1180" height="360" fill="url(#mantle)"/>`;
+ if(tg.mg)s+=cell(400,565,190,105,0,t,"#ffe9a8")+cell(780,565,190,105,1,t,"#ffe9a8");
+ s+=`<path d="M450 455 Q${L} 415 ${L} 330 L${R} 330 Q${R} 415 730 455 Z" fill="url(#magma)" style="filter:drop-shadow(0 0 ${14+6*Math.sin(t*4)}px #ff8a1f)"/>`;
+ if(tg.fx)for(let i=0;i<9;i++){const y=445-((t*55+i*41)%120);s+=`<circle cx="${590+Math.sin(t*2+i*2)*30}" cy="${y}" r="${4+i%3*2}" fill="#fff3a0" opacity=".85"/>`}
+ let a="",b="";
+ for(let k=-1;k<9;k++){const c=k&1?"#6a7398":"#414866";a+=`<rect x="${L-(k+1)*80-ph}" y="330" width="80" height="70" fill="${c}"/>`}
+ for(let k=-2;k<9;k++){const c=k&1?"#6a7398":"#414866";b+=`<rect x="${R+k*80+ph}" y="330" width="80" height="70" fill="${c}"/>`}
+ s+=`<g clip-path="url(#clL)">${a}</g><g clip-path="url(#clR)">${b}</g><rect x="0" y="330" width="${L}" height="6" fill="#fff" opacity=".18"/><rect x="${R}" y="330" width="545" height="6" fill="#fff" opacity=".18"/>`;
+ s+=`<polygon points="380,330 440,292 480,314 520,272 ${L},330" fill="#5b6590"/><polygon points="${R},330 660,272 700,314 740,292 800,330" fill="#5b6590"/><polygon points="520,272 508,290 532,290" fill="#fff"/><polygon points="660,272 648,290 672,290" fill="#fff"/>`;
+ s+=`<path d="${wave(235,5,t*2)} L1180 330 L0 330 Z" fill="url(#sea)" opacity=".72"/>`;
+ if(tg.fx){for(let i=0;i<3;i++){const x=1240-((t*35+i*420)%1300);s+=`<text x="${x}" y="${275+i*17+Math.sin(t*2+i)*6}" font-size="34">🐟</text>`}for(let i=0;i<3;i++){const x=(t*28+i*380)%1300-60;s+=`<text x="${x}" y="${300+i*10}" font-size="30" transform="translate(${2*x+60},0) scale(-1,1)">🐠</text>`}s+=`<text x="${(t*20+300)%1300}" y="310" font-size="30" opacity="0">.</text>`}
+ if(P.quake>0)s+=rings(590,360,t*2);
+ if(tg.ar)s+=arr(500,150,330,150,"#2ea8ff",12)+arr(680,150,850,150,"#2ea8ff",12)+lab("Plate B moves away →",985,150,880,150)+lab("← Plate A moves away",195,150,300,150);
+ if(tg.lab)s+=lab("Ocean water",130,262,130,290)+lab("Mid-ocean ridge",590,215,590,290)+lab("Plate A (crust)",170,428,170,385)+lab("Plate B (crust)",1010,428,1010,385)+lab("Magma rises",590,490,590,420)+lab("New sea floor forms",900,268,780,352)+lab("Convection: hot rock rises, cool rock sinks",420,720,420,672)+lab("Mantle",1050,620,1050,620);
+ return s}
+function dConv(t){
+ const cx=930,cy=180,e=Math.max(P.erupt,.3+.7*Math.max(0,Math.sin(t*.7))),tg=P.tog;
+ let s=sky(t)+`<rect y="372" width="1180" height="388" fill="url(#mantle)"/>`;
+ if(tg.mg)s+=cell(330,565,200,100,1,t,"#ffe9a8");
+ s+=`<path d="${wave(258,5,t*2)} L545 372 L0 372 Z" fill="url(#sea)" opacity=".85"/>`;
+ s+=`<polygon points="545,262 1180,262 1180,470 850,468 790,447 720,395 650,345 545,325" fill="url(#land)"/><rect x="545" y="262" width="635" height="14" fill="#4caf50"/>`;
+ s+=`<g transform="translate(0,262) scale(1,${1+.08*Math.sin(t*.8)}) translate(0,-262)"><polygon points="560,262 610,200 640,230 690,175 745,262" fill="#8c93a3"/><polygon points="690,175 668,205 712,205" fill="#fff"/><polygon points="610,200 597,222 623,222" fill="#fff"/></g>`;
+ s+=`<polygon points="850,262 915,180 945,180 1010,262" fill="#6b4a3a"/>`;
+ if(e>.25)s+=`<path d="M922 184 L900 262 L925 262 Z M938 184 L962 262 L940 262 Z" fill="#ff8a1f" opacity="${e}" style="filter:drop-shadow(0 0 8px #ff5a1f)"/>`;
+ s+=`<path d="M-20 350 L540 350 C650 350 720 410 800 480 L1060 715" fill="none" stroke="#3b4058" stroke-width="46"/><path d="M-20 350 L540 350 C650 350 720 410 800 480 L1060 715" fill="none" stroke="#8f9bd0" stroke-width="46" stroke-dasharray="40 40" stroke-dashoffset="${-t*45}" opacity=".5"/>`;
+ s+=`<ellipse cx="930" cy="430" rx="64" ry="30" fill="url(#magma)" style="filter:drop-shadow(0 0 ${12+5*Math.sin(t*4)}px #ff8a1f)"/>`;
+ if(tg.mg)s+=`<path d="M925 598 C900 520 960 470 930 430 C910 380 950 300 930 190" fill="none" stroke="#ffb020" stroke-width="12" stroke-linecap="round" stroke-dasharray="18 12" stroke-dashoffset="${-t*70}" style="filter:drop-shadow(0 0 8px #ff7a1a)"/>`;
+ if(tg.fx){
+  for(let i=0;i<18;i++){const u=(t*.9+i/18)%1,vx=((i%7)-3)*55,x=cx+vx*u*1.2,y=cy-520*u+560*u*u;s+=`<circle cx="${x}" cy="${y}" r="${7*(1-u*.5)}" fill="hsl(${50-u*40} 100% 55%)" opacity="${e*(1-u*u*u)}"/>`}
+  for(let i=0;i<7;i++){const u=(t*.25+i/7)%1;s+=`<circle cx="${cx+Math.sin(t+i)*18+u*40}" cy="${cy-u*170}" r="${16+u*38}" fill="#8a8f9c" opacity="${.65*(1-u)*e}"/>`}
+  s+=rings(610,352,t)}
+ for(let i=0;i<2;i++){const x=540-((t*35+i*260)%560);s+=`<text x="${x}" y="${290+i*22+Math.sin(t*2+i)*5}" font-size="32">🐟</text>`}
+ if(tg.ar)s+=arr(90,190,290,190,"#ff4d67",12)+arr(1165,215,1080,215,"#ffc247",9)+lab("Ocean plate moves →",190,150,190,178);
+ if(tg.lab)s+=lab("Ocean plate (heavy)",150,425,150,360)+lab("Land plate (light)",1010,345,1010,345)+lab("Trench",520,310,545,372)+lab("Plate sinks: subduction",700,530,780,470)+lab("Volcano",930,120,930,178)+lab("Mountains",640,150,650,215)+lab("Magma rises",1080,540,935,540)+lab("Earthquakes",430,485,600,362)+lab("Mantle",300,715,300,715)+lab("Convection",300,470,300,470);
+ return s}
+function dTra(t){
+ const tg=P.tog,o=P.off%240,y0=110;
+ let s=`<rect width="1180" height="760" fill="url(#grass)"/><rect x="20" y="110" width="560" height="590" rx="14" fill="url(#plA)"/><rect x="600" y="110" width="560" height="590" rx="14" fill="url(#plB)"/>`;
+ let A="",B="";
+ for(let k=0;k<4;k++){const ya=y0+k*240-o,yb=y0+(k-1)*240+o;
+  A+=`<rect x="20" y="${ya+100}" width="560" height="30" fill="#3a3d46"/><line x1="20" y1="${ya+115}" x2="580" y2="${ya+115}" stroke="#ffd54a" stroke-width="3" stroke-dasharray="26 18"/><text x="90" y="${ya+70}" font-size="46">🏠</text><text x="400" y="${ya+205}" font-size="46">🌳</text><text x="490" y="${ya+60}" font-size="40">🌲</text><text x="${40+(t*70+k*150)%480}" y="${ya+124}" font-size="30" transform="translate(0,0)">🚗</text>`;
+  B+=`<rect x="600" y="${yb+100}" width="560" height="30" fill="#3a3d46"/><line x1="600" y1="${yb+115}" x2="1160" y2="${yb+115}" stroke="#ffd54a" stroke-width="3" stroke-dasharray="26 18"/><text x="1040" y="${yb+70}" font-size="46">🏘️</text><text x="700" y="${yb+205}" font-size="46">🌳</text><text x="880" y="${yb+60}" font-size="40">🌲</text><text x="${1130-(t*70+k*150)%480}" y="${yb+124}" font-size="30">🚙</text>`}
+ s+=`<g clip-path="url(#clA)">${A}</g><g clip-path="url(#clB)">${B}</g>`;
+ const st=P.stress,fl=P.snap>0?1:0,w=4+st*9;
+ s+=`<rect x="580" y="110" width="20" height="590" fill="#1a0f0a"/><polyline points="590,110 582,190 598,270 583,350 597,430 582,510 598,590 588,700" fill="none" stroke="${fl?"#fff":`hsl(${30-30*st} 100% 55%)`}" stroke-width="${w}" opacity="${.35+.65*st+fl}" style="filter:drop-shadow(0 0 ${6+st*14}px #ff4d1a)"/>`;
+ if(tg.fx&&P.quake>0)s+=rings(590,400,t*2);
+ s+=`<rect x="110" y="716" width="400" height="20" rx="10" fill="#1c2b63" stroke="#6f8fd8"/><rect x="110" y="716" width="${400*st}" height="20" rx="10" fill="hsl(${120-120*st} 90% 55%)"/>`;
+ if(tg.lab)s+=lab("Stress",65,726,65,726)+lab("Earthquake when the bar is full!",690,726,690,726);
+ if(tg.ar)s+=arr(300,330,300,215,"#ffc247",13)+arr(880,215,880,330,"#22d3a0",13);
+ if(tg.lab)s+=lab("Plate A moves UP",300,175,300,215)+lab("Plate B moves DOWN",880,175,880,215)+lab("Fault line (big crack)",590,96,590,130)+lab("Road",150,400,150,400)+lab("Road (look how it breaks!)",1000,400,1000,400)+lab("Top view: looking down from above",590,745,590,745);
+ return s}
+function plateDraw(){
+ const t=P.t;let s=P.mode==="div"?dDiv(t):P.mode==="conv"?dConv(t):dTra(t);
+ if(P.quake>0)s+=`<text x="590" y="112" text-anchor="middle" font-family="Arial Black,Arial" font-size="58" fill="#ff4d67" stroke="#fff" stroke-width="2" opacity="${.5+.5*Math.sin(t*30)}">EARTHQUAKE!</text>`;
+ const q=P.quake>0?Math.min(1,P.quake)*(P.mode==="tra"?9:6):0;
+ $("pw").setAttribute("transform",`translate(${(Math.random()-.5)*q},${(Math.random()-.5)*q})`);$("pw").innerHTML=s;
+ const m=MODES[P.mode];$("pst").innerHTML=`<span style="color:${m[1]}">${m[0]}</span>`+(P.paused?' <small style="color:#ffc247">· Paused</small>':"")+` <small style="font:600 15px Segoe UI;color:#a3b4e0"> · speed ×${P.speed.toFixed(1)}</small>`}
+
+/* =================== PHASES OF THE MOON =================== */
+const CY=29.53,NAMES=["New Moon","Waxing Crescent","First Quarter","Waxing Gibbous","Full Moon","Waning Gibbous","Last Quarter","Waning Crescent"],COL=["#9b7bff","#2ea8ff","#19d3da","#22d3a0","#ffc247","#ff8f3a","#ff4d67","#ff7eb6"];
+const NOTE=["Moon is between Earth and Sun. We see no light.","A thin bright curve on the right.","Half of the Moon looks bright.","More than half is bright.","Whole face is bright!","Bright part is starting to shrink.","Half is bright on the left.","A thin bright curve on the left."];
+const M={day:0,t:0,speed:1,paused:false,go:null,tog:{lab:1,or:1,sun:1,ph:1,vl:1,st:1}};
+const MT=`<circle r="100" fill="url(#mg)"/><g fill="#8b8a86" opacity=".42"><ellipse cx="-30" cy="-35" rx="38" ry="28"/><ellipse cx="32" cy="-18" rx="26" ry="34"/><ellipse cx="8" cy="30" rx="34" ry="22"/><ellipse cx="-48" cy="24" rx="16" ry="24"/></g><g fill="#a29f95" opacity=".55" stroke="#8a877d" stroke-width="3"><circle cx="55" cy="42" r="14"/><circle cx="-62" cy="-8" r="10"/><circle cx="-20" cy="62" r="12"/><circle cx="62" cy="-46" r="9"/><circle cx="0" cy="-72" r="8"/><circle cx="-70" cy="46" r="8"/><circle cx="20" cy="-45" r="7"/></g>`;
+const lit=th=>{const c=Math.cos(th),rx=100*Math.abs(c);return th<Math.PI?`M0 -100 A100 100 0 0 1 0 100 A${rx} 100 0 0 ${c>0?0:1} 0 -100 Z`:`M0 -100 A100 100 0 0 0 0 100 A${rx} 100 0 0 ${c<0?0:1} 0 -100 Z`};
+const litK=th=>(1-Math.cos(th))/2;
+const moonG=(x,y,r,d,id,gl)=>`<g transform="translate(${x},${y}) scale(${r/100})"><circle r="112" fill="#fff3b0" opacity="${gl}"/><circle r="100" fill="#141b3f"/><g opacity=".16">${MT}</g><clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${MT}</g><circle r="100" fill="none" stroke="#8fa0e0" stroke-width="${2.5*100/r}" opacity=".55"/></g>`;
+const HALF="M0 -100 A100 100 0 0 0 0 100 Z";
+const idx=f=>Math.floor(f*8+.5)%8;
+/* stars (once) */
+$("stars").innerHTML=[...Array(70)].map(()=>`<circle cx="${Math.random()*1180}" cy="${Math.random()*760}" r="${.6+Math.random()*1.6}" fill="#fff" opacity="${.3+Math.random()*.7}"/>`).join("");
+/* phase cards in Explanation */
+$("mgrid").innerHTML=NAMES.map((n,i)=>`<div class="card pc tilt" style="border-top:6px solid ${COL[i]}"><svg viewBox="-125 -125 250 250">${moonG(0,0,100,lit(i*Math.PI/4),"gc"+i,litK(i*Math.PI/4)*.25)}</svg><b style="color:${COL[i]}">${n}</b><span>${NOTE[i]}</span></div>`).join("");
+document.querySelectorAll("#mgrid .tilt").forEach(c=>{c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(800px) rotateY(${x*8}deg) rotateX(${-y*8}deg)`});c.addEventListener("mouseleave",()=>c.style.transform="")});
+
+$("mPlay").onclick=()=>{M.go=null;M.paused=!M.paused;$("mPlay").textContent=M.paused?"▶ Play":"⏸ Pause"};
+$("mReset").onclick=()=>{Object.assign(M,{day:0,speed:1,paused:false,go:null});$("mPlay").textContent="⏸ Pause"};
+$("mSlow").onclick=()=>M.speed=clamp(M.speed-.4,.2,5);$("mFast").onclick=()=>M.speed=clamp(M.speed+.5,.2,5);
+document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{M.go=+b.dataset.p*CY/8;$("mPlay").textContent="▶ Play"});
+document.querySelectorAll("#simM .tg").forEach(b=>b.onclick=()=>{b.classList.toggle("on");M.tog[b.dataset.k]=b.classList.contains("on")?1:0});
+
+function moonStep(dt){
+ M.t+=dt;
+ if(M.go!==null){M.paused=false;const d=(M.go-M.day+CY)%CY,inc=dt*9;if(d<=inc+.001||d>CY-.01){M.day=M.go;M.go=null;M.paused=true}else M.day=(M.day+inc)%CY;return}
+ if(!M.paused)M.day=(M.day+dt*M.speed*1.6)%CY;
+ $("mPlay").textContent=M.paused?"▶ Play":"⏸ Pause"}
+function moonDraw(){
+ const f=M.day/CY,th=f*2*Math.PI,E=[470,360],R=200,tg=M.tog,t=M.t,i8=idx(f);
+ const mx=E[0]-R*Math.cos(th),my=E[1]+R*Math.sin(th),k=litK(th);
+ let s="";
+ /* sun */
+ s+=`<g transform="translate(90,360)"><g transform="rotate(${t*8})">${[...Array(14)].map((_,i)=>`<polygon points="-8,-64 8,-64 0,-96" fill="#ffb020" opacity=".85" transform="rotate(${i*360/14})"/>`).join("")}</g><circle r="${62+3*Math.sin(t*3)}" fill="#ffcf3a" opacity=".25"/><circle r="58" fill="url(#sg)"/></g>`;
+ if(tg.sun){for(let i=0;i<7;i++){const y=300+i*20;s+=`<line x1="160" y1="${y}" x2="248" y2="${y}" stroke="#ffd54a" stroke-width="3" stroke-dasharray="14 10" stroke-dashoffset="${-t*50}" opacity=".7"/><polygon points="256,${y} 244,${y-5} 244,${y+5}" fill="#ffd54a" opacity=".85"/>`}}
+ /* orbit */
+ if(tg.or)s+=`<path d="M${E[0]+R} ${E[1]} A${R} ${R} 0 0 0 ${E[0]-R} ${E[1]} A${R} ${R} 0 0 0 ${E[0]+R} ${E[1]}" fill="none" stroke="#7fa0ff" stroke-width="3" stroke-dasharray="10 12" stroke-dashoffset="${-t*20}" opacity=".7"/>`;
+ /* phase moons on orbit */
+ if(tg.ph)for(let i=0;i<8;i++){const a=i*Math.PI/4,px=E[0]-R*Math.cos(a),py=E[1]+R*Math.sin(a);
+  s+=moonG(px,py,15,HALF,"om"+i,.1)+(i===i8?`<circle cx="${px}" cy="${py}" r="24" fill="none" stroke="${COL[i]}" stroke-width="3"/>`:"");
+  if(tg.lab){const c=Math.cos(a),sn=Math.sin(a),lx=E[0]-(R+34)*c,ly=E[1]+(R+34)*sn+(Math.abs(sn)>.9?sn*12:4);s+=`<text x="${lx}" y="${ly}" text-anchor="${c>.3?"end":c<-.3?"start":"middle"}" font-size="14" font-weight="700" fill="${i===i8?COL[i]:"#a9bbe8"}">${NAMES[i]}</text>`}}
+ /* view line */
+ if(tg.vl)s+=`<line x1="${E[0]}" y1="${E[1]}" x2="${mx}" y2="${my}" stroke="#fff" stroke-width="2" stroke-dasharray="6 6" opacity=".6"/>`;
+ /* earth */
+ const sh=(t*8)%120;
+ s+=`<g transform="translate(${E[0]},${E[1]})"><circle r="52" fill="#4aa8ff" opacity=".2"/><g clip-path="url(#ec)"><circle r="44" fill="url(#eg)"/><g transform="translate(${-60-sh},0)">${[0,1,2].map(j=>`<g transform="translate(${j*120},0)"><path d="M10 -22 q14 -14 30 -4 q12 10 2 24 q-14 12 -26 2 q-14 -8 -6 -22z" fill="#43b356"/><path d="M62 4 q14 -8 26 4 q8 12 -6 22 q-16 4 -22 -8 q-4 -10 2 -18z" fill="#4bbf5f"/><ellipse cx="100" cy="-30" rx="14" ry="6" fill="#fff" opacity=".8"/></g>`).join("")}</g><path d="M0 -44 A44 44 0 0 1 0 44 Z" fill="#000" opacity=".55"/></g><circle r="44" fill="none" stroke="#bfe6ff" stroke-width="2" opacity=".6"/></g>`;
+ /* moon in orbit */
+ s+=moonG(mx,my,24,HALF,"omv",.35);
+ /* big view */
+ const vx=960,vy=340,vr=118,dsp=`M0 -100 A100 100 0 0 1 0 100 A100 100 0 0 1 0 -100`;
+ s+=`<circle cx="${vx}" cy="${vy}" r="150" fill="#0a1436" opacity=".65" stroke="${COL[i8]}" stroke-width="3"/>`+moonG(vx,vy,vr,lit(th),"cv",k*.28);
+ s+=`<text x="${vx}" y="${vy+185}" text-anchor="middle" font-family="Georgia,serif" font-size="34" font-weight="700" fill="${COL[i8]}">${NAMES[i8]}</text><text x="${vx}" y="${vy+218}" text-anchor="middle" font-size="19" fill="#dfe8ff">${Math.round(k*100)}% of the Moon looks bright</text>`;
+ if(tg.lab)s+=lab("What we see from Earth",vx,vy-172,vx,vy-150)+lab("Sun",90,452,90,418)+lab("Sunlight",204,278,204,294)+lab("Earth",E[0],432,E[0],406)+lab("Moon",mx,my-46,mx,my-26)+lab("Moon's orbit",E[0],E[1]-R-22,E[0],E[1]-R-22);
+ /* strip */
+ if(tg.st)for(let i=0;i<8;i++){const x=135+i*130,a=i*Math.PI/4;
+  s+=(i===i8?`<rect x="${x-52}" y="626" width="104" height="112" rx="16" fill="${COL[i]}" opacity=".25" stroke="${COL[i]}" stroke-width="3"/>`:"")+moonG(x,672,28,lit(a),"sm"+i,litK(a)*.15);
+  if(tg.lab)s+=`<text x="${x}" y="726" text-anchor="middle" font-size="12.5" font-weight="700" fill="${i===i8?COL[i]:"#a9bbe8"}">${NAMES[i]}</text>`}
+ $("mw").innerHTML=s;
+ $("mst").innerHTML=`<span style="color:${COL[i8]}">${NAMES[i8]}</span> <small style="font:600 15px Segoe UI;color:#a3b4e0"> · Day ${M.day.toFixed(1)} of 29.5 · ${M.paused?"paused":"speed ×"+M.speed.toFixed(1)}</small>`}
+
+/* main loop: only the visible simulation runs */
+let last=performance.now();
+function frame(ts){const dt=clamp((ts-last)/1000,.001,.05);last=ts;
+ if(page==="s"){if(topic==="p"){plateStep(dt);plateDraw()}else{moonStep(dt);moonDraw()}}
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+document.addEventListener("keydown",e=>{if(e.key===" "&&page==="s"){e.preventDefault();(topic==="p"?$("pPlay"):$("mPlay")).click()}});
+</script></body></html>

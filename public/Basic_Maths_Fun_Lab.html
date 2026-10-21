@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEN Z EDTECH INTERACTIVE - Basic Maths Fun Lab</title>
+<style>
+:root{--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--red:#ff4d67;--grn:#22d3a0;--amb:#ffc247;--vio:#9b7bff;--org:#ff8f3a;--k:var(--grn)}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:18px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.bub{position:fixed;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 30% 30%,#fff5,#5b8cff22 60%,transparent 70%);animation:fl linear infinite;z-index:0}
+@keyframes fl{from{transform:translateY(105vh)}to{transform:translateY(-30vh)}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:22px 20px 40px}
+header{text-align:center;padding:8px 0;perspective:700px}
+.brand{font:900 clamp(30px,5.6vw,64px)/1.05 "Arial Black",Impact,Arial,sans-serif;color:#ff3b5c;letter-spacing:1px;text-shadow:1px 1px 0 #b0102b,2px 2px 0 #a00e26,3px 3px 0 #8f0c22,4px 4px 0 #7f0a1e,5px 5px 0 #6f091a,8px 12px 22px #000a,0 0 30px #ff3b5c66;transform:rotateX(12deg);animation:sw 6s ease-in-out infinite alternate}
+@keyframes sw{to{transform:rotateX(4deg) rotateY(3deg)}}
+header h1{font:700 26px Georgia,serif;margin-top:12px;color:var(--amb)}
+header p{color:var(--mut);font-size:19px}
+nav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0 10px}
+.tab{border:0;border-radius:18px;padding:12px 26px;font:800 20px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}
+.tab b{font-size:26px;margin-right:8px}
+.tab.on{background-color:var(--k);background-image:linear-gradient(180deg,#ffffff55,#00000040);color:#04102a;box-shadow:0 5px 0 #0a1233,0 10px 28px var(--k)}
+.pg{animation:in .5s}
+@keyframes in{from{opacity:0;transform:translateY(18px) rotateX(8deg)}}
+.acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.btn{border:0;border-radius:14px;padding:11px 22px;font:800 17px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}.btn:active{transform:translateY(3px)}
+.b1{background:var(--blue)}.b2{background:var(--amb)}.b3{background:var(--grn)}.b4{background:var(--pink,#ff7eb6)}
+.btn.sel{outline:3px solid #fff;outline-offset:2px}
+.card{background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-top:6px solid var(--k);border-radius:22px;padding:24px 30px;box-shadow:0 18px 40px #0009,inset 0 1px 0 #ffffff22;min-height:120px}
+.card h2{font:700 30px Georgia,serif;color:var(--k);margin-bottom:8px}
+.card .big{font-size:23px}
+.card ol{padding-left:26px;font-size:20px}li{margin:7px 0}
+.ex{margin-top:12px;display:inline-block;background:#0b1436;border:1px solid var(--line);border-radius:14px;padding:8px 18px;font:700 26px Georgia,serif;color:var(--amb)}
+.ctl{display:flex;gap:22px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.ctl label{color:var(--mut);font-size:16px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.ctl input{width:84px;padding:6px 10px;font:800 24px "Segoe UI",Arial;text-align:center;border-radius:12px;border:2px solid var(--line);background:#0a1230;color:#fff}
+.eq{text-align:center;font:900 46px Georgia,serif;color:#fff;text-shadow:0 0 22px var(--k)}
+.say{text-align:center;color:var(--amb);font-size:21px;font-weight:700;min-height:34px}
+.stage{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap;min-height:250px;background:radial-gradient(circle at 50% 0,#14286e,#050a1e 75%);border:1px solid var(--line);border-radius:22px;padding:18px;margin-top:8px}
+.box{border:3px dashed var(--c,#5b7cff);border-radius:18px;padding:10px 12px 12px;min-width:120px;background:#ffffff08;display:flex;flex-direction:column;align-items:center;gap:8px;animation:pop .4s}
+.box>i{font:700 15px "Segoe UI";font-style:normal;color:var(--mut)}
+.balls{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:calc((var(--bs) + 5px)*var(--cols));min-height:44px}
+.stage{--bs:42px;--cols:10}.stage[data-d="2"]{--bs:34px;--cols:15}.stage[data-d="3"]{--bs:28px;--cols:20}.stage[data-d="4"]{--bs:24px;--cols:25}
+.fs .stage{--bs:58px;--cols:10}.fs .stage[data-d="2"]{--bs:46px;--cols:15}.fs .stage[data-d="3"]{--bs:38px;--cols:20}.fs .stage[data-d="4"]{--bs:33px;--cols:25}
+.ball{width:var(--bs);height:var(--bs);font-size:calc(var(--bs)*.44);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI",Arial;font-weight:900;color:#fff;text-shadow:0 1px 3px #0009;background-color:var(--c);background-image:radial-gradient(circle at 32% 26%,rgba(255,255,255,.65) 0,rgba(255,255,255,0) 30%),radial-gradient(circle at 70% 78%,rgba(0,0,0,.28) 0,rgba(0,0,0,0) 55%);box-shadow:inset -4px -6px 9px #0004,0 5px 9px #0007;animation:pop .45s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{from{transform:scale(0) translateY(-20px);opacity:0}}
+.ball.gone{animation:gone .8s forwards}
+@keyframes gone{40%{transform:scale(1.25)}to{transform:translateY(-60px) scale(0);opacity:0}}
+.ball.hi{outline:3px solid #fff}
+.tot{border-color:var(--amb)}
+#app:fullscreen{max-width:none;width:100%;height:100%;overflow:auto;padding:20px 48px;background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e)}
+#app:-webkit-full-screen{max-width:none;width:100%;height:100%;overflow:auto;padding:20px 48px;background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e)}
+.fs header,.fs nav,.fs .acts,.fs footer,.fs .card h2{display:none}
+.fs .card{min-height:calc(100vh - 40px);border-radius:18px}
+.fs .box>i{font-size:19px}
+.fs .stage{min-height:46vh}
+.fs .eq{font-size:64px}.fs .say{font-size:27px}
+.fs .brand{font-size:clamp(28px,4vw,48px)}
+.b5{background:#fff}
+.dev{display:inline-flex;flex-direction:column;gap:2px;margin-top:14px;padding:14px 34px;border-radius:20px;background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-top:5px solid #ff3b5c;box-shadow:0 12px 30px #0009}
+.dev b{font:800 24px Georgia,serif;color:var(--amb)}.dev span{font-size:18px;color:var(--tx);letter-spacing:1px}
+footer{text-align:center;color:var(--mut);font-size:15px;margin-top:22px}
+</style></head><body>
+<div class="wrap" id="app">
+<header><div class="brand">GEN Z EDTECH INTERACTIVE</div><h1>Basic Maths Fun Lab</h1><p>Learn add, subtract, multiply and divide by counting colourful balls</p></header>
+<nav id="nav"></nav>
+<div class="pg" id="pg"></div>
+<footer><div class="tip">Click "Simulation" and count the balls together with the numbers!</div><div class="dev"><b>Muhammad Imran Khan</b><span>MSc Computer Science</span><span>03007603964</span><span>03147603964</span></div></footer>
+</div>
+<script>
+const COL=['#ff4d67','#ffc247','#22d3a0','#2ea8ff','#9b7bff','#ff8f3a','#19d3da','#ff7eb6'];
+const OPS={
+add:{n:'Addition',s:'+',k:'#22d3a0',def:'Addition means putting two or more groups together to find how many there are in all. We use the plus sign ( + ).',
+ exp:['Take a group of 3 balls.','Take another group of 2 balls.','Put both groups together.','Count all the balls: 1, 2, 3, 4, 5.','So 3 + 2 = 5. The answer is called the sum.'],ex:'3 + 2 = 5',
+ l:['First number','Second number'],v:[3,2],max:[100,100],min:[1,1]},
+sub:{n:'Subtraction',s:'−',k:'#ff4d67',def:'Subtraction means taking some things away from a group to find how many are left. We use the minus sign ( − ).',
+ exp:['Start with a group of 5 balls.','Take away 2 balls.','Count the balls that are left: 1, 2, 3.','So 5 − 2 = 3. The answer is called the difference.'],ex:'5 − 2 = 3',
+ l:['Start with','Take away'],v:[7,3],max:[150,150],min:[1,0]},
+mul:{n:'Multiplication',s:'×',k:'#ffc247',def:'Multiplication is a quick way of adding the same number again and again. We use the times sign ( × ).',
+ exp:['3 × 4 means 3 groups with 4 balls in each group.','Add the groups: 4 + 4 + 4.','Count all the balls: 12.','So 3 × 4 = 12. The answer is called the product.'],ex:'3 × 4 = 12',
+ l:['Number of groups','Balls in each group'],v:[3,4],max:[12,20],min:[1,1]},
+div:{n:'Division',s:'÷',k:'#2ea8ff',def:'Division means sharing a big group equally into smaller groups. We use the divide sign ( ÷ ).',
+ exp:['12 ÷ 3 means share 12 balls equally into 3 boxes.','Give one ball to each box again and again.','Stop when there are no balls to share.','Each box has 4 balls. So 12 ÷ 3 = 4.','If some balls are left over, that is the remainder.'],ex:'12 ÷ 3 = 4',
+ l:['Total balls','Number of boxes'],v:[12,3],max:[150,10],min:[1,1]}};
+const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let cur='add',view='def',tok=0;
+const el=(c,t)=>{const d=document.createElement('div');d.className=c;if(t!=null)d.textContent=t;return d};
+const ball=(i,t)=>{const b=el('ball',t);b.style.setProperty('--c',COL[i%8]);return b};
+function nav(){$('#nav').innerHTML='';for(const k in OPS){const b=document.createElement('button');b.className='tab'+(k==cur?' on':'');b.style.setProperty('--k',OPS[k].k);b.innerHTML='<b>'+OPS[k].s+'</b>'+OPS[k].n;b.onclick=()=>{cur=k;view='def';show()};$('#nav').appendChild(b)}}
+function show(){tok++;nav();const o=OPS[cur],p=$('#pg');p.style.setProperty('--k',o.k);p.style.animation='none';p.offsetHeight;p.style.animation='';
+ p.innerHTML='<div class="acts"><button class="btn b1" data-v="def">📖 Definition</button><button class="btn b2" data-v="exp">💡 Explanation</button><button class="btn b3" data-v="sim">▶ Simulation</button></div><div class="card" id="card"></div>';
+ p.querySelectorAll('.btn').forEach(b=>{if(b.dataset.v==view)b.classList.add('sel');b.onclick=()=>{view=b.dataset.v;tok++;show()}});
+ const c=$('#card');
+ if(view=='def')c.innerHTML='<h2>What is '+o.n+'?</h2><p class="big">'+o.def+'</p><div class="ex">Example: '+o.ex+'</div>';
+ else if(view=='exp')c.innerHTML='<h2>'+o.n+' explained step by step</h2><ol>'+o.exp.map(x=>'<li>'+x+'</li>').join('')+'</ol><div class="ex">'+o.ex+'</div>';
+ else{c.innerHTML='<h2>'+o.n+' Simulation</h2><div class="ctl"><label>'+o.l[0]+'<input id="a" type="number" min="'+o.min[0]+'" max="'+o.max[0]+'" value="'+o.v[0]+'"></label><b style="font-size:38px;color:'+o.k+'">'+o.s+'</b><label>'+o.l[1]+'<input id="b" type="number" min="'+o.min[1]+'" max="'+o.max[1]+'" value="'+o.v[1]+'"></label><button class="btn b4" id="go">▶ Start / Replay</button><button class="btn b5" id="fs">⛶ Full Screen</button></div><div class="eq" id="eq">&nbsp;</div><div class="say" id="say">&nbsp;</div><div class="stage" id="st"></div>';
+  $('#go').onclick=run;$('#fs').onclick=toggleFS;fsLabel();run()}}
+const cl=(v,lo,hi)=>Math.max(lo,Math.min(hi,Math.round(+v)||lo));
+async function run(){const my=++tok,o=OPS[cur],A=$('#a'),B=$('#b');
+ let a=cl(A.value,o.min[0],o.max[0]),b=cl(B.value,o.min[1],o.max[1]);
+ if(cur=='sub'&&b>a)b=a;if(cur=='div'&&b<1)b=1;A.value=a;B.value=b;
+ const st=$('#st'),say=t=>{if(my==tok)$('#say').textContent=t},eq=t=>{if(my==tok)$('#eq').textContent=t},ok=()=>my==tok,w=async ms=>{await sleep(ms);return ok()};
+ const N={add:a+b,sub:a,mul:a*b,div:a}[cur],lv=N<=24?1:N<=60?2:N<=110?3:4,sp=[1,.5,.25,.12][lv-1],t=ms=>Math.max(15,Math.round(ms*sp));st.dataset.d=lv;st.innerHTML='';const box=(t,c)=>{const x=el('box'),l=el('balls');x.style.setProperty('--c',c||'#5b7cff');x.append(el('',''),l);x.firstChild.replaceWith(Object.assign(document.createElement('i'),{textContent:t}));st.appendChild(x);return[x,l]};
+ if(cur=='add'){eq(a+' + '+b+' = ?');say('First group: '+a+' balls. Count with me!');
+  const[,g1]=box('First group = '+a,COL[3]);let n=0;
+  for(let i=0;i<a;i++){g1.appendChild(ball(n,++n));if(!await w(t(450)))return}
+  say('Second group: '+b+' balls. Keep counting!');const[,g2]=box('Second group = '+b,COL[5]);
+  for(let i=0;i<b;i++){g2.appendChild(ball(n,++n));if(!await w(t(450)))return}
+  say('Now put both groups together...');if(!await w(1100))return;
+  const[tx,tl]=box('Total',COL[1]);tx.classList.add('tot');
+  for(const g of [g1,g2])for(const x of[...g.children]){tl.appendChild(x);if(!await w(t(160)))return}
+  eq(a+' + '+b+' = '+(a+b));say('There are '+(a+b)+' balls in all. '+a+' + '+b+' = '+(a+b)+' 🎉')}
+ if(cur=='sub'){eq(a+' − '+b+' = ?');say('We have '+a+' balls. Count them!');
+  const[,g]=box('Start with '+a,COL[3]);const bs=[];
+  for(let i=0;i<a;i++){const x=ball(i,i+1);bs.push(x);g.appendChild(x);if(!await w(t(350)))return}
+  if(b>0){say('Now take away '+b+' balls...');if(!await w(900))return}
+  for(let i=0;i<b;i++){const x=bs.pop();x.classList.add('gone');say('Take away '+(i+1)+' of '+b);setTimeout(()=>x.remove(),800);if(!await w(t(700)))return}
+  say('Count the balls that are left:');
+  for(let i=0;i<bs.length;i++){bs[i].textContent=i+1;bs[i].classList.add('hi');if(!await w(t(450)))return}
+  eq(a+' − '+b+' = '+(a-b));say(a-b+' balls are left. '+a+' − '+b+' = '+(a-b)+' 🎉')}
+ if(cur=='mul'){eq(a+' × '+b+' = ?');say(a+' groups, and each group has '+b+' balls.');let n=0;
+  for(let g=0;g<a;g++){const[,l]=box('Group '+(g+1)+' ('+b+' balls)',COL[g%8]);
+   for(let i=0;i<b;i++){l.appendChild(ball(n,++n));if(!await w(t(230)))return}
+   say('Group '+(g+1)+' done. Balls so far: '+n);if(!await w(t(500)))return}
+  eq(a+' × '+b+' = '+a*b);say(a+' groups of '+b+' = '+a*b+' balls. '+a+' × '+b+' = '+a*b+' 🎉')}
+ if(cur=='div'){eq(a+' ÷ '+b+' = ?');say('We have '+a+' balls to share equally into '+b+' boxes.');
+  const[px,pl]=box('Balls to share = '+a,COL[3]);const bs=[];
+  for(let i=0;i<a;i++){const x=ball(i,i+1);bs.push(x);pl.appendChild(x);if(!await w(t(140)))return}
+  const bx=[];for(let j=0;j<b;j++)bx.push(box('Box '+(j+1),COL[j%8])[1]);
+  if(!await w(800))return;const q=Math.floor(a/b);
+  for(let r=1;r<=q;r++){say('Round '+r+': give 1 ball to every box');
+   for(let j=0;j<b;j++){const x=bs.shift();x.textContent=r;bx[j].appendChild(x);if(!await w(t(400)))return}
+   if(!await w(t(500)))return}
+  const rem=a%b;bs.forEach(x=>x.textContent='');
+  eq(a+' ÷ '+b+' = '+q+(rem?'  (remainder '+rem+')':''));
+  say('Each box has '+q+' balls. '+(rem?rem+' ball(s) are left over — that is the remainder. ':'Nothing is left over. ')+'🎉')}}
+const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function toggleFS(){const a=$('#app');if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}}
+function fsLabel(){const on=!!fsEl();$('#app').classList.toggle('fs',on);const b=$('#fs');if(b)b.textContent=on?'✖ Exit Full Screen':'⛶ Full Screen'}
+document.addEventListener('fullscreenchange',fsLabel);document.addEventListener('webkitfullscreenchange',fsLabel);
+const wr=document.body;
+for(let i=0;i<18;i++){const d=el('bub'),s=30+Math.random()*90;d.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;animation-duration:'+(18+Math.random()*24)+'s;animation-delay:-'+Math.random()*30+'s';wr.appendChild(d)}
+show();
+</script></body></html>

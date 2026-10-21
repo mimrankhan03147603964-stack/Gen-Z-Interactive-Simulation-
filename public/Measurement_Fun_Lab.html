@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEN Z EDTECH INTERACTIVE - Measurement Fun Lab</title>
+<style>
+:root{--line:#2a3d80;--tx:#eaf0ff;--mut:#a3b4e0;--blue:#2ea8ff;--amb:#ffc247;--grn:#22d3a0;--k:var(--blue)}
+*{box-sizing:border-box;margin:0}
+body{background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e);background-size:300% 300%;animation:bg 24s ease infinite;color:var(--tx);font:18px/1.6 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 100%}}
+.bub{position:fixed;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 30% 30%,#fff5,#5b8cff22 60%,transparent 70%);animation:fl linear infinite;z-index:0}
+@keyframes fl{from{transform:translateY(105vh)}to{transform:translateY(-30vh)}}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:22px 20px 40px}
+header{text-align:center;padding:8px 0;perspective:700px}
+.brand{font:900 clamp(30px,5.6vw,64px)/1.05 "Arial Black",Impact,Arial,sans-serif;color:#ff3b5c;letter-spacing:1px;text-shadow:1px 1px 0 #b0102b,2px 2px 0 #a00e26,3px 3px 0 #8f0c22,4px 4px 0 #7f0a1e,5px 5px 0 #6f091a,8px 12px 22px #000a,0 0 30px #ff3b5c66;transform:rotateX(12deg);animation:sw 6s ease-in-out infinite alternate}
+@keyframes sw{to{transform:rotateX(4deg) rotateY(3deg)}}
+header h1{font:700 26px Georgia,serif;margin-top:12px;color:var(--amb)}
+header p{color:var(--mut);font-size:19px}
+nav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0 10px}
+.tab{border:0;border-radius:18px;padding:12px 26px;font:800 20px "Segoe UI",Arial,sans-serif;color:#dfe8ff;background:linear-gradient(180deg,#26397d,#16244f);box-shadow:0 5px 0 #0a1233,0 10px 22px #0008;cursor:pointer;transition:.15s}
+.tab:hover{transform:translateY(-3px)}.tab b{font-size:24px;margin-right:8px}
+.tab.on{background-color:var(--k);background-image:linear-gradient(180deg,#ffffff55,#00000040);color:#04102a;box-shadow:0 5px 0 #0a1233,0 10px 28px var(--k)}
+.pg{animation:in .5s}
+@keyframes in{from{opacity:0;transform:translateY(18px) rotateX(8deg)}}
+.acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.btn{border:0;border-radius:14px;padding:11px 22px;font:800 17px "Segoe UI",Arial,sans-serif;color:#04102a;cursor:pointer;box-shadow:0 4px 0 #0007,0 8px 16px #0006;transition:.12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}.btn:active{transform:translateY(3px)}
+.b1{background:var(--blue)}.b2{background:var(--amb)}.b3{background:var(--grn)}.b4{background:#ff7eb6}.b5{background:#fff}
+.btn.sel{outline:3px solid #fff;outline-offset:2px}
+.card{background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-top:6px solid var(--k);border-radius:22px;padding:24px 30px;box-shadow:0 18px 40px #0009,inset 0 1px 0 #ffffff22;min-height:120px}
+.card h2{font:700 30px Georgia,serif;color:var(--k);margin-bottom:8px}
+.big{font-size:23px}.card ol{padding-left:26px;font-size:20px}li{margin:7px 0}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.ex{display:inline-block;background:#0b1436;border:1px solid var(--line);border-radius:14px;padding:8px 18px;font:700 24px Georgia,serif;color:var(--amb);margin-top:12px}
+.chips .ex{margin:0}
+.ctl{display:flex;gap:22px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.ctl label{color:var(--mut);font-size:16px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.ctl input{width:96px;padding:6px 10px;font:800 24px "Segoe UI",Arial;text-align:center;border-radius:12px;border:2px solid var(--line);background:#0a1230;color:#fff}
+.eq{text-align:center;font:900 46px Georgia,serif;color:#fff;text-shadow:0 0 22px var(--k)}
+.say{text-align:center;color:var(--amb);font-size:21px;font-weight:700;min-height:34px}
+.stage{--bs:42px;display:flex;gap:30px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:420px;background:radial-gradient(circle at 50% 0,#14286e,#050a1e 75%);border:1px solid var(--line);border-radius:22px;padding:18px;margin-top:8px;overflow:hidden}
+.ball,.seg{display:flex;align-items:center;justify-content:center;font:900 17px "Segoe UI",Arial;color:#fff;text-shadow:0 1px 3px #0009;background-color:var(--c);animation:pop .45s cubic-bezier(.3,1.8,.5,1)}
+.ball{width:var(--bs);height:var(--bs);border-radius:50%;background-image:radial-gradient(circle at 32% 26%,rgba(255,255,255,.65) 0,rgba(255,255,255,0) 30%),radial-gradient(circle at 70% 78%,rgba(0,0,0,.28) 0,rgba(0,0,0,0) 55%);box-shadow:inset -4px -6px 9px #0004,0 5px 9px #0007}
+@keyframes pop{from{transform:scale(0) translateY(-20px);opacity:0}}
+/* length */
+.lrows{--cw:min(44px,calc((100vw - 140px)/21));display:flex;flex-direction:column;gap:30px}
+.obj{display:flex;filter:drop-shadow(0 6px 8px #0009)}
+.cell{position:relative;width:var(--cw);height:calc(var(--cw)*1.15)}
+.body{position:absolute;inset:0}
+.pencil .body{background:linear-gradient(180deg,#ffe066 0 28%,#f5b800 28% 72%,#c98a00 72%)}
+.pencil .first .body{background:linear-gradient(90deg,#ff8fa3 0 55%,#c9d1e0 55% 80%,#f5b800 80%);border-radius:12px 0 0 12px}
+.pencil .last .body{background:linear-gradient(90deg,#f3cf9c 0 55%,#2b2b2b 55%);clip-path:polygon(0 0,100% 40%,100% 60%,0 100%)}
+.ribbon .body{background-image:linear-gradient(180deg,#ffffff50,#00000030)}
+.ribbon .first .body{border-radius:14px 0 0 14px}.ribbon .last .body{border-radius:0 14px 14px 0}
+.bd{position:absolute;left:50%;top:50%;width:calc(var(--cw)*.8);height:calc(var(--cw)*.8);margin:calc(var(--cw)*-.4) 0 0 calc(var(--cw)*-.4);border-radius:50%;background:var(--c);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font:900 calc(var(--cw)*.36) "Segoe UI",Arial;color:#fff;text-shadow:0 1px 3px #000a;animation:pop .4s;box-shadow:0 3px 6px #0008}
+.ruler{position:relative;width:calc(var(--cw)*20);height:74px;background:linear-gradient(180deg,#ffe9a8,#f0c15a);border-radius:6px;box-shadow:0 8px 16px #0008}
+.ruler::before{content:"";position:absolute;left:0;top:0;width:100%;height:9px;background:repeating-linear-gradient(90deg,#5a3b00 0 1px,transparent 1px calc(var(--cw)/10))}
+.tk{position:absolute;top:0;height:16px;border-left:2px solid #5a3b00}.tk.m{height:26px}
+.tk span{position:absolute;top:28px;left:0;transform:translateX(-50%);font:800 calc(var(--cw)*.36) "Segoe UI";color:#4a3000}
+.tk.hi{border-color:#e02040;height:46px;border-left-width:4px}.tk.hi span{color:#e02040;font-size:calc(var(--cw)*.5);top:46px}
+/* weight */
+.sc{position:relative;width:900px;height:545px;font-family:"Segoe UI Emoji","Apple Color Emoji","Segoe UI",sans-serif}
+.stand{position:absolute;left:446px;top:80px;width:8px;height:440px;background:linear-gradient(90deg,#8ea3e6,#4a5fa8)}
+.base{position:absolute;left:340px;top:515px;width:220px;height:20px;border-radius:12px;background:linear-gradient(180deg,#8ea3e6,#3a4f9a)}
+.beam{position:absolute;left:450px;top:74px;width:660px;height:14px;border-radius:8px;background:linear-gradient(180deg,#ffc247,#ff8f3a);transform:translateX(-50%);transition:transform .7s ease;box-shadow:0 4px 10px #0007}
+.pan{position:absolute;width:300px;margin-left:-150px;min-height:150px;transition:left .7s ease,top .7s ease;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:10px;border:4px solid #9fb4ff;border-top:0;border-radius:0 0 150px 150px;background:#ffffff18}
+.pan::before{content:"";position:absolute;top:-58px;left:50%;height:58px;border-left:3px solid #9fb4ff}
+.ob{font-size:88px;line-height:1}.obt{font:900 26px Georgia;color:var(--amb);background:#0b1436;border-radius:10px;padding:0 14px}
+.wts{display:flex;flex-wrap:wrap;gap:12px 8px;justify-content:center;align-items:flex-end}
+.w1,.w10{position:relative;display:flex;align-items:center;justify-content:center;font:900 16px "Segoe UI";color:#fff;text-shadow:0 1px 3px #000b;background-color:var(--c);background-image:linear-gradient(180deg,#ffffff60,#0000 45%,#0000004d);border-radius:8px 8px 4px 4px;box-shadow:0 4px 8px #0008;animation:pop .45s}
+.w1{width:48px;height:42px}.w10{width:78px;height:64px;font-size:22px;border:3px solid #0004}
+.w1::before,.w10::before{content:"";position:absolute;top:-9px;left:50%;width:18px;height:10px;margin-left:-9px;border-radius:8px 8px 0 0;background:var(--c);border:2px solid #0003;border-bottom:0}
+/* capacity */
+.jw{display:flex;gap:70px;align-items:flex-end;padding-right:80px}
+.queue{width:470px}.qt{font:800 19px "Segoe UI";color:var(--amb);margin:6px 0}
+.qg{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.bucket,.cup{clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);display:flex;align-items:center;justify-content:center;font:900 20px "Segoe UI";color:#fff;text-shadow:0 1px 3px #000b;background-color:var(--c);background-image:linear-gradient(180deg,#ffffffa0 0 12%,#0000 12%),linear-gradient(90deg,#ffffff50,#0000 40%,#0003);animation:pop .4s}
+.bucket{width:92px;height:76px}.cup{width:62px;height:64px;font-size:16px}
+.bucket.pour,.cup.pour{animation:pour .9s forwards}
+@keyframes pour{35%{transform:rotate(-70deg) translateY(-30px)}to{transform:rotate(-70deg) translateY(-30px);opacity:0}}
+.tank{position:relative;width:200px;height:344px}
+.jug{position:absolute;inset:0;border:4px solid #cfe0ff;border-top:0;border-radius:0 0 30px 30px;background:#ffffff0d;overflow:hidden}
+.liq{position:absolute;inset:0;display:flex;flex-direction:column-reverse}
+.lay{height:0;transition:height .8s;display:flex;align-items:center;justify-content:center;font:800 16px "Segoe UI";color:#fff;background-color:var(--c);background-image:linear-gradient(180deg,#ffffff40,#0000001f);overflow:hidden}
+.lay.on{height:var(--h)}
+.tick{position:absolute;left:0;right:0;border-top:2px solid #ffffff80;pointer-events:none}
+.tick span{position:absolute;right:6px;top:-22px;font:800 15px "Segoe UI";color:#fff;text-shadow:0 1px 3px #000}
+.lvl{position:absolute;left:100%;margin-left:12px;bottom:4px;transition:bottom .8s;white-space:nowrap;font:900 26px Georgia;color:#04102a;background:var(--amb);padding:0 14px;border-radius:10px}
+.lvl::before{content:"◀";position:absolute;left:-16px;color:var(--amb)}
+#app:fullscreen,#app:-webkit-full-screen{max-width:none;width:100%;height:100%;overflow:auto;padding:20px 48px;background:linear-gradient(135deg,#050a1e,#10205a,#2a0f4a,#050a1e)}
+.fs header,.fs nav,.fs .acts,.fs footer,.fs .card h2{display:none}
+.fs .card{min-height:calc(100vh - 40px);border-radius:18px}
+.fs .stage{min-height:64vh;--bs:52px}.fs .eq{font-size:64px}.fs .say{font-size:27px}
+.fs .lrows{--cw:min(72px,calc((100vw - 160px)/21))}
+.fs .sc,.fs .jw{zoom:1.2}
+.dev{display:inline-flex;flex-direction:column;gap:2px;margin-top:14px;padding:14px 34px;border-radius:20px;background:linear-gradient(160deg,#15265f,#0a1332);border:1px solid var(--line);border-top:5px solid #ff3b5c;box-shadow:0 12px 30px #0009}
+.dev b{font:800 24px Georgia,serif;color:var(--amb)}.dev span{font-size:18px;letter-spacing:1px}
+footer{text-align:center;color:var(--mut);font-size:15px;margin-top:22px}
+</style></head><body>
+<div class="wrap" id="app">
+<header><div class="brand">GEN Z EDTECH INTERACTIVE</div><h1>Measurement Fun Lab</h1><p>Learn length, weight and capacity with colourful blocks, balls and cups</p></header>
+<nav id="nav"></nav>
+<div class="pg" id="pg"></div>
+<footer><div class="tip">Click "Simulation" and count together with the numbers!</div><div class="dev"><b>Muhammad Imran Khan</b><span>MSc Computer Science</span><span>03007603964</span><span>03147603964</span></div></footer>
+</div>
+<script>
+const COL=['#ff4d67','#ffc247','#22d3a0','#2ea8ff','#9b7bff','#ff8f3a','#19d3da','#ff7eb6'];
+const OPS={
+len:{n:'Length',s:'📏',k:'#2ea8ff',def:'Length tells us how long, tall or far something is. We measure length with a ruler or a measuring tape.',
+ facts:['10 mm = 1 cm','100 cm = 1 m','1000 m = 1 km'],
+ exp:['Put one end of the object exactly at 0 on the ruler.','Keep the object straight along the ruler.','Look at the number where the object ends.','Write that number with its unit, like 7 cm.'],ex:'Pencil = 7 cm',l:'Length (1 to 100 cm)',v:7,min:1,max:100},
+wt:{n:'Weight',s:'⚖️',k:'#ff8f3a',def:'Weight tells us how heavy or light something is. We measure weight with a balance or a weighing scale.',
+ facts:['1000 g = 1 kg','1000 kg = 1 tonne'],
+ exp:['Put the object on one pan of the balance.','Put 1 kg balls on the other pan, one by one.','Keep adding until both pans are level.','Count the balls. That number is the weight of the object.'],ex:'Box = 5 kg',l:'Weight (1 to 100 kg)',v:5,min:1,max:100},
+cap:{n:'Capacity',s:'🥛',k:'#22d3a0',def:'Capacity tells us how much liquid a container can hold. We measure it in millilitres (ml) and litres (l).',
+ facts:['1000 ml = 1 l'],
+ exp:['Take a big jug that has litre marks on it.','Pour water into it, one cup (1 litre) at a time.','Count the cups you pour.','Read the mark where the water stops. That is the capacity.'],ex:'Jug = 6 litres',l:'Water (1 to 100 litres)',v:6,min:1,max:100}};
+const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let cur='len',view='def',tok=0;
+const el=(c,t)=>{const d=document.createElement('div');d.className=c;if(t!=null)d.textContent=t;return d};
+const cl=(v,lo,hi)=>Math.max(lo,Math.min(hi,Math.round(+v)||lo));
+function nav(){$('#nav').innerHTML='';for(const k in OPS){const b=document.createElement('button');b.className='tab'+(k==cur?' on':'');b.style.setProperty('--k',OPS[k].k);b.innerHTML='<b>'+OPS[k].s+'</b>'+OPS[k].n;b.onclick=()=>{cur=k;view='def';show()};$('#nav').appendChild(b)}}
+function show(){tok++;nav();const o=OPS[cur],p=$('#pg');p.style.setProperty('--k',o.k);p.style.animation='none';p.offsetHeight;p.style.animation='';
+ p.innerHTML='<div class="acts"><button class="btn b1" data-v="def">📖 Definition</button><button class="btn b2" data-v="exp">💡 Explanation</button><button class="btn b3" data-v="sim">▶ Simulation</button></div><div class="card" id="card"></div>';
+ p.querySelectorAll('.btn').forEach(b=>{if(b.dataset.v==view)b.classList.add('sel');b.onclick=()=>{view=b.dataset.v;show()}});
+ const c=$('#card');
+ if(view=='def')c.innerHTML='<h2>What is '+o.n+'?</h2><p class="big">'+o.def+'</p><div class="chips">'+o.facts.map(f=>'<div class="ex">'+f+'</div>').join('')+'</div>';
+ else if(view=='exp')c.innerHTML='<h2>How to measure '+o.n+'</h2><ol>'+o.exp.map(x=>'<li>'+x+'</li>').join('')+'</ol><div class="ex">Example: '+o.ex+'</div>';
+ else{c.innerHTML='<h2>'+o.n+' Simulation</h2><div class="ctl"><label>'+o.l+'<input id="a" type="number" min="'+o.min+'" max="'+o.max+'" value="'+o.v+'"></label><button class="btn b4" id="go">▶ Start / Replay</button><button class="btn b5" id="fs">⛶ Full Screen</button></div><div class="eq" id="eq">&nbsp;</div><div class="say" id="say">&nbsp;</div><div class="stage" id="st"></div>';
+  $('#go').onclick=run;$('#fs').onclick=toggleFS;fsLabel();run()}}
+async function run(){const my=++tok,o=OPS[cur],A=$('#a');const a=cl(A.value,o.min,o.max);A.value=a;
+ const st=$('#st'),say=t=>{if(my==tok)$('#say').textContent=t},eq=t=>{if(my==tok)$('#eq').textContent=t},w=async ms=>{await sleep(ms);return my==tok};
+ if(cur=='len'){const kind=a<=20?'pencil':'ribbon',rows=Math.ceil(a/20),sp=a<=20?1:a<=50?.6:.35,t=ms=>Math.max(70,ms*sp),nm=kind=='pencil'?'pencil':'ribbon';
+  st.innerHTML='<div class="lrows '+kind+'" id="lr"></div>';const lr=$('#lr'),T=[],C=[];
+  for(let r=0;r<rows;r++){const row=el('lrow'),ob=el('obj'),ru=el('ruler');T[r]=[];const n=Math.min(20,a-20*r);
+   for(let j=0;j<n;j++){const g=20*r+j,c=el('cell'+(g==0?' first':'')+(g==a-1?' last':'')),bd=el('body');if(kind=='ribbon')bd.style.backgroundColor=COL[g%8];c.appendChild(bd);ob.appendChild(c);C[g]=c}
+   for(let i=0;i<=20;i++){const k=el('tk'+(i%5?'':' m'));k.style.left='calc(var(--cw)*'+i+')';k.innerHTML='<span>'+(20*r+i)+'</span>';ru.appendChild(k);T[r][i]=k}
+   row.append(ob,ru);lr.appendChild(row)}
+  T[0][0].classList.add('hi');eq('Length = ? cm');say('This is a '+nm+'. How long is it? Let us measure it.');if(!await w(1600))return;
+  say('The '+nm+' starts at 0. Count each centimetre with me...');if(!await w(1300))return;
+  for(let i=0;i<a;i++){const r=Math.floor(i/20),j=i%20,bd=el('bd',i+1);bd.style.setProperty('--c',COL[i%8]);C[i].appendChild(bd);
+   document.querySelectorAll('.tk.hi').forEach(x=>x.classList.remove('hi'));T[r][j+1].classList.add('hi');
+   if(j==0&&r>0)C[i].scrollIntoView({block:'center',behavior:'smooth'});say(i+1+' cm');if(!await w(t(430)))return}
+  eq('Length = '+a+' cm');say('The '+nm+' ends at '+a+', so it is '+a+' cm long. That is '+a*10+' mm'+(a==100?' = 1 metre':'')+' 🎉')}
+ if(cur=='wt'){st.innerHTML='<div class="sc"><div class="stand"></div><div class="base"></div><div class="beam" id="bm"></div><div class="pan" id="pl"><div class="ob">📦</div><div class="obt" id="obt">? kg</div></div><div class="pan" id="pr"><div class="wts" id="wts"></div></div></div>';
+  const pos=th=>{const r=th*Math.PI/180,L=320,cx=450,by=80;$('#bm').style.transform='translateX(-50%) rotate('+th+'deg)';
+   $('#pl').style.left=(cx-L*Math.cos(r))+'px';$('#pl').style.top=(by-L*Math.sin(r)+58)+'px';$('#pr').style.left=(cx+L*Math.cos(r))+'px';$('#pr').style.top=(by+L*Math.sin(r)+58)+'px'};
+  const th=n=>n>=a?0:-Math.max(3,20*(a-n)/a),tens=Math.floor(a/10),ones=a%10;let n=0,i=0;pos(th(0));
+  eq('Box = ? kg');say('The box is on the left pan. We will add weights to the right pan until both pans are level.');if(!await w(1800))return;
+  if(tens)say('First we add big 10 kg weights.');if(tens&&!await w(1200))return;
+  for(let k=0;k<tens;k++){n+=10;const b=el('w10','10 kg');b.style.setProperty('--c',COL[i++%8]);$('#wts').appendChild(b);pos(th(n));say('Right pan: '+n+' kg');if(!await w(900))return}
+  if(ones&&tens){say('Now we add small 1 kg weights.');if(!await w(1000))return}
+  for(let k=0;k<ones;k++){n+=1;const b=el('w1','1 kg');b.style.setProperty('--c',COL[i++%8]);$('#wts').appendChild(b);pos(th(n));say('Right pan: '+n+' kg');if(!await w(750))return}
+  $('#obt').textContent=a+' kg';eq('Box = '+a+' kg');say('Both pans are level, so the box weighs '+a+' kg. That is '+a*1000+' g 🎉')}
+ if(cur=='cap'){const big=a>10,TOT=big?100:10,H=340/TOT,tens=big?Math.floor(a/10):0,ones=big?a%10:a;
+  st.innerHTML='<div class="jw"><div class="queue" id="qu"></div><div class="tank"><div class="jug"><div class="liq" id="lq"></div><div id="tk"></div></div><div class="lvl" id="lvl">0 L</div></div></div>';
+  const step=big?10:1;for(let k=step;k<=TOT;k+=step){const t=el('tick');t.style.bottom=k*H-1+'px';t.innerHTML='<span>'+k+' L</span>';$('#tk').appendChild(t)}
+  const qu=$('#qu'),B=[],Cp=[];let i=0;
+  if(tens){qu.appendChild(el('qt','Buckets (10 litres each)'));const g=el('qg');qu.appendChild(g);for(let k=0;k<tens;k++){const b=el('bucket','10 L');b.style.setProperty('--c',COL[i++%8]);g.appendChild(b);B.push(b)}}
+  if(ones){qu.appendChild(el('qt','Cups (1 litre each)'));const g=el('qg');qu.appendChild(g);for(let k=0;k<ones;k++){const b=el('cup','1 L');b.style.setProperty('--c',COL[i++%8]);g.appendChild(b);Cp.push(b)}}
+  eq('Water = ? litres');say('We will pour water into the tank and read the level.');if(!await w(1800))return;
+  let n=0;const pour=async(item,v,lab,ms)=>{item.classList.add('pour');n+=v;const l=el('lay',H*v>=28?lab:'');l.style.setProperty('--c',COL[(i++)%8]);l.style.setProperty('--h',H*v+'px');$('#lq').appendChild(l);l.offsetHeight;l.classList.add('on');
+   $('#lvl').style.bottom=n*H+4+'px';$('#lvl').textContent=n+' L';say('Poured '+v+' L. Water level: '+n+' litres');return w(ms)};
+  for(const b of B)if(!await pour(b,10,'10 L',1000))return;
+  for(const c of Cp)if(!await pour(c,1,'1 L',big?700:1000))return;
+  eq('Water = '+a+' litres');say('The water level is at '+a+', so the tank holds '+a+' litres. That is '+a*1000+' ml 🎉')}}
+const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function toggleFS(){const a=$('#app');if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{(a.requestFullscreen||a.webkitRequestFullscreen).call(a)}}
+function fsLabel(){const on=!!fsEl();$('#app').classList.toggle('fs',on);const b=$('#fs');if(b)b.textContent=on?'✖ Exit Full Screen':'⛶ Full Screen'}
+document.addEventListener('fullscreenchange',fsLabel);document.addEventListener('webkitfullscreenchange',fsLabel);
+for(let i=0;i<18;i++){const d=el('bub'),s=30+Math.random()*90;d.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;animation-duration:'+(18+Math.random()*24)+'s;animation-delay:-'+Math.random()*30+'s';document.body.appendChild(d)}
+show();
+</script></body></html>
