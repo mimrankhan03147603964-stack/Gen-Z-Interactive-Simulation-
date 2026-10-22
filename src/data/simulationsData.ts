@@ -1097,34 +1097,19 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     gradeLevel: 'Middle & Secondary School (Grades 6–12)'
   },
   {
-    id: 'sim-multiplication-tables-studio',
-    slug: 'multiplication-tables-interactive-studio',
+    id: 'sim-interactive-geometry-shapes-lab',
+    slug: 'interactive-geometry-shapes-lab',
     indexNumber: '81',
-    title: 'Multiplication Tables Interactive Studio',
-    subject: 'Elementary Mathematics & Arithmetic',
+    title: 'Cambridge Scholar: Geometry & Spatial Mathematics Lab',
+    subject: 'Mathematics & Spatial Geometry',
     category: 'Mathematics & Logic',
-    iconName: 'Grid',
-    accentColor: '#ec4899',
-    description: 'Master multiplication tables from 1 to 12 with interactive visual animations. Toggle between Equal Groups and Array grid views, use the live multiplier stepper, listen to audio feedback, adjust auto-play speeds, and celebrate completed tables with animated confetti.',
-    fileUrl: '/simulations/multiplication_tables_fixed.html',
-    topics: ['Multiplication Tables 1 through 12', 'Equal Groups Visual Multiplication', 'Array Grid Rectangular Representation', 'Skip Counting & Multiplication Memory Patterns'],
-    features: ['Direct 1 to 12 Multiplication Table Buttons', 'Equal Groups & Rectangular Array Dual Modes', 'Live Multiplication Step-by-Step Audio & Counter', 'Full-screen Interactive Stage & Confetti Celebrations'],
-    gradeLevel: 'Primary & Elementary Mathematics (Grades 1–6)'
-  }
+    iconName: 'Shapes',
+    accentColor: '#f59e0b',
+    description: 'Comprehensive mathematics geometry workshop covering 2D regular and irregular polygons, circle theorem calculations, angular trigonometry, coordinate geometry, and rotatable 3D spatial polyhedra.',
+    fileUrl: '/simulations/interactive-geometry-shapes.html',
+    topics: ['Polygons: Triangles, Quadrilaterals & Regular N-gons', 'Circle Theorems: Radius, Tangents, Arcs & Sectors', 'Interior & Exterior Angle Computations', '3D Polyhedra Faces, Edges & Euler Characteristic'],
+    features: ['Real-time Angle & Vertex Interactive Manipulation', 'Dynamic Perimeter, Area & Volume Formula Solvers', 'Coordinate Plane Geometry & Vector Plotter', 'Interactive Math Challenge Exercises & Knowledge Check'],
+    gradeLevel: 'Middle & Secondary School (Grades 6–10)'
+  },
 ];
-
-export const CATEGORIES = [
-  'All Simulations',
-  'Physics & Motion',
-  'Chemistry & Matter',
-  'Biology & Life',
-  'Earth & Space',
-  'Mathematics & Logic',
-  'Computer Science & IT',
-  'English & Grammar',
-  'Early Childhood (ECCE)',
-  'Urdu & Linguistics'
-] as const;
-
-
 

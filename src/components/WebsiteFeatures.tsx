@@ -9,7 +9,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
   const features = [
     {
       title: 'Optimized for Laptops & PCs',
-      badge: 'Dual 4K Ready',
+      badge: 'DUAL 4K READY',
       badgeColor: '#0284c7',
       description: 'Native responsive execution on computer monitors, Chromebooks, interactive classroom smart boards, and widescreen projectors.',
       // Vibrant 3D dual-screen setup (sleek modern laptop + desktop display) with an illuminated electric blue & cyan glassmorphism glow
@@ -64,7 +64,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     },
     {
       title: 'Real-Time Physics & Math Engines',
-      badge: '60 FPS Live',
+      badge: '60 FPS LIVE',
       badgeColor: '#f59e0b',
       description: 'Continuous ray tracing, dynamic particle kinetics, harmonic Keplerian orbits, and circuit Ohm\'s law calculators running live at 60 FPS.',
       // Rich 3D gold-plated microchip processor surrounded by glowing orange/amber circuit board traces & live logic paths
@@ -121,7 +121,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     },
     {
       title: 'True 4K Fullscreen Projection',
-      badge: 'Cinema 4K UHD',
+      badge: 'CINEMA 4K UHD',
       badgeColor: '#a855f7',
       description: 'Single-click theater mode eliminates browser distractions and fills the display for high-impact classroom lectures and science demonstrations.',
       // Bold, colorful 3D Ultra HD 4K cinema projection emblem with deep purple and magenta gradient beams
@@ -167,7 +167,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     },
     {
       title: 'Multidisciplinary Curriculum & English Arts',
-      badge: 'STEM + Arts',
+      badge: 'STEM + ARTS',
       badgeColor: '#10b981',
       description: 'Aligned with elementary, secondary, and higher competencies across Physics, Chemistry, Biology, Earth & Space, Math, Computer Science, and English Language Arts.',
       // Rich, colorful 3D open hardbound academic encyclopedia with layered colored bookmarks, glowing educational symbols (A, Ω, π), & emerald ribbon
@@ -219,118 +219,105 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
   return (
     <section 
       id="features" 
-      className="w-full rounded-2xl p-6 sm:p-8 border shadow-xl transition-all space-y-6 opacity-100"
-      style={{
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.82)',
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
-        color: isDarkMode ? '#ffffff' : '#0f172a'
-      }}
+      className="w-full rounded-3xl p-6 sm:p-8 space-y-6 transition-all bg-[#10244c] border-2 border-blue-400 shadow-2xl text-white"
     >
       <div 
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4"
-        style={{
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
-        }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700/80 pb-4"
       >
         <div>
           <span 
-            className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-2xs inline-block mb-1.5"
-            style={{
-              backgroundColor: isDarkMode ? 'rgba(15, 41, 99, 0.75)' : 'rgba(239, 246, 255, 0.85)',
-              color: isDarkMode ? '#38bdf8' : '#1d4ed8',
-              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(147, 197, 253, 0.7)',
-              borderWidth: '1px',
-              borderStyle: 'solid'
-            }}
+            className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-1.5 bg-blue-950/70 text-cyan-300 border border-blue-500/40 font-mono shadow-xs"
           >
             Digital Laboratory Architecture
           </span>
           <h2 
-            className="text-xl sm:text-2xl font-black tracking-tight"
-            style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+            className="text-xl sm:text-2xl font-black tracking-tight text-white font-heading"
           >
             Professional STEM Educational Website Capabilities
           </h2>
         </div>
         <div 
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shrink-0"
-          style={{
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(241, 245, 249, 0.8)',
-            borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.45)' : 'rgba(148, 163, 184, 0.6)',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            color: isDarkMode ? '#38bdf8' : '#1d4ed8'
-          }}
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black shrink-0 bg-slate-800/80 border border-slate-700 text-emerald-300 shadow-xs"
         >
-          <ShieldCheck className="w-4 h-4 text-emerald-500" />
+          <ShieldCheck className="w-4 h-4 text-emerald-400" />
           <span>Verified Digital Laboratory Standard</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {features.map((feat, idx) => (
-          <div 
-            key={idx}
-            className="p-5 rounded-2xl border transition-all btn-3d flex flex-col justify-between group hover:shadow-xl hover:-translate-y-1 duration-200"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.72)' : 'rgba(248, 250, 252, 0.82)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.05)'
-            }}
-          >
-            <div>
-              {/* Header with 3D Icon & Feature Badge */}
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <div 
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg icon-tile-3d shrink-0 p-2 group-hover:scale-105 transition-transform"
-                  style={{
-                    backgroundColor: isDarkMode ? 'rgba(12, 26, 59, 0.85)' : '#ffffff',
-                    borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.4)' : '#e2e8f0',
-                    borderWidth: '1.5px',
-                    borderStyle: 'solid',
-                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)'
-                  }}
-                >
-                  {feat.renderIcon()}
-                </div>
-                <span 
-                  className="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide uppercase shadow-2xs"
-                  style={{
-                    backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.8)' : '#ffffff',
-                    color: feat.badgeColor,
-                    border: `1px solid ${feat.badgeColor}40`
-                  }}
-                >
-                  {feat.badge}
-                </span>
-              </div>
+        {features.map((feat, idx) => {
+          const style = [
+            {
+              gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%)',
+              borderColor: 'rgba(56, 189, 248, 0.55)',
+              glowColor: 'rgba(2, 132, 199, 0.45)'
+            },
+            {
+              gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 40%, #451a03 100%)',
+              borderColor: 'rgba(251, 191, 36, 0.55)',
+              glowColor: 'rgba(217, 119, 6, 0.45)'
+            },
+            {
+              gradient: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 40%, #2e1065 100%)',
+              borderColor: 'rgba(167, 139, 250, 0.55)',
+              glowColor: 'rgba(124, 58, 237, 0.45)'
+            },
+            {
+              gradient: 'linear-gradient(135deg, #059669 0%, #047857 40%, #064e3b 100%)',
+              borderColor: 'rgba(52, 211, 153, 0.55)',
+              glowColor: 'rgba(5, 150, 105, 0.45)'
+            }
+          ][idx % 4];
 
-              <h3 
-                className="text-base font-black tracking-tight mb-2 leading-snug group-hover:text-blue-500 transition-colors"
-                style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-              >
-                {feat.title}
-              </h3>
-              <p 
-                className="text-xs font-medium leading-relaxed"
-                style={{ color: isDarkMode ? '#94a3b8' : '#64748b' }}
-              >
-                {feat.description}
-              </p>
+          return (
+            <div 
+              key={idx}
+              className="p-5 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl text-white cursor-default select-none"
+              style={{
+                background: style.gradient,
+                borderColor: style.borderColor,
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                boxShadow: `0 14px 34px -8px ${style.glowColor}, 0 6px 16px rgba(0,0,0,0.22), inset 0 1px 1px 0 rgba(255,255,255,0.45)`
+              }}
+            >
+              {/* 3D Glass Specular Sheen */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-30 bg-gradient-to-b from-white/35 via-transparent to-black/25"
+              />
+
+              <div className="relative z-10">
+                {/* Header with 3D Icon & Feature Badge */}
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-110 transition-transform bg-[#0a1836] border-2 border-blue-400 shadow-lg text-white"
+                    style={{
+                      boxShadow: '0 8px 20px -4px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    {feat.renderIcon()}
+                  </div>
+                  <span 
+                    className="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide uppercase shadow-md bg-[#0a1836] border-2 border-blue-400 text-white"
+                  >
+                    {feat.badge}
+                  </span>
+                </div>
+
+                <h3 
+                  className="text-base font-black tracking-tight mb-2 leading-snug text-white drop-shadow-sm group-hover:text-amber-200 transition-colors"
+                >
+                  {feat.title}
+                </h3>
+                <p 
+                  className="text-xs font-medium leading-relaxed text-white/95 drop-shadow-2xs"
+                >
+                  {feat.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

@@ -15,6 +15,30 @@ export interface SimColorConfig {
   glowColor: string;
 }
 
+export interface DisciplineStyle {
+  base: string;
+  dark: string;
+  name: string;
+  glow: string;
+}
+
+export const DISCIPLINE_COLORS: Record<string, DisciplineStyle> = {
+  'Physics & Motion': { base: '#2563eb', dark: '#0c1b4d', name: 'Physics & Classical Mechanics', glow: 'rgba(37, 99, 235, 0.5)' },
+  'Chemistry & Matter': { base: '#9333ea', dark: '#240b40', name: 'Chemistry & Molecular Science', glow: 'rgba(147, 51, 234, 0.5)' },
+  'Biology & Life': { base: '#16a34a', dark: '#082613', name: 'Biology & Living Systems', glow: 'rgba(22, 163, 74, 0.5)' },
+  'Earth & Space': { base: '#0f766e', dark: '#051f1d', name: 'Earth & Space Exploration', glow: 'rgba(15, 118, 110, 0.5)' },
+  'Mathematics & Logic': { base: '#ea580c', dark: '#3b1603', name: 'Mathematics & Geometry', glow: 'rgba(234, 88, 12, 0.5)' },
+  'Computer Science & IT': { base: '#0e7490', dark: '#041f26', name: 'Computer Science & Hardware', glow: 'rgba(14, 116, 144, 0.5)' },
+  'English & Grammar': { base: '#4f46e5', dark: '#141240', name: 'English & Spatial Linguistics', glow: 'rgba(79, 70, 229, 0.5)' },
+  'Early Childhood (ECCE)': { base: '#db2777', dark: '#3b0a20', name: 'Early Childhood Care & Education', glow: 'rgba(219, 39, 119, 0.5)' },
+  'Urdu & Linguistics': { base: '#b91c1c', dark: '#330808', name: 'Urdu Language & Linguistics', glow: 'rgba(185, 28, 28, 0.5)' },
+};
+
+export const getDisciplineColor = (category?: string): DisciplineStyle => {
+  if (!category) return { base: '#3b82f6', dark: '#0a1030', name: 'STEM Discipline', glow: 'rgba(59, 130, 246, 0.5)' };
+  return DISCIPLINE_COLORS[category] || { base: '#3b82f6', dark: '#0a1030', name: category, glow: 'rgba(59, 130, 246, 0.5)' };
+};
+
 export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
   '01': {
     id: '01',

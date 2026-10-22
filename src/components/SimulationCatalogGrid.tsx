@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SimulationItem } from '../types';
-import { getSimTheme } from '../data/simTheme';
+import { getSimTheme, getDisciplineColor } from '../data/simTheme';
 import { 
   Sparkles, 
   Search, 
@@ -218,7 +218,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   {
     key: 'Urdu & Linguistics',
     shortLabel: 'Urdu & Linguistics',
-    fullTitle: 'Urdu Language & Linguistics (اردو زبان و قواعد)',
+    fullTitle: 'Urdu Language & Linguistics',
     iconBg: 'rgba(16, 185, 129, 0.16)',
     iconBorder: '#10b981',
     activeBorder: '#6ee7b7',
@@ -248,13 +248,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   onLaunchFullscreenModal,
   isDarkMode = false
 }) => {
+  // Tier 1 Grade Level filter state ('all' | 'primary' | 'middle' | 'secondary' | 'higher')
+  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
+
   // Category state (Default to 'All Simulations')
   const [internalCategory, setInternalCategory] = useState<string>('All Simulations');
-  
+
   // Quick search filter term
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+
+  const gradeTiers = [
+    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12' },
+    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE' },
+    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics' },
+    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS' },
+    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus' },
+  ];
 
   const handleCategoryChange = (catKey: string) => {
     if (onSelectCategory) {
@@ -271,13 +282,85 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // All active simulation labs including standalone uploaded modules
   const activeSimulations = simulations;
 
+  const matchesGradeTier = (sim: SimulationItem, tier: string): boolean => {
+    if (tier === 'all') return true;
+    const grade = (sim.gradeLevel || '').toLowerCase();
+    const cat = (sim.category || '').toLowerCase();
+
+    if (tier === 'primary') {
+      return (
+        cat.includes('early childhood') ||
+        cat.includes('ecce') ||
+        grade.includes('elementary') ||
+        grade.includes('primary') ||
+        grade.includes('pre-k') ||
+        grade.includes('grades 1') ||
+        grade.includes('grades 2') ||
+        grade.includes('grades 3') ||
+        grade.includes('grades 4') ||
+        grade.includes('grades 5') ||
+        grade.includes('3–9') ||
+        grade.includes('kindergarten')
+      );
+    }
+    if (tier === 'middle') {
+      return (
+        grade.includes('middle') ||
+        grade.includes('grades 6') ||
+        grade.includes('grades 7') ||
+        grade.includes('grades 8') ||
+        grade.includes('6–8') ||
+        grade.includes('6-8') ||
+        grade.includes('6–10') ||
+        grade.includes('6–12') ||
+        grade.includes('7–12')
+      );
+    }
+    if (tier === 'secondary') {
+      return (
+        grade.includes('secondary') ||
+        grade.includes('matric') ||
+        grade.includes('grades 9') ||
+        grade.includes('grades 10') ||
+        grade.includes('9–10') ||
+        grade.includes('9-10') ||
+        grade.includes('9–12') ||
+        grade.includes('6–10') ||
+        grade.includes('6–12') ||
+        grade.includes('7–12') ||
+        grade.includes('high school')
+      );
+    }
+    if (tier === 'higher') {
+      return (
+        grade.includes('higher') ||
+        grade.includes('f.sc') ||
+        grade.includes('fsc') ||
+        grade.includes('grades 11') ||
+        grade.includes('grades 12') ||
+        grade.includes('11–12') ||
+        grade.includes('11-12') ||
+        grade.includes('9–12') ||
+        grade.includes('6–12') ||
+        grade.includes('7–12') ||
+        grade.includes('college') ||
+        grade.includes('advanced') ||
+        grade.includes('high school')
+      );
+    }
+    return true;
+  };
+
+  const getGradeTierCount = (tierKey: string) => {
+    return activeSimulations.filter(s => matchesGradeTier(s, tierKey)).length;
+  };
+
   const cleanCardTitle = (title: string, category?: string): string => {
     let clean = title
       .replace(/\.html$/i, '')
       .replace(/_/g, ' ')
       .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
       .trim();
-    // Enforce English titles for all subjects except Urdu
     if (category !== 'Urdu & Linguistics') {
       clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
     }
@@ -323,7 +406,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return clean;
   };
 
-
   const matchesSearch = (sim: SimulationItem) => {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
@@ -340,9 +422,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
   const getCategoryCount = (categoryKey: string) => {
     if (categoryKey === 'All Simulations' || categoryKey === 'All') {
-      return activeSimulations.length;
+      return activeSimulations.filter(s => matchesGradeTier(s, selectedGradeTier)).length;
     }
-    return activeSimulations.filter(s => s.category === categoryKey).length;
+    return activeSimulations.filter(s => s.category === categoryKey && matchesGradeTier(s, selectedGradeTier)).length;
   };
 
   const subjectCategories = getSubjectCategories();
@@ -350,17 +432,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
   const isAllCategory = selectedCategory === 'All Simulations' || selectedCategory === 'All';
 
-  // Simulations belonging to currently selected subject & filtered by search
-  // In default "All Simulations" state, displays all simulation labs across all subjects
+  // Two-tier filtered simulations: Grade Level Tier & STEM Subject Tier + Real-time Instant Search
   const displayedSims = activeSimulations.filter(s => {
+    if (!matchesGradeTier(s, selectedGradeTier)) return false;
     if (!isAllCategory && s.category !== selectedCategory) return false;
     if (!matchesSearch(s)) return false;
     return true;
   });
 
-  // Render a simulation card with full fidelity
+  // Render a simulation card with deep frosted glassmorphism, unique multi-colored identity, and 3D tactile push buttons
   const renderCard = (sim: SimulationItem) => {
-    const theme = getSimTheme(sim.indexNumber);
+    const simTheme = getSimTheme(sim.indexNumber);
+    const discStyle = getDisciplineColor(sim.category);
     const isActive = activeSim ? activeSim.id === sim.id : false;
     const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
     const displayTitle = cleanCardTitle(sim.title, sim.category);
@@ -368,96 +451,91 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     const displaySubject = cleanCardSubject(sim.subject, sim.category);
     const displayDesc = cleanCardDescription(sim.description, sim.category);
 
+    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+
     return (
       <div
         key={sim.id}
         onClick={(e) => {
-          if ((e.target as HTMLElement).closest('button')) return;
+          if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           handleCardClick(sim);
         }}
-        className={`rounded-2xl border transition-all duration-200 flex flex-col justify-between cursor-pointer group shadow-lg btn-3d relative overflow-hidden opacity-100 ${
-          isActive ? 'scale-[1.01]' : ''
+        className={`card-colored-3d rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-300 text-white ${
+          isActive ? 'ring-4 ring-cyan-400 scale-[1.02]' : ''
         }`}
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(255, 255, 255, 0.92)',
+          background: 'linear-gradient(160deg, #16305e 0%, #102347 100%)',
+          backgroundColor: '#13284f',
+          borderWidth: '2px',
           borderStyle: 'solid',
-          borderTopWidth: isConceptGuide ? '5px' : '4px',
-          borderRightWidth: isActive ? '2px' : '1.5px',
-          borderBottomWidth: isActive ? '2px' : '1.5px',
-          borderLeftWidth: isActive ? '2px' : '1.5px',
-          borderTopColor: theme.bgSolid,
-          borderRightColor: isActive ? theme.bgSolid : theme.borderColor,
-          borderBottomColor: isActive ? theme.bgSolid : theme.borderColor,
-          borderLeftColor: isActive ? theme.bgSolid : theme.borderColor,
-          boxShadow: isDarkMode 
-            ? `0 8px 32px 0 rgba(0, 0, 0, 0.35), 0 0 12px ${theme.glowColor}` 
-            : `0 8px 24px rgba(31, 38, 135, 0.08), 0 2px 10px ${theme.glowColor}`,
-          color: isDarkMode ? '#ffffff' : '#0f172a'
+          borderColor: simTheme.borderColor || '#38bdf8',
+          boxShadow: `0 10px 30px -8px ${simTheme.glowColor || 'rgba(2, 132, 199, 0.4)'}, 0 4px 16px rgba(0, 0, 0, 0.4)`,
+          transform: 'translateZ(0)'
         }}
       >
-        {/* Card Content */}
-        <div className="p-5 pb-3">
-          <div className="flex items-start justify-between gap-3 mb-3">
-            {/* Realistic Visual Emblem */}
-            <a
-              href={getSimulationStandaloneUrl(sim)}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 icon-tile-3d shadow-md group-hover:scale-105 transition-transform duration-200 p-1 block"
+        {/* Distinct Multi-Colored Top Accent Ribbon */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-2.5 opacity-100"
+          style={{
+            background: simTheme.bgGradient
+          }}
+        />
+
+        {/* Top Header: 3D Emblem & Badges */}
+        <div className="flex items-start justify-between gap-3 mb-3 relative z-10 pt-1.5">
+          {/* Realistic Visual Emblem Pedestal */}
+          <a
+            href={getSimulationStandaloneUrl(sim)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-1 group-hover:scale-110 transition-transform block bg-[#183466] border-2 border-blue-400/80 shadow-md"
+            style={{
+              borderColor: simTheme.borderColor || '#38bdf8'
+            }}
+            title={`Open ${displayTitle} in new tab`}
+          >
+            <TopicRealisticIcon 
+              indexNumber={sim.indexNumber}
+              simId={sim.id}
+              className="w-9 h-9 sm:w-10 sm:h-10 drop-shadow-sm group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
+            />
+          </a>
+
+          {/* 3D Badges: Lab / Concept & Grade */}
+          <div className="flex flex-col items-end gap-1.5">
+            <span 
+              className="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg text-white shadow-xs"
               style={{
-                backgroundColor: theme.badgeBg,
-                borderColor: theme.borderColor,
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                boxShadow: `0 4px 14px ${theme.glowColor}`
+                background: simTheme.bgGradient,
+                boxShadow: `0 2px 8px ${simTheme.glowColor}`
               }}
-              title={`Open ${displayTitle} in new tab`}
             >
-              <TopicRealisticIcon 
-                indexNumber={sim.indexNumber}
-                simId={sim.id}
-                className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-sm group-hover:scale-110 transition-transform duration-200" 
-              />
-            </a>
-
-            {/* Badges: Lab / Concept & Grade */}
-            <div className="flex flex-col items-end gap-1.5">
-              <span 
-                className="font-mono text-xs font-black px-2 py-0.5 rounded shadow-2xs"
-                style={{
-                  backgroundColor: theme.bgSolid,
-                  color: '#ffffff',
-                  borderColor: theme.borderColor,
-                  borderWidth: '1px',
-                  borderStyle: 'solid'
-                }}
-              >
-                {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
-              </span>
-              <span 
-                className="text-[10px] font-black px-2 py-0.5 rounded-full"
-                style={{
-                  backgroundColor: theme.badgeBg,
-                  color: theme.badgeText,
-                  borderColor: theme.badgeBorder,
-                  borderWidth: '1px',
-                  borderStyle: 'solid'
-                }}
-              >
-                {displayGrade}
-              </span>
-            </div>
+              {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
+            </span>
+            <span 
+              className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-2xs"
+              style={{
+                backgroundColor: 'rgba(30, 41, 59, 0.8)',
+                color: '#e2e8f0',
+                border: `1px solid ${simTheme.borderColor}`
+              }}
+            >
+              {displayGrade}
+            </span>
           </div>
+        </div>
 
-          {/* Simulation Topic Title */}
+        {/* Content: Title, Subject, Description, Topics */}
+        <div className="relative z-10 flex-1 flex flex-col">
+          {/* Simulation Topic Title (with proper Urdu Nastaliq & RTL when applicable) */}
           <h4 
-            className="text-base font-black tracking-tight leading-snug line-clamp-2 group-hover:text-blue-500 transition-colors"
-            style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+            className={`text-base sm:text-lg font-black tracking-tight text-white group-hover:text-cyan-300 transition-colors drop-shadow-xs ${
+              isUrdu ? 'font-urdu leading-[2.2]' : 'font-heading leading-snug line-clamp-2'
+            }`}
+            dir={isUrdu ? 'rtl' : 'ltr'}
           >
             <a
               href={getSimulationStandaloneUrl(sim)}
@@ -466,7 +544,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="hover:underline"
+              className="hover:underline text-white group-hover:text-cyan-300"
               title={`Open ${displayTitle} in new tab`}
             >
               {displayTitle}
@@ -475,47 +553,47 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
           {/* Subject & Sub-discipline */}
           <p 
-            className="text-xs font-bold mt-1 line-clamp-1"
-            style={{ color: isDarkMode ? '#38bdf8' : '#1d4ed8' }}
+            className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5"
+            style={{ color: discStyle.base }}
           >
-            {displaySubject}
+            <span 
+              className="w-1.5 h-1.5 rounded-full animate-pulse inline-block shrink-0" 
+              style={{ backgroundColor: discStyle.base }}
+            />
+            <span className="text-cyan-200">{displaySubject}</span>
           </p>
 
-          {/* Concept Description Intro */}
+          {/* Concept Description Intro (with proper Urdu Nastaliq & RTL when applicable) */}
           <p 
-            className="text-xs font-medium mt-2 line-clamp-2 leading-relaxed"
-            style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}
+            className={`text-xs sm:text-[13px] font-medium text-slate-100 mt-2 line-clamp-2 leading-relaxed ${
+              isUrdu ? 'font-urdu leading-[2.2]' : ''
+            }`}
+            dir={isUrdu ? 'rtl' : 'ltr'}
           >
             {displayDesc}
           </p>
 
           {/* Topic Tags */}
           <div className="flex flex-wrap gap-1.5 mt-3">
-            {sim.topics.slice(0, 2).map((topic, i) => (
-              <span
-                key={i}
-                className="text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[140px]"
-                style={{
-                  backgroundColor: isDarkMode ? '#060e22' : theme.tagBg,
-                  color: isDarkMode ? '#cbd5e1' : theme.tagText,
-                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                  borderWidth: '1px',
-                  borderStyle: 'solid'
-                }}
-              >
-                {cleanCardTopic(topic, sim.category)}
-              </span>
-            ))}
+            {sim.topics.slice(0, 2).map((topic, i) => {
+              const cleanT = cleanCardTopic(topic, sim.category);
+              const isTopicUrdu = /[\u0600-\u06FF]/.test(cleanT);
+              return (
+                <span
+                  key={i}
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md truncate max-w-[150px] shadow-xs bg-[#183466] text-cyan-100 border border-cyan-400/50 ${
+                    isTopicUrdu ? 'font-urdu leading-[2]' : ''
+                  }`}
+                  dir={isTopicUrdu ? 'rtl' : 'ltr'}
+                  title={cleanT}
+                >
+                  {cleanT}
+                </span>
+              );
+            })}
             {sim.topics.length > 2 && (
               <span 
-                className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-                style={{
-                  backgroundColor: isDarkMode ? '#060e22' : theme.badgeBg,
-                  color: isDarkMode ? '#94a3b8' : theme.badgeText,
-                  borderColor: isDarkMode ? '#1e3a8a' : theme.badgeBorder,
-                  borderWidth: '1px',
-                  borderStyle: 'solid'
-                }}
+                className="text-[11px] font-bold px-2 py-0.5 rounded-md shadow-xs bg-[#183466] text-white border border-blue-400/50"
               >
                 +{sim.topics.length - 2}
               </span>
@@ -524,15 +602,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Card Action Bar */}
-        <div 
-          className="p-3 px-4 border-t flex items-center justify-between gap-2 transition-colors"
-          style={{
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.75)' : 'rgba(248, 250, 252, 0.75)',
-            borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(255, 255, 255, 0.5)'
-          }}
-        >
+        <div className="relative z-10 pt-4 mt-auto border-t-2 border-blue-400/30 flex items-center justify-between gap-2">
+          {/* Action Button: High-Contrast 3D Tactile Push Button */}
           <a
             href={getSimulationStandaloneUrl(sim)}
             target="_blank"
@@ -540,35 +611,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-black transition-all group-hover:scale-105 duration-150 px-2.5 py-1 rounded-lg text-white shadow-2xs cursor-pointer"
+            className="btn-tactile-3d px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg border-2 flex items-center gap-1.5 cursor-pointer"
             style={{
-              backgroundColor: theme.bgSolid,
-              boxShadow: `0 2px 6px ${theme.glowColor}`
+              background: simTheme.bgGradient,
+              borderColor: '#ffffff',
+              boxShadow: `0 4px 14px ${simTheme.glowColor || 'rgba(2, 132, 199, 0.5)'}`
             }}
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
-            <ExternalLink className="w-3 h-3 text-white" />
+            <ExternalLink className="w-3.5 h-3.5 text-white pointer-events-none shrink-0" />
             <span>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
           </a>
 
-          {/* Direct Fullscreen Modal Button */}
+          {/* Direct Fullscreen Modal Button with 3D tactile push */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onLaunchFullscreenModal(sim);
             }}
-            className="p-1.5 rounded-lg border transition-all cursor-pointer hover:scale-105 shadow-sm"
-            style={{
-              backgroundColor: theme.bgSolid,
-              borderColor: theme.borderColor,
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              color: '#ffffff'
-            }}
+            className="btn-tactile-3d w-9 h-9 rounded-xl border-2 border-cyan-400/70 bg-[#183466] hover:bg-[#204588] text-white transition-all cursor-pointer flex items-center justify-center shadow-md"
             title="Launch in 4K Fullscreen View"
           >
-            <Maximize2 className="w-3.5 h-3.5 text-white" />
+            <Maximize2 className="w-4 h-4 pointer-events-none shrink-0" />
           </button>
         </div>
       </div>
@@ -578,26 +643,129 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   return (
     <section 
       id="catalog" 
-      className="w-full space-y-6 pt-2 scroll-mt-20 opacity-100"
+      className="w-full space-y-6 pt-2 scroll-mt-28 opacity-100"
     >
+      {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
+      <div className="bg-[#10244c] border-2 border-blue-400 shadow-xl rounded-3xl p-4 sm:p-5 text-white transition-all">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-mono font-black uppercase tracking-wider text-cyan-300 px-2.5 py-0.5 rounded-full bg-[#0a1836] border-2 border-blue-400">
+              TIER 1 GRADE LEVEL FILTER
+            </span>
+            <span className="text-xs sm:text-sm font-black text-white font-heading">
+              Curriculum Grade &amp; Academic Stage
+            </span>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap text-[11px] font-semibold text-slate-300">
+            <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
+            {selectedGradeTier !== 'all' && (
+              <button 
+                type="button"
+                onClick={() => setSelectedGradeTier('all')}
+                className="text-cyan-300 hover:text-white underline cursor-pointer text-xs font-bold ml-1"
+                title="Reset grade filter to show all simulations"
+              >
+                Reset to All {activeSimulations.length} Labs
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* OPEN RESPONSIVE GRID - NO HORIZONTAL SCROLLING REQUIRED */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 w-full">
+          {gradeTiers.map((tier) => {
+            const isSelectedTier = selectedGradeTier === tier.key;
+            const count = getGradeTierCount(tier.key);
+            const tierStyles: Record<string, { gradient: string; activeGlow: string; inactiveBg: string; inactiveBorder: string; inactiveText: string }> = {
+              all: {
+                gradient: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
+                activeGlow: 'rgba(37, 99, 235, 0.45)',
+                inactiveBg: 'bg-[#163261]',
+                inactiveBorder: 'border-2 border-blue-400/50',
+                inactiveText: 'text-white'
+              },
+              primary: {
+                gradient: 'linear-gradient(135deg, #065f46 0%, #10b981 100%)',
+                activeGlow: 'rgba(16, 185, 129, 0.45)',
+                inactiveBg: 'bg-[#163261]',
+                inactiveBorder: 'border-2 border-emerald-400/50',
+                inactiveText: 'text-white'
+              },
+              middle: {
+                gradient: 'linear-gradient(135deg, #0369a1 0%, #0284c7 100%)',
+                activeGlow: 'rgba(2, 132, 199, 0.45)',
+                inactiveBg: 'bg-[#163261]',
+                inactiveBorder: 'border-2 border-sky-400/50',
+                inactiveText: 'text-white'
+              },
+              secondary: {
+                gradient: 'linear-gradient(135deg, #3730a3 0%, #6366f1 100%)',
+                activeGlow: 'rgba(99, 102, 241, 0.45)',
+                inactiveBg: 'bg-[#163261]',
+                inactiveBorder: 'border-2 border-indigo-400/50',
+                inactiveText: 'text-white'
+              },
+              higher: {
+                gradient: 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)',
+                activeGlow: 'rgba(168, 85, 247, 0.45)',
+                inactiveBg: 'bg-[#163261]',
+                inactiveBorder: 'border-2 border-purple-400/50',
+                inactiveText: 'text-white'
+              }
+            };
+            const style = tierStyles[tier.key] || tierStyles.all;
+
+            return (
+              <button
+                key={tier.key}
+                type="button"
+                onClick={() => setSelectedGradeTier(tier.key)}
+                className={`btn-tactile-3d w-full p-3 rounded-2xl text-xs font-bold transition-all flex flex-col justify-between items-start gap-1.5 shadow-md relative overflow-hidden ${
+                  isSelectedTier
+                    ? 'text-white border-2 border-white shadow-xl ring-2 ring-white/60'
+                    : `${style.inactiveBg} ${style.inactiveBorder} ${style.inactiveText} hover:brightness-125`
+                }`}
+                style={
+                  isSelectedTier
+                    ? {
+                        background: style.gradient,
+                        boxShadow: `0 6px 18px ${style.activeGlow}`
+                      }
+                    : undefined
+                }
+                title={`${tier.label}: ${tier.desc}`}
+              >
+                <div className="w-full flex items-center justify-between gap-1.5">
+                  <span className="font-heading font-black text-xs sm:text-sm truncate text-white">
+                    {tier.label}
+                  </span>
+                  <span
+                    className={`font-mono text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${
+                      isSelectedTier
+                        ? 'bg-white text-slate-950 shadow-xs'
+                        : 'bg-[#0a1836] text-white border border-blue-400/60'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </div>
+                <div className="text-[10px] font-medium text-slate-200 line-clamp-1 text-left">
+                  {tier.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Mobile & Tablet Subject Selector (< 1024px) */}
-      <div 
-        className="block lg:hidden rounded-2xl p-4 sm:p-5 border shadow-xl transition-all"
-        style={{
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.85)' : 'rgba(255, 255, 255, 0.95)',
-          borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.35)' : 'rgba(147, 197, 253, 0.7)',
-          borderWidth: '1.5px',
-          borderStyle: 'solid'
-        }}
-      >
+      <div className="block lg:hidden bg-[#10244c] border-2 border-blue-400 shadow-xl rounded-3xl p-4 sm:p-5 transition-all text-white">
         <div className="flex items-center gap-2 mb-3">
-          <Filter className="w-4 h-4 text-blue-500" />
-          <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <Filter className="w-4 h-4 text-cyan-400" />
+          <span className="text-xs font-black uppercase tracking-wider text-white">
             Select STEM Discipline
           </span>
-          <span className="ml-auto text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">
+          <span className="ml-auto text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#0a1836] text-cyan-300 border border-blue-400">
             {activeSimulations.length} Labs
           </span>
         </div>
@@ -606,121 +774,90 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <select
             value={selectedCategory}
             onChange={(e) => handleCategoryChange(e.target.value)}
-            className="w-full py-2.5 px-3.5 pr-10 rounded-xl text-xs sm:text-sm font-black border appearance-none outline-none cursor-pointer transition-all shadow-sm"
-            style={{
-              backgroundColor: isDarkMode ? '#0b1633' : '#ffffff',
-              borderColor: isDarkMode ? '#3b82f6' : '#93c5fd',
-              color: isDarkMode ? '#ffffff' : '#0f172a'
-            }}
+            className="w-full py-2.5 px-3.5 pr-10 rounded-xl text-xs sm:text-sm font-bold border-2 border-blue-400 appearance-none outline-none cursor-pointer transition-all shadow-xs bg-[#0a1836] text-white focus:border-cyan-300"
           >
             {subjectCategories.map((cat) => (
-              <option key={cat.key} value={cat.key}>
+              <option key={cat.key} value={cat.key} className="bg-[#0a1836] text-white">
                 {cat.fullTitle} ({getCategoryCount(cat.key)} {getCategoryCount(cat.key) === 1 ? 'Lab' : 'Labs'})
               </option>
             ))}
           </select>
-          <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500" />
+          <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-cyan-300" />
         </div>
       </div>
 
       {/* Two-Column Responsive Desktop Architecture (>= 1024px) */}
       <div className="flex flex-col lg:flex-row items-start gap-8 w-full">
         
-        {/* =======================================================================
-            SIDEBAR (STEM DISCIPLINES PANEL):
-            1. "All Simulations" option as the very first item at top (Default state)
-            2. Total count badge showing all available labs (e.g. 51 Labs)
-            3. Appropriate STEM / layers icon matching design style
-            4. Individual subjects clearly highlighted when selected
-            5. Clicking back on "All Simulations" resets filter to display all labs
-            ======================================================================= */}
+        {/* STEM DISCIPLINES PANEL */}
         <aside 
-          className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-20 self-start rounded-2xl border shadow-xl p-4 transition-all"
-          style={{
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.88)' : 'rgba(255, 255, 255, 0.94)',
-            borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(203, 213, 225, 0.8)',
-            borderWidth: '1.5px',
-            borderStyle: 'solid',
-            boxShadow: isDarkMode ? '0 12px 36px rgba(0, 0, 0, 0.45)' : '0 8px 32px rgba(31, 38, 135, 0.08)'
-          }}
+          className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-24 self-start bg-[#10244c] border-2 border-blue-400 shadow-2xl rounded-3xl p-4 transition-all text-white"
         >
           {/* Sidebar Top Header */}
-          <div className="pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <div className="pb-3 mb-3 border-b-2 border-blue-400/40 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-blue-500" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              <Layers className="w-4 h-4 text-cyan-400" />
+              <h3 className="text-xs font-black uppercase tracking-wider text-white font-heading">
                 STEM Disciplines
               </h3>
             </div>
-            <span className="font-mono text-[11px] font-black px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-500">
-              {activeSimulations.length} Labs
+            <span className="font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full bg-[#0a1836] text-cyan-300 border border-blue-400">
+              {activeSimulations.length} Labs Total
             </span>
           </div>
 
-          {/* Subjects Selector Menu (Beginning with "All Simulations" as Top Default) */}
-          <div className="space-y-2">
+          {/* Subjects Selector Menu */}
+          <div className="space-y-1.5">
             {subjectCategories.map((cat) => {
               const isSelectedSubject = selectedCategory === cat.key;
               const subjectCount = getCategoryCount(cat.key);
+              const disc = getDisciplineColor(cat.key);
 
               return (
                 <button
                   key={cat.key}
                   type="button"
                   onClick={() => handleCategoryChange(cat.key)}
-                  className={`w-full p-3 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all duration-200 group border ${
+                  className={`w-full p-2.5 sm:p-3 rounded-2xl flex items-center justify-between text-left cursor-pointer transition-all duration-200 group border-2 relative overflow-hidden ${
                     isSelectedSubject
-                      ? 'shadow-md scale-[1.01]'
-                      : 'hover:scale-[1.005]'
+                      ? 'ring-3 ring-amber-300 border-amber-300 scale-[1.02] shadow-xl text-white'
+                      : 'bg-[#163261] border-blue-400/40 hover:bg-[#1f4585] text-white hover:border-blue-300 shadow-md'
                   }`}
                   style={{
-                    backgroundColor: isSelectedSubject
-                      ? (isDarkMode ? 'rgba(37, 99, 235, 0.28)' : 'rgba(239, 246, 255, 0.95)')
-                      : (isDarkMode ? 'rgba(15, 23, 42, 0.4)' : '#ffffff'),
-                    borderColor: isSelectedSubject
-                      ? (isDarkMode ? '#38bdf8' : '#2563eb')
-                      : (isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(226, 232, 240, 0.9)'),
-                    borderWidth: isSelectedSubject ? '2px' : '1px'
+                    background: isSelectedSubject ? `linear-gradient(135deg, ${disc.base} 0%, ${disc.dark} 100%)` : undefined,
+                    boxShadow: isSelectedSubject ? `0 6px 18px -4px ${disc.glow}` : undefined
                   }}
                   title={`Filter by ${cat.fullTitle}`}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0 relative z-10">
                     <div 
-                      className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 p-1.5 shadow-xs transition-transform group-hover:scale-105"
-                      style={{
-                        backgroundColor: isSelectedSubject ? cat.activeBorder : (isDarkMode ? '#1e293b' : cat.iconBg),
-                        border: `1px solid ${cat.iconBorder}`
-                      }}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 p-1.5 shadow-2xs border-2 bg-[#0a1836] border-blue-400 text-white"
                     >
                       {cat.renderIcon({
-                        className: "w-5 h-5",
-                        isSelected: isSelectedSubject,
-                        isDark: isDarkMode
+                        className: "w-4 h-4 text-white",
+                        isSelected: true,
+                        isDark: false
                       })}
                     </div>
 
-                    {/* Clean Subject Name */}
+                    {/* Subject Name in High-Contrast White */}
                     <span 
-                      className={`text-xs font-black truncate leading-tight ${
-                        isSelectedSubject 
-                          ? 'text-blue-600 dark:text-cyan-300' 
-                          : 'text-slate-800 dark:text-slate-200 group-hover:text-blue-500'
-                      }`}
+                      className="text-xs font-black truncate leading-tight text-white drop-shadow-xs font-heading"
                     >
                       {cat.fullTitle}
                     </span>
                   </div>
 
                   <span 
-                    className="font-mono text-[11px] font-black px-2 py-0.5 rounded-full shrink-0 ml-2 shadow-2xs"
-                    style={{
-                      backgroundColor: isSelectedSubject ? '#2563eb' : (isDarkMode ? '#1e293b' : '#e2e8f0'),
-                      color: isSelectedSubject ? '#ffffff' : (isDarkMode ? '#94a3b8' : '#64748b')
-                    }}
+                    className={`font-mono text-[11px] font-black px-2 py-0.5 rounded-full shrink-0 ml-2 relative z-10 ${
+                      isSelectedSubject 
+                        ? 'bg-amber-300 text-slate-950 shadow-md' 
+                        : 'bg-[#0a1836] text-cyan-200 border border-blue-400/60 shadow-xs'
+                    }`}
                   >
-                    {cat.key === 'All Simulations' ? `${subjectCount} Labs` : subjectCount}
+                    {cat.key === 'All Simulations' 
+                      ? (selectedGradeTier !== 'all' ? `${subjectCount} / ${activeSimulations.length}` : `${activeSimulations.length} Labs`)
+                      : subjectCount}
                   </span>
                 </button>
               );
@@ -732,80 +869,52 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         <div className="flex-1 min-w-0 space-y-6">
           
           {/* Top Breadcrumb & Quick Search Filter Bar */}
-          <div 
-            className="rounded-2xl p-4 sm:p-5 border shadow-xl transition-all"
-            style={{
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.78)' : 'rgba(255, 255, 255, 0.92)',
-              borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1.5px',
-              borderStyle: 'solid',
-              boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)'
-            }}
-          >
+          <div className="bg-[#10244c] border-2 border-blue-400 shadow-xl rounded-3xl p-4 sm:p-5 transition-all text-white">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               
               {/* Breadcrumb & Subject Header */}
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 flex-wrap">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 flex-wrap">
                   <span 
                     onClick={() => handleCategoryChange('All Simulations')}
-                    className="cursor-pointer hover:text-blue-500"
+                    className="cursor-pointer hover:text-cyan-300 text-slate-300 underline"
                   >
                     Interactive Catalog
                   </span>
                   <span>&gt;</span>
-                  <span className="text-blue-600 dark:text-blue-400 font-extrabold">
+                  <span className="text-cyan-300 font-black">
                     {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h2 
-                    className="text-xl sm:text-2xl font-black tracking-tight"
-                    style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
-                  >
+                  <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white font-heading">
                     {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
                   </h2>
-                  <span 
-                    className="px-2.5 py-0.5 rounded-full text-xs font-black shadow-2xs flex items-center gap-1"
-                    style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    {displayedSims.length} {displayedSims.length === 1 ? 'Lab Available' : 'Labs Available'}
+                  <span className="px-3 py-1 rounded-full text-xs font-black shadow-xs flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-2 border-cyan-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-300" />
+                    {displayedSims.length === activeSimulations.length
+                      ? `Showing All ${activeSimulations.length} Verified Labs`
+                      : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
                   </span>
                 </div>
               </div>
 
               {/* Quick Search Bar to Filter Labs Instantly */}
               <div className="w-full md:w-80 shrink-0">
-                <div 
-                  className="relative flex items-center rounded-xl border shadow-inner transition-all"
-                  style={{
-                    backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.85)' : 'rgba(248, 250, 252, 0.95)',
-                    borderColor: isDarkMode ? 'rgba(56, 189, 248, 0.4)' : 'rgba(148, 163, 184, 0.6)',
-                    borderWidth: '1.5px',
-                    borderStyle: 'solid'
-                  }}
-                >
-                  <Search className="w-4 h-4 ml-3 shrink-0" style={{ color: isDarkMode ? '#38bdf8' : '#2563eb' }} />
+                <div className="relative flex items-center rounded-xl border-2 border-blue-400 bg-[#0a1836] shadow-inner focus-within:border-cyan-300 focus-within:ring-2 focus-within:ring-cyan-300/30">
+                  <Search className="w-4 h-4 ml-3 shrink-0 text-cyan-300" />
                   <input
                     type="text"
                     placeholder="Search labs across disciplines..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full py-2 px-2.5 text-xs font-bold bg-transparent outline-none"
-                    style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
+                    className="w-full py-2 px-2.5 text-xs font-bold bg-transparent outline-none text-white placeholder-slate-400"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm('')}
-                      className="mr-2 text-xs font-black px-1.5 py-0.5 rounded cursor-pointer"
-                      style={{
-                        backgroundColor: isDarkMode ? '#1e293b' : '#e2e8f0',
-                        color: isDarkMode ? '#ffffff' : '#0f172a'
-                      }}
+                      className="mr-2 text-xs font-black px-1.5 py-0.5 rounded cursor-pointer bg-slate-800 text-slate-300 hover:text-white"
                       title="Clear search"
                     >
                       &times;

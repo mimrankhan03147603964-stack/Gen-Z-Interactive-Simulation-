@@ -30,10 +30,10 @@ interface MainStageProps {
 
 export const MainStage: React.FC<MainStageProps> = ({
   activeSim,
-  totalSimulations = 52,
+  totalSimulations = 74,
   onLaunchFullscreenModal,
   onBackToCatalog,
-  isDarkMode = false
+  isDarkMode = true
 }) => {
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | 'full'>('full');
   const [iframeHeight, setIframeHeight] = useState<number>(850);
@@ -211,7 +211,7 @@ export const MainStage: React.FC<MainStageProps> = ({
     <div 
       id="stage"
       ref={stageContainerRef}
-      className="simulation-wrapper w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-20"
+      className="simulation-wrapper w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-28"
       style={{
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
