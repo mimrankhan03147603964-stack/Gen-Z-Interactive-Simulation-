@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   GraduationCap, 
   FlaskConical, 
@@ -9,7 +9,8 @@ import {
   Cpu, 
   Zap, 
   Compass, 
-  SlidersHorizontal 
+  SlidersHorizontal,
+  ChevronDown
 } from 'lucide-react';
 
 interface PedagogicalHubProps {
@@ -17,6 +18,9 @@ interface PedagogicalHubProps {
 }
 
 export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations = 74 }) => {
+  const [showTeacherDetails, setShowTeacherDetails] = useState<boolean>(false);
+  const [showStudentDetails, setShowStudentDetails] = useState<boolean>(false);
+
   return (
     <section 
       id="pedagogical-hub"
@@ -132,24 +136,37 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
               Empower your lecture hall and science classrooms with real-time computational demonstrations mapped directly to Student Learning Objectives (SLOs). Convert abstract chalkboard equations into tangible, interactive physical models in seconds.
             </p>
 
-            {/* Feature Checklist - Compact 2-Column Grid */}
-            <div className="grid grid-cols-2 gap-1.5 pt-0.5">
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-300 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">4K Smartboard Execution:</strong> High visual fidelity</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">SLO Curriculum:</strong> National Curriculum (2026-27)</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-300 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Theory-to-Practice:</strong> Live variable tweaking</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-sky-300 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Parameter Reset:</strong> Instant test repetition</span>
-              </div>
+            {/* Progressive Disclosure Toggle for Key Features: Collapsed/Hidden by Default */}
+            <div className="pt-0.5">
+              <button
+                type="button"
+                onClick={() => setShowTeacherDetails(!showTeacherDetails)}
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-xl bg-sky-950/80 hover:bg-sky-900 border border-sky-400/60 text-cyan-200 transition-all cursor-pointer shadow-xs active:scale-95"
+              >
+                <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-cyan-300 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showTeacherDetails && (
+                <div className="grid grid-cols-2 gap-1.5 pt-2">
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-cyan-300 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">4K Smartboard Execution:</strong> High visual fidelity</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">SLO Curriculum:</strong> National Curriculum (2026-27)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-300 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Theory-to-Practice:</strong> Live variable tweaking</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-slate-900/60 border border-sky-500/30 text-[11px] text-sky-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-sky-300 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Parameter Reset:</strong> Instant test repetition</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -209,24 +226,37 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
               Step into an open sandbox where you are the lead investigator. Conduct risky experiments with zero danger, test extreme physical limits, see subatomic particles, and build deep intuition through play and observation.
             </p>
 
-            {/* Feature Checklist - Compact 2-Column Grid */}
-            <div className="grid grid-cols-2 gap-1.5 pt-0.5">
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-pink-400 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Zero-Risk Sandbox:</strong> No chemical hazards</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-300 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Infinite Repetitions:</strong> Free circuit wiring</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Parameter Control:</strong> Adjust gravity &amp; optics</span>
-              </div>
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-300 shrink-0 pointer-events-none" />
-                <span className="truncate"><strong className="text-white font-bold">Dynamic Feedback:</strong> Live trajectory plots</span>
-              </div>
+            {/* Progressive Disclosure Toggle for Key Features: Collapsed/Hidden by Default */}
+            <div className="pt-0.5">
+              <button
+                type="button"
+                onClick={() => setShowStudentDetails(!showStudentDetails)}
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-400/60 text-pink-200 transition-all cursor-pointer shadow-xs active:scale-95"
+              >
+                <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-pink-300 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showStudentDetails && (
+                <div className="grid grid-cols-2 gap-1.5 pt-2">
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-pink-400 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Zero-Risk Sandbox:</strong> No chemical hazards</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-300 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Infinite Repetitions:</strong> Free circuit wiring</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Parameter Control:</strong> Adjust gravity &amp; optics</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-purple-950/60 border border-purple-500/30 text-[11px] text-purple-50 leading-tight">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-cyan-300 shrink-0 pointer-events-none" />
+                    <span className="truncate"><strong className="text-white font-bold">Dynamic Feedback:</strong> Live trajectory plots</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
