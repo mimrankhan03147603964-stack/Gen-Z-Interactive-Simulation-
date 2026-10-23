@@ -287,18 +287,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
           {/* Official GZ Monogram Emblem on Solid Luminous Frame */}
           <div className="shrink-0 flex items-center justify-center my-2 md:my-0 self-center">
             <div 
-              className="relative p-2 sm:p-2.5 flex items-center justify-center transition-all duration-300 hover:scale-105 rounded-2xl border-2 border-sky-400/90 bg-slate-950 shadow-[0_16px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(56,189,248,0.35)]"
+              className="relative p-2 flex items-center justify-center transition-all duration-300 hover:scale-105 rounded-2xl overflow-hidden border-2 border-sky-400/90 bg-[#240854] shadow-[0_16px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(56,189,248,0.35)] w-[240px] sm:w-[280px] md:w-[320px] h-[90px] sm:h-[105px] md:h-[115px]"
               style={{
-                width: '260px',
-                maxWidth: '100%',
-                height: '130px'
+                borderRadius: '16px',
               }}
               title="Gen Z Interactive Simulations Official Monogram"
             >
               <img 
                 src="/genz-official-logo.png" 
                 alt="Gen Z Interactive Simulations Official Monogram Logo" 
-                className="w-full h-full max-w-full max-h-full object-contain block mx-auto select-none drop-shadow-md rounded-xl"
+                className="w-full h-full object-contain block select-none pointer-events-none"
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
           </div>

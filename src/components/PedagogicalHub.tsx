@@ -20,11 +20,12 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
   return (
     <section 
       id="pedagogical-hub"
-      className="w-full relative z-10 space-y-6 scroll-mt-24 select-none"
+      className="w-full max-w-none relative z-10 space-y-6 scroll-mt-24 select-none"
+      style={{ width: '100%', maxWidth: '100%' }}
     >
       {/* 4 Pillars Ambient Ribbon Banner - Each Box Completely Colored with a Different Solid Gradient */}
       <div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-3xl border-2 border-slate-200 shadow-lg bg-white"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-3xl border-2 border-slate-200 shadow-lg bg-white w-full max-w-none"
       >
         {/* Box 1: Zero Lab Cost - Solid Deep Sky/Blue */}
         <div className="flex items-center gap-3.5 p-4 rounded-2xl text-white shadow-md border-2 border-sky-400/50 transition-all hover:scale-[1.02]"
@@ -79,14 +80,21 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
         </div>
       </div>
 
-      {/* Two Prominent Widescreen Desktop/Laptop Cards (Full Width 2-Column Grid & Compact Balanced Height) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 w-full">
+      {/* Two Prominent Widescreen Desktop/Laptop Cards (Full 100% Widescreen Width Side-by-Side) */}
+      <div 
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 w-full max-w-none"
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+        }}
+      >
         
-        {/* PILLAR 1: FOR TEACHERS & EDUCATORS - Solid Deep Navy / Midnight Blue */}
+        {/* CARD 1: FOR TEACHERS & EDUCATORS - Solid Deep Navy / Midnight Blue */}
         <div 
-          className="relative overflow-hidden rounded-3xl py-6 px-6 sm:px-8 flex flex-col justify-between border-2 border-sky-400 shadow-2xl group text-white transition-all hover:shadow-[0_25px_50px_-12px_rgba(2,28,77,0.7)]"
+          className="w-full flex-1 relative overflow-hidden rounded-3xl py-6 px-6 sm:px-8 flex flex-col justify-between border-2 border-sky-400 shadow-2xl group text-white transition-all hover:shadow-[0_25px_50px_-12px_rgba(2,28,77,0.7)]"
           style={{
-            background: 'linear-gradient(145deg, #071a3d 0%, #0d2857 50%, #123774 100%)'
+            background: 'linear-gradient(145deg, #071a3d 0%, #0d2857 50%, #123774 100%)',
+            width: '100%'
           }}
         >
           {/* Top Decorative Sheen */}
@@ -100,10 +108,15 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
                   <GraduationCap className="w-6 h-6 text-cyan-300 pointer-events-none" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono font-black uppercase tracking-wider px-3 py-0.5 rounded-full bg-sky-950 border border-sky-400/60 text-sky-200 shadow-md">
-                    Smart Classroom Demonstration
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white font-heading tracking-tight mt-0.5 drop-shadow-sm">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-950 border border-sky-400/60 text-sky-200 shadow-md">
+                      SMART CLASSROOM
+                    </span>
+                    <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-900 border border-blue-400/60 text-blue-200 shadow-md">
+                      DEMONSTRATION
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white font-heading tracking-tight mt-1 drop-shadow-sm">
                     For Teachers &amp; Educators
                   </h3>
                 </div>
@@ -155,11 +168,12 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
           </div>
         </div>
 
-        {/* PILLAR 2: FOR STUDENTS & YOUNG SCIENTISTS - Solid Dark Royal Violet / Rich Amethyst */}
+        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS - Solid Dark Royal Violet / Rich Amethyst */}
         <div 
-          className="relative overflow-hidden rounded-3xl py-6 px-6 sm:px-8 flex flex-col justify-between border-2 border-purple-400 shadow-2xl group text-white transition-all hover:shadow-[0_25px_50px_-12px_rgba(59,7,100,0.7)]"
+          className="w-full flex-1 relative overflow-hidden rounded-3xl py-6 px-6 sm:px-8 flex flex-col justify-between border-2 border-purple-400 shadow-2xl group text-white transition-all hover:shadow-[0_25px_50px_-12px_rgba(59,7,100,0.7)]"
           style={{
-            background: 'linear-gradient(145deg, #1f0838 0%, #300f54 50%, #461678 100%)'
+            background: 'linear-gradient(145deg, #1f0838 0%, #300f54 50%, #461678 100%)',
+            width: '100%'
           }}
         >
           {/* Top Decorative Sheen */}
@@ -173,10 +187,15 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
                   <Compass className="w-6 h-6 text-pink-300 pointer-events-none" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono font-black uppercase tracking-wider px-3 py-0.5 rounded-full bg-purple-950 border border-purple-400/60 text-purple-200 shadow-md">
-                    Hands-On Practical Discovery
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white font-heading tracking-tight mt-0.5 drop-shadow-sm">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-950 border border-purple-400/60 text-purple-200 shadow-md">
+                      HANDS-ON PRACTICE
+                    </span>
+                    <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-pink-950 border border-pink-400/60 text-pink-200 shadow-md">
+                      DISCOVERY
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white font-heading tracking-tight mt-1 drop-shadow-sm">
                     For Students &amp; Young Scientists
                   </h3>
                 </div>

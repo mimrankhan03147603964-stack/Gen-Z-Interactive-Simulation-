@@ -249,32 +249,33 @@ export default function App() {
       
       {/* Website Content Container with position: relative, z-index: 1 */}
       <div className="relative z-1 flex flex-col flex-1 w-full min-h-screen">
-        {/* Top Website Header Navbar (z-index: 100) */}
+        {/* Top Website Header Navbar (Desktop-Optimized, No Hamburger Menu) */}
         <TopNavbar
           totalSimulations={allSimulations.length}
-          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
           isDarkMode={isDarkMode}
           onToggleTheme={() => setIsDarkMode((prev) => !prev)}
           onBackToCatalog={handleBackToCatalog}
         />
 
-        {/* Slide-over Fast Navigation Drawer */}
-        <Sidebar
-          simulations={allSimulations}
-          selectedCategory={selectedSubject}
-          onSelectCategory={(cat) => {
-            setSelectedSubject(cat);
-            setSidebarOpen(false);
-            const catEl = document.getElementById('catalog');
-            if (catEl) {
-              catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }}
-          onSelectSim={handleSelectSim}
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-          isDarkMode={isDarkMode}
-        />
+        {/* Slide-over Fast Navigation Drawer (Disabled for desktop, guarded if opened) */}
+        {sidebarOpen && (
+          <Sidebar
+            simulations={allSimulations}
+            selectedCategory={selectedSubject}
+            onSelectCategory={(cat) => {
+              setSelectedSubject(cat);
+              setSidebarOpen(false);
+              const catEl = document.getElementById('catalog');
+              if (catEl) {
+                catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+            onSelectSim={handleSelectSim}
+            isOpen={sidebarOpen}
+            onToggle={() => setSidebarOpen(false)}
+            isDarkMode={isDarkMode}
+          />
+        )}
 
         {/* Main Catalog Portal & Dashboard for Laptop & Desktop Screens (Full Widescreen Span) */}
         <main 

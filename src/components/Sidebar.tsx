@@ -241,12 +241,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <div className="flex items-center gap-3">
             <div 
-              className="w-16 h-10 rounded-xl p-1 bg-slate-950 border-2 border-slate-300 shadow-sm shrink-0 flex items-center justify-center overflow-hidden"
+              className="w-[150px] h-[44px] rounded-xl p-1 bg-[#240854] border border-slate-300 shadow-sm shrink-0 flex items-center justify-center overflow-hidden"
+              style={{ borderRadius: '10px' }}
             >
               <img
                 src="/genz-official-logo.png"
                 alt="Gen Z Official Logo"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain block pointer-events-none"
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
             <div>
