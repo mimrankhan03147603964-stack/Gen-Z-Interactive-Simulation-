@@ -381,24 +381,41 @@ export const ThreeStemBackground: React.FC = () => {
     chipGroup.add(chipCore);
 
     // -------------------------------------------------------------------------
-    // 3E. Ambient Floating Scientific Particles
+    // 3E. Ambient Floating Scientific Particles with Vibrant Multi-Colors
     // -------------------------------------------------------------------------
-    const particleCount = 140;
+    const particleCount = 180;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
+    const particleColors = new Float32Array(particleCount * 3);
 
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      particlePositions[i] = (Math.random() - 0.5) * 65;
-      particlePositions[i + 1] = (Math.random() - 0.5) * 50;
-      particlePositions[i + 2] = (Math.random() - 0.5) * 25 - 5;
+    const vibrantThreeColors = [
+      new THREE.Color(0x00f5ff), // Electric Cyan
+      new THREE.Color(0x3b82f6), // Royal Blue
+      new THREE.Color(0x10b981), // Emerald Green
+      new THREE.Color(0xa855f7), // Vivid Purple
+      new THREE.Color(0xf59e0b), // Amber Gold
+      new THREE.Color(0xf43f5e), // Bright Rose
+      new THREE.Color(0x06b6d4), // Turquoise
+    ];
+
+    for (let i = 0; i < particleCount; i++) {
+      particlePositions[i * 3] = (Math.random() - 0.5) * 75;
+      particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 55;
+      particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 30 - 5;
+
+      const c = vibrantThreeColors[i % vibrantThreeColors.length];
+      particleColors[i * 3] = c.r;
+      particleColors[i * 3 + 1] = c.g;
+      particleColors[i * 3 + 2] = c.b;
     }
     particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      color: 0x0284c7,
-      size: 0.4,
+      size: 0.65,
+      vertexColors: true,
       transparent: true,
-      opacity: 0.65
+      opacity: 0.95
     });
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     masterGroup.add(particleSystem);
@@ -515,7 +532,7 @@ export const ThreeStemBackground: React.FC = () => {
         height: '100%',
         zIndex: 0,
         pointerEvents: 'none',
-        opacity: 0.65,
+        opacity: 0.85,
         overflow: 'hidden'
       }}
       aria-hidden="true"

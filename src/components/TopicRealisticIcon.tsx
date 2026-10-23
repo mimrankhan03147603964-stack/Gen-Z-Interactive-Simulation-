@@ -7,6 +7,83 @@ interface TopicRealisticIconProps {
   size?: number | string;
 }
 
+const SIM_ID_TO_ICON_CASE: Record<string, number> = {
+  'sim-breathing-process-simulation': 1,
+  'sim-atoms-light-sound': 2,
+  'sim-electricity': 3,
+  'sim-heat-transfer': 4,
+  'sim-solar-system': 5,
+  'sim-water-cycle': 6,
+  'sim-cell-structure': 7,
+  'sim-chemical-reactions': 8,
+  'sim-magnets-magnetic-fields': 9,
+  'sim-forces-friction-motion': 10,
+  'sim-plant-transpiration-water': 12,
+  'sim-optical-reflection-refraction': 13,
+  'sim-digestive-system-organs': 14,
+  'sim-simple-machines-levers': 15,
+  'sim-solutions-solubility-crystals': 16,
+  'sim-nervous-system-synapses': 17,
+  'sim-sound-waves-doppler': 18,
+  'sim-circulatory-system-heart': 19,
+  'sim-weather-atmosphere-fronts': 20,
+  'sim-sound-waves-frequency-doppler': 21,
+  'sim-basic-maths-multiplication': 22,
+  'sim-interactive-geometry': 23,
+  'sim-algebra-equation-balancer': 24,
+  'sim-measurement-units-scale': 25,
+  'sim-computer-parts-hardware': 26,
+  'sim-keyboard-shortcuts-typing': 27,
+  'sim-basic-prepositions-3d': 28,
+  'sim-atoms-molecules-builder': 29,
+  'sim-early-childhood-care-education': 30,
+  'sim-dna-genetics-punnett-square': 31,
+  'sim-acids-bases-ph-titration': 32,
+  'sim-electromagnetic-induction-lab': 33,
+  'sim-projectile-motion-gravity': 34,
+  'sim-chemical-reaction-kinetics': 35,
+  'sim-photosynthesis-chloroplast-engine': 36,
+  'sim-moon-phases-tides-orbit': 37,
+  'sim-pythagorean-theorem-geometry': 38,
+  'sim-sorting-algorithms-visualizer': 39,
+  'sim-english-syntax-tree-grammar': 40,
+  'sim-color-mixing-shapes-playground': 41,
+  'sim-pendulum-harmonic-motion': 42,
+  'sim-ideal-gas-laws': 43,
+  'sim-volcano-magma-dynamics': 45,
+  'sim-unit-circle-trigonometry': 46,
+  'sim-logic-gates-circuit-designer': 47,
+  'sim-parts-of-speech-grammar-quest': 48,
+  'sim-ecce-curriculum-learning-areas': 50,
+  'sim-wave-optics-double-slit': 51,
+  'sim-active-passive-voice-tense-timeline': 52,
+  'sim-urdu-grammar': 53,
+  'sim-english-grammar': 54,
+  'sim-parts-of-speech-lab': 55,
+  'sim-ecce-learning-world': 56,
+  'sim-eye-structure-simulation': 58,
+  'sim-abc-real-objects-learning': 59,
+  'sim-photosynthesis-simulation': 62,
+  'sim-solar-system-simulation': 63,
+  'sim-plate-tectonics-moon-phases-studio': 64,
+  'sim-human-heart-simulation': 66,
+  'sim-ice-to-water-to-steam-simulation': 67,
+  'sim-water-cycle-simulation': 68,
+  'sim-urdu-grammar-sifat-ki-aqsam': 69,
+  'sim-alphabet-phonics-soundboard': 70,
+  'sim-dc-motor-ac-generator': 71,
+  'sim-english-verb-tenses-timeline': 72,
+  'sim-haroof-e-tahajji-sound-lab': 73,
+  'sim-hookes-law-lab': 74,
+  'sim-light-explorer-refraction-lenses': 75,
+  'sim-logic-gates-binary-circuit-builder': 76,
+  'sim-nuclear-fission-fusion-halflife': 77,
+  'sim-interactive-periodic-table-elements': 78,
+  'sim-2d-3d-shapes-builder': 79,
+  'sim-solar-lunar-eclipse-interactive': 80,
+  'sim-interactive-geometry-shapes-lab': 81
+};
+
 /**
  * High-definition, fully colored, topic-specific realistic visual emblems
  * for all STEM interactive simulations in the Gen Z Interactive Simulations catalog.
@@ -19,7 +96,8 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
   size
 }) => {
   const normIndex = indexNumber ? indexNumber.replace(/^0+/, '') : '';
-  const idx = parseInt(normIndex, 10);
+  const parsed = parseInt(normIndex, 10);
+  const idx = (simId && SIM_ID_TO_ICON_CASE[simId]) ? SIM_ID_TO_ICON_CASE[simId] : parsed;
 
   const style = size ? { width: size, height: size } : undefined;
 

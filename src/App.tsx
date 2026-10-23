@@ -88,7 +88,7 @@ export default function App() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Premium dark high-tech STEM theme
+  const [isDarkMode, setIsDarkMode] = useState(false); // Clean Soft Claymorphism & Neumorphic Light Theme
 
   // Security & Code Asset Protection: Disable right-click & inspect shortcuts
   useEffect(() => {
@@ -239,10 +239,10 @@ export default function App() {
     return <StandaloneLabPlayer sim={standaloneLab} />;
   }
 
-  // MAIN CATALOG PORTAL & DASHBOARD: Deep Dark Theme with 3D STEM Background & High Contrast Typography
+  // MAIN CATALOG PORTAL & DASHBOARD: Soft Claymorphism & Modern Neumorphic Light Theme
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased text-slate-100 bg-[#070b14] relative"
+      className="min-h-screen flex flex-col font-sans select-none antialiased text-slate-800 bg-transparent relative"
     >
       {/* 3D STEM Simulation Interactive Background strictly in background */}
       <ThreeStemBackground />
@@ -278,7 +278,7 @@ export default function App() {
 
         {/* Main Catalog Portal & Dashboard for Laptop & Desktop Screens */}
         <main 
-          className="flex-1 max-w-[1580px] mx-auto w-full px-3 sm:px-6 lg:px-8 xl:px-10 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100"
+          className="flex-1 max-w-[1720px] 2xl:max-w-[1820px] mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100"
           style={{
             backgroundColor: 'transparent'
           }}
@@ -362,7 +362,7 @@ export default function App() {
         )}
 
         {/* Developer Website Footer strictly pinned to bottom */}
-        <Footer isDarkMode={isDarkMode} />
+        <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
 
       </div>
     </div>

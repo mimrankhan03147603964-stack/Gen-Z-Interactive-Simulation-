@@ -213,24 +213,20 @@ export const MainStage: React.FC<MainStageProps> = ({
       ref={stageContainerRef}
       className="simulation-wrapper w-full rounded-2xl border transition-all overflow-hidden flex flex-col shadow-xl opacity-100 scroll-mt-28"
       style={{
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        backgroundColor: isDarkMode ? 'rgba(6, 14, 34, 0.78)' : 'rgba(255, 255, 255, 0.82)',
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.65)',
-        borderWidth: '1px',
+        backgroundColor: '#071530',
+        borderColor: '#38bdf8',
+        borderWidth: '2px',
         borderStyle: 'solid',
-        boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.45)' : '0 8px 32px 0 rgba(31, 38, 135, 0.08)',
-        color: isDarkMode ? '#ffffff' : '#0f172a'
+        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.7)',
+        color: '#ffffff'
       }}
     >
       {/* Top Navigation Bar with Back to Topics Button & Breadcrumbs */}
       <div 
         className="px-5 py-3 border-b flex flex-wrap items-center justify-between gap-3 transition-colors"
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(7, 18, 45, 0.88)' : 'rgba(255, 255, 255, 0.92)',
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(226, 232, 240, 0.9)'
+          backgroundColor: '#0c2352',
+          borderBottom: '2px solid rgba(56, 189, 248, 0.4)'
         }}
       >
         <div className="flex items-center gap-3">
@@ -300,10 +296,8 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="px-5 py-3 border-b flex flex-wrap items-center justify-between gap-3"
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(11, 25, 61, 0.75)' : 'rgba(239, 246, 255, 0.75)',
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(191, 219, 254, 0.6)'
+          backgroundColor: '#081a3d',
+          borderBottom: '1px solid rgba(56, 189, 248, 0.3)'
         }}
       >
         <div className="flex items-center gap-2.5">
@@ -373,10 +367,8 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="p-5 sm:p-6 border-b transition-colors"
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(8, 20, 47, 0.72)' : 'rgba(248, 250, 252, 0.75)',
-          borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)'
+          backgroundColor: '#071530',
+          borderBottom: '1px solid rgba(56, 189, 248, 0.3)'
         }}
       >
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
@@ -437,13 +429,11 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="w-full lg:w-80 shrink-0 p-4 rounded-xl border"
             style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.75)' : 'rgba(255, 255, 255, 0.82)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1px',
+              backgroundColor: '#0c2352',
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
             }}
           >
             <div 
@@ -492,10 +482,8 @@ export const MainStage: React.FC<MainStageProps> = ({
         <div 
           className="px-4 sm:px-5 py-2.5 border-b flex flex-wrap items-center justify-between gap-3"
           style={{
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            backgroundColor: isDarkMode ? 'rgba(10, 22, 51, 0.75)' : 'rgba(241, 245, 249, 0.75)',
-            borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)'
+            backgroundColor: '#0a1d40',
+            borderBottom: '1px solid rgba(56, 189, 248, 0.3)'
           }}
         >
           <div className="flex items-center gap-2">
@@ -519,10 +507,8 @@ export const MainStage: React.FC<MainStageProps> = ({
             <div 
               className="flex items-center rounded-xl p-0.5 text-xs shadow-inner"
               style={{
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                backgroundColor: isDarkMode ? 'rgba(7, 19, 46, 0.75)' : 'rgba(255, 255, 255, 0.75)',
-                borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(148, 163, 184, 0.6)',
+                backgroundColor: '#071530',
+                borderColor: 'rgba(56, 189, 248, 0.4)',
                 borderWidth: '1px',
                 borderStyle: 'solid'
               }}
@@ -706,10 +692,8 @@ export const MainStage: React.FC<MainStageProps> = ({
       <div 
         className="p-5 sm:p-6 border-t transition-colors"
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: isDarkMode ? 'rgba(7, 19, 41, 0.75)' : 'rgba(255, 255, 255, 0.75)',
-          borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid rgba(255, 255, 255, 0.5)'
+          backgroundColor: '#071530',
+          borderTop: '1px solid rgba(56, 189, 248, 0.3)'
         }}
       >
         <div className="flex items-center gap-2 mb-4 text-xs font-black uppercase tracking-wider"
@@ -724,13 +708,11 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1px',
+              backgroundColor: '#0c2352',
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
             }}
           >
             <div>
@@ -764,13 +746,11 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1px',
+              backgroundColor: '#0c2352',
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
             }}
           >
             <div>
@@ -804,13 +784,11 @@ export const MainStage: React.FC<MainStageProps> = ({
           <div 
             className="p-4 rounded-xl border flex flex-col justify-between"
             style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              backgroundColor: isDarkMode ? 'rgba(12, 27, 61, 0.72)' : 'rgba(248, 250, 252, 0.75)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.65)',
-              borderWidth: '1px',
+              backgroundColor: '#0c2352',
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              borderWidth: '1.5px',
               borderStyle: 'solid',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
             }}
           >
             <div>

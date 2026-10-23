@@ -1259,6 +1259,53 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
 };
 
 
+// 16 Vibrant Unique Color Themes for full card color coverage
+const VIBRANT_CARD_PALETTES: Array<{ solid: string; grad: string; border: string; glow: string; badgeBg: string; badgeText: string }> = [
+  { solid: '#059669', grad: 'linear-gradient(135deg, #059669 0%, #047857 50%, #064e3b 100%)', border: '#34d399', glow: 'rgba(16, 185, 129, 0.45)', badgeBg: '#d1fae5', badgeText: '#065f46' }, // Emerald
+  { solid: '#0284c7', grad: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%)', border: '#38bdf8', glow: 'rgba(14, 165, 233, 0.45)', badgeBg: '#e0f2fe', badgeText: '#0369a1' }, // Sky Blue
+  { solid: '#d97706', grad: 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%)', border: '#fbbf24', glow: 'rgba(245, 158, 11, 0.45)', badgeBg: '#fef3c7', badgeText: '#92400e' }, // Amber
+  { solid: '#e11d48', grad: 'linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%)', border: '#fb7185', glow: 'rgba(244, 63, 94, 0.45)', badgeBg: '#ffe4e6', badgeText: '#9f1239' }, // Rose Ruby
+  { solid: '#7c3aed', grad: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)', border: '#a78bfa', glow: 'rgba(124, 58, 237, 0.45)', badgeBg: '#ede9fe', badgeText: '#5b21b6' }, // Violet
+  { solid: '#2563eb', grad: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%)', border: '#60a5fa', glow: 'rgba(37, 99, 235, 0.45)', badgeBg: '#dbeafe', badgeText: '#1e40af' }, // Royal Blue
+  { solid: '#0d9488', grad: 'linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%)', border: '#2dd4bf', glow: 'rgba(13, 148, 136, 0.45)', badgeBg: '#ccfbf1', badgeText: '#115e59' }, // Teal
+  { solid: '#c026d3', grad: 'linear-gradient(135deg, #c026d3 0%, #a21caf 50%, #86198f 100%)', border: '#e879f9', glow: 'rgba(192, 38, 211, 0.45)', badgeBg: '#fae8ff', badgeText: '#86198f' }, // Fuchsia
+  { solid: '#ea580c', grad: 'linear-gradient(135deg, #ea580c 0%, #c2410c 50%, #9a3412 100%)', border: '#fb923c', glow: 'rgba(234, 88, 12, 0.45)', badgeBg: '#ffedd5', badgeText: '#9a3412' }, // Orange
+  { solid: '#4f46e5', grad: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 50%, #3730a3 100%)', border: '#818cf8', glow: 'rgba(79, 70, 229, 0.45)', badgeBg: '#e0e7ff', badgeText: '#3730a3' }, // Indigo
+  { solid: '#16a34a', grad: 'linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%)', border: '#4ade80', glow: 'rgba(22, 163, 74, 0.45)', badgeBg: '#dcfce7', badgeText: '#166534' }, // Forest Green
+  { solid: '#db2777', grad: 'linear-gradient(135deg, #db2777 0%, #be185d 50%, #9d174d 100%)', border: '#f472b6', glow: 'rgba(219, 39, 119, 0.45)', badgeBg: '#fce7f3', badgeText: '#9d174d' }, // Magenta
+  { solid: '#0891b2', grad: 'linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #155e75 100%)', border: '#22d3ee', glow: 'rgba(8, 145, 178, 0.45)', badgeBg: '#cffafe', badgeText: '#155e75' }, // Cyan Tech
+  { solid: '#9333ea', grad: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 50%, #6b21a8 100%)', border: '#c084fc', glow: 'rgba(147, 51, 234, 0.45)', badgeBg: '#f3e8ff', badgeText: '#6b21a8' }, // Purple
+  { solid: '#b91c1c', grad: 'linear-gradient(135deg, #b91c1c 0%, #991b1b 50%, #7f1d1d 100%)', border: '#f87171', glow: 'rgba(185, 28, 28, 0.45)', badgeBg: '#fee2e2', badgeText: '#7f1d1d' }, // Crimson
+  { solid: '#4338ca', grad: 'linear-gradient(135deg, #4338ca 0%, #3730a3 50%, #312e81 100%)', border: '#a5b4fc', glow: 'rgba(67, 56, 202, 0.45)', badgeBg: '#e0e7ff', badgeText: '#312e81' }  // Deep Indigo
+];
+
 export const getSimTheme = (indexNumber: string): SimColorConfig => {
-  return SIM_COLOR_CONFIGS[indexNumber] || SIM_COLOR_CONFIGS['01'];
+  const paddedKey = indexNumber.length === 1 ? `0${indexNumber}` : indexNumber;
+  if (SIM_COLOR_CONFIGS[paddedKey]) {
+    return SIM_COLOR_CONFIGS[paddedKey];
+  }
+  if (SIM_COLOR_CONFIGS[indexNumber]) {
+    return SIM_COLOR_CONFIGS[indexNumber];
+  }
+  
+  // Deterministic colorful fallback based on index number
+  const num = parseInt(indexNumber, 10) || 1;
+  const palette = VIBRANT_CARD_PALETTES[(num - 1) % VIBRANT_CARD_PALETTES.length];
+  
+  return {
+    id: paddedKey,
+    name: `Lab ${indexNumber}`,
+    bgSolid: palette.solid,
+    bgGradient: palette.grad,
+    borderColor: palette.border,
+    iconBg: palette.solid,
+    iconBorder: palette.border,
+    iconColor: '#ffffff',
+    badgeBg: palette.badgeBg,
+    badgeText: palette.badgeText,
+    badgeBorder: palette.border,
+    tagBg: palette.badgeBg,
+    tagText: palette.solid,
+    glowColor: palette.glow
+  };
 };

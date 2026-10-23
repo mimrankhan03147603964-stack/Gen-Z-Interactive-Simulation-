@@ -206,48 +206,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Backdrop overlay */}
+      {/* Backdrop overlay - Solid Opaque Dimming Preventing Any Bleed-through */}
       {isOpen && (
         <div
           onClick={onToggle}
-          className="fixed inset-0 z-[9990] bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 cursor-pointer"
+          className="fixed inset-0 z-[99990] bg-black/85 transition-opacity duration-300 cursor-pointer"
           aria-hidden="true"
         />
       )}
 
-      {/* Slide-out Drawer Panel */}
+      {/* Slide-out Drawer Panel - Dedicated Layer at z-[99999] with 100% Solid Background */}
       <div
-        className={`fixed top-0 left-0 z-[9999] h-full w-84 sm:w-96 bg-[#0a1836] text-white shadow-2xl border-r-2 border-blue-400 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 z-[99999] h-full w-84 sm:w-96 bg-slate-900 text-white shadow-[0_0_60px_rgba(0,0,0,0.85)] border-r-2 border-sky-500/50 flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{
-          boxShadow: '10px 0 40px -10px rgba(0, 0, 0, 0.8)'
-        }}
         role="dialog"
         aria-modal="true"
         aria-label="STEM Navigation Drawer"
       >
-        {/* Drawer Header with Rich 3D Gradient */}
+        {/* Drawer Header with Vibrant Azure-Royal Gradient & Soft Glow */}
         <div 
-          className="p-4 sm:p-5 border-b-2 border-blue-400 flex items-center justify-between gap-3 shrink-0 relative overflow-hidden"
+          className="p-4 sm:p-5 border-b border-white/20 flex items-center justify-between gap-3 shrink-0 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #091e42 0%, #1e3a8a 50%, #2563eb 100%)',
-            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3)'
+            background: 'linear-gradient(135deg, #071530 0%, #0c2352 50%, #081a3d 100%)',
+            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)'
           }}
         >
           {/* Top Sheen */}
-          <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/30" />
+          <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/30 via-transparent to-black/40" />
 
           <div className="flex items-center gap-3 relative z-10">
             <div 
-              className="w-11 h-11 rounded-xl p-1 bg-[#0f2347] border-2 border-blue-400 shadow-md shrink-0 flex items-center justify-center overflow-hidden"
-              style={{
-                boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)'
-              }}
+              className="w-16 h-10 rounded-xl p-1 bg-slate-950 border border-sky-400/80 shadow-md shrink-0 flex items-center justify-center overflow-hidden"
             >
               <img
-                src="/genz-monogram.png"
-                alt="Gen Z Monogram"
+                src="/genz-official-logo.png"
+                alt="Gen Z Official Logo"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -255,9 +249,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <h2 className="text-sm font-black tracking-wide text-white uppercase font-heading drop-shadow-xs">
                 GEN Z SIMULATIONS
               </h2>
-              <p className="text-xs font-bold text-cyan-200 flex items-center gap-1.5 mt-0.5">
+              <p className="text-xs font-bold text-sky-200 flex items-center gap-1.5 mt-0.5">
                 <span>STEM Disciplines</span>
-                <span className="px-2 py-0.2 rounded-full text-[10px] font-mono font-black bg-amber-400 text-slate-950 shadow-xs">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-black bg-cyan-400 text-slate-950 shadow-xs">
                   {simulations.length} Labs
                 </span>
               </p>
@@ -268,7 +262,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={onToggle}
-            className="p-2 rounded-xl bg-white/20 hover:bg-white/30 border border-white/40 text-white transition-all cursor-pointer shadow-md active:scale-95 relative z-10"
+            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white transition-all cursor-pointer shadow-sm active:scale-95 relative z-10"
             title="Close Drawer"
             aria-label="Close Drawer"
           >
@@ -277,14 +271,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* View Switcher Tabs (Disciplines vs All Labs) */}
-        <div className="p-3 border-b-2 border-blue-400/50 bg-[#0e2145] grid grid-cols-2 gap-2 shrink-0">
+        <div className="p-3 border-b border-slate-800 bg-slate-950 grid grid-cols-2 gap-2 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('categories')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
+            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
               activeTab === 'categories'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-300 shadow-md'
-                : 'bg-[#163261] text-slate-200 hover:bg-[#1c3f7a] border-blue-400/40'
+                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white border-white/50 shadow-md'
+                : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700 shadow-2xs'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -293,10 +287,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('labs')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
+            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
               activeTab === 'labs'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-300 shadow-md'
-                : 'bg-[#163261] text-slate-200 hover:bg-[#1c3f7a] border-blue-400/40'
+                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white border-white/50 shadow-md'
+                : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700 shadow-2xs'
             }`}
           >
             <Search className="w-3.5 h-3.5" />
@@ -306,8 +300,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Tab 1: STEM Subjects / Categories List - FULLY COLORED 3D BOXES */}
         {activeTab === 'categories' && (
-          <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
-            <div className="px-2 py-1 text-[11px] font-black uppercase tracking-wider text-cyan-300 flex items-center justify-between">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-900">
+            <div className="px-2 py-1 text-[11px] font-black uppercase tracking-wider text-sky-400 flex items-center justify-between">
               <span>Filter By Subject</span>
               <span className="text-[10px] font-mono text-slate-400">9 Available</span>
             </div>
@@ -324,22 +318,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full p-3 rounded-2xl text-left cursor-pointer transition-all duration-200 flex items-center justify-between group relative overflow-hidden border ${
                     isSelected
                       ? 'ring-3 ring-amber-300 ring-offset-2 ring-offset-slate-900 scale-[1.02] shadow-xl'
-                      : 'hover:scale-[1.01] hover:brightness-110 shadow-md'
+                      : 'hover:scale-[1.01] hover:brightness-105 shadow-sm'
                   }`}
                   style={{
                     background: cat.gradient,
                     borderColor: isSelected ? '#fde047' : cat.border,
-                    boxShadow: `0 8px 24px -4px ${cat.glow}, inset 0 1px 1px rgba(255,255,255,0.4)`
+                    boxShadow: `0 6px 18px -4px ${cat.glow}, inset 0 1px 1px rgba(255,255,255,0.4)`
                   }}
                   title={`Filter by ${cat.name}`}
                 >
-                  {/* Top Specular Glass Highlight */}
+                  {/* Top Specular Highlight */}
                   <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/30" />
 
                   <div className="flex items-center gap-3 min-w-0 relative z-10">
                     {/* Glowing 3D Icon Box */}
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-2 transition-transform group-hover:scale-110 bg-white/20 border-white/40 shadow-sm"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-2 transition-transform group-hover:scale-110 bg-slate-950/70 border-white/40 shadow-sm"
                     >
                       {cat.icon}
                     </div>
@@ -358,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-black ${
                         isSelected
                           ? 'bg-amber-300 text-slate-950 shadow-md'
-                          : 'bg-white/25 text-white border border-white/40 shadow-xs'
+                          : 'bg-slate-950/70 text-white border border-white/40 shadow-xs'
                       }`}
                     >
                       {count}
@@ -373,17 +367,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Tab 2: All Labs Direct Search & Launch */}
         {activeTab === 'labs' && (
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col min-h-0 bg-slate-900">
             {/* Search Input */}
-            <div className="p-3 border-b-2 border-blue-400/50 bg-[#0e2145]">
+            <div className="p-3 border-b border-slate-800 bg-slate-950">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyan-300 pointer-events-none" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search by title, number, or topic..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-8 py-2 text-xs font-bold rounded-xl border-2 border-blue-400/60 bg-[#08152e] text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 shadow-xs"
+                  className="w-full pl-9 pr-8 py-2 text-xs font-bold rounded-xl border border-slate-700 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20 shadow-2xs"
                 />
                 {searchTerm && (
                   <button
@@ -398,10 +392,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#091630]">
-              <div className="px-2 py-1 text-[11px] font-black text-cyan-300 flex justify-between">
+            <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-slate-900">
+              <div className="px-2 py-1 text-[11px] font-black text-sky-400 flex justify-between">
                 <span>SIMULATIONS</span>
-                <span className="font-mono text-amber-300">{filteredSims.length} FOUND</span>
+                <span className="font-mono text-cyan-300">{filteredSims.length} FOUND</span>
               </div>
 
               {filteredSims.map((sim) => (
@@ -411,39 +405,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onToggle()}
-                  className="p-3 rounded-2xl border-2 border-blue-400/40 bg-[#122752] hover:bg-[#183466] hover:border-cyan-400 transition-all flex items-center justify-between gap-2.5 group shadow-md no-underline text-inherit block relative overflow-hidden"
+                  className="p-3 rounded-2xl border border-slate-700/80 bg-slate-800/90 hover:bg-slate-800 hover:border-sky-400 transition-all flex items-center justify-between gap-2.5 group shadow-sm no-underline text-inherit block relative overflow-hidden"
                 >
                   <div className="min-w-0 flex-1 relative z-10">
                     <div className="flex items-center gap-1.5 mb-1">
                       <span 
-                        className="font-mono text-[10px] font-black px-1.5 py-0.2 rounded text-white shadow-xs"
-                        style={{ backgroundColor: sim.accentColor || '#2563eb' }}
+                        className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full text-white shadow-2xs"
+                        style={{ backgroundColor: sim.accentColor || '#0284c7' }}
                       >
                         LAB {sim.indexNumber}
                       </span>
-                      <span className="text-[10px] font-bold text-cyan-300 truncate">
+                      <span className="text-[10px] font-bold text-sky-300 truncate">
                         {sim.category}
                       </span>
                     </div>
                     <h4 className="text-xs font-black text-white group-hover:text-cyan-300 truncate font-heading">
                       {sim.title}
                     </h4>
-                    <p className="text-[11px] font-medium text-slate-200 line-clamp-1 mt-0.5">
+                    <p className="text-[11px] font-normal text-slate-300 line-clamp-1 mt-0.5">
                       {sim.description}
                     </p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-cyan-400 group-hover:text-white group-hover:scale-110 transition-all shrink-0 relative z-10" />
+                  <ExternalLink className="w-4 h-4 text-cyan-400 group-hover:text-amber-300 group-hover:scale-110 transition-all shrink-0 relative z-10" />
                 </a>
               ))}
             </div>
           </div>
         )}
 
-        {/* Drawer Footer with Vibrant 3D Gradient */}
+        {/* Drawer Footer with Solid Dark Blue Gradient */}
         <div 
-          className="p-3.5 border-t-2 border-blue-400 text-center shrink-0"
+          className="p-3.5 border-t border-sky-500/40 text-center shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #091e42 0%, #1e3a8a 100%)'
+            background: 'linear-gradient(135deg, #071530 0%, #0c2352 100%)'
           }}
         >
           <p className="text-[11px] font-black text-cyan-200">

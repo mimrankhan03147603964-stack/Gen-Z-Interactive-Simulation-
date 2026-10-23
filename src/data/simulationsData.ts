@@ -154,7 +154,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-simple-machines',
     slug: 'simple-machines',
-    indexNumber: '12',
+    indexNumber: '11',
     title: 'Simple Machines (6 Mechanisms)',
     subject: 'Mechanical Engineering & Physics',
     category: 'Physics & Motion',
@@ -169,7 +169,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-states-of-matter',
     slug: 'states-of-matter',
-    indexNumber: '13',
+    indexNumber: '12',
     title: 'States of Matter (Solid, Liquid, Gas)',
     subject: 'Thermodynamics & Chemistry',
     category: 'Chemistry & Matter',
@@ -184,7 +184,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-earth-space',
     slug: 'earth-and-space',
-    indexNumber: '14',
+    indexNumber: '13',
     title: 'Earth & Space: Water Cycle & Day/Night',
     subject: 'Earth Science & Astronomy',
     category: 'Earth & Space',
@@ -199,7 +199,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-earth-rotation-revolution',
     slug: 'earth-rotation-revolution',
-    indexNumber: '15',
+    indexNumber: '14',
     title: 'Earth Rotation & Revolution Simulator',
     subject: 'Astronomy & Geophysics',
     category: 'Earth & Space',
@@ -214,7 +214,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-plate-tectonics-moon-phases',
     slug: 'plate-tectonics-moon-phases',
-    indexNumber: '16',
+    indexNumber: '15',
     title: 'Moon Phases & Lunar Orbit Simulator',
     subject: 'Lunar Astronomy & Celestial Mechanics',
     category: 'Earth & Space',
@@ -229,7 +229,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-solar-lunar-eclipse',
     slug: 'solar-and-lunar-eclipse',
-    indexNumber: '17',
+    indexNumber: '16',
     title: 'Solar & Lunar Eclipse Simulator',
     subject: 'Celestial Mechanics & Ray Optics',
     category: 'Earth & Space',
@@ -244,7 +244,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-planetary-motion-keplers-laws',
     slug: 'planetary-motion-keplers-laws',
-    indexNumber: '18',
+    indexNumber: '17',
     title: 'Solar System & Planetary Motion (Kepler\'s Laws)',
     subject: 'Astrophysics & Classical Mechanics',
     category: 'Physics & Motion',
@@ -259,7 +259,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-solar-system-orbits',
     slug: 'solar-system-orbits',
-    indexNumber: '19',
+    indexNumber: '18',
     title: '3D Solar System & Planetary Orbits',
     subject: 'Planetary Science & Astronomy',
     category: 'Earth & Space',
@@ -274,7 +274,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-periodic-table-bohr',
     slug: 'periodic-table-bohr-model',
-    indexNumber: '20',
+    indexNumber: '19',
     title: 'Interactive Periodic Table & Bohr Model',
     subject: 'Atomic Chemistry & Quantum Shells',
     category: 'Chemistry & Matter',
@@ -289,7 +289,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-sound-waves-doppler',
     slug: 'sound-waves-doppler-effect',
-    indexNumber: '21',
+    indexNumber: '20',
     title: 'Sound Waves, Frequency & Doppler Effect',
     subject: 'Acoustics & Wave Physics',
     category: 'Physics & Motion',
@@ -304,7 +304,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-basic-maths-multiplication',
     slug: 'basic-maths-multiplication',
-    indexNumber: '22',
+    indexNumber: '21',
     title: 'Basic Maths Fun Lab: Add, Subtract, Multiply & Divide',
     subject: 'Elementary Mathematics & Arithmetic',
     category: 'Mathematics & Logic',
@@ -319,7 +319,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-interactive-geometry',
     slug: 'interactive-geometry-shapes',
-    indexNumber: '23',
+    indexNumber: '22',
     title: 'Cambridge Scholar: Geometry Lab',
     subject: 'Geometry & Measurement',
     category: 'Mathematics & Logic',
@@ -334,7 +334,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-algebra-equation-balancer',
     slug: 'algebra-equation-balancer',
-    indexNumber: '24',
+    indexNumber: '23',
     title: 'Cambridge Scholar: Algebra Equations Lab',
     subject: 'Algebra & Functions',
     category: 'Mathematics & Logic',
@@ -349,7 +349,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-measurement-units-scale',
     slug: 'measurement-units-scale',
-    indexNumber: '25',
+    indexNumber: '24',
     title: 'Measurement Fun Lab: Length, Weight & Capacity',
     subject: 'Applied Mathematics & Metric Units',
     category: 'Mathematics & Logic',
@@ -364,7 +364,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-computer-parts-hardware',
     slug: 'computer-parts-hardware',
-    indexNumber: '26',
+    indexNumber: '25',
     title: 'Computer Parts & Hardware Architecture',
     subject: 'Computer Science & System Engineering',
     category: 'Computer Science & IT',
@@ -379,7 +379,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-keyboard-shortcuts-typing',
     slug: 'keyboard-shortcuts-typing',
-    indexNumber: '27',
+    indexNumber: '26',
     title: 'Keyboard Shortcuts & System Hotkeys Lab',
     subject: 'Computer Science & Digital Literacy',
     category: 'Computer Science & IT',
@@ -394,7 +394,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-basic-prepositions-3d',
     slug: 'basic-prepositions-3d',
-    indexNumber: '28',
+    indexNumber: '27',
     title: 'Basic Prepositions in 3D: Space, Movement & Grammar',
     subject: 'English & Grammar (Linguistics)',
     category: 'English & Grammar',
@@ -409,7 +409,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-atoms-molecules-builder',
     slug: 'atoms-and-molecules-builder',
-    indexNumber: '29',
+    indexNumber: '28',
     title: 'Atoms & Molecules: Interactive Chemistry Lab',
     subject: 'Chemistry & Molecular Science',
     category: 'Chemistry & Matter',
@@ -424,7 +424,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-early-childhood-care-education',
     slug: 'early-childhood-care-education',
-    indexNumber: '30',
+    indexNumber: '29',
     title: 'Early Childhood Care & Education (ECCE) Discovery Academy',
     subject: 'Early Childhood & Foundation Stage (ECCE / Pre-K)',
     category: 'Early Childhood (ECCE)',
@@ -439,7 +439,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-dna-genetics-punnett-square',
     slug: 'dna-genetics-punnett-square',
-    indexNumber: '31',
+    indexNumber: '30',
     title: 'Genetics, DNA & Punnett Square Lab',
     subject: 'Cellular Biology & Genetics',
     category: 'Biology & Life',
@@ -454,7 +454,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-acids-bases-ph-titration',
     slug: 'acids-bases-ph-titration',
-    indexNumber: '32',
+    indexNumber: '31',
     title: 'Acids, Bases and the pH Scale Lab',
     subject: 'Chemistry & Solution Science',
     category: 'Chemistry & Matter',
@@ -469,7 +469,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-electromagnetic-induction-lab',
     slug: 'electromagnetic-induction-lab',
-    indexNumber: '33',
+    indexNumber: '32',
     title: 'Electromagnetic Induction & Faraday\'s Law Lab',
     subject: 'Physics & Electrodynamics',
     category: 'Physics & Motion',
@@ -484,7 +484,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-projectile-motion-gravity',
     slug: 'projectile-motion-gravity',
-    indexNumber: '34',
+    indexNumber: '33',
     title: 'Projectile Motion & Gravitational Trajectory Lab',
     subject: 'Classical Mechanics & Kinematics',
     category: 'Physics & Motion',
@@ -499,7 +499,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-chemical-reaction-kinetics',
     slug: 'chemical-reaction-kinetics',
-    indexNumber: '35',
+    indexNumber: '34',
     title: 'Chemical Reaction Kinetics & Catalysis Lab',
     subject: 'Physical & Molecular Chemistry',
     category: 'Chemistry & Matter',
@@ -514,7 +514,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-photosynthesis-chloroplast-engine',
     slug: 'photosynthesis-chloroplast-engine',
-    indexNumber: '36',
+    indexNumber: '35',
     title: 'Photosynthesis & Cellular Chloroplast Engine',
     subject: 'Cellular Biology & Bioenergetics',
     category: 'Biology & Life',
@@ -529,7 +529,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-moon-phases-tides-orbit',
     slug: 'moon-phases-tides-orbit',
-    indexNumber: '37',
+    indexNumber: '36',
     title: 'Moon Phases, Tides & Lunar Orbit Simulator',
     subject: 'Astronomy & Planetary Science',
     category: 'Earth & Space',
@@ -544,7 +544,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-pythagorean-theorem-geometry',
     slug: 'pythagorean-theorem-geometry',
-    indexNumber: '38',
+    indexNumber: '37',
     title: 'Pythagorean Theorem & Geometric Distance Engine',
     subject: 'Euclidean Geometry & Algebra',
     category: 'Mathematics & Logic',
@@ -559,7 +559,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-sorting-algorithms-visualizer',
     slug: 'sorting-algorithms-visualizer',
-    indexNumber: '39',
+    indexNumber: '38',
     title: 'Sorting Algorithms & Computational Complexity Workbench',
     subject: 'Algorithms & Data Structures',
     category: 'Computer Science & IT',
@@ -574,7 +574,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-english-syntax-tree-grammar',
     slug: 'english-syntax-tree-grammar',
-    indexNumber: '40',
+    indexNumber: '39',
     title: 'English Sentence Structure & Syntax Tree Builder',
     subject: 'English Grammar & Linguistics',
     category: 'English & Grammar',
@@ -589,7 +589,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-color-mixing-shapes-playground',
     slug: 'color-mixing-shapes-playground',
-    indexNumber: '41',
+    indexNumber: '40',
     title: 'Vibrant Color Mixing & Geometric Sorting Playground',
     subject: 'Sensory Arts & Early Cognitive Development',
     category: 'Early Childhood (ECCE)',
@@ -604,7 +604,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-pendulum-harmonic-motion',
     slug: 'pendulum-harmonic-motion',
-    indexNumber: '42',
+    indexNumber: '41',
     title: 'Simple Harmonic Motion & Pendulum Conservation',
     subject: 'Classical Mechanics & Oscillations',
     category: 'Physics & Motion',
@@ -619,7 +619,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-ideal-gas-laws',
     slug: 'ideal-gas-laws',
-    indexNumber: '43',
+    indexNumber: '42',
     title: 'Ideal Gas Laws & Kinetic Molecular Theory Engine',
     subject: 'Physical & Thermal Chemistry',
     category: 'Chemistry & Matter',
@@ -634,7 +634,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-volcano-magma-dynamics',
     slug: 'volcano-magma-dynamics',
-    indexNumber: '45',
+    indexNumber: '43',
     title: 'Volcano Anatomy, Magma Chambers & Eruption Dynamics',
     subject: 'Geology & Volcanology',
     category: 'Earth & Space',
@@ -649,7 +649,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-unit-circle-trigonometry',
     slug: 'unit-circle-trigonometry',
-    indexNumber: '46',
+    indexNumber: '44',
     title: 'Interactive Unit Circle & Trigonometric Functions',
     subject: 'Trigonometry & Analytic Geometry',
     category: 'Mathematics & Logic',
@@ -664,7 +664,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-logic-gates-circuit-designer',
     slug: 'logic-gates-circuit-designer',
-    indexNumber: '47',
+    indexNumber: '45',
     title: 'Digital Logic Gates & Boolean Circuit Designer',
     subject: 'Digital Electronics & Computer Architecture',
     category: 'Computer Science & IT',
@@ -679,7 +679,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-parts-of-speech-grammar-quest',
     slug: 'parts-of-speech-grammar-quest',
-    indexNumber: '48',
+    indexNumber: '46',
     title: 'Parts of Speech Explorer & Grammar Quest Engine',
     subject: 'Grammar, Syntax & Lexicology',
     category: 'English & Grammar',
@@ -694,7 +694,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-ecce-curriculum-learning-areas',
     slug: 'ecce-curriculum-learning-areas',
-    indexNumber: '50',
+    indexNumber: '47',
     title: 'ECCE Seven Learning Areas: Teacher Conceptual Framework & Curriculum Standards (NCP 2022–23)',
     subject: 'ECCE Teacher Pedagogical Concept & Learning Areas Framework',
     category: 'Early Childhood (ECCE)',
@@ -709,7 +709,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-wave-optics-double-slit',
     slug: 'wave-optics-double-slit-interference',
-    indexNumber: '51',
+    indexNumber: '48',
     title: 'Wave Optics & Double-Slit Interference Lab',
     subject: 'Optics & Quantum Wave Physics',
     category: 'Physics & Motion',
@@ -724,7 +724,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-active-passive-voice-tense-timeline',
     slug: 'active-passive-voice-tense-timeline',
-    indexNumber: '52',
+    indexNumber: '49',
     title: 'Active vs. Passive Voice & Verb Tenses Timeline Studio',
     subject: 'English Grammar, Voice & Tense Syntax',
     category: 'English & Grammar',
@@ -739,7 +739,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-urdu-grammar',
     slug: 'urdu-grammar',
-    indexNumber: '53',
+    indexNumber: '50',
     title: 'Urdu Grammar: Parts of Speech (اُردو قواعد - اجزائے کلام)',
     subject: 'Urdu Linguistics & Grammar Rules (اردو گرامر)',
     category: 'Urdu & Linguistics',
@@ -754,7 +754,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-english-grammar',
     slug: 'english-grammar',
-    indexNumber: '54',
+    indexNumber: '51',
     title: 'English Grammar',
     subject: 'English Grammar (Parts of Speech & Syntax)',
     category: 'English & Grammar',
@@ -769,7 +769,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-parts-of-speech-lab',
     slug: 'parts-of-speech-lab',
-    indexNumber: '55',
+    indexNumber: '52',
     title: 'Parts of Speech Lab',
     subject: 'English Grammar & Lexical Classes',
     category: 'English & Grammar',
@@ -784,7 +784,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-ecce-learning-world',
     slug: 'ecce-learning-world',
-    indexNumber: '56',
+    indexNumber: '53',
     title: 'ECCE Learning World',
     subject: 'Early Childhood Care & Education (Alphabet, Numbers, Urdu & Calendar)',
     category: 'Early Childhood (ECCE)',
@@ -799,7 +799,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-eye-structure-simulation',
     slug: 'eye-structure-simulation',
-    indexNumber: '58',
+    indexNumber: '54',
     title: 'Eye Structure Simulation',
     subject: 'Biology & Optical Anatomy',
     category: 'Biology & Life',
@@ -814,7 +814,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-abc-real-objects-learning',
     slug: 'abc-real-objects-learning',
-    indexNumber: '59',
+    indexNumber: '55',
     title: 'ABC Real Objects Learning',
     subject: 'Early Childhood Care & Education (ECCE)',
     category: 'Early Childhood (ECCE)',
@@ -829,7 +829,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-photosynthesis-simulation',
     slug: 'photosynthesis-simulation',
-    indexNumber: '62',
+    indexNumber: '56',
     title: 'Photosynthesis in Flowering Plants Lab',
     subject: 'Biology & Plant Physiology',
     category: 'Biology & Life',
@@ -844,7 +844,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-solar-system-simulation',
     slug: 'solar-system-simulation',
-    indexNumber: '63',
+    indexNumber: '57',
     title: 'Solar System Simulation',
     subject: 'Astronomy & Planetary Physics',
     category: 'Earth & Space',
@@ -859,7 +859,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-plate-tectonics-moon-phases-studio',
     slug: 'plate-tectonics-moon-phases-studio',
-    indexNumber: '64',
+    indexNumber: '58',
     title: 'Plate Tectonics & Moon Phases Interactive Studio',
     subject: 'Earth Sciences & Planetary Geology',
     category: 'Earth & Space',
@@ -874,7 +874,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-human-heart-simulation',
     slug: 'human-heart-simulation',
-    indexNumber: '66',
+    indexNumber: '59',
     title: 'Human Heart Simulation',
     subject: 'Biology & Double Blood Circulation',
     category: 'Biology & Life',
@@ -889,7 +889,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-ice-to-water-to-steam-simulation',
     slug: 'ice-to-water-to-steam-simulation',
-    indexNumber: '67',
+    indexNumber: '60',
     title: 'Heating Ice: Solid to Liquid to Steam Simulation',
     subject: 'Chemistry & Thermodynamics',
     category: 'Chemistry & Matter',
@@ -904,7 +904,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-water-cycle-simulation',
     slug: 'water-cycle-simulation',
-    indexNumber: '68',
+    indexNumber: '61',
     title: 'The Water Cycle Simulation',
     subject: 'Earth Sciences & Hydrology',
     category: 'Earth & Space',
@@ -919,7 +919,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-urdu-grammar-sifat-ki-aqsam',
     slug: 'urdu-grammar-sifat-ki-aqsam',
-    indexNumber: '69',
+    indexNumber: '62',
     title: 'Urdu Grammar: Kinds of Adjectives (اُردو قواعد - صفت کی اقسام)',
     subject: 'Urdu Language & Linguistics (اردو زبان و قواعد)',
     category: 'Urdu & Linguistics',
@@ -934,7 +934,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-alphabet-phonics-soundboard',
     slug: 'alphabet-phonics-soundboard',
-    indexNumber: '70',
+    indexNumber: '63',
     title: 'Alphabet & Phonics Soundboard',
     subject: 'Early Childhood Care & Education (Alphabet & Phonics)',
     category: 'Early Childhood (ECCE)',
@@ -949,7 +949,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-dc-motor-ac-generator',
     slug: 'dc-motor-ac-generator-commutator',
-    indexNumber: '71',
+    indexNumber: '64',
     title: 'DC Motor, AC Generator and Commutator Dynamics',
     subject: 'Physics & Electromagnetism',
     category: 'Physics & Motion',
@@ -964,7 +964,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-english-verb-tenses-timeline',
     slug: 'english-verb-tenses-timeline',
-    indexNumber: '72',
+    indexNumber: '65',
     title: 'English Verb Tenses Timeline: Past, Present and Future',
     subject: 'English Grammar & Verb Tenses',
     category: 'English & Grammar',
@@ -979,7 +979,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-haroof-e-tahajji-sound-lab',
     slug: 'haroof-e-tahajji-sound-lab',
-    indexNumber: '73',
+    indexNumber: '66',
     title: 'Haroof-e-Tahajji & Sound Recognition Lab (اُردو حروفِ تہجی و صوتیات لیب)',
     subject: 'Urdu Language & Foundation (اردو حروف و صوتیات)',
     category: 'Urdu & Linguistics',
@@ -994,7 +994,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-hookes-law-lab',
     slug: 'hookes-law-lab',
-    indexNumber: '74',
+    indexNumber: '67',
     title: 'Hooke\'s Law & Spring Force Lab',
     subject: 'Classical Mechanics & Elasticity',
     category: 'Physics & Motion',
@@ -1009,7 +1009,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-light-explorer-refraction-lenses',
     slug: 'light-explorer-refraction-lenses',
-    indexNumber: '75',
+    indexNumber: '68',
     title: 'Light Explorer: Reflection, Refraction & Lenses',
     subject: 'Optics & Wave Physics',
     category: 'Physics & Motion',
@@ -1024,7 +1024,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-logic-gates-binary-circuit-builder',
     slug: 'logic-gates-binary-circuit-builder',
-    indexNumber: '76',
+    indexNumber: '69',
     title: 'Logic Gates and Binary Circuit Builder',
     subject: 'Computer Science & Digital Electronics',
     category: 'Computer Science & IT',
@@ -1039,7 +1039,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-nuclear-fission-fusion-halflife',
     slug: 'nuclear-fission-fusion-halflife',
-    indexNumber: '77',
+    indexNumber: '70',
     title: 'Nuclear Fission, Fusion and Half-Life Decay',
     subject: 'Nuclear Physics & Modern Science',
     category: 'Physics & Motion',
@@ -1054,7 +1054,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-interactive-periodic-table-elements',
     slug: 'interactive-periodic-table-elements',
-    indexNumber: '78',
+    indexNumber: '71',
     title: 'Interactive Periodic Table of Elements',
     subject: 'Chemistry & Periodic Classification',
     category: 'Chemistry & Matter',
@@ -1069,7 +1069,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-2d-3d-shapes-builder',
     slug: '2d-3d-shapes-builder',
-    indexNumber: '79',
+    indexNumber: '72',
     title: '2D & 3D Shapes Builder',
     subject: 'Mathematics & Spatial Geometry',
     category: 'Mathematics & Logic',
@@ -1084,7 +1084,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-solar-lunar-eclipse-interactive',
     slug: 'solar-lunar-eclipse-interactive',
-    indexNumber: '80',
+    indexNumber: '73',
     title: 'Cambridge Scholar: Solar & Lunar Eclipse Interactive Lab',
     subject: 'Astronomy & Celestial Mechanics',
     category: 'Earth & Space',
@@ -1099,7 +1099,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
   {
     id: 'sim-interactive-geometry-shapes-lab',
     slug: 'interactive-geometry-shapes-lab',
-    indexNumber: '81',
+    indexNumber: '74',
     title: 'Cambridge Scholar: Geometry & Spatial Mathematics Lab',
     subject: 'Mathematics & Spatial Geometry',
     category: 'Mathematics & Logic',
