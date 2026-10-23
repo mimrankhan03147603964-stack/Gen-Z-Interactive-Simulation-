@@ -203,25 +203,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
         {/* Top Row: Left Pill Badges + Right Futuristic Cockpit Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
           
-          {/* Left Pill Chip with Curriculum Alignment Tag */}
+          {/* Left Pill Chip with Curriculum Alignment Tag (Yellow Accents) */}
           <div className="flex items-center gap-2 flex-wrap">
             <div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-sky-400/60 bg-slate-900/90 shadow-lg text-white"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-yellow-400/70 bg-slate-950 shadow-xl"
             >
-              <Sparkles className="w-4 h-4 text-amber-400 pointer-events-none shrink-0" />
-              <span className="font-heading font-black text-xs sm:text-sm tracking-wide text-white drop-shadow-xs">
+              <Sparkles className="w-4 h-4 text-yellow-400 pointer-events-none shrink-0 fill-yellow-400/20" />
+              <span className="font-heading font-black text-xs sm:text-sm tracking-wide text-yellow-400 drop-shadow-xs">
                 GEN Z INTERACTIVE SIMULATIONS PORTAL
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black font-mono bg-gradient-to-r from-sky-400 to-blue-600 text-white shadow-md border border-white/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black font-mono bg-yellow-400/15 text-yellow-400 shadow-md border border-yellow-400/60">
                 4K 3D
               </span>
             </div>
 
             <span 
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-bold border-2 border-emerald-400/60 bg-emerald-950/90 text-emerald-300 shadow-lg"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold border-2 border-yellow-400/60 bg-slate-950 text-yellow-300 shadow-xl"
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              Aligned with National Curriculum of Pakistan (Session 2026-27)
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse shrink-0 shadow-[0_0_8px_#facc15]" />
+              <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             </span>
           </div>
 

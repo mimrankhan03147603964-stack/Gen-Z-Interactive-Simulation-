@@ -693,7 +693,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     {tier.label}
                   </span>
                   <span
-                    className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 bg-white text-slate-950 shadow-md border border-white/80"
+                    className="font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full shrink-0 bg-black/40 text-white shadow-md border border-white/30"
                   >
                     {count}
                   </span>
@@ -804,7 +804,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <span 
                     className={`font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full shrink-0 ml-2 relative z-10 ${
                       isSelectedSubject 
-                        ? 'bg-white text-slate-900 shadow-xs' 
+                        ? 'bg-black/35 text-white border border-white/40 shadow-xs' 
                         : 'bg-slate-100 text-slate-700 border border-slate-200'
                     }`}
                   >

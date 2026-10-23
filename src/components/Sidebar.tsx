@@ -180,6 +180,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
     );
   });
 
+  // Lock body scroll when drawer is open to prevent underlying content bleed and scroll
+  React.useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   // Handle Escape key to close drawer
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
