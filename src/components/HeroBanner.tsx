@@ -252,16 +252,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
         </div>
 
         {/* Main Headline & GZ Emblem Showcase */}
-        <div className="relative z-10 my-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <div className="flex-1">
-            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-wide leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+        <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
+          <div className="flex-1 min-w-0">
+            <h1 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] whitespace-normal sm:whitespace-nowrap">
               Gen Z Interactive Simulations Portal
             </h1>
             <p className="mt-2 text-sm sm:text-base font-black text-sky-300 tracking-wide flex items-center gap-2 drop-shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping inline-block shrink-0" />
               <span>Professional Multidisciplinary STEM Learning Portal</span>
             </p>
-            <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl leading-relaxed font-normal">
+            <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-200 max-w-3xl leading-relaxed font-normal">
               Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, computer science, linguistics, and early childhood care &amp; education (ECCE). Switch seamlessly across all {allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.
             </p>
 

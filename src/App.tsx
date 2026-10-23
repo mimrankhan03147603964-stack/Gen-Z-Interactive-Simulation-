@@ -276,9 +276,9 @@ export default function App() {
           isDarkMode={isDarkMode}
         />
 
-        {/* Main Catalog Portal & Dashboard for Laptop & Desktop Screens */}
+        {/* Main Catalog Portal & Dashboard for Laptop & Desktop Screens (Full Widescreen Span) */}
         <main 
-          className="flex-1 max-w-[1720px] 2xl:max-w-[1820px] mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100"
+          className="flex-1 w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100"
           style={{
             backgroundColor: 'transparent'
           }}

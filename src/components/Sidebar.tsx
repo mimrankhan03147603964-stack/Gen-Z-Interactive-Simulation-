@@ -38,110 +38,110 @@ const CATEGORIES: CategoryItem[] = [
     name: 'All Simulations',
     shortLabel: 'Full STEM Catalog',
     countKey: 'All Simulations',
-    accent: '#2563eb',
-    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
-    border: 'rgba(96, 165, 250, 0.6)',
-    glow: 'rgba(37, 99, 235, 0.45)',
+    accent: '#1e40af',
+    gradient: 'linear-gradient(135deg, #172554 0%, #1e40af 50%, #2563eb 100%)',
+    border: '#3b82f6',
+    glow: 'rgba(37, 99, 235, 0.35)',
     icon: <Layers className="w-5 h-5 text-white" />
   },
   {
     key: 'Physics & Motion',
     name: 'Physics & Classical Mechanics',
-    shortLabel: 'Physics',
+    shortLabel: 'Physics & Force Motion',
     countKey: 'Physics & Motion',
     accent: '#1d4ed8',
-    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%)',
-    border: 'rgba(56, 189, 248, 0.6)',
-    glow: 'rgba(2, 132, 199, 0.45)',
-    icon: <Atom className="w-5 h-5 text-cyan-200" />
+    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #0284c7 100%)',
+    border: '#38bdf8',
+    glow: 'rgba(2, 132, 199, 0.35)',
+    icon: <Atom className="w-5 h-5 text-white" />
   },
   {
     key: 'Chemistry & Matter',
     name: 'Chemistry & Molecular Science',
-    shortLabel: 'Chemistry',
+    shortLabel: 'Chemistry (Atoms & Molecules)',
     countKey: 'Chemistry & Matter',
-    accent: '#9333ea',
-    gradient: 'linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)',
-    border: 'rgba(216, 180, 254, 0.6)',
-    glow: 'rgba(168, 85, 247, 0.45)',
-    icon: <FlaskConical className="w-5 h-5 text-purple-200" />
+    accent: '#1d4ed8',
+    gradient: 'linear-gradient(135deg, #172554 0%, #1d4ed8 50%, #2563eb 100%)',
+    border: '#60a5fa',
+    glow: 'rgba(37, 99, 235, 0.35)',
+    icon: <FlaskConical className="w-5 h-5 text-white" />
   },
   {
     key: 'Biology & Life',
     name: 'Biology & Living Systems',
-    shortLabel: 'Biology',
+    shortLabel: 'Biology (Genetics, DNA)',
     countKey: 'Biology & Life',
-    accent: '#16a34a',
-    gradient: 'linear-gradient(135deg, #065f46 0%, #10b981 100%)',
-    border: 'rgba(134, 239, 172, 0.6)',
-    glow: 'rgba(16, 185, 129, 0.45)',
-    icon: <Leaf className="w-5 h-5 text-emerald-200" />
+    accent: '#1e40af',
+    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%)',
+    border: '#3b82f6',
+    glow: 'rgba(30, 64, 175, 0.35)',
+    icon: <Leaf className="w-5 h-5 text-white" />
   },
   {
     key: 'Earth & Space',
     name: 'Earth & Space Exploration',
-    shortLabel: 'Earth & Space',
+    shortLabel: 'Earth & Celestial Orbits',
     countKey: 'Earth & Space',
-    accent: '#0f766e',
-    gradient: 'linear-gradient(135deg, #115e59 0%, #06b6d4 100%)',
-    border: 'rgba(103, 232, 249, 0.6)',
-    glow: 'rgba(6, 182, 212, 0.45)',
-    icon: <Globe className="w-5 h-5 text-teal-200" />
+    accent: '#0369a1',
+    gradient: 'linear-gradient(135deg, #075985 0%, #0369a1 50%, #0284c7 100%)',
+    border: '#38bdf8',
+    glow: 'rgba(2, 132, 199, 0.35)',
+    icon: <Globe className="w-5 h-5 text-white" />
   },
   {
     key: 'Mathematics & Logic',
     name: 'Mathematics & Geometry',
-    shortLabel: 'Mathematics',
+    shortLabel: 'Mathematics & Geometry',
     countKey: 'Mathematics & Logic',
-    accent: '#ea580c',
-    gradient: 'linear-gradient(135deg, #9a3412 0%, #ea580c 100%)',
-    border: 'rgba(253, 186, 116, 0.6)',
-    glow: 'rgba(234, 88, 12, 0.45)',
-    icon: <Calculator className="w-5 h-5 text-amber-200" />
+    accent: '#1d4ed8',
+    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #3b82f6 100%)',
+    border: '#60a5fa',
+    glow: 'rgba(29, 78, 216, 0.35)',
+    icon: <Calculator className="w-5 h-5 text-white" />
   },
   {
     key: 'Computer Science & IT',
     name: 'Computer Science & Hardware',
-    shortLabel: 'Computer Science',
+    shortLabel: 'Computer Science & Logic',
     countKey: 'Computer Science & IT',
-    accent: '#0e7490',
-    gradient: 'linear-gradient(135deg, #0369a1 0%, #6366f1 100%)',
-    border: 'rgba(129, 140, 248, 0.6)',
-    glow: 'rgba(99, 102, 241, 0.45)',
-    icon: <Cpu className="w-5 h-5 text-sky-200" />
+    accent: '#1e40af',
+    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #2563eb 100%)',
+    border: '#3b82f6',
+    glow: 'rgba(30, 64, 175, 0.35)',
+    icon: <Cpu className="w-5 h-5 text-white" />
   },
   {
     key: 'English & Grammar',
     name: 'English & Spatial Linguistics',
-    shortLabel: 'English',
+    shortLabel: 'English Language Arts',
     countKey: 'English & Grammar',
-    accent: '#4f46e5',
-    gradient: 'linear-gradient(135deg, #3730a3 0%, #8b5cf6 100%)',
-    border: 'rgba(196, 181, 253, 0.6)',
-    glow: 'rgba(139, 92, 246, 0.45)',
-    icon: <BookOpen className="w-5 h-5 text-indigo-200" />
+    accent: '#2563eb',
+    gradient: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #60a5fa 100%)',
+    border: '#93c5fd',
+    glow: 'rgba(37, 99, 235, 0.35)',
+    icon: <BookOpen className="w-5 h-5 text-white" />
   },
   {
     key: 'Early Childhood (ECCE)',
     name: 'Early Childhood Care & Education',
-    shortLabel: 'ECCE',
+    shortLabel: 'Early Childhood Care (ECCE)',
     countKey: 'Early Childhood (ECCE)',
-    accent: '#db2777',
-    gradient: 'linear-gradient(135deg, #9d174d 0%, #ec4899 100%)',
-    border: 'rgba(244, 114, 182, 0.6)',
-    glow: 'rgba(236, 72, 153, 0.45)',
-    icon: <Baby className="w-5 h-5 text-pink-200" />
+    accent: '#1d4ed8',
+    gradient: 'linear-gradient(135deg, #172554 0%, #1d4ed8 50%, #3b82f6 100%)',
+    border: '#60a5fa',
+    glow: 'rgba(29, 78, 216, 0.35)',
+    icon: <Baby className="w-5 h-5 text-white" />
   },
   {
     key: 'Urdu & Linguistics',
     name: 'Urdu Language & Linguistics',
-    shortLabel: 'Urdu',
+    shortLabel: 'Urdu Language & Alphabet',
     countKey: 'Urdu & Linguistics',
-    accent: '#b91c1c',
-    gradient: 'linear-gradient(135deg, #991b1b 0%, #ef4444 100%)',
-    border: 'rgba(252, 165, 165, 0.6)',
-    glow: 'rgba(239, 68, 68, 0.45)',
-    icon: <GraduationCap className="w-5 h-5 text-rose-200" />
+    accent: '#1e3a8a',
+    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%)',
+    border: '#3b82f6',
+    glow: 'rgba(30, 58, 138, 0.35)',
+    icon: <GraduationCap className="w-5 h-5 text-white" />
   }
 ];
 
@@ -226,29 +226,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Slide-out Drawer Panel - Dedicated Layer at z-[99999] with 100% Solid Background */}
+      {/* Slide-out Drawer Panel - Solid Pure White Background with Crisp Blue Cards at z-[99999] */}
       <div
-        className={`fixed top-0 left-0 z-[99999] h-full w-84 sm:w-96 bg-slate-900 text-white shadow-[0_0_60px_rgba(0,0,0,0.85)] border-r-2 border-sky-500/50 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 z-[99999] h-full w-84 sm:w-96 bg-white text-slate-900 shadow-[0_0_60px_rgba(0,0,0,0.6)] border-r-2 border-slate-300 flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="dialog"
         aria-modal="true"
         aria-label="STEM Navigation Drawer"
       >
-        {/* Drawer Header with Vibrant Azure-Royal Gradient & Soft Glow */}
+        {/* Drawer Header: Clean Solid White with Crisp Dark Contrast */}
         <div 
-          className="p-4 sm:p-5 border-b border-white/20 flex items-center justify-between gap-3 shrink-0 relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, #071530 0%, #0c2352 50%, #081a3d 100%)',
-            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)'
-          }}
+          className="p-4 sm:p-5 border-b-2 border-slate-200 flex items-center justify-between gap-3 shrink-0 relative bg-white"
         >
-          {/* Top Sheen */}
-          <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/30 via-transparent to-black/40" />
-
-          <div className="flex items-center gap-3 relative z-10">
+          <div className="flex items-center gap-3">
             <div 
-              className="w-16 h-10 rounded-xl p-1 bg-slate-950 border border-sky-400/80 shadow-md shrink-0 flex items-center justify-center overflow-hidden"
+              className="w-16 h-10 rounded-xl p-1 bg-slate-950 border-2 border-slate-300 shadow-sm shrink-0 flex items-center justify-center overflow-hidden"
             >
               <img
                 src="/genz-official-logo.png"
@@ -257,39 +250,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
               />
             </div>
             <div>
-              <h2 className="text-sm font-black tracking-wide text-white uppercase font-heading drop-shadow-xs">
+              <h2 className="text-sm font-black tracking-wide text-slate-900 uppercase font-heading">
                 GEN Z SIMULATIONS
               </h2>
-              <p className="text-xs font-bold text-sky-200 flex items-center gap-1.5 mt-0.5">
+              <p className="text-xs font-bold text-blue-600 flex items-center gap-1.5 mt-0.5">
                 <span>STEM Disciplines</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-black bg-cyan-400 text-slate-950 shadow-xs">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-black bg-blue-100 text-blue-800 border border-blue-300">
                   {simulations.length} Labs
                 </span>
               </p>
             </div>
           </div>
 
-          {/* Close Button with 3D tactile push */}
+          {/* Close Button with Crisp Border */}
           <button
             type="button"
             onClick={onToggle}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white transition-all cursor-pointer shadow-sm active:scale-95 relative z-10"
+            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-700 transition-all cursor-pointer shadow-xs active:scale-95"
             title="Close Drawer"
             aria-label="Close Drawer"
           >
-            <X className="w-5 h-5 text-white" />
+            <X className="w-5 h-5 text-slate-700" />
           </button>
         </div>
 
         {/* View Switcher Tabs (Disciplines vs All Labs) */}
-        <div className="p-3 border-b border-slate-800 bg-slate-950 grid grid-cols-2 gap-2 shrink-0">
+        <div className="p-3 border-b-2 border-slate-200 bg-slate-50 grid grid-cols-2 gap-2 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('categories')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
+            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
               activeTab === 'categories'
-                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white border-white/50 shadow-md'
-                : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700 shadow-2xs'
+                ? 'bg-blue-600 text-white border-blue-700 shadow-md'
+                : 'bg-white text-slate-700 hover:text-blue-600 border-slate-300 shadow-xs'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -298,10 +291,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('labs')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
+            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
               activeTab === 'labs'
-                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white border-white/50 shadow-md'
-                : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700 shadow-2xs'
+                ? 'bg-blue-600 text-white border-blue-700 shadow-md'
+                : 'bg-white text-slate-700 hover:text-blue-600 border-slate-300 shadow-xs'
             }`}
           >
             <Search className="w-3.5 h-3.5" />
@@ -309,12 +302,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Tab 1: STEM Subjects / Categories List - FULLY COLORED 3D BOXES */}
+        {/* Tab 1: STEM Subjects / Categories List - SOLID BLUE CARDS ON PURE WHITE */}
         {activeTab === 'categories' && (
-          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-900">
-            <div className="px-2 py-1 text-[11px] font-black uppercase tracking-wider text-sky-400 flex items-center justify-between">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-white">
+            <div className="px-2 py-1 text-xs font-black uppercase tracking-wider text-slate-800 flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2">
               <span>Filter By Subject</span>
-              <span className="text-[10px] font-mono text-slate-400">9 Available</span>
+              <span className="text-[11px] font-mono font-bold text-slate-500">9 Available</span>
             </div>
 
             {CATEGORIES.map((cat) => {
@@ -326,14 +319,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={cat.key}
                   type="button"
                   onClick={() => handleCategoryClick(cat.key)}
-                  className={`w-full p-3 rounded-2xl text-left cursor-pointer transition-all duration-200 flex items-center justify-between group relative overflow-hidden border ${
+                  className={`w-full p-3 rounded-2xl text-left cursor-pointer transition-all duration-200 flex items-center justify-between group relative overflow-hidden border-2 text-white ${
                     isSelected
-                      ? 'ring-3 ring-amber-300 ring-offset-2 ring-offset-slate-900 scale-[1.02] shadow-xl'
-                      : 'hover:scale-[1.01] hover:brightness-105 shadow-sm'
+                      ? 'ring-3 ring-amber-400 ring-offset-2 ring-offset-white scale-[1.02] shadow-xl border-white'
+                      : 'hover:scale-[1.01] hover:brightness-105 shadow-md border-blue-400/50'
                   }`}
                   style={{
                     background: cat.gradient,
-                    borderColor: isSelected ? '#fde047' : cat.border,
                     boxShadow: `0 6px 18px -4px ${cat.glow}, inset 0 1px 1px rgba(255,255,255,0.4)`
                   }}
                   title={`Filter by ${cat.name}`}
@@ -342,9 +334,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/30" />
 
                   <div className="flex items-center gap-3 min-w-0 relative z-10">
-                    {/* Glowing 3D Icon Box */}
+                    {/* Glowing Icon Box */}
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-2 transition-transform group-hover:scale-110 bg-slate-950/70 border-white/40 shadow-sm"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-2 transition-transform group-hover:scale-110 bg-black/25 border-white/50 shadow-sm"
                     >
                       {cat.icon}
                     </div>
@@ -352,7 +344,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <div className="text-xs sm:text-sm font-black truncate leading-tight text-white drop-shadow-sm font-heading">
                         {cat.name}
                       </div>
-                      <div className="text-[11px] font-bold text-white/90 drop-shadow-xs mt-0.5">
+                      <div className="text-[11px] font-bold text-blue-100 drop-shadow-xs mt-0.5">
                         {cat.shortLabel}
                       </div>
                     </div>
@@ -363,12 +355,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-black ${
                         isSelected
                           ? 'bg-amber-300 text-slate-950 shadow-md'
-                          : 'bg-slate-950/70 text-white border border-white/40 shadow-xs'
+                          : 'bg-white text-slate-900 border border-white shadow-xs'
                       }`}
                     >
                       {count}
                     </span>
-                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-amber-300' : 'text-white/80'}`} />
+                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-amber-300' : 'text-white'}`} />
                   </div>
                 </button>
               );
@@ -376,25 +368,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Tab 2: All Labs Direct Search & Launch */}
+        {/* Tab 2: All Labs Direct Search & Launch - SOLID BLUE CARDS ON PURE WHITE */}
         {activeTab === 'labs' && (
-          <div className="flex-1 flex flex-col min-h-0 bg-slate-900">
+          <div className="flex-1 flex flex-col min-h-0 bg-white">
             {/* Search Input */}
-            <div className="p-3 border-b border-slate-800 bg-slate-950">
+            <div className="p-3 border-b-2 border-slate-200 bg-slate-50">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search by title, number, or topic..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-8 py-2 text-xs font-bold rounded-xl border border-slate-700 bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20 shadow-2xs"
+                  className="w-full pl-9 pr-8 py-2.5 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-xs"
                 />
                 {searchTerm && (
                   <button
                     type="button"
                     onClick={() => setSearchTerm('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs font-bold"
                   >
                     ✕
                   </button>
@@ -402,11 +394,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
 
-            {/* List */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-slate-900">
-              <div className="px-2 py-1 text-[11px] font-black text-sky-400 flex justify-between">
+            {/* List with Crisp Solid Blue Cards */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-white">
+              <div className="px-2 py-1 text-xs font-black text-slate-800 flex justify-between border-b border-slate-200 pb-1 mb-2">
                 <span>SIMULATIONS</span>
-                <span className="font-mono text-cyan-300">{filteredSims.length} FOUND</span>
+                <span className="font-mono text-blue-700 font-bold">{filteredSims.length} FOUND</span>
               </div>
 
               {filteredSims.map((sim) => (
@@ -416,43 +408,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onToggle()}
-                  className="p-3 rounded-2xl border border-slate-700/80 bg-slate-800/90 hover:bg-slate-800 hover:border-sky-400 transition-all flex items-center justify-between gap-2.5 group shadow-sm no-underline text-inherit block relative overflow-hidden"
+                  className="p-3.5 rounded-2xl border-2 border-blue-500 hover:border-blue-300 transition-all flex items-center justify-between gap-3 group shadow-md no-underline text-white block relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%)',
+                    boxShadow: '0 4px 14px rgba(30, 58, 138, 0.25)'
+                  }}
                 >
                   <div className="min-w-0 flex-1 relative z-10">
-                    <div className="flex items-center gap-1.5 mb-1">
+                    <div className="flex items-center gap-1.5 mb-1.5">
                       <span 
-                        className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full text-white shadow-2xs"
-                        style={{ backgroundColor: sim.accentColor || '#0284c7' }}
+                        className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full text-slate-950 bg-white shadow-xs"
                       >
                         LAB {sim.indexNumber}
                       </span>
-                      <span className="text-[10px] font-bold text-sky-300 truncate">
+                      <span className="text-[10px] font-bold text-sky-200 truncate">
                         {sim.category}
                       </span>
                     </div>
-                    <h4 className="text-xs font-black text-white group-hover:text-cyan-300 truncate font-heading">
+                    <h4 className="text-xs sm:text-sm font-black text-white group-hover:text-amber-200 truncate font-heading drop-shadow-xs">
                       {sim.title}
                     </h4>
-                    <p className="text-[11px] font-normal text-slate-300 line-clamp-1 mt-0.5">
+                    <p className="text-[11px] font-normal text-sky-100 line-clamp-1 mt-0.5">
                       {sim.description}
                     </p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-cyan-400 group-hover:text-amber-300 group-hover:scale-110 transition-all shrink-0 relative z-10" />
+                  <ExternalLink className="w-4 h-4 text-white group-hover:text-amber-300 group-hover:scale-110 transition-all shrink-0 relative z-10" />
                 </a>
               ))}
             </div>
           </div>
         )}
 
-        {/* Drawer Footer with Solid Dark Blue Gradient */}
-        <div 
-          className="p-3.5 border-t border-sky-500/40 text-center shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, #071530 0%, #0c2352 100%)'
-          }}
-        >
-          <p className="text-[11px] font-black text-cyan-200">
+        {/* Drawer Footer with High Contrast Details */}
+        <div className="p-3.5 border-t-2 border-slate-200 bg-slate-50 text-center shrink-0">
+          <p className="text-xs font-black text-slate-800">
             Gen Z Interactive Simulations &bull; {simulations.length} Verified Labs
+          </p>
+          <p className="text-[10px] font-bold text-blue-700 mt-0.5">
+            National Curriculum of Pakistan &bull; Session 2026-27
           </p>
         </div>
       </div>

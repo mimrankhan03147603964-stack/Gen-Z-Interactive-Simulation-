@@ -6,11 +6,9 @@ import {
   Search, 
   Maximize2, 
   CheckCircle2, 
-  Filter, 
   ExternalLink, 
   Wand2, 
   Loader2, 
-  ChevronDown, 
   Layers
 } from 'lucide-react';
 
@@ -707,186 +705,86 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* Mobile & Tablet Subject Selector (< 1024px) */}
-      <div className="block lg:hidden bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 transition-all text-slate-800">
-        <div className="flex items-center gap-2 mb-3">
-          <Filter className="w-4 h-4 text-sky-600" />
-          <span className="text-xs font-black uppercase tracking-wider text-slate-800 font-heading">
-            Select STEM Discipline
-          </span>
-          <span className="ml-auto text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
-            {activeSimulations.length} Labs
-          </span>
-        </div>
-
-        <div className="relative">
-          <select
-            value={selectedCategory}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            className="w-full py-2.5 px-3.5 pr-10 rounded-2xl text-xs sm:text-sm font-bold border border-[rgba(220,235,255,0.95)] appearance-none outline-none cursor-pointer transition-all shadow-2xs bg-white text-slate-800 focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
-          >
-            {subjectCategories.map((cat) => (
-              <option key={cat.key} value={cat.key} className="bg-white text-slate-800">
-                {cat.fullTitle} ({getCategoryCount(cat.key)} {getCategoryCount(cat.key) === 1 ? 'Lab' : 'Labs'})
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-sky-600" />
-        </div>
-      </div>
-
-      {/* Two-Column Responsive Desktop Architecture (>= 1024px) */}
-      <div className="flex flex-col lg:flex-row items-start gap-8 w-full">
+      {/* Full-Width Simulation Catalog Main Content */}
+      <div className="w-full space-y-6">
         
-        {/* STEM DISCIPLINES PANEL */}
-        <aside 
-          className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-24 self-start bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 transition-all text-slate-800"
-        >
-          {/* Sidebar Top Header */}
-          <div className="pb-3 mb-3 border-b border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-sky-600" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 font-heading">
-                STEM Disciplines
-              </h3>
-            </div>
-            <span className="font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
-              {activeSimulations.length} Labs Total
-            </span>
-          </div>
-
-          {/* Subjects Selector Menu */}
-          <div className="space-y-1.5">
-            {subjectCategories.map((cat) => {
-              const isSelectedSubject = selectedCategory === cat.key;
-              const subjectCount = getCategoryCount(cat.key);
-              const disc = getDisciplineColor(cat.key);
-
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => handleCategoryChange(cat.key)}
-                  className={`w-full p-2.5 sm:p-3 rounded-2xl flex items-center justify-between text-left cursor-pointer transition-all duration-200 group border-2 relative overflow-hidden ${
-                    isSelectedSubject
-                      ? 'text-white border-white scale-[1.02] shadow-lg ring-2 ring-sky-300'
-                      : 'bg-white border-slate-200 hover:bg-sky-50/70 text-slate-800 hover:text-sky-700 hover:border-sky-300 shadow-xs'
-                  }`}
-                  style={{
-                    background: isSelectedSubject ? `linear-gradient(135deg, ${disc.base} 0%, ${disc.dark} 100%)` : undefined,
-                    boxShadow: isSelectedSubject ? `0 6px 18px -4px ${disc.glow}` : undefined
-                  }}
-                  title={`Filter by ${cat.fullTitle}`}
+        {/* Top Breadcrumb & Quick Search Filter Bar */}
+        <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 transition-all text-slate-800">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            
+            {/* Breadcrumb & Subject Header */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 flex-wrap">
+                <span 
+                  onClick={() => handleCategoryChange('All Simulations')}
+                  className="cursor-pointer hover:text-sky-600 text-slate-500 underline"
                 >
-                  <div className="flex items-center gap-2.5 min-w-0 relative z-10">
-                    <div 
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 p-1.5 shadow-xs border ${
-                        isSelectedSubject ? 'bg-white/20 border-white/40 text-white' : 'bg-slate-100 border-slate-200 text-slate-800'
-                      }`}
-                    >
-                      {cat.renderIcon({
-                        className: `w-4 h-4 ${isSelectedSubject ? 'text-white' : 'text-slate-800'}`,
-                        isSelected: isSelectedSubject,
-                        isDark: false
-                      })}
-                    </div>
+                  Interactive Catalog
+                </span>
+                <span>&gt;</span>
+                <span className="text-sky-700 font-black">
+                  {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
+                </span>
+              </div>
 
-                    {/* Subject Name */}
-                    <span 
-                      className={`text-xs font-black truncate leading-tight font-heading ${
-                        isSelectedSubject ? 'text-white' : 'text-slate-900 group-hover:text-sky-700'
-                      }`}
-                    >
-                      {cat.fullTitle}
-                    </span>
-                  </div>
-
-                  <span 
-                    className={`font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full shrink-0 ml-2 relative z-10 ${
-                      isSelectedSubject 
-                        ? 'bg-black/35 text-white border border-white/40 shadow-xs' 
-                        : 'bg-slate-100 text-slate-700 border border-slate-200'
-                    }`}
-                  >
-                    {cat.key === 'All Simulations' 
-                      ? (selectedGradeTier !== 'all' ? `${subjectCount} / ${activeSimulations.length}` : `${activeSimulations.length} Labs`)
-                      : subjectCount}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </aside>
-
-        {/* Right Content Area: Simulation Cards Grid */}
-        <div className="flex-1 min-w-0 space-y-6">
-          
-          {/* Top Breadcrumb & Quick Search Filter Bar */}
-          <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 transition-all text-slate-800">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              
-              {/* Breadcrumb & Subject Header */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 flex-wrap">
-                  <span 
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
+                  {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
+                </h2>
+                {!isAllCategory && (
+                  <button
+                    type="button"
                     onClick={() => handleCategoryChange('All Simulations')}
-                    className="cursor-pointer hover:text-sky-600 text-slate-500 underline"
+                    className="px-3 py-1 rounded-full text-xs font-black bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    title="Reset discipline filter to show all simulations"
                   >
-                    Interactive Catalog
-                  </span>
-                  <span>&gt;</span>
-                  <span className="text-sky-700 font-black">
-                    {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
-                    {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
-                  </h2>
-                  <span className="px-3 py-1 rounded-full text-xs font-black shadow-2xs flex items-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-mono">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-300" />
-                    {displayedSims.length === activeSimulations.length
-                      ? `Showing All ${activeSimulations.length} Verified Labs`
-                      : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
-                  </span>
-                </div>
+                    <span>Filter: {activeSubjectConfig.fullTitle}</span>
+                    <span className="font-black text-sm">&times;</span>
+                  </button>
+                )}
+                <span className="px-3 py-1 rounded-full text-xs font-black shadow-2xs flex items-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-mono">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-300" />
+                  {displayedSims.length === activeSimulations.length
+                    ? `Showing All ${activeSimulations.length} Verified Labs`
+                    : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
+                </span>
               </div>
+            </div>
 
-              {/* Quick Search Bar to Filter Labs Instantly */}
-              <div className="w-full md:w-80 shrink-0">
-                <div className="relative flex items-center rounded-2xl border border-[rgba(220,235,255,0.95)] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-100">
-                  <Search className="w-4 h-4 ml-3.5 shrink-0 text-sky-500" />
-                  <input
-                    type="text"
-                    placeholder="Search labs across disciplines..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full py-2.5 px-3 text-xs font-bold bg-transparent outline-none text-slate-800 placeholder-slate-400 font-sans"
-                  />
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm('')}
-                      className="mr-2 text-xs font-black px-1.5 py-0.5 rounded-full cursor-pointer bg-slate-100 text-slate-500 hover:text-slate-800"
-                      title="Clear search"
-                    >
-                      &times;
-                    </button>
-                  )}
-                </div>
+            {/* Quick Search Bar to Filter Labs Instantly */}
+            <div className="w-full md:w-80 shrink-0">
+              <div className="relative flex items-center rounded-2xl border border-[rgba(220,235,255,0.95)] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-100">
+                <Search className="w-4 h-4 ml-3.5 shrink-0 text-sky-500" />
+                <input
+                  type="text"
+                  placeholder="Search labs across disciplines..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full py-2.5 px-3 text-xs font-bold bg-transparent outline-none text-slate-800 placeholder-slate-400 font-sans"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="mr-2 text-xs font-black px-1.5 py-0.5 rounded-full cursor-pointer bg-slate-100 text-slate-500 hover:text-slate-800"
+                    title="Clear search"
+                  >
+                    &times;
+                  </button>
+                )}
               </div>
+            </div>
 
+          </div>
+        </div>
+
+        {/* Full-Width Simulation Cards Grid: 4 Columns on Large/Widescreen Displays */}
+        {displayedSims.length > 0 ? (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 w-full">
+              {displayedSims.map(renderCard)}
             </div>
           </div>
-
-          {/* Cards Grid: 2 or 3 Columns for Selected Subject / All Simulations */}
-          {displayedSims.length > 0 ? (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                {displayedSims.map(renderCard)}
-              </div>
-            </div>
-          ) : (
+        ) : (
             <div 
               className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
               style={{
@@ -959,9 +857,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               </div>
             </div>
           )}
-
-        </div>
-
       </div>
     </section>
   );
