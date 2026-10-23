@@ -738,63 +738,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* Tier 2 Curriculum Filter Flow: STEM Subject Tabs */}
-      <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 text-slate-800 transition-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-mono font-black uppercase tracking-wider text-purple-700 px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-200">
-              TIER 2 STEM SUBJECT FILTER
-            </span>
-            <span className="text-xs sm:text-sm font-black text-slate-900 font-heading">
-              Select Discipline &amp; Learning Track
-            </span>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap text-[11px] font-semibold text-slate-500">
-            <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
-            {!isAllCategory && (
-              <button 
-                type="button"
-                onClick={() => handleCategoryChange('All Simulations')}
-                className="text-purple-600 hover:text-purple-800 underline cursor-pointer text-xs font-bold ml-1"
-                title="Reset subject filter"
-              >
-                Reset to All Subjects
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Responsive Wrap Grid of Subject Buttons with Icon and Count */}
-        <div className="flex flex-wrap gap-2 w-full">
-          {subjectCategories.map((cat) => {
-            const isSelected = selectedCategory === cat.key;
-            const count = getCategoryCount(cat.key);
-            return (
-              <button
-                key={cat.key}
-                type="button"
-                onClick={() => handleCategoryChange(cat.key)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
-                  isSelected
-                    ? 'bg-slate-950 text-white border-slate-950 shadow-md ring-3 ring-amber-300 scale-[1.02]'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-300 hover:border-slate-400'
-                }`}
-              >
-                <div className="shrink-0 w-4 h-4 flex items-center justify-center pointer-events-none">
-                  {cat.renderIcon({ isSelected, className: 'w-4 h-4' })}
-                </div>
-                <span className="font-heading font-black">{cat.shortLabel}</span>
-                <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-full shrink-0 ${
-                  isSelected ? 'bg-amber-400 text-slate-950' : 'bg-slate-200 text-slate-700'
-                }`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Full-Width Simulation Catalog Main Content */}
       <div className="w-full space-y-6">
         
