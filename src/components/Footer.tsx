@@ -20,13 +20,13 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 74 }) => {
           borderRadius: '16px'
         }}
       >
-        {/* 1. Monogram / Logo centered directly on parrot-green background (No inner box, no border, no dark shield) */}
-        <div className="flex items-center justify-center bg-transparent">
+        {/* 1. Monogram / Logo centered directly on parrot-green background (Completely transparent, no dark box) */}
+        <div className="flex items-center justify-center bg-transparent p-0 m-0 border-0 shadow-none">
           <img 
-            src="/genz-official-logo.png" 
+            src="/genz-logo-transparent.png" 
             alt="Gen Z Interactive Simulations Official Logo" 
-            className="block select-none pointer-events-none rounded-md"
-            style={{ display: 'block', maxHeight: '56px', width: 'auto', objectFit: 'contain' }}
+            className="block select-none pointer-events-none"
+            style={{ display: 'block', maxHeight: '60px', width: 'auto', objectFit: 'contain', background: 'transparent' }}
           />
         </div>
 
