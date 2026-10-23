@@ -236,49 +236,6 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   }
 ];
 
-const subjectThemeMap: Record<string, { gradient: string; glow: string }> = {
-  'All Simulations': {
-    gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%)',
-    glow: 'rgba(2, 132, 199, 0.45)'
-  },
-  'Physics & Motion': {
-    gradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%)',
-    glow: 'rgba(37, 99, 235, 0.45)'
-  },
-  'Chemistry & Matter': {
-    gradient: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 50%, #6b21a8 100%)',
-    glow: 'rgba(147, 51, 234, 0.45)'
-  },
-  'Biology & Life': {
-    gradient: 'linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%)',
-    glow: 'rgba(5, 150, 105, 0.45)'
-  },
-  'Earth & Space': {
-    gradient: 'linear-gradient(135deg, #0284c7 0%, #0f766e 50%, #0f172a 100%)',
-    glow: 'rgba(2, 132, 199, 0.45)'
-  },
-  'Mathematics & Logic': {
-    gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%)',
-    glow: 'rgba(217, 119, 6, 0.45)'
-  },
-  'Computer Science & IT': {
-    gradient: 'linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%)',
-    glow: 'rgba(13, 148, 136, 0.45)'
-  },
-  'English & Grammar': {
-    gradient: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 50%, #3730a3 100%)',
-    glow: 'rgba(79, 70, 229, 0.45)'
-  },
-  'Early Childhood (ECCE)': {
-    gradient: 'linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%)',
-    glow: 'rgba(225, 29, 72, 0.45)'
-  },
-  'Urdu & Linguistics': {
-    gradient: 'linear-gradient(135deg, #047857 0%, #065f46 50%, #064e3b 100%)',
-    glow: 'rgba(4, 120, 87, 0.45)'
-  }
-};
-
 export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   simulations,
   activeSim,
@@ -692,23 +649,23 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       className="w-full space-y-6 pt-2 scroll-mt-28 opacity-100"
     >
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
-      <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 text-slate-800 transition-all">
+      <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-4 sm:p-5 text-slate-800 transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-mono font-black uppercase tracking-wider text-sky-700 px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200">
-              TIER 1 GRADE LEVEL FILTER
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-700 px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200">
+              GRADE FILTER
             </span>
-            <span className="text-xs sm:text-sm font-black text-slate-900 font-heading">
+            <span className="text-xs sm:text-sm font-bold text-slate-900 font-heading">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-[11px] font-semibold text-slate-500">
+          <div className="flex items-center gap-2 flex-wrap text-[11px] font-medium text-slate-500">
             <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
                 onClick={() => setSelectedGradeTier('all')}
-                className="text-sky-600 hover:text-blue-700 underline cursor-pointer text-xs font-bold ml-1"
+                className="text-sky-600 hover:text-blue-700 underline cursor-pointer text-xs font-semibold ml-1"
                 title="Reset grade filter to show all simulations"
               >
                 Reset to All {activeSimulations.length} Labs
@@ -717,88 +674,63 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* OPEN RESPONSIVE GRID - EACH GRADE BOX HAS ITS OWN DISTINCT FULL-COLOR BACKGROUND */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 w-full">
+        {/* Clean Minimal Grade Filter Buttons */}
+        <div className="flex flex-wrap items-center gap-2 w-full">
           {gradeTiers.map((tier) => {
             const isSelectedTier = selectedGradeTier === tier.key;
             const count = getGradeTierCount(tier.key);
-            const tierStyles: Record<string, { gradient: string; activeGlow: string }> = {
-              all: {
-                gradient: 'linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%)',
-                activeGlow: 'rgba(37, 99, 235, 0.45)'
-              },
-              primary: {
-                gradient: 'linear-gradient(135deg, #065f46 0%, #059669 50%, #10b981 100%)',
-                activeGlow: 'rgba(16, 185, 129, 0.45)'
-              },
-              middle: {
-                gradient: 'linear-gradient(135deg, #0369a1 0%, #0284c7 50%, #06b6d4 100%)',
-                activeGlow: 'rgba(6, 182, 212, 0.45)'
-              },
-              secondary: {
-                gradient: 'linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #6366f1 100%)',
-                activeGlow: 'rgba(99, 102, 241, 0.45)'
-              },
-              higher: {
-                gradient: 'linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a855f7 100%)',
-                activeGlow: 'rgba(168, 85, 247, 0.45)'
-              }
-            };
-            const style = tierStyles[tier.key] || tierStyles.all;
 
             return (
               <button
                 key={tier.key}
                 type="button"
                 onClick={() => setSelectedGradeTier(tier.key)}
-                className={`w-full p-3.5 rounded-2xl text-xs font-bold transition-all flex flex-col justify-between items-start gap-1.5 cursor-pointer relative overflow-hidden ${
+                data-grade={tier.key}
+                data-filter={tier.key}
+                className={`inline-flex items-center gap-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer select-none border ${
                   isSelectedTier
-                    ? 'text-white border-2 border-white ring-4 ring-amber-300 shadow-xl scale-[1.03]'
-                    : 'text-white border-2 border-white/40 shadow-md hover:scale-[1.02] hover:border-white'
+                    ? 'bg-[#0284c7] text-white border-[#0284c7] shadow-xs'
+                    : 'bg-white text-[#0f172a] border-slate-200 hover:bg-[#f1f5f9] hover:text-[#0284c7] hover:border-slate-300'
                 }`}
                 style={{
-                  background: style.gradient,
-                  boxShadow: isSelectedTier ? `0 8px 22px ${style.activeGlow}, inset 0 1px 2px rgba(255,255,255,0.4)` : '0 4px 14px rgba(0,0,0,0.1)'
+                  padding: '6px 12px'
                 }}
                 title={`${tier.label}: ${tier.desc}`}
               >
-                <div className="w-full flex items-center justify-between gap-1.5">
-                  <span className="font-heading font-black text-xs sm:text-sm truncate text-white drop-shadow-sm">
-                    {tier.label}
-                  </span>
-                  <span
-                    className="font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full shrink-0 bg-black/40 text-white shadow-md border border-white/30"
-                  >
-                    {count}
-                  </span>
-                </div>
-                <div className="text-[10px] font-bold line-clamp-1 text-left text-white/95 drop-shadow-2xs">
-                  {tier.desc}
-                </div>
+                <span>{tier.label}</span>
+                <span
+                  className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
+                    isSelectedTier
+                      ? 'bg-white/20 text-white font-bold'
+                      : 'bg-slate-100 text-slate-600 font-medium'
+                  }`}
+                >
+                  {count}
+                </span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Subject Filter Section: Vibrant & Tactile 3D Buttons */}
-      <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 text-slate-800 transition-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5">
+      {/* Subject Filter Section: Clean Minimal Buttons */}
+      <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-4 sm:p-5 text-slate-800 transition-all">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-mono font-black uppercase tracking-wider text-purple-700 px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-200">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-700 px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-xs sm:text-sm font-black text-slate-900 font-heading">
+            <span className="text-xs sm:text-sm font-bold text-slate-900 font-heading">
               Select Discipline &amp; Learning Track
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-[11px] font-semibold text-slate-500">
+          <div className="flex items-center gap-2 flex-wrap text-[11px] font-medium text-slate-500">
             <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
             {!isAllCategory && (
               <button 
                 type="button"
                 onClick={() => handleCategoryChange('All Simulations')}
-                className="text-purple-600 hover:text-purple-800 underline cursor-pointer text-xs font-bold ml-1"
+                className="text-sky-600 hover:text-sky-800 underline cursor-pointer text-xs font-semibold ml-1"
                 title="Reset subject filter to show all simulations"
               >
                 Reset to All Subjects
@@ -807,48 +739,38 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Modern 3D Vibrant Subject Buttons Grid with ZERO Text Collisions */}
-        <div className="flex flex-wrap gap-2.5 sm:gap-3 w-full items-center">
+        {/* Clean Minimal Subject Buttons */}
+        <div className="flex flex-wrap items-center gap-2 w-full">
           {subjectCategories.map((cat) => {
             const isSelected = selectedCategory === cat.key;
             const count = getCategoryCount(cat.key);
-            const theme = subjectThemeMap[cat.key] || subjectThemeMap['All Simulations'];
 
             return (
               <button
                 key={cat.key}
                 type="button"
                 onClick={() => handleCategoryChange(cat.key)}
-                className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition-all flex items-center gap-2.5 cursor-pointer relative overflow-hidden shrink-0 select-none ${
+                data-subject={cat.key}
+                data-filter={cat.key}
+                className={`inline-flex items-center gap-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer select-none border ${
                   isSelected
-                    ? 'ring-4 ring-amber-300 scale-[1.04] shadow-xl text-white'
-                    : 'hover:-translate-y-0.5 hover:scale-[1.02] shadow-md text-white'
+                    ? 'bg-[#0284c7] text-white border-[#0284c7] shadow-xs'
+                    : 'bg-white text-[#0f172a] border-slate-200 hover:bg-[#f1f5f9] hover:text-[#0284c7] hover:border-slate-300'
                 }`}
                 style={{
-                  background: theme.gradient,
-                  borderWidth: '2px',
-                  borderStyle: 'solid',
-                  borderColor: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.45)',
-                  boxShadow: isSelected
-                    ? `0 10px 24px -2px ${theme.glow}, 0 4px 10px -2px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.6)`
-                    : `0 5px 14px -2px ${theme.glow}, 0 2px 5px -2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.35)`
+                  padding: '6px 12px'
                 }}
                 title={`Filter simulations by ${cat.fullTitle} (${count} available)`}
               >
-                {/* Subtle Specular Top Sheen */}
-                <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/20" />
-
-                <div className="shrink-0 w-5 h-5 flex items-center justify-center pointer-events-none relative z-10">
-                  {cat.renderIcon({ isSelected, className: 'w-5 h-5 drop-shadow-xs' })}
+                <div className="shrink-0 w-4 h-4 flex items-center justify-center pointer-events-none">
+                  {cat.renderIcon({ isSelected, className: 'w-4 h-4' })}
                 </div>
-                <span className="font-heading font-black tracking-wide text-white drop-shadow-sm whitespace-nowrap relative z-10">
-                  {cat.shortLabel}
-                </span>
+                <span>{cat.shortLabel}</span>
                 <span 
-                  className={`font-mono text-[11px] font-black px-2.5 py-0.5 rounded-full shrink-0 relative z-10 ${
+                  className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
                     isSelected 
-                      ? 'bg-amber-300 text-slate-950 border border-amber-200 shadow-sm' 
-                      : 'bg-black/40 text-white border border-white/40 shadow-inner'
+                      ? 'bg-white/20 text-white font-bold' 
+                      : 'bg-slate-100 text-slate-600 font-medium'
                   }`}
                 >
                   {count}
