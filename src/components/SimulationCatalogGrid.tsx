@@ -474,8 +474,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         {/* Subtle Specular Top Sheen */}
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/25" />
 
-        {/* Top Header: Visual Emblem Pedestal & Badges */}
-        <div className="flex items-start justify-between gap-3 mb-3 relative z-10 pt-1">
+        {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
+        <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
           {/* Realistic Visual Emblem Pedestal on Solid High-Contrast Surface */}
           <a
             href={getSimulationStandaloneUrl(sim)}
@@ -484,29 +484,32 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950/75 border-2 border-white/50 shadow-lg"
+            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950/80 border-2 border-white/50 shadow-md"
             title={`Open ${displayTitle} in new tab`}
           >
             <TopicRealisticIcon 
               indexNumber={sim.indexNumber} 
               simId={sim.id} 
-              className="w-10 h-10 drop-shadow-sm group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
+              className="w-9 h-9 sm:w-10 sm:h-10 drop-shadow-sm group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
             />
           </a>
 
-          {/* 3D Badges: Lab / Concept & Grade inside rounded pill capsules */}
-          <div className="flex flex-col items-end gap-1.5">
-            <span 
-              className="font-mono text-xs font-black px-3 py-1 rounded-full bg-slate-950 text-white shadow-md border border-white/60"
-            >
-              {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
-            </span>
-            <span 
-              className="text-[11px] font-bold px-3 py-0.5 rounded-full font-mono shadow-xs bg-black/45 text-white border border-white/40"
-            >
-              {displayGrade}
-            </span>
-          </div>
+          {/* 3D Lab / Concept Badge - Clearly Separated on Right */}
+          <span 
+            className="font-mono text-xs font-black px-3.5 py-1 rounded-full bg-slate-950 text-white shadow-md border border-white/60 shrink-0 tracking-wide"
+          >
+            {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
+          </span>
+        </div>
+
+        {/* Dedicated Grade / Class Level Area: Sits on its own unobstructed line with crisp readability */}
+        <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
+          <span 
+            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono shadow-xs bg-black/45 text-white border border-white/40 leading-normal inline-block max-w-full break-words text-left"
+            title={displayGrade}
+          >
+            {displayGrade}
+          </span>
         </div>
 
         {/* Content: Title, Subject, Description, Topics */}
