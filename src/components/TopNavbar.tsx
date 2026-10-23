@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Sparkles, ChevronDown } from 'lucide-react';
 import { SimulationItem } from '../types';
 
 interface TopNavbarProps {
@@ -15,18 +15,87 @@ interface TopNavbarProps {
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   totalSimulations = 74,
-  onToggleSidebar,
   onBackToCatalog
 }) => {
+  const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleMouseEnter = (menu: 'catalog' | 'hub') => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpenDropdown(menu);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150);
+  };
+
+  const handleItemClick = (href: string) => {
+    setOpenDropdown(null);
+    if (href === '#' || href === '#top') {
+      if (onBackToCatalog) onBackToCatalog();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const catalogDropdownItems = [
+    { label: `All Interactive Labs (${totalSimulations})`, href: '#catalog', desc: 'Browse the full 74-simulation STEM catalog' },
+    { label: 'Physics & Motion', href: '#catalog', desc: 'Classical mechanics, optics, gravitation & waves' },
+    { label: 'Chemistry & Matter', href: '#catalog', desc: 'Molecular structures, gas laws & reactions' },
+    { label: 'Biology & Living Systems', href: '#catalog', desc: 'Genetics, physiology, photosynthesis & cells' },
+    { label: 'Earth & Space Exploration', href: '#catalog', desc: 'Planetary orbits, astrophysics & Earth systems' },
+    { label: 'Mathematics & Logic', href: '#catalog', desc: 'Calculus, trigonometry, geometry & graphs' },
+    { label: 'Computer Science & IT', href: '#catalog', desc: 'Binary logic, logic gates & computer architecture' },
+    { label: 'Early Childhood (ECCE)', href: '#catalog', desc: 'Foundational tactile STEM learning areas' },
+    { label: 'Urdu & Linguistics', href: '#catalog', desc: 'Phonetics, script & language mechanics' },
+  ];
+
+  const hubDropdownItems = [
+    { label: 'For Teachers & Educators', href: '#pedagogical-hub', desc: 'Smart classroom & 4K projector-ready demonstrations' },
+    { label: 'For Students & Young Scientists', href: '#pedagogical-hub', desc: 'Open sandbox for self-paced scientific discovery' },
+    { label: 'National Curriculum of Pakistan', href: '#features', desc: 'Aligned with official SLOs (Session 2026-27)' },
+    { label: 'Digital Laboratory Architecture', href: '#features', desc: 'Browser-based 60 FPS computational simulation engine' },
+  ];
+
   return (
     <header 
-      className="sticky top-0 z-50 w-full border-b-2 border-slate-300 transition-all select-none" 
+      className="sticky top-0 z-50 w-full border-b border-slate-200 transition-all select-none bg-white" 
       style={{ 
         position: 'sticky', 
         top: 0, 
         zIndex: 50,
         backgroundColor: '#ffffff',
-        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.1)'
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
       }}
     >
       <div className="max-w-[1720px] 2xl:max-w-[1820px] mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
@@ -35,7 +104,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         <div className="flex items-center gap-3.5">
           {/* GZ Monogram Logo - Exact-Fit Box Tightly Shrink-Wrapped around Logo */}
           <div 
-            onClick={onBackToCatalog}
+            onClick={() => {
+              if (onBackToCatalog) onBackToCatalog();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border-2 border-sky-500 bg-[#240854] shadow-[0_2px_6px_rgba(0,0,0,0.3)] transition-all duration-150 hover:scale-105 cursor-pointer"
             style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '8px' }}
             title="Gen Z Interactive Simulations Home"
@@ -73,93 +145,157 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </div>
         </div>
 
-        {/* Center Desktop Navigation: Solid, Opaque 3D Colorful Buttons (Different Vibrant Color Each) */}
+        {/* Center & Right Navigation: Clean Plain Text Links with Interactive Dropdowns */}
         <div 
-          className="flex items-center gap-2 sm:gap-2.5 p-1 rounded-2xl border-2 border-slate-300"
-          style={{ backgroundColor: '#f1f5f9' }}
+          ref={navRef}
+          className="flex items-center gap-1 sm:gap-2 flex-wrap"
         >
-          {/* Button 1: Home (Solid Vibrant Blue Gradient 3D) */}
+          {/* Link 1: Home */}
           <button
             type="button"
-            onClick={onBackToCatalog}
-            className="relative inline-flex items-center px-4 py-2 rounded-xl text-xs font-black transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer select-none"
-            style={{
-              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-              color: '#ffffff',
-              border: '1px solid #1e40af',
-              borderBottom: '3px solid #172554',
-              boxShadow: '0 3px 0 #0f172a, 0 5px 10px rgba(0,0,0,0.2)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+            onClick={() => {
+              setOpenDropdown(null);
+              if (onBackToCatalog) onBackToCatalog();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            className="px-3 py-2 text-sm font-semibold text-[#0f172a] hover:text-[#0284c7] hover:bg-slate-100 rounded-lg transition-colors duration-150 cursor-pointer"
           >
-            <span style={{ color: '#ffffff', fontWeight: 800 }}>Home</span>
+            Home
           </button>
 
-          {/* Button 2: STEM Catalog (Solid Emerald/Teal Green Gradient 3D) */}
-          <a
-            href="#catalog"
-            className="relative inline-flex items-center px-4 py-2 rounded-xl text-xs font-black transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer select-none"
-            style={{
-              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-              color: '#ffffff',
-              border: '1px solid #065f46',
-              borderBottom: '3px solid #064e3b',
-              boxShadow: '0 3px 0 #0f172a, 0 5px 10px rgba(0,0,0,0.2)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-            }}
+          {/* Link 2: STEM Catalog ({totalSimulations}) with Dropdown Menu */}
+          <div 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('catalog')}
+            onMouseLeave={handleMouseLeave}
           >
-            <span style={{ color: '#ffffff', fontWeight: 800 }}>STEM Catalog ({totalSimulations})</span>
-          </a>
+            <button
+              type="button"
+              onClick={() => setOpenDropdown(prev => prev === 'catalog' ? null : 'catalog')}
+              className={`inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-150 cursor-pointer ${
+                openDropdown === 'catalog' 
+                  ? 'text-[#0284c7] bg-slate-100' 
+                  : 'text-[#0f172a] hover:text-[#0284c7] hover:bg-slate-100'
+              }`}
+              aria-expanded={openDropdown === 'catalog'}
+            >
+              <span>STEM Catalog ({totalSimulations})</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'catalog' ? 'rotate-180 text-[#0284c7]' : 'text-slate-500'}`} />
+            </button>
 
-          {/* Button 3: Educators & Students Hub (Solid Violet/Purple Gradient 3D) */}
-          <a
-            href="#pedagogical-hub"
-            className="relative inline-flex items-center px-4 py-2 rounded-xl text-xs font-black transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer select-none"
-            style={{
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-              color: '#ffffff',
-              border: '1px solid #5b21b6',
-              borderBottom: '3px solid #4c1d95',
-              boxShadow: '0 3px 0 #0f172a, 0 5px 10px rgba(0,0,0,0.2)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-            }}
+            {/* Floating Dropdown Panel */}
+            {openDropdown === 'catalog' && (
+              <div 
+                className="absolute left-0 top-full mt-1.5 w-72 sm:w-80 bg-white rounded-xl border border-slate-200 shadow-xl py-2 z-[9999] transition-all"
+                style={{
+                  boxShadow: '0 12px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06)'
+                }}
+              >
+                <div className="px-3.5 py-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                  STEM Catalog Disciplines
+                </div>
+                <div className="max-h-[380px] overflow-y-auto scrollbar-thin py-0.5">
+                  {catalogDropdownItems.map((item, idx) => (
+                    <a
+                      key={idx}
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleItemClick(item.href);
+                      }}
+                      className="flex flex-col px-3.5 py-2 text-left hover:bg-slate-50 transition-colors group cursor-pointer"
+                    >
+                      <span className="text-sm font-semibold text-[#111827] group-hover:text-[#0284c7] transition-colors">
+                        {item.label}
+                      </span>
+                      <span className="text-[11px] text-slate-500 leading-tight">
+                        {item.desc}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Link 3: Educators & Students Hub with Dropdown Menu */}
+          <div 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('hub')}
+            onMouseLeave={handleMouseLeave}
           >
-            <span style={{ color: '#ffffff', fontWeight: 800 }}>Educators &amp; Students Hub</span>
-          </a>
+            <button
+              type="button"
+              onClick={() => setOpenDropdown(prev => prev === 'hub' ? null : 'hub')}
+              className={`inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-150 cursor-pointer ${
+                openDropdown === 'hub' 
+                  ? 'text-[#0284c7] bg-slate-100' 
+                  : 'text-[#0f172a] hover:text-[#0284c7] hover:bg-slate-100'
+              }`}
+              aria-expanded={openDropdown === 'hub'}
+            >
+              <span>Educators &amp; Students Hub</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'hub' ? 'rotate-180 text-[#0284c7]' : 'text-slate-500'}`} />
+            </button>
 
-          {/* Button 4: Developer & Contact (Solid Amber/Orange Gradient 3D) */}
+            {/* Floating Dropdown Panel */}
+            {openDropdown === 'hub' && (
+              <div 
+                className="absolute left-0 top-full mt-1.5 w-72 sm:w-80 bg-white rounded-xl border border-slate-200 shadow-xl py-2 z-[9999] transition-all"
+                style={{
+                  boxShadow: '0 12px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06)'
+                }}
+              >
+                <div className="px-3.5 py-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                  Pedagogical Audience &amp; Standards
+                </div>
+                <div className="py-0.5">
+                  {hubDropdownItems.map((item, idx) => (
+                    <a
+                      key={idx}
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleItemClick(item.href);
+                      }}
+                      className="flex flex-col px-3.5 py-2 text-left hover:bg-slate-50 transition-colors group cursor-pointer"
+                    >
+                      <span className="text-sm font-semibold text-[#111827] group-hover:text-[#0284c7] transition-colors">
+                        {item.label}
+                      </span>
+                      <span className="text-[11px] text-slate-500 leading-tight">
+                        {item.desc}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Link 4: Developer & Contact */}
           <a
             href="#developer"
-            className="relative inline-flex items-center px-4 py-2 rounded-xl text-xs font-black transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer select-none"
-            style={{
-              background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-              color: '#ffffff',
-              border: '1px solid #92400e',
-              borderBottom: '3px solid #78350f',
-              boxShadow: '0 3px 0 #0f172a, 0 5px 10px rgba(0,0,0,0.2)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+            onClick={(e) => {
+              e.preventDefault();
+              handleItemClick('#developer');
             }}
+            className="px-3 py-2 text-sm font-semibold text-[#0f172a] hover:text-[#0284c7] hover:bg-slate-100 rounded-lg transition-colors duration-150 cursor-pointer"
           >
-            <span style={{ color: '#ffffff', fontWeight: 800 }}>Developer &amp; Contact</span>
+            Developer &amp; Contact
           </a>
-        </div>
 
-        {/* Right Action Button: Master Indigo 3D Vibrant Button */}
-        <div className="flex items-center gap-3 shrink-0">
+          {/* Link 5: Explore All Labs Grid */}
           <a
             href="#catalog"
-            className="relative inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-black transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer select-none"
-            style={{
-              background: 'linear-gradient(135deg, #4338ca 0%, #3730a3 100%)',
-              color: '#ffffff',
-              border: '1px solid #312e81',
-              borderBottom: '3px solid #1e1b4b',
-              boxShadow: '0 3px 0 #0f172a, 0 6px 12px rgba(0,0,0,0.25)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.6)'
+            onClick={(e) => {
+              e.preventDefault();
+              handleItemClick('#catalog');
             }}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-[#0f172a] hover:text-[#0284c7] hover:bg-slate-100 rounded-lg transition-colors duration-150 cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 pointer-events-none" style={{ color: '#facc15' }} />
-            <span style={{ color: '#ffffff', fontWeight: 900 }}>Explore All Labs Grid</span>
+            <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+            <span>Explore All Labs Grid</span>
           </a>
         </div>
 
