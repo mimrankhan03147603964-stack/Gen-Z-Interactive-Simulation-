@@ -292,10 +292,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   isDarkMode = false
 }) => {
   // Tier 1 Grade Level filter state ('all' | 'primary' | 'middle' | 'secondary' | 'higher')
-  // Default to 'primary' for progressive disclosure and fast clean initial load
-  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('primary');
+  // Default to 'all' on initial load to keep all simulations active and visible across all grades
+  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
 
-  // Category state (Default to 'All Simulations')
+  // Category state (Default to 'All Simulations' on initial load)
   const [internalCategory, setInternalCategory] = useState<string>('All Simulations');
 
   // Quick search filter term
