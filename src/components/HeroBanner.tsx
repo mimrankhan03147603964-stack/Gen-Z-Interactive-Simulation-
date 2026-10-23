@@ -284,20 +284,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
             </div>
           </div>
 
-          {/* Official GZ Monogram Emblem on Solid Luminous Frame */}
+          {/* Official GZ Monogram Emblem - Exact-Fit Box Tightly Shrink-Wrapped around Logo */}
           <div className="shrink-0 flex items-center justify-center my-2 md:my-0 self-center">
             <div 
-              className="relative p-2 flex items-center justify-center transition-all duration-300 hover:scale-105 rounded-2xl overflow-hidden border-2 border-sky-400/90 bg-[#240854] shadow-[0_16px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(56,189,248,0.35)] w-[240px] sm:w-[280px] md:w-[320px] h-[90px] sm:h-[105px] md:h-[115px]"
+              className="relative inline-flex items-center justify-center transition-all duration-300 hover:scale-105 rounded-lg overflow-hidden border-2 border-sky-400/90 bg-[#240854] shadow-[0_12px_28px_-4px_rgba(0,0,0,0.7),0_0_20px_rgba(56,189,248,0.35)]"
               style={{
-                borderRadius: '16px',
+                width: 'fit-content',
+                height: 'auto',
+                padding: '0px',
+                borderRadius: '8px'
               }}
               title="Gen Z Interactive Simulations Official Monogram"
             >
               <img 
                 src="/genz-official-logo.png" 
                 alt="Gen Z Interactive Simulations Official Monogram Logo" 
-                className="w-full h-full object-contain block select-none pointer-events-none"
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                className="block select-none pointer-events-none rounded-md"
+                style={{ display: 'block', maxHeight: '105px', width: 'auto', objectFit: 'contain' }}
               />
             </div>
           </div>

@@ -17,14 +17,14 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 74 }) => {
         {/* 1. Brand Monogram & Portal Header */}
         <div className="space-y-2 text-center flex flex-col items-center">
           <div 
-            className="w-[200px] sm:w-[240px] h-[64px] sm:h-[72px] rounded-xl p-1.5 bg-[#240854] border-2 border-sky-400 shadow-xl overflow-hidden flex items-center justify-center transition-transform hover:scale-105"
-            style={{ borderRadius: '12px' }}
+            className="inline-flex items-center justify-center rounded-lg bg-[#240854] border-2 border-sky-400 shadow-xl overflow-hidden transition-transform hover:scale-105"
+            style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '8px' }}
           >
             <img 
               src="/genz-official-logo.png" 
               alt="Gen Z Interactive Simulations Official Logo" 
-              className="w-full h-full object-contain block select-none pointer-events-none"
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              className="block select-none pointer-events-none rounded-md"
+              style={{ display: 'block', maxHeight: '64px', width: 'auto', objectFit: 'contain' }}
             />
           </div>
           <div className="space-y-0.5">
