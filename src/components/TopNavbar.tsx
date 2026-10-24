@@ -5,22 +5,9 @@ import {
   Home, 
   Layers, 
   BookOpen, 
-  UserCheck,
-  Atom,
-  FlaskConical,
-  Leaf,
-  Globe,
-  Calculator,
-  Cpu,
-  GraduationCap,
-  ExternalLink,
-  Flame,
-  Dna,
-  Volume2,
-  Activity
+  UserCheck
 } from 'lucide-react';
 import { SimulationItem } from '../types';
-import { SIMULATIONS_LIST } from '../data/simulationsData';
 
 interface TopNavbarProps {
   activeSim?: SimulationItem | null;
@@ -32,15 +19,6 @@ interface TopNavbarProps {
   onToggleTheme?: () => void;
   onBackToCatalog?: () => void;
   onSelectCategory?: (category: string) => void;
-}
-
-interface DropdownItem {
-  label: string;
-  href: string;
-  desc: string;
-  categoryKey?: string;
-  color: string;
-  icon: React.ReactNode;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
@@ -136,122 +114,22 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     }
   }, [onBackToCatalog, onSelectCategory]);
 
-  const getCategoryCount = (key?: string) => {
-    if (!key || key === 'All Simulations') return SIMULATIONS_LIST.length;
-    return SIMULATIONS_LIST.filter(s => s.category === key).length;
-  };
-
-  const catalogDropdownItems: DropdownItem[] = [
-    { 
-      label: 'All Interactive Labs', 
-      href: '#catalog', 
-      desc: 'Complete STEM repository with instant search', 
-      categoryKey: 'All Simulations', 
-      color: '#2563eb',
-      icon: <Layers className="w-4 h-4 text-blue-600" />
-    },
-    { 
-      label: 'Physics & Motion', 
-      href: '#catalog', 
-      desc: 'Mechanics, Optics, Waves & Doppler Effect', 
-      categoryKey: 'Physics & Motion', 
-      color: '#0284c7',
-      icon: <Atom className="w-4 h-4 text-sky-600" />
-    },
-    { 
-      label: 'Chemistry & Matter', 
-      href: '#catalog', 
-      desc: 'Reactions, Gas Laws, Bonding & Conservation', 
-      categoryKey: 'Chemistry & Matter', 
-      color: '#9333ea',
-      icon: <FlaskConical className="w-4 h-4 text-purple-600" />
-    },
-    { 
-      label: 'Biology & Living Systems', 
-      href: '#catalog', 
-      desc: 'Genetics, Excretory, Circulation & Cells', 
-      categoryKey: 'Biology & Life', 
-      color: '#16a34a',
-      icon: <Leaf className="w-4 h-4 text-emerald-600" />
-    },
-    { 
-      label: 'Mathematics & Logic', 
-      href: '#catalog', 
-      desc: 'Primary Class 1-5, Geometry, Algebra & Trig', 
-      categoryKey: 'Mathematics & Logic', 
-      color: '#ea580c',
-      icon: <Calculator className="w-4 h-4 text-orange-600" />
-    },
-    { 
-      label: 'Astronomy & Space Science', 
-      href: '#catalog', 
-      desc: 'Solar System, Tides, Eclipses & Geology', 
-      categoryKey: 'Earth & Space', 
-      color: '#0d9488',
-      icon: <Globe className="w-4 h-4 text-teal-600" />
-    },
-    { 
-      label: 'Computer Science & IT', 
-      href: '#catalog', 
-      desc: 'Logic Gates, Binary Circuits & Algorithms', 
-      categoryKey: 'Computer Science & IT', 
-      color: '#0e7490',
-      icon: <Cpu className="w-4 h-4 text-cyan-600" />
-    },
-    { 
-      label: 'Early Childhood (ECCE)', 
-      href: '#catalog', 
-      desc: 'Alphabet Phonics, Colors, Shapes & Tracing', 
-      categoryKey: 'Early Childhood (ECCE)', 
-      color: '#db2777',
-      icon: <Sparkles className="w-4 h-4 text-pink-600" />
-    },
-    { 
-      label: 'Urdu & Linguistics', 
-      href: '#catalog', 
-      desc: 'Haroof-e-Tahajji, Ajza-e-Kalam & Sifat', 
-      categoryKey: 'Urdu & Linguistics', 
-      color: '#b91c1c',
-      icon: <BookOpen className="w-4 h-4 text-rose-600" />
-    },
+  const stemDropdownItems = [
+    { label: `All Interactive Labs (${totalSimulations})`, categoryKey: 'All Simulations' },
+    { label: 'Physics & Mechanics (15)', categoryKey: 'Physics & Motion' },
+    { label: 'Chemistry & Matter (13)', categoryKey: 'Chemistry & Matter' },
+    { label: 'Biology & Genetics (14)', categoryKey: 'Biology & Life' },
+    { label: 'Mathematics & Logic (13)', categoryKey: 'Mathematics & Logic' },
+    { label: 'Earth & Solar System (10)', categoryKey: 'Earth & Space' },
+    { label: 'Computer Science & IT (5)', categoryKey: 'Computer Science & IT' },
+    { label: 'Early Childhood Care & Education (ECCE)', categoryKey: 'Early Childhood (ECCE)' },
   ];
 
-  const featuredQuickLabs = [
-    { label: "Charles's Law", key: 'Chemistry & Matter', icon: <Flame className="w-3.5 h-3.5 text-orange-500" /> },
-    { label: 'DNA & Genetics', key: 'Biology & Life', icon: <Dna className="w-3.5 h-3.5 text-purple-500" /> },
-    { label: 'Doppler Effect', key: 'Physics & Motion', icon: <Volume2 className="w-3.5 h-3.5 text-amber-500" /> },
-    { label: 'Kidney Filtration', key: 'Biology & Life', icon: <Activity className="w-3.5 h-3.5 text-emerald-500" /> },
-  ];
-
-  const hubDropdownItems: DropdownItem[] = [
-    { 
-      label: 'For Teachers & Educators', 
-      href: '#pedagogical-hub', 
-      desc: 'Smart classroom 4K demonstrations, lesson workflows & conceptual pedagogy', 
-      color: '#2563eb',
-      icon: <GraduationCap className="w-4 h-4 text-blue-600" />
-    },
-    { 
-      label: 'For Students & Young Scientists', 
-      href: '#pedagogical-hub', 
-      desc: 'Open inquiry sandboxes, real-time physics parameters & gamified quizzes', 
-      color: '#10b981',
-      icon: <Sparkles className="w-4 h-4 text-emerald-600" />
-    },
-    { 
-      label: 'National Curriculum of Pakistan', 
-      href: '#features', 
-      desc: 'Aligned with official Student Learning Objectives (SLOs) Session 2026-27', 
-      color: '#f59e0b',
-      icon: <BookOpen className="w-4 h-4 text-amber-600" />
-    },
-    { 
-      label: 'Digital Laboratory Architecture', 
-      href: '#features', 
-      desc: '100% browser-based 60 FPS HTML5 Canvas computational physics engine', 
-      color: '#6366f1',
-      icon: <Cpu className="w-4 h-4 text-indigo-600" />
-    },
+  const hubDropdownItems = [
+    { label: 'For Teachers & Educators', href: '#pedagogical-hub' },
+    { label: 'For Students & Learners', href: '#pedagogical-hub' },
+    { label: 'Curriculum Standards & Demonstration Guide', href: '#pedagogical-hub' },
+    { label: 'Academic Research & Pedagogy', href: '#pedagogical-hub' },
   ];
 
   return (
@@ -345,7 +223,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <span>Home</span>
           </button>
 
-          {/* Link 2: STEM Catalog ({totalSimulations}) with Comprehensive Mega-Dropdown */}
+          {/* Link 2: STEM Catalog ({totalSimulations}) */}
           <div 
             className="relative shrink-0"
             onMouseEnter={() => handleMouseEnter('catalog')}
@@ -359,7 +237,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'catalog' 
-                  ? 'text-sky-700 bg-sky-50 ring-2 ring-sky-300' 
+                  ? 'text-slate-900 bg-slate-100 ring-1 ring-slate-300' 
                   : 'text-slate-800 hover:text-sky-600 hover:bg-slate-100'
               }`}
               aria-expanded={openDropdown === 'catalog'}
@@ -368,124 +246,66 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             >
               <Layers className="w-3.5 h-3.5 text-sky-600 shrink-0" />
               <span>STEM Catalog ({totalSimulations})</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-sky-600' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-slate-800' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel: Height Auto, min-height fit-content, max-height 85vh, z-index 99999 */}
+            {/* Lime-Green Dropdown Panel exactly matching screenshot */}
             {openDropdown === 'catalog' && (
               <div 
-                className="absolute right-0 top-full pt-2 z-[99999]"
+                className="absolute left-0 top-full pt-1.5 z-[99999]"
                 style={{
                   position: 'absolute',
                   top: '100%',
-                  right: 0,
+                  left: 0,
                   zIndex: 99999
                 }}
                 onMouseEnter={() => handleMouseEnter('catalog')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[calc(100vw-20px)] sm:w-[560px] md:w-[640px] max-w-[660px] bg-white rounded-2xl border-2 border-slate-200/90 shadow-2xl p-3"
+                  className="w-[290px] sm:w-[315px] rounded-xl overflow-hidden select-none"
                   style={{
-                    height: 'auto',
-                    minHeight: 'fit-content',
-                    maxHeight: '85vh',
-                    overflowY: 'auto',
-                    backgroundColor: '#ffffff',
-                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                    backgroundColor: '#86eb16',
+                    border: '1.5px solid #6ec40d',
+                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)'
                   }}
                 >
-                  {/* Header with Title and All Labs Count Badge */}
-                  <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                      <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-700">
-                        STEM Disciplines &amp; Academic Catalog
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
-                      {totalSimulations} Total Labs
-                    </span>
+                  {/* Dropdown Header */}
+                  <div 
+                    className="px-4 py-2.5 text-[11px] font-bold text-slate-900 tracking-wider uppercase"
+                    style={{ borderBottom: '1px solid #6ec40d' }}
+                  >
+                    STEM DISCIPLINES &amp; LABORATORIES
                   </div>
 
-                  {/* 2-Column Responsive Grid of All Disciplines (Clean, Spacious, Fully Clickable) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-0.5">
-                    {catalogDropdownItems.map((item, idx) => {
-                      const count = getCategoryCount(item.categoryKey);
+                  {/* Vertical List of Disciplines */}
+                  <div className="flex flex-col">
+                    {stemDropdownItems.map((item, idx) => {
+                      const isLast = idx === stemDropdownItems.length - 1;
                       return (
                         <button
                           key={idx}
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleItemClick(item.href, item.categoryKey);
+                            handleItemClick('#catalog', item.categoryKey);
                           }}
-                          className="flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-sky-50/90 border border-slate-200/60 hover:border-sky-300 transition-all duration-150 group cursor-pointer shadow-2xs"
+                          className="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-900 hover:bg-black/5 active:bg-black/10 transition-colors cursor-pointer"
+                          style={{
+                            borderBottom: !isLast ? '1px solid #6ec40d' : 'none'
+                          }}
                         >
-                          <div 
-                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
-                            style={{ backgroundColor: `${item.color}15` }}
-                          >
-                            {item.icon}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-1.5">
-                              <span className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-sky-700 transition-colors truncate">
-                                {item.label}
-                              </span>
-                              <span 
-                                className="text-[9px] font-bold px-1.5 py-0.2 rounded-md font-mono shrink-0 shadow-2xs"
-                                style={{ backgroundColor: `${item.color}20`, color: item.color }}
-                              >
-                                {count}
-                              </span>
-                            </div>
-                            <div className="text-[10.5px] text-slate-500 leading-tight mt-0.5 line-clamp-1 group-hover:text-slate-600">
-                              {item.desc}
-                            </div>
-                          </div>
+                          {item.label}
                         </button>
                       );
                     })}
-                  </div>
-
-                  {/* Quick Access to Key Topics Bar */}
-                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 px-2 text-[11px]">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-[10px] font-mono font-bold uppercase text-slate-400">Popular:</span>
-                      {featuredQuickLabs.map((lab, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleItemClick('#catalog', lab.key);
-                          }}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 transition-colors cursor-pointer text-[10.5px] font-semibold"
-                        >
-                          {lab.icon}
-                          <span>{lab.label}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleItemClick('#catalog', 'All Simulations');
-                      }}
-                      className="font-bold text-sky-600 hover:text-sky-800 underline cursor-pointer ml-auto"
-                    >
-                      View All {totalSimulations} Labs &rarr;
-                    </button>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Link 3: Educators & Students Hub with Dropdown Menu */}
+          {/* Link 3: Educators & Students Hub */}
           <div 
             className="relative shrink-0"
             onMouseEnter={() => handleMouseEnter('hub')}
@@ -499,7 +319,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'hub' 
-                  ? 'text-indigo-700 bg-indigo-50 ring-2 ring-indigo-300' 
+                  ? 'text-slate-900 bg-slate-100 ring-1 ring-slate-300' 
                   : 'text-slate-800 hover:text-indigo-600 hover:bg-slate-100'
               }`}
               aria-expanded={openDropdown === 'hub'}
@@ -509,87 +329,59 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <BookOpen className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
               <span className="hidden sm:inline">Educators &amp; Students Hub</span>
               <span className="sm:hidden">Hub</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-indigo-600' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-slate-800' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel: Height Auto, min-height fit-content, max-height 85vh, z-index 99999 */}
+            {/* Lime-Green Dropdown Panel exactly matching screenshot */}
             {openDropdown === 'hub' && (
               <div 
-                className="absolute right-0 top-full pt-2 z-[99999]"
+                className="absolute left-0 top-full pt-1.5 z-[99999]"
                 style={{
                   position: 'absolute',
                   top: '100%',
-                  right: 0,
+                  left: 0,
                   zIndex: 99999
                 }}
                 onMouseEnter={() => handleMouseEnter('hub')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[calc(100vw-20px)] sm:w-[480px] md:w-[520px] max-w-[540px] bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-3"
+                  className="w-[320px] sm:w-[350px] rounded-xl overflow-hidden select-none"
                   style={{
-                    height: 'auto',
-                    minHeight: 'fit-content',
-                    maxHeight: '85vh',
-                    overflowY: 'auto',
-                    backgroundColor: '#ffffff',
-                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                    backgroundColor: '#86eb16',
+                    border: '1.5px solid #6ec40d',
+                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)'
                   }}
                 >
-                  <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
-                      <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-700">
-                        Pedagogical Audience &amp; Framework
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
-                      Session 2026-27
-                    </span>
+                  {/* Dropdown Header */}
+                  <div 
+                    className="px-4 py-2.5 text-[11px] font-bold text-slate-900 tracking-wider uppercase"
+                    style={{ borderBottom: '1px solid #6ec40d' }}
+                  >
+                    PEDAGOGICAL AUDIENCE &amp; FRAMEWORK
                   </div>
 
-                  <div className="space-y-2 p-0.5">
-                    {hubDropdownItems.map((item, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleItemClick(item.href);
-                        }}
-                        className="w-full flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-indigo-50/90 border border-slate-200/60 hover:border-indigo-300 transition-all duration-150 group cursor-pointer shadow-2xs"
-                      >
-                        <div 
-                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
-                          style={{ backgroundColor: `${item.color}15` }}
+                  {/* Vertical List of Hub Items */}
+                  <div className="flex flex-col">
+                    {hubDropdownItems.map((item, idx) => {
+                      const isLast = idx === hubDropdownItems.length - 1;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleItemClick(item.href);
+                          }}
+                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[15px] font-semibold text-slate-900 hover:bg-black/5 active:bg-black/10 transition-colors cursor-pointer"
+                          style={{
+                            borderBottom: !isLast ? '1px solid #6ec40d' : 'none'
+                          }}
                         >
-                          {item.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-indigo-700 transition-colors">
-                            {item.label}
-                          </div>
-                          <div className="text-[11px] text-slate-500 leading-tight mt-0.5 group-hover:text-slate-600">
-                            {item.desc}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Footer Quick Action */}
-                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-[11px]">
-                    <span className="text-slate-400 font-medium">Curriculum Standards &amp; Demonstration Guide</span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleItemClick('#pedagogical-hub');
-                      }}
-                      className="font-bold text-indigo-600 hover:text-indigo-800 underline cursor-pointer"
-                    >
-                      Open Pedagogical Hub &rarr;
-                    </button>
+                          {item.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
