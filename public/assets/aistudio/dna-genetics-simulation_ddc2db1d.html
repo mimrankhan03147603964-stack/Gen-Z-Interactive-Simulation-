@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>DNA Structure and Monohybrid Genetics</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;background:#0a1330;color:#fff;height:100vh;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 25% 15%,#243b8f,#0a1330 70%)}
+header{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#0007;flex-wrap:wrap}
+h1{font-size:21px;flex:1;min-width:280px;text-shadow:0 3px 0 #0008}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#cv{flex:1;min-height:0;width:100%;display:block}
+#gen{display:none;flex:1;overflow:auto;padding:14px}
+aside{width:320px;padding:12px;overflow:auto;background:#0006;display:flex;flex-direction:column;gap:8px}
+aside h3{font-size:14px;color:#ffd23f;margin-top:4px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.b{background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));color:#fff;border:0;border-radius:11px;padding:10px 6px;font:700 14px 'Trebuchet MS',Arial;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,#000),0 7px 10px #0006;text-shadow:0 1px 2px #0007}
+.b:hover{filter:brightness(1.15)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 45%,#000)}
+.b.on{outline:3px solid #fff}
+.w{grid-column:span 2}
+.msg{background:#0008;border-left:6px solid #ffd23f;padding:10px 14px;border-radius:8px;font-size:15px;line-height:1.4;margin:6px 0}
+#seq{background:#0008;padding:6px 14px;font:700 16px 'Courier New',monospace;letter-spacing:3px;overflow-x:auto;white-space:nowrap}
+#seq i{font-style:normal;padding:0 1px;border-radius:3px;color:#111}
+.row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin:8px 0}
+.card{background:#ffffff14;border:2px solid #ffffff30;border-radius:16px;padding:12px;text-align:center;box-shadow:0 8px 18px #0006}
+.pn{border-collapse:separate;border-spacing:6px}
+.pn th{font-size:26px;color:#ffd23f;width:92px;height:46px}
+.pn td{width:92px;height:80px;border-radius:12px;text-align:center;font-weight:700;color:#111;box-shadow:0 5px 0 #0006}
+.pn td b{font-size:26px;display:block}
+.tall{background:#7ee787}.dwarf{background:#ffb86b}
+.bar{height:22px;border-radius:11px;margin:4px 0;display:flex;overflow:hidden;background:#0008}
+.bar div{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#111}
+.nohint .hint{display:none}
+@media(max-width:900px){aside{width:230px}}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>🧬 DNA Structure &amp; Monohybrid Genetics</h1>
+ <button class="b" style="--c:#2563eb" id="t1" onclick="tab(1)">🧬 DNA Structure</button>
+ <button class="b" style="--c:#16a34a" id="t2" onclick="tab(2)">🌱 Monohybrid Genetics</button>
+ <button class="b" style="--c:#e11d48" id="fsb" onclick="fs()">⛶ Full Screen</button>
+</header>
+<main>
+ <div id="stage">
+  <canvas id="cv"></canvas>
+  <div id="dmsg" class="msg hint"></div>
+  <div id="seq"></div>
+  <div id="gen"><div id="gmsg" class="msg hint"></div><div id="gout"></div></div>
+ </div>
+ <aside id="dnaCtl">
+  <h3>🎥 Movement</h3>
+  <div class="g">
+   <button class="b" style="--c:#f97316" id="bp" onclick="play=!play;this.textContent=play?'⏸ Pause':'▶ Play'">⏸ Pause</button>
+   <button class="b" style="--c:#a855f7" onclick="dir*=-1">🔄 Reverse Spin</button>
+   <button class="b" style="--c:#06b6d4" onclick="spd=Math.min(4,spd+.5)">⏩ Faster</button>
+   <button class="b" style="--c:#0ea5e9" onclick="spd=Math.max(.5,spd-.5)">⏪ Slower</button>
+   <button class="b" style="--c:#84cc16" onclick="zoom=Math.min(1.8,zoom+.15)">🔍 Zoom In</button>
+   <button class="b" style="--c:#eab308" onclick="zoom=Math.max(.6,zoom-.15)">🔎 Zoom Out</button>
+  </div>
+  <h3>🔬 Experiments</h3>
+  <div class="g">
+   <button class="b" style="--c:#ef4444" onclick="unzT=1;dm('DNA unzips! An enzyme called helicase breaks the weak hydrogen bonds between the base pairs and the two strands move apart.')">✂️ Unzip DNA</button>
+   <button class="b" style="--c:#14b8a6" onclick="unzT=0;repT=0;dm('The strands zip back together. A always pairs with T, and G always pairs with C.')">🤐 Zip Back</button>
+   <button class="b w" style="--c:#8b5cf6" onclick="unzT=1;repT=1;dm('DNA copying! Each old strand (bright) gets a new partner strand (glowing). Now there are two identical DNA molecules.')">📋 Copy (Replicate) DNA</button>
+   <button class="b" style="--c:#ec4899" onclick="mut()">⚡ Mutate a Base</button>
+   <button class="b" style="--c:#22c55e" onclick="newSeq();dm('A brand new DNA code! The order of the letters is the genetic message.')">🎲 New Sequence</button>
+  </div>
+  <h3>🪜 Views</h3>
+  <div class="g">
+   <button class="b" style="--c:#0284c7" onclick="lab=!lab">🏷️ Labels On/Off</button>
+   <button class="b" style="--c:#b45309" onclick="lad=!lad;dm(lad?'Real-life model: DNA looks like a twisted rope ladder. The ropes are the sugar-phosphate backbone and the wooden steps are the base pairs.':'Colour view: every base has its own colour.')">🪜 Rope Ladder Model</button>
+   <button class="b w" style="--c:#64748b" onclick="rot=0;dir=1;spd=1;zoom=1;unzT=0;repT=0;lad=false;lab=true;play=true;bp.textContent='⏸ Pause';dm('Simulation reset.')">♻️ Reset All</button>
+  </div>
+  <div class="msg hint" style="font-size:13px">Tip: DNA is shaped like a twisted ladder called a <b>double helix</b>.</div>
+ </aside>
+ <aside id="genCtl" style="display:none">
+  <h3>🌼 Parent 1</h3>
+  <div class="g" style="grid-template-columns:1fr 1fr 1fr">
+   <button class="b p1" style="--c:#16a34a" onclick="sp(1,'TT')">TT</button>
+   <button class="b p1" style="--c:#0d9488" onclick="sp(1,'Tt')">Tt</button>
+   <button class="b p1" style="--c:#ea580c" onclick="sp(1,'tt')">tt</button>
+  </div>
+  <h3>🌼 Parent 2</h3>
+  <div class="g" style="grid-template-columns:1fr 1fr 1fr">
+   <button class="b p2" style="--c:#2563eb" onclick="sp(2,'TT')">TT</button>
+   <button class="b p2" style="--c:#7c3aed" onclick="sp(2,'Tt')">Tt</button>
+   <button class="b p2" style="--c:#db2777" onclick="sp(2,'tt')">tt</button>
+  </div>
+  <h3>🎯 Make Offspring</h3>
+  <div class="g">
+   <button class="b" style="--c:#f59e0b" onclick="addKid(1)">🌱 Add 1 Seed</button>
+   <button class="b" style="--c:#ef4444" onclick="addKid(16)">🌿 Grow 16 Seeds</button>
+   <button class="b w" style="--c:#64748b" onclick="kids=[];gm('Offspring cleared. Pick parents and grow new seeds!');rg()">🧹 Clear Offspring</button>
+  </div>
+  <h3>⚡ Quick Experiments</h3>
+  <div class="g">
+   <button class="b w" style="--c:#0891b2" onclick="q('TT','tt','Pure Tall × Pure Dwarf: every F1 child is Tt and looks Tall. The dwarf trait is hidden!')">1️⃣ Pure Tall × Pure Dwarf</button>
+   <button class="b w" style="--c:#9333ea" onclick="q('Tt','Tt','Hybrid × Hybrid (F2): the dwarf trait comes back! Expected ratio is 3 Tall : 1 Dwarf.')">2️⃣ Self-Cross F1 (Tt × Tt)</button>
+   <button class="b w" style="--c:#be123c" onclick="q('Tt','tt','Test Cross: Tt × tt gives 1 Tall : 1 Dwarf. It shows if a tall plant hides a t allele.')">3️⃣ Test Cross (Tt × tt)</button>
+   <button class="b" style="--c:#0369a1" onclick="document.body.classList.toggle('nohint')">💡 Hints On/Off</button>
+   <button class="b" style="--c:#a16207" onclick="q('TT','TT','Both parents are pure tall, so every child is TT.')">TT × TT</button>
+  </div>
+  <div class="msg hint" style="font-size:13px"><b>T</b> = Tall (dominant)<br><b>t</b> = Dwarf (recessive)<br>A plant is Tall if it has at least one T.</div>
+ </aside>
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id),app=$('app');
+function fs(){document.fullscreenElement?document.exitFullscreen():app.requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+function tab(n){const d=n==1;$('cv').style.display=d?'block':'none';$('dmsg').style.display=$('seq').style.display=d?'block':'none';$('gen').style.display=d?'none':'block';$('dnaCtl').style.display=d?'flex':'none';$('genCtl').style.display=d?'none':'flex';$('t1').classList.toggle('on',d);$('t2').classList.toggle('on',!d);if(!d)rg()}
+/* ---------- DNA ---------- */
+const N=18,COL={A:'#ff4d6d',T:'#ffd23f',G:'#2ecc71',C:'#3a86ff'},CP={A:'T',T:'A',G:'C',C:'G'},NAME={A:'Adenine',T:'Thymine',G:'Guanine',C:'Cytosine'};
+let seq,rot=0,dir=1,spd=1,zoom=1,play=true,unz=0,unzT=0,rep=0,repT=0,lab=true,lad=false,mi=-1;
+const cv=$('cv'),c=cv.getContext('2d');
+function dm(t){$('dmsg').textContent=t}
+function seqTxt(){$('seq').innerHTML='Strand 1: '+seq.map(b=>`<i style="background:${COL[b]}">${b}</i>`).join('')+'<br>Strand 2: '+seq.map(b=>`<i style="background:${COL[CP[b]]}">${CP[b]}</i>`).join('')}
+function newSeq(){seq=Array.from({length:N},()=>'ATGC'[Math.random()*4|0]);mi=-1;seqTxt()}
+function mut(){mi=Math.random()*N|0;const o=seq[mi];let n;do n='ATGC'[Math.random()*4|0];while(n==o);seq[mi]=n;seqTxt();dm(`Mutation! Base ${mi+1} changed from ${o} to ${n}. A tiny change in the code can change a gene.`)}
+function line(a,b,w,col){c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke()}
+function ball(p,r,col){const g=c.createRadialGradient(p[0]-r/3,p[1]-r/3,r/6,p[0],p[1],r);g.addColorStop(0,'#fff');g.addColorStop(.25,col);g.addColorStop(1,'#000a');c.fillStyle=g;c.beginPath();c.arc(p[0],p[1],r,0,7);c.fill()}
+function frame(t){
+ if(play)rot+=.02*spd*dir;unz+=(unzT-unz)*.06;rep+=(repT-rep)*.04;
+ if(cv.width!=cv.clientWidth||cv.height!=cv.clientHeight){cv.width=cv.clientWidth;cv.height=cv.clientHeight}
+ const W=cv.width,H=cv.height;
+ if($('cv').style.display!='none'&&W){
+ c.clearRect(0,0,W,H);
+ const sp=Math.min(H*.86/N,44)*zoom,R=Math.min(W*.14,95)*zoom,ox=unz*R*1.7,F=700,cx=W/2,cy=H/2;
+ const P=(x,y,z)=>{const k=F/(F+z);return[cx+x*k,cy+y*k,k]};
+ const A1=[],A2=[],B1=[],B2=[],it=[];
+ for(let i=0;i<N;i++){
+  const y=(i-(N-1)/2)*sp,a=i*.6+rot,x=R*Math.cos(a),z=R*Math.sin(a);
+  A1.push(P(x-ox,y,z));A2.push(P(-x+ox,y,-z));B1.push(P(-x-ox,y,-z));B2.push(P(x+ox,y,z));
+  const M1=P(-ox,y,0),M2=P(ox,y,0),b=seq[i],q=CP[b],al=Math.min(1,unz*3)*rep;
+  it.push([z,()=>{
+   const k=A1[i][2];
+   line(A1[i],M1,9*k,lad?'#b5651d':COL[b]);line(A2[i],M2,9*k,lad?'#b5651d':COL[q]);
+   if(unz<.2){c.fillStyle='#fff';c.globalAlpha=1-unz*5;for(let j=-1;j<2;j++)c.fillRect(M1[0]+j*5-1,M1[1]-2,3,4);c.globalAlpha=1}
+   if(lab&&!lad&&k>.9){c.fillStyle='#111';c.font='bold '+(13*k)+'px Arial';c.textAlign='center';c.fillText(b,(A1[i][0]+M1[0])/2,(A1[i][1]+M1[1])/2+5);c.fillText(q,(A2[i][0]+M2[0])/2,(A2[i][1]+M2[1])/2+5)}
+   if(al>.02){c.globalAlpha=al;line(M1,B1[i],8*k,COL[q]);line(M2,B2[i],8*k,COL[b]);ball(B1[i],8*k,'#2dd4bf');ball(B2[i],8*k,'#2dd4bf');c.globalAlpha=1}
+   ball(A1[i],11*k,lad?'#d2b48c':'#a855f7');ball(A2[i],11*k,lad?'#d2b48c':'#a855f7');
+   if(i==mi){c.strokeStyle='#fff';c.lineWidth=3;c.beginPath();c.arc(M1[0],M1[1],20+Math.sin(t/150)*4,0,7);c.stroke()}
+  }])}
+ [A1,A2].forEach(A=>{for(let i=1;i<N;i++)line(A[i-1],A[i],6*A[i][2],lad?'#c9a66b':'#7c3aed')});
+ if(rep>.05)[B1,B2].forEach(A=>{c.globalAlpha=Math.min(1,unz*3)*rep;for(let i=1;i<N;i++)line(A[i-1],A[i],5*A[i][2],'#14b8a6');c.globalAlpha=1});
+ it.sort((u,v)=>v[0]-u[0]).forEach(o=>o[1]());
+ c.textAlign='left';c.font='bold 15px Arial';
+ Object.keys(COL).forEach((k,i)=>{c.fillStyle=COL[k];c.beginPath();c.roundRect(14,14+i*28,22,22,6);c.fill();c.fillStyle='#fff';c.fillText(k+' = '+NAME[k],44,31+i*28)});
+ c.fillStyle='#a855f7';c.beginPath();c.arc(25,128,10,0,7);c.fill();c.fillStyle='#fff';c.fillText('Sugar-Phosphate',44,133);
+ if(lab){const n=A1[2],m=A1[N/2|0];c.font='bold 16px Arial';c.fillStyle='#fff';c.strokeStyle='#fff';c.lineWidth=2;
+  c.textAlign='right';c.fillText('Sugar-Phosphate Backbone',W-14,H*.12);line([W-14-10,H*.12+6],[A2[2][0],A2[2][1]],2,'#fff8');
+  c.textAlign='left';c.fillText('Base Pair (A–T or G–C)',14,H*.92);line([60,H*.92-14],[m[0],m[1]],2,'#fff8');
+  c.fillText('Hydrogen bonds = white dots',14,H*.92+22)}
+ }
+ requestAnimationFrame(frame)}
+newSeq();dm('Welcome! Press the colourful buttons to spin, zoom, unzip and copy the DNA.');tab(1);requestAnimationFrame(frame);
+/* ---------- Genetics ---------- */
+let P1='Tt',P2='Tt',kids=[];
+const srt=g=>g[0]=='t'&&g[1]=='T'?'Tt':g,tr=g=>g.includes('T')?'Tall':'Dwarf';
+function gm(t){$('gmsg').textContent=t}
+function plant(g,s=1){const t=g.includes('T'),h=t?100:46,y=113-h;
+ return `<svg width="${64*s}" height="${124*s}" viewBox="0 0 64 124"><rect y="110" width="64" height="14" rx="6" fill="#8d5a2b"/><path d="M32 112V${y}" stroke="#2e9e4f" stroke-width="5"/><ellipse cx="18" cy="${y+h*.5}" rx="14" ry="6" fill="#43c463" transform="rotate(-30 18 ${y+h*.5})"/><ellipse cx="46" cy="${y+h*.7}" rx="14" ry="6" fill="#43c463" transform="rotate(30 46 ${y+h*.7})"/><ellipse cx="46" cy="${y+h*.3}" rx="12" ry="5" fill="#2ea34f" transform="rotate(-70 46 ${y+h*.3})"/><circle cx="26" cy="${y+h*.3}" r="3.5" fill="#9be564"/><circle cx="32" cy="${y+h*.3-5}" r="3.5" fill="#9be564"/><circle cx="32" cy="${y-2}" r="9" fill="${t?'#ff6fb5':'#ffb347'}"/><circle cx="32" cy="${y-2}" r="3.5" fill="#fff35c"/></svg>`}
+function sp(n,g){n==1?P1=g:P2=g;kids=[];document.querySelectorAll('.p'+n).forEach(b=>b.classList.toggle('on',b.textContent==g));gm(`Parent ${n} is ${g} (${tr(g)}). Each parent gives ONE allele to a child.`);rg()}
+function q(a,b,m){P1=a;P2=b;kids=[];['1','2'].forEach(n=>document.querySelectorAll('.p'+n).forEach(x=>x.classList.toggle('on',x.textContent==(n==1?a:b))));gm(m);rg()}
+function addKid(n){for(let i=0;i<n;i++)kids.push(srt(P1[Math.random()*2|0]+P2[Math.random()*2|0]));gm(`${n} new seed${n>1?'s':''} grown! Each one got a random allele from each parent. Watch the ratio as you add more.`);rg()}
+function rg(){
+ const a=P1.split(''),b=P2.split(''),cells=[],cnt={TT:0,Tt:0,tt:0};
+ a.forEach(x=>b.forEach(y=>{const g=srt(x+y);cells.push(g);cnt[g]++}));
+ const et=cnt.TT+cnt.Tt,ed=cnt.tt;
+ let h=`<div class="row"><div class="card"><div>${plant(P1,1.2)}</div><b>Parent 1: ${P1}</b><br>${tr(P1)}<br>Gametes: ${a.map(x=>`<span style="background:#ffd23f;color:#111;border-radius:50%;padding:1px 8px;font-weight:700">${x}</span>`).join(' ')}</div>
+ <div style="font-size:40px">✖️</div>
+ <div class="card"><div>${plant(P2,1.2)}</div><b>Parent 2: ${P2}</b><br>${tr(P2)}<br>Gametes: ${b.map(x=>`<span style="background:#ffd23f;color:#111;border-radius:50%;padding:1px 8px;font-weight:700">${x}</span>`).join(' ')}</div>
+ <div class="card"><b>Punnett Square</b><table class="pn"><tr><th></th><th>${b[0]}</th><th>${b[1]}</th></tr>
+ ${[0,1].map(i=>`<tr><th>${a[i]}</th>${[0,1].map(j=>{const g=cells[i*2+j];return `<td class="${tr(g).toLowerCase()}"><b>${g}</b>${tr(g)}</td>`}).join('')}</tr>`).join('')}</table></div></div>
+ <div class="msg hint"><b>Expected:</b> ${et} Tall : ${ed} Dwarf &nbsp;|&nbsp; Genotypes: ${cnt.TT} TT : ${cnt.Tt} Tt : ${cnt.tt} tt</div>`;
+ const k=kids.length,kt=kids.filter(g=>g.includes('T')).length,kd=k-kt;
+ h+=`<div class="card" style="text-align:left"><b>🌱 Offspring (${k} plants)</b><div class="row" style="gap:6px">${kids.map(g=>`<div style="text-align:center;font-size:12px">${plant(g,.6)}<br><b>${g}</b></div>`).join('')||'<i>No offspring yet. Press "Add 1 Seed" or "Grow 16 Seeds".</i>'}</div>`;
+ if(k)h+=`<div>Observed: ${kt} Tall : ${kd} Dwarf</div><div class="bar"><div style="width:${kt/k*100}%;background:#7ee787">${kt?'Tall '+kt:''}</div><div style="width:${kd/k*100}%;background:#ffb86b">${kd?'Dwarf '+kd:''}</div></div>`;
+ $('gout').innerHTML=h+'</div>'}
+sp(1,'Tt');sp(2,'Tt');gm('Gregor Mendel studied tall and dwarf pea plants. Choose two parents, then grow seeds to see the result!');
+</script></body></html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Doppler Effect – GEN Z EDTECH INTERACTIVE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Trebuchet MS','Segoe UI',sans-serif;background:#eef3fb;color:#14213d}
+header{background:linear-gradient(120deg,#14213d,#1d4e89);color:#fff;text-align:center;padding:14px 10px}
+header h1{margin:0;font-size:34px;font-weight:900;letter-spacing:1px}
+header p{margin:4px 0 0;font-size:18px;opacity:.9}
+nav{display:flex;gap:10px;justify-content:center;padding:12px}
+nav button{font:700 17px inherit;font-family:inherit;padding:10px 28px;border:0;border-radius:12px;background:#fff;color:#1d4e89;cursor:pointer;box-shadow:0 2px 6px #0003}
+nav button.on{background:#ff6f00;color:#fff}
+.tab{display:none;max-width:1100px;margin:0 auto;padding:0 16px 16px}.tab.on{display:block}
+.card{background:#fff;border-radius:16px;padding:20px 26px;margin-bottom:14px;box-shadow:0 3px 10px #0002;font-size:18px;line-height:1.6}
+.card h2{margin:0 0 8px;color:#1d4e89}
+.eq{background:#fff3e0;border-left:6px solid #ff6f00;padding:10px 16px;border-radius:8px;font-weight:700}
+.stage{background:#14213d;border-radius:16px;padding:10px;max-width:1200px;margin:0 auto}
+.view{position:relative;display:flex;justify-content:center;align-items:center}
+canvas{width:100%;max-width:100%;aspect-ratio:1000/520;border-radius:12px;background:#9ad;display:block}
+.hud{position:absolute;top:10px;left:10px;display:flex;gap:8px;flex-wrap:wrap;max-width:62%}
+.box{background:#14213dd9;color:#fff;border-radius:10px;padding:6px 12px;font-size:14px}
+.box b{display:block;font-size:24px}
+.gauge{position:absolute;top:10px;right:10px;width:300px;background:#14213dd9;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px}
+.track{height:12px;border-radius:6px;background:linear-gradient(90deg,#42a5f5,#eee,#ef5350);position:relative;margin:6px 0}
+.mk{position:absolute;top:-4px;width:6px;height:20px;background:#111;border:2px solid #fff;border-radius:3px;left:50%}
+.lab{display:flex;justify-content:space-between}
+#msg{font-weight:700;font-size:14px;margin-top:4px;color:#ffe066}
+.ctl{display:flex;flex-direction:column;gap:6px;padding-top:10px}
+.grp{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.grp button{font:700 14px inherit;font-family:inherit;color:#fff;border:3px solid transparent;border-radius:10px;padding:8px 13px;cursor:pointer;box-shadow:0 3px 0 #0006;transition:transform .1s}
+.grp button:hover{transform:translateY(-2px)}.grp button:active{transform:translateY(2px)}
+.grp button.sel{border-color:#ffe066;outline:2px solid #fff}
+.stage:fullscreen{display:flex;flex-direction:column;border-radius:0;padding:8px}
+.stage:fullscreen .view{flex:1;min-height:0}
+.stage:fullscreen canvas{max-height:100%;width:auto;height:100%}
+.stage:fullscreen .ctl{max-height:36vh;overflow:auto}
+.sf{text-align:center;color:#cfd8dc;font-size:12px;padding-top:6px}
+footer{text-align:center;padding:16px;font-size:13px;color:#14213d}
+footer b.br{font-size:14px;letter-spacing:1px}
+.dev,.sf span{font-weight:700;font-size:12px;background:#ffe066;color:#14213d;padding:2px 8px;border-radius:6px}
+</style></head><body>
+<header><h1>GEN Z EDTECH INTERACTIVE</h1><p>Doppler Effect: Siren Frequency Shift for Moving Observers</p></header>
+<nav><button class="on" data-t="def">Definition</button><button data-t="exp">Explanation</button><button data-t="sim">Simulation</button></nav>
+
+<section class="tab on" id="def">
+<div class="card"><h2>What is the Doppler Effect?</h2>
+The Doppler effect is the change in the pitch (frequency) of a sound that happens when the source of the sound and the listener are moving toward or away from each other.
+<p class="eq">Moving closer → higher pitch. Moving apart → lower pitch.</p>
+It is named after the Austrian scientist Christian Doppler, who described it in 1842.</div>
+<div class="card"><h2>Key words</h2><b>Frequency:</b> how many sound waves reach your ear each second, measured in hertz (Hz).<br><b>Pitch:</b> how high or low a sound seems. More waves per second sounds higher.<br><b>Source:</b> the object making the sound, like a siren.<br><b>Observer:</b> the person listening.</div>
+</section>
+
+<section class="tab" id="exp">
+<div class="card"><h2>Why does the pitch change?</h2>
+A siren sends out sound waves in all directions. When an ambulance drives toward you, each new wave starts a little closer to you than the one before, so the waves are squeezed together. More waves reach your ear every second, so you hear a higher pitch.<br><br>When the ambulance drives away, each new wave starts farther away. The waves are stretched out, fewer reach your ear each second, and you hear a lower pitch.<br><br>The siren itself never changes. Only what you hear changes.</div>
+<div class="card"><h2>The formula</h2>
+<p class="eq">f′ = f × (c − v<sub>listener</sub>) ÷ (c − v<sub>source</sub>)</p>
+f = the siren’s real frequency, f′ = the frequency you hear, c = speed of sound (about 343 m/s in air). Each speed is measured along the line between the siren and the listener. Toward each other makes f′ bigger.</div>
+<div class="card"><h2>What to try in the simulation</h2>
+1. Press <b>Sound On</b> and listen as the vehicle approaches, passes and leaves.<br>2. Make the vehicle faster and notice the bigger pitch jump.<br>3. Let the listener move toward or away from the siren.<br>4. Switch waves on and off to see them squeezed in front and stretched behind.<br><i>Note: the waves and speeds are drawn bigger than real life so that you can see them. The pitch numbers use real physics.</i></div>
+</section>
+
+<section class="tab" id="sim">
+<div class="stage" id="stage">
+<div class="view"><canvas id="cv"></canvas>
+<div class="hud"><div class="box">Siren frequency<b id="f0">700 Hz</b></div><div class="box">You hear<b id="fh">700 Hz</b></div><div class="box">Vehicle speed<b id="sp">80 km/h</b></div></div>
+<div class="gauge"><div class="lab"><span>Lower</span><span>Same</span><span>Higher</span></div><div class="track"><div class="mk" id="mk"></div></div><div id="msg"></div></div></div>
+<div class="ctl" id="ctl"></div>
+<div class="sf">GEN Z EDTECH INTERACTIVE &nbsp; <span>Muhammad Imran Khan, MSc Computer Science</span></div>
+</div>
+</section>
+
+<footer><b class="br">GEN Z EDTECH INTERACTIVE</b><br><span class="dev">Muhammad Imran Khan, MSc Computer Science</span></footer>
+
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),g=cv.getContext('2d');
+cv.width=2000;cv.height=1040;g.scale(2,2);
+const C=300,K=4,CS=343;
+const S={run:true,dir:1,kmh:80,veh:'amb',x:-80,ox:500,ovk:0,waves:[],t:0,em:0,slow:1,sound:false,siren:'steady',showW:true,f0:700,fh:700};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.tab').forEach(e=>e.classList.remove('on'));b.classList.add('on');$('#'+b.dataset.t).classList.add('on')});
+
+/* audio */
+let AC,osc,gn;
+function audio(){if(AC)return;AC=new(window.AudioContext||window.webkitAudioContext)();osc=AC.createOscillator();osc.type='sawtooth';const lp=AC.createBiquadFilter();lp.frequency.value=2200;gn=AC.createGain();gn.gain.value=0;osc.connect(lp);lp.connect(gn);gn.connect(AC.destination);osc.start()}
+function vol(){if(AC)gn.gain.setTargetAtTime(S.sound&&S.run?.07:0,AC.currentTime,.05)}
+
+/* buttons */
+const ctl=$('#ctl');
+function grp(){const d=document.createElement('div');d.className='grp';ctl.appendChild(d);return d}
+function mk(d,label,col,fn,set,dark){const b=document.createElement('button');b.textContent=label;b.style.background=col;if(dark)b.style.color='#222';b.dataset.s=set||'';b.onclick=()=>{fn(b);if(set){d.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}};d.appendChild(b);return b}
+let d=grp();
+mk(d,'⏸ Pause','#2ecc71',b=>{S.run=!S.run;b.textContent=S.run?'⏸ Pause':'▶ Play';vol()});
+mk(d,'↺ Reset','#e53935',()=>{S.x=S.dir>0?-80:1080;S.waves=[];S.t=0});
+mk(d,'🐢 Slow Motion: Off','#8e44ad',b=>{S.slow=S.slow==1?.3:1;b.textContent='🐢 Slow Motion: '+(S.slow==1?'Off':'On')});
+mk(d,'➖ Slower','#f39c12',()=>{S.kmh=Math.max(20,S.kmh-20)});
+mk(d,'➕ Faster','#e67e22',()=>{S.kmh=Math.min(240,S.kmh+20)});
+mk(d,'⇄ Reverse Direction','#3f51b5',()=>{S.dir*=-1;S.waves=[];S.x=S.dir>0?-80:1080});
+d=grp();
+mk(d,'🔊 Sound: Off','#1e88e5',b=>{audio();AC.resume();S.sound=!S.sound;b.textContent='🔊 Sound: '+(S.sound?'On':'Off');vol()});
+mk(d,'Steady Tone','#00acc1',()=>S.siren='steady','si').classList.add('sel');
+mk(d,'Wail Siren','#d81b60',()=>S.siren='wail','si');
+mk(d,'Yelp Siren','#6d4c41',()=>S.siren='yelp','si');
+d=grp();
+mk(d,'🚑 Ambulance','#ff7043',()=>S.veh='amb','v').classList.add('sel');
+mk(d,'🚓 Police Car','#283593',()=>S.veh='police','v');
+mk(d,'🚒 Fire Truck','#b71c1c',()=>S.veh='fire','v');
+d=grp();
+mk(d,'🧍 Listener Still','#7cb342',()=>S.ovk=0,'o').classList.add('sel');
+mk(d,'🏃 Listener Runs Right','#fbc02d',()=>S.ovk=30,'o',1);
+mk(d,'🏃 Listener Runs Left','#00897b',()=>S.ovk=-30,'o');
+mk(d,'🌊 Waves: On','#26c6da',b=>{S.showW=!S.showW;b.textContent='🌊 Waves: '+(S.showW?'On':'Off')},0,1);
+d=grp();
+mk(d,'📍 Jump: Approaching','#ec407a',()=>jump(-380));
+mk(d,'📍 Jump: Passing','#ab47bc',()=>jump(0));
+mk(d,'📍 Jump: Leaving','#5c6bc0',()=>jump(380));
+const fs=mk(d,'⛶ Full Screen','#212121',()=>{document.fullscreenElement?document.exitFullscreen():$('#stage').requestFullscreen()});
+fs.style.borderColor='#ffd54f';
+document.onfullscreenchange=()=>fs.textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen';
+function jump(o){S.x=S.ox+o*S.dir;S.waves=[]}
+
+/* drawing */
+function scene(){
+ let l=g.createLinearGradient(0,0,0,330);l.addColorStop(0,'#5fb3f0');l.addColorStop(1,'#dff1fb');g.fillStyle=l;g.fillRect(0,0,1000,520);
+ g.fillStyle='#ffd54f';g.beginPath();g.arc(880,70,36,0,7);g.fill();
+ [[20,110,170,'#90a4ae'],[150,90,230,'#78909c'],[260,130,150,'#b0bec5'],[420,100,250,'#8d9fb0'],[540,120,190,'#9fb3c8'],[680,90,220,'#78909c'],[790,140,160,'#b0bec5'],[940,70,200,'#90a4ae']].forEach(([x,w,h,c])=>{g.fillStyle=c;g.fillRect(x,330-h,w,h);g.fillStyle='#e3f2fd';for(let a=x+10;a<x+w-14;a+=24)for(let b=330-h+12;b<316;b+=26)g.fillRect(a,b,12,14)});
+ g.fillStyle='#4a4f57';g.fillRect(0,330,1000,85);g.fillStyle='#fff';for(let x=0;x<1000;x+=60)g.fillRect(x,368,34,4);
+ g.fillStyle='#cfd8dc';g.fillRect(0,415,1000,55);g.fillStyle='#b0bec5';g.fillRect(0,415,1000,4);
+ g.fillStyle='#7cb342';g.fillRect(0,470,1000,50);
+ [90,330,640,900].forEach(x=>{g.fillStyle='#6d4c41';g.fillRect(x-4,478,8,30);g.fillStyle='#2e7d32';g.beginPath();g.arc(x,470,24,0,7);g.fill()})}
+function vehicle(){
+ const T={amb:{w:120,h:50,b:'#fafafa'},police:{w:104,h:34,b:'#1a237e'},fire:{w:150,h:54,b:'#d32f2f'}}[S.veh],y0=395,top=y0-14-T.h,on=Math.floor(S.t*6)%2;
+ g.save();g.translate(S.x,0);g.scale(S.dir,1);
+ g.fillStyle=T.b;g.beginPath();g.roundRect(-T.w/2,top,T.w,T.h,8);g.fill();
+ g.fillStyle='#b3e5fc';g.beginPath();g.roundRect(T.w/2-38,top+6,30,T.h*.42,5);g.fill();
+ if(S.veh=='amb'){g.fillStyle='#e53935';g.fillRect(-T.w/2,top+T.h*.62,T.w,8);g.fillRect(-26,top+8,8,24);g.fillRect(-34,top+16,24,8)}
+ if(S.veh=='police'){g.fillStyle='#fff';g.fillRect(-T.w/2+14,top+8,44,T.h-12);g.fillStyle='#ffd54f';g.fillRect(-T.w/2,top+T.h-8,T.w,4)}
+ if(S.veh=='fire'){g.fillStyle='#fff';g.fillRect(-T.w/2,top+T.h*.6,T.w,6);g.strokeStyle='#9e9e9e';g.lineWidth=3;g.beginPath();g.moveTo(-66,top-6);g.lineTo(34,top-6);g.moveTo(-66,top-14);g.lineTo(34,top-14);g.stroke();g.lineWidth=2;for(let x=-60;x<34;x+=12){g.beginPath();g.moveTo(x,top-14);g.lineTo(x,top-6);g.stroke()}}
+ g.fillStyle='#fff59d';g.fillRect(T.w/2-4,top+T.h-16,6,9);
+ [-1,1].forEach(s=>{const cx=s*T.w*.3,cy=y0-12;g.fillStyle='#111';g.beginPath();g.arc(cx,cy,13,0,7);g.fill();g.fillStyle='#9e9e9e';g.beginPath();g.arc(cx,cy,6,0,7);g.fill();g.strokeStyle='#222';g.lineWidth=2;const a=S.x/12*S.dir;g.beginPath();g.moveTo(cx+6*Math.cos(a),cy+6*Math.sin(a));g.lineTo(cx-6*Math.cos(a),cy-6*Math.sin(a));g.stroke()});
+ [[-14,'#ff1744',on],[0,'#2979ff',!on]].forEach(([x,c,o])=>{g.fillStyle=o?c:'#4a2a2a';g.fillRect(x,top-8,14,8);if(o){const r=g.createRadialGradient(x+7,top-4,0,x+7,top-4,32);r.addColorStop(0,c+'cc');r.addColorStop(1,c+'00');g.fillStyle=r;g.fillRect(x-25,top-36,64,64)}});
+ g.restore();return top-8}
+function person(){
+ const x=S.ox,y=455,sw=S.ovk&&S.run?Math.sin(S.t*12)*7:0;
+ g.lineCap='round';g.strokeStyle='#263859';g.lineWidth=7;g.beginPath();g.moveTo(x-4,430);g.lineTo(x-4+sw,y);g.moveTo(x+4,430);g.lineTo(x+4-sw,y);g.stroke();
+ g.fillStyle='#ff7043';g.beginPath();g.roundRect(x-12,396,24,38,7);g.fill();
+ g.strokeStyle='#ffcc99';g.lineWidth=5;g.beginPath();g.moveTo(x+9,403);g.lineTo(x+13,390);g.stroke();
+ g.fillStyle='#ffcc99';g.beginPath();g.arc(x,385,12,0,7);g.fill();g.fillStyle='#3e2723';g.beginPath();g.arc(x,383,12,Math.PI,0);g.fill();
+ g.fillStyle='#ffb380';g.beginPath();g.arc(x+11,386,4,0,7);g.fill();
+ g.fillStyle='#14213d';g.fillRect(x-4,386,2,3);g.fillRect(x+2,386,2,3);
+ g.strokeStyle='#14213d';g.lineWidth=1.5;[8,13].forEach(r=>{g.beginPath();g.arc(x+11,386,r,-.9,.9);g.stroke()});
+ g.fillStyle='#14213d';g.font='bold 13px sans-serif';g.textAlign='center';g.fillText('Listener',x,364);g.textAlign='left'}
+
+/* loop */
+let last=0;
+function frame(ts){
+ const dt=Math.min((ts-last)/1000,.05)*(S.run?S.slow:0);last=ts;S.t+=dt;
+ const vpx=S.kmh/3.6/CS*C*K;S.x+=S.dir*vpx*dt;S.ox=Math.max(50,Math.min(950,S.ox+S.ovk/3.6/CS*C*K*dt));
+ if(S.dir>0&&S.x>1120){S.x=-120;S.waves=[]}if(S.dir<0&&S.x<-120){S.x=1120;S.waves=[]}
+ g.clearRect(0,0,1000,520);scene();
+ const sy=vehicle()-6;
+ if(S.run){S.em+=dt;while(S.em>.12){S.em-=.12;S.waves.push({x:S.x,y:sy,t:S.t})}}
+ S.waves=S.waves.filter(w=>C*(S.t-w.t)<760);
+ if(S.showW){g.lineWidth=2.5;S.waves.forEach(w=>{const r=C*(S.t-w.t);g.strokeStyle='rgba(255,111,0,'+(.9*(1-r/760)).toFixed(2)+')';g.beginPath();g.arc(w.x,w.y,r,0,7);g.stroke()})}
+ person();
+ S.f0=S.siren=='steady'?700:S.siren=='wail'?750+250*Math.sin(S.t*2.2):750+250*Math.sin(S.t*15);
+ const dx=S.ox-S.x,dy=430-sy,dd=Math.hypot(dx,dy),ux=dx/dd;
+ const ratio=(CS-S.ovk/3.6*ux)/(CS-S.dir*S.kmh/3.6*ux);S.fh=S.f0*ratio;
+ if(AC)osc.frequency.setTargetAtTime(S.fh,AC.currentTime,.03);
+ $('#f0').textContent=Math.round(S.f0)+' Hz';$('#fh').textContent=Math.round(S.fh)+' Hz';$('#sp').textContent=S.kmh+' km/h';
+ $('#mk').style.left=Math.max(2,Math.min(96,(ratio-.85)/.3*100))+'%';
+ $('#msg').textContent=ratio>1.004?'Higher pitch: the siren is coming closer.':ratio<.996?'Lower pitch: the siren is moving away.':'Same pitch: the siren is right beside you.';
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

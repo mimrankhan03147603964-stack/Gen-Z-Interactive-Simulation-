@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 4 Maths Interactive Lab</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{margin:0}
+#app{min-height:100vh;overflow:auto;display:flex;flex-direction:column;background:radial-gradient(circle at 15% 0,#0ea5e9,#1e1b4b 50%,#9d174d)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 28px;color:#fff}
+h1{margin:0;font-size:30px;letter-spacing:1px;text-shadow:0 2px 0 #f59e0b,0 5px 0 #b45309,0 9px 14px #000a}
+h1 small{display:block;font-size:12px;letter-spacing:3px;color:#fde68a;text-shadow:none}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 28px 12px}
+.b{border:0;border-radius:12px;padding:9px 14px;font-weight:700;font-size:15px;color:#fff;background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.35),0 8px 14px rgba(0,0,0,.25);cursor:pointer;transition:.1s}
+.b:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.tab.on{outline:3px solid #fde68a;transform:scale(1.06)}
+main{flex:1;margin:0 28px;background:#fffdf7;border-radius:22px;padding:16px 26px;box-shadow:0 12px 30px #0008;color:#1f2937;display:flex;flex-direction:column;align-items:center}
+#stage{width:100%;display:flex;flex-direction:column;align-items:center}
+h2{margin:0 0 6px;color:#4c1d95;font-size:26px}
+.bar{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center;margin:7px 0}
+.big{font-size:22px;font-weight:700;margin:6px 0;text-align:center}
+.msg{background:#fef3c7;border:2px dashed #f59e0b;border-radius:12px;padding:8px 18px;font-weight:600;min-height:40px;text-align:center;font-size:17px;margin:4px 0;max-width:900px}
+.vis{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;background:#ecfeff;border-radius:16px;padding:14px;margin:6px 0}
+footer{color:#c7d2fe;text-align:center;padding:10px;font-size:13px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;font-size:.8em;line-height:1}
+.fr b{border-bottom:3px solid #1f2937;padding:0 6px 2px}.fr i{font-style:normal;padding-top:2px}
+.col{background:#fff;border:3px solid var(--c);border-radius:14px;padding:8px;width:128px;text-align:center;min-height:250px}
+.col h4{margin:0 0 4px;color:var(--c);font-size:14px;height:34px}
+.dg{font-size:48px;font-weight:900;color:var(--c)}
+.tk{display:inline-flex;width:34px;height:34px;margin:2px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9,var(--c) 60%);border:2px solid #0003;color:#fff;font-size:10px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 2px 4px #0005}
+.chip{display:inline-block;min-width:44px;padding:5px 8px;margin:3px;border-radius:10px;background:#e5e7eb;font-weight:700;text-align:center}
+.chip.g{background:#fde047;box-shadow:0 0 0 3px #f59e0b}.chip.h{background:#86efac;box-shadow:0 0 0 3px #16a34a}
+.ld span{position:absolute;text-align:center;width:36px}
+.dec{display:grid;grid-template-rows:repeat(10,34px);grid-auto-flow:column;gap:3px;background:#451a03;padding:8px;border-radius:10px;box-shadow:0 8px 16px #0006}
+.dec div{width:34px;border-radius:4px;cursor:pointer;background:#78350f;box-shadow:inset 0 2px 3px #fff3,inset 0 -2px 3px #0006}
+</style></head><body>
+<div id="app">
+<header><h1>CLASS 4 MATHS INTERACTIVE LAB<small>GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+<button class="b" id="fb" style="--c:#ea580c" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><div id="stage"></div></main>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &nbsp;|&nbsp; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s),R=n=>Math.floor(Math.random()*n),P=Math.PI,gcd=(a,b)=>b?gcd(b,a%b):a,lcm=(a,b)=>a*b/gcd(a,b);
+const btn=(t,c,f)=>`<button class="b" style="--c:${c}" onclick="${f}">${t}</button>`;
+const fr=(a,b)=>`<span class="fr"><b>${a}</b><i>${b}</i></span>`;
+const CL=['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#3b82f6','#8b5cf6','#ec4899'];
+let cur=0,S={},T=null,D=0;
+const ref=()=>sims[cur][1]();
+function fs(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+document.onfullscreenchange=()=>$('#fb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+const strip=(n,d,c,h=42)=>`<div style="display:flex;width:min(720px,100%);height:${h}px;border-radius:10px;overflow:hidden;border:3px solid #374151;box-shadow:0 4px 8px #0004;margin:4px 0">${Array.from({length:d},(_,i)=>`<div style="flex:1;background:${i<n?c:'#fff'};border-right:${i<d-1?'2px solid #37415155':'0'};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:${d>12?9:14}px">${i<n&&d<=12?'1/'+d:''}</div>`).join('')}</div>`;
+
+/* 1 PLACE VALUE */
+const PV=[['Hundred Thousands',100000,'#dc2626'],['Ten Thousands',10000,'#ea580c'],['Thousands',1000,'#ca8a04'],['Hundreds',100,'#16a34a'],['Tens',10,'#2563eb'],['Ones',1,'#9333ea']];
+const W1=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'],W2=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+const w3=n=>{let s='';if(n>=100){s+=W1[n/100|0]+' hundred';n%=100;if(n)s+=' and '}if(n>=20){s+=W2[n/10|0];if(n%10)s+='-'+W1[n%10]}else if(n)s+=W1[n];return s};
+const words=n=>n==0?'zero':(n>=1000?w3(n/1000|0)+' thousand'+(n%1000?' ':''):'')+(n%1000?w3(n%1000):'');
+function pv(){const n=S.n,ds=String(n).padStart(6,'0').split('').map(Number);
+const ex=ds.map((d,i)=>d?`<span style="color:${PV[i][2]}">${d*PV[i][1]}</span>`:'').filter(x=>x).join(' + ')||'0';
+$('#stage').innerHTML=`<h2>Place Value Expander (up to 6 digits)</h2><div class="big" style="font-size:44px;letter-spacing:2px;color:#4c1d95">${n.toLocaleString('en-US')}</div><div class="vis" style="align-items:flex-start">${ds.map((d,i)=>`<div class="col" style="--c:${PV[i][2]}"><h4>${PV[i][0]}</h4><div class="dg">${d}</div><div class="bar" style="margin:2px">${btn('▲',PV[i][2],`pvD(${i},1)`)}${btn('▼','#475569',`pvD(${i},-1)`)}</div><div>${Array.from({length:d},()=>`<span class="tk" style="--c:${PV[i][2]}">${PV[i][1]>=1000?PV[i][1]/1000+'K':PV[i][1]}</span>`).join('')}</div></div>`).join('')}</div><div class="msg" style="font-size:20px">Expanded form: ${ex}<br>In words: <b>${words(n)}</b></div><div class="bar">${btn('🎲 Random','#f59e0b','S.n=R(1000000);pv()')}${btn('×10','#16a34a','S.n=Math.min(999999,S.n*10);pv()')}${btn('÷10','#2563eb','S.n=Math.floor(S.n/10);pv()')}${btn('＋1,000','#9333ea','S.n=Math.min(999999,S.n+1000);pv()')}${btn('＋100,000','#db2777','S.n=Math.min(999999,S.n+100000);pv()')}${btn('🔊 Say It','#0d9488','speechSynthesis.speak(new SpeechSynthesisUtterance(words(S.n)))')}${btn('↺ Reset','#64748b','S.n=0;pv()')}</div>`}
+function pvD(i,d){const v=PV[i][1],dg=Math.floor(S.n/v)%10,nd=(dg+d+10)%10;S.n+=(nd-dg)*v;pv()}
+
+/* 2 LONG DIVISION */
+function ldS(Dv,v){const ds=String(Dv).split('').map(Number),n=ds.length,st=[],q=[],L=[];let c=0,started=false,pushed=false;
+const sn=m=>st.push({q:q.slice(),L:L.map(o=>({...o})),m});
+sn(`Divide ${Dv} by ${v}. We follow 4 steps again and again: Divide, Multiply, Subtract, Bring Down.`);
+for(let i=0;i<n;i++){
+ if(i>0){c=c*10+ds[i];if(pushed)L[L.length-1]={t:String(c),i,k:'r'};sn(`⬇ Bring down ${ds[i]}. Now we have ${c}.`)}else c=ds[0];
+ const qq=Math.floor(c/v),pr=qq*v,rm=c-pr;q.push(qq);if(qq)started=true;
+ sn(`➗ Divide: ${c} ÷ ${v} = ${qq}. Write ${qq} on top.`);
+ if(qq==0&&!started&&i<n-1){pushed=false;sn(`${c} is smaller than ${v}, so we take the next digit.`);continue}
+ pushed=true;L.push({t:String(pr),i,k:'p'});sn(`✖ Multiply: ${qq} × ${v} = ${pr}.`);
+ L.push({t:String(rm),i,k:'r'});sn(`➖ Subtract: ${c} − ${pr} = ${rm}.`+(i==n-1?`<br>✅ Answer: ${Dv} ÷ ${v} = ${Math.floor(Dv/v)}${Dv%v?' remainder '+Dv%v:''}`:''));c=rm}
+return st}
+function ld(){const{Dv,v}=S,st=ldS(Dv,v);S.st=Math.min(S.st,st.length-1);const s=st[S.st],n=String(Dv).length,cw=36,mw=60,ds=String(Dv).split('');
+const sp=(t,e,col,x)=>t.split('').map((ch,j)=>`<span style="left:${(e-t.length+1+j)*cw}px;color:${col}">${ch}</span>`).join('');
+const fz=s.q.findIndex(x=>x>0);
+let rows=`<div class="ld" style="position:relative;height:44px;margin-left:${mw}px;border-left:4px solid transparent;width:${n*cw}px">${s.q.map((x,i)=>(fz>=0&&i>=fz)||(fz<0&&i==n-1&&s.q.length==n)?`<span style="left:${i*cw}px;color:#ea580c">${x}</span>`:'').join('')}</div><div style="display:flex;align-items:center"><div style="width:${mw}px;text-align:right;padding-right:10px;color:#7c3aed">${v}</div><div class="ld" style="position:relative;height:46px;width:${n*cw}px;border-top:4px solid #111;border-left:4px solid #111;padding-top:2px">${ds.map((x,i)=>`<span style="left:${i*cw}px">${x}</span>`).join('')}</div></div>`;
+s.L.forEach(o=>rows+=`<div class="ld" style="position:relative;height:42px;margin-left:${mw}px;border-left:4px solid transparent;width:${n*cw}px">${sp(o.t,o.i,o.k=='p'?'#dc2626':'#16a34a')}${o.k=='p'?`<span style="left:${(o.i-o.t.length)*cw}px;color:#dc2626">−</span>`:''}</div>${o.k=='p'?`<div style="margin-left:${mw}px;width:${n*cw}px;border-top:3px solid #dc2626;height:0"></div>`:''}`);
+$('#stage').innerHTML=`<h2>Long Division: Step by Step</h2><div class="vis"><div style="font:800 32px monospace;background:#fff;padding:14px 24px;border-radius:14px;box-shadow:0 4px 10px #0003;min-width:300px">${rows}</div></div><div class="msg">${s.m}</div><div class="bar">${btn('◀ Back','#64748b','S.st=Math.max(0,S.st-1);ld()')}${btn('Next Step ▶','#16a34a','S.st++;ld()')}${btn('⏯ Auto Play','#2563eb',"clearInterval(T);S.st=0;ld();T=setInterval(()=>{if(S.st<ldS(S.Dv,S.v).length-1){S.st++;ld()}else clearInterval(T)},1100)")}${btn('🔁 Restart','#f59e0b','S.st=0;ld()')}${btn('🎲 Random','#db2777','S.Dv=100+R(9900);S.v=2+R(8);S.st=0;ld()')}</div><div class="bar"><b>Divisor:</b>${btn('＋','#0d9488','ldC("v",1)')}${btn('－','#0f766e','ldC("v",-1)')}<b>Dividend:</b>${btn('＋100','#ea580c','ldC("Dv",100)')}${btn('－100','#c2410c','ldC("Dv",-100)')}${btn('＋1','#9333ea','ldC("Dv",1)')}${btn('－1','#7e22ce','ldC("Dv",-1)')}</div>`}
+function ldC(k,d){S[k]=k=='v'?Math.max(2,Math.min(12,S.v+d)):Math.max(10,Math.min(9999,S.Dv+d));S.st=0;clearInterval(T);ld()}
+
+/* 3 FACTOR RAINBOW */
+const fac=n=>{const f=[];for(let i=1;i<=n;i++)if(n%i==0)f.push(i);return f};
+function rb(n){const f=fac(n),L=f.length,w=Math.max(300,L*66),xs=f.map((_,k)=>L==1?w/2:40+k*(w-80)/(L-1));let s='';
+for(let k=0;k<L-1-k;k++){const x1=xs[k],x2=xs[L-1-k],r=(x2-x1)/2;s+=`<path d="M${x1} 140A${r} ${Math.min(r,115)} 0 0 1 ${x2} 140" fill="none" stroke="${CL[k%8]}" stroke-width="8"/>`}
+f.forEach((x,k)=>s+=`<circle cx="${xs[k]}" cy="140" r="16" fill="#fff" stroke="#374151" stroke-width="2"/><text x="${xs[k]}" y="146" text-anchor="middle" font-size="15" font-weight="800">${x}</text>`);
+return`<svg viewBox="0 0 ${w} 170" style="width:${Math.min(w,520)}px;max-width:100%">${s}</svg>`}
+function fc(){const{a,b}=S,fa=fac(a),fb=fac(b),hc=gcd(a,b),lc=lcm(a,b),cf=fa.filter(x=>b%x==0),ma=Array.from({length:12},(_,i)=>a*(i+1)),mb=Array.from({length:12},(_,i)=>b*(i+1));
+const pr=n=>fac(n).filter(x=>x*x<=n).map(x=>`${x}×${n/x}`).join(', ');
+const ch=(m,o)=>m.map(x=>`<span class="chip${x==lc?' g':o(x)?' h':''}">${x}</span>`).join('');
+$('#stage').innerHTML=`<h2>Factor Rainbow, HCF & LCM</h2><div class="vis" style="align-items:flex-start"><div style="text-align:center"><div class="big" style="color:#dc2626">Factors of ${a}</div>${rb(a)}<div>Pairs: ${pr(a)}</div></div><div style="text-align:center"><div class="big" style="color:#2563eb">Factors of ${b}</div>${rb(b)}<div>Pairs: ${pr(b)}</div></div></div>${S.mu?`<div class="vis" style="display:block"><div><b>Multiples of ${a}:</b> ${ch(ma,x=>x%b==0)}</div><div><b>Multiples of ${b}:</b> ${ch(mb,x=>x%a==0)}</div></div>`:''}<div class="msg">Common factors: ${cf.join(', ')}<br><b>HCF</b> (highest common factor) = ${hc} &nbsp;|&nbsp; <b>LCM</b> (lowest common multiple) = ${lc}<br>Check: HCF × LCM = ${hc} × ${lc} = ${hc*lc} = ${a} × ${b}</div><div class="bar"><b>Number A:</b>${btn('＋','#dc2626','fcC("a",1)')}${btn('－','#991b1b','fcC("a",-1)')}${btn('＋5','#ea580c','fcC("a",5)')}<b>Number B:</b>${btn('＋','#2563eb','fcC("b",1)')}${btn('－','#1e40af','fcC("b",-1)')}${btn('＋5','#0891b2','fcC("b",5)')}</div><div class="bar">${btn('🔢 Show / Hide Multiples','#16a34a','S.mu=!S.mu;fc()')}${btn('🎲 Random','#f59e0b','S.a=2+R(40);S.b=2+R(40);fc()')}${btn('Example 12 & 18','#9333ea','S.a=12;S.b=18;fc()')}</div>`}
+function fcC(k,d){S[k]=Math.max(2,Math.min(60,S[k]+d));fc()}
+
+/* 4 EQUIVALENT FRACTIONS */
+function ef(){const{n0,d0,n,d}=S,g=gcd(n,d);
+$('#stage').innerHTML=`<h2>Equivalent Fractions & Simplifier</h2><div class="vis" style="flex-direction:column"><div class="big" style="color:#16a34a">Start: ${fr(n0,d0)}</div>${strip(n0,d0,'#16a34a',46)}<div class="big" style="color:#dc2626">Now: ${fr(n,d)} ${g==1?' ✅ lowest terms':''}</div>${strip(n,d,'#dc2626',46)}</div><div class="msg">${S.m||'Multiply or divide the top and bottom by the same number. The fraction stays equal!'}<br>${fr(n0,d0)} = ${fr(n,d)}</div><div class="bar"><b>Multiply:</b>${[2,3,4,5,10].map((k,i)=>btn('×'+k,CL[i],`efM(${k})`)).join('')}</div><div class="bar"><b>Divide:</b>${[2,3,5].map((k,i)=>btn('÷'+k,CL[i+4],`efV(${k})`)).join('')}${btn('✨ Simplify','#16a34a','efV(gcd(S.n,S.d))')}${btn('↺ Back to Start','#64748b','S.n=S.n0;S.d=S.d0;S.m=\'\';ef()')}</div><div class="bar"><b>Top:</b>${btn('＋','#0d9488','efC("n",1)')}${btn('－','#0f766e','efC("n",-1)')}<b>Bottom:</b>${btn('＋','#ea580c','efC("d",1)')}${btn('－','#c2410c','efC("d",-1)')}${btn('🎲 Random','#f59e0b','S.d0=2+R(11);S.n0=1+R(S.d0-1);S.n=S.n0;S.d=S.d0;S.m=\'\';ef()')}</div>`}
+function efM(k){if(S.d*k>60){S.m='Too many parts! Try a smaller number.'}else{S.m=`Multiply top and bottom by ${k}: ${S.n}×${k} = ${S.n*k} and ${S.d}×${k} = ${S.d*k}`;S.n*=k;S.d*=k}ef()}
+function efV(k){if(k>1&&S.n%k==0&&S.d%k==0){S.m=`Divide top and bottom by ${k}: ${S.n}÷${k} = ${S.n/k} and ${S.d}÷${k} = ${S.d/k}`;S.n/=k;S.d/=k}else S.m=k>1?`We cannot divide both numbers by ${k}.`:'Already in lowest terms!';ef()}
+function efC(a,d){if(a=='n')S.n0=Math.max(1,Math.min(S.d0-1,S.n0+d));else{S.d0=Math.max(2,Math.min(12,S.d0+d));S.n0=Math.min(S.n0,S.d0-1)}S.n=S.n0;S.d=S.d0;S.m='';ef()}
+
+/* 5 ADD/SUB FRACTIONS */
+function af(){let[a0,a1]=S.a,[b0,b1]=S.b;if(S.op=='−'&&a0*b1<b0*a1){[a0,a1,b0,b1]=[b0,b1,a0,a1]}
+const l=lcm(a1,b1),n1=a0*l/a1,n2=b0*l/b1,r=S.op=='+'?n1+n2:n1-n2,g=r?gcd(r,l):l,like=a1==b1,st=S.st;let v,m;
+const two=(x,y,xd,yd)=>strip(x,xd,'#16a34a',36)+`<div class="op" style="font-size:30px;font-weight:800;color:#7c3aed">${S.op}</div>`+strip(y,yd,'#2563eb',36);
+if(st==0){v=two(a0,b0,a1,b1);m=like?'The denominators are the SAME (like fractions). We can add or subtract the tops right away.':`The denominators ${a1} and ${b1} are different (unlike fractions). We need a common denominator first.`}
+else if(st==1){v=two(a0,b0,a1,b1);m=`Step 1: Find the common denominator (LCD). Multiples of ${a1} and ${b1} meet first at <b>${l}</b>.`}
+else if(st==2){v=two(n1,n2,l,l);m=`Step 2: Make equivalent fractions with denominator ${l}:<br>${a0}/${a1} = ${n1}/${l} and ${b0}/${b1} = ${n2}/${l}`}
+else if(st==3){v=r>l?strip(l,l,'#ea580c',36)+strip(r-l,l,'#ea580c',36):strip(r,l,'#ea580c',36);m=`Step 3: ${S.op=='+'?'Add':'Subtract'} the tops: ${n1} ${S.op} ${n2} = ${r}. Keep the bottom ${l}. Answer: ${r}/${l}`}
+else{const w=Math.floor(r/g/(l/g)),rr=r/g-w*(l/g);v=strip(Math.min(r/g,l/g),l/g,'#db2777',36)+(r/g>l/g?strip(r/g-l/g,l/g,'#db2777',36):'');m=`Step 4: Simplify. Divide top and bottom by ${g}: ${r}/${l} = <b>${r/g}/${l/g}</b>${w>=1&&rr?` = ${w} and ${rr}/${l/g} (mixed number)`:''}${r==0?' = 0':''}`}
+$('#stage').innerHTML=`<h2>Adding & Subtracting Fractions</h2><div class="big">${fr(a0,a1)} ${S.op} ${fr(b0,b1)} = ${st==4?fr(r/g,l/g):'?'}</div><div class="vis" style="flex-direction:column">${v}</div><div class="msg">${m}</div><div class="bar">${btn('◀ Back','#64748b','S.st=Math.max(0,S.st-1);af()')}${btn('Next Step ▶','#16a34a','S.st=Math.min(4,S.st+1);af()')}${btn('🔁 Restart','#f59e0b','S.st=0;af()')}${btn('＋ / − Switch','#9333ea',"S.op=S.op=='+'?'−':'+';S.st=0;af()")}${btn('🎲 Like Fractions','#0d9488','afR(1)')}${btn('🎲 Unlike Fractions','#db2777','afR(0)')}</div><div class="bar"><b>1st:</b>${btn('top＋','#16a34a','afC("a",0,1)')}${btn('top－','#15803d','afC("a",0,-1)')}${btn('bottom＋','#ea580c','afC("a",1,1)')}${btn('bottom－','#c2410c','afC("a",1,-1)')}<b>2nd:</b>${btn('top＋','#2563eb','afC("b",0,1)')}${btn('top－','#1d4ed8','afC("b",0,-1)')}${btn('bottom＋','#0891b2','afC("b",1,1)')}${btn('bottom－','#0e7490','afC("b",1,-1)')}</div>`}
+function afC(k,i,d){const f=S[k];f[i]=f[i]+d;f[1]=Math.max(2,Math.min(12,f[1]));f[0]=Math.max(1,Math.min(f[1]-1,f[0]));S.st=0;af()}
+function afR(like){const d1=2+R(8),d2=like?d1:2+R(8);S.a=[1+R(d1-1),d1];S.b=[1+R(d2-1),d2];S.st=0;af()}
+
+/* 6 DECIMALS */
+function dc(){const c=S.c,t=Math.floor(c/10),h=c%10;let cells='';
+for(let i=0;i<100;i++)cells+=`<div onclick="S.c=S.c==${i+1}?${i}:${i+1};dc()" style="${i<c?(i<t*10?'background:linear-gradient(135deg,#60a5fa,#1d4ed8)':'background:linear-gradient(135deg,#fdba74,#ea580c)'):''}"></div>`;
+let nl='';for(let i=0;i<=100;i++){const x=40+i*7.2;nl+=`<line x1="${x}" y1="40" x2="${x}" y2="${i%10?48:58}" stroke="#374151"/>`;if(i%10==0)nl+=`<text x="${x}" y="78" text-anchor="middle" font-size="14" font-weight="700">${i/100}</text>`}
+const mx=40+c*7.2;
+$('#stage').innerHTML=`<h2>Decimals: Tenths & Hundredths Grid</h2><div class="vis"><div><div class="dec">${cells}</div><div style="text-align:center;margin-top:6px;font-weight:700">🍫 Chocolate bar: 100 squares = 1 whole</div></div><div style="text-align:center"><div class="big" style="font-size:54px;color:#7c3aed">${(c/100).toFixed(2)}</div><div class="big">${fr(c,100)}</div><div class="big" style="color:#1d4ed8">${t} tenths</div><div class="big" style="color:#ea580c">${h} hundredths</div></div></div><div style="width:min(760px,100%)"><svg viewBox="0 0 780 100"><line x1="40" y1="40" x2="760" y2="40" stroke="#111" stroke-width="3"/>${nl}<polygon points="${mx},38 ${mx-9},20 ${mx+9},20" fill="#dc2626"/></svg></div><div class="msg">${c} out of 100 squares are coloured = ${c}/100 = ${(c/100).toFixed(2)}<br>${t} tenths + ${h} hundredths = 0.${t}${h}. Click any square to colour up to it.</div><div class="bar">${btn('＋1 hundredth','#ea580c','S.c=Math.min(100,S.c+1);dc()')}${btn('－1 hundredth','#c2410c','S.c=Math.max(0,S.c-1);dc()')}${btn('＋1 tenth','#2563eb','S.c=Math.min(100,S.c+10);dc()')}${btn('－1 tenth','#1d4ed8','S.c=Math.max(0,S.c-10);dc()')}${[[25,'0.25'],[50,'0.5'],[75,'0.75'],[100,'1.0']].map((x,i)=>btn(x[1],CL[i+3],`S.c=${x[0]};dc()`)).join('')}${btn('🎲 Random','#f59e0b','S.c=R(101);dc()')}${btn('↺ Clear','#64748b','S.c=0;dc()')}</div>`}
+
+/* 7 PROTRACTOR */
+function prT(a){return a==0?['Zero angle','#64748b','Two lines together']:a<90?['ACUTE angle (less than 90°)','#16a34a','A slice of pizza 🍕']:a==90?['RIGHT angle (exactly 90°)','#2563eb','Corner of a book 📖']:a<180?['OBTUSE angle (more than 90°, less than 180°)','#ea580c','Open laptop screen 💻']:['STRAIGHT angle (exactly 180°)','#9333ea','A straight line, like a ruler 📏']}
+function pr(){$('#stage').innerHTML=`<h2>Angle Protractor</h2><svg id="ps" viewBox="0 0 640 340" style="width:min(820px,100%);cursor:crosshair" onmousedown="D=1;prM(event)" onmousemove="D&&prM(event)" onmouseup="D=0" onmouseleave="D=0"></svg><div class="msg" id="pm"></div><div class="bar">${[[-10,'#64748b'],[-5,'#475569'],[-1,'#334155'],[1,'#0d9488'],[5,'#0891b2'],[10,'#2563eb']].map(x=>btn((x[0]>0?'＋':'－')+Math.abs(x[0])+'°',x[1],`S.a=Math.max(0,Math.min(180,S.a+(${x[0]})));prD()`)).join('')}</div><div class="bar">${[[30,'#16a34a'],[45,'#22c55e'],[60,'#65a30d'],[90,'#2563eb'],[120,'#ea580c'],[135,'#f97316'],[150,'#dc2626'],[180,'#9333ea']].map(x=>btn(x[0]+'°',x[1],`S.a=${x[0]};prD()`)).join('')}${btn('🎲 Random','#f59e0b','S.a=R(181);prD()')}${btn('Hide Number','#475569','S.hide=!S.hide;prD()')}</div>`;prD()}
+function prM(e){const r=$('#ps').getBoundingClientRect(),x=(e.clientX-r.left)*640/r.width-320,y=300-(e.clientY-r.top)*340/r.height;let a=Math.atan2(y,x)*180/P;if(y<0)a=x<0?180:0;S.a=Math.round(Math.max(0,Math.min(180,a)));prD()}
+function prD(){const a=S.a,cx=320,cy=300,rad=P/180,p=(r,d)=>[cx+r*Math.cos(d*rad),cy-r*Math.sin(d*rad)];let t='';
+for(let d=0;d<=180;d++){const l=d%10==0?26:d%5==0?18:10,[x1,y1]=p(270,d),[x2,y2]=p(270-l,d);t+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#0c4a6e" stroke-width="${d%10?1:2}"/>`;if(d%10==0){const[ox,oy]=p(228,d),[ix,iy]=p(196,d);t+=`<text x="${ox}" y="${oy+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#0c4a6e">${d}</text><text x="${ix}" y="${iy+4}" text-anchor="middle" font-size="11" fill="#be185d">${180-d}</text>`}}
+const[ex,ey]=p(300,a),[wx,wy]=p(100,a),i=prT(a);
+$('#ps').innerHTML=`<path d="M${cx-280} ${cy}A280 280 0 0 1 ${cx+280} ${cy}Z" fill="#7dd3fc66" stroke="#0369a1" stroke-width="3"/><rect x="${cx-290}" y="${cy}" width="580" height="22" rx="4" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>${t}<path d="M${cx} ${cy}L${cx+100} ${cy}A100 100 0 0 0 ${wx} ${wy}Z" fill="${i[1]}55"/><line x1="${cx}" y1="${cy}" x2="${cx+310}" y2="${cy}" stroke="#16a34a" stroke-width="5"/><line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="${i[1]}" stroke-width="6" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="8" fill="#111"/>${S.hide?'':`<text x="${cx+120}" y="${cy-20}" font-size="26" font-weight="900" fill="${i[1]}">${a}°</text>`}`;
+$('#pm').innerHTML=`<span style="color:${i[1]};font-size:20px"><b>${i[0]}</b></span><br>Real life: ${i[2]}<br>Drag the red arm with the mouse, or use the buttons. Read the outer numbers (0 on the right).`}
+
+/* 8 AREA & PERIMETER */
+const GW=14,GH=9;
+function ap(x,y){S.g[y][x]^=1;apR()}
+function apR(){const g=S.g,E=(x,y)=>x>=0&&y>=0&&x<GW&&y<GH&&g[y][x];let a=0,per=0,s='',idx=0,x0=99,x1=-1,y0=99,y1=-1,ed='';
+for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){const on=g[y][x];if(on){a++;idx++;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);
+ if(!E(x,y-1)){per++;ed+=`<line x1="${x*40}" y1="${y*40}" x2="${x*40+40}" y2="${y*40}"/>`}if(!E(x,y+1)){per++;ed+=`<line x1="${x*40}" y1="${y*40+40}" x2="${x*40+40}" y2="${y*40+40}"/>`}if(!E(x-1,y)){per++;ed+=`<line x1="${x*40}" y1="${y*40}" x2="${x*40}" y2="${y*40+40}"/>`}if(!E(x+1,y)){per++;ed+=`<line x1="${x*40+40}" y1="${y*40}" x2="${x*40+40}" y2="${y*40+40}"/>`}}
+ s+=`<rect onclick="ap(${x},${y})" x="${x*40+1}" y="${y*40+1}" width="38" height="38" rx="4" fill="${on?`hsl(${(x*25+y*15)%360} 80% 58%)`:'#f8fafc'}" stroke="${on?'#0004':'#cbd5e1'}" style="cursor:pointer"/>`;if(on&&S.num)s+=`<text x="${x*40+20}" y="${y*40+26}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" pointer-events="none">${idx}</text>`}
+const w=x1-x0+1,h=y1-y0+1,rect=a>0&&w*h==a;
+$('#sg').innerHTML=s+(S.pe?`<g stroke="#dc2626" stroke-width="5" stroke-linecap="round" pointer-events="none">${ed}</g>`:'');
+$('#am').innerHTML=a==0?'Click the grid to place blocks. Each block is 1 square unit.':`Area = number of squares = <b>${a}</b> square units<br>Perimeter = number of red edges = <b>${per}</b> units${rect?`<br>It is a rectangle! Area = l × w = ${w} × ${h} = ${a}. Perimeter = 2 × (l + w) = 2 × (${w} + ${h}) = ${2*(w+h)}`:'<br>This is not a rectangle, so count the squares and edges.'}`}
+function ap0(){$('#stage').innerHTML=`<h2>Area & Perimeter Grid Sandbox</h2><div class="vis"><svg id="sg" viewBox="0 0 560 360" style="width:min(780px,100%)"></svg></div><div class="msg" id="am"></div><div class="bar">${btn('▭ Build Rectangle','#16a34a','apB()')}<b>Length:</b>${btn('＋','#2563eb','S.l=Math.min(12,S.l+1);apB()')}${btn('－','#1d4ed8','S.l=Math.max(1,S.l-1);apB()')}<b>Width:</b>${btn('＋','#ea580c','S.w=Math.min(8,S.w+1);apB()')}${btn('－','#c2410c','S.w=Math.max(1,S.w-1);apB()')}</div><div class="bar">${btn('L Shape','#0d9488','apP([[0,0],[0,1],[0,2],[0,3],[1,3],[2,3]])')}${btn('＋ Cross','#db2777','apP([[1,0],[0,1],[1,1],[2,1],[1,2]])')}${btn('🪜 Stairs','#9333ea','apP([[0,3],[0,2],[1,2],[0,1],[1,1],[2,1],[0,0],[1,0],[2,0],[3,0]])')}${btn('🎲 Random Shape','#f59e0b','apRn()')}${btn('🔴 Perimeter On/Off','#dc2626','S.pe=!S.pe;apR()')}${btn('🔢 Count Squares','#2563eb','S.num=!S.num;apR()')}${btn('🗑 Clear','#64748b','S.g=apE();apR()')}</div>`;apR()}
+const apE=()=>Array.from({length:GH},()=>Array(GW).fill(0));
+function apB(){S.g=apE();for(let y=0;y<S.w;y++)for(let x=0;x<S.l;x++)S.g[y+(GH-S.w>>1)][x+(GW-S.l>>1)]=1;apR()}
+function apP(c){S.g=apE();c.forEach(([x,y])=>S.g[y+2][x+4]=1);apR()}
+function apRn(){S.g=apE();let x=3+R(8),y=2+R(5);S.g[y][x]=1;for(let i=0;i<12+R(8);i++){const d=[[1,0],[-1,0],[0,1],[0,-1]][R(4)];x=Math.max(0,Math.min(GW-1,x+d[0]));y=Math.max(0,Math.min(GH-1,y+d[1]));S.g[y][x]=1}apR()}
+
+const sims=[['🔢 Place Value',pv,()=>({n:345678})],['➗ Long Division',ld,()=>({Dv:845,v:7,st:0})],['🌈 Factor Rainbow',fc,()=>({a:12,b:18,mu:1})],['🍫 Equivalent Fractions',ef,()=>({n0:3,d0:4,n:3,d:4,m:''})],['➕ Add Fractions',af,()=>({a:[1,3],b:[1,4],op:'+',st:0})],['🔟 Decimals',dc,()=>({c:37})],['📐 Protractor',pr,()=>({a:60,hide:0})],['🧱 Area & Perimeter',ap0,()=>({g:apE(),l:5,w:3,pe:1,num:0})]];
+const cols=['#ef4444','#f97316','#ca8a04','#16a34a','#0891b2','#2563eb','#9333ea','#db2777'];
+$('#nav').innerHTML=sims.map((s,i)=>`<button class="b tab" style="--c:${cols[i]}" onclick="go(${i})">${s[0]}</button>`).join('');
+function go(i){clearInterval(T);D=0;cur=i;S=sims[i][2]();document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j==i));sims[i][1]();if(i==7)apB()}
+go(0);
+</script></body></html>

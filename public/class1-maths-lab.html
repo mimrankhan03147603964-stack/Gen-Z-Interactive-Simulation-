@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 1 Maths Lab (Age 6–7)</title>
+<style>
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;font-family:"Comic Sans MS","Trebuchet MS",sans-serif}
+body{background:linear-gradient(135deg,#ffe0b2,#e1f5c4 50%,#b3e5fc)}
+#app{height:100%;display:flex;flex-direction:column;padding:10px 14px;gap:9px}
+#top{display:flex;align-items:center;gap:12px}
+h1{margin:0;flex:1;font-size:28px;color:#bf360c;text-shadow:2px 2px 0 #fff}
+#nav,#ctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#nav .b{padding:7px 11px;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
+.b:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.b.on{outline:4px solid #fff;outline-offset:2px}
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:24px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 40px rgba(255,255,255,.4);background:linear-gradient(#bde8ff,#f2fbff)}
+.msg{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#fff;padding:5px 24px;border-radius:30px;font-size:23px;font-weight:bold;color:#bf360c;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;max-width:94%;text-align:center}
+.tray{position:absolute;top:66px;left:0;right:0;height:38%;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center}
+.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1}
+.shk{animation:shk .4s}@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* frog */
+.eq{position:absolute;top:84px;left:0;right:0;text-align:center;font-size:56px;font-weight:bold;color:#1b5e20;text-shadow:2px 2px #fff}
+.nl{position:absolute;left:4%;right:4%;top:62%;height:46px}
+.nl::before{content:"";position:absolute;left:-2%;right:-2%;top:20px;height:6px;background:#fff8;border-radius:3px}
+.pad{position:absolute;top:0;width:44px;height:44px;border-radius:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;box-shadow:0 6px 0 #0003,inset 0 -4px 6px #0003;color:#33410d}
+.frog{position:absolute;top:-78px;font-size:72px;transform:translateX(-50%);transition:left .45s;line-height:1;filter:drop-shadow(0 8px 6px #0005)}
+.frog.hop{animation:hop .45s}@keyframes hop{50%{margin-top:-80px}}
+/* place value */
+.pv{position:absolute;top:66px;bottom:84px;width:42%;border:5px dashed #fff;border-radius:22px;background:#ffffff66;display:flex;flex-direction:column;align-items:center;padding:6px}
+.pvt{font-size:26px;font-weight:bold;color:#37474f}
+.pvb{flex:1;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-end;justify-content:center;padding:8px;width:100%}
+.rod{width:32px;height:216px;border-radius:5px;background:repeating-linear-gradient(#ffb300 0 21px,#bf5b00 21px 23px);box-shadow:0 6px 0 #0004,inset 5px 0 6px #fff6,inset -5px 0 6px #0003}
+.cube{width:34px;height:34px;border-radius:5px;background:linear-gradient(135deg,#81d4fa,#0288d1);box-shadow:0 5px 0 #0004,inset 3px 3px 5px #fff7}
+.bignum{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:36px;font-weight:bold;color:#bf360c;text-shadow:2px 2px #fff}
+/* tens frame */
+.tf{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);display:grid;grid-template-columns:repeat(5,min(15vh,120px));gap:8px;padding:12px;background:#ff7043;border-radius:20px;box-shadow:0 12px 0 #a73f1e,0 20px 30px #0004}
+.tc{width:min(15vh,120px);height:min(15vh,120px);background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:min(9vh,70px);cursor:pointer;box-shadow:inset 0 5px 10px #0003}
+.inf{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:34px;font-weight:bold;color:#bf360c;text-shadow:2px 2px #fff;white-space:pre}
+/* gator */
+.gat{position:absolute;inset:70px 20px 20px;display:flex;align-items:center;justify-content:space-around}
+.gp{width:30%;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bn{font-size:min(20vh,150px);font-weight:bold;color:#1565c0;text-shadow:4px 4px #fff;line-height:1}
+.dts{font-size:28px;text-align:center;line-height:1.1;max-height:40%;overflow:hidden}
+.gc{display:flex;flex-direction:column;align-items:center}
+.gsym{font-size:min(16vh,120px);font-weight:bold;color:#e65100;line-height:1;text-shadow:3px 3px #fff}
+.chomp{animation:cm .6s infinite}@keyframes cm{50%{scale:1.08 .92}}
+/* shapes */
+.shw{position:absolute;inset:60px 30px 10px;display:flex;align-items:center;justify-content:space-around}
+.ib{display:flex;flex-direction:column;gap:12px;max-width:40%}
+.ib h2{margin:0;font-size:44px}.ib p{margin:0;font-size:24px;font-weight:bold;color:#37474f}
+.ob{display:flex;gap:14px}.oc{background:#fff;border-radius:16px;padding:8px 14px;text-align:center;font-weight:bold;box-shadow:0 5px 0 #0003}.oc span{display:block;font-size:56px}
+/* clock */
+.clw{position:absolute;inset:56px 0 6px;display:flex;align-items:center;justify-content:center;gap:40px}
+.lg{font-size:24px;font-weight:bold;line-height:2;background:#fff;border-radius:16px;padding:12px 20px;box-shadow:0 6px 0 #0003}
+/* skip */
+.ng{position:absolute;inset:60px 20px 12px;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:4px}
+.nc{background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:clamp(12px,2.6vh,22px);color:#455a64;box-shadow:0 3px 0 #0002;transition:.3s}
+.bun{position:absolute;font-size:38px;transition:left .4s,top .4s;z-index:5;line-height:1;pointer-events:none}
+/* trains */
+.tr2{position:absolute;left:0;right:0;top:30%;display:flex;gap:14px;justify-content:center;align-items:flex-end}
+.cr{position:relative;width:96px;height:84px;border-radius:12px;box-shadow:0 8px 0 #0004,inset 0 -8px 10px #0003,inset 0 6px 10px #fff6;display:flex;align-items:center;justify-content:center;font-size:54px;margin-bottom:18px;background:#fff}
+.cr::before,.cr::after{content:"";position:absolute;bottom:-20px;width:26px;height:26px;border-radius:50%;background:#37474f;border:5px solid #90a4ae}
+.cr::before{left:12px}.cr::after{right:12px}
+.cr.bl{border:4px dashed #90a4ae;color:#90a4ae;box-shadow:none;font-weight:bold}
+.trk{position:absolute;left:0;right:0;top:calc(30% + 126px);height:12px;background:repeating-linear-gradient(90deg,#6d4c41 0 14px,transparent 14px 34px),linear-gradient(#90a4ae,#90a4ae) 0 5px/100% 5px no-repeat}
+</style></head>
+<body><div id="app">
+<div id="top"><h1>🔢 Class 1 Maths Lab (Age 6–7)</h1><button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button></div>
+<div id="nav"></div><div id="stage"></div><div id="ctrl"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),st=$('#stage'),ct=$('#ctrl'),nav=$('#nav');
+const P=['#e53935','#1e88e5','#f9a825','#43a047','#8e24aa','#00acc1','#fb8c00','#d81b60'];
+let T=[],cur=0,ac;
+const M=t=>{const m=$('#msg');if(m)m.textContent=t};
+const say=t=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.8;u.pitch=1.3;u.lang='en-US';speechSynthesis.speak(u)}catch(e){}};
+const tone=(f=600,d=.15,ty='sine')=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}};
+const btn=(l,c,fn,p=ct)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',c);b.textContent=l;b.onclick=fn;p.appendChild(b);return b};
+const el=(h,cls,s,p=st)=>{const d=document.createElement('div');d.className=cls||'';d.innerHTML=h||'';if(s)Object.assign(d.style,s);p.appendChild(d);return d};
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const bad=m=>{tone(150,.3,'square');M(m);say('Try again')};
+
+function frog(){
+ let p=0,s=0,ops=[],q=null;st.style.background='linear-gradient(#bde8ff 0 50%,#4fc3f7 50%,#0277bd)';
+ M('Jump the frog along the number line!');const eq=el('','eq'),nl=el('','nl');
+ for(let n=0;n<=20;n++)el(n,'pad',{left:n*5+'%',background:n%5?'#aed581':'#ffd54f'},nl);
+ const fg=el('🐸','frog',{left:'0%'},nl);
+ const show=()=>{eq.textContent=ops.length?s+' '+ops.join(' ')+' = '+p:'The frog is on '+p};
+ const mv=()=>{fg.style.left=p*5+'%';fg.classList.remove('hop');void fg.offsetWidth;fg.classList.add('hop');show()};
+ const jump=k=>{const n=p+k;if(n<0||n>20){bad('No lily pad there! Try a different jump.');return}p=n;ops.push((k>0?'+ ':'− ')+Math.abs(k));tone(300+p*25,.15);say(String(p));mv();
+  if(q&&p==q.t){M('Correct! '+eq.textContent+'. Well done!');say('Correct! Well done!');q=null}else if(!q)M(k>0?'Jumping forward means adding!':'Jumping backward means subtracting!')};
+ const rs=a=>{p=s=a;ops=[];q=null;mv()};rs(0);
+ [1,2,3,5].forEach((k,i)=>btn('+'+k+' Jump',['#43a047','#00897b','#1e88e5','#3949ab'][i],()=>jump(k)));
+ [1,2,3,5].forEach((k,i)=>btn('− '+k+' Jump',['#e53935','#d81b60','#fb8c00','#8e24aa'][i],()=>jump(-k)));
+ btn('Random Start','#00acc1',()=>{rs(rnd(0,15));M('The frog starts on '+p+'!');say('Start on '+p)});
+ btn('Quiz Me!','#f9a825',()=>{let a=rnd(1,10),b=rnd(1,5),pl=Math.random()<.6||a<b;rs(a);q={t:pl?a+b:a-b};const t=a+(pl?' plus ':' minus ')+b;M('Start on '+a+'. What is '+a+(pl?' + ':' − ')+b+'? Jump the frog!');say('What is '+t+'?')});
+ btn('Reset','#546e7a',()=>{rs(0);M('Jump the frog along the number line!')});
+}
+
+function place(){
+ let t=0,o=0,q=null;
+ const z=(l,s)=>el('<div class=pvt>'+l+'</div><div class=pvb></div>','pv',s);
+ const TZ=z('TENS (bundles of 10)',{left:'4%'}),OZ=z('ONES (single blocks)',{right:'4%'}),tb=TZ.lastChild,ob=OZ.lastChild,big=el('','bignum');M('Build numbers with blocks!');
+ const draw=()=>{tb.innerHTML=ob.innerHTML='';for(let i=0;i<t;i++)el('','rod',null,tb);for(let i=0;i<o;i++)el('','cube',null,ob);
+  const n=t*10+o;big.textContent=n+' = '+t+' tens + '+o+' ones'+(o>=10?'   Bundle 10 ones!':'');
+  if(q!=null&&n==q&&o<10){M('Correct! You built '+q+'!');say('Correct! You built '+q);q=null}};
+ const add=(dt,d0)=>{const nt=t+dt,no=o+d0;if(nt<0||nt>9||no<0||no>19){bad('No more room!');return false}t=nt;o=no;tone(400+(t*10+o)*5,.1);draw();return true};
+ btn('+1 One','#1e88e5',()=>{if(add(0,1))say(String(t*10+o))});btn('− 1 One','#e53935',()=>{if(add(0,-1))say(String(t*10+o))});
+ btn('+10 (Add a Ten)','#43a047',()=>{if(add(1,0))say(String(t*10+o))});btn('− 10 (Take a Ten)','#fb8c00',()=>{if(add(-1,0))say(String(t*10+o))});
+ btn('Bundle 10 Ones 📦','#8e24aa',()=>{if(o<10){M('You need 10 ones to make a bundle!');say('You need ten ones');return}o-=10;t++;tone(800,.3);draw();M('10 ones = 1 ten!');say('Ten ones make one ten!')});
+ btn('Unbundle a Ten ✂️','#00acc1',()=>{if(t<1||o>9){bad('You cannot unbundle now!');return}t--;o+=10;tone(500,.2);draw();M('1 ten = 10 ones!');say('One ten is ten ones')});
+ btn('Quiz Me!','#f9a825',()=>{t=o=0;q=rnd(11,59);draw();M('Build the number '+q+'!');say('Build the number '+q)});
+ btn('Clear','#546e7a',()=>{t=o=0;q=null;draw();M('Build numbers with blocks!')});draw();
+}
+
+function tens(){
+ let g=Array(10).fill(0),ob='⭐',q=null;const fr=el('','tf'),inf=el('','inf');M('Put counters in the ten frame!');
+ const cnt=()=>g.filter(x=>x).length;
+ const draw=()=>{fr.innerHTML='';g.forEach((v,i)=>{const c=el(v?ob:'','tc',null,fr);c.onclick=()=>{g[i]=g[i]?0:1;tone(300+i*40,.1);draw();say(String(cnt()))}});const n=cnt();
+  inf.textContent='Count: '+n+(n<10?'\n'+(10-n)+' more to make 10':'\nTen! The frame is full!');
+  if(q&&n==q){M('Correct! '+n+'!');say('Correct!');q=null}};
+ [['Stars ⭐','⭐'],['Coins 🪙','🪙'],['Apples 🍎','🍎'],['Hearts ❤️','❤️']].forEach((x,i)=>btn(x[0],P[i],()=>{ob=x[1];draw()}));
+ btn('Add One ➕','#43a047',()=>{const i=g.indexOf(0);if(i<0){bad('The frame is full!');return}g[i]=1;tone(300+i*40,.1);draw();say(String(cnt()))});
+ btn('Remove One ➖','#e53935',()=>{const i=g.lastIndexOf(1);if(i<0)return;g[i]=0;draw();say(String(cnt()))});
+ btn('Fill 5','#fb8c00',()=>{g=g.map((v,i)=>i<5?1:0);draw();say('Five')});btn('Fill All 10','#8e24aa',()=>{g.fill(1);draw();say('Ten')});
+ btn('Quiz Me!','#f9a825',()=>{g.fill(0);q=rnd(1,10);draw();M('Show me '+q+'!');say('Show me '+q)});btn('Clear','#546e7a',()=>{g.fill(0);q=null;draw();M('Put counters in the ten frame!')});draw();
+}
+
+function gator(){
+ let mx=10,a,b;const root=el('<div class=gp></div><div class=gc></div><div class=gp></div>','gat'),[GA,GC,GB]=root.children;
+ const gsvg=d=>`<div class="${d==9?'chomp':''}"><svg viewBox="0 0 200 200" style="width:min(30vh,240px);transform:scaleX(${d<0?-1:1});filter:drop-shadow(0 10px 8px #0005)"><defs><radialGradient id="gg" cx="40%" cy="35%"><stop offset="0" stop-color="#9ccc65"/><stop offset="1" stop-color="#2e7d32"/></radialGradient></defs>`+(d==0?'<circle cx="100" cy="100" r="80" fill="url(#gg)"/><path d="M60 125Q100 150 140 125" stroke="#1b5e20" stroke-width="6" fill="none"/>':'<path d="M100 100L165.5 54.1A80 80 0 1 0 165.5 145.9Z" fill="url(#gg)"/><path d="M100 100L165.5 54.1M100 100L165.5 145.9" stroke="#fff" stroke-width="9" stroke-dasharray="6 9"/>')+'<circle cx="95" cy="55" r="14" fill="#fff"/><circle cx="99" cy="55" r="7" fill="#111"/></svg></div>';
+ const nu=()=>{a=rnd(1,mx);b=Math.random()<.15?a:rnd(1,mx);const f=n=>'<div class=bn>'+n+'</div>'+(mx<=20?'<div class=dts>'+'🍎'.repeat(n)+'</div>':'');
+  GA.innerHTML=f(a);GB.innerHTML=f(b);GC.innerHTML=gsvg(9)+'<div class=gsym>?</div>';M('Which number is bigger? Feed the alligator!')};
+ const ans=s=>{const ok=(s=='>'&&a>b)||(s=='<'&&a<b)||(s=='='&&a==b);if(!ok){bad('Look at the numbers again!');return}
+  GC.innerHTML=gsvg(a>b?-1:a<b?1:0)+'<div class=gsym>'+s+'</div>';tone(800,.3);const m=a+(a>b?' is greater than ':a<b?' is less than ':' is equal to ')+b;M('Yes! '+m+'!');say(m)};
+ nu();btn('>  Greater Than','#43a047',()=>ans('>'));btn('<  Less Than','#1e88e5',()=>ans('<'));btn('=  Equal','#fb8c00',()=>ans('='));
+ btn('New Numbers','#8e24aa',nu);[10,20,50].forEach((n,i)=>btn('Up to '+n,['#00acc1','#d81b60','#f9a825'][i],()=>{mx=n;nu()}));
+ btn('Say Numbers','#546e7a',()=>say(a+' and '+b));
+}
+
+function shapes(){
+ const SH={Circle:{c:'#e53935',p:[],o:[['⚽','Ball'],['🍪','Cookie'],['🕐','Clock']],i:'A circle has 0 corners and 0 straight sides. It is round!'},
+  Square:{c:'#1e88e5',p:[[60,60],[240,60],[240,240],[60,240]],o:[['🪟','Window'],['🧇','Waffle'],['🎲','Dice']],i:'A square has 4 equal sides and 4 corners.'},
+  Triangle:{c:'#43a047',p:[[150,40],[260,240],[40,240]],o:[['🍕','Pizza slice'],['⛺','Tent'],['🚩','Flag']],i:'A triangle has 3 sides and 3 corners.'},
+  Rectangle:{c:'#f9a825',p:[[30,85],[270,85],[270,215],[30,215]],o:[['🚪','Door'],['📱','Phone'],['📺','TV']],i:'A rectangle has 4 sides and 4 corners. Two sides are long and two are short.'}};
+ let cs='Square';const root=el('<div id="svw"></div><div class="ib"></div>','shw'),svw=root.firstChild,ib=root.lastChild;
+ const ov=()=>svw.querySelector('#ov'),clT=()=>{T.forEach(clearTimeout);T=[]};
+ const draw=()=>{clT();const s=SH[cs];M('This is a '+cs+'. Count its corners and sides!');
+  svw.innerHTML='<svg viewBox="0 0 300 300" style="width:min(58vh,400px);height:min(58vh,400px);filter:drop-shadow(0 14px 12px #0005)"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".25" stop-color="'+s.c+'"/><stop offset="1" stop-color="'+s.c+'"/></linearGradient></defs>'+
+   (s.p.length?'<polygon points="'+s.p.map(x=>x.join(',')).join(' ')+'" fill="url(#sg)" stroke="#0004" stroke-width="5" stroke-linejoin="round"/>':'<circle cx="150" cy="150" r="105" fill="url(#sg)" stroke="#0004" stroke-width="5"/>')+'<g id="ov"></g></svg>';
+  ib.innerHTML='<h2 style="color:'+s.c+'">'+cs+'</h2><p>'+s.i+'</p><p>Things we see every day:</p><div class=ob>'+s.o.map(x=>'<div class=oc><span>'+x[0]+'</span>'+x[1]+'</div>').join('')+'</div>';say(s.i)};
+ const corners=()=>{clT();draw();const s=SH[cs];if(!s.p.length){M('A circle has no corners!');say('A circle has no corners');return}
+  s.p.forEach((pt,i)=>T.push(setTimeout(()=>{ov().insertAdjacentHTML('beforeend','<circle cx="'+pt[0]+'" cy="'+pt[1]+'" r="17" fill="#ffeb3b" stroke="#333" stroke-width="3"/><text x="'+pt[0]+'" y="'+(pt[1]+7)+'" text-anchor="middle" font-size="22" font-weight="bold">'+(i+1)+'</text>');tone(400+i*100,.2);say(String(i+1));M(i==s.p.length-1?cs+' has '+(i+1)+' corners!':'Corner '+(i+1))},i*800+300)))};
+ const sides=()=>{clT();draw();const s=SH[cs],n=s.p.length;if(!n){M('A circle has 1 curved side and no straight sides!');say('A circle has no straight sides');return}
+  s.p.forEach((pt,i)=>T.push(setTimeout(()=>{const q=s.p[(i+1)%n];ov().insertAdjacentHTML('beforeend','<line x1="'+pt[0]+'" y1="'+pt[1]+'" x2="'+q[0]+'" y2="'+q[1]+'" stroke="'+P[(i+3)%8]+'" stroke-width="12" stroke-linecap="round"/><circle cx="'+(pt[0]+q[0])/2+'" cy="'+(pt[1]+q[1])/2+'" r="16" fill="#fff" stroke="#333" stroke-width="3"/><text x="'+(pt[0]+q[0])/2+'" y="'+((pt[1]+q[1])/2+7)+'" text-anchor="middle" font-size="22" font-weight="bold">'+(i+1)+'</text>');tone(300+i*100,.2);say(String(i+1));M(i==n-1?cs+' has '+n+' sides!':'Side '+(i+1))},i*800+300)))};
+ draw();Object.keys(SH).forEach((k,i)=>btn(k,SH[k].c,()=>{cs=k;draw()}));btn('Count Corners','#8e24aa',corners);btn('Count Sides','#00acc1',sides);btn('Reset','#546e7a',draw);
+}
+
+function clock(){
+ let h=3,m=0,q=null,busy=0;
+ let s='<svg viewBox="0 0 300 300" style="width:min(62vh,420px);height:min(62vh,420px);filter:drop-shadow(0 14px 14px #0006)"><defs><radialGradient id="wg" cx="40%" cy="35%"><stop offset="0" stop-color="#c68642"/><stop offset="1" stop-color="#6d4220"/></radialGradient></defs><circle cx="150" cy="150" r="146" fill="url(#wg)"/><circle cx="150" cy="150" r="126" fill="#fffef7" stroke="#4e342e" stroke-width="4"/>';
+ for(let i=0;i<60;i++){const a=i*6*Math.PI/180,r2=i%5?112:104;s+='<line x1="'+(150+118*Math.sin(a))+'" y1="'+(150-118*Math.cos(a))+'" x2="'+(150+r2*Math.sin(a))+'" y2="'+(150-r2*Math.cos(a))+'" stroke="#555" stroke-width="'+(i%5?1.5:3)+'"/>'}
+ for(let n=1;n<=12;n++){const a=n*30*Math.PI/180;s+='<text class="cn" data-n="'+n+'" x="'+(150+86*Math.sin(a))+'" y="'+(150-86*Math.cos(a)+10)+'" text-anchor="middle" font-size="30" font-weight="bold" fill="#d84315" style="cursor:pointer">'+n+'</text>'}
+ s+='<line id="hh" x1="150" y1="150" x2="150" y2="90" stroke="#1e88e5" stroke-width="12" stroke-linecap="round"/><line id="mm" x1="150" y1="150" x2="150" y2="45" stroke="#e53935" stroke-width="7" stroke-linecap="round"/><circle cx="150" cy="150" r="10" fill="#333"/></svg>';
+ const w=el(s+'<div class=lg>🔵 Short hand = hour<br>🔴 Long hand = minutes<br>Tap a number to move the short hand!</div>','clw');
+ const draw=()=>{w.querySelector('#hh').setAttribute('transform','rotate('+((h%12)*30+m*.5)+' 150 150)');w.querySelector('#mm').setAttribute('transform','rotate('+m*6+' 150 150)')};
+ const txt=()=>h+":00  It is "+h+" o'clock";const setH=n=>{if(busy)return;h=n;m=0;draw();tone(300+n*40,.15);M(txt());say("It is "+h+" o'clock")};
+ w.querySelectorAll('.cn').forEach(x=>x.onclick=()=>setH(+x.dataset.n));draw();M('Read the clock! '+txt());
+ btn('Hour +1','#43a047',()=>setH(h%12+1));btn('Hour −1','#e53935',()=>setH((h+10)%12+1));
+ btn('Spin Big Hand 🔄','#1e88e5',()=>{if(busy)return;busy=1;M('The long hand goes all the way around = 1 hour!');say('The long hand goes all the way around. That is one hour!');let k=0;const id=setInterval(()=>{m=++k;draw();tone(200+k*5,.03);if(k>=60){clearInterval(id);h=h%12+1;m=0;busy=0;draw();M(txt());say("Now it is "+h+" o'clock")}},40);T.push(id)});
+ btn('Read the Clock 🔊','#8e24aa',()=>{M(txt());say("It is "+h+" o'clock")});
+ btn('Quiz Me!','#f9a825',()=>{q=rnd(1,12);M("Show "+q+" o'clock! Tap the number "+q);say("Show "+q+" o'clock")});
+ btn('Check Answer ✅','#00acc1',()=>{if(!q){M('Press Quiz Me first!');return}if(h==q){M('Correct! '+txt());say('Correct! Well done!');q=null;tone(900,.3)}else bad("Not yet! Show "+q+" o'clock.")});
+}
+
+function skip(){
+ let step=2,pos=0,seq=[],auto=0;const col={2:'#64b5f6',5:'#81c784',10:'#ff8a65'};
+ const ng=el('','ng'),cells=[];for(let n=1;n<=100;n++)cells.push(el(n,'nc',null,ng));const bun=el('🐰','bun',null,ng);
+ const place_=c=>{bun.style.left=c.offsetLeft+c.offsetWidth/2-19+'px';bun.style.top=c.offsetTop-12+'px'};
+ const reset=()=>{pos=0;seq=[];cells.forEach(c=>c.style.background='#fff');place_(cells[0]);M('Count by '+step+'s! Press Jump!')};
+ const jump=()=>{if(pos+step>100){M('The race is over! You reached '+pos+'!');say('The race is over');return false}pos+=step;seq.push(pos);const c=cells[pos-1];c.style.background=col[step];place_(c);tone(300+pos*4,.12);say(String(pos));M('Counting by '+step+'s: '+seq.slice(-8).join(', '));return true};
+ const stop=()=>{if(auto){clearInterval(auto);auto=0}};
+ reset();[2,5,10].forEach((s,i)=>btn('Count by '+s+'s',['#1e88e5','#43a047','#e53935'][i],()=>{stop();step=s;reset();say('Count by '+s+'s')}));
+ btn('Jump! 🐰','#f9a825',jump);btn('Auto Run ▶️','#8e24aa',()=>{stop();auto=setInterval(()=>{if(!jump())stop()},900);T.push(auto)});btn('Stop ⏹️','#546e7a',stop);btn('Reset','#00acc1',()=>{stop();reset()});
+}
+
+function trains(){
+ const CO=[['#e53935','Red'],['#1e88e5','Blue'],['#fdd835','Yellow'],['#43a047','Green'],['#fb8c00','Orange'],['#8e24aa','Purple']],SP=[['⭐','Star'],['❤️','Heart'],['🔷','Diamond'],['🔺','Triangle'],['🟢','Circle'],['🟧','Square']];
+ let mode='c',seq,fl,cars;const tr=el('','tr2');el('','trk');const pal=el('','tray',{top:'auto',bottom:'12px',height:'26%'});
+ const paint=(c,s)=>{c.className='cr';c.textContent='';c.style.background='';if(s){if(mode=='c')c.style.background='linear-gradient(rgba(255,255,255,.35),rgba(0,0,0,.1)),'+s[0];else c.textContent=s[0]}else{c.className='cr bl';c.textContent='?'}};
+ const put=s=>{if(fl>6){M('The train is ready! Press Drive!');return}const i=fl;
+  if(s==seq[i]){paint(cars[i],s);fl++;tone(500+i*60,.2);say(s[1]);M(fl==7?'Great job! The train is ready! Press Drive!':'Yes! What comes next?');if(fl==7)say('Great job! The train is ready!')}
+  else{cars[i].classList.add('shk');setTimeout(()=>cars[i].classList.remove('shk'),400);bad('Not quite. Look at the pattern again!')}};
+ const start=()=>{tr.innerHTML=pal.innerHTML='';tr.style.transition='none';tr.style.transform='none';
+  const pat=pick(['AB','ABC','AAB','ABB']),pl=sh(mode=='c'?CO:SP),sy=pl.slice(0,3);seq=[];for(let i=0;i<7;i++)seq.push(sy[pat.charCodeAt(i%pat.length)-65]);fl=4;
+  el('🚂','',{fontSize:'110px',lineHeight:1,marginBottom:'10px'},tr);cars=seq.map((s,i)=>{const c=el('','cr',null,tr);paint(c,i<4?s:null);return c});
+  const used=[...new Set(pat)].map(l=>sy[l.charCodeAt(0)-65]);
+  sh([...used,pl[3]]).forEach(s=>{const i=el(mode=='c'?'':s[0],'item',mode=='c'?{width:'76px',height:'76px',borderRadius:'50%',background:'radial-gradient(circle at 35% 30%,#fffa,'+s[0]+' 45%)',boxShadow:'0 8px 0 #0003'}:{fontSize:'70px'},pal);i.onclick=()=>put(s)});
+  M('Which comes next? Finish the pattern!')};
+ start();btn('New Pattern','#8e24aa',start);btn('Colors 🎨','#e53935',()=>{mode='c';start()});btn('Shapes ⭐','#1e88e5',()=>{mode='s';start()});
+ btn('Hint 💡','#f9a825',()=>{const t=seq.slice(0,4).map(s=>s[1]).join(', ');M('Pattern: '+t+', ...?');say(t+'. What comes next?')});
+ btn('Toot Toot! 🔔','#43a047',()=>{tone(500,.2,'square');setTimeout(()=>tone(700,.4,'square'),250);say('Toot toot!')});
+ btn('Drive! 🚂','#00acc1',()=>{if(fl<7){M('Finish the pattern first!');say('Finish the pattern first');return}tr.style.transition='transform 3.5s ease-in';tr.style.transform='translateX(-120%)';tone(300,.4,'square');T.push(setTimeout(()=>{tr.style.transition='none';tr.style.transform='none'},3800))});
+}
+
+const S=[frog,place,tens,gator,shapes,clock,skip,trains];
+const N=['🐸 Frog Number Line','🧱 Place Value','🔟 Ten Frame','🐊 Alligator > < =','🔷 2D Shapes','🕐 Read the Hour','🐰 Skip Counting','🚂 Pattern Trains'];
+const tabs=N.map((n,i)=>btn(n,P[i%8],()=>load(i),nav));
+function load(i){T.forEach(x=>{clearTimeout(x);clearInterval(x)});T=[];st.style.background='';try{speechSynthesis.cancel()}catch(e){}cur=i;
+ st.innerHTML='<div class="msg" id="msg"></div>';ct.innerHTML='';tabs.forEach((t,k)=>t.classList.toggle('on',k==i));S[i]()}
+$('#fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+document.onfullscreenchange=()=>{$('#fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(()=>load(cur),250)};
+load(0);
+</script></body></html>

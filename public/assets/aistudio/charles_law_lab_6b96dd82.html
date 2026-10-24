@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Charles's Law (V ∝ T) – Interactive Lab</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;background:#1b1035;color:#10233a}
+#app{position:relative;display:grid;grid-template-columns:1fr 360px;grid-template-rows:auto 1fr auto;gap:10px;height:100vh;padding:10px;background:linear-gradient(135deg,#1b1035,#0f4c75)}
+header{grid-column:1/3;display:flex;justify-content:space-between;align-items:center;color:#fff}
+h1{font-size:22px}
+.sub{font-size:13px;color:#c5d8ee}
+#stage{position:relative;background:linear-gradient(#f7fbff,#d5e4f3);border-radius:16px;overflow:hidden;min-height:0}
+#stage svg{width:100%;height:100%;display:block}
+#msg{position:absolute;left:12px;right:12px;top:10px;background:rgba(27,16,53,.92);color:#fff;border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.35}
+#panel{background:#fff;border-radius:16px;padding:10px 12px;overflow:auto;min-height:0}
+.sec{font-weight:700;font-size:13px;color:#0f4c75;margin:8px 0 5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.b{border:0;border-radius:10px;color:#fff;font:700 13px "Trebuchet MS",Arial,sans-serif;padding:10px 6px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.28);transition:transform .1s,filter .15s}
+.b:hover{filter:brightness(1.1)}
+.b:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.b.on{outline:3px solid #ffd166;outline-offset:1px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+td,th{padding:4px 6px;border-bottom:1px solid #e3ebf3}
+td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+th{background:#eef4fb;font-size:12px}
+.dt td{text-align:center;font-weight:400}
+.big td{background:#e8f5ee;color:#0a6b3d}
+#fbox,#legend{display:none;margin-top:8px;background:#fff4d6;border-left:5px solid #f4a261;border-radius:6px;padding:8px;font-size:13px;line-height:1.5}
+#legend{background:#e8f0fb;border-color:#3a86ff}
+footer{grid-column:1/3;text-align:center;font-size:12px;color:#a9c4e0}
+#quiz{display:none;position:absolute;inset:0;background:rgba(5,10,30,.75);z-index:9;align-items:center;justify-content:center}
+#qbox{background:#fff;border-radius:16px;padding:22px;width:min(560px,90%)}
+#qt{font-size:19px;font-weight:700;margin-bottom:14px}
+#qo{display:grid;gap:8px}
+#qf{margin:12px 0;font-weight:700;min-height:22px;color:#0a6b3d}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div><h1>Charles's Law (V ∝ T) – Gas Volume and Temperature</h1><div class="sub">At constant pressure, a gas expands when heated and shrinks when cooled.</div></div>
+  <button class="b" id="fs" style="background:#7b2cbf;font-size:15px;padding:11px 18px">Full Screen</button>
+</header>
+
+<div id="stage">
+<div id="msg"></div>
+<svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet">
+<defs>
+ <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8955b"/><stop offset="1" stop-color="#8d5a2b"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset=".3" stop-color="#d4ecfa" stop-opacity=".12"/><stop offset=".8" stop-color="#d4ecfa" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".55"/></linearGradient>
+ <radialGradient id="ball" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ff9db0"/><stop offset="1" stop-color="#d00050"/></radialGradient>
+ <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c677d"/><stop offset="1" stop-color="#27303f"/></linearGradient>
+</defs>
+<rect x="0" y="495" width="800" height="25" fill="url(#wood)"/>
+
+<!-- Thermometer -->
+<rect x="122" y="150" width="28" height="290" rx="14" fill="#fff" stroke="#8aa0b5" stroke-width="2"/>
+<circle cx="136" cy="446" r="24" fill="#fff" stroke="#8aa0b5" stroke-width="2"/>
+<circle cx="136" cy="446" r="17" fill="#e63946"/>
+<rect id="merc" x="131" y="300" width="10" height="140" rx="5" fill="#e63946"/>
+<g id="ticks" font-size="10" fill="#34506b"></g>
+<text x="136" y="112" text-anchor="middle" font-size="22" font-weight="700" fill="#0f4c75" id="tC">25.0 °C</text>
+<text x="136" y="134" text-anchor="middle" font-size="15" font-weight="700" fill="#7b2cbf" id="tK">298.2 K</text>
+
+<!-- Hot plate -->
+<rect x="205" y="470" width="390" height="28" rx="8" fill="url(#plate)"/>
+<ellipse id="coil" cx="400" cy="474" rx="150" ry="4" fill="#ff4d00" opacity="0"/>
+<circle cx="235" cy="484" r="7" id="knob" fill="#9aa5b1"/><text x="560" y="490" font-size="10" fill="#c7d0da" text-anchor="end">HOT PLATE</text>
+
+<!-- Water bath -->
+<rect id="water" x="252" y="290" width="296" height="178" fill="#78c8ff" opacity=".85"/>
+<g id="ice" opacity="0">
+ <rect x="275" y="296" width="34" height="30" rx="5" fill="#e8f8ff" stroke="#9fd8f5" transform="rotate(-12 292 311)"/>
+ <rect x="318" y="302" width="30" height="28" rx="5" fill="#e8f8ff" stroke="#9fd8f5" transform="rotate(10 333 316)"/>
+ <rect x="490" y="298" width="36" height="30" rx="5" fill="#e8f8ff" stroke="#9fd8f5" transform="rotate(8 508 313)"/>
+</g>
+<g id="bub"></g>
+
+<!-- Syringe mode -->
+<g data-m="s">
+ <rect x="374" y="290" width="52" height="162" rx="4" fill="#eaf6ff" fill-opacity=".5" stroke="#6f9bb8" stroke-width="2.5"/>
+ <g id="grad" font-size="9" fill="#34506b"></g>
+ <rect id="gasS" x="376" y="350" width="48" height="100" fill="#ffe5e0" opacity=".55"/>
+ <g id="pist"><rect x="376" y="340" width="48" height="12" rx="3" fill="#222"/><rect x="396" y="170" width="8" height="172" fill="#8d99ae"/><rect x="372" y="160" width="56" height="12" rx="5" fill="#2a9d8f"/></g>
+</g>
+<!-- Balloon mode -->
+<g data-m="b">
+ <circle cx="400" cy="395" r="56" fill="#eaf6ff" fill-opacity=".5" stroke="#6f9bb8" stroke-width="2.5"/>
+ <rect x="388" y="300" width="24" height="46" fill="#eaf6ff" fill-opacity=".5" stroke="#6f9bb8" stroke-width="2.5"/>
+ <ellipse id="gasB" cx="400" cy="395" rx="52" ry="52" fill="#ffe5e0" opacity=".45"/>
+ <circle id="balloon" cx="400" cy="270" r="30" fill="url(#ball)"/>
+ <ellipse id="shine" cx="388" cy="258" rx="6" ry="10" fill="#fff" opacity=".4"/>
+ <rect x="391" y="296" width="18" height="14" rx="3" fill="#b0003d"/>
+</g>
+<g id="parts"></g>
+<rect x="250" y="250" width="300" height="220" rx="10" fill="url(#glass)" stroke="#7aa6c4" stroke-width="3"/>
+<text x="400" y="244" text-anchor="middle" font-size="12" font-weight="700" fill="#0f4c75">WATER BATH</text>
+<g id="steam" opacity="0" fill="none" stroke="#9fb4c8" stroke-width="4" stroke-linecap="round">
+ <path d="M310 240 q-12 -18 0 -34 q12 -16 0 -32"/><path d="M400 240 q-12 -18 0 -34 q12 -16 0 -32"/><path d="M490 240 q-12 -18 0 -34 q12 -16 0 -32"/>
+</g>
+
+<!-- Graph -->
+<rect x="562" y="108" width="230" height="222" rx="10" fill="#fff" opacity=".9" stroke="#b8cde0"/>
+<text x="677" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="#0f4c75">Volume vs Temperature</text>
+<g stroke="#34506b" stroke-width="1.5"><line x1="590" y1="300" x2="782" y2="300"/><line x1="590" y1="300" x2="590" y2="132"/></g>
+<g font-size="9" fill="#34506b" id="gl"></g>
+<text x="690" y="324" text-anchor="middle" font-size="10" font-weight="700" fill="#34506b">Temperature (K)</text>
+<text x="574" y="216" font-size="10" font-weight="700" fill="#34506b" transform="rotate(-90 574 216)" text-anchor="middle">Volume (mL)</text>
+<line id="gExt" x1="590" y1="300" x2="727" y2="186" stroke="#e63946" stroke-width="2" stroke-dasharray="5 4" opacity="0"/>
+<text id="gExtT" x="596" y="292" font-size="9" font-weight="700" fill="#e63946" opacity="0">0 K = −273 °C</text>
+<line id="gLine" x1="0" y1="0" x2="0" y2="0" stroke="#3a86ff" stroke-width="3"/>
+<g id="gPts"></g>
+<circle id="gDot" cx="0" cy="0" r="6" fill="#ffb703" stroke="#fff" stroke-width="2"/>
+<text x="400" y="505" text-anchor="middle" font-size="11" font-weight="700" fill="#5b3a1a" id="volTag" opacity="0"></text>
+</svg>
+</div>
+
+<div id="panel">
+ <div class="sec">Choose the gas container</div>
+ <div class="g2">
+  <button class="b" id="m_s" style="background:#e76f51">Gas Syringe</button>
+  <button class="b" id="m_b" style="background:#d00050">Balloon + Flask</button>
+ </div>
+ <div class="sec">Change the temperature</div>
+ <div class="g3">
+  <button class="b" id="heat" style="background:#f77f00">Heat</button>
+  <button class="b" id="cool" style="background:#00a6fb">Add Ice</button>
+  <button class="b" id="stop" style="background:#6c757d">Hold</button>
+  <button class="b" id="p0" style="background:#0077b6">Ice 0 °C</button>
+  <button class="b" id="p25" style="background:#2a9d8f">Room 25 °C</button>
+  <button class="b" id="p100" style="background:#d62828">Boil 100 °C</button>
+  <button class="b" id="up" style="background:#e85d04">+ 10 °C</button>
+  <button class="b" id="dn" style="background:#3a86ff">− 10 °C</button>
+  <button class="b" id="rs" style="background:#495057">Reset</button>
+ </div>
+ <div class="sec">Collect and study data</div>
+ <div class="g2">
+  <button class="b" id="rec" style="background:#2b9348">Record Data</button>
+  <button class="b" id="clr" style="background:#c9184a">Clear Data</button>
+  <button class="b" id="ext" style="background:#7209b7">Extend to 0 K</button>
+  <button class="b" id="mol" style="background:#3a0ca3">Show Particles</button>
+  <button class="b" id="fm" style="background:#e5383b">Show Formula</button>
+  <button class="b" id="hint" style="background:#e09f3e;color:#2b1b00">Hint</button>
+  <button class="b" id="slow" style="background:#5f0f40">Slow Heating</button>
+  <button class="b" id="fast" style="background:#ff006e">Fast Heating</button>
+  <button class="b" id="qz" style="background:#06a77d;grid-column:1/3">Quiz Time</button>
+ </div>
+ <div id="fbox"></div><div id="legend">Particles speed up as the gas gets hotter. Blue = slow (cold), Red = fast (hot).</div>
+ <div class="sec">Live readings</div>
+ <table>
+  <tr><td>Temperature</td><td id="rC"></td></tr>
+  <tr><td>Temperature in kelvin</td><td id="rK"></td></tr>
+  <tr class="big"><td>Gas volume</td><td id="rV"></td></tr>
+  <tr><td>V ÷ T (constant)</td><td id="rR"></td></tr>
+  <tr><td>Pressure</td><td>constant</td></tr>
+ </table>
+ <div class="sec">Recorded data</div>
+ <table class="dt"><tr><th>T (°C)</th><th>T (K)</th><th>V (mL)</th><th>V/T</th></tr><tbody id="rows"></tbody></table>
+</div>
+<footer>GEN Z EDTECH INTERACTIVE &nbsp;|&nbsp; Developed by MUHAMMAD IMRAN KHAN (MSc Computer Science)</footer>
+
+<div id="quiz"><div id="qbox"><div id="qt"></div><div id="qo"></div><div id="qf"></div>
+ <button class="b" id="qn" style="background:#3a86ff;padding:10px 18px">Next Question</button>
+ <button class="b" id="qc" style="background:#6c757d;padding:10px 18px;margin-left:8px">Close</button></div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mx=(a,b,t)=>Math.round(a+(b-a)*t);
+const K0=273.15,N=36;
+let T=25,tgt=25,mode='s',sp=1,mol=false,ext=false,ic=0,data=[],P=[],B=[],last=0,note=null;
+
+// static scales
+(function(){
+ let h='';for(let c=0;c<=100;c+=10){const y=440-c*2.7;h+=`<line x1="150" y1="${y}" x2="158" y2="${y}" stroke="#34506b"/><text x="162" y="${y+3}">${c}</text>`;}
+ $('ticks').innerHTML=h;
+ let g='';for(let v=10;v<=150;v+=10){const y=450-v;g+=`<line x1="374" y1="${y}" x2="${v%50?380:388}" y2="${y}" stroke="#34506b"/>`;if(v%50===0)g+=`<text x="432" y="${y+3}">${v}</text>`;}
+ $('grad').innerHTML=g;
+ let l='';[0,100,200,300,400].forEach(k=>{l+=`<text x="${gx(k)}" y="312" text-anchor="middle">${k}</text>`});
+ [0,50,100,150].forEach(v=>{l+=`<text x="586" y="${gy(v)+3}" text-anchor="end">${v}</text>`});
+ $('gl').innerHTML=l;
+})();
+function gx(k){return 590+k*.47}
+function gy(v){return 300-v*1.1}
+const vol=t=>100*(t+K0)/K0;
+
+function initP(){P=[];for(let i=0;i<N;i++){const a=Math.random()*6.28;P.push({x:400,y:400,vx:Math.cos(a),vy:Math.sin(a),r:i%10<7?0:1});}}
+function setMode(m){mode=m;document.querySelectorAll('[data-m]').forEach(n=>n.style.display=n.dataset.m===m?'':'none');
+ $('m_s').classList.toggle('on',m==='s');$('m_b').classList.toggle('on',m==='b');
+ initP();
+ const V=vol(T),h=m==='s'?V:70;
+ P.forEach(q=>{q.x=400+(Math.random()-.5)*30;q.y=m==='s'?450-Math.random()*V*.9:395+(Math.random()-.5)*30;});}
+function heating(){return tgt>T+.05}
+function cooling(){return tgt<T-.05}
+
+function frame(t){
+ const dt=Math.min(.05,(t-last)/1000||.016);last=t;
+ const rate=6*sp;
+ if(heating())T=Math.min(tgt,T+rate*dt);else if(cooling())T=Math.max(tgt,T-rate*dt);
+ T=cl(T,0,100);
+ const V=vol(T),K=T+K0,k=V/K;
+ // readings
+ $('tC').textContent=T.toFixed(1)+' °C';$('tK').textContent=K.toFixed(1)+' K';
+ $('rC').textContent=T.toFixed(1)+' °C';$('rK').textContent=K.toFixed(1)+' K';
+ $('rV').textContent=V.toFixed(1)+' mL';$('rR').textContent=k.toFixed(3)+' mL/K';
+ $('merc').setAttribute('y',440-T*2.7);$('merc').setAttribute('height',T*2.7+2);
+ // water, ice, plate
+ const f=T/100;
+ $('water').setAttribute('fill',`rgb(${mx(120,255,f)},${mx(200,170,f)},${mx(255,150,f)})`);
+ ic+=((cooling()||T<6?1:0)-ic)*Math.min(1,dt*3);$('ice').setAttribute('opacity',ic.toFixed(2));
+ $('coil').setAttribute('opacity',heating()?.6+.3*Math.sin(t/130):0);
+ $('knob').setAttribute('fill',heating()?'#ff3b30':'#9aa5b1');
+ $('steam').setAttribute('opacity',cl((T-80)/20,0,1)*(.6+.3*Math.sin(t/300)));
+ // container
+ if(mode==='s'){
+  const top=450-V;$('pist').setAttribute('transform',`translate(0,${top-340})`);
+  $('gasS').setAttribute('y',top);$('gasS').setAttribute('height',V);$('gasS').setAttribute('fill',`rgb(255,${mx(235,200,f)},${mx(235,190,f)})`);
+ }else{
+  const Vb=V-70,rb=24*Math.cbrt(Vb/30);
+  $('balloon').setAttribute('r',rb.toFixed(1));$('balloon').setAttribute('cy',(300-rb).toFixed(1));
+  $('shine').setAttribute('cx',(400-rb*.4).toFixed(1));$('shine').setAttribute('cy',(300-rb*1.3).toFixed(1));
+  $('gasB').setAttribute('fill',`rgb(255,${mx(235,200,f)},${mx(235,190,f)})`);
+ }
+ // particles
+ const v0=95*Math.sqrt(K/K0)*sp**.3;
+ let h='';const col=`rgb(${mx(40,235,f)},${mx(120,60,f)},${mx(230,40,f)})`;
+ const rb=24*Math.cbrt((V-70)/30);
+ for(const q of P){
+  const s=Math.hypot(q.vx,q.vy)||1;q.vx*=v0/s;q.vy*=v0/s;
+  q.x+=q.vx*dt;q.y+=q.vy*dt;
+  if(mode==='s'){
+   const top=450-V+5;
+   if(q.x<381){q.x=381;q.vx=Math.abs(q.vx)}if(q.x>419){q.x=419;q.vx=-Math.abs(q.vx)}
+   if(q.y<top){q.y=top;q.vy=Math.abs(q.vy)}if(q.y>446){q.y=446;q.vy=-Math.abs(q.vy)}
+  }else{
+   const cx=400,cy=q.r?300-rb:395,R=q.r?rb-5:49;
+   const dx=q.x-cx,dy=q.y-cy,d=Math.hypot(dx,dy);
+   if(d>R){const nx=dx/d,ny=dy/d;q.x=cx+nx*R;q.y=cy+ny*R;const dp=q.vx*nx+q.vy*ny;q.vx-=2*dp*nx;q.vy-=2*dp*ny;}
+  }
+  if(mol)h+=`<circle cx="${q.x|0}" cy="${q.y|0}" r="4.5" fill="${col}" stroke="#fff" stroke-width="1"/>`;
+ }
+ $('parts').innerHTML=h;$('legend').style.display=mol?'block':'none';
+ // bubbles at boiling
+ if(T>92&&Math.random()<.4)B.push({x:262+Math.random()*276,y:462,r:2+Math.random()*3,v:60+Math.random()*50});
+ let bh='';B=B.filter(b=>{b.y-=b.v*dt;if(b.y<292)return false;bh+=`<circle cx="${b.x|0}" cy="${b.y|0}" r="${b.r.toFixed(1)}" fill="#fff" fill-opacity=".5" stroke="#fff"/>`;return true;});
+ $('bub').innerHTML=bh;
+ // graph
+ $('gDot').setAttribute('cx',gx(K));$('gDot').setAttribute('cy',gy(V));
+ $('gLine').setAttribute('x1',gx(K0));$('gLine').setAttribute('y1',gy(100));$('gLine').setAttribute('x2',gx(K0+100));$('gLine').setAttribute('y2',gy(vol(100)));
+ // message
+ $('msg').textContent=note||(heating()?"Heating: the particles move faster and push the walls outward, so the gas expands.":cooling()?"Cooling: the particles slow down, so the gas shrinks.":data.length>=4?"Look at the V ÷ T column: it stays the same. Volume is directly proportional to Kelvin temperature.":"Press Heat or Add Ice, then press Record Data at different temperatures.");
+ $('heat').classList.toggle('on',heating());$('cool').classList.toggle('on',cooling());
+ requestAnimationFrame(frame);
+}
+function say(t){note=t;clearTimeout(say.t);say.t=setTimeout(()=>note=null,5000)}
+function renderRows(){
+ $('rows').innerHTML=data.map(d=>`<tr class="dt"><td>${d.c.toFixed(0)}</td><td>${d.k.toFixed(0)}</td><td>${d.v.toFixed(1)}</td><td>${(d.v/d.k).toFixed(3)}</td></tr>`).join('');
+ $('gPts').innerHTML=data.map(d=>`<circle cx="${gx(d.k)}" cy="${gy(d.v)}" r="4.5" fill="#e63946" stroke="#fff" stroke-width="1.5"/>`).join('');
+}
+$('m_s').onclick=()=>setMode('s');$('m_b').onclick=()=>setMode('b');
+$('heat').onclick=()=>tgt=100;$('cool').onclick=()=>tgt=0;$('stop').onclick=()=>tgt=T;
+$('p0').onclick=()=>tgt=0;$('p25').onclick=()=>tgt=25;$('p100').onclick=()=>tgt=100;
+$('up').onclick=()=>tgt=Math.min(100,Math.round(T/10)*10+10);$('dn').onclick=()=>tgt=Math.max(0,Math.round(T/10)*10-10);
+$('rs').onclick=()=>{T=25;tgt=25;data=[];ext=false;renderRows();$('gExt').setAttribute('opacity',0);$('gExtT').setAttribute('opacity',0);$('ext').classList.remove('on');setMode(mode);};
+$('rec').onclick=()=>{const K=T+K0,V=vol(T);if(data.some(d=>Math.abs(d.c-T)<2)){say("You already recorded this temperature. Change the temperature first.");return}
+ data.push({c:T,k:K,v:V});if(data.length>8)data.shift();data.sort((a,b)=>a.c-b.c);renderRows();say("Recorded: "+V.toFixed(1)+" mL at "+K.toFixed(0)+" K.");};
+$('clr').onclick=()=>{data=[];renderRows();};
+$('ext').onclick=()=>{ext=!ext;$('ext').classList.toggle('on',ext);$('gExt').setAttribute('x2',gx(K0));$('gExt').setAttribute('y2',gy(100));
+ $('gExt').setAttribute('opacity',ext?1:0);$('gExtT').setAttribute('opacity',ext?1:0);
+ if(ext)say("Extending the line backwards, the volume would reach zero at 0 K (−273 °C), which is absolute zero.");};
+$('mol').onclick=()=>{mol=!mol;$('mol').classList.toggle('on',mol);$('mol').textContent=mol?'Hide Particles':'Show Particles';};
+$('fm').onclick=()=>{const b=$('fbox'),on=b.style.display!=='block';b.style.display=on?'block':'none';$('fm').textContent=on?'Hide Formula':'Show Formula';
+ b.innerHTML="<b>V₁ ÷ T₁ = V₂ ÷ T₂</b><br>T must be in kelvin: K = °C + 273.<br>Pressure and amount of gas stay constant.";};
+$('slow').onclick=()=>{sp=sp<1?1:.35;$('slow').classList.toggle('on',sp<1);$('fast').classList.remove('on');};
+$('fast').onclick=()=>{sp=sp>1?1:3;$('fast').classList.toggle('on',sp>1);$('slow').classList.remove('on');};
+$('hint').onclick=()=>say("Hint: record at least four temperatures, then turn on “Extend to 0 K” and watch the graph line.");
+$('fs').onclick=()=>{if(!document.fullscreenElement)$('app').requestFullscreen().catch(()=>{});else document.exitFullscreen();};
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';});
+
+const Q=[
+ {q:"What does Charles's Law say?",o:["V is inversely proportional to T","V is directly proportional to Kelvin T at constant pressure","P is proportional to V","Gas mass changes with T"],a:1},
+ {q:"What happens to a balloon placed in hot water?",o:["It shrinks","It expands","It stays the same","It disappears"],a:1},
+ {q:"Which temperature scale must be used in Charles's Law?",o:["Celsius","Fahrenheit","Kelvin","Any scale"],a:2},
+ {q:"0 °C is equal to about...",o:["0 K","100 K","273 K","373 K"],a:2},
+ {q:"Why does a gas expand when heated?",o:["Particles get bigger","Particles move faster and push harder","Particles are created","Gravity changes"],a:1},
+ {q:"What would the volume of an ideal gas be at 0 K?",o:["Infinite","Zero","100 mL","Unchanged"],a:1}
+];
+const QC=["#e76f51","#2a9d8f","#6a4c93","#f77f00"];
+let qi=0,score=0,answered=false;
+function showQ(){const q=Q[qi%Q.length];answered=false;$('qt').textContent=q.q;$('qf').textContent="Score: "+score;$('qo').innerHTML='';
+ q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='b';b.style.background=QC[i];b.style.padding='12px';b.textContent=o;
+  b.onclick=()=>{if(answered)return;answered=true;if(i===q.a){score++;$('qf').textContent="Correct! Score: "+score;}else $('qf').textContent="Not quite. Correct answer: "+q.o[q.a]+". Score: "+score;};
+  $('qo').appendChild(b);});}
+$('qz').onclick=()=>{$('quiz').style.display='flex';showQ();};
+$('qn').onclick=()=>{qi++;showQ();};
+$('qc').onclick=()=>{$('quiz').style.display='none';};
+
+setMode('s');requestAnimationFrame(frame);
+</script>
+</body>
+</html>

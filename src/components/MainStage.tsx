@@ -30,7 +30,7 @@ interface MainStageProps {
 
 export const MainStage: React.FC<MainStageProps> = ({
   activeSim,
-  totalSimulations = 74,
+  totalSimulations = 86,
   onLaunchFullscreenModal,
   onBackToCatalog,
   isDarkMode = true

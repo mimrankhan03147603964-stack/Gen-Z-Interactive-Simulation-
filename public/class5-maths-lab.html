@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 5 Maths Interactive Lab</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{margin:0}
+#app{min-height:100vh;overflow:auto;display:flex;flex-direction:column;background:radial-gradient(circle at 85% 0,#f59e0b,#1e1b4b 52%,#0f766e)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 28px;color:#fff}
+h1{margin:0;font-size:30px;letter-spacing:1px;text-shadow:0 2px 0 #f59e0b,0 5px 0 #b45309,0 9px 14px #000a}
+h1 small{display:block;font-size:12px;letter-spacing:3px;color:#fde68a;text-shadow:none}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 28px 12px}
+.b{border:0;border-radius:12px;padding:9px 14px;font-weight:700;font-size:15px;color:#fff;background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.35),0 8px 14px rgba(0,0,0,.25);cursor:pointer;transition:.1s}
+.b:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.tab.on{outline:3px solid #fde68a;transform:scale(1.06)}
+main{flex:1;margin:0 28px;background:#fffdf7;border-radius:22px;padding:16px 26px;box-shadow:0 12px 30px #0008;color:#1f2937;display:flex;flex-direction:column;align-items:center}
+#stage{width:100%;display:flex;flex-direction:column;align-items:center}
+h2{margin:0 0 6px;color:#4c1d95;font-size:26px}
+.bar{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center;margin:7px 0}
+.big{font-size:22px;font-weight:700;margin:6px 0;text-align:center}
+.msg{background:#fef3c7;border:2px dashed #f59e0b;border-radius:12px;padding:8px 18px;font-weight:600;min-height:40px;text-align:center;font-size:17px;margin:4px 0;max-width:900px}
+.vis{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;background:#ecfeff;border-radius:16px;padding:14px;margin:6px 0}
+footer{color:#c7d2fe;text-align:center;padding:10px;font-size:13px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;font-size:.8em;line-height:1}
+.fr b{border-bottom:3px solid #1f2937;padding:0 6px 2px}.fr i{font-style:normal;padding-top:2px}
+.sg{display:grid;grid-template-columns:repeat(10,54px);gap:4px;background:#1e293b;padding:10px;border-radius:14px;box-shadow:0 8px 16px #0006}
+.sc{height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;cursor:pointer;box-shadow:inset 0 2px 3px #fff5,inset 0 -3px 3px #0004;transition:.2s}
+.tk{display:inline-flex;min-width:36px;height:36px;padding:0 4px;margin:2px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff9,var(--c) 60%);border:2px solid #0003;color:#fff;font-size:11px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 2px 4px #0005}
+.dec{display:grid;grid-template-rows:repeat(10,32px);grid-auto-flow:column;gap:3px;background:#0f172a;padding:8px;border-radius:10px;box-shadow:0 8px 16px #0006}
+.dec div{width:32px;border-radius:5px;cursor:pointer;background:#334155;box-shadow:inset 0 2px 3px #fff3,inset 0 -2px 3px #0006}
+pre{font:800 32px monospace;margin:0;line-height:1.25}
+</style></head><body>
+<div id="app">
+<header><h1>CLASS 5 MATHS INTERACTIVE LAB<small>GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+<button class="b" id="fb" style="--c:#ea580c" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><div id="stage"></div></main>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &nbsp;|&nbsp; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s),R=n=>Math.floor(Math.random()*n),P=Math.PI,gcd=(a,b)=>b?gcd(b,a%b):a,prod=a=>a.reduce((x,y)=>x*y,1);
+const btn=(t,c,f)=>`<button class="b" style="--c:${c}" onclick="${f}">${t}</button>`;
+const fr=(a,b)=>`<span class="fr"><b>${a}</b><i>${b}</i></span>`;
+const CL=['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#3b82f6','#8b5cf6','#ec4899'];
+let cur=0,S={},T=null;
+const ref=()=>sims[cur][1]();
+function fs(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+document.onfullscreenchange=()=>$('#fb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+const strip=(n,d,c,h=36)=>`<div style="display:flex;width:min(640px,100%);height:${h}px;border-radius:10px;overflow:hidden;border:3px solid #374151;box-shadow:0 4px 8px #0004;margin:4px 0">${Array.from({length:d},(_,i)=>`<div style="flex:1;background:${i<n?c:'#fff'};border-right:${i<d-1?'2px solid #37415155':'0'}"></div>`).join('')}</div>`;
+const stepBar=(max,extra='')=>`<div class="bar">${btn('◀ Back','#64748b','S.st=Math.max(0,S.st-1);ref()')}${btn('Next Step ▶','#16a34a',`S.st=Math.min(${max},S.st+1);ref()`)}${btn('🔁 Restart','#f59e0b','S.st=0;ref()')}${extra}</div>`;
+
+/* 1 SIEVE */
+function sv(){const st=S.s;let g='',pc=0,cc=0;
+for(let n=1;n<=100;n++){const k=n==1?3:st[n];if(k==1)pc++;if(k==2)cc++;
+const bg=n==S.cur?'#facc15':k==1?'#22c55e':k==2?'#fecaca':k==3?'#cbd5e1':'#f8fafc',col=k==2?'#b91c1c':k==1||n==S.cur?'#052e16':'#334155';
+g+=`<div class="sc" onclick="S.i=${n};sv()" style="background:${bg};color:${col};${S.only&&k==2?'visibility:hidden':''}${n==S.i?';outline:4px solid #7c3aed':''}">${n}</div>`}
+const i=S.i,fa=i?[...Array(i).keys()].map(x=>x+1).filter(x=>i%x==0):[];
+$('#stage').innerHTML=`<h2>Prime vs Composite: Sieve of Eratosthenes</h2><div class="vis"><div class="sg">${g}</div><div style="max-width:250px"><div class="big" style="color:#16a34a">🟩 Prime: ${pc}</div><div class="big" style="color:#dc2626">🟥 Composite: ${cc}</div><div class="big" style="color:#64748b">⬜ Not sorted yet: ${100-pc-cc-1}</div>${i?`<div class="msg">${i} has ${fa.length} factor${fa.length>1?'s':''}: ${fa.join(', ')}<br><b>${i==1?'1 is neither prime nor composite':fa.length==2?'PRIME (exactly 2 factors)':'COMPOSITE (more than 2 factors)'}</b></div>`:''}</div></div><div class="msg">${S.m}</div><div class="bar">${btn('Next Step ▶','#16a34a','svN()')}${btn('⏯ Auto Play','#2563eb',"clearInterval(T);T=setInterval(()=>{svN();if(!S.s.includes(0,2))clearInterval(T)},900)")}${btn('⚡ Reveal All','#9333ea','svA()')}${btn('👁 Primes Only On/Off','#ea580c','S.only=!S.only;sv()')}${btn('↺ Reset','#64748b','clearInterval(T);S=sims[0][2]();sv()')}</div>`}
+function svN(){const st=S.s;let p=0;for(let n=2;n<=100;n++)if(!st[n]){p=n;break}
+if(!p){S.m='✅ Finished! The green numbers are all the primes up to 100.';return sv()}
+st[p]=1;S.cur=p;const c=[];for(let m=2*p;m<=100;m+=p)if(!st[m]){st[m]=2;c.push(m)}
+S.m=`${p} is PRIME (green). ${c.length?'Cross out its multiples: '+c.join(', ')+'.':'It has no new multiples to cross out.'}`;sv()}
+function svA(){clearInterval(T);const st=S.s;for(let p=2;p<=100;p++)if(!st[p]){st[p]=1;for(let m=2*p;m<=100;m+=p)if(!st[m])st[m]=2}S.m='✅ Finished! The green numbers are all the primes up to 100.';S.cur=0;sv()}
+
+/* 2 HCF LCM VENN */
+const pf=n=>{const f=[];for(let p=2;n>1;p++)while(n%p==0){f.push(p);n/=p}return f},PC={2:'#ef4444',3:'#f97316',5:'#16a34a',7:'#2563eb',11:'#9333ea',13:'#db2777'};
+function vn(){const{a,b,st}=S,fa=pf(a),fb=pf(b),com=[],oa=[];let rb=fb.slice();
+fa.forEach(x=>{const i=rb.indexOf(x);if(i>=0){com.push(x);rb.splice(i,1)}else oa.push(x)});
+const ob=rb,h=prod(com),l=prod(oa)*prod(com)*prod(ob);
+const chips=(arr,x0,x1)=>st<1?'':arr.map((p,i)=>{const per=Math.max(1,Math.floor((x1-x0)/44)),cx=(x0+x1)/2+((i%per)-(Math.min(arr.length,per)-1)/2)*44,cy=160+(Math.floor(i/per)-(Math.ceil(arr.length/per)-1)/2)*44;return`<circle cx="${cx}" cy="${cy}" r="19" fill="${PC[p]||'#0d9488'}" stroke="#fff" stroke-width="3"/><text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">${p}</text>`}).join('');
+let m=[`Step 1: Break each number into prime factors.<br>${a} = ${fa.join(' × ')} and ${b} = ${fb.join(' × ')}`,`Step 2: Put the factors in the Venn diagram. Shared factors go in the middle.`,`Step 3: HCF = multiply the middle numbers: ${com.join(' × ')||'1'} = <b>${h}</b>`,`Step 4: LCM = multiply ALL the numbers in both circles: ${[...oa,...com,...ob].join(' × ')} = <b>${l}</b><br>Check: HCF × LCM = ${h} × ${l} = ${h*l} = ${a} × ${b}`][st];
+$('#stage').innerHTML=`<h2>HCF & LCM Venn Diagram</h2><div class="vis"><svg viewBox="0 0 640 320" style="width:min(760px,100%)"><circle cx="225" cy="160" r="150" fill="#fecaca88" stroke="#dc2626" stroke-width="4"/><circle cx="415" cy="160" r="150" fill="#bfdbfe88" stroke="#2563eb" stroke-width="4"/>${st>=2?'<path d="M320 31A150 150 0 0 1 320 289A150 150 0 0 1 320 31Z" fill="#fde04799"/>':''}<text x="170" y="22" text-anchor="middle" font-size="22" font-weight="800" fill="#dc2626">${a}</text><text x="470" y="22" text-anchor="middle" font-size="22" font-weight="800" fill="#2563eb">${b}</text>${chips(oa,90,290)}${chips(com,290,350)}${chips(ob,350,550)}</svg></div><div class="msg">${m}</div>${stepBar(3,btn('🎲 Random','#db2777','S.a=2+R(60);S.b=2+R(60);S.st=0;ref()'))}<div class="bar"><b>A:</b>${btn('＋','#dc2626','vnC("a",1)')}${btn('－','#991b1b','vnC("a",-1)')}${btn('＋5','#ea580c','vnC("a",5)')}<b>B:</b>${btn('＋','#2563eb','vnC("b",1)')}${btn('－','#1e40af','vnC("b",-1)')}${btn('＋5','#0891b2','vnC("b",5)')}${btn('Example 12 & 18','#9333ea','S.a=12;S.b=18;S.st=0;ref()')}${btn('Example 24 & 36','#16a34a','S.a=24;S.b=36;S.st=0;ref()')}</div>`}
+function vnC(k,d){S[k]=Math.max(2,Math.min(99,S[k]+d));S.st=0;vn()}
+
+/* 3 FRACTION x / ÷ */
+function fm(){const[a,b]=S.a,[c,d]=S.b,st=S.st,mul=S.op=='×';let v,m,rn,rd;
+if(mul){rn=a*c;rd=b*d}else{rn=a*d;rd=b*c}const g=gcd(rn,rd),sn=rn/g,sd=rd/g,w=Math.floor(sn/sd),rm=sn%sd;
+const mix=sn>sd?` = ${w}${rm?' and '+fr(rm,sd):''} (mixed number)`:'';
+if(mul){let cells='';const cw=300/b,ch=300/d;
+for(let r=0;r<d;r++)for(let k=0;k<b;k++){const iC=k<a,iR=r<c;let f='#fff';if(st==0)f=iC?'#93c5fd':'#fff';else if(st==1)f=iC&&iR?'#c4b5fd':iC?'#93c5fd':iR?'#fca5a5':'#fff';else f=iC&&iR?'#7c3aed':'#f1f5f9';cells+=`<rect x="${10+k*cw}" y="${10+r*ch}" width="${cw}" height="${ch}" fill="${f}" stroke="#475569"/>`}
+v=`<svg viewBox="0 0 320 320" width="330" height="330"><g>${cells}</g><rect x="10" y="10" width="300" height="300" fill="none" stroke="#111" stroke-width="4"/></svg><div style="font-size:19px;font-weight:700;max-width:280px">🟦 Blue columns: ${fr(a,b)}<br>🟥 Red rows: ${fr(c,d)}<br>🟪 Overlap: ${a*c} of ${b*d} boxes</div>`;
+m=['Step 1: Shade the first fraction as columns (blue).','Step 2: Shade the second fraction as rows (red).',`Step 3: The purple overlap is the answer: ${a*c} small boxes out of ${b*d} = ${a*c}/${b*d}.`,`Step 4: ${a}/${b} × ${c}/${d} = ${a*c}/${b*d} = ${sn}/${sd}${mix}`][st]}
+else{v=st==0?strip(a,b,'#16a34a')+'<div class="big">÷</div>'+strip(c,d,'#2563eb'):st==1?`<div class="big" style="font-size:32px">${fr(a,b)} ÷ ${fr(c,d)} → ${fr(a,b)} × ${fr(d,c)}</div>`:st==2?`<div class="big" style="font-size:32px">${fr(a,b)} × ${fr(d,c)} = ${fr(a+'×'+d,b+'×'+c)} = ${fr(rn,rd)}</div>`:(sn>sd?strip(sd,sd,'#ea580c')+strip(sn-sd,sd,'#ea580c'):strip(sn,sd,'#ea580c'));
+m=['Step 1: Here are the two fractions we will divide.','Step 2: <b>Keep</b> the first fraction, <b>Change</b> ÷ to ×, <b>Flip</b> the second fraction.',`Step 3: Multiply tops and bottoms: ${a}×${d} = ${rn} and ${b}×${c} = ${rd}.`,`Step 4: Simplify: ${rn}/${rd} = ${sn}/${sd}${mix}`][st]}
+$('#stage').innerHTML=`<h2>Fraction ${mul?'Multiplication':'Division'}: Area Model</h2><div class="big">${fr(a,b)} ${S.op} ${fr(c,d)} = ${st==3?fr(sn,sd):'?'}</div><div class="vis">${v}</div><div class="msg">${m}</div>${stepBar(3,btn('× / ÷ Switch','#9333ea',"S.op=S.op=='×'?'÷':'×';S.st=0;ref()")+btn('🎲 Random','#db2777','fmR()'))}<div class="bar"><b>1st:</b>${btn('top＋','#16a34a','fmC(0,0,1)')}${btn('top－','#15803d','fmC(0,0,-1)')}${btn('bottom＋','#ea580c','fmC(0,1,1)')}${btn('bottom－','#c2410c','fmC(0,1,-1)')}<b>2nd:</b>${btn('top＋','#2563eb','fmC(1,0,1)')}${btn('top－','#1d4ed8','fmC(1,0,-1)')}${btn('bottom＋','#0891b2','fmC(1,1,1)')}${btn('bottom－','#0e7490','fmC(1,1,-1)')}</div>`}
+function fmC(k,i,d){const f=k?S.b:S.a;f[i]+=d;f[1]=Math.max(2,Math.min(8,f[1]));f[0]=Math.max(1,Math.min(f[1]-1,f[0]));S.st=0;fm()}
+function fmR(){const d1=2+R(7),d2=2+R(7);S.a=[1+R(d1-1),d1];S.b=[1+R(d2-1),d2];S.st=0;fm()}
+
+/* 4 DECIMALS */
+const dstr=x=>(x/100).toFixed(2),toks=x=>{const o=Math.floor(x/100),t=Math.floor(x/10)%10,h=x%10,k=(n,l,c)=>Array.from({length:n},()=>`<span class="tk" style="--c:${c}">${l}</span>`).join('');return k(o,'1','#2563eb')+k(t,'0.1','#16a34a')+k(h,'0.01','#ea580c')};
+function dcm(){let{A,B,op,st}=S;if(op=='−'&&A<B)[A,B]=[B,A];const res=op=='+'?A+B:op=='−'?A-B:A*B;let v,m;
+const pad=(s,n)=>s.padStart(n);
+if(op=='×'){const rs=(res/10000).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+v=st==0?`<pre>${dstr(A)}\n× ${dstr(B)}</pre>`:st==1?`<pre>${A}\n× ${B}\n(ignore the points)</pre>`:st==2?`<pre>${A}\n× ${B}\n= ${A*B}</pre>`:`<pre>${dstr(A)} (2 places)\n× ${dstr(B)} (2 places)\n= ${rs}  (4 places)</pre>`;
+m=['Step 1: We want to multiply these two decimals.','Step 2: Ignore the decimal points. Multiply as whole numbers: '+A+' × '+B,`Step 3: ${A} × ${B} = ${A*B}`,`Step 4: Count decimal places: 2 + 2 = 4. Put the point 4 places from the right: <b>${rs}</b>`][st]}
+else{const sa=dstr(A),sb=dstr(B),sr=dstr(res),w=Math.max(sa.length,sb.length,sr.length)+2;
+v=st==0?`<div>${toks(A)}</div><div class="big">${op}</div><div>${toks(B)}</div>`:st==1?`<pre>${pad(sa,w)}\n${op} ${pad(sb,w-2)}\n${'─'.repeat(w)}</pre>`:st==2?`<pre>${pad(sa,w)}\n${op} ${pad(sb,w-2)}\n${'─'.repeat(w)}\n${pad(sr,w)}</pre>`:`<div>${toks(res)}</div><pre style="margin-left:20px">${sr}</pre>`;
+m=['Step 1: Here are the two numbers shown with 1s, tenths and hundredths.','Step 2: Line up the decimal points, one under the other. Add zeros if needed.',`Step 3: ${op=='+'?'Add':'Subtract'} column by column from the right (hundredths, tenths, then ones).`,`Step 4: ${op=='+'?'Regroup 10 hundredths into 1 tenth, 10 tenths into 1.':'Borrow when needed.'} Answer: <b>${sr}</b>`][st]}
+$('#stage').innerHTML=`<h2>Decimal Operations Visualizer</h2><div class="big">${dstr(A)} ${op} ${dstr(B)} = ${st==3?(op=='×'?(res/10000).toString():dstr(res)):'?'}</div><div class="vis" style="min-height:150px">${v}</div><div class="msg">${m}</div>${stepBar(3,btn('🎲 Random','#db2777','S.A=10+R(390);S.B=10+R(390);S.st=0;ref()'))}<div class="bar"><b>Operation:</b>${btn('＋ Add','#16a34a',"S.op='+';S.st=0;ref()")}${btn('－ Subtract','#2563eb',"S.op='−';S.st=0;ref()")}${btn('× Multiply','#9333ea',"S.op='×';S.st=0;ref()")}</div><div class="bar"><b>First:</b>${btn('＋0.1','#16a34a','dcC("A",10)')}${btn('－0.1','#15803d','dcC("A",-10)')}${btn('＋0.01','#ea580c','dcC("A",1)')}${btn('－0.01','#c2410c','dcC("A",-1)')}<b>Second:</b>${btn('＋0.1','#2563eb','dcC("B",10)')}${btn('－0.1','#1d4ed8','dcC("B",-10)')}${btn('＋0.01','#0891b2','dcC("B",1)')}${btn('－0.01','#0e7490','dcC("B",-1)')}</div>`}
+function dcC(k,d){S[k]=Math.max(1,Math.min(499,S[k]+d));S.st=0;dcm()}
+
+/* 5 PERCENTAGE */
+function pc(){const p=S.p,g=p?gcd(p,100):100,N=S.N;let c='';
+for(let i=0;i<100;i++)c+=`<div onclick="S.p=S.p==${i+1}?${i}:${i+1};pc()" style="${i<p?'background:linear-gradient(135deg,#5eead4,#0d9488)':''}"></div>`;
+let pie='';if(p>=100)pie=`<circle cx="100" cy="100" r="90" fill="#0d9488"/>`;else if(p>0){const a=p/100*2*P-P/2;pie=`<path d="M100 100L100 10A90 90 0 ${p>50?1:0} 1 ${100+90*Math.cos(a)} ${100+90*Math.sin(a)}Z" fill="#0d9488"/>`}
+$('#stage').innerHTML=`<h2>Percentage Tile Grid</h2><div class="vis"><div class="dec">${c}</div><div style="text-align:center"><svg viewBox="0 0 200 200" width="200" height="200"><circle cx="100" cy="100" r="90" fill="#e2e8f0" stroke="#334155" stroke-width="4"/>${pie}<circle cx="100" cy="100" r="90" fill="none" stroke="#334155" stroke-width="4"/></svg><div style="width:200px;height:26px;border:3px solid #334155;border-radius:8px;margin:8px auto;background:linear-gradient(90deg,#22c55e ${p}%,#e5e7eb ${p}%)"></div>🔋 Battery ${p}%</div><div style="text-align:center"><div class="big" style="font-size:54px;color:#0d9488">${p}%</div><div class="big">${fr(p,100)}${p&&g>1?' = '+fr(p/g,100/g):''}</div><div class="big">Decimal: ${(p/100).toString()}</div><div class="big" style="color:#7c3aed">${p}% of ${N} = <b>${p*N/100}</b></div></div></div><div class="msg">${p} tiles out of 100 are coloured. ${p}% means ${p} out of every 100.<br>${p/100} = ${p?fr(p/g,100/g):'0'} = ${p}%</div><div class="bar">${[[-10,'#475569'],[-5,'#64748b'],[-1,'#94a3b8'],[1,'#0d9488'],[5,'#0891b2'],[10,'#2563eb']].map(x=>btn((x[0]>0?'＋':'－')+Math.abs(x[0])+'%',x[1],`S.p=Math.max(0,Math.min(100,S.p+(${x[0]})));pc()`)).join('')}</div><div class="bar">${[[10,'1/10'],[20,'1/5'],[25,'1/4'],[50,'1/2'],[75,'3/4'],[100,'1']].map((x,i)=>btn(x[1]+' = '+x[0]+'%',CL[i],`S.p=${x[0]};pc()`)).join('')}${btn('🎲 Random','#f59e0b','S.p=R(101);pc()')}${btn('↺ Clear','#64748b','S.p=0;pc()')}</div><div class="bar"><b>Find the % of:</b>${[40,80,200,500].map((n,i)=>btn(n,CL[i+4],`S.N=${n};pc()`)).join('')}</div>`}
+
+/* 6 VOLUME */
+function vo(){const{l,w,h,k}=S,s=26,c=s*.866,I=(x,y,z)=>[(x-y)*c,(x+y)*s*.5-z*s],pt=a=>a.map(q=>I(...q).map(n=>n.toFixed(1)).join(',')).join(' ');
+const cubes=[];for(let z=0;z<k;z++)for(let x=0;x<l;x++)for(let y=0;y<w;y++)cubes.push([x,y,z]);cubes.sort((p,q)=>(p[0]+p[1]+p[2])-(q[0]+q[1]+q[2]));
+let s2='';cubes.forEach(([x,y,z])=>{const hu=(z*40+200)%360;s2+=`<polygon points="${pt([[x,y,z+1],[x+1,y,z+1],[x+1,y+1,z+1],[x,y+1,z+1]])}" fill="hsl(${hu} 85% 72%)" stroke="#0005" stroke-width=".8"/><polygon points="${pt([[x+1,y,z],[x+1,y+1,z],[x+1,y+1,z+1],[x+1,y,z+1]])}" fill="hsl(${hu} 80% 48%)" stroke="#0005" stroke-width=".8"/><polygon points="${pt([[x,y+1,z],[x+1,y+1,z],[x+1,y+1,z+1],[x,y+1,z+1]])}" fill="hsl(${hu} 80% 60%)" stroke="#0005" stroke-width=".8"/>`});
+let wire='';if(S.wr){const E=[[[0,0,0],[l,0,0]],[[l,0,0],[l,w,0]],[[l,w,0],[0,w,0]],[[0,w,0],[0,0,0]],[[0,0,h],[l,0,h]],[[l,0,h],[l,w,h]],[[l,w,h],[0,w,h]],[[0,w,h],[0,0,h]],[[0,0,0],[0,0,h]],[[l,0,0],[l,0,h]],[[l,w,0],[l,w,h]],[[0,w,0],[0,w,h]]];wire=E.map(e=>`<polyline points="${pt(e)}" fill="none" stroke="#92400e" stroke-width="3" stroke-dasharray="7 5"/>`).join('')}
+const x0=-w*c-20,x1=l*c+20,y0=-h*s-20,y1=(l+w)*s*.5+20,per=l*w;
+$('#stage').innerHTML=`<h2>Volume of a Rectangular Prism (Cubic Units)</h2><div class="vis"><svg viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}" style="width:${Math.min(620,(x1-x0)*1.5)}px;max-width:100%;height:${Math.min(420,(y1-y0)*1.5)}px">${wire}${s2}</svg><div style="font-size:21px;font-weight:700;line-height:1.7">📦 Box size<br>Length: ${l} cm<br>Width: ${w} cm<br>Height: ${h} cm<br><span style="color:#7c3aed">Cubes (1 cm³ each)</span></div></div><div class="msg">Layer size: ${l} × ${w} = ${per} cubes in one layer.<br>${k} layer${k==1?'':'s'} filled: ${k} × ${per} = <b>${k*per} cm³</b>${k==h?`<br>🎉 Full box! Volume = l × w × h = ${l} × ${w} × ${h} = <b>${l*w*h} cm³</b>`:''}</div><div class="bar">${btn('⬆ Fill One Layer','#16a34a','S.k=Math.min(S.h,S.k+1);vo()')}${btn('⬇ Remove Layer','#dc2626','S.k=Math.max(0,S.k-1);vo()')}${btn('📦 Fill All','#2563eb','S.k=S.h;vo()')}${btn('Empty','#64748b','S.k=0;vo()')}${btn('Box Outline On/Off','#92400e','S.wr=!S.wr;vo()')}${btn('🎲 Random Box','#f59e0b','S.l=2+R(6);S.w=2+R(5);S.h=2+R(5);S.k=0;vo()')}</div><div class="bar"><b>Length:</b>${btn('＋','#ea580c','voC("l",1)')}${btn('－','#c2410c','voC("l",-1)')}<b>Width:</b>${btn('＋','#0d9488','voC("w",1)')}${btn('－','#0f766e','voC("w",-1)')}<b>Height:</b>${btn('＋','#9333ea','voC("h",1)')}${btn('－','#7e22ce','voC("h",-1)')}</div>`}
+function voC(a,d){S[a]=Math.max(1,Math.min(a=='l'?8:a=='w'?6:6,S[a]+d));S.k=Math.min(S.k,S.h);vo()}
+
+/* 7 ANGLES */
+const sec=(v,p,q,r,c)=>{const a1=Math.atan2(-(p[1]-v[1]),p[0]-v[0]),a2=Math.atan2(-(q[1]-v[1]),q[0]-v[0]);let da=a2-a1;while(da>P)da-=2*P;while(da<-P)da+=2*P;const e1=[v[0]+r*Math.cos(a1),v[1]-r*Math.sin(a1)],e2=[v[0]+r*Math.cos(a2),v[1]-r*Math.sin(a2)];return`<path d="M${v[0]} ${v[1]}L${e1}A${r} ${r} 0 0 ${da>0?0:1} ${e2}Z" fill="${c}" fill-opacity=".85" stroke="#fff" stroke-width="2"/>`};
+const AC=['#ef4444','#16a34a','#2563eb'];
+function an(){S.md=='tri'?tri():ln()}
+function tri(){const{A,B,st}=S,C=180-A-B,rd=P/180,sC=Math.sin(C*rd);let L=360,ac=L*Math.sin(B*rd)/sC;const hh=ac*Math.sin(A*rd);if(hh>200){L*=200/hh;ac=L*Math.sin(B*rd)/sC}
+let pts=[[0,250],[L,250],[ac*Math.cos(A*rd),250-ac*Math.sin(A*rd)]];const mn=Math.min(...pts.map(p=>p[0])),mx=Math.max(...pts.map(p=>p[0])),sc=Math.min(1,520/(mx-mn));pts=pts.map(p=>[60+(p[0]-mn)*sc,250-(250-p[1])*sc]);
+const V=[[0,1,2],[1,2,0],[2,0,1]],an_=[A,B,C];let s=`<polygon points="${pts.join(' ')}" fill="#fef9c3" stroke="#78350f" stroke-width="4" stroke-linejoin="round"/>`;
+V.forEach(([i,j,k],n)=>{s+=sec(pts[i],pts[j],pts[k],st>=1?44:30,st>=1?AC[n]:'#cbd5e1');const u=q=>{const d=Math.hypot(q[0]-pts[i][0],q[1]-pts[i][1]);return[(q[0]-pts[i][0])/d,(q[1]-pts[i][1])/d]},a=u(pts[j]),b=u(pts[k]),m=[a[0]+b[0],a[1]+b[1]],ml=Math.hypot(...m)||1;s+=`<text x="${pts[i][0]+m[0]/ml*70-4}" y="${pts[i][1]+m[1]/ml*70+6}" text-anchor="middle" font-size="20" font-weight="800" fill="${AC[n]}">${an_[n]}°</text>`});
+if(st>=2){const O=[320,425];let a=0;s+='<line x1="170" y1="425" x2="470" y2="425" stroke="#111" stroke-width="5"/>';an_.forEach((x,n)=>{const e1=[O[0]+95*Math.cos(a*rd),O[1]-95*Math.sin(a*rd)],e2=[O[0]+95*Math.cos((a+x)*rd),O[1]-95*Math.sin((a+x)*rd)],md=(a+x/2)*rd;s+=`<path d="M${O}L${e1}A95 95 0 0 0 ${e2}Z" fill="${AC[n]}" stroke="#fff" stroke-width="2"/><text x="${O[0]+62*Math.cos(md)}" y="${O[1]-62*Math.sin(md)+5}" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">${'ABC'[n]}</text>`;a+=x})}
+const ty=[A,B,C].some(x=>x==90)?'Right-angled':[A,B,C].some(x=>x>90)?'Obtuse-angled':'Acute-angled',eq=A==B&&B==C?'Equilateral':(A==B||B==C||A==C)?'Isosceles':'Scalene';
+$('#stage').innerHTML=`<h2>Triangle Angle Sum = 180°</h2><div class="vis"><svg viewBox="0 0 640 450" style="width:min(720px,100%)">${s}</svg></div><div class="msg">${['Here is a triangle with three angles A, B and C.','The three corners are coloured. Imagine tearing them off!','Place the three corners side by side on a straight line. They fit exactly on a straight angle!'][st]}<br><b>A + B + C = ${A}° + ${B}° + ${C}° = 180°</b> &nbsp;|&nbsp; ${ty} ${eq} triangle</div>${stepBar(2)}<div class="bar"><b>Angle A:</b>${btn('＋5','#ef4444','trC("A",5)')}${btn('－5','#b91c1c','trC("A",-5)')}${btn('＋1','#f97316','trC("A",1)')}${btn('－1','#c2410c','trC("A",-1)')}<b>Angle B:</b>${btn('＋5','#16a34a','trC("B",5)')}${btn('－5','#15803d','trC("B",-5)')}${btn('＋1','#0d9488','trC("B",1)')}${btn('－1','#0f766e','trC("B",-1)')}</div><div class="bar">${btn('Equilateral','#2563eb','S.A=60;S.B=60;S.st=0;an()')}${btn('Right-angled','#9333ea','S.A=90;S.B=45;S.st=0;an()')}${btn('Isosceles','#db2777','S.A=50;S.B=50;S.st=0;an()')}${btn('Obtuse','#ea580c','S.A=110;S.B=30;S.st=0;an()')}${btn('🎲 Random','#f59e0b','S.A=20+R(60);S.B=20+R(60);S.st=0;an()')}${btn('↔ Straight Line Mode','#475569',"S.md='line';an()")}</div>`}
+function trC(k,d){S[k]+=d;S[k]=Math.max(10,Math.min(150,S[k]));if(S.A+S.B>170)S[k]-=S.A+S.B-170;S.st=Math.min(S.st,2);tri()}
+function ln(){const x=S.x,rd=P/180,O=[320,300],e=[O[0]+230*Math.cos(x*rd),O[1]-230*Math.sin(x*rd)],r1=[O[0]+80*Math.cos(x*rd),O[1]-80*Math.sin(x*rd)],r2=[O[0]-110,O[1]],m1=x/2*rd,m2=(x+(180-x)/2)*rd,q=S.q;
+const s=`<line x1="40" y1="300" x2="600" y2="300" stroke="#111" stroke-width="5"/><path d="M${O}L${O[0]+110} ${O[1]}A110 110 0 0 0 ${O[0]+110*Math.cos(x*rd)} ${O[1]-110*Math.sin(x*rd)}Z" fill="#ef4444cc"/><path d="M${O}L${O[0]+110*Math.cos(x*rd)} ${O[1]-110*Math.sin(x*rd)}A110 110 0 0 0 ${O[0]-110} ${O[1]}Z" fill="#2563ebcc"/><line x1="${O[0]}" y1="${O[1]}" x2="${e[0]}" y2="${e[1]}" stroke="#111" stroke-width="5" stroke-linecap="round"/><circle cx="${O[0]}" cy="${O[1]}" r="8" fill="#111"/><text x="${O[0]+65*Math.cos(m1)}" y="${O[1]-65*Math.sin(m1)+6}" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">${x}°</text><text x="${O[0]+65*Math.cos(m2)}" y="${O[1]-65*Math.sin(m2)+6}" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">${q?'?':180-x+'°'}</text>`;
+$('#stage').innerHTML=`<h2>Angles on a Straight Line</h2><div class="vis"><svg viewBox="0 0 640 330" style="width:min(720px,100%)">${s}</svg></div><div class="msg">Angles on a straight line add up to 180°.<br><b>${x}° + ${q?'?':180-x+'°'} = 180°</b>${q?'<br>Find the missing angle: 180 − '+x+' = ?':''}</div><div class="bar">${[[-10,'#475569'],[-5,'#64748b'],[-1,'#94a3b8'],[1,'#0d9488'],[5,'#0891b2'],[10,'#2563eb']].map(a=>btn((a[0]>0?'＋':'－')+Math.abs(a[0])+'°',a[1],`S.x=Math.max(10,Math.min(170,S.x+(${a[0]})));ln()`)).join('')}${[30,60,90,120,150].map((a,i)=>btn(a+'°',CL[i],`S.x=${a};ln()`)).join('')}${btn('❓ Quiz Mode','#9333ea','S.q=!S.q;ln()')}${btn('🎲 Random','#f59e0b','S.x=10+R(161);ln()')}${btn('△ Triangle Mode','#475569',"S.md='tri';an()")}</div>`}
+
+/* 8 CHARTS */
+const DY=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],SP=['⚽ Football','🏏 Cricket','🏊 Swimming','🏸 Badminton','🚴 Cycling'];
+function ch(){S.mo=='pie'?pie():line()}
+function line(){const t=S.t,X=i=>60+i*88,Y=v=>290-v*5.2;let g='';
+for(let v=0;v<=50;v+=10)g+=`<line x1="60" y1="${Y(v)}" x2="620" y2="${Y(v)}" stroke="#cbd5e1"/><text x="50" y="${Y(v)+5}" text-anchor="end" font-size="14">${v}</text>`;
+const pts=t.map((v,i)=>X(i)+','+Y(v)).join(' ');
+g+=`<polygon points="60,290 ${pts} ${X(6)},290" fill="#f9731633"/><polyline points="${pts}" fill="none" stroke="#ea580c" stroke-width="5" stroke-linejoin="round"/>`;
+t.forEach((v,i)=>g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="9" fill="#fff" stroke="#dc2626" stroke-width="4"/><text x="${X(i)}" y="${Y(v)-16}" text-anchor="middle" font-size="16" font-weight="800">${v}°</text><text x="${X(i)}" y="316" text-anchor="middle" font-size="16" font-weight="700">${DY[i]}</text>`);
+const mx=Math.max(...t),mn=Math.min(...t),av=(t.reduce((a,b)=>a+b,0)/7).toFixed(1);
+$('#stage').innerHTML=`<h2>Line Graph: Temperature This Week 🌡️</h2><div class="vis"><svg viewBox="0 0 640 330" style="width:min(780px,100%)"><text x="20" y="20" font-size="14" font-weight="700">°C</text><line x1="60" y1="20" x2="60" y2="290" stroke="#111" stroke-width="2"/><line x1="60" y1="290" x2="620" y2="290" stroke="#111" stroke-width="2"/>${g}</svg></div><div class="msg">Hottest: ${DY[t.indexOf(mx)]} (${mx}°C) &nbsp;|&nbsp; Coolest: ${DY[t.indexOf(mn)]} (${mn}°C) &nbsp;|&nbsp; Average: ${av}°C &nbsp;|&nbsp; Difference: ${mx-mn}°C</div><div class="bar">${DY.map((d,i)=>`<span style="display:flex;gap:3px;align-items:center"><b>${d}</b>${btn('＋',CL[i],`chT(${i},1)`)}${btn('－','#475569',`chT(${i},-1)`)}</span>`).join('')}</div><div class="bar">${btn('🎲 Random Week','#f59e0b','S.t=DY.map(()=>15+R(26));ch()')}${btn('☀ Summer Week','#ea580c','S.t=[34,36,38,40,39,37,35];ch()')}${btn('❄ Winter Week','#2563eb','S.t=[8,6,5,9,7,10,12];ch()')}${btn('🥧 Switch to Pie Chart','#9333ea',"S.mo='pie';ch()")}</div>`}
+function chT(i,d){S.t[i]=Math.max(0,Math.min(50,S.t[i]+d));line()}
+function pie(){const v=S.pc,tot=v.reduce((a,b)=>a+b,0);let a0=-P/2,s='';
+v.forEach((x,i)=>{if(!x)return;const f=x/tot,a1=a0+f*2*P,md=(a0+a1)/2;s+=f>.9999?`<circle cx="150" cy="150" r="130" fill="${CL[i]}"/>`:`<path d="M150 150L${150+130*Math.cos(a0)} ${150+130*Math.sin(a0)}A130 130 0 ${f>.5?1:0} 1 ${150+130*Math.cos(a1)} ${150+130*Math.sin(a1)}Z" fill="${CL[i]}" stroke="#fff" stroke-width="3"/>`;if(f>.04)s+=`<text x="${150+85*Math.cos(md)}" y="${150+85*Math.sin(md)+6}" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">${Math.round(f*100)}%</text>`;a0=a1});
+$('#stage').innerHTML=`<h2>Pie Chart: Favourite Sports</h2><div class="vis"><svg viewBox="0 0 300 300" width="340" height="340">${tot?s:'<circle cx="150" cy="150" r="130" fill="#e2e8f0"/>'}</svg><div>${v.map((x,i)=>`<div style="font-size:20px;font-weight:700;margin:6px 0"><span style="display:inline-block;width:20px;height:20px;border-radius:5px;background:${CL[i]};vertical-align:middle"></span> ${SP[i]}: ${x} (${tot?Math.round(x/tot*100):0}%) &nbsp;${btn('＋',CL[i],`chP(${i},1)`)} ${btn('－','#475569',`chP(${i},-1)`)}</div>`).join('')}<div class="big">Total students: ${tot}</div></div></div><div class="msg">${tot?`Most popular: ${SP[v.indexOf(Math.max(...v))]} &nbsp;|&nbsp; Each slice = students ÷ total × 100%`:'Add votes to see the pie chart.'}</div><div class="bar">${btn('🎲 Random Votes','#f59e0b','S.pc=SP.map(()=>R(12));pie()')}${btn('↺ Reset','#64748b','S.pc=[8,5,7,3,6];pie()')}${btn('📈 Switch to Line Graph','#ea580c',"S.mo='line';ch()")}</div>`}
+function chP(i,d){S.pc[i]=Math.max(0,Math.min(30,S.pc[i]+d));pie()}
+
+const sims=[['🔍 Prime Sieve',sv,()=>({s:Array(101).fill(0),cur:0,m:'Press NEXT STEP. We find the next prime, then cross out all of its multiples.',only:0,i:0})],['⭕ HCF & LCM Venn',vn,()=>({a:12,b:18,st:0})],['🟪 Fraction × ÷',fm,()=>({a:[2,3],b:[3,4],op:'×',st:0})],['🔢 Decimals',dcm,()=>({A:235,B:148,op:'+',st:0})],['💯 Percentage',pc,()=>({p:25,N:80})],['📦 Volume',vo,()=>({l:4,w:3,h:3,k:1,wr:1})],['📐 Angles',an,()=>({md:'tri',A:60,B:70,st:0,x:65,q:0})],['📈 Graphs & Pie',ch,()=>({mo:'line',t:[24,26,29,31,28,25,23],pc:[8,5,7,3,6]})]];
+const cols=['#ef4444','#f97316','#ca8a04','#16a34a','#0891b2','#2563eb','#9333ea','#db2777'];
+$('#nav').innerHTML=sims.map((s,i)=>`<button class="b tab" style="--c:${cols[i]}" onclick="go(${i})">${s[0]}</button>`).join('');
+function go(i){clearInterval(T);cur=i;S=sims[i][2]();document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j==i));sims[i][1]()}
+go(0);
+</script></body></html>

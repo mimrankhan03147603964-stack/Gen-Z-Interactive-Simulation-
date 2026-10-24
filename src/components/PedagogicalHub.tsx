@@ -17,7 +17,7 @@ interface PedagogicalHubProps {
   totalSimulations?: number;
 }
 
-export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations = 74 }) => {
+export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations = 86 }) => {
   const [showTeacherDetails, setShowTeacherDetails] = useState<boolean>(false);
   const [showStudentDetails, setShowStudentDetails] = useState<boolean>(false);
 

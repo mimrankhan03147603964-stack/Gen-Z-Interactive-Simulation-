@@ -81,7 +81,19 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-interactive-periodic-table-elements': 78,
   'sim-2d-3d-shapes-builder': 79,
   'sim-solar-lunar-eclipse-interactive': 80,
-  'sim-interactive-geometry-shapes-lab': 81
+  'sim-interactive-geometry-shapes-lab': 81,
+  'sim-charles-law-lab': 43,
+  'sim-chemical-bonding-studio': 29,
+  'sim-class1-maths-lab': 22,
+  'sim-class2-maths-lab': 23,
+  'sim-class3-maths-lab': 81,
+  'sim-class4-maths-lab': 24,
+  'sim-class5-maths-lab': 38,
+  'sim-conservation-of-mass-lab': 35,
+  'sim-dna-structure-genetics': 31,
+  'sim-doppler-effect-sound-observers': 21,
+  'sim-energy-forms-and-changes': 71,
+  'sim-excretory-system-kidney-filtration': 14
 };
 
 /**

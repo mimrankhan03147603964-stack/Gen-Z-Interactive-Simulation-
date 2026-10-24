@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Chemical Bonding: Ionic and Covalent</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;background:#0a1330;color:#fff;height:100vh;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 70% 10%,#0f766e,#0a1330 65%)}
+header{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#0007;flex-wrap:wrap}
+h1{font-size:21px;flex:1;min-width:280px;text-shadow:0 3px 0 #0008}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#cv{flex:1;min-height:0;width:100%;display:block}
+aside{width:320px;padding:12px;overflow:auto;background:#0006;display:flex;flex-direction:column;gap:8px}
+aside h3{font-size:14px;color:#ffd23f;margin-top:4px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.b{background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));color:#fff;border:0;border-radius:11px;padding:10px 6px;font:700 14px 'Trebuchet MS',Arial;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,#000),0 7px 10px #0006;text-shadow:0 1px 2px #0007}
+.b:hover{filter:brightness(1.15)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 45%,#000)}
+.b.on{outline:3px solid #fff}
+.w{grid-column:span 2}
+.msg{background:#0009;border-left:6px solid #ffd23f;padding:10px 14px;font-size:16px;line-height:1.4;min-height:62px}
+.note{background:#0008;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.4}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>⚛️ Chemical Bonding: Ionic and Covalent</h1>
+ <button class="b" style="--c:#2563eb" id="t1" onclick="tab(1)">🧂 Ionic Bonding</button>
+ <button class="b" style="--c:#16a34a" id="t2" onclick="tab(2)">💧 Covalent Bonding</button>
+ <button class="b" style="--c:#e11d48" id="fsb" onclick="fs()">⛶ Full Screen</button>
+</header>
+<main>
+ <div id="stage"><canvas id="cv"></canvas><div id="msg" class="msg"></div></div>
+ <aside id="ionCtl">
+  <h3>🧪 Choose a Compound</h3>
+  <div class="g" id="ionBtns"></div>
+  <h3>🎬 Steps</h3>
+  <div class="g">
+   <button class="b" style="--c:#f97316" onclick="ionStep(1)">⚡ Give 1 Electron</button>
+   <button class="b" style="--c:#a855f7" onclick="ionAuto()">▶ Auto Play</button>
+   <button class="b" style="--c:#ef4444" onclick="ionAttract()">🧲 Attract Ions</button>
+   <button class="b" style="--c:#06b6d4" onclick="ionCrystal()">💎 Crystal Lattice</button>
+  </div>
+  <h3>👀 View</h3>
+  <div class="g">
+   <button class="b" style="--c:#eab308" onclick="charges=!charges">➕➖ Charges</button>
+   <button class="b" style="--c:#0284c7" onclick="labs=!labs">🏷️ Labels</button>
+   <button class="b" style="--c:#db2777" onclick="big=!big">🌍 Real Life View</button>
+   <button class="b" style="--c:#64748b" onclick="ionLoad(ii)">♻️ Reset</button>
+  </div>
+  <div class="note">A <b>metal</b> gives away electrons and becomes a <b>positive ion</b>. A <b>non-metal</b> takes them and becomes a <b>negative ion</b>. Opposite charges attract and make an <b>ionic bond</b>.</div>
+ </aside>
+ <aside id="covCtl" style="display:none">
+  <h3>🧪 Choose a Molecule</h3>
+  <div class="g" id="covBtns"></div>
+  <h3>🎬 Steps</h3>
+  <div class="g">
+   <button class="b" style="--c:#f97316" onclick="joinT=1;m('Atoms move close together. Their outer shells touch.')">🤝 Bring Together</button>
+   <button class="b" style="--c:#a855f7" onclick="joinT=1;shareT=1;m('Atoms SHARE electrons! Each pair of shared electrons is one covalent bond.')">🔗 Share Electrons</button>
+   <button class="b" style="--c:#ef4444" onclick="joinT=0;shareT=0;m('Atoms are separate again.')">↔️ Separate</button>
+   <button class="b" style="--c:#06b6d4" onclick="spinOn=!spinOn">🔄 Spin</button>
+  </div>
+  <h3>👀 View</h3>
+  <div class="g">
+   <button class="b" style="--c:#eab308" onclick="stick=!stick">➖ Bond Sticks</button>
+   <button class="b" style="--c:#16a34a" onclick="lone=!lone">🔵 Lone Pairs</button>
+   <button class="b" style="--c:#0284c7" onclick="labs=!labs">🏷️ Labels</button>
+   <button class="b" style="--c:#db2777" onclick="big=!big">🌍 Real Life View</button>
+   <button class="b w" style="--c:#64748b" onclick="covLoad(ci)">♻️ Reset</button>
+  </div>
+  <div class="note">Non-metal atoms <b>share</b> electrons to fill their outer shell. Yellow and blue dots show which atom each electron came from.</div>
+ </aside>
+</main></div>
+<script>
+const $=id=>document.getElementById(id),app=$('app'),cv=$('cv'),c=cv.getContext('2d');
+function fs(){document.fullscreenElement?document.exitFullscreen():app.requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+function m(t){$('msg').textContent=t}
+let mode=1,labs=true,charges=true,big=false,T=0;
+const EL={H:['#f5f5f5',20,'Hydrogen'],C:['#555',28,'Carbon'],N:['#3a86ff',27,'Nitrogen'],O:['#e63946',27,'Oxygen'],Na:['#9b5de5',34,'Sodium'],K:['#7c3aed',38,'Potassium'],Li:['#c77dff',28,'Lithium'],Mg:['#ff9f1c',33,'Magnesium'],Cl:['#2ecc71',31,'Chlorine'],F:['#5eead4',24,'Fluorine'],Br:['#b5651d',35,'Bromine']};
+const OFF=[0,45,-45,90,-90,135,-135,180].map(d=>d*Math.PI/180),PI=Math.PI;
+const lerp=(a,b,t)=>a+(b-a)*t;
+function ball(x,y,r,col,a=1){c.globalAlpha=a;const g=c.createRadialGradient(x-r/3,y-r/3,r/8,x,y,r);g.addColorStop(0,'#fff');g.addColorStop(.3,col);g.addColorStop(1,'#000c');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.globalAlpha=1}
+function elec(x,y,col){c.fillStyle=col+'55';c.beginPath();c.arc(x,y,10,0,7);c.fill();c.fillStyle=col;c.beginPath();c.arc(x,y,5.5,0,7);c.fill();c.strokeStyle='#000a';c.lineWidth=1;c.stroke()}
+function ring(x,y,r){c.strokeStyle='#ffffff55';c.lineWidth=2;c.setLineDash([6,6]);c.beginPath();c.arc(x,y,r,0,7);c.stroke();c.setLineDash([])}
+function txt(s,x,y,sz,col='#fff',al='center'){c.font='bold '+sz+'px Trebuchet MS,Arial';c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)}
+function tab(n){mode=n;big=false;$('ionCtl').style.display=n==1?'flex':'none';$('covCtl').style.display=n==2?'flex':'none';$('t1').classList.toggle('on',n==1);$('t2').classList.toggle('on',n==2);n==1?ionLoad(ii):covLoad(ci)}
+/* ---------- real-life objects ---------- */
+const OBJ={
+shaker(){c.fillStyle='rgba(200,230,255,.35)';c.strokeStyle='#cfe8ff';c.lineWidth=3;c.beginPath();c.roundRect(-40,-70,80,115,12);c.fill();c.stroke();c.fillStyle='#fff';c.fillRect(-36,-30,72,71);c.fillStyle='#c0c7d1';c.beginPath();c.roundRect(-44,-96,88,28,8);c.fill();c.fillStyle='#333';[-20,0,20].forEach(x=>{c.beginPath();c.arc(x,-82,3.5,0,7);c.fill()})},
+glass(){c.fillStyle='#38bdf8cc';c.beginPath();c.moveTo(-38,-25);c.quadraticCurveTo(-15,-35,0,-25);c.quadraticCurveTo(15,-15,38,-25);c.lineTo(29,56);c.lineTo(-29,56);c.fill();c.strokeStyle='#e0f2fe';c.lineWidth=4;c.fillStyle='rgba(220,240,255,.2)';c.beginPath();c.moveTo(-42,-70);c.lineTo(42,-70);c.lineTo(31,60);c.lineTo(-31,60);c.closePath();c.fill();c.stroke()},
+bottle(){c.fillStyle='#7c2d12';c.beginPath();c.roundRect(-30,-30,60,100,16);c.fill();c.fillRect(-12,-72,24,46);c.fillStyle='#ef4444';c.fillRect(-14,-82,28,12);c.fillStyle='#fff';c.fillRect(-30,0,60,30);c.fillStyle='#ef4444';c.font='bold 14px Arial';c.textAlign='center';c.fillText('COLA',0,21);c.fillStyle='#fff8';[[-8,-45],[6,-55],[0,-35]].forEach(p=>{c.beginPath();c.arc(p[0],p[1],3,0,7);c.fill()})},
+spray(){c.fillStyle='#14b8a6';c.beginPath();c.roundRect(-30,-30,60,100,14);c.fill();c.fillStyle='#fff';c.fillRect(-30,5,60,30);c.fillStyle='#0f766e';c.fillRect(-14,-52,28,24);c.fillStyle='#e5e7eb';c.fillRect(-14,-66,48,14)},
+flame(){c.fillStyle='#374151';c.beginPath();c.ellipse(0,38,66,14,0,0,7);c.fill();for(let k=-2;k<=2;k++){const h=40+(k==0?18:0)+Math.sin(T/120+k)*7,x=k*24,g=c.createLinearGradient(0,30,0,-h);g.addColorStop(0,'#2563eb');g.addColorStop(.6,'#7dd3fc');g.addColorStop(1,'#fff');c.fillStyle=g;c.beginPath();c.moveTo(x-10,32);c.quadraticCurveTo(x-14,0,x,-h);c.quadraticCurveTo(x+14,0,x+10,32);c.fill()}},
+balloon(){c.strokeStyle='#ddd';c.lineWidth=2;c.beginPath();c.moveTo(0,36);c.bezierCurveTo(-14,60,14,70,0,100);c.stroke();ball(0,-20,50,'#ef4444');c.fillStyle='#ef4444';c.beginPath();c.moveTo(0,28);c.lineTo(-8,40);c.lineTo(8,40);c.fill()},
+tank(){c.fillStyle='#1d4ed8';c.beginPath();c.roundRect(-30,-80,60,150,28);c.fill();c.fillStyle='#111';c.fillRect(-10,-102,20,24);c.fillRect(-22,-108,44,8);c.fillStyle='#fff';c.fillRect(-30,-10,60,34);c.fillStyle='#1d4ed8';c.font='bold 18px Arial';c.textAlign='center';c.fillText('GAS',0,14)},
+tablet(){c.fillStyle='#cbd5e1';c.beginPath();c.ellipse(0,10,58,24,0,0,7);c.fill();c.fillStyle='#f8fafc';c.beginPath();c.ellipse(0,0,58,24,0,0,7);c.fill();c.strokeStyle='#94a3b8';c.lineWidth=2;c.beginPath();c.moveTo(-40,0);c.lineTo(40,0);c.stroke()},
+gem(){const g=c.createLinearGradient(-40,-50,40,50);g.addColorStop(0,'#fff');g.addColorStop(.5,'#7dd3fc');g.addColorStop(1,'#2563eb');c.fillStyle=g;c.beginPath();c.moveTo(-42,-20);c.lineTo(-22,-52);c.lineTo(22,-52);c.lineTo(42,-20);c.lineTo(0,56);c.closePath();c.fill();c.strokeStyle='#fff9';c.lineWidth=2;c.stroke();c.beginPath();c.moveTo(-42,-20);c.lineTo(42,-20);c.moveTo(-22,-52);c.lineTo(0,56);c.moveTo(22,-52);c.lineTo(0,56);c.stroke()}};
+const LBL={shaker:'Salt Shaker',glass:'Glass of Water',bottle:'Fizzy Drink',spray:'Cleaning Spray',flame:'Gas Stove',balloon:'Balloon',tank:'Gas Tank',tablet:'Antacid Tablet',gem:'Crystals'};
+function realCard(obj,use,W,H,f){
+ if(big){c.fillStyle='#0008';c.beginPath();c.roundRect(W*.12,H*.08,W*.76,H*.84,24);c.fill();c.save();c.translate(W/2,H*.5);c.scale(2.2,2.2);OBJ[obj]();c.restore();
+  txt('Real life: '+LBL[obj],W/2,H*.17,26,'#ffd23f');txt(f+' is found in the '+LBL[obj].toLowerCase()+'.',W/2,H*.8,20);txt(use,W/2,H*.86,18,'#cfe8ff');return true}
+ const x=W-110,y=26;c.fillStyle='#0008';c.beginPath();c.roundRect(x-90,y,180,215,18);c.fill();c.strokeStyle='#ffd23f';c.lineWidth=2;c.stroke();
+ txt('Real life',x,y+24,16,'#ffd23f');c.save();c.translate(x,y+115);c.scale(.95,.95);OBJ[obj]();c.restore();txt(LBL[obj],x,y+202,15);return false}
+/* ---------- IONIC ---------- */
+const IONS=[
+{n:'Sodium Chloride',f:'NaCl',m:'Na',x:'Cl',k:1,vm:1,vx:7,obj:'shaker',use:'This is the salt we sprinkle on our food.'},
+{n:'Magnesium Oxide',f:'MgO',m:'Mg',x:'O',k:1,vm:2,vx:6,obj:'tablet',use:'It is used in antacid tablets and fire-proof bricks.'},
+{n:'Magnesium Chloride',f:'MgCl₂',m:'Mg',x:'Cl',k:2,vm:2,vx:7,obj:'gem',use:'It is used in bath salts and to make tofu.'},
+{n:'Lithium Fluoride',f:'LiF',m:'Li',x:'F',k:1,vm:1,vx:7,obj:'gem',use:'Its clear crystals are used in camera lenses.'},
+{n:'Potassium Bromide',f:'KBr',m:'K',x:'Br',k:1,vm:1,vx:7,obj:'gem',use:'Its crystals are used in science labs.'}];
+let ii=0,I,E=[],xfer=0,att=0,attT=0,cry=false,timer=null;
+IONS.forEach((o,k)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',['#2563eb','#ea580c','#7c3aed','#0d9488','#be185d'][k]);b.textContent=o.f+' '+o.n.split(' ')[0];b.onclick=()=>ionLoad(k);$('ionBtns').appendChild(b)});
+function ionLoad(k){ii=k;I=IONS[k];xfer=0;att=0;attT=0;cry=false;clearInterval(timer);E=[];
+ for(let j=0;j<I.vm;j++)E.push({j,own:0,col:'#ffd23f'});
+ for(let p=0;p<I.k;p++)for(let i=0;i<I.vx;i++)E.push({p,i,own:p+1,col:'#4cc9f0'});
+ m(`${I.n} (${I.f}): ${I.m} has ${I.vm} outer electron${I.vm>1?'s':''}. ${I.x} needs ${8-I.vx} more to fill its shell. Press "Give 1 Electron".`)}
+const done=()=>xfer>=I.vm,sym=i=>i==0?I.m:I.x;
+function ionPos(i,cx,cy){const n=I.k,d=n==1?lerp(300,125,att):lerp(270,125,att);return n==1?[cx+(i?d/2:-d/2),cy]:[i==0?cx:i==1?cx-d:cx+d,cy]}
+const faceM=p=>I.k==1?0:(p==0?PI:0),faceN=p=>I.k==1?PI:(p==0?0:PI);
+const rad=i=>EL[sym(i)][1]*(done()?(i==0?.72:1.12):1);
+function ionStep(a){if(cry)return;if(done()){m('All electrons are given. Now press "Attract Ions".');return}xfer++;
+ m(done()?`${I.m} lost ${I.vm} electron${I.vm>1?'s':''} and became a POSITIVE ion. ${I.x} gained ${I.vm} and became a NEGATIVE ion. Both now have full outer shells!`:`An electron jumps from ${I.m} to ${I.x}.`)}
+function ionAttract(){if(!done()){m('First give the electrons (press "Give 1 Electron").');return}attT=1;m('Opposite charges attract! The positive and negative ions pull together. This pull is the IONIC BOND.')}
+function ionCrystal(){if(!done()){m('First give the electrons.');return}attT=1;cry=true;m('Millions of ions stack in a regular 3D pattern called a CRYSTAL LATTICE. This is why salt grains look like tiny cubes.')}
+function ionAuto(){ionLoad(ii);timer=setInterval(()=>{if(!done())ionStep();else if(!attT)ionAttract();else if(!cry)ionCrystal();else clearInterval(timer)},1100)}
+function ionTgt(e,cx,cy){let h,a;
+ if(e.j!==undefined){const p=e.j%I.k,t=Math.floor(e.j/I.k);if(e.j<xfer){h=p+1;a=faceN(p)+OFF[7-(I.vx+t)]}else{h=0;a=faceM(p)+OFF[t]}}
+ else{h=e.own;a=faceN(e.p)+OFF[7-e.i]}
+ const P=ionPos(h,cx,cy),r=rad(h)+16;return[P[0]+r*Math.cos(a),P[1]+r*Math.sin(a)]}
+function drawIon(W,H,cx,cy){
+ att+=(attT-att)*.05;
+ if(cry){c.globalAlpha=1;for(let L=1;L>=0;L--)for(let r=0;r<4;r++)for(let q=0;q<6;q++){const x=cx+(q-2.5)*66+L*18,y=cy+(r-1.5)*66-L*18,pos=(r+q)%2==0;ball(x,y,(pos?19:27)*(L?.85:1),pos?EL[I.m][0]:EL[I.x][0],L?.6:1);if(!L)txt(pos?'+':'−',x,y+7,22,'#fff')}
+  txt('Crystal Lattice of '+I.n,cx,cy-170,22,'#ffd23f');txt('Each + ion is surrounded by − ions (simplified picture)',cx,cy+180,16,'#cfe8ff');return}
+ const n=I.k+1;
+ for(let i=0;i<n;i++){const P=ionPos(i,cx,cy),r=rad(i),s=sym(i);
+  if(done()&&charges){const g=c.createRadialGradient(P[0],P[1],r,P[0],P[1],r+46);const col=i==0?'255,80,80':'80,140,255';g.addColorStop(0,`rgba(${col},.55)`);g.addColorStop(1,`rgba(${col},0)`);c.fillStyle=g;c.beginPath();c.arc(P[0],P[1],r+46,0,7);c.fill()}
+  ring(P[0],P[1],r+16);ball(P[0],P[1],r,EL[s][0]);txt(s,P[0],P[1]+7,20,s=='H'?'#222':'#fff');
+  if(labs)txt(EL[s][2]+(i==0?' (metal)':' (non-metal)'),P[0],P[1]+r+50,15,'#cfe8ff');
+  if(done()&&charges){const q=i==0?I.vm:8-I.vx,sup=['','','²','³'][q]||'';txt(s+sup+(i==0?'⁺':'⁻'),P[0],P[1]-r-34,24,i==0?'#ff9a9a':'#9ec5ff')}}
+ E.forEach(e=>{const t=ionTgt(e,cx,cy);if(e.x==null){e.x=t[0];e.y=t[1]}e.x+=(t[0]-e.x)*.12;e.y+=(t[1]-e.y)*.12;elec(e.x,e.y,e.col)});
+ if(att>.5&&done()){const a=ionPos(0,cx,cy),b=ionPos(1,cx,cy);txt('opposites attract  ⟵ + ⟶',(a[0]+b[0])/2,cy-110,18,'#ffd23f')}}
+/* ---------- COVALENT ---------- */
+const VAL={H:1,C:4,N:5,O:6};
+const COV=[
+{n:'Hydrogen',f:'H₂',a:[['H',-.5,0],['H',.5,0]],b:[[0,1,1]],obj:'balloon',use:'Balloons filled with hydrogen float up.'},
+{n:'Oxygen',f:'O₂',a:[['O',-.5,0],['O',.5,0]],b:[[0,1,2]],obj:'tank',use:'We breathe oxygen from the air.'},
+{n:'Nitrogen',f:'N₂',a:[['N',-.5,0],['N',.5,0]],b:[[0,1,3]],obj:'tank',use:'Most of the air around us is nitrogen.'},
+{n:'Water',f:'H₂O',a:[['O',0,-.1],['H',-.78,.55],['H',.78,.55]],b:[[0,1,1],[0,2,1]],obj:'glass',use:'Water is what we drink every day.'},
+{n:'Carbon Dioxide',f:'CO₂',a:[['C',0,0],['O',-1.1,0],['O',1.1,0]],b:[[0,1,2],[0,2,2]],obj:'bottle',use:'The bubbles in a fizzy drink are carbon dioxide.'},
+{n:'Methane',f:'CH₄',a:[['C',0,0],['H',-.7,-.7],['H',.7,-.7],['H',-.7,.7],['H',.7,.7]],b:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],obj:'flame',use:'Natural gas for cooking is methane.'},
+{n:'Ammonia',f:'NH₃',a:[['N',0,0],['H',0,-1],['H',-.87,.5],['H',.87,.5]],b:[[0,1,1],[0,2,1],[0,3,1]],obj:'spray',use:'Ammonia is an ingredient in some cleaning sprays.'}];
+let ci=0,C_,CE=[],join=0,joinT=0,share=0,shareT=0,spin=0,spinOn=false,stick=true,lone=true;
+COV.forEach((o,k)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',['#2563eb','#dc2626','#0891b2','#0284c7','#7c3aed','#ea580c','#0d9488'][k]);b.textContent=o.f+' '+o.n.split(' ')[0];b.onclick=()=>covLoad(k);$('covBtns').appendChild(b)});
+function covLoad(k){ci=k;C_=COV[k];join=joinT=share=shareT=0;spin=0;CE=[];
+ const dirs=C_.a.map((a,i)=>C_.b.filter(b=>b[0]==i||b[1]==i).map(b=>{const j=b[0]==i?b[1]:b[0];return Math.atan2(C_.a[j][2]-a[2],C_.a[j][1]-a[1])}));
+ C_.a.forEach((a,i)=>{let used=0;C_.b.forEach((b,bi)=>{if(b[0]!=i&&b[1]!=i)return;const j=b[0]==i?b[1]:b[0],ang=Math.atan2(C_.a[j][2]-a[2],C_.a[j][1]-a[1]);used+=b[2];for(let q=0;q<b[2];q++)CE.push({t:'b',i,bi,ang,q,o:b[2],first:b[0]==i,col:i==0?'#ffd23f':'#4cc9f0'})});
+  const L=VAL[a[0]]-used,pairs=Math.ceil(L/2);let cand=[];for(let d=0;d<12;d++){const an=d*PI/6;if(dirs[i].every(x=>Math.abs(Math.atan2(Math.sin(an-x),Math.cos(an-x)))>.75))cand.push(an)}
+  let left=L;for(let p=0;p<pairs;p++){const an=cand[Math.floor(p*cand.length/pairs)]??0;for(let q=0;q<Math.min(2,left);q++)CE.push({t:'l',i,ang:an+(q?.17:-.17),col:i==0?'#ffd23f':'#4cc9f0'});left-=2}});
+ m(`${C_.n} (${C_.f}): the atoms are far apart. Press "Bring Together", then "Share Electrons".`)}
+function drawCov(W,H,cx,cy){
+ join+=(joinT-join)*.05;share+=(shareT-share)*.06;if(spinOn)spin+=.012;
+ const f=lerp(2.4,1,join),L=118,R=(u,v)=>[u*Math.cos(spin)-v*Math.sin(spin),u*Math.sin(spin)+v*Math.cos(spin)];
+ const P=C_.a.map(a=>{const r=R(a[1]*L*f,a[2]*L*f);return[cx+r[0],cy+r[1]]});
+ if(stick&&join>.8)C_.b.forEach(b=>{const A=P[b[0]],B=P[b[1]],dx=B[1]-A[1],dy=A[0]-B[0],l=Math.hypot(dx,dy)||1;for(let q=0;q<b[2];q++){const o=(q-(b[2]-1)/2)*9;c.strokeStyle='#fff';c.lineWidth=5;c.globalAlpha=share;c.beginPath();c.moveTo(A[0]+dx/l*o,A[1]+dy/l*o);c.lineTo(B[0]+dx/l*o,B[1]+dy/l*o);c.stroke();c.globalAlpha=1}});
+ C_.a.forEach((a,i)=>{const r=EL[a[0]][1]+(a[0]=='H'?6:2);ring(P[i][0],P[i][1],r+16);ball(P[i][0],P[i][1],r,EL[a[0]][0]);txt(a[0],P[i][0],P[i][1]+7,20,a[0]=='H'?'#222':'#fff');if(labs)txt(EL[a[0]][2],P[i][0],P[i][1]+r+44,14,'#cfe8ff')});
+ CE.forEach(e=>{if(e.t=='l'&&!lone)return;const A=P[e.i],r=EL[C_.a[e.i][0]][1]+(C_.a[e.i][0]=='H'?6:2)+16,an=e.ang+spin;let x,y;
+  if(e.t=='b'){const bd=C_.b[e.bi],o=bd[2],j=bd[0]==e.i?bd[1]:bd[0],B=P[j],dx=B[1]-A[1],dy=A[0]-B[0],l=Math.hypot(dx,dy)||1,mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2,k=(e.first?0:o)+e.q,off=(k-(o*2-1)/2)*(share>.5?9:0),sx=lerp(A[0]+r*Math.cos(an+(e.q-(o-1)/2)*.42),mx+dx/l*off,share),sy=lerp(A[1]+r*Math.sin(an+(e.q-(o-1)/2)*.42),my+dy/l*off,share);x=sx;y=sy}
+  else{x=A[0]+r*Math.cos(an);y=A[1]+r*Math.sin(an)}elec(x,y,e.col)});
+ txt(C_.f+'  •  '+C_.n,cx,cy-H*.38,26,'#ffd23f');
+ if(share>.8)txt(C_.b.map(b=>b[2]==1?'single':b[2]==2?'double':'triple').filter((v,i,a)=>a.indexOf(v)==i).join(' and ')+' covalent bond'+(C_.b.length>1?'s':''),cx,cy+H*.4,18,'#7ee787')}
+/* ---------- main loop ---------- */
+function frame(t){T=t;if(cv.width!=cv.clientWidth||cv.height!=cv.clientHeight){cv.width=cv.clientWidth;cv.height=cv.clientHeight}
+ const W=cv.width,H=cv.height;c.clearRect(0,0,W,H);
+ if(W){const o=mode==1?I:C_;const g=c.createLinearGradient(0,H*.78,0,H);g.addColorStop(0,'#0000');g.addColorStop(1,'#8b5a2b99');c.fillStyle=g;c.fillRect(0,H*.78,W,H*.22);
+  if(!realCard(o.obj,o.use,W,H,o.f)){const cx=(W-200)/2,cy=H*.52;mode==1?drawIon(W,H,cx,cy):drawCov(W,H,cx,cy)}}
+ requestAnimationFrame(frame)}
+ionLoad(0);covLoad(0);tab(1);requestAnimationFrame(frame);
+</script></body></html>

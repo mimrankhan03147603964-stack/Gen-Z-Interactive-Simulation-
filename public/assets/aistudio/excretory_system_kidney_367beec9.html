@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Human Excretory System and Kidney Filtration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#020617}
+#app{height:100vh;display:flex;flex-direction:column;gap:8px;padding:10px 14px;color:#fff;background:linear-gradient(160deg,#0b2a6b,#0a1a4a 50%,#06103a)}
+#top{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#1d4ed8,#0b2a8f);border-radius:0 0 40px 14px;padding:6px 30px;border-bottom:3px solid #38bdf8}
+#top h1{font-size:28px;line-height:1.1}#top h1 span{color:#fde047}
+#top .tag{border:3px solid #22d3ee;border-radius:40px;padding:6px 24px;font-weight:700;line-height:1.25;background:#0b1e5b}
+#row{flex:1;min-height:0;display:flex;gap:10px}
+.pan{flex:1 1 0;min-width:0;display:flex;flex-direction:column;border-radius:18px;padding:6px;background:linear-gradient(#e0f2fe,#bae6fd);border:3px solid #3b82f6;transition:flex-grow .5s;cursor:pointer}
+.pan.f{flex-grow:1.8}.pan.s{flex-grow:.75}
+.pan h2{align-self:center;background:linear-gradient(#2563eb,#1e3a8a);padding:3px 28px;border-radius:26px;font-size:20px;margin-top:-4px;white-space:nowrap}
+.cvw{flex:1;min-height:0;position:relative}canvas{position:absolute;inset:0;width:100%;height:100%}
+#hint{font-size:17px;font-weight:700;text-align:center;background:#0008;border:2px solid #38bdf8;border-radius:30px;padding:7px 20px;min-height:38px}
+#bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:#0b1e5b;border-radius:18px;padding:8px}
+button{border:none;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 0 #0007;transition:.1s}
+button:hover{filter:brightness(1.18);transform:translateY(-2px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+button.on{outline:3px solid #fff}
+.s1{background:#dc2626}.s2{background:#2563eb}.s3{background:#16a34a}.s4{background:#9333ea}.s5{background:#ea580c}
+.c1{background:#0d9488}.c2{background:#db2777}.c3{background:#ca8a04}.c4{background:#4f46e5}.c5{background:#0891b2}.c6{background:#475569}.c7{background:#65a30d}
+</style></head><body>
+<div id="app">
+<div id="top"><h1>Human Excretory System &amp;<br><span>Kidney Filtration</span></h1><div class="tag">Clean Blood<br>Healthy Body<br>Better Life</div></div>
+<div id="row"></div>
+<div id="hint">Click Step 1 to start, or press Play Steps. Click any label to learn more.</div>
+<div id="bar">
+<button class="s1" onclick="step(1)">1 Blood Enters</button><button class="s2" onclick="step(2)">2 Filtration</button><button class="s3" onclick="step(3)">3 Tubules</button>
+<button class="s4" onclick="step(4)">4 Reabsorption</button><button class="s5" onclick="step(5)">5 Urine Forms</button>
+<button class="c1" id="bA" onclick="auto(this)">Play Steps</button><button class="c4" onclick="step(S.step%5+1)">Next Step</button>
+<button class="c2 on" id="bL" onclick="tog('labels',this)">Labels</button><button class="c3" id="bP" onclick="tog('pause',this)">Pause Flow</button>
+<button class="c7" id="bF" onclick="speed(this)">Speed: Normal</button><button class="c5" onclick="zoom(.2)">Zoom In</button><button class="c5" onclick="zoom(-.2)">Zoom Out</button>
+<button class="c6" onclick="reset()">Reset</button><button class="c1" onclick="full()">Full Screen</button>
+</div></div>
+<script>
+const P=Math.PI,$=s=>document.querySelector(s),qb=(a,b,c,t)=>(1-t)*(1-t)*a+2*(1-t)*t*b+t*t*c;
+const S={step:0,zoom:1,labels:true,pause:false,spd:1,t:0,timer:null};
+const TXT=['Click Step 1 to start, or press Play Steps. Click any label to learn more.','Step 1: Blood enters the glomerulus via the afferent arteriole.','Step 2: Pressure filters waste and extra water into Bowman\u2019s capsule.','Step 3: The filtrate moves through the nephron (tubules).','Step 4: Useful substances are reabsorbed back into the blood.','Step 5: Waste and extra water form urine and leave through the ureter.'];
+const on=(...k)=>S.step==0||k.includes(S.step)?1:.3;
+function tube(g,pts,w,c,hi){g.lineCap='round';g.lineJoin='round';g.strokeStyle=c;g.lineWidth=w;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();
+ g.strokeStyle=hi||'#ffffff66';g.lineWidth=w*.25;g.stroke()}
+function dot(g,x,y,c,r){g.fillStyle=c;g.beginPath();g.arc(x,y,r||4,0,7);g.fill()}
+function bean(g,cx,cy,fl,rot){g.save();g.translate(cx,cy);g.scale(fl,1);g.rotate(rot);let gr=g.createRadialGradient(-12,-20,5,0,0,62);gr.addColorStop(0,'#f87171');gr.addColorStop(1,'#7f1d1d');
+ g.fillStyle=gr;g.beginPath();g.ellipse(0,0,42,62,0,0,7);g.fill();g.fillStyle='rgba(120,20,20,.9)';g.beginPath();g.arc(38,4,17,0,7);g.fill();g.restore()}
+// Nephron path
+const NP=[];function ln(a,b,n,tag,f){for(let i=0;i<n;i++){const u=i/n;let x=a[0]+(b[0]-a[0])*u,y=a[1]+(b[1]-a[1])*u;if(f)[x,y]=f(x,y,u);NP.push([x,y,tag])}}
+ln([170,165],[170,285],45,'p',(x,y,u)=>[x+36*Math.sin(u*P*5)*Math.min(1,u*6),y]);
+ln([170,285],[150,330],8,'l');ln([150,330],[150,440],20,'l');
+for(let i=0;i<=12;i++){const a=P+i/12*P;NP.push([182+32*Math.cos(a),440-22*Math.sin(a),'l'])}
+ln([214,440],[214,345],20,'l');ln([214,345],[310,340],40,'d',(x,y,u)=>[x,y+12*Math.sin(u*P*6)]);ln([326,340],[326,505],25,'c');
+const CL=[0];for(let i=1;i<NP.length;i++)CL.push(CL[i-1]+Math.hypot(NP[i][0]-NP[i-1][0],NP[i][1]-NP[i-1][1]));
+const NT=CL[CL.length-1];
+function at(u){const d=u*NT;let i=1;while(i<CL.length-1&&CL[i]<d)i++;return NP[i]}
+const ORG=[
+{name:'Excretory System',labels:[
+{t:'Right Kidney',d:'The right kidney cleans the blood and makes urine.',p:[.16,.05],f:()=>[120,130]},
+{t:'Left Kidney',d:'The left kidney also cleans the blood and makes urine.',p:[.82,.05],f:()=>[320,130]},
+{t:'Ureter',d:'A ureter is a thin tube that carries urine from a kidney to the bladder.',p:[.82,.55],f:()=>[qb(275,290,235,.5),qb(165,300,385,.5)]},
+{t:'Urinary Bladder',d:'The bladder stores urine until we go to the toilet.',p:[.8,.76],f:()=>[235,395]},
+{t:'Urethra',d:'The urethra is the tube that carries urine out of the body.',p:[.75,.93],f:()=>[220,462]}],
+draw(g,t){g.fillStyle='rgba(56,189,248,.2)';g.strokeStyle='rgba(30,64,175,.4)';g.lineWidth=3;g.beginPath();g.ellipse(220,270,150,250,0,0,7);g.fill();g.stroke();
+ g.beginPath();g.ellipse(220,400,125,85,0,0,7);g.fill();g.stroke();
+ tube(g,[[210,10],[210,250],[150,350]],11,'#dc2626');tube(g,[[210,250],[275,350]],11,'#dc2626');tube(g,[[232,10],[232,250],[290,340]],11,'#2563eb');tube(g,[[232,250],[165,345]],11,'#2563eb');
+ tube(g,[[210,140],[150,125]],7,'#dc2626');tube(g,[[210,140],[290,125]],7,'#dc2626');tube(g,[[232,165],[155,150]],7,'#2563eb');tube(g,[[232,165],[285,150]],7,'#2563eb');
+ for(const[x,f]of[[130,1],[310,-1]]){bean(g,x,135,f,f*.25)}
+ for(const f of[1,-1]){const X=u=>220+f*(220-qb(165,150,205,u)-0);}
+ const ur=(f)=>{const px=u=>f>0?qb(165,150,205,u):440-qb(165,150,205,u),py=u=>qb(170,300,385,u);g.strokeStyle='#fbbf24';g.lineWidth=7;g.beginPath();g.moveTo(px(0),py(0));for(let u=0;u<=1;u+=.05)g.lineTo(px(u),py(u));g.stroke();
+  if(on(5)>.5)for(let i=0;i<6;i++){const u=(i/6+t*.25)%1;dot(g,px(u),py(u),'#fff7',3.5)}};ur(1);ur(-1);
+ let gr=g.createRadialGradient(210,385,5,220,395,42);gr.addColorStop(0,'#fca5a5');gr.addColorStop(1,'#b91c1c');g.fillStyle=gr;g.beginPath();g.ellipse(220,398,40,36,0,0,7);g.fill();
+ tube(g,[[220,430],[220,490]],10,'#f59e0b');
+ for(let i=0;i<8;i++){const u=(i/8+t*.3)%1;dot(g,210,10+u*240,'#fecaca',3.5);dot(g,232,250-u*240,'#bfdbfe',3.5)}}},
+{name:'Structure of a Kidney',labels:[
+{t:'Renal Cortex',d:'The cortex is the outer layer where blood is first filtered.',p:[.8,.06],f:()=>[95,150]},
+{t:'Renal Medulla',d:'The medulla has cone-shaped pyramids that collect urine.',p:[.8,.22],f:()=>[170,225]},
+{t:'Renal Artery',d:'The renal artery brings blood with waste into the kidney.',p:[.82,.4],f:()=>[300,225]},
+{t:'Renal Vein',d:'The renal vein takes cleaned blood away from the kidney.',p:[.82,.54],f:()=>[300,258]},
+{t:'Renal Pelvis',d:'The renal pelvis is a funnel that gathers urine and sends it to the ureter.',p:[.78,.68],f:()=>[258,262]},
+{t:'Ureter',d:'The ureter carries urine down to the bladder.',p:[.82,.9],f:()=>[298,430]}],
+draw(g,t){g.save();g.beginPath();g.rect(0,0,285,520);g.clip();let gr=g.createRadialGradient(150,200,20,200,240,210);gr.addColorStop(0,'#f97316');gr.addColorStop(1,'#b91c1c');
+ g.fillStyle=gr;g.beginPath();g.ellipse(200,245,165,215,0,0,7);g.fill();g.strokeStyle='#fed7aa';g.lineWidth=5;g.stroke();
+ for(let k=0;k<7;k++){const a=(105+k*25)*P/180,x=250+Math.cos(a)*105,y=250+Math.sin(a)*135;g.save();g.translate(x,y);g.rotate(a);g.fillStyle='#dc2626';g.strokeStyle='#fca5a5';g.lineWidth=3;g.beginPath();g.ellipse(0,0,42,30,0,0,7);g.fill();g.stroke();g.restore();
+  tube(g,[[250,255],[250+Math.cos(a)*70,250+Math.sin(a)*92]],8,'#fbbf24')}g.restore();
+ dot(g,252,255,'#fbbf24',30);tube(g,[[255,285],[285,370],[298,500]],17,'#fbbf24');
+ tube(g,[[345,218],[262,238]],14,'#dc2626');tube(g,[[345,260],[265,262]],14,'#2563eb');
+ for(let i=0;i<6;i++){const u=(i/6+t*.3)%1;dot(g,345-u*85,218+u*20,'#fecaca',3.5);dot(g,265+u*80,262-u*2,'#bfdbfe',3.5);if(on(5)>.5)dot(g,qb(255,285,298,u),qb(285,370,500,u)+(u>.2?0:0),'#fff8',4)}}},
+{name:'Kidney Filtration (Nephron)',labels:[
+{t:'Afferent Arteriole',d:'This small blood vessel brings blood into the glomerulus.',p:[.28,.03],f:()=>[100,50]},
+{t:'Efferent Arteriole',d:'This small vessel carries filtered blood away from the glomerulus.',p:[.74,.03],f:()=>[290,52]},
+{t:'Glomerulus',d:'The glomerulus is a ball of tiny blood vessels. Pressure squeezes waste out of the blood here.',p:[.78,.14],f:()=>[185,110]},
+{t:'Bowman\u2019s Capsule',d:'This cup-shaped capsule catches the filtered liquid, called filtrate.',p:[.78,.25],f:()=>[205,150]},
+{t:'Proximal Convoluted Tubule',d:'Here the body takes back glucose, salts and water. This is reabsorption.',p:[.72,.37],f:()=>[200,215]},
+{t:'Loop of Henle',d:'The loop of Henle helps save water and makes urine stronger.',p:[.8,.55],f:()=>[238,440]},
+{t:'Distal Convoluted Tubule',d:'The distal tubule fine-tunes salts and water before urine is collected.',p:[.7,.7],f:()=>[270,343]},
+{t:'Collecting Duct',d:'The collecting duct gathers urine and sends it to the renal pelvis.',p:[.78,.88],f:()=>[326,440]}],
+draw(g,t){
+ g.globalAlpha=on(3,4);tube(g,NP,17,'#fbbf24','#fff7');g.globalAlpha=1;
+ g.globalAlpha=on(5);tube(g,NP.filter(p=>p[2]=='c'),19,'#f59e0b','#fff7');g.globalAlpha=1;
+ g.globalAlpha=on(4);tube(g,[[240,60],[130,150],[105,260],[105,370],[120,455]],7,'#2563eb','#93c5fd');g.globalAlpha=1;
+ g.globalAlpha=on(2,3);let gr=g.createRadialGradient(165,105,5,170,112,52);gr.addColorStop(0,'#fde68a');gr.addColorStop(1,'#d97706');g.fillStyle=gr;g.beginPath();g.arc(170,112,52,0,7);g.fill();g.fillStyle='rgba(255,255,255,.45)';g.beginPath();g.arc(170,112,40,0,7);g.fill();g.globalAlpha=1;
+ g.globalAlpha=on(1,2);tube(g,[[40,50],[100,50],[145,72],[165,92]],10,'#dc2626');tube(g,[[190,86],[240,62],[330,52],[395,40]],10,'#2563eb');
+ g.fillStyle='#dc2626';g.beginPath();g.arc(170,112,32,0,7);g.fill();g.strokeStyle='#fecaca';g.lineWidth=3;for(let i=0;i<5;i++){g.beginPath();g.arc(170+Math.cos(i*1.3)*9,112+Math.sin(i*1.3)*9,10+i,0,7);g.stroke()}g.globalAlpha=1;
+ if(on(1)>.5)for(let i=0;i<7;i++){const u=(i/7+t*.3)%1;dot(g,40+u*125,50+(u>.5?(u-.5)*84:0),'#fecaca',4.5)}
+ if(on(1,2)>.5)for(let i=0;i<5;i++){const u=(i/5+t*.3)%1;dot(g,190+u*205,86-u*46,'#bfdbfe',4.5)}
+ if(on(2)>.5)for(let i=0;i<6;i++){const u=(i/6+t*.5)%1;dot(g,170+Math.cos(i*1.1)*u*48,112+Math.sin(i*1.1)*u*48+u*10,'#fef08a',3.5)}
+ if(on(3,4)>.5)for(let i=0;i<34;i++){const q=at((i/34+t*.07)%1);if(q[2]!='c')dot(g,q[0],q[1],'#fffbeb',3.5)}
+ if(on(4)>.5)for(let i=0;i<9;i++){const u=(i/9+t*.3)%1,y=190+i*8,q=at((y-165)/(NT*.0+1)>0?.02+i*.018:.02);dot(g,q[0]+(105-q[0])*u,q[1]+(Math.min(q[1]+60*u,y+80)-q[1]),'#60a5fa',4)}
+ if(on(5)>.5)for(let i=0;i<9;i++){const u=(i/9+t*.25)%1;dot(g,326,340+u*165,'#fde047',4.5)}
+ g.fillStyle='#16a34a';g.font='bold 15px Segoe UI';g.textAlign='center';
+ if(on(5)>.5&&S.step==5){g.fillStyle='#b45309';g.fillText('Urine to ureter',326,520)}}}];
+const row=$('#row');
+ORG.forEach(o=>{const s=document.createElement('section');s.className='pan';s.innerHTML='<h2>'+o.name+'</h2><div class="cvw"><canvas></canvas></div>';row.appendChild(s);
+ o.el=s;o.cv=s.querySelector('canvas');o.g=o.cv.getContext('2d');o.rects=[];
+ new ResizeObserver(()=>{const d=devicePixelRatio||1,r=o.cv.getBoundingClientRect();o.w=r.width;o.h=r.height;o.d=d;o.cv.width=r.width*d;o.cv.height=r.height*d}).observe(o.cv);
+ s.onclick=e=>{const r=o.cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,h=o.rects.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);
+  if(h)$('#hint').textContent=h.l.t+': '+h.l.d;else{const f=!s.classList.contains('f');ORG.forEach(p=>{p.el.classList.toggle('f',f&&p==o);p.el.classList.toggle('s',f&&p!=o)})}}});
+function step(n){S.step=n;$('#hint').textContent=TXT[n]}
+function reset(){S.step=0;S.zoom=1;clearInterval(S.timer);S.timer=null;$('#bA').classList.remove('on');ORG.forEach(p=>p.el.classList.remove('f','s'));$('#hint').textContent=TXT[0]}
+function auto(b){if(S.timer){clearInterval(S.timer);S.timer=null;b.classList.remove('on');b.textContent='Play Steps'}else{step(S.step%5+1);S.timer=setInterval(()=>step(S.step%5+1),4000);b.classList.add('on');b.textContent='Stop Steps'}}
+function tog(k,b){S[k]=!S[k];b.classList.toggle('on',S[k]);if(k=='pause')b.textContent=S.pause?'Resume Flow':'Pause Flow'}
+function speed(b){S.spd=S.spd==1?2.2:S.spd==2.2?.45:1;b.textContent='Speed: '+(S.spd==1?'Normal':S.spd>1?'Fast':'Slow')}
+function zoom(d){S.zoom=Math.max(.6,Math.min(1.9,S.zoom+d))}
+function full(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(!S.pause)S.t+=dt*S.spd;
+ ORG.forEach(o=>{const{g,w,h,d}=o;if(!w)return;g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,w,h);
+  const sc=Math.min(w/440,h/530)*S.zoom,cx=w/2,cy=h/2;g.save();g.translate(cx,cy);g.scale(sc,sc);g.translate(-220,-262);o.draw(g,S.t);g.restore();
+  o.rects=[];if(!S.labels)return;const fs=Math.max(11,Math.min(17,w/24));g.font='bold '+fs+'px Segoe UI';g.textAlign='center';
+  o.labels.forEach((l,i)=>{const[lx,ly]=l.f(),px=cx+sc*(lx-220),py=cy+sc*(ly-262),tw=g.measureText(l.t).width+18,bx=Math.min(w-tw/2-2,Math.max(tw/2+2,l.p[0]*w)),by=l.p[1]*h+fs;
+   g.strokeStyle='#1e293b';g.lineWidth=2;g.beginPath();g.moveTo(bx,by);g.lineTo(px,py);g.stroke();dot(g,px,py,'#fff',4.5);g.strokeStyle='#1e293b';g.lineWidth=1.5;g.stroke();
+   const cols=['#1d4ed8','#dc2626','#ea580c','#16a34a','#7c3aed','#db2777','#0d9488','#ca8a04'];g.fillStyle=cols[(i+(ORG.indexOf(o)*3))%8];g.beginPath();g.roundRect(bx-tw/2,by-fs,tw,fs*1.9,9);g.fill();
+   g.fillStyle='#fff';g.fillText(l.t,bx,by+fs*.35);o.rects.push({x:bx-tw/2,y:by-fs,w:tw,h:fs*1.9,l})})});
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

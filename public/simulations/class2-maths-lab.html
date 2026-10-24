@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 2 Maths Interactive Lab</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{margin:0}
+#app{min-height:100vh;overflow:auto;display:flex;flex-direction:column;background:radial-gradient(circle at 20% 0,#7c3aed,#1e1b4b 55%,#0e7490)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 28px;color:#fff}
+h1{margin:0;font-size:30px;letter-spacing:1px;text-shadow:0 2px 0 #f59e0b,0 5px 0 #b45309,0 9px 14px #000a}
+h1 small{display:block;font-size:12px;letter-spacing:3px;color:#fde68a;text-shadow:none}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 28px 12px}
+.b{border:0;border-radius:12px;padding:10px 16px;font-weight:700;font-size:15px;color:#fff;background:var(--c);box-shadow:0 5px 0 rgba(0,0,0,.35),0 8px 14px rgba(0,0,0,.25);cursor:pointer;transition:.1s}
+.b:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.tab.on{outline:3px solid #fde68a;transform:scale(1.06)}
+main{flex:1;margin:0 28px;background:#fffdf7;border-radius:22px;padding:16px 26px;box-shadow:0 12px 30px #0008;color:#1f2937;display:flex;flex-direction:column;align-items:center}
+#stage{width:100%;display:flex;flex-direction:column;align-items:center}
+h2{margin:0 0 6px;color:#4c1d95;font-size:26px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:10px 0}
+.big{font-size:22px;font-weight:700;margin:6px 0;text-align:center}
+.msg{background:#fef3c7;border:2px dashed #f59e0b;border-radius:12px;padding:8px 18px;font-weight:600;min-height:40px;text-align:center;font-size:17px}
+.vis{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:150px;width:100%;background:#ecfeff;border-radius:16px;padding:14px;margin:8px 0}
+.op{font-size:44px;font-weight:800;color:#7c3aed}
+footer{color:#c7d2fe;text-align:center;padding:10px;font-size:13px}
+.grp{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;justify-content:center;min-width:30px}
+.ones{display:grid;grid-template-columns:repeat(5,22px);gap:4px}
+.one{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#bbf7d0,#16a34a 60%,#14532d);box-shadow:0 2px 3px #0006}
+.rod{width:22px;height:104px;border-radius:4px;background:repeating-linear-gradient(#93c5fd 0 9px,#1d4ed8 9px 10px);box-shadow:2px 3px 4px #0005}
+.flat{width:104px;height:104px;border-radius:5px;background:repeating-linear-gradient(90deg,transparent 0 9px,#7f1d1d 9px 10px),repeating-linear-gradient(#fca5a5 0 9px,#dc2626 9px 10px);box-shadow:3px 4px 6px #0005}
+.x{opacity:.22;filter:grayscale(1)}
+.house{width:min(820px,100%)}
+.roof{background:linear-gradient(#ef4444,#991b1b);color:#fff;font-size:34px;font-weight:800;text-align:center;padding:34px 0 8px;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.rooms{display:flex;border:6px solid #92400e;background:#fef3c7}
+.room{flex:1;min-height:230px;border-right:4px solid #92400e;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.room:last-child{border:0}
+.row{display:flex;gap:6px;padding:4px 10px;border-radius:12px;font-size:38px;line-height:1.1}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;font-size:.8em;line-height:1}
+.fr b{border-bottom:3px solid #1f2937;padding:0 6px 2px}.fr i{font-style:normal;padding-top:2px}
+.scene{width:300px;height:300px;perspective:700px;display:flex;align-items:center;justify-content:center}
+.cube{width:160px;height:160px;position:relative;transform-style:preserve-3d}
+.f{position:absolute;width:160px;height:160px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:#fff}
+.dot{position:absolute;left:72px;top:72px;width:16px;height:16px;border-radius:50%;background:#ef4444;border:2px solid #fff}
+table{border-collapse:collapse;margin:8px 0;font-size:17px}td,th{border:2px solid #c4b5fd;padding:6px 14px;text-align:center}th{background:#ede9fe}
+</style></head><body>
+<div id="app">
+<header><h1>CLASS 2 MATHS INTERACTIVE LAB<small>GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+<button class="b" id="fb" style="--c:#ea580c" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><div id="stage"></div></main>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science &nbsp;|&nbsp; GEN Z EDTECH INTERACTIVE</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s),R=n=>Math.floor(Math.random()*n),P=Math.PI;
+const btn=(t,c,f)=>`<button class="b" style="--c:${c}" onclick="${f}">${t}</button>`;
+const fr=(a,b)=>`<span class="fr"><b>${a}</b><i>${b}</i></span>`;
+const bl=(h,t,o,xt=0,xo=0)=>`<div class="grp">${'<div class="flat"></div>'.repeat(h)}${'<div class="rod"></div>'.repeat(t)}${'<div class="rod x"></div>'.repeat(xt)}<div class="ones">${'<div class="one"></div>'.repeat(o)}${'<div class="one x"></div>'.repeat(xo)}</div></div>`;
+let cur=0,S={},T=null;
+const ref=()=>sims[cur][1]();
+function fs(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+document.onfullscreenchange=()=>$('#fb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+
+/* 1 PLACE VALUE */
+function pv(){const{h,t,o,m}=S,n=h*100+t*10+o;
+const col=(nm,k,c,v)=>`<div class="room" style="background:${c}22"><b style="color:${c};font-size:21px">${nm}</b><div class="bar" style="margin:0">${btn('＋ Add',c,`pvA('${k}',1)`)}${btn('－ Remove','#475569',`pvA('${k}',-1)`)}</div><div style="font-size:32px;font-weight:800">${v}</div>${bl(k=='h'?v:0,k=='t'?v:0,k=='o'?v:0)}</div>`;
+$('#stage').innerHTML=`<h2>Place Value House</h2><div class="house"><div class="roof">${n}</div><div class="rooms">${col('Hundreds','h','#dc2626',h)}${col('Tens','t','#2563eb',t)}${col('Ones','o','#16a34a',o)}</div></div><div class="big">${h} hundreds + ${t} tens + ${o} ones = ${n}</div><div class="msg">${m||'Add blocks to the houses and watch the number change!'}</div><div class="bar">${btn('🎲 Random Number','#f59e0b','S={h:1+R(9),t:R(10),o:R(10),m:\'\'};pv()')}${btn('🔊 Say the Number','#8b5cf6','speechSynthesis.speak(new SpeechSynthesisUtterance(String(S.h*100+S.t*10+S.o)))')}${btn('↺ Reset','#64748b','S={h:0,t:0,o:0,m:\'\'};pv()')}</div>`}
+function pvA(k,d){S.m='';S[k]+=d;if(S[k]<0)S[k]=0;if(S[k]>9){const up=k=='o'?'t':'h';if(k=='h')S[k]=9;else if(S[up]<9){S[k]=0;S[up]++;S.m=k=='o'?'10 ones make 1 ten! Moved to the Tens house.':'10 tens make 1 hundred! Moved to the Hundreds house.'}else S[k]=9}pv()}
+
+/* 2 ADDITION */
+function adS(c){let a,b;do{a=10+R(80);b=10+R(80)}while(c?(a%10+b%10<10):(a%10+b%10>=10));return{a,b,st:0}}
+const stp=(ttl,eq,v,m,n)=>$('#stage').innerHTML=`<h2>${ttl}</h2><div class="big">${eq}</div><div class="vis">${v}</div><div class="msg">${m}</div><div class="bar">${btn('◀ Back','#64748b','S.st=Math.max(0,S.st-1);ref()')}${btn('Next Step ▶','#16a34a','S.st=Math.min(3,S.st+1);ref()')}${btn('🔁 Restart','#f59e0b','S.st=0;ref()')}${btn(n[0],'#2563eb',`S=${n[1]};ref()`)}${btn(n[2],'#dc2626',`S=${n[3]};ref()`)}</div>`;
+function ad(){const{a,b,st}=S,oa=a%10,ob=b%10,ta=(a-oa)/10,tb=(b-ob)/10,o=oa+ob,t=ta+tb;let v,m;
+if(st==0){v=bl(0,ta,oa)+'<span class="op">+</span>'+bl(0,tb,ob);m='Here are the two numbers. Press NEXT STEP to add them.'}
+else if(st==1){v=bl(0,t,o);m=`Step 1: Add the ones. ${oa} + ${ob} = ${o} ones.`}
+else if(st==2){const c=o>=10?1:0;v=bl(0,t+c,o-10*c);m=c?`Step 2: Regroup! 10 ones = 1 ten. Carry 1 ten to the tens house. Ones left: ${o-10}.`:`Step 2: ${o} is less than 10, so no regrouping is needed.`}
+else{const s=a+b;v=bl(s/100|0,(s/10|0)%10,s%10);m=`Step 3: Add the tens. Answer: ${a} + ${b} = ${s}`}
+stp('Addition with Regrouping (Carrying Over)',`${a} + ${b} = ${st==3?a+b:'?'}`,v,m,['🎲 Carry Example','adS(1)','🎲 No-Carry Example','adS(0)'])}
+
+/* 3 SUBTRACTION */
+function sbS(c){let a,b;do{a=20+R(75);b=10+R(80)}while(b>=a||(c?b%10<=a%10:b%10>a%10));return{a,b,st:0}}
+function sb(){const{a,b,st}=S,oa=a%10,ob=b%10,ta=(a-oa)/10,tb=(b-ob)/10,bor=oa<ob,t=bor?ta-1:ta,o=bor?oa+10:oa;let v,m;
+if(st==0){v=bl(0,ta,oa);m=`Start with ${a}. We must take away ${b}.`}
+else if(st==1){v=bl(0,t,o);m=bor?`Step 1: ${oa} ones is not enough to take away ${ob}. Break 1 ten into 10 ones! Now: ${t} tens and ${o} ones.`:`Step 1: We have ${oa} ones, enough to take away ${ob}. No borrowing needed.`}
+else if(st==2){v=bl(0,t,o-ob,0,ob);m=`Step 2: Take away the ones. ${o} - ${ob} = ${o-ob}. (Faded blocks are taken away.)`}
+else{const s=a-b;v=bl(0,t-tb,o-ob,tb,0);m=`Step 3: Take away the tens. Answer: ${a} - ${b} = ${s}`}
+stp('Subtraction with Borrowing (Ungrouping Blocks)',`${a} − ${b} = ${st==3?a-b:'?'}`,v,m,['🎲 Borrow Example','sbS(1)','🎲 No-Borrow Example','sbS(0)'])}
+
+/* 4 ARRAY */
+function ar(){const{r,c,e,k}=S;let g='';
+for(let i=0;i<r;i++)g+=`<div class="row" style="${i<k?'background:#fde68a;box-shadow:0 0 0 3px #f59e0b':''}">${`<span>${e}</span>`.repeat(c)}</div>`;
+const rep=n=>Array(n).fill(c).join(' + ');
+$('#stage').innerHTML=`<h2>Array Builder: Repeated Addition</h2><div class="vis" style="flex-direction:column;gap:6px">${g}</div><div class="big">${r} rows of ${c} = ${rep(r)} = ${r*c}</div><div class="big" style="color:#7c3aed">${r} × ${c} = ${r*c}</div><div class="msg">${k?`Counted ${k} row${k>1?'s':''}: ${rep(k)} = ${k*c}`:'Press COUNT ROW to add the rows one by one.'}</div><div class="bar">${btn('＋ Row','#16a34a','arC("r",1)')}${btn('－ Row','#dc2626','arC("r",-1)')}${btn('＋ Column','#2563eb','arC("c",1)')}${btn('－ Column','#f97316','arC("c",-1)')}${btn('👆 Count Row','#8b5cf6','S.k=Math.min(S.r,S.k+1);ar()')}${btn('↺ Reset Count','#64748b','S.k=0;ar()')}</div><div class="bar">${['🍎','🍪','🍓','⚽','🧁'].map((x,i)=>btn(x,['#ef4444','#a16207','#db2777','#0d9488','#9333ea'][i],`S.e='${x}';ar()`)).join('')}</div>`}
+function arC(k,d){S[k]=Math.max(1,Math.min(k=='r'?6:8,S[k]+d));S.k=0;ar()}
+
+/* 5 PIZZA */
+function pz(){const n=S.n,cx=180,cy=180;let s='';
+for(let i=0;i<n;i++){const a1=-P/2+i*2*P/n,a2=a1+2*P/n,m=(a1+a2)/2,d=S.sep?12:0,off=S.off.includes(i);
+const sl=r=>`M${cx} ${cy}L${cx+r*Math.cos(a1)} ${cy+r*Math.sin(a1)}A${r} ${r} 0 0 1 ${cx+r*Math.cos(a2)} ${cy+r*Math.sin(a2)}Z`;
+const dot=(r,f,rad)=>`<circle cx="${cx+r*Math.cos(m)}" cy="${cy+r*Math.sin(m)}" r="${rad}" fill="${f}" stroke="#7f1d1d" stroke-width="1"/>`;
+const dot2=(r,da,f)=>`<circle cx="${cx+r*Math.cos(m+da)}" cy="${cy+r*Math.sin(m+da)}" r="6" fill="${f}"/>`;
+s+=`<g onclick="pzT(${i})" style="cursor:pointer;opacity:${off?.14:1}" transform="translate(${Math.cos(m)*d} ${Math.sin(m)*d})"><path d="${sl(140)}" fill="#d97706" stroke="#92400e" stroke-width="3"/><path d="${sl(124)}" fill="#fcd34d"/>${dot(60,'#dc2626',14)}${dot(100,'#dc2626',15)}${dot2(80,.35,'#16a34a')}${dot2(80,-.35,'#16a34a')}${dot2(112,.28,'#16a34a')}${dot2(50,-.4,'#f97316')}</g>`}
+const e=S.off.length,l=n-e,nm=n==2?`${fr(1,2)} one half`:`${fr(1,4)} one fourth (quarter)`;
+$('#stage').innerHTML=`<h2>Fraction Pizza: Halves and Fourths</h2><svg viewBox="0 0 360 360" width="400" height="400"><ellipse cx="185" cy="340" rx="150" ry="14" fill="#0003"/>${s}</svg><div class="big">The pizza is cut into ${n} equal parts. 1 slice = ${nm}</div><div class="msg">Eaten: ${fr(e,n)} &nbsp; Left: ${fr(l,n)}${n==4&&e==2?'<br>2/4 is the same as 1/2!':''}${e==0?'<br>Click a slice to eat it!':''}</div><div class="bar">${btn('✂ Cut in Halves','#2563eb','S.n=2;S.off=[];pz()')}${btn('✂ Cut in Fourths','#9333ea','S.n=4;S.off=[];pz()')}${btn('😋 Eat a Slice','#ea580c','pzE()')}${btn('↩ Put Back','#16a34a','S.off.pop();pz()')}${btn('↔ Join / Separate','#0d9488','S.sep=!S.sep;pz()')}${btn('↺ Reset','#64748b','S.off=[];pz()')}</div>`}
+function pzT(i){const k=S.off.indexOf(i);k<0?S.off.push(i):S.off.splice(k,1);pz()}
+function pzE(){for(let i=0;i<S.n;i++)if(!S.off.includes(i)){S.off.push(i);break}pz()}
+
+/* 6 CLOCK */
+function ck(){const{h,m}=S;let t='';
+for(let i=0;i<60;i++){const a=i*6*P/180,r1=i%5?128:118;t+=`<line x1="${150+r1*Math.sin(a)}" y1="${150-r1*Math.cos(a)}" x2="${150+134*Math.sin(a)}" y2="${150-134*Math.cos(a)}" stroke="#374151" stroke-width="${i%5?1:3}"/>`}
+for(let i=1;i<=12;i++){const a=i*30*P/180;t+=`<text x="${150+98*Math.sin(a)}" y="${150-98*Math.cos(a)+8}" text-anchor="middle" font-size="24" font-weight="800" fill="#b91c1c">${i}</text>`}
+const ha=(h%12)*30+m/2,ma=m*6,hh=h%12||12;
+$('#stage').innerHTML=`<h2>Interactive Clock: Hours and Half-Hours</h2><svg viewBox="0 0 300 300" width="380" height="380"><circle cx="150" cy="150" r="146" fill="#b45309"/><circle cx="150" cy="150" r="138" fill="#fffbeb" stroke="#78350f" stroke-width="4"/>${t}<line x1="150" y1="150" x2="150" y2="85" stroke="#1d4ed8" stroke-width="10" stroke-linecap="round" transform="rotate(${ha} 150 150)"/><line x1="150" y1="150" x2="150" y2="42" stroke="#dc2626" stroke-width="6" stroke-linecap="round" transform="rotate(${ma} 150 150)"/><circle cx="150" cy="150" r="9" fill="#111"/></svg><div class="big" style="font-size:42px;background:#111;color:#4ade80;padding:4px 24px;border-radius:10px;font-family:monospace">${hh}:${m?'30':'00'}</div><div class="msg">${m?`Half past ${hh}. The minute hand points to 6.`:`${hh} o'clock. The minute hand points to 12.`}<br>Short blue hand = hours. Long red hand = minutes.</div><div class="bar">${btn('＋ 1 Hour','#16a34a','S.h=S.h%12+1;ck()')}${btn('－ 1 Hour','#dc2626','S.h=(S.h+10)%12+1;ck()')}${btn("🕒 O'clock",'#2563eb','S.m=0;ck()')}${btn('🕞 Half Past','#9333ea','S.m=30;ck()')}${btn('🎲 Random Time','#f59e0b','S.h=1+R(12);S.m=R(2)*30;ck()')}</div>`}
+
+/* 7 BALANCE */
+const IT=[['🍋','Lemon',50],['🍎','Apple',100],['🍌','Banana',150],['🥔','Potato',200],['🧱','Brick',500]];
+function bal(){const w=a=>a.reduce((s,i)=>s+IT[i][2],0),l=w(S.L),r=w(S.R);S.t=Math.max(-16,Math.min(16,(l-r)/12));
+const res=l==r?'Both pans are EQUAL. They balance!':l>r?'The LEFT pan is HEAVIER. The right pan is lighter.':'The RIGHT pan is HEAVIER. The left pan is lighter.';
+const row=(sd,c,nm)=>`<div class="bar" style="margin:4px"><b>${nm} pan:</b>${IT.map((x,i)=>btn(x[0]+' '+x[2]+' g',c,`bAd('${sd}',${i})`)).join('')}${btn('✖ Clear','#475569',`S.${sd}=[];bal()`)}</div>`;
+$('#stage').innerHTML=`<h2>Pan Balance Scale: Mass in Grams</h2><svg id="bs" viewBox="0 0 600 340" width="660" height="375"></svg><div class="msg">Left: ${l} g &nbsp;|&nbsp; Right: ${r} g<br>${res}</div>${row('L','#2563eb','Left')}${row('R','#dc2626','Right')}`;
+clearInterval(T);T=setInterval(()=>{S.c+=(S.t-S.c)*.15;bdr();if(Math.abs(S.t-S.c)<.05){S.c=S.t;bdr();clearInterval(T)}},30);bdr()}
+function bAd(sd,i){if(S[sd].length<5)S[sd].push(i);bal()}
+function bdr(){const th=-S.c*P/180,cx=300,cy=70,ex=Math.cos(th)*170,ey=Math.sin(th)*170;
+const pan=(x,y,a)=>`<line x1="${x}" y1="${y}" x2="${x-70}" y2="${y+110}" stroke="#555" stroke-width="2"/><line x1="${x}" y1="${y}" x2="${x+70}" y2="${y+110}" stroke="#555" stroke-width="2"/><path d="M${x-85} ${y+110}h170q-12 30-85 30t-85-30z" fill="url(#g)" stroke="#78350f" stroke-width="3"/><text x="${x}" y="${y+104}" text-anchor="middle" font-size="26">${a.map(i=>IT[i][0]).join('')}</text>`;
+$('#bs').innerHTML=`<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".5" stop-color="#d97706"/><stop offset="1" stop-color="#92400e"/></linearGradient></defs><path d="M200 330h200l-20-20h-60V80h-40v230h-60z" fill="url(#g)" stroke="#78350f" stroke-width="2"/><line x1="${cx-ex}" y1="${cy-ey}" x2="${cx+ex}" y2="${cy+ey}" stroke="#92400e" stroke-width="10" stroke-linecap="round"/>${pan(cx-ex,cy-ey,S.L)}${pan(cx+ex,cy+ey,S.R)}<circle cx="${cx}" cy="${cy}" r="14" fill="#fbbf24" stroke="#78350f" stroke-width="3"/>`}
+
+/* 8 SHAPES */
+const FACT={cube:['Cube',6,12,8,'Dice 🎲, gift box 🎁'],sphere:['Sphere',0,0,0,'Ball ⚽, globe 🌍 (1 curved surface)'],cylinder:['Cylinder',2,'2 curved',0,'Tin can 🥫, drum (1 curved surface)'],cone:['Cone',1,'1 curved',1,'Ice-cream cone 🍦, party hat 🎉']};
+function sh(){const F=FACT[S.k];
+$('#stage').innerHTML=`<h2>3D Shapes Explorer</h2><div style="display:flex;gap:30px;align-items:center;flex-wrap:wrap;justify-content:center"><div id="sc" class="vis" style="width:340px;min-height:320px"></div><div><table><tr><th>Shape</th><th>Flat Faces</th><th>Edges</th><th>Corners</th></tr><tr><td><b>${F[0]}</b></td><td>${F[1]}</td><td>${F[2]}</td><td>${F[3]}</td></tr></table><div class="msg">Real life: ${F[4]}<br>${{f:'Faces are the flat surfaces.',e:'Edges are where two faces meet.',c:'Corners (vertices) are the pointed places.'}[S.m]}</div></div></div>
+<div class="bar">${btn('🎲 Cube','#ef4444',"S.k='cube';sh()")}${btn('⚽ Sphere','#2563eb',"S.k='sphere';sh()")}${btn('🥫 Cylinder','#16a34a',"S.k='cylinder';sh()")}${btn('🍦 Cone','#f59e0b',"S.k='cone';sh()")}</div>
+<div class="bar">${btn('Show Faces','#9333ea',"S.m='f';sh()")}${btn('Show Edges','#0d9488',"S.m='e';sh()")}${btn('Show Corners','#db2777',"S.m='c';sh()")}${btn('◀ Turn Left','#64748b','S.ry-=20;sd()')}${btn('Turn Right ▶','#64748b','S.ry+=20;sd()')}${btn('▲ Tilt Up','#475569','S.rx=Math.max(-80,S.rx-10);sd()')}${btn('▼ Tilt Down','#475569','S.rx=Math.min(-10,S.rx+10);sd()')}${btn('⟳ Auto Spin On/Off','#ea580c','S.spin=!S.spin')}</div>`;
+clearInterval(T);T=setInterval(()=>{if(S.spin){S.ry+=2;sd()}},40);sd()}
+function sd(){const k=S.k,m=S.m,a=S.ry*P/180,ve=Math.max(.12,Math.sin(Math.abs(S.rx)*P/180)),Y='#facc15';let h;
+if(k=='cube'){const c=['#ef4444','#3b82f6','#22c55e','#f59e0b','#8b5cf6','#06b6d4'],tr=['rotateY(0)','rotateY(90deg)','rotateY(180deg)','rotateY(-90deg)','rotateX(90deg)','rotateX(-90deg)'];
+h=`<div class="scene"><div class="cube" style="transform:rotateX(${S.rx}deg) rotateY(${S.ry}deg)">${tr.map((t,i)=>`<div class="f" style="transform:${t} translateZ(80px);background:${m=='f'?c[i]+'e0':'#0ea5e91a'};border:${m=='e'?'6px solid '+Y:'2px solid #fff8'}">${m=='f'?i+1:''}</div>`).join('')}${m=='c'?[0,1,2,3,4,5,6,7].map(i=>`<div class="dot" style="transform:translate3d(${i&1?80:-80}px,${i&2?80:-80}px,${i&4?80:-80}px)"></div>`).join(''):''}</div></div>`}
+else{const sn=Math.sin(a),fr_=Math.cos(a)>0;let b='';
+if(k=='sphere'){b=`<circle cx="150" cy="150" r="105" fill="url(#sg)"/>`+[0,1,2,3].map(j=>`<ellipse cx="150" cy="150" rx="${105*Math.abs(Math.sin(a+j*P/4))}" ry="105" fill="none" stroke="${['#fff','#fde047','#fff','#fde047'][j]}" stroke-width="3" opacity=".8"/>`).join('')+`<ellipse cx="150" cy="150" rx="105" ry="${105*ve}" fill="none" stroke="#fff" stroke-width="3"/>`}
+if(k=='cylinder'){const r=80*ve;b=`<path d="M70 70V230A80 ${r} 0 0 0 230 230V70Z" fill="url(#cg)" stroke="${m=='e'?Y:'#1e3a8a'}" stroke-width="${m=='e'?6:2}"/>${fr_?`<line x1="${150+80*sn}" y1="${70+r*Math.cos(a)}" x2="${150+80*sn}" y2="${230+r*Math.cos(a)}" stroke="#ef4444" stroke-width="12"/>`:''}<ellipse cx="150" cy="70" rx="80" ry="${r}" fill="${m=='f'?'#34d399':'#bfdbfe'}" stroke="${m=='e'?Y:'#1e3a8a'}" stroke-width="${m=='e'?6:2}"/>`}
+if(k=='cone'){const r=90*ve;b=(m=='f'?`<ellipse cx="150" cy="230" rx="90" ry="${r}" fill="#34d399" opacity=".7"/>`:'')+`<path d="M150 40L60 230A90 ${r} 0 0 0 240 230Z" fill="url(#cn)" stroke="${m=='e'?Y:'#7c2d12'}" stroke-width="${m=='e'?6:2}"/>${fr_?`<line x1="150" y1="40" x2="${150+90*sn}" y2="${230+r*Math.cos(a)}" stroke="#fff" stroke-width="8" opacity=".85"/>`:''}${m=='c'?'<circle cx="150" cy="40" r="11" fill="#ef4444" stroke="#fff" stroke-width="3"/>':''}`}
+h=`<svg viewBox="0 0 300 300" width="300" height="300"><defs><radialGradient id="sg" cx=".35" cy=".3"><stop offset="0" stop-color="#bfdbfe"/><stop offset=".6" stop-color="#2563eb"/><stop offset="1" stop-color="#1e3a8a"/></radialGradient><linearGradient id="cg"><stop offset="0" stop-color="#166534"/><stop offset=".4" stop-color="#4ade80"/><stop offset="1" stop-color="#14532d"/></linearGradient><linearGradient id="cn"><stop offset="0" stop-color="#b45309"/><stop offset=".4" stop-color="#fbbf24"/><stop offset="1" stop-color="#7c2d12"/></linearGradient></defs><ellipse cx="150" cy="${k=='sphere'?275:262}" rx="90" ry="12" fill="#0003"/>${b}</svg>`}
+$('#sc').innerHTML=h}
+
+const sims=[['🏠 Place Value House',pv,()=>({h:2,t:3,o:5,m:''})],['➕ Addition Regrouping',ad,()=>adS(1)],['➖ Subtraction Borrowing',sb,()=>sbS(1)],['✖ Array Builder',ar,()=>({r:3,c:4,e:'🍎',k:0})],['🍕 Fraction Pizza',pz,()=>({n:2,off:[],sep:1})],['🕒 Clock',ck,()=>({h:3,m:0})],['⚖ Balance Scale',bal,()=>({L:[1],R:[],c:0,t:0})],['🧊 3D Shapes',sh,()=>({k:'cube',rx:-25,ry:35,m:'f',spin:1})]];
+const cols=['#ef4444','#f97316','#ca8a04','#16a34a','#0891b2','#2563eb','#9333ea','#db2777'];
+$('#nav').innerHTML=sims.map((s,i)=>`<button class="b tab" style="--c:${cols[i]}" onclick="go(${i})">${s[0]}</button>`).join('');
+function go(i){clearInterval(T);cur=i;S=sims[i][2]();document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j==i));sims[i][1]()}
+go(0);
+</script></body></html>

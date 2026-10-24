@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Law of Conservation of Mass – Interactive Lab</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;background:#0d2540;color:#10233a}
+#app{position:relative;display:grid;grid-template-columns:1fr 350px;grid-template-rows:auto 1fr auto;gap:10px;height:100vh;padding:10px;background:linear-gradient(135deg,#0d2540,#14507a)}
+header{grid-column:1/3;display:flex;justify-content:space-between;align-items:center;color:#fff}
+h1{font-size:22px;letter-spacing:.3px}
+.sub{font-size:13px;color:#bcd7ee}
+#stage{position:relative;background:linear-gradient(#f6fbff,#d3e3f3);border-radius:16px;overflow:hidden;min-height:0}
+#stage svg{width:100%;height:100%;display:block}
+#msg{position:absolute;left:12px;right:12px;top:10px;background:rgba(13,37,64,.92);color:#fff;border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.35}
+#panel{background:#fff;border-radius:16px;padding:10px 12px;overflow:auto;min-height:0}
+.sec{font-weight:700;font-size:13px;color:#14507a;margin:8px 0 5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.b{border:0;border-radius:10px;color:#fff;font:700 13px "Trebuchet MS",Arial,sans-serif;padding:10px 6px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.28);transition:transform .1s,filter .15s}
+.b:hover{filter:brightness(1.1)}
+.b:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.b:disabled{opacity:.35;cursor:not-allowed;filter:none}
+.b.on{outline:3px solid #ffd166;outline-offset:1px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+td{padding:4px 6px;border-bottom:1px solid #e3ebf3}
+td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.big td{background:#e8f5ee;color:#0a6b3d}
+#eqbox,#legend{display:none;margin-top:8px;background:#fff4d6;border-left:5px solid #f4a261;border-radius:6px;padding:8px;font-size:13px}
+#legend{background:#e8f0fb;border-color:#3a86ff}
+#contents{font-size:12.5px;color:#34506b;margin-top:2px;line-height:1.5}
+footer{grid-column:1/3;text-align:center;font-size:12px;color:#9fc2de}
+#quiz{display:none;position:absolute;inset:0;background:rgba(5,15,30,.75);z-index:9;align-items:center;justify-content:center}
+#qbox{background:#fff;border-radius:16px;padding:22px;width:min(560px,90%)}
+#qt{font-size:19px;font-weight:700;margin-bottom:14px}
+#qo{display:grid;gap:8px}
+#qf{margin:12px 0;font-weight:700;min-height:22px;color:#0a6b3d}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div><h1>Law of Conservation of Mass – Closed System Lab</h1><div class="sub">Mass is never created or destroyed in a chemical reaction.</div></div>
+  <button class="b" id="fs" style="background:#7b2cbf;font-size:15px;padding:11px 18px">Full Screen</button>
+</header>
+
+<div id="stage">
+<div id="msg"></div>
+<svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet">
+<defs>
+ <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6fbff"/><stop offset="1" stop-color="#cfe0f1"/></linearGradient>
+ <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8955b"/><stop offset="1" stop-color="#8d5a2b"/></linearGradient>
+ <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9eef3"/><stop offset="1" stop-color="#9aa8b6"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".25" stop-color="#cfe9f7" stop-opacity=".25"/><stop offset=".8" stop-color="#cfe9f7" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity=".6"/></linearGradient>
+ <radialGradient id="ball" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ff8fa3"/><stop offset="1" stop-color="#d00050"/></radialGradient>
+ <radialGradient id="glowg"><stop offset="0" stop-color="#ffb703" stop-opacity=".9"/><stop offset="1" stop-color="#ff5400" stop-opacity="0"/></radialGradient>
+ <clipPath id="fc"><path d="M372 160 L372 250 L292 390 Q285 405 305 405 L495 405 Q515 405 508 390 L428 250 L428 160 Z"/></clipPath>
+</defs>
+<rect width="800" height="520" fill="url(#wall)"/>
+<rect x="0" y="495" width="800" height="25" fill="url(#wood)"/>
+
+<!-- Everyday objects: experiment 1 -->
+<g data-e="0">
+ <rect x="123" y="352" width="26" height="18" rx="3" fill="#d62828"/><rect x="124" y="368" width="24" height="40" fill="#e9c46a" opacity=".9"/>
+ <rect x="102" y="405" width="68" height="90" rx="14" fill="#e9c46a"/><rect x="108" y="440" width="56" height="40" rx="4" fill="#fff"/>
+ <text x="136" y="457" text-anchor="middle" font-size="11" font-weight="700" fill="#9d0208">VINEGAR</text><text x="136" y="472" text-anchor="middle" font-size="9" fill="#555">white, 5% acid</text>
+ <rect x="615" y="415" width="80" height="80" rx="4" fill="#2a9d8f"/><rect x="615" y="415" width="80" height="14" fill="#1f776d"/>
+ <text x="655" y="456" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">BAKING</text><text x="655" y="470" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">SODA</text>
+</g>
+<!-- experiment 2 -->
+<g data-e="1">
+ <rect x="124" y="360" width="24" height="16" rx="3" fill="#1d3557"/><rect x="118" y="374" width="36" height="22" fill="#a8dadc" opacity=".8"/>
+ <rect x="102" y="392" width="68" height="103" rx="20" fill="#a8dadc" opacity=".9"/><rect x="106" y="430" width="60" height="30" fill="#fff" opacity=".85"/>
+ <text x="136" y="450" text-anchor="middle" font-size="12" font-weight="700" fill="#1d3557">WATER</text>
+ <rect x="600" y="465" width="105" height="28" rx="14" fill="#e76f51"/>
+ <circle cx="625" cy="479" r="9" fill="#fff"/><circle cx="652" cy="479" r="9" fill="#fff"/><circle cx="679" cy="479" r="9" fill="#fff"/>
+ <text x="652" y="458" text-anchor="middle" font-size="11" font-weight="700" fill="#9d0208">FIZZY TABLETS</text>
+</g>
+<!-- experiment 3 -->
+<g data-e="2">
+ <ellipse cx="655" cy="470" rx="46" ry="24" fill="#aeb6bf"/>
+ <path d="M620 470 Q640 450 660 472 T695 466 M625 480 Q650 462 672 482 M635 462 Q655 480 685 462" stroke="#6c757d" fill="none" stroke-width="2"/>
+ <text x="655" y="442" text-anchor="middle" font-size="11" font-weight="700" fill="#34495e">STEEL WOOL PAD</text>
+ <g stroke="#5c677d" stroke-width="5" stroke-linecap="round"><line x1="105" y1="490" x2="175" y2="478"/><line x1="105" y1="478" x2="175" y2="466"/></g>
+ <text x="140" y="455" text-anchor="middle" font-size="11" font-weight="700" fill="#34495e">IRON NAILS</text>
+</g>
+
+<!-- Digital balance -->
+<rect x="190" y="436" width="420" height="58" rx="14" fill="url(#steel)" stroke="#6b7c8c"/>
+<rect x="255" y="414" width="290" height="22" rx="8" fill="url(#steel)" stroke="#6b7c8c"/>
+<rect x="300" y="446" width="200" height="38" rx="6" fill="#0b1d12"/>
+<text id="disp" x="480" y="474" text-anchor="end" font-family="Consolas,monospace" font-size="28" fill="#4cff8a">000.0</text>
+<text x="494" y="474" text-anchor="end" font-size="14" fill="#4cff8a" dx="0"></text>
+<text x="496" y="462" text-anchor="end" font-size="11" fill="#4cff8a">g</text>
+<circle cx="226" cy="465" r="9" fill="#e63946"/><circle cx="574" cy="465" r="9" fill="#2a9d8f"/>
+<text x="400" y="430" text-anchor="middle" font-size="11" fill="#47586a" font-weight="700">DIGITAL BALANCE</text>
+
+<!-- Flask -->
+<path d="M372 160 L372 250 L292 390 Q285 405 305 405 L495 405 Q515 405 508 390 L428 250 L428 160 Z" fill="#eaf6ff" opacity=".55"/>
+<g clip-path="url(#fc)">
+ <rect id="liq" data-e="01" x="280" y="300" width="240" height="110" fill="#f1e0a8" opacity=".9"/>
+ <ellipse id="foam" data-e="01" cx="400" cy="300" rx="110" ry="9" fill="#fff" opacity="0"/>
+ <g id="wool" data-e="2" fill="none" stroke="#b8bcc4" stroke-width="3" stroke-linecap="round">
+  <path d="M362 385 Q380 340 400 380 T440 345 M360 360 Q385 395 410 350 T442 385 M365 340 Q395 372 420 342 M370 392 Q400 350 436 392"/>
+ </g>
+ <ellipse id="glow" data-e="2" cx="400" cy="365" rx="75" ry="45" fill="url(#glowg)" opacity="0"/>
+ <g id="tube" data-e="01">
+  <g id="tubeG"><rect x="391" y="205" width="18" height="55" rx="8" fill="#e8f4fb" stroke="#7a8ca3" stroke-width="2"/><rect id="powder" x="394" y="236" width="12" height="20" rx="4" fill="#fff" stroke="#c9c9c9"/></g>
+ </g>
+ <g id="bub"></g>
+ <g id="parts"></g>
+</g>
+<path d="M372 160 L372 250 L292 390 Q285 405 305 405 L495 405 Q515 405 508 390 L428 250 L428 160 Z" fill="url(#glass)" stroke="#6f9bb8" stroke-width="3"/>
+<path d="M382 175 L382 252 L310 385" stroke="#fff" stroke-width="5" opacity=".6" fill="none" stroke-linecap="round"/>
+<rect x="364" y="152" width="72" height="14" rx="6" fill="#dfeaf3" stroke="#6f9bb8" stroke-width="2"/>
+
+<!-- Balloon -->
+<g id="balloon" data-e="0" transform="translate(400,162)">
+ <ellipse cx="0" cy="-50" rx="38" ry="50" fill="url(#ball)"/><ellipse cx="-13" cy="-70" rx="8" ry="14" fill="#fff" opacity=".35"/>
+ <rect x="-14" y="-4" width="28" height="14" rx="4" fill="#d00050"/>
+</g>
+<!-- Cork -->
+<g id="cork" data-e="12"><path d="M368 146 L432 146 L426 178 L374 178Z" fill="#c28f5a" stroke="#8d5a2b" stroke-width="2"/><circle cx="388" cy="160" r="3" fill="#a06c3b"/><circle cx="412" cy="166" r="3" fill="#a06c3b"/></g>
+<text x="400" y="395" id="flaskTag" text-anchor="middle" font-size="11" font-weight="700" fill="#3d5a73" opacity=".0"></text>
+<text x="650" y="95" text-anchor="middle" font-size="14" font-weight="700" fill="#14507a" id="sysTag">SEALED SYSTEM</text>
+<rect x="560" y="105" width="180" height="6" rx="3" id="sysBar" fill="#2a9d8f"/>
+</svg>
+</div>
+
+<div id="panel">
+ <div class="sec">Choose experiment</div>
+ <div class="g3">
+  <button class="b" id="x0" style="background:#e76f51">Vinegar + Soda</button>
+  <button class="b" id="x1" style="background:#2a9d8f">Fizzy Tablet</button>
+  <button class="b" id="x2" style="background:#6a4c93">Steel Wool</button>
+ </div>
+ <div class="sec">Run the demonstration</div>
+ <div class="g2">
+  <button class="b" id="wb" style="background:#1d7dd6">1. Weigh Before</button>
+  <button class="b" id="st" style="background:#f77f00">2. Start Reaction</button>
+  <button class="b" id="wa" style="background:#2b9348">3. Weigh After</button>
+  <button class="b" id="op" style="background:#d62828">Open System</button>
+  <button class="b" id="se" style="background:#0096c7">Seal System</button>
+  <button class="b" id="rs" style="background:#6c757d">Reset</button>
+ </div>
+ <div class="sec">Learning tools</div>
+ <div class="g2">
+  <button class="b" id="mol" style="background:#3a0ca3">Show Molecules</button>
+  <button class="b" id="eq" style="background:#e5383b">Show Equation</button>
+  <button class="b" id="slow" style="background:#5f0f40">Slow Motion</button>
+  <button class="b" id="fast" style="background:#ff006e">Fast Forward</button>
+  <button class="b" id="hint" style="background:#e09f3e;color:#2b1b00">Hint</button>
+  <button class="b" id="qz" style="background:#06a77d">Quiz Time</button>
+ </div>
+ <div id="eqbox"></div><div id="legend"></div>
+ <div class="sec">Contents of the flask</div><div id="contents"></div>
+ <div class="sec">Mass readings</div>
+ <table>
+  <tr><td>Solids and liquids</td><td id="rS"></td></tr>
+  <tr><td>Gas inside</td><td id="rG"></td></tr>
+  <tr><td>Gas escaped</td><td id="rE"></td></tr>
+  <tr class="big"><td>Balance reading</td><td id="rT"></td></tr>
+  <tr><td>Mass before</td><td id="rB">–</td></tr>
+  <tr><td>Mass after</td><td id="rA">–</td></tr>
+  <tr><td>Difference</td><td id="rD">–</td></tr>
+ </table>
+</div>
+<footer>GEN Z EDTECH INTERACTIVE &nbsp;|&nbsp; Developed by MUHAMMAD IMRAN KHAN (MSc Computer Science)</footer>
+
+<div id="quiz"><div id="qbox"><div id="qt"></div><div id="qo"></div><div id="qf"></div>
+ <button class="b" id="qn" style="background:#3a86ff;padding:10px 18px">Next Question</button>
+ <button class="b" id="qc" style="background:#6c757d;padding:10px 18px;margin-left:8px">Close</button></div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const N=44;
+const E=[
+ {n:"Vinegar + Baking Soda",base:125,sB:60,sA:54.8,gB:0,gA:5.2,lv:300,d0:'L',d1:'G',c0:["#e63946","#1d7dd6"],c1:["#8d99ae"],
+  start:"Mix Reactants",liq:"#f1e0a8",powder:"#ffffff",
+  eq:"NaHCO₃ + CH₃COOH → CH₃COONa + H₂O + CO₂ (gas)",
+  leg:"Red = vinegar particles, Blue = baking soda particles, Grey = carbon dioxide gas.",
+  list:"Conical flask and balloon: 125 g<br>Vinegar: 50 g<br>Baking soda: 10 g"},
+ {n:"Fizzy Tablet in Water",base:30,sB:64,sA:62.9,gB:0,gA:1.1,lv:300,d0:'L',d1:'G',c0:["#ff9f1c","#2ec4b6"],c1:["#8d99ae"],
+  start:"Drop Tablet",liq:"#9bd7f0",powder:"#ffe8a3",
+  eq:"Tablet (NaHCO₃ + citric acid) + H₂O → sodium citrate + H₂O + CO₂ (gas)",
+  leg:"Orange = tablet particles, Teal = water particles, Grey = carbon dioxide gas.",
+  list:"Sealed bottle and cork: 30 g<br>Water: 60 g<br>Fizzy tablet: 4 g"},
+ {n:"Steel Wool and Oxygen",base:150,sB:10,sA:13.2,gB:3.2,gA:0,lv:0,d0:'G',d1:'S',c0:["#3a86ff"],c1:["#8b4513"],
+  start:"Heat Steel Wool",liq:"",powder:"",
+  eq:"4Fe + 3O₂ → 2Fe₂O₃ (iron oxide, rust)",
+  leg:"Blue = oxygen gas, Brown = rust (iron oxide) joined to the steel wool.",
+  list:"Glass jar and cork: 150 g<br>Steel wool: 10 g<br>Oxygen in the jar: 3.2 g"}
+];
+const MSG={
+ 0:"Step 1: Read the balance, then press “1. Weigh Before” to record the mass of the whole sealed system.",
+ 1:"Step 2: The mass is recorded. Press “2. Start Reaction” and watch the balance carefully.",
+ r:"The reaction is running. Watch the balance: does the number change while the system is sealed?",
+ 2:"Step 3: The reaction has finished. Press “3. Weigh After” to compare.",
+ open:"The system is open: the gas is escaping and the balance reading falls. Mass is not lost – it leaves the flask."
+};
+let ex=0,stage=0,p=0,sealed=true,gasEsc=0,before=null,after=null,mol=false,sp=1,P=[],B=[],last=0,total=0,msgOverride=null;
+
+function init(i){
+ ex=i;stage=0;p=0;sealed=true;gasEsc=0;before=null;after=null;B=[];msgOverride=null;
+ const e=E[i];
+ P=[];for(let k=0;k<N;k++){const d=e.d0;P.push({i:k,s:0,gone:false,
+  x:400+(Math.random()-.5)*110,y:d==='L'?e.lv+10+Math.random()*80:190+Math.random()*190,
+  vx:(Math.random()-.5)*130,vy:(Math.random()-.5)*130});}
+ document.querySelectorAll('[data-e]').forEach(n=>n.style.display=n.dataset.e.includes(i)?'':'none');
+ if(e.liq){$('liq').setAttribute('fill',e.liq);$('powder').setAttribute('fill',e.powder);}
+ $('contents').innerHTML=e.list;$('eqbox').textContent=e.eq;$('legend').textContent=e.leg;
+ $('st').textContent="2. "+e.start;
+ [0,1,2].forEach(k=>$('x'+k).classList.toggle('on',k===i));
+ $('rB').textContent=$('rA').textContent=$('rD').textContent='–';
+ $('powder').style.opacity=1;$('tubeG').setAttribute('transform','');
+ $('wool').setAttribute('stroke','#b8bcc4');
+ buttons();
+}
+function buttons(){
+ $('wb').disabled=before!==null||stage!==0;
+ $('st').disabled=before===null||stage!==0;
+ $('wa').disabled=stage!==2||after!==null;
+ $('op').disabled=!sealed;$('se').disabled=sealed;
+ $('mol').classList.toggle('on',mol);
+ $('slow').classList.toggle('on',sp<1);$('fast').classList.toggle('on',sp>1);
+}
+function say(t){msgOverride=t}
+function curMsg(){
+ if(msgOverride)return msgOverride;
+ if(stage===0)return before===null?MSG[0]:MSG[1];
+ if(stage===1)return MSG.r;
+ return after===null?MSG[2]:"Conclusion drawn below.";
+}
+function hw(y){return y<255?28:Math.min(98,28+(y-255)*.52)}
+function convert(q,e){
+ q.s=1;
+ if(e.d1==='S'){q.x=358+Math.random()*84;q.y=335+Math.random()*57;}
+ else if(e.d0==='L'){q.y=e.lv-6;q.vy=-Math.abs(q.vy)-40;}
+}
+function frame(t){
+ const dt=Math.min(.05,(t-last)/1000||.016);last=t;
+ const e=E[ex];
+ if(stage===1){p=Math.min(1,p+dt*.12*sp);if(p>=1){stage=2;msgOverride=null;buttons();}}
+ const g=e.gB+(e.gA-e.gB)*p,s=e.sB+(e.sA-e.sB)*p;
+ if(!sealed&&e.gA>0)gasEsc=Math.min(g,gasEsc+dt*2.5*Math.max(1,sp));
+ gasEsc=Math.min(gasEsc,g);
+ total=e.base+s+g-gasEsc;
+ $('disp').textContent=total.toFixed(1).padStart(5,'0');
+ $('rS').textContent=s.toFixed(1)+" g";$('rG').textContent=(g-gasEsc).toFixed(1)+" g";
+ $('rE').textContent=gasEsc.toFixed(1)+" g";$('rT').textContent=total.toFixed(1)+" g";
+ $('sysTag').textContent=sealed?"CLOSED (SEALED) SYSTEM":"OPEN SYSTEM";
+ $('sysBar').setAttribute('fill',sealed?'#2a9d8f':'#d62828');
+ if(!sealed&&gasEsc>0.05&&!msgOverride)msgOverride=MSG.open;
+ $('msg').textContent=curMsg();
+
+ // objects
+ const frac=e.gA?(g-gasEsc)/e.gA:0;
+ if(ex===0){const sc=.3+1.25*frac;
+  $('balloon').setAttribute('transform',sealed?`translate(400,162) scale(${sc})`:`translate(400,105) rotate(28) scale(${.3+1.25*frac})`);}
+ else{$('cork').setAttribute('transform',sealed?'':'translate(0,-70) rotate(-14 400 160)');}
+ if(ex<2){const a=110*Math.min(1,p*5);$('tubeG').setAttribute('transform',`rotate(${a} 400 205)`);
+  $('powder').style.opacity=1-Math.min(1,p*6);$('foam').setAttribute('opacity',(stage?Math.min(.85,p*3):0)*(stage===2?1-.0:1));}
+ else{const m=(a,b)=>Math.round(a+(b-a)*p);
+  $('wool').setAttribute('stroke',`rgb(${m(184,139)},${m(188,69)},${m(196,19)})`);
+  $('glow').setAttribute('opacity',stage===1?.55+.35*Math.sin(t/120):0);}
+
+ // particles
+ for(const q of P){
+  if(q.gone)continue;
+  if(stage>=1&&!q.s&&p>q.i/N+.001)convert(q,e);
+  const d=q.s?e.d1:e.d0,k=d==='S'?.25:1;
+  q.x+=q.vx*dt*sp*k;q.y+=q.vy*dt*sp*k;
+  if(d==='S'){if(q.x<358||q.x>442)q.vx*=-1;if(q.y<335||q.y>392)q.vy*=-1;q.x=cl(q.x,358,442);q.y=cl(q.y,335,392);}
+  else{
+   const ymin=d==='L'?e.lv+8:178;
+   if(q.y<ymin){q.y=ymin;q.vy=Math.abs(q.vy);}
+   if(q.y>396){q.y=396;q.vy=-Math.abs(q.vy);}
+   const w=hw(q.y)-6;
+   if(q.x<400-w){q.x=400-w;q.vx=Math.abs(q.vx);}
+   if(q.x>400+w){q.x=400+w;q.vx=-Math.abs(q.vx);}
+   if(d==='G'&&!sealed&&q.y<190&&e.gA>0)q.gone=true;
+  }
+ }
+ let h='';
+ if(mol)for(const q of P){if(q.gone)continue;
+  const col=q.s?e.c1[q.i%e.c1.length]:e.c0[q.i%e.c0.length];
+  h+=`<circle cx="${q.x|0}" cy="${q.y|0}" r="5.5" fill="${col}" stroke="#fff" stroke-width="1.2"/>`;}
+ $('parts').innerHTML=h;
+ $('legend').style.display=mol?'block':'none';
+
+ // bubbles
+ if(stage===1&&e.d1==='G'&&Math.random()<.6*sp)B.push({x:400+(Math.random()-.5)*2*(hw(380)-14),y:392,r:2+Math.random()*4,v:45+Math.random()*60});
+ let bh='';B=B.filter(b=>{b.y-=b.v*dt*sp;if(b.y<e.lv)return false;bh+=`<circle cx="${b.x|0}" cy="${b.y|0}" r="${b.r.toFixed(1)}" fill="#fff" fill-opacity=".45" stroke="#fff"/>`;return true;});
+ $('bub').innerHTML=bh;
+ requestAnimationFrame(frame);
+}
+
+// buttons
+[0,1,2].forEach(i=>$('x'+i).onclick=()=>init(i));
+$('wb').onclick=()=>{before=total;$('rB').textContent=before.toFixed(1)+" g";say(null);msgOverride=null;buttons();};
+$('st').onclick=()=>{stage=1;msgOverride=null;buttons();};
+$('wa').onclick=()=>{after=total;$('rA').textContent=after.toFixed(1)+" g";
+ const d=after-before;$('rD').textContent=(d>=0?"+":"")+d.toFixed(1)+" g";
+ msgOverride=Math.abs(d)<.05?`Mass before = mass after = ${before.toFixed(1)} g. Mass is conserved in a closed system!`:`The balance shows ${Math.abs(d).toFixed(1)} g less because gas escaped. Total mass was not destroyed – it left the system.`;buttons();};
+$('op').onclick=()=>{sealed=false;msgOverride=null;if(E[ex].gA===0)say("The lid is open, but this reaction makes no gas, so nothing escapes.");buttons();};
+$('se').onclick=()=>{sealed=true;msgOverride=null;buttons();};
+$('rs').onclick=()=>init(ex);
+$('mol').onclick=()=>{mol=!mol;buttons();};
+$('eq').onclick=()=>{const b=$('eqbox');const on=b.style.display!=='block';b.style.display=on?'block':'none';$('eq').textContent=on?'Hide Equation':'Show Equation';};
+$('slow').onclick=()=>{sp=sp<1?1:.3;buttons();};
+$('fast').onclick=()=>{sp=sp>1?1:2.5;buttons();};
+$('hint').onclick=()=>{
+ const t=stage===0?(before===null?"Hint: everything inside the flask counts, including the gas, the balloon and the cork.":"Hint: the reactants are kept apart until you start the reaction."):
+ stage===1?"Hint: turn on “Show Molecules” and slow it down to watch the particles rearrange.":
+ "Hint: try “Open System” and see what happens to the balance. Then press Reset and compare.";
+ say(t);};
+$('fs').onclick=()=>{if(!document.fullscreenElement)$('app').requestFullscreen().catch(()=>{});else document.exitFullscreen();};
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';});
+
+// quiz
+const Q=[
+ {q:"What does the Law of Conservation of Mass say?",o:["Mass can be created","Mass is neither created nor destroyed in a chemical reaction","Mass always decreases","Mass doubles"],a:1},
+ {q:"Why does the balloon inflate in Experiment 1?",o:["Carbon dioxide gas is produced","Air is sucked in","The flask is heated","The vinegar evaporates"],a:0},
+ {q:"The balance reading drops when you open the flask. Why?",o:["Mass disappears","Gas escapes into the air","The balance breaks","Water freezes"],a:1},
+ {q:"Which kind of system keeps all matter inside?",o:["Open system","Closed system","Broken system","Empty system"],a:1},
+ {q:"In the steel wool experiment, the solid becomes heavier because it...",o:["Gains oxygen from the air","Absorbs light","Cools down","Loses iron"],a:0},
+ {q:"In a closed system, the total mass before the reaction is...",o:["Equal to the mass after","Half the mass after","Double the mass after","Zero"],a:0}
+];
+const QC=["#e76f51","#2a9d8f","#6a4c93","#f77f00"];
+let qi=0,score=0,answered=false;
+function showQ(){const q=Q[qi%Q.length];answered=false;$('qt').textContent=q.q;$('qf').textContent="Score: "+score;$('qo').innerHTML='';
+ q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='b';b.style.background=QC[i];b.style.padding='12px';b.textContent=o;
+  b.onclick=()=>{if(answered)return;answered=true;if(i===q.a){score++;$('qf').textContent="Correct! Score: "+score;}else $('qf').textContent="Not quite. Correct answer: "+q.o[q.a]+". Score: "+score;};
+  $('qo').appendChild(b);});}
+$('qz').onclick=()=>{$('quiz').style.display='flex';showQ();};
+$('qn').onclick=()=>{qi++;showQ();};
+$('qc').onclick=()=>{$('quiz').style.display='none';};
+
+init(0);requestAnimationFrame(frame);
+</script>
+</body>
+</html>

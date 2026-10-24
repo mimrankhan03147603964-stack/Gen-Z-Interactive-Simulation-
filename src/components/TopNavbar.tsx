@@ -14,7 +14,7 @@ interface TopNavbarProps {
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
-  totalSimulations = 74,
+  totalSimulations = 86,
   onBackToCatalog
 }) => {
   const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | null>(null);
@@ -69,7 +69,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   };
 
   const catalogDropdownItems = [
-    { label: `All Interactive Labs (${totalSimulations})`, href: '#catalog', desc: 'Browse the full 74-simulation STEM catalog' },
+    { label: `All Interactive Labs (${totalSimulations})`, href: '#catalog', desc: `Browse the full ${totalSimulations}-simulation STEM catalog` },
     { label: 'Physics & Motion', href: '#catalog', desc: 'Classical mechanics, optics, gravitation & waves' },
     { label: 'Chemistry & Matter', href: '#catalog', desc: 'Molecular structures, gas laws & reactions' },
     { label: 'Biology & Living Systems', href: '#catalog', desc: 'Genetics, physiology, photosynthesis & cells' },

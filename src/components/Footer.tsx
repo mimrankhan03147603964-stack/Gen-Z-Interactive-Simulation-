@@ -6,7 +6,7 @@ interface FooterProps {
   totalSimulations?: number;
 }
 
-export const Footer: React.FC<FooterProps> = ({ totalSimulations = 74 }) => {
+export const Footer: React.FC<FooterProps> = ({ totalSimulations = 86 }) => {
   return (
     <footer 
       id="developer"

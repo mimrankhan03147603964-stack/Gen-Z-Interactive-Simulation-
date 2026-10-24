@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Energy Forms and Changes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#020617}
+#app{height:100vh;display:flex;flex-direction:column;gap:6px;padding:8px 12px;color:#fff;background:linear-gradient(160deg,#0b3a8a,#082a63 55%,#061a45)}
+h1{text-align:center;font-size:25px;background:linear-gradient(90deg,#38bdf8,#fde047,#fb923c);-webkit-background-clip:text;color:transparent}
+#stage{flex:1;min-height:0;position:relative;border-radius:16px;overflow:hidden;border:3px solid #38bdf8}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.box{position:absolute;background:#eef2ffee;color:#0f172a;border:2px solid #475569;border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700}
+#legend{right:10px;top:10px}#legend div{margin:3px 0;display:flex;align-items:center;gap:8px}#legend i{width:17px;height:17px;border-radius:4px;border:2px solid #0004;display:inline-block}
+#cloudbox{left:10px;bottom:70px;display:none;width:170px}#cloudbox input{width:100%}#cloudbox span{display:flex;justify-content:space-between}
+#hint{font-size:16px;font-weight:700;text-align:center;background:#0008;border:2px solid #38bdf8;border-radius:30px;padding:6px 18px;min-height:34px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;background:#0b1e5b;border-radius:16px;padding:6px 8px}
+.bar b{font-size:13px;padding:0 4px;color:#fde047}
+button{border:none;border-radius:12px;padding:8px 11px;font-size:13px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 0 #0007;transition:.1s}
+button:hover:not(:disabled){filter:brightness(1.18);transform:translateY(-2px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+button.on{outline:3px solid #fff}button:disabled{opacity:.35;cursor:not-allowed}
+.i{font-size:15px}
+.a1{background:#16a34a}.a2{background:#0891b2}.a3{background:#ca8a04}.a4{background:#dc2626}.b1{background:#2563eb}.b2{background:#4f46e5}
+.d1{background:#0d9488}.d2{background:#ea580c}.d3{background:#9333ea}.d4{background:#db2777}
+.c1{background:#475569}.c2{background:#15803d}.c3{background:#be123c}.c4{background:#0369a1}.c5{background:#b45309}
+label{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}input[type=range]{width:110px}
+</style></head><body>
+<div id="app">
+<h1>Energy Forms and Changes</h1>
+<div id="stage"><canvas id="c"></canvas>
+<div class="box" id="legend"><div style="font-size:14px">Forms of Energy</div><div><i style="background:#d1d5db"></i>Mechanical</div><div><i style="background:#38bdf8"></i>Electrical</div><div><i style="background:#ef4444"></i>Thermal</div><div><i style="background:#facc15"></i>Light</div><div><i style="background:#22c55e"></i>Chemical</div></div>
+<div class="box" id="cloudbox">Clouds<span><small>None</small><small>Lots</small></span><input type="range" id="cld" min="0" max="100" value="0"><div style="margin-top:6px">Panel Angle</div><input type="range" id="pa" min="0" max="100" value="44"></div></div>
+<div id="hint"></div>
+<div class="bar"><b>1. SOURCE</b>
+<button class="a1" data-k="src" data-v="bike"><span class="i">&#128690;</span> Bicycle</button><button class="a2" data-k="src" data-v="faucet"><span class="i">&#128688;</span> Faucet</button><button class="a3" data-k="src" data-v="sun"><span class="i">&#9728;&#65039;</span> Sun</button><button class="a4" data-k="src" data-v="kettle"><span class="i">&#129754;</span> Tea Kettle</button>
+<b>2. CONVERTER (auto)</b><button class="b1" data-k="conv" data-v="belt">&#9881;&#65039; Belt &amp; Pulley Generator</button><button class="b1" data-k="conv" data-v="wheel">&#9881;&#65039; Water Wheel &amp; Generator</button><button class="b2" data-k="conv" data-v="solar">&#128261; Solar Panel</button>
+<b>3. USER</b><button class="d1" data-k="usr" data-v="water">&#129514; Water Beaker</button><button class="d2" data-k="usr" data-v="bulb">&#128161; Light Bulb</button><button class="d3" data-k="usr" data-v="cfl">&#127744; Fluorescent Bulb</button><button class="d4" data-k="usr" data-v="fan">&#127744; Fan</button></div>
+<div class="bar">
+<button class="c2" id="bOn" onclick="onoff()">START</button>
+<button class="a2" onclick="clouds(.25)">Add Clouds</button><button class="a3" onclick="clouds(-.25)">Clear Sky</button><button class="c4" onclick="faceSun()">Face the Sun</button><label>Source Level <input type="range" id="lvl" min="10" max="100" value="60"></label>
+<button class="a1" onclick="stp(1)">1 Source</button><button class="b1" onclick="stp(2)">2 Converter</button><button class="a3" onclick="stp(3)">3 Wire</button><button class="d3" onclick="stp(4)">4 User</button><button class="a4" onclick="stp(5)">5 Output</button>
+<button class="c4" id="bDemo" onclick="demo()">Guided Demo</button><button class="c1 on" id="bSym" onclick="tg('sym',this)">Energy Symbols</button><button class="c5 on" id="bLab" onclick="tg('lab',this)">Labels</button>
+<button class="c4" id="bSp" onclick="spd(this)">Speed: Normal</button><button class="c3" onclick="reset()">Reset</button><button class="c1" onclick="full()">Full Screen</button></div>
+</div>
+<script>
+const $=s=>$s(s),$s=s=>document.querySelector(s),cv=$s('#c'),g=cv.getContext('2d'),R=Math.random;
+const S={src:'bike',conv:'wheel',usr:'water',lvl:.6,cld:0,on:false,sym:true,lab:true,spd:1,t:0,syms:[],acc:0,T:20,uf:0,cf:0,pw:0,sa:0,cs:0,fa:0,pa:-1.084,fx:[],puffs:[],hl:-1,demo:null,cnt:{}};
+const FC={mech:'#d1d5db',elec:'#38bdf8',therm:'#ef4444',light:'#facc15',chem:'#22c55e'},FN={mech:'Mechanical',elec:'Electrical',therm:'Thermal',light:'Light',chem:'Chemical'};
+const SRC={bike:{n:'Bicycle Rider',f:'mech',c:'belt',nodes:[[188,398,'chem'],[152,488,'mech']]},faucet:{n:'Faucet',f:'mech',c:'wheel',nodes:[[250,225,'mech'],[320,340,'mech']]},sun:{n:'Sun',f:'light',c:'solar',nodes:[[100,115,'light']]},kettle:{n:'Tea Kettle',f:'mech',c:'wheel',nodes:[[140,522,'chem'],[140,472,'therm'],[205,432,'therm'],[335,418,'therm']]}};
+const CONV={belt:{n:'Belt & Pulley Generator',nodes:[[405,470,'mech'],[460,450,'elec',.2]]},wheel:{n:'Water Wheel & Generator',nodes:[[370,405,'mech'],[460,450,'elec',.2]]},solar:{n:'Solar Panel',nodes:[[380,275,'light'],[460,450,'elec',.25]]}};
+const USR={water:{n:'Water Beaker',eff:0,out:'therm',node:[800,470]},bulb:{n:'Incandescent Bulb',eff:.1,out:'light',node:[800,405]},cfl:{n:'Fluorescent Bulb',eff:.75,out:'light',node:[800,405]},fan:{n:'Desk Fan',eff:.8,out:'mech',node:[800,410]}};
+const rate=()=>S.on?S.lvl*8:0;
+function mkFree(x,y,f,v0,life){const a=f=='light'||f=='mech'?R()*6.28:-1.57+(R()-.5)*1.2,v=v0||(f=='light'?110:f=='mech'?80:50);S.syms.push({x,y,f,m:'free',vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:life||(f=='light'?4.5:3),age:0})}
+const CP=[440,300],SUN=[92,115];
+function pn(){return[Math.sin(S.pa),-Math.cos(S.pa)]}
+function face(){const n=pn();return[CP[0]+n[0]*16,CP[1]+n[1]*16]}
+function emit(){const s=SRC[S.src],c=CONV[S.conv],u=USR[S.usr],st=s.nodes[0];let cn=c.nodes,blk=false,bn=null;
+ if(S.src=='sun'){const f=face(),n=pn(),d=[SUN[0]-CP[0],SUN[1]-CP[1]],l=Math.hypot(d[0],d[1]),al=Math.max(0,(n[0]*d[0]+n[1]*d[1])/l);cn=[[f[0],f[1],'light'],c.nodes[1]];
+  if(R()<S.cld){blk=true;const t=.25+R()*.4;bn=[SUN[0]+(f[0]-SUN[0])*t+(R()-.5)*20,SUN[1]+(f[1]-SUN[1])*t+(R()-.5)*20]}
+  else if(R()>al*al){blk=true;bn=f}}
+ S.syms.push({x:st[0],y:st[1],f:st[2],p:blk?[[bn[0],bn[1],'light']]:[...s.nodes.slice(1),...cn,[500,470,'elec'],[710,470,'elec'],[790,470,'elec'],[...u.node,'elec']],i:0,m:'path',blk});
+ if(S.src=='sun')for(let k=0;k<2;k++)mkFree(92,115,'light',60+R()*70,10)}
+function arrive(q){const n=q.p[q.i];q.x=n[0];q.y=n[1];if(n[2]&&n[2]!=q.f)S.fx.push({x:n[0],y:n[1],c:FC[n[2]],a:0});if(n[2])q.f=n[2];
+ if(n[3]!==undefined){S.cf++;if(R()<n[3]){q.f='therm';q.m='free';q.x=460+(R()-.5)*40;q.y=408;q.vx=0;q.vy=-50;q.life=3;q.age=0;return}}
+ q.i++;if(q.i>=q.p.length)fin(q)}
+function fin(q){const u=USR[S.usr];if(q.blk){q.m='free';q.vx=(R()-.5)*60;q.vy=-30;q.life=.8;q.age=0;return}S.uf++;
+ if(S.usr=='water'){q.f='therm';q.m='store';q.tx=752+R()*92;q.ty=435+R()*55;q.life=6;q.age=0;S.T+=.55;return}
+ q.m='dead';const o=R()<u.eff?u.out:'therm';
+ if(S.usr=='fan'){if(o=='mech')mkFree(800,405,'mech',90,2.5);else mkTherm(800,455)}else{if(o=='light')mkFree(800,390,'light',130,4.5);else mkTherm(800,345+R()*10)}}
+function mkTherm(x,y){S.syms.push({x:x+(R()-.5)*14,y,f:'therm',m:'free',vx:0,vy:-45,life:3,age:0})}
+function reset(){S.syms=[];S.T=20;S.uf=S.cf=0;S.on=false;S.demo&&clearInterval(S.demo);S.demo=null;S.hl=-1;ui()}
+function onoff(){S.on=!S.on;ui();msg()}
+function ui(){$s('#bOn').textContent=S.on?'STOP':'START';$s('#bOn').className=S.on?'c3':'c2';$s('#bDemo').classList.toggle('on',!!S.demo)}
+function tg(k,b){S[k]=!S[k];b.classList.toggle('on',S[k])}
+function spd(b){S.spd=S.spd==1?2:S.spd==2?.5:1;b.textContent='Speed: '+(S.spd==1?'Normal':S.spd>1?'Fast':'Slow')}
+function full(){document.fullscreenElement?document.exitFullscreen():$s('#app').requestFullscreen()}
+function stp(n){S.hl=n;const s=SRC[S.src],c=CONV[S.conv],u=USR[S.usr];if(!S.on){S.on=true;ui()}
+ $s('#hint').textContent=['',
+ 'Step 1: '+(S.src=='kettle'?'The gas flame burns. Chemical energy becomes Thermal energy and makes steam.':S.src=='sun'?'The Sun sends out Light energy in all directions.':S.src=='faucet'?'Falling water has Mechanical energy (moving energy).':'The rider\u2019s muscles use Chemical energy to make Mechanical energy.'),
+ 'Step 2: The '+c.n+' changes '+FN[s.f=='mech'?'mech':'light']+' energy into Electrical energy. Some energy is lost as heat.',
+ 'Step 3: Electrical energy travels along the wire to the '+u.n+'.',
+ 'Step 4: The '+u.n+' receives the Electrical energy and puts it to use.',
+ 'Step 5: '+({water:'Thermal energy heats the water. The thermometer goes up!',bulb:'Only a little becomes Light. Most becomes Thermal energy (heat).',cfl:'Most becomes Light, only a little is wasted as heat. It is more efficient!',fan:'The blades spin (Mechanical energy) and a little heat is made.'})[S.usr]][n]}
+function demo(){if(S.demo){clearInterval(S.demo);S.demo=null;S.hl=-1;ui();return}let n=1;stp(1);S.demo=setInterval(()=>{n=n%5+1;stp(n)},4200);ui()}
+function msg(){const s=SRC[S.src],c=CONV[S.conv],u=USR[S.usr];$s('#hint').textContent=(S.on?'Running: ':'Ready. Press START. ')+s.n+' \u2192 '+c.n+' \u2192 '+u.n+'.'}
+document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k=='conv')return;S[k]=b.dataset.v;if(k=='src')S.conv=SRC[S.src].c;S.syms=[];S.T=20;sel();msg()});
+$s('#lvl').oninput=e=>S.lvl=e.target.value/100;$s('#cld').oninput=e=>{S.cld=e.target.value/100;cldMsg()};
+$s('#pa').oninput=e=>{S.pa=-1.7+e.target.value/100*1.4;$s('#hint').textContent=Math.abs(S.pa+1.084)>.35?'The panel is turned away from the sun, so the light bounces off. Press Face the Sun!':'The panel is facing the sun, so it collects light.'};
+function cldMsg(){$s('#hint').textContent=S.src!='sun'?'Choose the Sun as the source to use clouds and the solar panel.':S.cld>.6?'Thick clouds block the sunlight, so almost no light reaches the solar panel.':S.cld>0?'Some sunlight is blocked by the clouds, so the solar panel gets less energy.':'Clear sky: all the sunlight reaches the solar panel.'}
+function clouds(d){S.cld=Math.max(0,Math.min(1,S.cld+d));$s('#cld').value=Math.round(S.cld*100);cldMsg()}
+function faceSun(){S.pa=-1.084;$s('#pa').value=44;$s('#hint').textContent=S.src=='sun'?'The solar panel now faces the sun, so it collects the most light.':'Choose the Sun as the source to use the solar panel.'}
+function sel(){document.querySelectorAll('button[data-k]').forEach(b=>{const k=b.dataset.k;b.classList.toggle('on',S[k]==b.dataset.v);if(k=='conv')b.disabled=S.conv!=b.dataset.v});$s('#cloudbox').style.display=S.src=='sun'?'block':'none'}
+sel();msg();
+function rr(x,y,w,h,r,f,s,lw){g.beginPath();g.roundRect(x,y,w,h,r);if(f){g.fillStyle=f;g.fill()}if(s){g.strokeStyle=s;g.lineWidth=lw||2;g.stroke()}}
+function lg(x1,y1,x2,y2,...st){const q=g.createLinearGradient(x1,y1,x2,y2);st.forEach((c,i)=>q.addColorStop(i/(st.length-1),c));return q}
+function rg(x,y,r0,r1,...st){const q=g.createRadialGradient(x,y,r0,x,y,r1);st.forEach((c,i)=>q.addColorStop(i/(st.length-1),c));return q}
+function sh(x,y,w,h){g.fillStyle='rgba(60,30,0,.28)';g.beginPath();g.ellipse(x,y,w,h,0,0,7);g.fill()}
+function pipe(pts,w,c){g.lineCap='round';g.lineJoin='round';g.strokeStyle='#334155';g.lineWidth=w+4;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p));g.stroke();g.strokeStyle=c;g.lineWidth=w;g.stroke();g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=w*.22;g.translate(0,-w*.2);g.stroke();g.translate(0,w*.2)}
+function lab(t,x,y){if(!S.lab)return;g.font='bold 15px Segoe UI';g.textAlign='center';const w=g.measureText(t).width+16;rr(x-w/2,y-14,w,24,8,'rgba(15,23,42,.85)');g.fillStyle='#fde047';g.fillText(t,x,y+3)}
+function cloud(x,y,s,a,col){g.fillStyle=col||'rgba(255,255,255,'+a+')';g.beginPath();g.arc(x,y,24*s,0,7);g.arc(x+26*s,y+4*s,20*s,0,7);g.arc(x-26*s,y+6*s,18*s,0,7);g.arc(x+8*s,y-14*s,19*s,0,7);g.fill()}
+function leg(hx,hy,px,py,c){const L=44,d=Math.min(Math.hypot(px-hx,py-hy),2*L-1),a=Math.atan2(py-hy,px-hx),b=Math.acos(d/(2*L)),kx=hx+Math.cos(a-b)*L,ky=hy+Math.sin(a-b)*L;g.strokeStyle=c;g.lineWidth=11;g.lineCap='round';g.beginPath();g.moveTo(hx,hy);g.lineTo(kx,ky);g.lineTo(px,py);g.stroke()}
+function drawSrc(){const a=S.sa;
+ if(S.src=='bike'){sh(160,538,110,10);for(const x of[100,222]){g.strokeStyle='#111827';g.lineWidth=8;g.beginPath();g.arc(x,498,38,0,7);g.stroke();g.strokeStyle='#cbd5e1';g.lineWidth=2;g.beginPath();g.arc(x,498,32,0,7);g.stroke();g.lineWidth=1;g.strokeStyle='#e2e8f0';for(let k=0;k<12;k++){const t=a+k*.52;g.beginPath();g.moveTo(x,498);g.lineTo(x+Math.cos(t)*32,498+Math.sin(t)*32);g.stroke()}g.fillStyle='#475569';g.beginPath();g.arc(x,498,5,0,7);g.fill()}
+  g.fillStyle='#4b5563';g.beginPath();g.moveTo(100,498);g.lineTo(78,545);g.lineTo(126,545);g.fill();g.save();g.translate(222,498);g.rotate(a);g.fillStyle=lg(-22,0,22,0,'#9ca3af','#f3f4f6','#6b7280');g.beginPath();g.arc(0,0,22,0,7);g.fill();g.strokeStyle='#374151';g.lineWidth=3;g.stroke();for(let k=0;k<6;k++){g.rotate(1.047);g.beginPath();g.moveTo(5,0);g.lineTo(17,0);g.stroke()}g.restore();
+  g.strokeStyle='#dc2626';g.lineWidth=6;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(100,498);g.lineTo(148,495);g.lineTo(140,445);g.lineTo(205,438);g.lineTo(148,495);g.moveTo(100,498);g.lineTo(140,445);g.moveTo(205,438);g.lineTo(222,498);g.stroke();
+  g.strokeStyle='#1f2937';g.lineWidth=7;g.beginPath();g.moveTo(130,440);g.lineTo(152,440);g.moveTo(205,438);g.lineTo(212,420);g.lineTo(226,420);g.stroke();
+  g.strokeStyle='#94a3b8';g.lineWidth=3;g.beginPath();g.arc(148,495,13,0,7);g.stroke();g.beginPath();g.arc(100,498,7,0,7);g.stroke();
+  const p1=[148+Math.cos(a)*24,495+Math.sin(a)*24],p2=[148-Math.cos(a)*24,495-Math.sin(a)*24];leg(158,428,p2[0],p2[1],'#1e3a8a');g.strokeStyle='#475569';g.lineWidth=4;g.beginPath();g.moveTo(...p1);g.lineTo(...p2);g.stroke();
+  g.strokeStyle='#f97316';g.lineWidth=20;g.beginPath();g.moveTo(158,430);g.lineTo(186,385);g.stroke();g.strokeStyle='#f1c27d';g.lineWidth=7;g.beginPath();g.moveTo(186,390);g.lineTo(214,420);g.stroke();
+  g.fillStyle='#f1c27d';g.beginPath();g.arc(194,368,12,0,7);g.fill();g.fillStyle='#2563eb';g.beginPath();g.arc(194,365,14,3.2,6.3);g.fill();leg(158,428,p1[0],p1[1],'#1d4ed8');g.fillStyle='#111';g.fillRect(p1[0]-8,p1[1]-2,16,5)}
+ if(S.src=='faucet'){pipe([[20,175],[240,175],[240,205]],28,'#cbd5e1');rr(228,203,26,12,3,'#94a3b8','#475569');g.fillStyle='#dc2626';g.fillRect(120,140,8,22);g.beginPath();g.arc(124,138,13,0,7);g.fill();
+  if(S.on){g.strokeStyle='rgba(56,189,248,.9)';g.lineWidth=7+6*S.lvl;g.lineCap='round';g.beginPath();g.moveTo(241,215);g.quadraticCurveTo(252,310,345,380);g.stroke();g.strokeStyle='rgba(255,255,255,.7)';g.lineWidth=2;g.setLineDash([12,10]);g.lineDashOffset=-S.t*90;g.stroke();g.setLineDash([])}}
+ if(S.src=='sun'){g.fillStyle=rg(90,115,5,110,'rgba(255,255,255,1)','rgba(253,224,71,.8)','rgba(253,224,71,0)');g.beginPath();g.arc(90,115,110,0,7);g.fill();g.fillStyle=rg(90,115,3,42,'#fff','#fde047','#f59e0b');g.beginPath();g.arc(90,115,42,0,7);g.fill();
+}
+ if(S.src=='kettle'){sh(140,560,90,10);rr(80,520,120,34,8,lg(0,520,0,554,'#e5e7eb','#6b7280'),'#374151');g.fillStyle='#111';g.beginPath();g.ellipse(140,521,46,8,0,0,7);g.fill();
+  if(S.on)for(let k=0;k<12;k++){const t=k*.52+S.t*2,h=14+16*S.lvl*(.7+.3*Math.sin(S.t*16+k*3));g.fillStyle=k%2?'#2563eb':'#38bdf8';g.beginPath();g.ellipse(140+Math.cos(t)*34,519,5,h,0,0,7);g.globalAlpha=.8;g.fill();g.globalAlpha=1}
+  g.fillStyle=lg(90,470,190,470,'#fca5a5','#dc2626','#7f1d1d');g.beginPath();g.moveTo(92,505);g.bezierCurveTo(88,455,192,455,188,505);g.lineTo(92,505);g.fill();g.fillStyle='#9ca3af';g.beginPath();g.ellipse(140,466,22,7,0,0,7);g.fill();g.fillStyle='#111';g.beginPath();g.arc(140,457,6,0,7);g.fill();
+  g.strokeStyle='#dc2626';g.lineWidth=9;g.beginPath();g.moveTo(180,495);g.quadraticCurveTo(212,480,200,438);g.stroke();g.strokeStyle='#111';g.lineWidth=8;g.beginPath();g.arc(140,470,52,3.7,5.7);g.stroke();
+  if(S.on)for(let k=0;k<7;k++){const u=(S.t*.5+k/7)%1;g.fillStyle='rgba(255,255,255,'+(.8-u*.7)+')';g.beginPath();g.arc(200+u*130,436-u*14+Math.sin(u*9+k)*6,6+u*12,0,7);g.fill()}}
+ lab(SRC[S.src].n,150,572);lab({bike:'Chemical → Mechanical',faucet:'Mechanical (falling water)',sun:'Light',kettle:'Chemical → Thermal → Mechanical'}[S.src],150,600)}
+function drawConv(){const a=S.conv=='belt'?S.sa*1.57:S.cs;
+ if(S.conv=='wheel'){sh(375,540,70,8);g.fillStyle='#6b7280';g.fillRect(360,480,20,60);g.save();g.translate(370,440);g.rotate(a);g.strokeStyle='#92400e';g.lineWidth=7;g.beginPath();g.arc(0,0,50,0,7);g.stroke();g.strokeStyle='#d1d5db';g.lineWidth=2;g.beginPath();g.arc(0,0,40,0,7);g.stroke();for(let k=0;k<8;k++){g.rotate(.785);g.fillStyle=lg(-10,0,10,0,'#d97706','#92400e');g.fillRect(-10,-62,20,26);g.strokeStyle='#78350f';g.lineWidth=5;g.beginPath();g.moveTo(0,0);g.lineTo(0,-50);g.stroke()}g.restore();g.fillStyle='#9ca3af';g.beginPath();g.arc(370,440,10,0,7);g.fill()}
+ else if(S.conv=='solar'){sh(455,540,60,8);g.fillStyle='#6b7280';g.fillRect(434,300,12,112);
+ const al=Math.max(0,Math.cos(S.pa+1.084)),FP='M';
+ g.save();g.translate(CP[0],CP[1]);g.rotate(S.pa);
+ g.fillStyle='#374151';g.beginPath();g.roundRect(-104,-5,208,14,4);g.fill();
+ g.fillStyle=lg(-100,0,100,0,'#1e3a8a','#2563eb','#0b1b4d');g.beginPath();g.moveTo(-100,-6);g.lineTo(100,-6);g.lineTo(112,-34);g.lineTo(-88,-34);g.closePath();g.fill();
+ g.strokeStyle='rgba(190,215,255,.6)';g.lineWidth=1.2;for(let k=1;k<10;k++){const f=-100+k*20;g.beginPath();g.moveTo(f,-6);g.lineTo(f+12,-34);g.stroke()}for(let k=1;k<3;k++){g.beginPath();g.moveTo(-100+k*4,-6-k*9.3);g.lineTo(100+k*4,-6-k*9.3);g.stroke()}
+ const gl=S.src=='sun'&&S.on?(1-S.cld)*S.lvl*al:0;g.fillStyle='rgba(253,224,71,'+(.5*gl)+')';g.beginPath();g.moveTo(-100,-6);g.lineTo(100,-6);g.lineTo(112,-34);g.lineTo(-88,-34);g.fill();
+ g.strokeStyle='#e5e7eb';g.lineWidth=3;g.beginPath();g.moveTo(-100,-6);g.lineTo(100,-6);g.lineTo(112,-34);g.lineTo(-88,-34);g.closePath();g.stroke();g.restore();
+ g.fillStyle='#9ca3af';g.beginPath();g.arc(CP[0],CP[1],8,0,7);g.fill();
+ if(S.src=='sun'&&S.on&&S.cld<.97){const f=face();g.strokeStyle='rgba(250,204,21,'+(.35*(1-S.cld))+')';g.lineWidth=3;g.setLineDash([10,10]);g.lineDashOffset=-S.t*40;for(const o of[-26,0,26]){g.beginPath();g.moveTo(SUN[0]+o*.5,SUN[1]-o*.9);g.lineTo(f[0]+o*.5,f[1]-o*.9);g.stroke()}g.setLineDash([])}}
+ rr(420,410,80,80,14,lg(420,410,500,490,'#f3f4f6','#9ca3af','#6b7280'),'#374151');rr(432,424,56,52,8,'#d1d5db','#6b7280');
+ g.save();g.translate(460,450);g.rotate(a*1.5);g.strokeStyle='#475569';g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(-16,0);g.lineTo(16,0);g.moveTo(0,-16);g.lineTo(0,16);g.stroke();g.restore();
+ if(S.conv=='belt')drawBelt();pipe([[500,470],[710,470]],20,'#4b5563');lab(CONV[S.conv].n,440,572);lab(S.conv=='solar'?'Light → Electrical':'Mechanical → Electrical',440,600)}
+function drawUsr(){const b=Math.min(1,S.uf/3),u=S.usr;pipe([[705,470],[790,470]],14,'#4b5563');
+ if(u=='water'){sh(800,508,80,8);const T=S.T;g.fillStyle='rgba(125,211,252,.6)';g.fillRect(742,420,116,76);g.fillStyle='rgba(239,68,68,'+Math.min(.55,(T-20)/150)+')';g.fillRect(742,420,116,76);rr(738,362,124,138,12,'rgba(220,240,255,.28)','#475569',3);g.strokeStyle='#64748b';g.lineWidth=1.5;for(let y=380;y<495;y+=12){g.beginPath();g.moveTo(742,y);g.lineTo(y%24<12?760:752,y);g.stroke()}
+  g.fillStyle='rgba(255,255,255,.5)';g.fillRect(746,368,6,120);rr(883,360,16,132,8,'#fff','#334155',3);const fr=Math.min(1,(T-10)/100);g.fillStyle='#ef4444';g.fillRect(888,490-fr*125,6,fr*125+8);g.beginPath();g.arc(891,502,13,0,7);g.fill();g.fillStyle='#fff';g.font='bold 14px Segoe UI';g.textAlign='center';g.fillText(Math.round(T)+' \u00B0C',891,350);
+  if(T>75&&R()<.5)S.puffs.push({x:755+R()*90,y:415,r:6,a:.6});if(T>60&&R()<.2){S.puffs.push({x:755+R()*90,y:480,r:3,a:.5,b:1})}}
+ if(u=='bulb'||u=='cfl'){sh(800,508,40,6);g.fillStyle=rg(800,390,5,50+120*b,'rgba(255,245,160,'+(.95*b)+')','rgba(255,240,140,0)');g.beginPath();g.arc(800,390,50+120*b,0,7);g.fill();
+  rr(784,428,32,42,5,lg(784,0,816,0,'#9ca3af','#f3f4f6','#6b7280'));for(let y=434;y<466;y+=6){g.strokeStyle='#6b7280';g.lineWidth=1.5;g.beginPath();g.moveTo(784,y);g.lineTo(816,y);g.stroke()}rr(790,468,20,14,4,'#374151');
+  if(u=='bulb'){g.fillStyle='rgba(255,255,255,'+(.3+.5*b)+')';g.strokeStyle='#94a3b8';g.lineWidth=2;g.beginPath();g.arc(800,390,38,0,7);g.fill();g.stroke();g.fillRect(789,420,22,12);g.strokeStyle=b>.1?'#fde047':'#6b7280';g.lineWidth=3;g.beginPath();g.moveTo(794,428);g.lineTo(794,394);for(let k=0;k<5;k++)g.lineTo(794+k*3,k%2?394:386);g.lineTo(806,394);g.lineTo(806,428);g.stroke()}
+  else{g.strokeStyle=b>.1?'#fffbe0':'#e2e8f0';g.lineWidth=9;g.lineCap='round';g.beginPath();for(let y=426;y>358;y-=8){g.moveTo(782,y);g.lineTo(818,y-5)}g.stroke();g.strokeStyle='#9ca3af';g.lineWidth=2;g.stroke()}}
+ if(u=='fan'){sh(800,510,50,7);rr(790,430,20,60,6,lg(790,0,810,0,'#6b7280','#e5e7eb','#6b7280'));rr(765,485,70,16,7,'#374151');g.save();g.translate(800,405);g.rotate(S.fa);for(let k=0;k<4;k++){g.rotate(1.571);g.fillStyle=lg(-14,0,14,0,'#0e7490','#67e8f9');g.beginPath();g.ellipse(0,-33,15,33,.15,0,7);g.fill()}g.restore();g.strokeStyle='#9ca3af';g.lineWidth=3;g.beginPath();g.arc(800,405,52,0,7);g.stroke();g.lineWidth=1;for(let k=0;k<8;k++){g.beginPath();g.moveTo(800,405);g.lineTo(800+Math.cos(k*.785)*52,405+Math.sin(k*.785)*52);g.stroke()}g.fillStyle='#e5e7eb';g.beginPath();g.arc(800,405,9,0,7);g.fill()}
+ lab(USR[u].n,800,572);lab({water:'Electrical → Thermal',bulb:'Electrical → Light + Thermal',cfl:'Electrical → Light + Thermal',fan:'Electrical → Mechanical + Thermal'}[u],800,600)}
+function drawBelt(){const c1=[222,498],r1=22,c2=[405,470],r2=14,d=Math.hypot(c2[0]-c1[0],c2[1]-c1[1]),a=Math.atan2(c2[1]-c1[1],c2[0]-c1[0]),b=Math.acos((r1-r2)/d);
+ g.fillStyle='#6b7280';g.fillRect(410,464,12,12);g.beginPath();g.arc(c2[0],c2[1],r2,a-b,a+b);g.arc(c1[0],c1[1],r1,a+b,a-b+6.283);g.closePath();g.lineJoin='round';g.strokeStyle='#111827';g.lineWidth=6;g.stroke();g.strokeStyle='#9ca3af';g.lineWidth=2;g.setLineDash([8,8]);g.lineDashOffset=-S.sa*22;g.stroke();g.setLineDash([]);
+ g.save();g.translate(c2[0],c2[1]);g.rotate(S.sa*22/14);g.fillStyle=lg(-14,0,14,0,'#9ca3af','#f3f4f6','#6b7280');g.beginPath();g.arc(0,0,r2,0,7);g.fill();g.strokeStyle='#374151';g.lineWidth=2;g.stroke();for(let k=0;k<4;k++){g.rotate(1.571);g.beginPath();g.moveTo(2,0);g.lineTo(11,0);g.stroke()}g.restore()}
+function drawClouds(){if(S.src!='sun'||S.cld<=0)return;const B=[[130,128,1.3],[190,160,1.5],[250,190,1.5],[310,225,1.4],[160,95,1.1],[235,140,1.2],[360,255,1.2]];
+ B.forEach((c,i)=>{const th=i/B.length,v=Math.max(0,Math.min(1,(S.cld*1.05-th)*B.length));if(v<=0)return;const x=c[0]-(1-v)*260+Math.sin(S.t*.6+i)*6,y=c[1]+Math.cos(S.t*.5+i)*3;g.globalAlpha=Math.min(1,v*1.5);cloud(x,y+9,c[2],1,'#cbd5e1');cloud(x,y,c[2],.97,'#ffffff');g.globalAlpha=1})}
+function sym(q){const al=q.m=='free'||q.m=='store'?Math.max(0,1-q.age/q.life):1;g.globalAlpha=Math.min(1,al*1.6);g.fillStyle=FC[q.f];g.strokeStyle='#1e293b';g.lineWidth=1.5;g.beginPath();g.roundRect(q.x-9,q.y-9,18,18,4);g.fill();g.stroke();g.fillStyle='#1e293b';g.font='bold 12px Segoe UI';g.textAlign='center';g.fillText('E',q.x,q.y+4);g.globalAlpha=1}
+const W=1000,H=620,HL=[0,[20,60,290,540],[310,190,210,320],[500,445,300,50],[700,330,200,230],[690,300,230,260]];let sc=1,ox=0,oy=0;
+function fit(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;sc=Math.min(r.width/W,r.height/H);ox=(r.width-W*sc)/2;oy=(r.height-H*sc)/2}
+new ResizeObserver(fit).observe(cv);
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000)*S.spd;last=now;S.t+=dt;
+ S.acc+=dt*rate();while(S.acc>=1){S.acc-=1;emit()}
+ S.uf*=Math.exp(-dt*1.3);S.cf*=Math.exp(-dt*1.3);const tp=S.on?Math.min(1,rate()/5):0;S.pw+=(tp-S.pw)*dt*2;S.sa+=dt*S.pw*5;S.cs+=dt*Math.min(3,S.cf)*3;S.fa+=dt*14*Math.min(1,S.uf/2);S.T=Math.max(20,S.T-dt*(S.T-20)*.04);
+ for(const q of S.syms){if(q.m=='path'){const n=q.p[q.i],dx=n[0]-q.x,dy=n[1]-q.y,d=Math.hypot(dx,dy),st=180*dt;if(d<=st)arrive(q);else{q.x+=dx/d*st;q.y+=dy/d*st}}
+  else if(q.m=='free'){q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.f=='therm'){q.vy-=15*dt;q.x+=Math.sin(S.t*5+q.y)*.5}q.age+=dt}
+  else if(q.m=='store'){q.x+=(q.tx-q.x)*dt*4+(R()-.5)*3;q.y+=(q.ty-q.y)*dt*4+(R()-.5)*3;q.age+=dt}}
+ S.syms=S.syms.filter(q=>q.m=='dead'?false:q.m=='path'?true:q.age<q.life);S.puffs.forEach(p=>{p.y-=(p.b?25:40)*dt;p.r+=(p.b?1:12)*dt;p.a-=.35*dt});S.puffs=S.puffs.filter(p=>p.a>0&&(!p.b||p.y>405));
+ const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;g.setTransform(d,0,0,d,0,0);g.fillStyle=lg(0,0,0,r.height,'#fff7cf','#ffe9a6');g.fillRect(0,0,r.width,r.height);
+ g.translate(ox,oy);g.scale(sc,sc);
+ g.fillStyle=lg(0,545,0,620,'#c58a4a','#8a5a2b');g.fillRect(-300,545,1600,200);g.strokeStyle='rgba(60,30,0,.25)';g.lineWidth=2;for(let y=565;y<620;y+=22){g.beginPath();g.moveTo(-300,y);g.lineTo(1300,y);g.stroke()}g.fillStyle='rgba(255,255,255,.35)';g.fillRect(-300,545,1600,3);
+ g.font='bold 15px Segoe UI';g.textAlign='center';[['ENERGY SOURCE',150,'#16a34a'],['ENERGY CONVERTER',440,'#2563eb'],['ENERGY USER',800,'#9333ea']].forEach(([t,x,c])=>{rr(x-90,12,180,28,14,c);g.fillStyle='#fff';g.fillText(t,x,32)});
+ drawSrc();drawConv();drawUsr();
+ S.puffs.forEach(p=>{g.fillStyle='rgba(255,255,255,'+p.a+')';g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill()});
+ if(S.sym)S.syms.forEach(sym);S.fx.forEach(f=>{f.a+=dt*2;g.strokeStyle=f.c;g.globalAlpha=Math.max(0,1-f.a);g.lineWidth=4;g.beginPath();g.arc(f.x,f.y,8+f.a*30,0,7);g.stroke();g.globalAlpha=1});S.fx=S.fx.filter(f=>f.a<1);drawClouds();
+ if(S.hl>0){const h=HL[S.hl];g.strokeStyle='rgba(34,197,94,'+(.6+.4*Math.sin(S.t*8))+')';g.lineWidth=6;g.setLineDash([14,8]);g.strokeRect(...h);g.setLineDash([])}
+ const cn={mech:0,elec:0,therm:0,light:0,chem:0};S.syms.forEach(q=>cn[q.f]++);rr(560,50,150,100,10,'rgba(255,255,255,.85)','#475569');g.fillStyle='#0f172a';g.font='bold 12px Segoe UI';g.textAlign='left';g.fillText('Energy Now',570,67);
+ Object.keys(cn).forEach((k,i)=>{g.fillStyle=FC[k];g.fillRect(570,74+i*14,Math.min(100,cn[k]*6),9);g.strokeStyle='#334155';g.lineWidth=1;g.strokeRect(570,74+i*14,100,9)});
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

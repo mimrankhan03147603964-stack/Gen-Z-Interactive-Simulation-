@@ -35,7 +35,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
-  // 100% of available simulation topics currently in the system library (74 verified labs)
+  // 100% of available simulation topics currently in the system library (86 verified labs)
   const allSimulationTopics = SIMULATIONS_LIST;
 
   // Digital clock widget
