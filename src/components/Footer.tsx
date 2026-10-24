@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 74 }) => {
         {/* 1. Monogram / Logo centered directly on parrot-green background (Completely transparent, no dark box) */}
         <div className="flex items-center justify-center bg-transparent p-0 m-0 border-0 shadow-none">
           <img 
-            src="/genz-logo-transparent.png" 
+            src="/genz-logo-transparent.png?v=3" 
             alt="Gen Z Interactive Simulations Official Logo" 
             className="block select-none pointer-events-none"
             style={{ display: 'block', maxHeight: '60px', width: 'auto', objectFit: 'contain', background: 'transparent' }}

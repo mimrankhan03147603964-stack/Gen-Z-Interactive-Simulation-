@@ -284,25 +284,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
             </div>
           </div>
 
-          {/* Official GZ Monogram Emblem - Exact-Fit Box Tightly Shrink-Wrapped around Logo */}
-          <div className="shrink-0 flex items-center justify-center my-2 md:my-0 self-center">
-            <div 
-              className="relative inline-flex items-center justify-center transition-all duration-300 hover:scale-105 rounded-lg overflow-hidden border-2 border-sky-400/90 bg-[#240854] shadow-[0_12px_28px_-4px_rgba(0,0,0,0.7),0_0_20px_rgba(56,189,248,0.35)]"
-              style={{
-                width: 'fit-content',
-                height: 'auto',
-                padding: '0px',
-                borderRadius: '8px'
-              }}
-              title="Gen Z Interactive Simulations Official Monogram"
-            >
-              <img 
-                src="/genz-official-logo.png" 
-                alt="Gen Z Interactive Simulations Official Monogram Logo" 
-                className="block select-none pointer-events-none rounded-md"
-                style={{ display: 'block', maxHeight: '105px', width: 'auto', objectFit: 'contain' }}
-              />
-            </div>
+          {/* Official GZ Monogram Emblem - Transparent directly on Hero Background */}
+          <div className="shrink-0 flex items-center justify-center my-2 md:my-0 self-center bg-transparent p-0 m-0 border-0 shadow-none">
+            <img 
+              src="/genz-logo-transparent.png?v=3" 
+              alt="Gen Z Interactive Simulations Official Monogram Logo" 
+              className="block select-none pointer-events-none transition-transform duration-300 hover:scale-105"
+              style={{ display: 'block', maxHeight: '105px', width: 'auto', objectFit: 'contain', background: 'transparent' }}
+            />
           </div>
         </div>
 
