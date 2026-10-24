@@ -12,7 +12,12 @@ import {
   Globe,
   Calculator,
   Cpu,
-  GraduationCap
+  GraduationCap,
+  ExternalLink,
+  Flame,
+  Dna,
+  Volume2,
+  Activity
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -44,6 +49,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onSelectCategory
 }) => {
   const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | null>(null);
+  const [isPinned, setIsPinned] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -52,12 +58,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setOpenDropdown(null);
+        setIsPinned(false);
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpenDropdown(null);
+        setIsPinned(false);
       }
     };
 
@@ -79,25 +87,35 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    if (isPinned) return; // If pinned by explicit user click, keep open
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
       setOpenDropdown(null);
-    }, 240);
-  }, []);
+    }, 280);
+  }, [isPinned]);
 
   const toggleDropdown = useCallback((menu: 'catalog' | 'hub') => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    setOpenDropdown(prev => prev === menu ? null : menu);
+    setOpenDropdown(prev => {
+      if (prev === menu) {
+        setIsPinned(false);
+        return null;
+      } else {
+        setIsPinned(true); // Pinned by user click!
+        return menu;
+      }
+    });
   }, []);
 
   const handleItemClick = useCallback((href: string, categoryKey?: string) => {
-    // 1. Close dropdown immediately
+    // 1. Close dropdown immediately & unpin
     setOpenDropdown(null);
+    setIsPinned(false);
 
     // 2. Filter category if specified
     if (categoryKey && onSelectCategory) {
@@ -135,7 +153,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { 
       label: 'Physics & Motion', 
       href: '#catalog', 
-      desc: 'Mechanics, Optics, Waves & Doppler', 
+      desc: 'Mechanics, Optics, Waves & Doppler Effect', 
       categoryKey: 'Physics & Motion', 
       color: '#0284c7',
       icon: <Atom className="w-4 h-4 text-sky-600" />
@@ -151,7 +169,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { 
       label: 'Biology & Living Systems', 
       href: '#catalog', 
-      desc: 'Genetics, Excretory, Heart & Cells', 
+      desc: 'Genetics, Excretory, Circulation & Cells', 
       categoryKey: 'Biology & Life', 
       color: '#16a34a',
       icon: <Leaf className="w-4 h-4 text-emerald-600" />
@@ -159,13 +177,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { 
       label: 'Mathematics & Logic', 
       href: '#catalog', 
-      desc: 'Primary Class 1-5, Geometry & Algebra', 
+      desc: 'Primary Class 1-5, Geometry, Algebra & Trig', 
       categoryKey: 'Mathematics & Logic', 
       color: '#ea580c',
       icon: <Calculator className="w-4 h-4 text-orange-600" />
     },
     { 
-      label: 'Earth & Space Exploration', 
+      label: 'Astronomy & Space Science', 
       href: '#catalog', 
       desc: 'Solar System, Tides, Eclipses & Geology', 
       categoryKey: 'Earth & Space', 
@@ -175,7 +193,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { 
       label: 'Computer Science & IT', 
       href: '#catalog', 
-      desc: 'Logic Gates, Binary & Algorithms', 
+      desc: 'Logic Gates, Binary Circuits & Algorithms', 
       categoryKey: 'Computer Science & IT', 
       color: '#0e7490',
       icon: <Cpu className="w-4 h-4 text-cyan-600" />
@@ -183,7 +201,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { 
       label: 'Early Childhood (ECCE)', 
       href: '#catalog', 
-      desc: 'Alphabet Phonics, Colors & Shapes', 
+      desc: 'Alphabet Phonics, Colors, Shapes & Tracing', 
       categoryKey: 'Early Childhood (ECCE)', 
       color: '#db2777',
       icon: <Sparkles className="w-4 h-4 text-pink-600" />
@@ -196,6 +214,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       color: '#b91c1c',
       icon: <BookOpen className="w-4 h-4 text-rose-600" />
     },
+  ];
+
+  const featuredQuickLabs = [
+    { label: "Charles's Law", key: 'Chemistry & Matter', icon: <Flame className="w-3.5 h-3.5 text-orange-500" /> },
+    { label: 'DNA & Genetics', key: 'Biology & Life', icon: <Dna className="w-3.5 h-3.5 text-purple-500" /> },
+    { label: 'Doppler Effect', key: 'Physics & Motion', icon: <Volume2 className="w-3.5 h-3.5 text-amber-500" /> },
+    { label: 'Kidney Filtration', key: 'Biology & Life', icon: <Activity className="w-3.5 h-3.5 text-emerald-500" /> },
   ];
 
   const hubDropdownItems: DropdownItem[] = [
@@ -232,13 +257,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   return (
     <header 
       ref={headerRef}
-      className="fixed top-0 left-0 w-full z-[9999] border-b border-slate-200/90 bg-white/98 backdrop-blur-md transition-all select-none shadow-xs"
+      className="fixed top-0 left-0 w-full z-[99999] border-b border-slate-200/90 bg-white/98 backdrop-blur-md transition-all select-none shadow-xs"
       style={{ 
         position: 'fixed', 
         top: 0, 
         left: 0, 
         width: '100%', 
-        zIndex: 9999,
+        zIndex: 99999,
         backgroundColor: 'rgba(255, 255, 255, 0.98)',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
       }}
@@ -346,91 +371,115 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-sky-600' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel: Height Auto, max-height 85vh, z-index 99999, Unclipped Full View */}
+            {/* Floating Dropdown Panel: Height Auto, min-height fit-content, max-height 85vh, z-index 99999 */}
             {openDropdown === 'catalog' && (
               <div 
-                className="absolute left-0 sm:left-auto sm:right-0 md:left-0 top-full mt-2 w-[calc(100vw-24px)] sm:w-[540px] md:w-[620px] max-w-[640px] bg-white rounded-2xl border-2 border-slate-200/90 shadow-2xl p-3 z-[99999] transition-all"
+                className="absolute right-0 top-full pt-2 z-[99999]"
                 style={{
                   position: 'absolute',
                   top: '100%',
-                  zIndex: 99999,
-                  height: 'auto',
-                  minHeight: 'fit-content',
-                  maxHeight: '85vh',
-                  overflowY: 'auto',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                  right: 0,
+                  zIndex: 99999
                 }}
                 onMouseEnter={() => handleMouseEnter('catalog')}
                 onMouseLeave={handleMouseLeave}
               >
-                {/* Header with Title and All Labs Count Badge */}
-                <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
-                    <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-600">
-                      STEM Disciplines &amp; Laboratories
+                <div 
+                  className="w-[calc(100vw-20px)] sm:w-[560px] md:w-[640px] max-w-[660px] bg-white rounded-2xl border-2 border-slate-200/90 shadow-2xl p-3"
+                  style={{
+                    height: 'auto',
+                    minHeight: 'fit-content',
+                    maxHeight: '85vh',
+                    overflowY: 'auto',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                  }}
+                >
+                  {/* Header with Title and All Labs Count Badge */}
+                  <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                      <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-700">
+                        STEM Disciplines &amp; Academic Catalog
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
+                      {totalSimulations} Total Labs
                     </span>
                   </div>
-                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
-                    {totalSimulations} Total Labs
-                  </span>
-                </div>
 
-                {/* 2-Column Responsive Grid of All Disciplines (Clean, Spacious, Fully Clickable) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-0.5">
-                  {catalogDropdownItems.map((item, idx) => {
-                    const count = getCategoryCount(item.categoryKey);
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleItemClick(item.href, item.categoryKey);
-                        }}
-                        className="flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-sky-50/90 border border-slate-200/60 hover:border-sky-300 transition-all duration-150 group cursor-pointer shadow-2xs"
-                      >
-                        <div 
-                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
-                          style={{ backgroundColor: `${item.color}15` }}
+                  {/* 2-Column Responsive Grid of All Disciplines (Clean, Spacious, Fully Clickable) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-0.5">
+                    {catalogDropdownItems.map((item, idx) => {
+                      const count = getCategoryCount(item.categoryKey);
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleItemClick(item.href, item.categoryKey);
+                          }}
+                          className="flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-sky-50/90 border border-slate-200/60 hover:border-sky-300 transition-all duration-150 group cursor-pointer shadow-2xs"
                         >
-                          {item.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-1.5">
-                            <span className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-sky-700 transition-colors truncate">
-                              {item.label}
-                            </span>
-                            <span 
-                              className="text-[9px] font-bold px-1.5 py-0.2 rounded-md font-mono shrink-0 shadow-2xs"
-                              style={{ backgroundColor: `${item.color}20`, color: item.color }}
-                            >
-                              {count}
-                            </span>
+                          <div 
+                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
+                            style={{ backgroundColor: `${item.color}15` }}
+                          >
+                            {item.icon}
                           </div>
-                          <div className="text-[10.5px] text-slate-500 leading-tight mt-0.5 line-clamp-1 group-hover:text-slate-600">
-                            {item.desc}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1.5">
+                              <span className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-sky-700 transition-colors truncate">
+                                {item.label}
+                              </span>
+                              <span 
+                                className="text-[9px] font-bold px-1.5 py-0.2 rounded-md font-mono shrink-0 shadow-2xs"
+                                style={{ backgroundColor: `${item.color}20`, color: item.color }}
+                              >
+                                {count}
+                              </span>
+                            </div>
+                            <div className="text-[10.5px] text-slate-500 leading-tight mt-0.5 line-clamp-1 group-hover:text-slate-600">
+                              {item.desc}
+                            </div>
                           </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-                {/* Footer Quick Action */}
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-[11px]">
-                  <span className="text-slate-400 font-medium">Click any discipline to instantly filter catalog</span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleItemClick('#catalog', 'All Simulations');
-                    }}
-                    className="font-bold text-sky-600 hover:text-sky-800 underline cursor-pointer"
-                  >
-                    View All {totalSimulations} Labs &rarr;
-                  </button>
+                  {/* Quick Access to Key Topics Bar */}
+                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 px-2 text-[11px]">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-mono font-bold uppercase text-slate-400">Popular:</span>
+                      {featuredQuickLabs.map((lab, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleItemClick('#catalog', lab.key);
+                          }}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 transition-colors cursor-pointer text-[10.5px] font-semibold"
+                        >
+                          {lab.icon}
+                          <span>{lab.label}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleItemClick('#catalog', 'All Simulations');
+                      }}
+                      className="font-bold text-sky-600 hover:text-sky-800 underline cursor-pointer ml-auto"
+                    >
+                      View All {totalSimulations} Labs &rarr;
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -463,79 +512,85 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-indigo-600' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel: Height Auto, max-height 85vh, z-index 99999, Unclipped Full View */}
+            {/* Floating Dropdown Panel: Height Auto, min-height fit-content, max-height 85vh, z-index 99999 */}
             {openDropdown === 'hub' && (
               <div 
-                className="absolute right-0 top-full mt-2 w-[calc(100vw-24px)] sm:w-[480px] md:w-[520px] max-w-[540px] bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-3 z-[99999] transition-all"
+                className="absolute right-0 top-full pt-2 z-[99999]"
                 style={{
                   position: 'absolute',
                   top: '100%',
                   right: 0,
-                  zIndex: 99999,
-                  height: 'auto',
-                  minHeight: 'fit-content',
-                  maxHeight: '85vh',
-                  overflowY: 'auto',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                  zIndex: 99999
                 }}
                 onMouseEnter={() => handleMouseEnter('hub')}
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
-                    <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-600">
-                      Pedagogical Audience &amp; Framework
+                <div 
+                  className="w-[calc(100vw-20px)] sm:w-[480px] md:w-[520px] max-w-[540px] bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-3"
+                  style={{
+                    height: 'auto',
+                    minHeight: 'fit-content',
+                    maxHeight: '85vh',
+                    overflowY: 'auto',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.12)'
+                  }}
+                >
+                  <div className="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
+                      <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-700">
+                        Pedagogical Audience &amp; Framework
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
+                      Session 2026-27
                     </span>
                   </div>
-                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
-                    Session 2026-27
-                  </span>
-                </div>
 
-                <div className="space-y-2 p-0.5">
-                  {hubDropdownItems.map((item, idx) => (
+                  <div className="space-y-2 p-0.5">
+                    {hubDropdownItems.map((item, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleItemClick(item.href);
+                        }}
+                        className="w-full flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-indigo-50/90 border border-slate-200/60 hover:border-indigo-300 transition-all duration-150 group cursor-pointer shadow-2xs"
+                      >
+                        <div 
+                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
+                          style={{ backgroundColor: `${item.color}15` }}
+                        >
+                          {item.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-indigo-700 transition-colors">
+                            {item.label}
+                          </div>
+                          <div className="text-[11px] text-slate-500 leading-tight mt-0.5 group-hover:text-slate-600">
+                            {item.desc}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Footer Quick Action */}
+                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-[11px]">
+                    <span className="text-slate-400 font-medium">Curriculum Standards &amp; Demonstration Guide</span>
                     <button
-                      key={idx}
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleItemClick(item.href);
+                        handleItemClick('#pedagogical-hub');
                       }}
-                      className="w-full flex items-start gap-2.5 p-2.5 rounded-xl text-left bg-slate-50/70 hover:bg-indigo-50/90 border border-slate-200/60 hover:border-indigo-300 transition-all duration-150 group cursor-pointer shadow-2xs"
+                      className="font-bold text-indigo-600 hover:text-indigo-800 underline cursor-pointer"
                     >
-                      <div 
-                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-white"
-                        style={{ backgroundColor: `${item.color}15` }}
-                      >
-                        {item.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs sm:text-[13px] font-extrabold text-slate-800 group-hover:text-indigo-700 transition-colors">
-                          {item.label}
-                        </div>
-                        <div className="text-[11px] text-slate-500 leading-tight mt-0.5 group-hover:text-slate-600">
-                          {item.desc}
-                        </div>
-                      </div>
+                      Open Pedagogical Hub &rarr;
                     </button>
-                  ))}
-                </div>
-
-                {/* Footer Quick Action */}
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between px-2 text-[11px]">
-                  <span className="text-slate-400 font-medium">Curriculum Standards &amp; Demonstration Guide</span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleItemClick('#pedagogical-hub');
-                    }}
-                    className="font-bold text-indigo-600 hover:text-indigo-800 underline cursor-pointer"
-                  >
-                    Open Pedagogical Hub &rarr;
-                  </button>
+                  </div>
                 </div>
               </div>
             )}
