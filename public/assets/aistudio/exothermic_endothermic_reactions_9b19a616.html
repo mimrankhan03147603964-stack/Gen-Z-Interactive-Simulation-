@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Exothermic and Endothermic Reactions (Energy Profiles)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#020617}
+#app{height:100vh;display:flex;flex-direction:column;gap:8px;padding:10px 14px;color:#fff;background:linear-gradient(160deg,#0b3a8a,#082a63 55%,#061a45)}
+#top{text-align:center;background:linear-gradient(#0a4a9f,#06357a);border-radius:26px;padding:6px 20px;border-bottom:3px solid #38bdf8}
+#top h1{font-size:30px}#top h1 b{color:#fde047}#top div{font-size:19px;font-weight:700}
+#row{flex:1;min-height:0;display:flex;gap:12px}
+.pan{flex:1 1 0;min-width:0;display:flex;flex-direction:column;border-radius:20px;border:3px solid;overflow:hidden;transition:flex-grow .5s;cursor:pointer}
+.pan.f{flex-grow:1.6}.pan.s{flex-grow:.8}
+#exo{border-color:#f59e0b;background:#fef3c7}#endo{border-color:#0ea5e9;background:#e0f2fe}
+.pan h2{text-align:center;font-size:26px;padding:6px}#exo h2{background:linear-gradient(90deg,#ea580c,#f97316,#fb923c)}#endo h2{background:linear-gradient(90deg,#0284c7,#0ea5e9,#38bdf8)}
+.cvw{flex:1;min-height:0;position:relative}canvas{position:absolute;inset:0;width:100%;height:100%}
+.cap{margin:6px 12px 10px;padding:9px;border-radius:14px;text-align:center;font-weight:800;font-size:18px;color:#1e1b4b}
+#exo .cap{background:#fdba74aa}#endo .cap{background:#7dd3fcaa}
+#hint{font-size:17px;font-weight:700;text-align:center;background:#0008;border:2px solid #38bdf8;border-radius:30px;padding:7px 20px;min-height:38px}
+#bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:#0b1e5b;border-radius:18px;padding:8px}
+button{border:none;border-radius:14px;padding:10px 13px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 0 #0007;transition:.1s}
+button:hover{filter:brightness(1.18);transform:translateY(-2px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+button.on{outline:3px solid #fff}
+.s1{background:#2563eb}.s2{background:#dc2626}.s3{background:#9333ea}.s4{background:#16a34a}.s5{background:#ea580c}
+.c1{background:#0d9488}.c2{background:#db2777}.c3{background:#ca8a04}.c4{background:#4f46e5}.c5{background:#0891b2}.c6{background:#475569}.c7{background:#65a30d}.c8{background:#be123c}
+</style></head><body>
+<div id="app">
+<div id="top"><h1><b>Exothermic</b> and <b>Endothermic</b> Reactions</h1><div>(Energy Profiles)</div></div>
+<div id="row"></div>
+<div id="hint">Press Start Reaction to watch the energy change. Click any label to learn more.</div>
+<div id="bar">
+<button class="c1" id="bGo" onclick="go()">Start Reaction</button><button class="c3" onclick="pauseRun()">Pause</button><button class="c6" onclick="reset()">Reset</button>
+<button class="s1" onclick="step(1)">1 Reactants</button><button class="s2" onclick="step(2)">2 Activation Energy</button><button class="s3" onclick="step(3)">3 Peak</button><button class="s4" onclick="step(4)">4 Products</button><button class="s5" onclick="step(5)">5 Energy Change</button>
+<button class="c2 on" id="bAr" onclick="tog('arrows',this)">Arrows</button><button class="c4 on" id="bLb" onclick="tog('labels',this)">Labels</button>
+<button class="c8" id="bCat" onclick="tog('cat',this)">Catalyst</button><button class="c7" id="bSp" onclick="speed(this)">Speed: Normal</button>
+<button class="c3" onclick="example()">Daily Life Examples</button><button class="c5" onclick="zoom(.15)">Zoom In</button><button class="c5" onclick="zoom(-.15)">Zoom Out</button><button class="c6" onclick="full()">Full Screen</button>
+</div></div>
+<script>
+const $=s=>document.querySelector(s),P2=Math.PI*2,sm=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};
+const S={u:0,run:false,step:0,tu:null,arrows:true,labels:true,cat:false,spd:1,zoom:1,t:0,ex:0};
+const STEP=[0,.08,.4,.5,.95,1];
+const TXT=['Press Start Reaction to watch the energy change. Click any label to learn more.',
+'Step 1: Reactants start with some energy. Both reactions begin here.',
+'Step 2: Activation energy is the push needed to start the reaction.',
+'Step 3: At the peak (transition state) old bonds break and new bonds form.',
+'Step 4: Products form. Exothermic products end lower; endothermic products end higher.',
+'Step 5: \u0394H is the energy change. Exothermic: released (\u0394H < 0). Endothermic: absorbed (\u0394H > 0).'];
+const EX=[['Exothermic examples: burning wood in a campfire, hand warmers, and our body breaking down food.'],['Endothermic examples: instant cold packs, melting ice, and plants making food by photosynthesis.']];
+function curve(yR,yP,yPr){const pts=[];const add=(x0,y0,x1,y1)=>{for(let i=0;i<=24;i++){const t=i/24,s=t*t*(3-2*t);pts.push([x0+(x1-x0)*t,y0+(y1-y0)*s])}};
+ pts.push([55,yR]);add(120,yR,205,yP);add(205,yP,295,yPr);pts.push([390,yPr]);return pts}
+function yAt(pts,x){for(let i=1;i<pts.length;i++)if(pts[i][0]>=x){const a=pts[i-1],b=pts[i],f=(x-a[0])/((b[0]-a[0])||1);return a[1]+(b[1]-a[1])*f}return pts[pts.length-1][1]}
+const OR=[{k:'exo',name:'Exothermic Reaction',cap:'Energy is released to the surroundings',yR:150,yP:62,yPr:272,c1:'#f59e0b',c2:'#dc2626',dir:-1,
+ labels:[{t:'Reactants',d:'Reactants are the starting substances. Here they have more energy than the products.',x:105,y:188,c:'#2563eb'},
+ {t:'Products',d:'Products are the new substances made. In this reaction they have less energy than the reactants.',x:345,y:312,c:'#16a34a'},
+ {t:'Activation\nenergy',d:'Activation energy is the small push of energy needed to start a reaction.',x:100,y:100,c:'#dc2626'},
+ {t:'Energy released\n(\u0394H < 0)',d:'Energy is given out to the surroundings, so the surroundings feel hot. \u0394H is negative.',x:353,y:212,c:'#15803d'},
+ {t:'Peak',d:'The peak is the transition state, the highest energy point during the reaction.',x:262,y:44,c:'#9333ea'}]},
+{k:'endo',name:'Endothermic Reaction',cap:'Energy is absorbed from the surroundings',yR:292,yP:128,yPr:205,c1:'#2563eb',c2:'#1d4ed8',dir:1,
+ labels:[{t:'Reactants',d:'Reactants are the starting substances. Here they have less energy than the products.',x:105,y:326,c:'#2563eb'},
+ {t:'Products',d:'Products are the new substances made. In this reaction they have more energy than the reactants.',x:340,y:168,c:'#6d28d9'},
+ {t:'Activation\nenergy',d:'Activation energy is the push of energy needed to start a reaction.',x:100,y:210,c:'#dc2626'},
+ {t:'Energy absorbed\n(\u0394H > 0)',d:'Energy is taken in from the surroundings, so the surroundings feel cold. \u0394H is positive.',x:355,y:252,c:'#15803d'},
+ {t:'Peak',d:'The peak is the transition state, the highest energy point during the reaction.',x:268,y:108,c:'#9333ea'}]}];
+function yP(o){return S.cat?o.yR+(o.yP-o.yR)*.55:o.yP}
+function arr(g,x,y1,y2,c,w){g.strokeStyle=c;g.fillStyle=c;g.lineWidth=w;g.beginPath();g.moveTo(x,y1);g.lineTo(x,y2);g.stroke();const d=Math.sign(y2-y1);
+ for(const[y,s]of[[y2,d],[y1,-d]]){g.beginPath();g.moveTo(x,y);g.lineTo(x-7,y-s*13);g.lineTo(x+7,y-s*13);g.fill()}}
+function dash(g,x1,x2,y,c){g.setLineDash([6,5]);g.strokeStyle=c;g.lineWidth=2;g.beginPath();g.moveTo(x1,y);g.lineTo(x2,y);g.stroke();g.setLineDash([])}
+function pill(g,l,hl){const lines=l.t.split('\n');g.font='bold 14px Segoe UI';const w=Math.max(...lines.map(s=>g.measureText(s).width))+20,h=lines.length*17+9;
+ g.fillStyle=l.c;g.strokeStyle=hl?'#fff':'#0003';g.lineWidth=hl?4:1.5;g.beginPath();g.roundRect(l.x-w/2,l.y-h/2,w,h,9);g.fill();g.stroke();
+ g.fillStyle='#fff';g.textAlign='center';lines.forEach((s,i)=>g.fillText(s,l.x,l.y-h/2+17+i*17-1));l.r={x:l.x-w/2,y:l.y-h/2,w,h}}
+function pul(){return .5+.5*Math.sin(S.t*7)}
+function draw(o,g,i){
+ const u=S.u,heat=sm(.45,1,u),yp=yP(o),pts=curve(o.yR,yp,o.yPr);
+ g.lineCap='round';g.strokeStyle='#1e1b4b';g.lineWidth=4;g.beginPath();g.moveTo(50,350);g.lineTo(50,12);g.moveTo(50,350);g.lineTo(405,350);g.stroke();
+ g.fillStyle='#1e1b4b';g.beginPath();g.moveTo(50,6);g.lineTo(43,20);g.lineTo(57,20);g.fill();g.beginPath();g.moveTo(412,350);g.lineTo(398,343);g.lineTo(398,357);g.fill();
+ g.font='bold 18px Segoe UI';g.textAlign='center';g.fillText('Reaction Progress',230,384);g.save();g.translate(22,185);g.rotate(-Math.PI/2);g.fillText('Energy',0,0);g.restore();
+ if(S.cat){const p0=curve(o.yR,o.yP,o.yPr);g.setLineDash([5,5]);g.strokeStyle='#64748b';g.lineWidth=2;g.beginPath();p0.forEach((p,k)=>k?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();g.setLineDash([])}
+ const gr=g.createLinearGradient(55,0,390,0);gr.addColorStop(0,o.c1);gr.addColorStop(.5,o.c2);gr.addColorStop(1,o.c1);
+ g.strokeStyle='#0002';g.lineWidth=11;g.beginPath();pts.forEach((p,k)=>k?g.lineTo(p[0],p[1]+3):g.moveTo(p[0],p[1]+3));g.stroke();
+ g.strokeStyle=gr;g.lineWidth=8;g.beginPath();pts.forEach((p,k)=>k?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();
+ if(S.arrows){const hA=S.step==2?3+3*pul():0,hD=S.step==5?3+3*pul():0;
+  dash(g,50,215,o.yR,'#dc2626');dash(g,160,215,yp,'#dc2626');arr(g,170,o.yR,yp,'#dc2626',3+hA);
+  const dx=300;dash(g,215,dx+12,o.yR,'#15803d');dash(g,290,400,o.yPr,'#15803d');arr(g,dx,o.yR,o.yPr,'#15803d',3+hD)}
+ for(let k=10;k>=0;k--){const uu=Math.max(0,u-k*.012),x=55+uu*335,y=yAt(pts,x);g.fillStyle='rgba(250,204,21,'+(.5-k*.045)+')';g.beginPath();g.arc(x,y,12-k*.8,0,7);g.fill()}
+ const bx=55+u*335,by=yAt(pts,bx),bg=g.createRadialGradient(bx-4,by-4,2,bx,by,13);bg.addColorStop(0,'#fff');bg.addColorStop(1,'#facc15');g.fillStyle=bg;g.strokeStyle='#92400e';g.lineWidth=2;g.beginPath();g.arc(bx,by,12,0,7);g.fill();g.stroke();
+ if(S.step==3){g.strokeStyle='#9333ea';g.lineWidth=3;g.beginPath();g.arc(205,yp,14+4*pul(),0,7);g.stroke()}
+ // particles
+ if(u>.4&&u<1.001||S.step>=4)for(let k=0;k<14;k++){const f=(k/14+S.t*.5)%1,sx=300,sy=o.yPr,ex=470,ey=300,x=o.dir<0?sx+(ex-sx)*f:ex+(sx-ex)*f,y=(o.dir<0?sy+(ey-sy)*f:ey+(sy-ey)*f)-Math.sin(f*Math.PI)*60;
+  g.fillStyle=o.dir<0?'rgba(239,68,68,'+(.9-f*.5)+')':'rgba(59,130,246,'+(.4+f*.5)+')';g.beginPath();g.arc(x,y+(k%3)*4,4,0,7);g.fill()}
+ // thermometer
+ const T=25+(o.dir<0?42:-22)*heat,fr=(T+10)/90;g.fillStyle='#fff';g.strokeStyle='#334155';g.lineWidth=3;g.beginPath();g.roundRect(470,170,22,170,11);g.fill();g.stroke();g.beginPath();g.arc(481,350,17,0,7);g.fill();g.stroke();
+ const col=o.dir<0?'#ef4444':'#3b82f6';g.fillStyle=col;g.beginPath();g.arc(481,350,12,0,7);g.fill();g.fillRect(477,340-fr*165,8,fr*165+8);
+ g.fillStyle='#1e1b4b';g.font='bold 18px Segoe UI';g.textAlign='center';g.fillText(Math.round(T)+' \u00B0C',481,392);g.font='bold 12px Segoe UI';g.fillText('Surroundings',481,162);
+ // object
+ const v=S.ex%2;g.save();g.translate(481,80);
+ if(i==0){if(!v){g.fillStyle='#78350f';g.save();g.rotate(.4);g.beginPath();g.roundRect(-38,22,76,14,6);g.fill();g.restore();g.save();g.rotate(-.4);g.beginPath();g.roundRect(-38,22,76,14,6);g.fill();g.restore();
+   const h=.35+.65*heat;for(const[c,s]of[['#ef4444',1],['#f97316',.75],['#fde047',.45]]){g.fillStyle=c;const H=62*h*s*(1+.08*Math.sin(S.t*12+s*5)),W=30*s*(.6+.4*h);g.beginPath();g.moveTo(0,28);g.bezierCurveTo(-W,20,-W*.6,-H*.4,0,-H+20);g.bezierCurveTo(W*.6,-H*.4,W,20,0,28);g.fill()}}
+  else{let q=g.createLinearGradient(0,-30,0,35);q.addColorStop(0,'#fb923c');q.addColorStop(1,'#c2410c');g.fillStyle=q;g.beginPath();g.roundRect(-42,-22,84,56,14);g.fill();g.strokeStyle='#7c2d12';g.lineWidth=2;g.stroke();
+   g.fillStyle='#fff';g.font='bold 18px Segoe UI';g.fillText('HOT',0,12);g.strokeStyle='rgba(239,68,68,'+(.3+.7*heat)+')';g.lineWidth=3;for(let k=-1;k<=1;k++){g.beginPath();for(let y=-26;y>=-26-30*heat-6;y-=3)g.lineTo(k*20+5*Math.sin(y/4+S.t*6),y);g.stroke()}}}
+ else{if(!v){let q=g.createLinearGradient(0,-30,0,35);q.addColorStop(0,'#e0f2fe');q.addColorStop(1,'#38bdf8');g.fillStyle=q;g.beginPath();g.roundRect(-42,-22,84,56,16);g.fill();g.strokeStyle='#0369a1';g.lineWidth=2;g.stroke();
+   g.fillStyle='#0369a1';g.font='bold 14px Segoe UI';g.fillText('COLD PACK',0,16);g.strokeStyle='#fff';g.lineWidth=2;for(let k=0;k<6;k++){const a=k*Math.PI/3,r=6+12*heat;g.beginPath();g.moveTo(0,-4);g.lineTo(Math.cos(a)*r,-4+Math.sin(a)*r);g.stroke()}}
+  else{const sz=34*(1-.55*heat);g.fillStyle='rgba(125,211,252,.35)';g.beginPath();g.ellipse(0,34,18+30*heat,8+6*heat,0,0,7);g.fill();g.fillStyle='rgba(186,230,253,.85)';g.strokeStyle='#0284c7';g.lineWidth=2;g.beginPath();g.roundRect(-sz/2,34-sz,sz,sz,6);g.fill();g.stroke()}}
+ g.restore();
+ // labels
+ if(S.labels){const hl=[0,0,0,0,0];hl[0]=S.step==1;hl[2]=S.step==2;hl[4]=S.step==3;hl[1]=S.step==4;hl[3]=S.step==5;o.labels.forEach((l,k)=>pill(g,l,hl[k]))}
+}
+const row=$('#row');
+OR.forEach((o,i)=>{const s=document.createElement('section');s.className='pan';s.id=o.k;s.innerHTML='<h2>'+o.name+'</h2><div class="cvw"><canvas></canvas></div><div class="cap">'+o.cap+'</div>';row.appendChild(s);
+ o.el=s;o.cv=s.querySelector('canvas');o.g=o.cv.getContext('2d');
+ new ResizeObserver(()=>{const d=devicePixelRatio||1,r=o.cv.getBoundingClientRect();o.w=r.width;o.h=r.height;o.d=d;o.cv.width=r.width*d;o.cv.height=r.height*d}).observe(o.cv);
+ s.onclick=e=>{const r=o.cv.getBoundingClientRect(),x=(e.clientX-r.left-o.cx)/o.sc,y=(e.clientY-r.top-o.cy)/o.sc;
+  const h=S.labels&&o.labels.find(l=>l.r&&x>=l.r.x&&x<=l.r.x+l.r.w&&y>=l.r.y&&y<=l.r.y+l.r.h);
+  if(h)$('#hint').textContent=h.t.replace('\n',' ')+': '+h.d;else{const f=!s.classList.contains('f');OR.forEach(p=>{p.el.classList.toggle('f',f&&p==o);p.el.classList.toggle('s',f&&p!=o)})}}});
+function go(){if(S.u>=.999)S.u=0;S.run=true;S.tu=null;S.step=0;$('#hint').textContent='Reaction running: watch the ball climb the energy hill, then see the thermometer change!'}
+function pauseRun(){S.run=false;S.tu=null}
+function reset(){S.u=0;S.run=false;S.step=0;S.tu=null;S.cat=false;$('#bCat').classList.remove('on');OR.forEach(p=>p.el.classList.remove('f','s'));$('#hint').textContent=TXT[0]}
+function step(n){S.run=false;S.step=n;S.tu=STEP[n];$('#hint').textContent=TXT[n]}
+function tog(k,b){S[k]=!S[k];b.classList.toggle('on',S[k]);if(k=='cat')$('#hint').textContent=S.cat?'A catalyst lowers the activation energy, so the reaction starts more easily. The dashed curve shows the old peak.':'Catalyst removed: the activation energy is back to normal.'}
+function speed(b){S.spd=S.spd==1?2:S.spd==2?.5:1;b.textContent='Speed: '+(S.spd==1?'Normal':S.spd>1?'Fast':'Slow')}
+function example(){S.ex++;$('#hint').textContent=EX[S.ex%2][0]+' '+(S.ex%2?'Endothermic: ice pack and melting ice.':'Exothermic: campfire and hand warmer.')}
+function zoom(d){S.zoom=Math.max(.6,Math.min(1.8,S.zoom+d))}
+function full(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;S.t+=dt;
+ if(S.run){S.u+=dt*.1*S.spd;if(S.u>=1){S.u=1;S.run=false;$('#hint').textContent='Reaction complete! Look at the thermometers: exothermic got hotter, endothermic got colder.'}}
+ else if(S.tu!==null){S.u+=(S.tu-S.u)*Math.min(1,dt*3*S.spd)}
+ OR.forEach((o,i)=>{const{g,w,h,d}=o;if(!w)return;g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,w,h);
+  o.sc=Math.min(w/560,h/410)*S.zoom;o.cx=w/2-280*o.sc;o.cy=h/2-205*o.sc;g.save();g.translate(o.cx,o.cy);g.scale(o.sc,o.sc);draw(o,g,i);g.restore()});
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

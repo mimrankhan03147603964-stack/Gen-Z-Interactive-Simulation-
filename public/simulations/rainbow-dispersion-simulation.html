@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Light Dispersion and Rainbow Formation | GEN Z EDTECH INTERACTIVE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:#eaf0fa;color:#14213d}
+header{text-align:center;padding:12px 10px 2px}
+h1.brand{margin:0;font-size:2.3rem;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#4f46e5,#06b6d4,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-weight:600;color:#475569;margin-top:2px}
+nav{display:flex;justify-content:center;gap:10px;margin:12px}
+nav button{border:0;border-radius:14px;padding:10px 26px;font-size:1.05rem;font-weight:800;cursor:pointer;background:#fff;color:#4f46e5;box-shadow:0 2px 6px rgba(20,33,61,.15)}
+nav button.on{background:#4f46e5;color:#fff}
+.pane{display:none;max-width:1250px;margin:0 auto 14px;padding:0 14px}
+.pane.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:#fff;border-radius:18px;padding:18px 22px;box-shadow:0 4px 14px rgba(20,33,61,.1);line-height:1.55}
+.card h2{margin:0 0 6px;font-size:1.35rem}
+.f{font-size:1.25rem;font-weight:800;text-align:center;padding:10px;border-radius:12px;margin:8px 0}
+.b1{border-top:6px solid #f59e0b}.b1 .f{background:#fef3c7;color:#92400e}
+.b2{border-top:6px solid #8b5cf6}.b2 .f{background:#ede9fe;color:#5b21b6}
+#box{height:calc(100vh - 215px);min-height:540px;display:flex;flex-direction:column;background:#f6f9ff;border-radius:18px;box-shadow:0 4px 14px rgba(20,33,61,.15);overflow:hidden}
+#box:fullscreen{height:100vh;border-radius:0}
+#top{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#14213d;flex-wrap:wrap}
+#top .m{border:0;border-radius:10px;padding:8px 16px;font-weight:800;cursor:pointer;background:#334155;color:#cbd5e1}
+#top .m.on{background:#06b6d4;color:#042f3a}
+#hint{color:#fde68a;font-weight:700;margin-left:auto}
+#stage{flex:1;min-height:0;background:#0b1437}
+canvas{display:block}
+#ctl{display:flex;flex-wrap:wrap;gap:7px;padding:9px 12px;background:#14213d;align-items:center}
+.b{border:0;border-radius:12px;padding:8px 12px;font-weight:800;font-size:.9rem;color:#fff;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.b:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.sl{color:#fff;font-weight:700;display:flex;gap:8px;align-items:center}
+.sl input{width:150px}
+ul{padding-left:20px;margin:6px 0}
+footer{text-align:center;padding:10px 10px 18px;font-size:.78rem;color:#475569}
+.dev{font-size:.8rem;font-weight:700;background:#fde68a;color:#78350f;padding:2px 8px;border-radius:6px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1 class="brand">GEN Z EDTECH INTERACTIVE</h1><div class="sub">Light Dispersion and Rainbow Formation inside a Water Droplet</div></header>
+<nav><button class="on" data-p="def">Definition</button><button data-p="exp">Explanation</button><button data-p="sim">Simulation</button></nav>
+
+<section id="def" class="pane on"><div class="grid">
+<div class="card b1"><h2>Dispersion of Light</h2>
+<p>White sunlight is a mixture of many colors. <b>Dispersion</b> is the splitting of white light into its colors when it passes through a transparent material such as water or glass.</p>
+<div class="f">Red, Orange, Yellow, Green, Blue, Indigo, Violet</div>
+<p>Each color bends by a slightly different amount, so the colors fan out.</p></div>
+<div class="card b2"><h2>Rainbow Formation</h2>
+<p>A <b>rainbow</b> is a circular arc of colors. It forms when sunlight enters millions of raindrops, reflects once inside each drop, and leaves split into colors.</p>
+<div class="f">Refraction + Reflection + Refraction</div>
+<p>You see a rainbow when the Sun is <b>behind you</b> and rain is <b>in front of you</b>.</p></div></div></section>
+
+<section id="exp" class="pane"><div class="grid">
+<div class="card b1"><h2>What happens inside one droplet?</h2>
+<ul><li><b>Step 1:</b> White sunlight arrives at the droplet.</li><li><b>Step 2:</b> Light slows down in water and bends (refraction). Violet bends most and red bends least, so the colors split.</li><li><b>Step 3:</b> The light bounces off the back wall like a mirror (internal reflection).</li><li><b>Step 4:</b> It leaves the droplet, bends again, and the colors spread further apart.</li></ul>
+<p>Red comes out at about <b>42&deg;</b> and violet at about <b>40&deg;</b> from the point opposite the Sun.</p></div>
+<div class="card b2"><h2>Why is the rainbow an arc?</h2>
+<p>Every drop that sits at the right angle sends one color to your eye. Red drops lie on the outer circle and violet drops on the inner circle.</p>
+<ul><li>Higher Sun means a lower rainbow. Above 42&deg; no rainbow is visible.</li><li>Two reflections inside a drop make a fainter <b>double rainbow</b> with colors reversed.</li><li>You can see the same effect in a prism, a CD, or the mist from a garden hose.</li></ul></div></div></section>
+
+<section id="sim" class="pane"><div id="box">
+<div id="top"><button class="m on" data-m="drop">Inside a Droplet</button><button class="m" data-m="sky">Rainbow in the Sky</button><span id="hint"></span></div>
+<div id="stage"><canvas id="cv"></canvas></div>
+<div id="ctl"></div></div></section>
+
+<footer>GEN Z EDTECH INTERACTIVE &nbsp;|&nbsp; Developed by <span class="dev">Muhammad Imran Khan, MSc Computer Science</span></footer>
+
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),g=cv.getContext('2d'),W=1200,H=620;
+const C=[['Red','#ff2a2a',1.331],['Orange','#ff8a1f',1.3325],['Yellow','#ffe91f',1.334],['Green','#2bd94a',1.336],['Blue','#2f7bff',1.338],['Indigo','#5b3df5',1.340],['Violet','#b24dff',1.343]];
+let mode='drop',paused=false,auto=false,t=0,sc=1,ox=0,oy=0,DPR=1,sp=3,k=1,normals=true,vis=[1,1,1,1,1,1,1];
+let b=.86,tb=.86,u=0,tu=4,elev=20,te=20,rain=.8,tr=.8,dbl=false,hint='';
+const RC=170,CX=470,CY=310,GY=470;
+const ri=i=>1.3365+(C[i][2]-1.3365)*sp;
+const DR=Array.from({length:170},()=>({x:520+Math.random()*640,y:Math.random()*330,s:300+Math.random()*200}));
+function fit(){const r=$('#stage').getBoundingClientRect();if(!r.width)return;DPR=devicePixelRatio||1;cv.width=r.width*DPR;cv.height=r.height*DPR;cv.style.width=r.width+'px';cv.style.height=r.height+'px';sc=Math.min(r.width/W,r.height/H);ox=(r.width-W*sc)/2;oy=(r.height-H*sc)/2}
+new ResizeObserver(fit).observe($('#stage'));
+const rr=(x,y,w,h,r)=>{g.beginPath();g.roundRect(x,y,w,h,r)};
+const lg=(x0,y0,x1,y1,s)=>{const q=g.createLinearGradient(x0,y0,x1,y1);s.forEach((c,i)=>q.addColorStop(i/(s.length-1),c));return q};
+const tx=(s,x,y,f,c,a)=>{g.font=f;g.fillStyle=c;g.textAlign=a||'left';g.fillText(s,x,y)};
+const circ=(x,y,r,f)=>{g.beginPath();g.arc(x,y,r,0,7);g.fillStyle=f;g.fill()};
+function lab(s,x,y,px,py){const d=mode=='drop';g.strokeStyle=d?'#cbd5e1':'#475569';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y-10);g.lineTo(px,py);g.stroke();circ(px,py,3.5,d?'#cbd5e1':'#475569');g.font='600 14px Segoe UI';const w=g.measureText(s).width+18;rr(x-w/2,y-22,w,24,12);g.fillStyle=d?'#fff':'#1e293b';g.fill();tx(s,x,y-5,'600 14px Segoe UI',d?'#14213d':'#fff','center')}
+function card(x,y,w,h,ti,v,c){g.save();g.shadowColor='rgba(0,0,0,.3)';g.shadowBlur=10;rr(x,y,w,h,16);g.fillStyle='#fff';g.fill();g.restore();rr(x,y,8,h,4);g.fillStyle=c;g.fill();tx(ti,x+24,y+28,'600 15px Segoe UI','#64748b');tx(v,x+24,y+h-16,'800 26px Segoe UI',c)}
+/* physics */
+function hit(p,d,first){const a=p.x-CX,c=p.y-CY,bq=a*d.x+c*d.y,cq=a*a+c*c-RC*RC,s=Math.sqrt(Math.max(0,bq*bq-cq));return first?-bq-s:-bq+s}
+const mv=(p,d,t)=>({x:p.x+d.x*t,y:p.y+d.y*t});
+const nrm=p=>({x:(p.x-CX)/RC,y:(p.y-CY)/RC});
+function refl(d,n){const q=2*(d.x*n.x+d.y*n.y);return{x:d.x-q*n.x,y:d.y-q*n.y}}
+function refr(d,n,e){let c=-(d.x*n.x+d.y*n.y);if(c<0){n={x:-n.x,y:-n.y};c=-c}const k2=1-e*e*(1-c*c);if(k2<0)return refl(d,{x:-n.x,y:-n.y});const f=e*c-Math.sqrt(k2);return{x:e*d.x+f*n.x,y:e*d.y+f*n.y}}
+function trace(r,bb){let p={x:130,y:CY-bb*RC},d={x:1,y:0};const P=[p];p=mv(p,d,hit(p,d,1));P.push(p);d=refr(d,nrm(p),1/r);
+ for(let j=0;j<k;j++){p=mv(p,d,hit(p,d,0));P.push(p);d=refl(d,nrm(p))}
+ p=mv(p,d,hit(p,d,0));P.push(p);d=refr(d,nrm(p),r);P.push(mv(p,d,520));return{P,d}}
+function best(r,kk){let m=1e9,bi=0;for(let a=.3;a<1.5;a+=.003){const D=Math.PI*kk+2*a-2*(kk+1)*Math.asin(Math.sin(a)/r);if(D<m){m=D;bi=a}}const D=m*180/Math.PI;return{ang:kk==1?180-D:D-180,b:Math.sin(bi)}}
+/* drawing: droplet */
+function seg(a,e,f,col,w,fade){if(f<=0)return;let s=col;if(fade){s=g.createLinearGradient(a.x,a.y,e.x,e.y);s.addColorStop(0,col);s.addColorStop(1,col+'00')}g.strokeStyle=s;g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(a.x,a.y);g.lineTo(a.x+(e.x-a.x)*f,a.y+(e.y-a.y)*f);g.stroke()}
+function dash(p,n){g.setLineDash([6,6]);g.strokeStyle='rgba(255,255,255,.6)';g.lineWidth=1.5;g.beginPath();g.moveTo(p.x-n.x*55,p.y-n.y*55);g.lineTo(p.x+n.x*55,p.y+n.y*55);g.stroke();g.setLineDash([])}
+function drawD(){
+ g.fillStyle=lg(0,0,0,H,['#0b1437','#16295f','#0b1437']);g.fillRect(0,0,W,H);
+ let q=g.createRadialGradient(70,CY,20,70,CY,150);q.addColorStop(0,'rgba(255,230,120,.9)');q.addColorStop(1,'rgba(255,200,50,0)');circ(70,CY,150,q);
+ for(let i=0;i<14;i++){const a=i*Math.PI/7+t*.2;g.strokeStyle='rgba(255,210,70,.7)';g.lineWidth=4;g.beginPath();g.moveTo(70+Math.cos(a)*56,CY+Math.sin(a)*56);g.lineTo(70+Math.cos(a)*76,CY+Math.sin(a)*76);g.stroke()}
+ q=g.createRadialGradient(58,CY-12,4,70,CY,50);q.addColorStop(0,'#fffbe0');q.addColorStop(1,'#ffb300');circ(70,CY,50,q);
+ q=g.createRadialGradient(CX-50,CY-60,10,CX,CY,RC);q.addColorStop(0,'rgba(150,210,255,.12)');q.addColorStop(.8,'rgba(90,160,240,.22)');q.addColorStop(1,'rgba(180,225,255,.5)');circ(CX,CY,RC,q);
+ g.strokeStyle='rgba(200,235,255,.85)';g.lineWidth=3;g.beginPath();g.arc(CX,CY,RC,0,7);g.stroke();
+ g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=6;g.lineCap='round';g.beginPath();g.arc(CX,CY,RC-16,3.5,4.2);g.stroke();
+ const gr=trace(ri(3),b),ry=CY-b*RC,mx=k+3;
+ g.globalCompositeOperation='lighter';g.shadowColor='#fff';g.shadowBlur=14;
+ seg(gr.P[0],gr.P[1],Math.min(1,u),'#ffffff',5,0);
+ g.shadowBlur=8;
+ C.forEach((c,i)=>{if(!vis[i])return;const T=trace(ri(i),b);for(let j=1;j<T.P.length-1;j++)seg(T.P[j],T.P[j+1],Math.max(0,Math.min(1,u-j)),c[1],j==T.P.length-2?3.5:3,j==T.P.length-2)});
+ g.shadowBlur=0;g.globalCompositeOperation='source-over';
+ if(normals){if(u>=1)dash(gr.P[1],nrm(gr.P[1]));if(u>=2)for(let j=2;j<gr.P.length-1;j++)if(u>=j)dash(gr.P[j],nrm(gr.P[j]))}
+ lab('Sun',70,415,70,362);lab('White sunlight',280,ry-24,280,ry-3);lab('Water droplet',CX,575,CX,CY+RC+2);
+ const ia=Math.asin(b)*180/Math.PI,ra=Math.asin(b/ri(3))*180/Math.PI,ang=i=>{if(!vis[i])return'hidden';const d=trace(ri(i),b).d;return(180-Math.acos(d.x)*180/Math.PI).toFixed(1)+'°'};
+ card(890,12,290,82,'Ray height',(b*100).toFixed(0)+'% of radius','#f59e0b');
+ card(890,104,290,82,'Angle going in (i)',ia.toFixed(1)+'°','#ec4899');
+ card(890,196,290,82,'Angle after bending (r)',ra.toFixed(1)+'°','#10b981');
+ card(890,288,290,82,'Red light leaves at',ang(0),'#ef4444');
+ card(890,380,290,82,'Violet light leaves at',ang(6),'#8b5cf6');
+ C.forEach((c,i)=>{rr(890+i*42,482,40,40,8);g.fillStyle=c[1];g.fill();tx(c[0][0],910+i*42,509,'800 18px Segoe UI',i==2?'#422006':'#fff','center')});
+ tx('Rainbow colors: R O Y G B I V',890,550,'700 16px Segoe UI','#fde68a');
+ const s=Math.floor(u);hint=u>=mx-.01?'Done! Millions of droplets together make a rainbow.':s<1?'Sunlight looks white, but it hides all the colors.':s<2?'The light bends and splits into colors: this is dispersion!':s<=k+1?'The light bounces off the back wall like a mirror.':'It leaves the droplet and bends again.'}
+/* drawing: sky */
+function cloud(x,y,s,c){g.fillStyle=c;[[0,0,48],[-52,14,36],[50,14,40],[-20,-26,36],[24,-24,34]].forEach(a=>{g.beginPath();g.arc(x+a[0]*s,y+a[1]*s,a[2]*s,0,7);g.fill()});rr(x-85*s,y+10*s,170*s,42*s,21*s);g.fill()}
+function drawS(){const ra=Math.min(1,rain*1.3)*.85,cx=700,cy=GY+9*elev,sy=GY-elev*6.5;
+ g.fillStyle=lg(0,0,0,GY,['#5aa9ee','#dff1ff']);g.fillRect(0,0,W,GY);g.fillStyle='rgba(90,100,120,'+rain*.28+')';g.fillRect(0,0,W,GY);
+ let q=g.createRadialGradient(90,sy,5,90,sy,110);q.addColorStop(0,'rgba(255,240,150,.95)');q.addColorStop(1,'rgba(255,220,80,0)');circ(90,sy,110,q);
+ q=g.createRadialGradient(80,sy-8,3,90,sy,38);q.addColorStop(0,'#fffbe0');q.addColorStop(1,'#ffb300');circ(90,sy,38,q);
+ const bands=[];
+ for(let kk=1;kk<=(dbl?2:1);kk++)C.forEach((c,i)=>bands.push([c[1],9*best(ri(i),kk).ang,kk]));
+ g.lineCap='butt';bands.forEach((a,i)=>{g.globalAlpha=ra*(a[2]==2?.45:1);g.strokeStyle=a[0];g.lineWidth=a[2]==2?9*sp*.55+2:9*sp*.55+2;g.beginPath();g.arc(cx,cy,a[1],Math.PI,2*Math.PI);g.stroke()});g.globalAlpha=1;
+ g.fillStyle=lg(0,GY,0,H,['#74d46f','#2f8f4a']);g.fillRect(0,GY,W,H-GY);
+ g.fillStyle='#4aa85a';[[560,GY+8,120,22],[900,GY+14,160,26],[1100,GY+4,90,16]].forEach(a=>{g.beginPath();g.ellipse(a[0],a[1],a[2],a[3],0,0,7);g.fill()});
+ rr(1090,415,16,62,4);g.fillStyle='#7c4a21';g.fill();circ(1098,390,46,'#2f9e44');circ(1074,410,30,'#37b24d');circ(1124,410,30,'#37b24d');
+ g.strokeStyle='rgba(60,90,130,'+(.25+ra*.4)+')';g.lineWidth=1.5;const n=Math.floor(rain*170);
+ for(let i=0;i<n;i++){const d=DR[i],y=165+((d.y+t*d.s)%320);g.beginPath();g.moveTo(d.x,y);g.lineTo(d.x-3,y+14);g.stroke()}
+ g.setLineDash([10,8]);g.strokeStyle='#fbbf24';g.lineWidth=3;g.beginPath();g.moveTo(125,sy+10);g.lineTo(240,408);g.stroke();g.setLineDash([]);
+ cloud(880,92,1,'rgba('+(235-rain*80|0)+','+(240-rain*80|0)+','+(250-rain*70|0)+',1)');
+ rr(246,425,8,46,3);rr(260,425,8,46,3);g.fillStyle='#1e3a8a';rr(246,425,8,46,3);g.fill();rr(260,425,8,46,3);g.fill();
+ rr(240,372,34,60,10);g.fillStyle='#ef4444';g.fill();circ(257,352,18,'#f1c27d');g.beginPath();g.arc(257,348,19,Math.PI,2*Math.PI);g.fillStyle='#3b2314';g.fill();circ(266,353,3,'#111');
+ lab('Sun',90,sy+88,90,sy+40);lab('Sunlight from behind you',200,340,230,404);lab('Rain cloud',880,185,880,130);lab('Raindrops',1000,300,990,260);lab('You',257,520,257,474);
+ if(ra>.1&&elev<42)lab('Rainbow',cx,Math.max(40,cy-9*best(ri(0),1).ang+70),cx,cy-9*best(ri(0),1).ang+8);
+ const vis2=elev<42;
+ card(420,508,185,100,'Sun height',elev.toFixed(0)+'°','#f59e0b');card(615,508,185,100,'Red bow angle',best(ri(0),1).ang.toFixed(1)+'°','#ef4444');
+ card(810,508,185,100,'Rain amount',(rain*100).toFixed(0)+'%','#3b82f6');card(1005,508,175,100,'Rainbow seen?',vis2&&rain>.1?'Yes':'No',vis2&&rain>.1?'#10b981':'#64748b');
+ hint=elev>=42?'The Sun is too high: the rainbow hides below the ground!':rain<.1?'No rain, no rainbow. Add some raindrops!':'Sun behind you + raindrops in front = rainbow!'}
+function draw(){g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.setTransform(DPR*sc,0,0,DPR*sc,DPR*ox,DPR*oy);mode=='drop'?drawD():drawS();if($('#hint').textContent!=hint)$('#hint').textContent=hint}
+function step(dt){t+=dt;
+ if(mode=='drop'){if(auto){tb=.5+.45*Math.sin(t*.5);tu=k+3}b+=(tb-b)*Math.min(1,dt*6);u+=Math.sign(tu-u)*Math.min(Math.abs(tu-u),dt*1.2)}
+ else{if(auto)te=30+22*Math.sin(t*.4);elev+=(te-elev)*Math.min(1,dt*4);rain+=(tr-rain)*Math.min(1,dt*3)}
+ SL.forEach((s,i)=>{const e=$('#s'+i);if(e&&document.activeElement!==e)e.value=s.g()})}
+let last=performance.now();
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(!paused)step(dt);draw();requestAnimationFrame(loop)}
+/* controls */
+let SL=[];const off=f=>()=>{auto=false;f()};
+const cols=C.map((c,i)=>({l:()=>c[0]+(vis[i]?' On':' Off'),c:c[1],f:()=>vis[i]^=1,d:i==2}));
+const common=[
+ {l:()=>auto?'Stop Auto Demo':'Auto Demo',c:'#ec4899',f:()=>auto=!auto},
+ {l:()=>paused?'Play':'Pause',c:'#64748b',f:()=>paused=!paused},
+ {l:()=>'Reset',c:'#334155',f:()=>{auto=false;b=tb=.86;u=0;k=1;tu=4;vis=[1,1,1,1,1,1,1];sp=3;elev=te=20;rain=tr=.8;dbl=false}},
+ {l:()=>document.fullscreenElement?'Exit Full Screen':'Full Screen',c:'#16a34a',f:()=>document.fullscreenElement?document.exitFullscreen():$('#box').requestFullscreen()}];
+const defs={
+ drop:[{l:()=>'Step 1: Light Arrives',c:'#f59e0b',f:off(()=>tu=1)},{l:()=>'Step 2: Enter and Split',c:'#ef4444',f:off(()=>tu=2)},{l:()=>'Step 3: Bounce Inside',c:'#3b82f6',f:off(()=>tu=k+2)},{l:()=>'Step 4: Exit',c:'#10b981',f:off(()=>tu=k+3)},
+  {l:()=>'Play Ray',c:'#8b5cf6',f:off(()=>{u=0;tu=k+3})},{l:()=>'Rainbow Ray',c:'#ec4899',f:off(()=>tb=best(ri(3),k).b)},{l:()=>'Center Ray',c:'#64748b',f:off(()=>tb=0)},
+  ...cols,{l:()=>'All Colors',c:'#0ea5e9',f:()=>vis=vis.map(()=>1)},{l:()=>normals?'Hide Normals':'Show Normals',c:'#14b8a6',f:()=>normals=!normals},
+  {l:()=>sp>1?'Spread: Big':'Spread: Real',c:'#f97316',f:()=>sp=sp>1?1:3},{l:()=>'Reflections: '+k,c:'#a855f7',f:off(()=>{k=3-k;u=0;tu=k+3;tb=best(ri(3),k).b})},{l:()=>'Zoom Out to Sky',c:'#0891b2',f:()=>setMode('sky')}],
+ sky:[{l:()=>'Heavy Rain',c:'#3b82f6',f:off(()=>tr=1)},{l:()=>'Light Rain',c:'#06b6d4',f:off(()=>tr=.3)},{l:()=>'Stop Rain',c:'#64748b',f:off(()=>tr=0)},
+  {l:()=>'Sun Low 10°',c:'#f59e0b',f:off(()=>te=10)},{l:()=>'Sun Medium 30°',c:'#f97316',f:off(()=>te=30)},{l:()=>'Sun Too High 50°',c:'#ef4444',f:off(()=>te=50)},
+  {l:()=>dbl?'Double Rainbow: On':'Double Rainbow: Off',c:'#a855f7',f:()=>dbl=!dbl},{l:()=>sp>1?'Spread: Big':'Spread: Real',c:'#10b981',f:()=>sp=sp>1?1:3},{l:()=>'Zoom into a Raindrop',c:'#0891b2',f:()=>setMode('drop')}]};
+function build(){const c=$('#ctl');c.innerHTML='';
+ SL=mode=='drop'?[{n:'Ray Height',a:0,z:99,g:()=>tb*100,s:v=>tb=v/100}]:[{n:'Rain',a:0,z:100,g:()=>tr*100,s:v=>tr=v/100},{n:'Sun Height',a:5,z:60,g:()=>te,s:v=>te=v}];
+ SL.forEach((s,i)=>{c.insertAdjacentHTML('beforeend',`<label class="sl">${s.n}<input id="s${i}" type="range" min="${s.a}" max="${s.z}" value="${s.g()}"></label>`);$('#s'+i).oninput=e=>{auto=false;s.s(+e.target.value)}});
+ [...defs[mode],...common].forEach(d=>{const e=document.createElement('button');e.className='b';e.style.background=d.c;if(d.d)e.style.color='#422006';e.textContent=d.l();e.onclick=()=>{d.f();refresh()};e._d=d;c.appendChild(e)})}
+function refresh(){document.querySelectorAll('#ctl .b').forEach(e=>e.textContent=e._d.l())}
+function setMode(m){mode=m;auto=false;document.querySelectorAll('.m').forEach(x=>x.classList.toggle('on',x.dataset.m==m));$('#stage').style.background=m=='drop'?'#0b1437':'#dff1ff';if(m=='drop'){u=0;tu=k+3}build()}
+document.querySelectorAll('.m').forEach(x=>x.onclick=()=>setMode(x.dataset.m));
+document.querySelectorAll('nav button').forEach(x=>x.onclick=()=>{document.querySelectorAll('nav button').forEach(y=>y.classList.toggle('on',y==x));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==x.dataset.p));fit()});
+document.addEventListener('fullscreenchange',()=>{setTimeout(fit,80);refresh()});
+build();requestAnimationFrame(loop);
+</script></body></html>

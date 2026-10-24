@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Balanced and Unbalanced Forces - Tug of War</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#0f172a;color:#fff;min-height:100vh}
+#app{display:flex;flex-direction:column;height:100vh;padding:10px 14px;gap:8px;background:linear-gradient(135deg,#0f172a,#1e1b4b)}
+h1{text-align:center;font-size:24px;letter-spacing:.5px;background:linear-gradient(90deg,#38bdf8,#facc15,#f87171);-webkit-background-clip:text;color:transparent}
+#stage{flex:1;min-height:0;position:relative;border-radius:16px;overflow:hidden;border:3px solid #38bdf8;box-shadow:0 0 25px #38bdf866}
+canvas{width:100%;height:100%;object-fit:contain;display:block;background:#7dd3fc}
+#status{position:absolute;left:50%;top:10px;transform:translateX(-50%);padding:8px 22px;border-radius:30px;font-weight:700;font-size:18px;background:#000a;border:2px solid #fff;white-space:nowrap}
+.ok{color:#86efac}.bad{color:#fca5a5}
+#panel{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+.grp{background:#ffffff14;border-radius:14px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;max-width:560px}
+.grp b{width:100%;text-align:center;font-size:14px}
+button{border:none;border-radius:10px;padding:9px 13px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 4px 0 #0006;transition:.1s}
+button:hover{filter:brightness(1.15);transform:translateY(-1px)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+button.on{outline:3px solid #fff}
+.b1{background:#2563eb}.b2{background:#1d4ed8}.b3{background:#1e40af}.b4{background:#3b82f6}.bx{background:#475569}
+.r1{background:#ef4444}.r2{background:#dc2626}.r3{background:#b91c1c}.r4{background:#f97316}
+.g{background:#16a34a}.y{background:#ca8a04}.p{background:#9333ea}.t{background:#0d9488}.pk{background:#db2777}.o{background:#ea580c}.f{background:#0891b2}.gr{background:#4b5563}
+</style></head><body>
+<div id="app">
+<h1>Balanced and Unbalanced Forces: Tug of War</h1>
+<div id="stage"><canvas id="c" width="1200" height="540"></canvas><div id="status"></div></div>
+<div id="panel">
+<div class="grp"><b style="color:#93c5fd">Blue Team (pulls left)</b>
+<button class="b1" onclick="add('b',0)">+ Child (50 N)</button><button class="b4" onclick="add('b',1)">+ Teen (100 N)</button>
+<button class="b2" onclick="add('b',2)">+ Adult (150 N)</button><button class="b3" onclick="add('b',3)">+ Strong Man (250 N)</button>
+<button class="bx" onclick="rem('b')">Remove One</button></div>
+<div class="grp"><b>Controls</b>
+<button class="g" id="go" onclick="toggle()">Start Pulling</button><button class="gr" onclick="reset()">Reset</button>
+<button class="p" onclick="preset(1)">Balanced Game</button><button class="o" onclick="preset(2)">Unbalanced Game</button>
+<button class="y" id="bA" onclick="flag('arrows',this)">Force Arrows</button><button class="t" id="bL" onclick="flag('labels',this)">Labels</button>
+<button class="pk" id="bM" onclick="flag('mud',this)">Muddy Ground</button><button class="f" id="bS" onclick="flag('slow',this)">Slow Motion</button>
+<button class="gr" onclick="full()">Full Screen</button></div>
+<div class="grp"><b style="color:#fca5a5">Red Team (pulls right)</b>
+<button class="r1" onclick="add('r',0)">+ Child (50 N)</button><button class="r4" onclick="add('r',1)">+ Teen (100 N)</button>
+<button class="r2" onclick="add('r',2)">+ Adult (150 N)</button><button class="r3" onclick="add('r',3)">+ Strong Man (250 N)</button>
+<button class="bx" onclick="rem('r')">Remove One</button></div>
+</div></div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d'),W=1200,H=540,GY=400,CX=W/2,RANGE=300;
+const TYPES=[{n:'Child',f:50,s:.7},{n:'Teen',f:100,s:.88},{n:'Adult',f:150,s:1},{n:'Strong Man',f:250,s:1.18}];
+let team={b:[],r:[]},x=0,v=0,run=false,winner=null,opt={arrows:true,labels:true,mud:false,slow:false},t0=0;
+const stEl=document.getElementById('status');
+function sum(k){return team[k].reduce((a,i)=>a+TYPES[i].f,0)}
+function add(k,i){if(team[k].length<6){team[k].push(i);}}
+function rem(k){team[k].pop()}
+function reset(){x=0;v=0;run=false;winner=null;document.getElementById('go').textContent='Start Pulling'}
+function toggle(){if(winner)reset();run=!run;document.getElementById('go').textContent=run?'Pause':'Start Pulling'}
+function preset(n){reset();team.b=[];team.r=[];if(n==1){team.b=[2,2,1];team.r=[3,1,1]}else{team.b=[1,1,0];team.r=[2,3,2,1]}}
+function flag(k,b){opt[k]=!opt[k];b.classList.toggle('on',opt[k])}
+function full(){const a=document.getElementById('app');document.fullscreenElement?document.exitFullscreen():a.requestFullscreen()}
+['bA','bL'].forEach(i=>document.getElementById(i).classList.add('on'));
+preset(1);
+function step(){
+ const L=sum('b'),R=sum('r'),net=R-L,fr=opt.mud?70:25,sl=opt.slow?.35:1;
+ if(run&&!winner){
+  if(Math.abs(net)>fr){v+=(net-Math.sign(net)*fr)/4000*sl}else v*=.8;
+  v*=.96;x+=v*.002*60*sl/60*1;
+  if(x<=-1){x=-1;winner='Blue Team';run=false}
+  if(x>=1){x=1;winner='Red Team';run=false}
+  if(winner)document.getElementById('go').textContent='Play Again';
+ }
+ let m;
+ if(winner)m='<span class="ok">'+winner+' wins! The flag crossed the winning line.</span>';
+ else if(!L&&!R)m='Add players to both teams, then press Start Pulling.';
+ else if(L==R)m='<span class="ok">BALANCED: '+L+' N = '+R+' N. Net force is 0 N. No motion.</span>';
+ else if(Math.abs(net)<=fr)m='<span class="ok">Forces almost equal. Friction holds the rope.</span>';
+ else m='<span class="bad">UNBALANCED: net force '+Math.abs(net)+' N toward '+(net>0?'Red':'Blue')+'. The rope moves.</span>';
+ if(!run&&!winner&&(L||R))m+=' <small>(paused)</small>';
+ if(stEl.dataset.m!==m){stEl.innerHTML=m;stEl.dataset.m=m}
+}
+function person(px,k,i,idx){
+ const T=TYPES[i],s=T.s,face=k=='b'?1:-1,col=k=='b'?['#2563eb','#3b82f6','#1d4ed8','#1e3a8a'][i]:['#ef4444','#f97316','#dc2626','#991b1b'][i];
+ const tug=run&&!winner?Math.sin(performance.now()/160+idx)*.04:0,lean=.5+tug;
+ ctx.save();ctx.translate(px,GY);ctx.scale(face,1);ctx.lineCap='round';
+ ctx.fillStyle='#0003';ctx.beginPath();ctx.ellipse(-5,4,38*s,7,0,0,7);ctx.fill();
+ const hx=-10*s,hy=-55*s;
+ ctx.strokeStyle='#1f2937';ctx.lineWidth=9*s;
+ ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(10*s,0);ctx.moveTo(hx,hy);ctx.lineTo(-26*s,0);ctx.stroke();
+ ctx.strokeStyle='#111';ctx.lineWidth=7*s;ctx.beginPath();ctx.moveTo(10*s,0);ctx.lineTo(20*s,0);ctx.moveTo(-26*s,0);ctx.lineTo(-16*s,0);ctx.stroke();
+ const sx=hx-Math.sin(lean)*46*s,sy=hy-Math.cos(lean)*46*s;
+ ctx.strokeStyle=col;ctx.lineWidth=(i==3?24:17)*s;ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(sx,sy);ctx.stroke();
+ ctx.strokeStyle='#f1c27d';ctx.lineWidth=5.5*s;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(42*s,-70);ctx.stroke();
+ ctx.fillStyle='#f1c27d';ctx.beginPath();ctx.arc(42*s,-70,5*s,0,7);ctx.fill();
+ const hdx=sx-Math.sin(lean)*14*s,hdy=sy-Math.cos(lean)*14*s;
+ ctx.beginPath();ctx.arc(hdx,hdy,11*s,0,7);ctx.fill();
+ ctx.fillStyle=['#3b2314','#111','#6b4423','#222'][i];ctx.beginPath();ctx.arc(hdx-2*s,hdy-3*s,11*s,Math.PI,6.4);ctx.fill();
+ ctx.fillStyle='#111';ctx.beginPath();ctx.arc(hdx+5*s,hdy,1.6*s,0,7);ctx.fill();
+ ctx.restore();
+ return px+face*42*s;
+}
+function arrow(x1,x2,y,c,txt){
+ ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();
+ const d=Math.sign(x2-x1);ctx.beginPath();ctx.moveTo(x2+d*22,y);ctx.lineTo(x2,y-16);ctx.lineTo(x2,y+16);ctx.fill();
+ ctx.font='bold 20px Segoe UI';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='#000a';ctx.strokeText(txt,(x1+x2)/2,y-14);ctx.fillStyle='#fff';ctx.fillText(txt,(x1+x2)/2,y-14);
+}
+function label(txt,lx,ly,tx,ty){
+ ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(tx,ty);ctx.stroke();
+ ctx.font='bold 16px Segoe UI';const w=ctx.measureText(txt).width+16;ctx.fillStyle='#111c';ctx.fillRect(lx-w/2,ly-12,w,24);
+ ctx.fillStyle='#fde047';ctx.textAlign='center';ctx.fillText(txt,lx,ly+5);
+}
+function draw(){
+ const g=ctx.createLinearGradient(0,0,0,GY);g.addColorStop(0,'#38bdf8');g.addColorStop(1,'#e0f2fe');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#fde047';ctx.beginPath();ctx.arc(1090,90,45,0,7);ctx.fill();
+ ctx.fillStyle='#fff';[[200,100],[560,70],[860,130]].forEach(([a,b])=>{ctx.beginPath();ctx.arc(a,b,26,0,7);ctx.arc(a+30,b+6,22,0,7);ctx.arc(a-28,b+8,20,0,7);ctx.fill()});
+ ctx.fillStyle='#166534';ctx.beginPath();ctx.moveTo(0,GY-40);for(let i=0;i<=W;i+=60)ctx.lineTo(i,GY-70-Math.sin(i/90)*25);ctx.lineTo(W,GY);ctx.lineTo(0,GY);ctx.fill();
+ const gg=ctx.createLinearGradient(0,GY,0,H);gg.addColorStop(0,'#22c55e');gg.addColorStop(1,'#14532d');ctx.fillStyle=gg;ctx.fillRect(0,GY,W,H-GY);
+ for(let i=0;i<W;i+=40){ctx.fillStyle='#ffffff10';ctx.fillRect(i,GY,20,H-GY)}
+ if(opt.mud){ctx.fillStyle='#78350f';ctx.beginPath();ctx.ellipse(CX,GY+55,330,36,0,0,7);ctx.fill();ctx.fillStyle='#92400e';ctx.beginPath();ctx.ellipse(CX-60,GY+50,90,12,0,0,7);ctx.fill()}
+ ctx.strokeStyle='#fff';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(CX,GY-110);ctx.lineTo(CX,H-20);ctx.stroke();
+ [[-RANGE,'#2563eb'],[RANGE,'#ef4444']].forEach(([o,c])=>{ctx.strokeStyle=c;ctx.setLineDash([12,8]);ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(CX+o,GY-110);ctx.lineTo(CX+o,H-20);ctx.stroke();ctx.setLineDash([])});
+ const off=x*RANGE,fx=CX+off;
+ let minX=fx-40,maxX=fx+40;const ry=GY-70;
+ // players
+ team.b.forEach((i,n)=>{const px=fx-95-n*78;const h=person(px,'b',i,n);minX=Math.min(minX,h-6)});
+ team.r.forEach((i,n)=>{const px=fx+95+n*78;const h=person(px,'r',i,n+3);maxX=Math.max(maxX,h+6)});
+ // rope
+ ctx.strokeStyle='#5b3a1a';ctx.lineWidth=11;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(minX,ry);ctx.quadraticCurveTo(fx,ry+(run?3:12),maxX,ry);ctx.stroke();
+ ctx.strokeStyle='#c8964f';ctx.lineWidth=5;ctx.setLineDash([6,8]);ctx.stroke();ctx.setLineDash([]);
+ // flag
+ ctx.fillStyle='#facc15';ctx.fillRect(fx-3,ry-3,6,22);ctx.fillStyle='#16a34a';ctx.beginPath();ctx.moveTo(fx,ry+2);ctx.lineTo(fx+30,ry+12);ctx.lineTo(fx,ry+22);ctx.fill();
+ // forces
+ const L=sum('b'),R=sum('r');
+ if(opt.arrows){if(L)arrow(fx-20,fx-20-L*.9,ry-75,'#3b82f6','Blue: '+L+' N');if(R)arrow(fx+20,fx+20+R*.9,ry-75,'#ef4444','Red: '+R+' N')}
+ if(opt.labels){label('Center Line',CX,H-30,CX,GY+60);label('Blue Win Line',CX-RANGE,H-30,CX-RANGE,GY+70);label('Red Win Line',CX+RANGE,H-30,CX+RANGE,GY+70);
+  label('Rope',minX+60,ry+60,minX+60,ry);label('Flag Marker',fx,ry+95,fx,ry+22);label('Net Force: '+Math.abs(R-L)+' N',W/2,GY-165,W/2,GY-165)}
+ // net meter
+ ctx.fillStyle='#000a';ctx.fillRect(CX-150,60,300,24);ctx.fillStyle='#3b82f6';ctx.fillRect(CX-150,60,150,24);ctx.fillStyle='#ef4444';ctx.fillRect(CX,60,150,24);
+ ctx.fillStyle='#fff';ctx.fillRect(CX+off/RANGE*150-3,54,6,36);ctx.font='bold 13px Segoe UI';ctx.textAlign='center';ctx.fillText('BLUE',CX-120,77);ctx.fillText('RED',CX+120,77);
+ if(winner){ctx.font='bold 56px Segoe UI';ctx.fillStyle=winner[0]=='B'?'#60a5fa':'#f87171';ctx.strokeStyle='#fff';ctx.lineWidth=6;ctx.strokeText(winner+' Wins!',CX,210);ctx.fillText(winner+' Wins!',CX,210)}
+}
+function loop(){step();draw();requestAnimationFrame(loop)}
+loop();
+</script></body></html>

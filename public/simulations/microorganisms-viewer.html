@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Microorganisms Interactive Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:#020617}
+#app{height:100vh;display:flex;flex-direction:column;gap:8px;padding:10px 14px;color:#fff;background:radial-gradient(circle at 20% 0,#1d4ed8 0,#0b1e5b 45%,#050b2e 100%)}
+#top{display:flex;align-items:center;justify-content:center;gap:16px}
+#top .logo{width:54px;height:54px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:30px;box-shadow:0 0 18px #38bdf8}
+#top .tt{text-align:center;background:linear-gradient(#1e40af,#1e3a8a);border:3px solid #22d3ee;border-radius:22px;padding:4px 40px}
+#top h1{font-size:30px}#top small{display:block;color:#fef9c3;font-size:15px;font-weight:600}
+#top i{font:italic 700 17px "Segoe UI";color:#e0f2fe}
+#row{flex:1;min-height:0;display:flex;gap:10px}
+.pan{flex:1 1 0;min-width:0;display:flex;flex-direction:column;border-radius:20px;padding:8px;cursor:pointer;transition:flex-grow .5s;border:3px solid;position:relative}
+.pan.f{flex-grow:2.4}.pan.s{flex-grow:.7}
+.pan h2{align-self:center;padding:2px 36px;border-radius:30px;font-size:26px;margin-top:-4px;border:3px solid #fff8}
+.cvw{flex:1;min-height:0;position:relative}canvas{position:absolute;inset:0;width:100%;height:100%}
+.info{list-style:none;background:#ffffffee;color:#0f172a;border-radius:14px;padding:8px 12px;font-size:15px;font-weight:600}
+.info li{margin:3px 0}.info li:before{content:"\25CF  ";font-size:12px}
+.noinfo .info,.pan.s .info{display:none}
+#bac{border-color:#22c55e;background:linear-gradient(#064e3b,#14532d 60%,#052e16)}#bac h2{background:linear-gradient(#22c55e,#15803d)}#bac li:before{color:#16a34a}
+#vir{border-color:#3b82f6;background:linear-gradient(#172554,#1e3a8a 60%,#0c1a4d)}#vir h2{background:linear-gradient(#3b82f6,#1d4ed8)}#vir li:before{color:#2563eb}
+#fun{border-color:#a855f7;background:linear-gradient(#3b0764,#581c87 60%,#2e1065)}#fun h2{background:linear-gradient(#a855f7,#7e22ce)}#fun li:before{color:#9333ea}
+#hint{text-align:center;font-size:16px;font-weight:600;background:#0008;border:2px solid #38bdf8;border-radius:30px;padding:7px 20px;min-height:36px}
+#bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:#0b1e5b;border-radius:18px;padding:8px}
+button{border:none;border-radius:14px;padding:10px 16px;font-size:15px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 0 #0007;transition:.1s}
+button:hover{filter:brightness(1.18);transform:translateY(-2px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0007}
+button.on{outline:3px solid #fff}
+.c1{background:#16a34a}.c2{background:#2563eb}.c3{background:#9333ea}.c4{background:#0891b2}.c5{background:#0d9488}.c6{background:#ea580c}.c7{background:#db2777}.c8{background:#ca8a04}.c9{background:#dc2626}.c10{background:#4f46e5}.c11{background:#475569}
+</style></head><body>
+<div id="app">
+<div id="top"><div class="logo">&#128300;</div><div class="tt"><h1>Microorganisms</h1><small>(Bacteria, Virus, Fungi Interactive Viewer)</small></div><i>Small Living Things... Big Impact!</i></div>
+<div id="row"></div>
+<div id="hint">Click on each microorganism to explore! Click any label to learn more.</div>
+<div id="bar">
+<button class="c1" onclick="focusOn('bac')">Bacteria</button><button class="c2" onclick="focusOn('vir')">Virus</button><button class="c3" onclick="focusOn('fun')">Fungi</button>
+<button class="c4" onclick="zoom(.2)">Zoom In</button><button class="c5" onclick="zoom(-.2)">Zoom Out</button>
+<button class="c6 on" id="bR" onclick="tog('spin',this)">Rotate</button><button class="c7 on" id="bL" onclick="tog('labels',this)">Labels</button>
+<button class="c8 on" id="bI" onclick="tog('info',this)">Info</button><button class="c10" id="bP" onclick="tog('pause',this)">Pause</button>
+<button class="c9" onclick="home()">Home</button><button class="c11" onclick="full()">Full Screen</button>
+</div></div>
+<script>
+const P=Math.PI,$=s=>document.querySelector(s);
+const S={focus:null,zoom:1,spin:true,pause:false,labels:true,info:true,t:0};
+const qb=(a,b,c,t)=>(1-t)*(1-t)*a+2*(1-t)*t*b+t*t*c;
+// fungi hyphae
+const root=[0,125],ends=[[-195,150],[-150,172],[-95,188],[-40,192],[40,192],[95,188],[150,172],[195,150],[-170,118],[170,118],[-125,98],[125,98]];
+const hy=ends.map(e=>[e[0]*.45,e[1]-38,e[0],e[1]]);
+const heads=[[-95,-45,40,-.2],[0,-98,56,0],[92,-58,44,.2]];
+const pill=(g,x,y,w,h,r)=>{g.beginPath();g.roundRect(x,y,w,h,r)};
+function mk(key,name,bul,labels,draw,rot){return{key,name,bul,labels,draw,rot,ang:0,rects:[]}}
+const ORG=[
+mk('bac','Bacteria',['Single-celled organisms','Found almost everywhere','Can be helpful or harmful'],[
+{t:'Cell Wall',d:'The cell wall is a tough outer layer that protects the bacterium and gives it its shape.',p:[.2,.1],f:()=>[-60,-42]},
+{t:'Cytoplasm',d:'Cytoplasm is the jelly-like fluid inside the cell where life activities happen.',p:[.8,.3],f:()=>[40,26]},
+{t:'Nucleoid (DNA)',d:'The nucleoid holds the DNA, the instructions that tell the bacterium how to live.',p:[.8,.56],f:()=>[20,0]},
+{t:'Flagella',d:'Flagella are whip-like tails. They spin and help the bacterium swim.',p:[.35,.88],f:()=>[-185,52]}],
+(g,o,t)=>{const cap=(hw,r)=>{g.beginPath();g.arc(hw,0,r,-P/2,P/2);g.arc(-hw,0,r,P/2,P*1.5);g.closePath()};
+ g.lineCap='round';g.strokeStyle='#fbbf24';g.lineWidth=3;
+ for(let x=-80;x<=80;x+=14)for(const s of[-1,1]){g.beginPath();g.moveTo(x,s*45);g.lineTo(x+4,s*(62+3*Math.sin(t*3+x)));g.stroke()}
+ for(let a=-90;a<=90;a+=15)for(const s of[-1,1]){const r=a*P/180,c=Math.cos(r)*s,n=Math.sin(r);g.beginPath();g.moveTo(s*80+c*45,n*45);g.lineTo(s*80+c*62,n*62);g.stroke()}
+ for(let i=0;i<5;i++){g.strokeStyle=i%2?'#f59e0b':'#fbbf24';g.lineWidth=4;g.beginPath();for(let k=0;k<=100;k+=5){const y=-30+i*15+k*(i-2)*.25+9*Math.sin(k/11-t*5+i)*k/70;k?g.lineTo(-125-k*1.1,y):g.moveTo(-125,y)}g.stroke()}
+ let gr=g.createLinearGradient(0,-45,0,45);gr.addColorStop(0,'#7dd3fc');gr.addColorStop(.5,'#2563eb');gr.addColorStop(1,'#1e3a8a');
+ cap(80,45);g.fillStyle=gr;g.fill();g.strokeStyle='#bae6fd';g.lineWidth=7;g.setLineDash([3,5]);g.stroke();g.setLineDash([]);
+ cap(80,31);g.fillStyle='#4338ca';g.globalAlpha=.55;g.fill();g.globalAlpha=1;
+ g.strokeStyle='#c4b5fd';g.lineWidth=5;g.shadowColor='#a78bfa';g.shadowBlur=12;g.beginPath();
+ for(let x=-95;x<=95;x+=3){const y=13*Math.sin(x/6+t)+5*Math.sin(x/2.2);x>-95?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();g.shadowBlur=0;
+ g.fillStyle='#fff6';g.beginPath();g.ellipse(-20,-30,60,6,0,0,7);g.fill()},
+o=>-.5+Math.sin(o.ang)*.3),
+mk('vir','Virus',['Very small (not a cell)','Infects living cells','Causes diseases (e.g. flu, COVID-19)'],[
+{t:'Spike Protein',d:'Spike proteins stick to a host cell like keys so the virus can get inside.',p:[.72,.08],f:o=>[133*Math.cos(o.ang+.4*P*2/16*3),133*Math.sin(o.ang+.4*P*2/16*3)]},
+{t:'Genetic Material (RNA/DNA)',d:'The genetic material holds the virus instructions. It tells infected cells to make more viruses.',p:[.74,.5],f:()=>[0,0]},
+{t:'Capsid',d:'The capsid is a protein shell that protects the genetic material.',p:[.7,.88],f:()=>[-30,50]}],
+(g,o,t)=>{const R=95,n=16;g.lineCap='round';
+ for(let i=0;i<n;i++){const a=i*P*2/n+o.ang,c=Math.cos(a),s=Math.sin(a),L=36+4*Math.sin(t*3+i);g.strokeStyle='#dc2626';g.lineWidth=9;g.beginPath();g.moveTo(c*R,s*R);g.lineTo(c*(R+L),s*(R+L));g.stroke();
+  g.fillStyle='#ef4444';for(const q of[-1,0,1]){g.beginPath();g.arc(c*(R+L)-s*q*9,s*(R+L)+c*q*9,8,0,7);g.fill()}}
+ let gr=g.createRadialGradient(-30,-30,10,0,0,R);gr.addColorStop(0,'#60a5fa');gr.addColorStop(1,'#1e3a8a');g.fillStyle=gr;g.beginPath();g.arc(0,0,R,0,7);g.fill();
+ g.strokeStyle='#93c5fd';g.lineWidth=12;g.setLineDash([2,7]);g.beginPath();g.arc(0,0,R-12,0,7);g.stroke();g.setLineDash([]);
+ g.fillStyle='#4f46e5';g.beginPath();g.arc(0,0,60,0,7);g.fill();g.strokeStyle='#818cf8';g.lineWidth=5;g.stroke();
+ g.fillStyle='#1e1b4b';g.beginPath();g.arc(0,0,38,0,7);g.fill();
+ g.strokeStyle='#f59e0b';g.lineWidth=6;g.shadowColor='#fbbf24';g.shadowBlur=10;g.beginPath();for(let x=-28;x<=28;x+=2){const y=14*Math.sin(x/5+t*2);x>-28?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();g.shadowBlur=0},
+o=>0),
+mk('fun','Fungi',['Multi-celled organisms','Grow as hyphae (thread-like structures)','Help in decomposition','Some cause infections (e.g. athlete\u2019s foot)'],[
+{t:'Spores',d:'Spores are tiny seed-like cells. Wind carries them to new places where new fungi grow.',p:[.78,.05],f:()=>[18,-130]},
+{t:'Stalk',d:'The stalk lifts the spore head up so the wind can spread the spores.',p:[.14,.28],f:()=>[-30,40]},
+{t:'Hyphae',d:'Hyphae are thread-like tubes that spread underground and absorb food.',p:[.8,.9],f:()=>[qb(0,hy[7][0],hy[7][2],.65),qb(125,hy[7][1],hy[7][3],.65)]}],
+(g,o,t)=>{g.lineCap='round';
+ for(const[b,cy,ex,ey]of hy){g.strokeStyle='#4f46e5';g.lineWidth=7;g.beginPath();g.moveTo(0,125);g.quadraticCurveTo(b,cy,ex,ey);g.stroke();
+  g.strokeStyle='#a5b4fc';g.lineWidth=2;g.stroke();
+  const x=qb(0,b,ex,.6),y=qb(125,cy,ey,.6);g.strokeStyle='#6366f1';g.lineWidth=3;g.beginPath();g.moveTo(x,y);g.lineTo(x+ex*.12,y-22);g.moveTo(x,y);g.lineTo(x+ex*.1,y+14);g.stroke()}
+ heads.forEach(([hx,hy2,r,sw])=>{let gr=g.createLinearGradient(0,125,hx,hy2);gr.addColorStop(0,'#4f46e5');gr.addColorStop(1,'#93c5fd');g.strokeStyle=gr;g.lineWidth=13;g.beginPath();g.moveTo(0,128);g.quadraticCurveTo(hx*.15,30,hx,hy2+r*.8);g.stroke()});
+ heads.forEach(([hx,hy2,r])=>{let gr=g.createRadialGradient(hx-r*.3,hy2-r*.3,3,hx,hy2,r);gr.addColorStop(0,'#60a5fa');gr.addColorStop(1,'#1e3a8a');g.fillStyle=gr;g.beginPath();g.arc(hx,hy2,r,0,7);g.fill();
+  const N=Math.round(r*.9);for(let k=0;k<N;k++){const d=r*.88*Math.sqrt(k/N),a=k*2.4;g.fillStyle='#93c5fd';g.strokeStyle='#1e3a8a';g.lineWidth=1;g.beginPath();g.arc(hx+d*Math.cos(a),hy2+d*Math.sin(a),r*.1,0,7);g.fill();g.stroke()}});
+ g.save();g.beginPath();g.arc(150,-95,38,0,7);g.fillStyle='#e0f2fe';g.fill();g.clip();
+ for(let k=0;k<22;k++){const d=34*Math.sqrt(k/22),a=k*2.4+t*.3;g.fillStyle='#3b82f6';g.strokeStyle='#1e3a8a';g.beginPath();g.arc(150+d*Math.cos(a),-95+d*Math.sin(a),8,0,7);g.fill();g.stroke()}
+ g.restore();g.strokeStyle='#fff';g.lineWidth=4;g.beginPath();g.arc(150,-95,38,0,7);g.stroke()},
+o=>Math.sin(o.ang)*.12)];
+// build DOM
+const row=$('#row');
+ORG.forEach(o=>{const s=document.createElement('section');s.className='pan';s.id=o.key;
+ s.innerHTML='<h2>'+o.name+'</h2><div class="cvw"><canvas></canvas></div><ul class="info">'+o.bul.map(b=>'<li>'+b+'</li>').join('')+'</ul>';
+ row.appendChild(s);o.el=s;o.cv=s.querySelector('canvas');o.g=o.cv.getContext('2d');
+ new ResizeObserver(()=>{const d=devicePixelRatio||1,r=o.cv.getBoundingClientRect();o.w=r.width;o.h=r.height;o.cv.width=r.width*d;o.cv.height=r.height*d;o.d=d}).observe(o.cv);
+ s.onclick=e=>{const r=o.cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  const hit=o.rects.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);
+  if(hit){$('#hint').textContent=o.name+' - '+hit.l.t+': '+hit.l.d}else focusOn(o.key)}});
+function focusOn(k){S.focus=k;ORG.forEach(o=>{o.el.classList.toggle('f',o.key==k);o.el.classList.toggle('s',o.key!=k)});
+ const o=ORG.find(q=>q.key==k);$('#hint').textContent=o.name+': '+o.bul.join('. ')+'.'}
+function home(){S.focus=null;S.zoom=1;ORG.forEach(o=>o.el.classList.remove('f','s'));$('#hint').textContent='Click on each microorganism to explore! Click any label to learn more.'}
+function zoom(d){S.zoom=Math.max(.6,Math.min(1.9,S.zoom+d))}
+function tog(k,b){S[k]=!S[k];if(k=='pause')b.textContent=S[k]?'Play':'Pause';else b.classList.toggle('on',S[k]);
+ if(k=='info')$('#app').classList.toggle('noinfo',!S.info);if(k=='pause')b.classList.toggle('on',S[k])}
+function full(){document.fullscreenElement?document.exitFullscreen():$('#app').requestFullscreen()}
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(!S.pause){S.t+=dt;if(S.spin)ORG.forEach(o=>o.ang+=dt*.7)}
+ ORG.forEach(o=>{const{g,w,h,d}=o;if(!w)return;g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,w,h);
+  for(let i=0;i<8;i++){g.fillStyle='rgba(255,255,255,.07)';g.beginPath();g.arc((i*137+S.t*12*(i%3+1))%w,(h-((i*89+S.t*9*(i%4+1))%h)),8+i*3,0,7);g.fill()}
+  const sc=Math.min(w/500,h/430)*S.zoom,r=o.rot(o),cx=w/2,cy=h*.52;
+  g.save();g.translate(cx,cy);g.scale(sc,sc);g.rotate(r);o.draw(g,o,S.t);g.restore();
+  o.rects=[];if(!S.labels)return;
+  const fs=Math.max(12,Math.min(18,w/26));g.font='bold '+fs+'px Segoe UI';g.textAlign='center';
+  o.labels.forEach(l=>{const[lx,ly]=l.f(o),px=cx+sc*(lx*Math.cos(r)-ly*Math.sin(r)),py=cy+sc*(lx*Math.sin(r)+ly*Math.cos(r));
+   const tw=g.measureText(l.t).width+18,bx=Math.min(w-tw/2-2,Math.max(tw/2+2,l.p[0]*w)),by=l.p[1]*h+fs;
+   g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(bx,by);g.lineTo(px,py);g.stroke();g.fillStyle='#fff';g.beginPath();g.arc(px,py,4,0,7);g.fill();
+   g.fillStyle='rgba(2,6,23,.82)';g.strokeStyle='#e2e8f0';g.lineWidth=1.5;pill(g,bx-tw/2,by-fs,tw,fs*1.9,10);g.fill();g.stroke();
+   g.fillStyle='#fde047';g.fillText(l.t,bx,by+fs*.35);o.rects.push({x:bx-tw/2,y:by-fs,w:tw,h:fs*1.9,l})})});
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

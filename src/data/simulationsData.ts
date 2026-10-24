@@ -1291,5 +1291,345 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     features: ['3 Synchronized Side-by-Side Interactive Viewports with Auto-Expand', 'Real-Time Microscopic Blood & Filtrate Particle Stream Animations', '5-Step Guided Tour (Blood Enters, Filtration, Tubules, Reabsorption, Urine)', 'Interactive Click-to-Inspect Anatomical Badges with Educational Explanations'],
     gradeLevel: 'Middle & Secondary School Biology (Grades 8–12)'
   },
+  {
+    id: 'sim-exothermic-endothermic-reactions',
+    slug: 'exothermic-endothermic-reactions',
+    indexNumber: '87',
+    title: 'Exothermic and Endothermic Reactions (Energy Profiles)',
+    subject: 'Physical Chemistry & Energetics (حرارت گیر اور حرارت زا تعاملات)',
+    category: 'Chemistry & Matter',
+    iconName: 'Flame',
+    accentColor: '#ef4444',
+    description: 'Interactive thermochemistry laboratory exploring energy changes in chemical reactions. Compare Exothermic reactions (combustion, neutralization, magnesium + HCl; heat released, ΔH < 0, temperature rise) and Endothermic reactions (photosynthesis, ammonium nitrate dissolution, thermal decomposition; heat absorbed, ΔH > 0, temperature drop). Features dynamic potential energy profile diagrams, activation energy (Ea) barriers, molecular kinetic particle vibrations, and live thermometer telemetry.',
+    fileUrl: '/simulations/exothermic-endothermic-reactions.html',
+    topics: [
+      'Exothermic Reactions (ΔH < 0, Heat Released & Container Warms)',
+      'Endothermic Reactions (ΔH > 0, Heat Absorbed & Container Cools)',
+      'Potential Energy Diagrams: Reactants, Activated Complex, Products',
+      'Activation Energy (Ea) Barrier & Catalytic Lowering',
+      'Real-World Reactions: Neutralization, Combustion, Cold Packs'
+    ],
+    features: [
+      'Interactive Energy Diagram Profile with Live State Scrubbing',
+      'Real-Time Animated Molecular Collisions & Bond Energy Visualizer',
+      'Digital Thermometer Telemetry with Heat Wave Emission Animations',
+      'Interactive Reaction Selector with Detailed Enthalpy (ΔH) Values'
+    ],
+    gradeLevel: 'Secondary & High School Chemistry (Grades 9–12)'
+  },
+  {
+    id: 'sim-gas-laws-boyles-charles',
+    slug: 'gas-laws-simulation',
+    indexNumber: '88',
+    title: "Boyle's Law & Charles's Law: How Gases Behave",
+    subject: 'Physical Chemistry & Gas Laws (گیسوں کے قوانین: بوائل اور چارلس کا قانون)',
+    category: 'Chemistry & Matter',
+    iconName: 'Gauge',
+    accentColor: '#0284c7',
+    description: "Dual-mode gas laws laboratory demonstrating Robert Boyle's and Jacques Charles's fundamental kinetic gas principles. Explore Boyle's Law: Pressure is inversely proportional to Volume (P ∝ 1/V) at constant temperature by adjusting piston weights and watching molecular collision rates on cylinder walls. Switch to Charles's Law: Volume is directly proportional to Temperature (V ∝ T) at constant pressure with an adjustable heat source and cryo-cooler. Features real-time synchronized P vs. V and V vs. T graphical plotting, absolute zero Kelvin scale, and particle collision counters.",
+    fileUrl: '/simulations/gas-laws-simulation.html',
+    topics: [
+      "Boyle's Law Formula P₁V₁ = P₂V₂ (Inverse Proportion)",
+      "Charles's Law Formula V₁/T₁ = V₂/T₂ (Direct Proportion)",
+      'Kinetic Molecular Theory: Gas Particle Pressure & Velocity',
+      'Absolute Zero (0 Kelvin = −273.15°C) Thermal Extrapolation',
+      'Ideal Gas Behavior in Compressible Cylinders'
+    ],
+    features: [
+      "Boyle's Law & Charles's Law Dual Interactive Experiment Stations",
+      'Adjustable Piston Weights, Volume Chamber & Kinetic Particle Simulator',
+      'Real-Time Live P-V Hyperbola and V-T Linear Dynamic Graph Plotters',
+      'Temperature Units Toggle (°C vs. Kelvin) & Absolute Zero Visualizer'
+    ],
+    gradeLevel: 'Secondary & High School Science (Grades 9–12)'
+  },
+  {
+    id: 'sim-learning-areas-ecce-38-standards',
+    slug: 'learning-areas-simulations',
+    indexNumber: '89',
+    title: 'ECCE 7 Key Learning Areas & 38 Curriculum Standards',
+    subject: 'Early Childhood Care & Education (ECCE نصاب اور 38 معیارات)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'BookOpen',
+    accentColor: '#10b981',
+    description: 'Comprehensive, high-definition Early Childhood Care and Education (ECCE) interactive workbench covering all 7 official National Curriculum Learning Areas and 38 Competency Standards: Personal & Social Development, Basic Mathematical Concepts, Language & Literacy, The World Around Us, Creative Arts, Physical Development & Health, and Ethical/Values Learning. Features interactive child-friendly simulation modules, audio prompts, milestone trackers, and real-time competency feedback for early educators, parents, and young learners.',
+    fileUrl: '/simulations/learning-areas-simulations.html',
+    topics: [
+      '7 National ECCE Core Learning Areas for Holistic Development',
+      '38 Specific Competency Standards & Early Developmental Milestones',
+      'Early Mathematical Concept Formation (Counting, Sorting, Patterns)',
+      'Language, Phonics, Vocabulary & Storytelling Foundations',
+      'Sensory Discovery & Understanding The World Around Us',
+      'Creative Expression through Colors, Music, and Dramatic Play'
+    ],
+    features: [
+      '7 High-Fidelity Interactive Learning Area Exploration Hubs',
+      '38 Full Competency Standards with Interactive Child Engagement Modules',
+      'Early Childhood Milestone Checklist & Educator Assessment Tools',
+      'Bilingual Urdu and English Standard Descriptions with Visual Illustrations'
+    ],
+    gradeLevel: 'Early Childhood Education (Pre-K, Nursery, Prep / Ages 3–6)'
+  },
+  {
+    id: 'sim-microorganisms-viewer',
+    slug: 'microorganisms-viewer',
+    indexNumber: '90',
+    title: 'Microorganisms Interactive Viewer (Bacteria, Virus, Fungi)',
+    subject: 'Microbiology & Cellular Biology (خوردبینی جاندار: بیکٹیریا، وائرس، فنجائی)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#8b5cf6',
+    description: 'High-power virtual electron microscope laboratory for exploring the invisible world of microscopic organisms. Examine Bacteria (Bacillus, Coccus, Spirillum; cell wall, flagella, circular DNA plasmids), Viruses (Bacteriophage, Influenza, Coronaviridae; protein capsid, spike glycoproteins, RNA/DNA core), and Fungi/Protozoa (Yeast, Amoeba, Paramecium; hyphae, cilia, pseudopodia). Features magnification zoom from 100x to 100,000x, staining modes (Gram-positive vs. Gram-negative), interactive anatomy callouts, and beneficial vs. pathogenic classification.',
+    fileUrl: '/simulations/microorganisms-viewer.html',
+    topics: [
+      'Bacteria Anatomy: Peptidoglycan Cell Wall, Flagella & Binary Fission',
+      'Viral Architecture: Protein Capsid, Genetic Material & Host Penetration',
+      'Fungi & Yeast: Budding, Hyphae, Spores & Decomposition Role',
+      'Microscope Magnification Scales (Micrometers & Nanometers)',
+      'Beneficial Microbes (Probiotics, Nitrogen Fixation) vs. Pathogens'
+    ],
+    features: [
+      'Virtual Optical and Electron Microscope Lens with Smooth Zoom Controls',
+      'Interactive 3D-Styled Microorganism Specimens with Part Callouts',
+      'Gram Staining Visual Filter Toggle (Gram Positive Violet vs. Gram Negative Pink)',
+      'Pathogen vs. Beneficial Microorganism Comparative Knowledge Cards'
+    ],
+    gradeLevel: 'Middle & Secondary School Biology (Grades 6–10)'
+  },
+  {
+    id: 'sim-nursery-fun-lab',
+    slug: 'nursery-fun-lab',
+    indexNumber: '91',
+    title: 'Nursery Fun Lab (Age 4–5): Colors, Shapes & Seed Planting',
+    subject: 'Early Childhood Education (نرسری فن لیب: رنگ، اشکال اور پودا اگانا)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Sparkles',
+    accentColor: '#ec4899',
+    description: 'Vibrant, playful nursery laboratory designed specifically for 4-to-5-year-old learners. Features 4 interactive discovery stations: Color Mixing Flask (mix Red, Yellow, and Blue to create Orange, Green, and Purple with delightful visual splashes), Shape Hunter (identify Circles, Squares, Triangles, and Rectangles in everyday playground toys), Living vs. Non-Living Sorting Basket, and Interactive Seed Planting (dig soil, drop a seed, water with a watering can, bring out the smiling sun, and watch a flower sprout and bloom!).',
+    fileUrl: '/simulations/nursery-fun-lab.html',
+    topics: [
+      'Primary Colors (Red, Blue, Yellow) & Secondary Color Mixing',
+      'Basic 2D Geometric Shapes in Daily Life (Circle, Square, Triangle)',
+      'Living Things (Grow, Need Water) vs. Non-Living Toys',
+      'Plant Life Cycle: Soil, Seed, Water, Sunlight & Flowering Sprout',
+      'Fine Motor Mouse/Touch Skills & Interactive Visual Audio Cues'
+    ],
+    features: [
+      '4 Engaging Early-Years Stations: Colors, Shapes, Living Items, Seed Sprouting',
+      'Interactive Drag-and-Drop Gardening with Watering Can and Sunshine',
+      'Gentle Celebration Confetti & Rewarding Sound Feedback on Task Completion',
+      'Large Touch-Friendly Buttons Optimized for Young Learners & Tablets'
+    ],
+    gradeLevel: 'Early Childhood / Nursery Class (Ages 4–5)'
+  },
+  {
+    id: 'sim-plant-respiration-simulation',
+    slug: 'plant-respiration-simulation',
+    indexNumber: '92',
+    title: 'Plant Respiration: Day vs. Night Gas Exchange',
+    subject: 'Plant Physiology & Cellular Respiration (پودوں میں تنفس کا عمل: دن اور رات)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#059669',
+    description: 'Scientific plant physiology experiment comparing cellular respiration and photosynthesis during daytime sunlight versus complete nocturnal darkness. Investigate how plants respire 24 hours a day using mitochondria (C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP energy), while photosynthesis only occurs in the presence of light. Toggle between Day and Night environments, inspect the stomatal pore aperture, measure O₂ intake and CO₂ release with real-time gas sensor graphs, and observe the light compensation point.',
+    fileUrl: '/simulations/plant-respiration-simulation.html',
+    topics: [
+      'Plant Respiration Formula: Glucose + Oxygen → Carbon Dioxide + Water + ATP',
+      'Day vs. Night Net Gas Exchange Differences (Photosynthesis vs. Respiration)',
+      'Stomata Opening and Closing Mechanics in Leaves',
+      'Mitochondria (Respiration) vs. Chloroplasts (Photosynthesis)',
+      'Light Compensation Point: Equal Rates of Photosynthesis and Respiration'
+    ],
+    features: [
+      'Daytime Sun / Nighttime Moon Environment Switcher with Instant Lighting Shift',
+      'Microscopic Stomatal Pore Close-up with Animated O₂ and CO₂ Particle Flows',
+      'Live Digital Gas Chamber Sensor Readouts for Oxygen and Carbon Dioxide Levels',
+      'Interactive Comparison Table of Photosynthesis vs. Plant Respiration'
+    ],
+    gradeLevel: 'Middle & Secondary School Science (Grades 7–10)'
+  },
+  {
+    id: 'sim-play-group-fun-lab',
+    slug: 'play-group-fun-lab',
+    indexNumber: '93',
+    title: 'Play Group Fun Lab (Age 3–4): Bubbles, Animals & Senses',
+    subject: 'Early Childhood Foundation (پلے گروپ فن لیب: بلبلے، جانور اور حواس)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'Sparkles',
+    accentColor: '#f59e0b',
+    description: 'Charming, delightful interactive play station crafted for toddlers and playgroup children aged 3 to 4. Packed with sensory engagement: Colorful Bubble Popping with audio chime counters, Animal Peek-a-Boo (click to reveal playful cats, cows, lions, and ducks with authentic sounds and habitats), Big vs. Small comparison sandbox with fruits and balloons, and a Sensory Sparkle touch pad. Promotes hand-eye coordination, animal recognition, size awareness, and joyous early learning.',
+    fileUrl: '/simulations/play-group-fun-lab.html',
+    topics: [
+      'Interactive Bubble Pop Counting (1 to 10 with Chimes)',
+      'Animal Recognition, Habitats and Sound Mimicry',
+      'Size Concept Foundations: Big vs. Small Relative Comparisons',
+      'Auditory & Visual Sensory Exploration for Toddlers',
+      'Emotional Warmth, Confidence Building and Curiosity'
+    ],
+    features: [
+      '4 Toddler-Friendly Stations: Bubble Pop, Animal Peek-a-Boo, Big/Small, Sensory',
+      'Delightful Gentle Audio Chimes and Animal Voice Feedback',
+      'Zero Penalty, Stress-Free Free-Play Exploration Mode',
+      'Jumbo Sized Colorful Touch Elements Tailored for Small Hands'
+    ],
+    gradeLevel: 'Early Childhood / Play Group (Ages 3–4)'
+  },
+  {
+    id: 'sim-prep-fun-lab',
+    slug: 'prep-fun-lab',
+    indexNumber: '94',
+    title: 'Prep Fun Lab (Age 5–6): Plants, Habitats, Seasons & Magnets',
+    subject: 'Early Childhood Transition (پریپ فن لیب: پودے، موسم، مقناطیس اور حواس)',
+    category: 'Early Childhood (ECCE)',
+    iconName: 'BookOpen',
+    accentColor: '#3b82f6',
+    description: 'Comprehensive preparatory school science laboratory for 5-to-6-year-old kindergarten and prep learners. Features 5 interactive science exploration hubs: Plant Anatomy (drag-and-label roots, stem, leaves, flower, and fruit), Animal Homes (match squirrels to tree hollows, birds to nests, fish to ponds, and bees to hives), Four Seasons Weather Simulator (explore Spring flowers, Summer sun, Autumn leaves, and Winter snow), Magnet Magic (test iron nails, wooden blocks, plastic toys, and paper clips for magnetic attraction), and the 5 Senses Matching Game.',
+    fileUrl: '/simulations/prep-fun-lab.html',
+    topics: [
+      'Parts of a Flowering Plant: Roots, Stem, Leaves, Flower & Fruit',
+      'Animal Habitats and Shelters in Nature (Nest, Hive, Burrow, Pond)',
+      'Four Seasons (Spring, Summer, Autumn, Winter) & Weather Patterns',
+      'Magnetic Materials (Iron, Steel) vs. Non-Magnetic (Wood, Plastic)',
+      'Human 5 Senses: Sight, Hearing, Smell, Taste, and Touch'
+    ],
+    features: [
+      '5 Complete Hands-On Kindergarten Science Stations',
+      'Interactive Plant Labeling and Growth Inspection Sandbox',
+      'Dynamic Four Seasons Weather Visualizer with Falling Leaves & Snow',
+      'Horseshoe Magnet Playground with Snap-to-Attract Physics'
+    ],
+    gradeLevel: 'Early Childhood / Prep & Kindergarten (Ages 5–6)'
+  },
+  {
+    id: 'sim-white-light-prism-dispersion',
+    slug: 'prism-dispersion-simple',
+    indexNumber: '95',
+    title: 'White Light and the Glass Prism: Dispersion Lab',
+    subject: 'Optics & Wave Physics (شیشے کا منشور اور روشنی کا انتشار: VIBGYOR)',
+    category: 'Physics & Motion',
+    iconName: 'Sun',
+    accentColor: '#6366f1',
+    description: 'Optics and light dispersion physics simulator recreating Sir Isaac Newton\'s classic glass prism experiment. Direct a collimated beam of composite white light into a triangular glass prism (borosilicate / crown glass). Observe differential refraction at the first and second air-glass interfaces due to wavelength-dependent refractive indices (Cauchy\'s equation). See white light cleanly separate into the continuous visible spectrum: Red (least deviated, ~700 nm), Orange, Yellow, Green, Blue, Indigo, and Violet (most deviated, ~400 nm / VIBGYOR). Rotate the prism angle, adjust incidence beam angle, and project the spectrum on a movable white screen.',
+    fileUrl: '/simulations/prism-dispersion-simple.html',
+    topics: [
+      'Dispersion of White Light into Visible Spectrum (VIBGYOR)',
+      'Snell\'s Law of Refraction: n₁ sin(θ₁) = n₂ sin(θ₂)',
+      'Wavelength Dependence of Refractive Index (Red vs. Violet Deviation)',
+      'Angle of Minimum Deviation & Apex Angle in Triangular Prisms',
+      'Isaac Newton\'s Historic Spectrum Experiment and Monochromatic Light'
+    ],
+    features: [
+      'Interactive Rotatable Triangular Prism with Precision Angle Gauge',
+      'Collimated White Light Ray with Adjustable Incidence Angle and Beam Width',
+      'Vivid Ray-Traced Continuous Spectrum Fan (VIBGYOR) Projection',
+      'Movable Virtual White Cardboard Screen with Color Wavelength Markers'
+    ],
+    gradeLevel: 'Middle & Secondary School Physics (Grades 6–10)'
+  },
+  {
+    id: 'sim-rainbow-dispersion-droplets',
+    slug: 'rainbow-dispersion-simulation',
+    indexNumber: '96',
+    title: 'Light Dispersion & Rainbow Formation in Water Droplets',
+    subject: 'Optics & Atmospheric Physics (قوس قزح کی تشکیل اور پانی کے قطرے)',
+    category: 'Physics & Motion',
+    iconName: 'Sun',
+    accentColor: '#06b6d4',
+    description: 'Detailed atmospheric optics simulation demonstrating how rainbows form in the sky. Trace parallel rays of sunlight as they enter a spherical raindrop, refract at the front surface, undergo total internal reflection at the back inner surface, and refract again upon exiting to create the primary rainbow cone at angles between 40° (violet) and 42° (red). Switch between Single Droplet Ray-Tracing view and Sky Horizon Observer view to understand why rainbows appear as circular arcs with the sun always positioned directly behind the observer.',
+    fileUrl: '/simulations/rainbow-dispersion-simulation.html',
+    topics: [
+      'Primary Rainbow Formation Mechanism (Refraction → Internal Reflection → Refraction)',
+      'Angular Dispersion Spread: 40° (Violet) to 42° (Red) Relative to Antisolar Point',
+      'Total Internal Reflection at Spherical Liquid-Air Boundaries',
+      'Geometric Explanation of the Circular Rainbow Arc in the Sky',
+      'Secondary Rainbow Double-Reflection Phenomenon (50°–53° Inverted Colors)'
+    ],
+    features: [
+      'Dual Perspective Modes: Microscopic Water Droplet & Panoramic Sky View',
+      'Animated Ray-Tracing with Realistic Color Dispersion Wavelengths',
+      'Sun Position and Rain Curtain Density Sliders with Observer Angle Readout',
+      'Step-by-Step Interactive Guided Tour of the 3 Stages of Rainbow Optics'
+    ],
+    gradeLevel: 'Middle & Secondary School Physics (Grades 7–10)'
+  },
+  {
+    id: 'sim-shadow-formation-light-sources',
+    slug: 'shadow-light-simulation',
+    indexNumber: '97',
+    title: 'Shadow Formation & Light Sources: Umbra & Penumbra',
+    subject: 'Geometrical Optics (روشنی کے ذرائع اور سایہ کی تشکیل: امبرا اور پینمبرا)',
+    category: 'Physics & Motion',
+    iconName: 'Sun',
+    accentColor: '#d97706',
+    description: 'Interactive geometrical optics laboratory investigating the rectilinear propagation of light and shadow formation. Experiment with Point Light Sources (producing sharp-edged, high-contrast dark shadows) versus Extended Light Sources (such as frosted bulbs or torches, producing a dark inner Umbra region and a soft outer Penumbra region). Move the light source and opaque obstacle closer or farther from the projection wall to observe real-time shadow scaling, and compare Opaque, Translucent, and Transparent materials.',
+    fileUrl: '/simulations/shadow-light-simulation.html',
+    topics: [
+      'Rectilinear Propagation of Light (Light Travels in Straight Lines)',
+      'Point Source vs. Extended Source Shadow Geometry',
+      'Umbra (Complete Shadow Cone) vs. Penumbra (Partial Shadow Fringe)',
+      'Effects of Object and Screen Distance on Shadow Magnification',
+      'Optical Transparency: Opaque, Translucent, and Transparent Objects'
+    ],
+    features: [
+      'Point Source, Torch Beam, and Extended Frosted Bulb Light Selectors',
+      'Draggable Opaque Obstacle with Live Ray Tracing Lines to Screen',
+      'Real-Time Umbra and Penumbra Geometric Calculation & Size Readout',
+      'Material Selector (Wood Block, Frosted Glass, Clear Acrylic, Colored Filter)'
+    ],
+    gradeLevel: 'Primary & Middle School Science (Grades 4–8)'
+  },
+  {
+    id: 'sim-speed-of-sound-solids-liquids-gases',
+    slug: 'speed-of-sound-simulation',
+    indexNumber: '98',
+    title: 'Speed of Sound in Solids, Liquids and Gases',
+    subject: 'Acoustics & Wave Mechanics (ٹھوس، مائع اور گیس میں آواز کی رفتار)',
+    category: 'Physics & Motion',
+    iconName: 'Volume2',
+    accentColor: '#0ea5e9',
+    description: 'Dynamic acoustics and wave physics laboratory demonstrating why sound waves propagate at drastically different speeds through solids, liquids, and gases. Explore atomic and molecular lattices under mechanical compression: tightly packed steel atoms transmit vibrations almost instantaneously (~5,960 m/s), water molecules transmit at intermediate speeds (~1,482 m/s), while distant gas molecules in air require particle collisions and travel slowest (~343 m/s at 20°C). Race sound pulses simultaneously across three synchronized material chambers, view real-time oscilloscope waves, and adjust temperature.',
+    fileUrl: '/simulations/speed-of-sound-simulation.html',
+    topics: [
+      'Speed of Sound Formula: v = √(Elastic Modulus / Density)',
+      'Comparison of Sound Speeds: Steel (5960 m/s) > Water (1482 m/s) > Air (343 m/s)',
+      'Atomic Packing Density & Intermolecular Spring Forces',
+      'Effect of Temperature and Humidity on Acoustic Velocity in Air',
+      'Longitudinal Compression and Rarefaction Waves'
+    ],
+    features: [
+      'Synchronized 3-Lane Sound Pulse Race Across Solid, Liquid, and Gas Tubes',
+      'Live Microscopic Particle Kinetic Vibration Engine Showing Atomic Shoves',
+      'Oscilloscope Waveform Display with Frequency and Wavelength Calculations',
+      'Real-Time Sonic Timer Measuring Millisecond Transit Times'
+    ],
+    gradeLevel: 'Middle & Secondary School Physics (Grades 7–10)'
+  },
+  {
+    id: 'sim-balanced-unbalanced-forces-tug-of-war',
+    slug: 'tug-of-war-forces',
+    indexNumber: '99',
+    title: 'Balanced & Unbalanced Forces: Tug of War Challenge',
+    subject: 'Newtonian Mechanics (قوتیں: متوازن اور غیر متوازن قوتیں اور حرکت)',
+    category: 'Physics & Motion',
+    iconName: 'Compass',
+    accentColor: '#e11d48',
+    description: 'Interactive Newtonian mechanics simulation demonstrating balanced and unbalanced forces through a dynamic tug-of-war competition. Place pullers of varying strength (Small = 50 N, Medium = 100 N, Large = 150 N) on the Blue Team and Red Team along a heavy rope tied to a loaded cart. Observe vector force arrows, calculate net resultant force (ΣF = F_blue − F_red), observe Newton\'s First Law when forces are balanced (Net Force = 0, Cart remains at rest or constant velocity), and watch Newton\'s Second Law accelerate the cart when forces are unbalanced.',
+    fileUrl: '/simulations/tug-of-war-forces.html',
+    topics: [
+      'Net Resultant Force Vector Summation: F_net = F_left + F_right',
+      'Balanced Forces (F_net = 0 N: Equilibrium & Zero Acceleration)',
+      'Unbalanced Forces (F_net ≠ 0 N: Causes Acceleration in Direction of Net Force)',
+      'Newton\'s First & Second Laws of Motion (F = m × a)',
+      'Friction, Mass of Cart, and Velocity Gauge Dynamics'
+    ],
+    features: [
+      'Interactive Drag-and-Drop Blue and Red Pullers with Individual Force Values',
+      'Dynamic Real-Time Vector Force Arrows Proportional to Pulling Magnitude',
+      'Speedometer, Acceleration Telemetry, and Digital Rope Strain Dynamometer',
+      'Sound Effects, Win/Loss Celebrations, and Quick Balancing Reset Buttons'
+    ],
+    gradeLevel: 'Middle & Secondary School Physics (Grades 6–9)'
+  }
 ];
+
 

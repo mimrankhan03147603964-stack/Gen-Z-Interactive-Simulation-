@@ -92,8 +92,20 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-conservation-of-mass-lab': 35,
   'sim-dna-structure-genetics': 31,
   'sim-doppler-effect-sound-observers': 21,
-  'sim-energy-forms-and-changes': 71,
-  'sim-excretory-system-kidney-filtration': 14
+  'sim-excretory-system-kidney-filtration': 14,
+  'sim-exothermic-endothermic-reactions': 4,
+  'sim-gas-laws-boyles-charles': 43,
+  'sim-learning-areas-ecce-38-standards': 50,
+  'sim-microorganisms-viewer': 7,
+  'sim-nursery-fun-lab': 41,
+  'sim-plant-respiration-simulation': 36,
+  'sim-play-group-fun-lab': 56,
+  'sim-prep-fun-lab': 30,
+  'sim-white-light-prism-dispersion': 13,
+  'sim-rainbow-dispersion-droplets': 75,
+  'sim-shadow-formation-light-sources': 75,
+  'sim-speed-of-sound-solids-liquids-gases': 18,
+  'sim-balanced-unbalanced-forces-tug-of-war': 10
 };
 
 /**

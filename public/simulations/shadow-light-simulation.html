@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Shadow Formation and Light Sources</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;background:#0a1330;color:#fff;height:100vh;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 20% 10%,#b45309,#0a1330 65%)}
+header{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#0007;flex-wrap:wrap}
+h1{font-size:21px;flex:1;min-width:280px;text-shadow:0 3px 0 #0008}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#cv{flex:1;min-height:0;width:100%;display:block;cursor:grab}
+aside{width:330px;padding:12px;overflow:auto;background:#0006;display:flex;flex-direction:column;gap:8px}
+aside h3{font-size:14px;color:#ffd23f;margin-top:4px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.b{background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));color:#fff;border:0;border-radius:11px;padding:10px 6px;font:700 14px 'Trebuchet MS',Arial;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,#000),0 7px 10px #0006;text-shadow:0 1px 2px #0007}
+.b:hover{filter:brightness(1.15)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 45%,#000)}
+.b.on{outline:3px solid #fff}
+.w{grid-column:span 2}
+.msg{background:#0009;border-left:6px solid #ffd23f;padding:10px 14px;font-size:16px;line-height:1.4;min-height:62px}
+#info{background:#000b;padding:6px 14px;font:700 15px 'Courier New',monospace;color:#7ee787}
+.note{background:#0008;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.4}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>🔦 Shadow Formation &amp; Light Sources</h1>
+ <button class="b" style="--c:#e11d48" id="fsb" onclick="fs()">⛶ Full Screen</button>
+</header>
+<main>
+ <div id="stage"><canvas id="cv"></canvas><div id="msg" class="msg"></div><div id="info"></div></div>
+ <aside>
+  <h3>💡 Light Source</h3>
+  <div class="g">
+   <button class="b" style="--c:#f59e0b" onclick="setSrc('sun')">☀️ Sun</button>
+   <button class="b" style="--c:#2563eb" onclick="setSrc('torch')">🔦 Torch</button>
+   <button class="b" style="--c:#ea580c" onclick="setSrc('candle')">🕯️ Candle</button>
+   <button class="b" style="--c:#16a34a" onclick="setSrc('bulb')">💡 Bulb</button>
+   <button class="b" style="--c:#dc2626" onclick="on=!on;m(on?'Light is ON. Shadows appear!':'Light is OFF. With no light there is no shadow.')">⏻ Light On/Off</button>
+   <button class="b" style="--c:#a855f7" onclick="colI=(colI+1)%COLS.length;m('Light colour: '+COLS[colI][0])">🎨 Light Colour</button>
+  </div>
+  <h3>🕹️ Move the Light</h3>
+  <div class="g">
+   <button class="b" style="--c:#0891b2" onclick="mv('lx',-.05)">⬅ Light Farther</button>
+   <button class="b" style="--c:#0d9488" onclick="mv('lx',.05)">➡ Light Closer</button>
+   <button class="b" style="--c:#65a30d" onclick="mv('ly',-.06)">⬆ Light Up</button>
+   <button class="b" style="--c:#ca8a04" onclick="mv('ly',.06)">⬇ Light Down</button>
+  </div>
+  <h3>🌅 Sun Time of Day</h3>
+  <div class="g" style="grid-template-columns:1fr 1fr 1fr">
+   <button class="b" style="--c:#fb923c" onclick="tod(22,'Morning: the Sun is low, so shadows are LONG.')">Morning</button>
+   <button class="b" style="--c:#facc15;color:#222" onclick="tod(68,'Noon: the Sun is high, so shadows are SHORT.')">Noon</button>
+   <button class="b" style="--c:#e11d48" onclick="tod(12,'Evening: the Sun is very low, so shadows are very LONG.')">Evening</button>
+  </div>
+  <h3>🧸 Choose an Object</h3>
+  <div class="g">
+   <button class="b" style="--c:#2563eb" onclick="setObj('ball')">⚽ Football</button>
+   <button class="b" style="--c:#dc2626" onclick="setObj('mug')">☕ Mug</button>
+   <button class="b" style="--c:#7c3aed" onclick="setObj('book')">📘 Book</button>
+   <button class="b" style="--c:#15803d" onclick="setObj('tree')">🌳 Tree</button>
+  </div>
+  <h3>🔍 Material</h3>
+  <div class="g" style="grid-template-columns:1fr 1fr 1fr">
+   <button class="b" style="--c:#334155" onclick="setMat('opaque')">Opaque</button>
+   <button class="b" style="--c:#0ea5e9" onclick="setMat('translucent')">Translucent</button>
+   <button class="b" style="--c:#14b8a6" onclick="setMat('transparent')">Transparent</button>
+  </div>
+  <h3>↔️ Move the Object</h3>
+  <div class="g">
+   <button class="b" style="--c:#f43f5e" onclick="mv('ox',-.05)">⬅ Object Left</button>
+   <button class="b" style="--c:#8b5cf6" onclick="mv('ox',.05)">➡ Object Right</button>
+   <button class="b" style="--c:#22c55e" onclick="sc=Math.min(1.6,sc+.15)">➕ Bigger</button>
+   <button class="b" style="--c:#f97316" onclick="sc=Math.max(.6,sc-.15)">➖ Smaller</button>
+  </div>
+  <h3>👀 View</h3>
+  <div class="g">
+   <button class="b" style="--c:#eab308" onclick="rays=!rays">📏 Light Rays</button>
+   <button class="b" style="--c:#0284c7" onclick="labs=!labs">🏷️ Labels</button>
+   <button class="b" style="--c:#db2777" onclick="pen=!pen">🌓 Penumbra</button>
+   <button class="b" style="--c:#64748b" onclick="reset()">♻️ Reset</button>
+  </div>
+  <div class="note">You can also <b>drag</b> the light and the object with your mouse. Light travels in straight lines. A shadow forms when an object blocks the light.</div>
+ </aside>
+</main></div>
+<script>
+const $=id=>document.getElementById(id),app=$('app'),cv=$('cv'),c=cv.getContext('2d'),PI=Math.PI;
+function fs(){document.fullscreenElement?document.exitFullscreen():app.requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+function m(t){$('msg').textContent=t}
+const COLS=[['White','255,255,255'],['Warm Yellow','255,214,102'],['Red','255,90,90'],['Green','100,230,120'],['Blue','110,160,255']];
+const OBJS={ball:{h:84,w:84,n:'Football'},mug:{h:64,w:68,n:'Mug'},book:{h:92,w:58,n:'Book'},tree:{h:170,w:120,n:'Tree'}};
+const RS={torch:12,candle:8,bulb:22};
+const INFO={sun:'The Sun is a HUGE light source very far away. Its rays are almost parallel, so shadow size does not change when you move things. Try the time-of-day buttons!',
+torch:'A torch sends light in a narrow beam. Drag it closer to the object and watch the shadow grow bigger.',
+candle:'A candle flame is a small light source. Small sources make sharp shadows with a thin penumbra.',
+bulb:'A bulb is a bigger light source. It makes a soft shadow with a dark centre (umbra) and a lighter edge (penumbra).'};
+let src='torch',on=true,colI=0,mat='opaque',obj='ball',rays=true,labs=true,pen=true,th=50,lxF=.14,lyF=.5,oxF=.5,sc=1,gy,sx,ox,ytop,lx,ly,T=0,drag=null;
+function setSrc(s){src=s;on=true;const d={sun:[.1,.3],torch:[.14,.5],candle:[.16,.64],bulb:[.17,.16]}[s];lxF=d[0];lyF=d[1];m(INFO[s])}
+function setObj(o){obj=o;m('Object: '+OBJS[o].n+'. Look at the shape of its shadow.')}
+function setMat(x){mat=x;m({opaque:'OPAQUE objects block ALL light, so the shadow is dark. (wood, metal, books)',translucent:'TRANSLUCENT objects let SOME light through, so the shadow is light. (frosted glass, wax paper)',transparent:'TRANSPARENT objects let MOST light through, so there is almost no shadow. (clear glass, water)'}[x])}
+function tod(a,t){setSrc('sun');th=a;m(t)}
+function mv(k,d){if(src=='sun'){if(k=='ly'){th=Math.max(8,Math.min(80,th-d*100));m('Sun height changed. Higher Sun = shorter shadow.')}else if(k=='lx')m('The Sun is too far away to move closer! Try the time-of-day buttons.');}
+ if(k=='ox')oxF=Math.max(.2,Math.min(.62,oxF+d));if(src!='sun'){if(k=='lx')lxF=Math.max(.04,lxF+d);if(k=='ly')lyF=Math.max(.08,Math.min(.9,lyF+d))}}
+function reset(){src='torch';on=true;colI=0;mat='opaque';obj='ball';rays=labs=pen=true;th=50;lxF=.14;lyF=.5;oxF=.5;sc=1;m('Simulation reset.')}
+function reach(dx,dy){if(dy<=.0001){const y=ytop+dy/dx*(sx-ox);return sx+(gy-y)}const xg=ox+dx/dy*(gy-ytop);if(xg<=sx)return xg;const y=ytop+dy/dx*(sx-ox);return sx+(gy-y)}
+function calc(){const D=[];if(src=='sun'){const k=Math.tan(th*PI/180);D.push([1,k*.93],[1,k*1.07])}else[-RS[src],RS[src]].forEach(d=>D.push([ox-lx,ytop-(ly+d)]));
+ const r=D.map(d=>Math.min(reach(d[0],d[1]),sx+gy-30));return[Math.min(...r),Math.max(...r)]}
+function geo(W,H){gy=H*.74;sx=W-170;const o=OBJS[obj];ox=oxF*W;ytop=gy-o.h*sc;lx=Math.min(lxF*W,ox-70);ly=lyF*gy;if(src=='candle')ly=Math.min(ly,gy-80)}
+/* ---------- drawing ---------- */
+function objDraw(){const o=OBJS[obj];c.save();c.translate(ox,gy);c.scale(sc,sc);c.globalAlpha=mat=='opaque'?1:mat=='translucent'?.6:.3;
+ if(obj=='ball'){const g=c.createRadialGradient(-12,-56,5,0,-42,44);g.addColorStop(0,'#fff');g.addColorStop(1,'#cbd5e1');c.fillStyle=g;c.beginPath();c.arc(0,-42,42,0,7);c.fill();c.fillStyle='#111';[[0,-42,13],[-30,-58,8],[30,-58,8],[-24,-18,8],[24,-18,8]].forEach(p=>{c.beginPath();for(let i=0;i<5;i++){const a=i*2*PI/5-PI/2;c.lineTo(p[0]+p[2]*Math.cos(a),p[1]+p[2]*Math.sin(a))}c.fill()})}
+ if(obj=='mug'){const g=c.createLinearGradient(-30,0,30,0);g.addColorStop(0,'#fca5a5');g.addColorStop(.4,'#ef4444');g.addColorStop(1,'#7f1d1d');c.fillStyle=g;c.beginPath();c.roundRect(-30,-64,60,64,8);c.fill();c.strokeStyle='#dc2626';c.lineWidth=9;c.beginPath();c.arc(32,-32,16,-1.4,1.4);c.stroke();c.fillStyle='#5b3a1e';c.beginPath();c.ellipse(0,-62,28,7,0,0,7);c.fill()}
+ if(obj=='book'){c.fillStyle='#f8fafc';c.fillRect(-27,-90,56,90);c.fillStyle='#2563eb';c.fillRect(-29,-92,56,90);c.fillStyle='#1e3a8a';c.fillRect(-29,-92,9,90);c.fillStyle='#fde047';c.fillRect(-12,-70,32,6);c.fillRect(-12,-58,24,5);c.beginPath();c.arc(4,-30,9,0,7);c.fill()}
+ if(obj=='tree'){c.fillStyle='#7c4a1e';c.fillRect(-10,-70,20,70);[[0,-115,48,'#15803d'],[-34,-92,34,'#16a34a'],[34,-92,34,'#16a34a'],[0,-150,34,'#22c55e']].forEach(p=>{c.fillStyle=p[3];c.beginPath();c.arc(p[0],p[1],p[2],0,7);c.fill()})}
+ if(mat!='opaque'){c.fillStyle='rgba(255,255,255,.45)';c.fillRect(-o.w/2+6,-o.h+10,7,o.h*.6)}
+ c.restore()}
+function txt(s,x,y,sz=15,col='#111'){c.font='bold '+sz+'px Trebuchet MS,Arial';c.fillStyle=col;c.textAlign='center';c.fillText(s,x,y)}
+function srcDraw(W){const colr='rgb('+COLS[colI][1]+')';
+ if(src=='sun'){const x=90,y=gy-60-Math.sin(th*PI/180)*(gy-140);if(on){c.save();c.translate(x,y);c.rotate(T/3000);c.strokeStyle='#fbbf24';c.lineWidth=5;for(let i=0;i<12;i++){c.rotate(PI/6);c.beginPath();c.moveTo(48,0);c.lineTo(68,0);c.stroke()}c.restore()}
+  const g=c.createRadialGradient(x-10,y-10,5,x,y,44);g.addColorStop(0,on?'#fff7b0':'#e2e8f0');g.addColorStop(1,on?'#f59e0b':'#64748b');c.fillStyle=g;c.beginPath();c.arc(x,y,44,0,7);c.fill();return[x,y]}
+ if(src=='torch'){const a=Math.atan2(ytop+(gy-ytop)/2-ly,ox-lx);c.save();c.translate(lx,ly);c.rotate(a);c.fillStyle='#475569';c.beginPath();c.roundRect(-96,-13,86,26,6);c.fill();c.fillStyle='#ef4444';c.fillRect(-70,-13,10,26);c.fillStyle='#94a3b8';c.beginPath();c.moveTo(-12,-13);c.lineTo(10,-24);c.lineTo(10,24);c.lineTo(-12,13);c.fill();c.fillStyle=on?colr:'#cbd5e1';c.beginPath();c.ellipse(10,0,5,22,0,0,7);c.fill();c.restore()}
+ if(src=='candle'){c.fillStyle='#fef3c7';c.beginPath();c.roundRect(lx-9,ly+16,18,gy-ly-16,3);c.fill();c.fillStyle='#fde68a';c.fillRect(lx-9,ly+16,5,gy-ly-16);c.strokeStyle='#222';c.lineWidth=2;c.beginPath();c.moveTo(lx,ly+16);c.lineTo(lx,ly+6);c.stroke();
+  if(on){const f=Math.sin(T/90)*2,g=c.createRadialGradient(lx,ly+4,2,lx,ly,16);g.addColorStop(0,'#fff');g.addColorStop(.5,'#fcd34d');g.addColorStop(1,'#f97316');c.fillStyle=g;c.beginPath();c.moveTo(lx-7,ly+6);c.quadraticCurveTo(lx-9,ly-8,lx+f,ly-22);c.quadraticCurveTo(lx+9,ly-8,lx+7,ly+6);c.fill()}}
+ if(src=='bulb'){c.strokeStyle='#222';c.lineWidth=3;c.beginPath();c.moveTo(lx,0);c.lineTo(lx,ly-38);c.stroke();c.fillStyle='#64748b';c.fillRect(lx-9,ly-38,18,18);const g=c.createRadialGradient(lx-6,ly-6,3,lx,ly,24);g.addColorStop(0,'#fff');g.addColorStop(1,on?colr:'#cbd5e1');c.fillStyle=g;c.beginPath();c.arc(lx,ly,22,0,7);c.fill();c.strokeStyle=on?'#f59e0b':'#64748b';c.lineWidth=2;c.beginPath();c.moveTo(lx-6,ly+10);c.lineTo(lx-4,ly-2);c.lineTo(lx,ly+4);c.lineTo(lx+4,ly-2);c.lineTo(lx+6,ly+10);c.stroke()}
+ return[lx,ly]}
+function rayDraw(){const col=COLS[colI][1],L=[];
+ if(src=='sun'){const k=Math.tan(th*PI/180),n=Math.hypot(1,k);for(let y=-k*sx;y<gy;y+=34)L.push([0,y,1/n,k/n])}
+ else if(src=='torch'){const a0=Math.atan2(ytop+(gy-ytop)/2-ly,ox-lx);for(let i=-7;i<=7;i++){const a=a0+i*.045;L.push([lx+14*Math.cos(a0),ly+14*Math.sin(a0),Math.cos(a),Math.sin(a)])}}
+ else for(let i=-11;i<=11;i++){const a=i*PI/15*.9;L.push([lx,ly,Math.cos(a),Math.sin(a)])}
+ L.forEach(r=>{const[x0,y0,dx,dy]=r;let t=1e9;if(dy>1e-4)t=Math.min(t,(gy-y0)/dy);if(dx>1e-4)t=Math.min(t,(sx-x0)/dx);let to=1e9,hit=false;if(dx>1e-4&&x0<ox){to=(ox-x0)/dx;const yo=y0+dy*to;hit=to<t&&yo>=ytop&&yo<=gy}
+  const e=hit&&mat=='opaque'?to:t;c.strokeStyle=`rgba(${col},.6)`;c.lineWidth=1.6;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0+dx*Math.min(e,hit?to:e),y0+dy*Math.min(e,hit?to:e));c.stroke();
+  if(hit&&mat!='opaque'){c.strokeStyle=`rgba(${col},${mat=='translucent'?.22:.5})`;c.beginPath();c.moveTo(x0+dx*to,y0+dy*to);c.lineTo(x0+dx*t,y0+dy*t);c.stroke()}})}
+function shadow(){const[ri,ro]=calc(),A={opaque:.78,translucent:.35,transparent:.1}[mat],ar=Math.min(ro,sx),ai=Math.min(ri,sx);
+ const fl=(e,al)=>{c.fillStyle=`rgba(0,0,0,${al})`;c.beginPath();c.moveTo(ox-14,gy+4);c.lineTo(e,gy+10);c.lineTo(e,gy+38);c.lineTo(ox-14,gy+44);c.fill()};
+ if(pen)fl(ar,A*.45);fl(pen?ai:(ai+ar)/2,pen?A*.9:A);
+ if(ro>sx){const wr=ro-sx,wi=Math.max(0,ri-sx),x=sx+26,w=118;if(pen){c.fillStyle=`rgba(0,0,0,${A*.45})`;c.fillRect(x,gy-wr,w,wr)}c.fillStyle=`rgba(0,0,0,${pen?A*.9:A})`;const h=pen?wi:(wi+wr)/2;c.fillRect(x,gy-h,w,h)}
+ return[ri,ro,ai,ar]}
+function frame(t){T=t;if(cv.width!=cv.clientWidth||cv.height!=cv.clientHeight){cv.width=cv.clientWidth;cv.height=cv.clientHeight}
+ const W=cv.width,H=cv.height;if(W){geo(W,H);c.clearRect(0,0,W,H);
+ let g=c.createLinearGradient(0,0,0,gy);g.addColorStop(0,'#e6eefb');g.addColorStop(1,'#b9c8de');c.fillStyle=g;c.fillRect(0,0,W,gy);
+ g=c.createLinearGradient(0,gy,0,H);g.addColorStop(0,'#d3a876');g.addColorStop(1,'#8a6137');c.fillStyle=g;c.fillRect(0,gy,W,H-gy);
+ c.strokeStyle='#0002';c.lineWidth=2;for(let x=0;x<W;x+=70){c.beginPath();c.moveTo(x,gy+48);c.lineTo(x,H);c.stroke()}
+ c.fillStyle='#fdfdfd';c.fillRect(sx,40,W-sx-10,gy-40);c.strokeStyle='#94a3b8';c.lineWidth=5;c.strokeRect(sx,40,W-sx-10,gy-40);c.fillStyle='#64748b';c.fillRect(sx+50,gy,10,40);c.fillRect(W-70,gy,10,40);
+ let res=[0,0,0,0];if(on){res=shadow()}
+ if(on&&rays)rayDraw();
+ objDraw();
+ if(on){c.globalCompositeOperation='multiply';const[r,gg,b]=COLS[colI][1].split(',').map(Number);c.fillStyle=`rgb(${(255+r)/2|0},${(255+gg)/2|0},${(255+b)/2|0})`;c.fillRect(0,0,W,H);c.globalCompositeOperation='source-over'}
+ else{c.globalCompositeOperation='multiply';c.fillStyle='#363f5e';c.fillRect(0,0,W,H);c.globalCompositeOperation='source-over'}
+ const S=srcDraw(W);
+ if(on){c.globalCompositeOperation='lighter';const gl=c.createRadialGradient(S[0],S[1],10,S[0],S[1],240);gl.addColorStop(0,`rgba(${COLS[colI][1]},.35)`);gl.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=gl;c.fillRect(S[0]-240,S[1]-240,480,480);c.globalCompositeOperation='source-over'}
+ if(labs){const o=OBJS[obj];txt('Light Source',S[0],Math.max(18,S[1]-(src=='sun'?78:48)),16,'#92400e');txt('Object ('+o.n+')',ox,ytop-14,16,'#1e3a8a');txt('Screen (Wall)',sx+(W-sx-10)/2,62,16,'#334155');
+  if(on&&res[3]>ox+30){txt('Shadow',(ox+res[3])/2,gy+30,16,'#fff');}
+  c.textAlign='left';c.font='bold 13px Arial';c.fillStyle='#222';c.fillText('Dark part = Umbra',14,H-34);c.fillText('Light part = Penumbra',14,H-14)}
+ const cm=on?Math.round((res[1]-ox)/3):0,hc=Math.round(OBJS[obj].h*sc/3),d=src=='sun'?'Sun height: '+Math.round(th)+'°':'Light distance: '+Math.round((ox-lx)/3)+' cm';
+ const s=on?`Object height: ${hc} cm  |  Shadow length: ${cm} cm  |  ${d}  |  Light: ${COLS[colI][0]}`:'Light is OFF  |  No light = no shadow';if($('info').textContent!=s)$('info').textContent=s}
+ requestAnimationFrame(frame)}
+function pt(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+cv.onpointerdown=e=>{const[x,y]=pt(e),o=OBJS[obj];if(src!='sun'&&Math.hypot(x-lx,y-ly)<50)drag='l';else if(Math.abs(x-ox)<o.w*sc/2+10&&y>ytop-10&&y<gy+10)drag='o';cv.setPointerCapture(e.pointerId)};
+cv.onpointermove=e=>{if(!drag)return;const[x,y]=pt(e);if(drag=='l'){lxF=Math.max(.04,Math.min(x/cv.width,oxF-.06));lyF=Math.max(.08,Math.min(y/gy,.95))}else oxF=Math.max(lxF+.07,Math.min(.62,x/cv.width))};
+cv.onpointerup=()=>drag=null;
+setSrc('torch');requestAnimationFrame(frame);
+</script></body></html>

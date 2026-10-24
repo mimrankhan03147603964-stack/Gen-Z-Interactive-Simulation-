@@ -23,7 +23,7 @@ interface TopNavbarProps {
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
-  totalSimulations = 86,
+  totalSimulations = SIMULATIONS_LIST.length,
   onBackToCatalog,
   onSelectCategory
 }) => {

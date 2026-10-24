@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nursery Fun Lab (Age 4–5)</title>
+<style>
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;font-family:"Comic Sans MS","Trebuchet MS",sans-serif}
+body{background:linear-gradient(135deg,#c9f2c7,#fff3a8 50%,#ffc9e0)}
+#app{height:100%;display:flex;flex-direction:column;padding:10px 14px;gap:9px}
+#top{display:flex;align-items:center;gap:12px}
+h1{margin:0;flex:1;font-size:28px;color:#1b5e8a;text-shadow:2px 2px 0 #fff}
+#nav,#ctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#nav .b{padding:7px 11px;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
+.b:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.b.on{outline:4px solid #fff;outline-offset:2px}
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:24px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 40px rgba(255,255,255,.4);background:linear-gradient(#bde8ff,#f2fbff)}
+.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 26px;border-radius:30px;font-size:25px;font-weight:bold;color:#1b5e8a;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap}
+.tray{position:absolute;top:66px;left:0;right:0;height:38%;display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:center}
+.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1}
+.item.sel{transform:scale(1.2) rotate(-8deg);filter:drop-shadow(0 0 16px gold)}
+.baskets{position:absolute;bottom:14px;left:0;right:0;height:44%;display:flex;gap:40px;justify-content:center;padding:0 30px}
+.basket{flex:1;max-width:480px;border-radius:20px 20px 70px 70px;box-shadow:0 8px 0 #0004,0 14px 20px #0004;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px;overflow:hidden}
+.bt{color:#fff;font-weight:bold;font-size:26px;text-shadow:2px 2px #0007}
+.bin{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:4px}
+.hint{animation:pu .5s 4}@keyframes pu{50%{transform:scale(1.2)}}
+/* mixer */
+.row{position:absolute;inset:70px 0 0;display:flex;align-items:center;justify-content:center;gap:36px}
+.gw{display:flex;flex-direction:column;align-items:center;gap:8px}.gw b{font-size:30px;color:#333}
+.op{font-size:90px;font-weight:bold;color:#1b5e8a}
+.gl2{width:150px;height:240px;border:7px solid #fff;border-top:0;border-radius:0 0 50px 50px;position:relative;overflow:hidden;background:#fff6;box-shadow:inset 0 0 30px #fff,0 12px 20px #0003}
+.gl2::after{content:"";position:absolute;left:12%;top:8%;width:14%;height:70%;border-radius:20px;background:#fff8}
+.liq{position:absolute;left:0;right:0;bottom:0;height:0;transition:height .8s,background .8s}
+/* shapes */
+.frm{display:flex;flex-direction:column;align-items:center;font-weight:bold;font-size:24px;color:#37474f;cursor:pointer}
+/* babies */
+.pc{display:flex;flex-direction:column;align-items:center;padding:8px 20px;border-radius:18px;background:#fff;cursor:pointer;box-shadow:0 6px 0 #0003;font-size:22px;font-weight:bold;transition:.2s}
+.pc.sel{outline:5px solid gold;transform:scale(1.1)}.pc.ok{background:#c8f5b0;opacity:.7;pointer-events:none}
+/* plant */
+.pot{position:absolute;left:50%;bottom:40px;width:230px;height:170px;margin-left:-115px;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);background:linear-gradient(90deg,#bf5b2c,#e8884f 40%,#9b4720)}
+.soil{position:absolute;left:0;right:0;top:0;height:0;background:#5d3a1a;transition:height .8s,filter .8s}
+.seed{position:absolute;left:50%;bottom:196px;margin-left:-18px;font-size:36px;transition:.6s}
+.pl2{position:absolute;left:50%;bottom:205px;margin-left:-40px;width:80px;font-size:60px;text-align:center;line-height:1;transform-origin:bottom;transform:scale(0);transition:transform 1.5s}
+.sun{position:absolute;right:8%;top:70px;font-size:110px;opacity:0;scale:.3;transition:1s;filter:drop-shadow(0 0 30px gold)}
+.rn{position:absolute;top:-10%;font-size:34px;animation:fall 1.2s linear forwards}@keyframes fall{to{top:100%;opacity:0}}
+/* seesaw */
+.beam{position:absolute;left:14%;right:14%;bottom:150px;height:24px;border-radius:12px;background:linear-gradient(#e0a25a,#a8702f);box-shadow:0 8px 14px #0004;transition:transform 1.2s cubic-bezier(.3,1.6,.5,1);z-index:2}
+.sl{position:absolute;bottom:20px;font-size:100px;line-height:1}
+.fulc{position:absolute;left:50%;bottom:0;margin-left:-90px;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:162px solid #e53935;filter:drop-shadow(0 8px 6px #0004);z-index:1}
+/* shadows */
+.shd{width:150px;height:150px;border-radius:20px;background:#dfe9f3;box-shadow:inset 0 4px 10px #0003;display:flex;align-items:center;justify-content:center;font-size:90px;cursor:pointer}
+.shd span{filter:brightness(0) opacity(.8);transition:.4s}.shd.ok{background:#c8f5b0}.shd.ok span{filter:none}
+/* germs */
+.hz{position:absolute;left:50%;top:56%;width:min(50vh,340px);height:min(50vh,340px);transform:translate(-50%,-50%)}
+.hh{font-size:min(46vh,310px);line-height:1;text-align:center;filter:drop-shadow(0 12px 10px #0005)}
+.gm{position:absolute;font-size:38px;cursor:pointer;transition:.3s;animation:wig .6s infinite}@keyframes wig{50%{transform:rotate(15deg) translateY(-5px)}}
+.fm{position:absolute;inset:0;pointer-events:none}.fm div{position:absolute;font-size:52px;animation:bob 2s ease-in-out infinite}@keyframes bob{50%{margin-top:-10px}}
+</style></head>
+<body><div id="app">
+<div id="top"><h1>🌈 Nursery Fun Lab (Age 4–5)</h1><button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button></div>
+<div id="nav"></div><div id="stage"></div><div id="ctrl"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),st=$('#stage'),ct=$('#ctrl'),nav=$('#nav');
+const P=['#e53935','#1e88e5','#f9a825','#43a047','#8e24aa','#00acc1','#fb8c00','#d81b60'];
+let T=[],cur=0,ac;
+const M=t=>{const m=$('#msg');if(m)m.textContent=t};
+const say=t=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.8;u.pitch=1.3;u.lang='en-US';speechSynthesis.speak(u)}catch(e){}};
+const tone=(f=600,d=.15,ty='sine')=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}};
+const btn=(l,c,fn,p=ct)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',c);b.textContent=l;b.onclick=fn;p.appendChild(b);return b};
+const el=(h,cls,s,p=st)=>{const d=document.createElement('div');d.className=cls||'';d.innerHTML=h||'';if(s)Object.assign(d.style,s);p.appendChild(d);return d};
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+const clr=()=>st.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));
+const bad=m=>{tone(150,.3,'square');M(m);say('Try again')};
+
+function mixer(){
+ const C={Red:'#e53935',Yellow:'#fdd835',Blue:'#1e88e5',Orange:'#fb8c00',Green:'#43a047',Purple:'#8e24aa'};
+ const R={'Red+Yellow':'Orange','Blue+Yellow':'Green','Blue+Red':'Purple'};let sl=[];
+ M('Pick two colors to mix!');const g='<div class=gw><div class=gl2><div class=liq></div></div><b>?</b></div>';
+ const row=el(g+'<span class=op>+</span>'+g+'<span class=op>=</span>'+g,'row');const L=[...row.querySelectorAll('.liq')],B=[...row.querySelectorAll('b')];
+ const fill=(i,n)=>{L[i].style.height='72%';L[i].style.background=C[n];B[i].textContent=n};
+ ['Red','Yellow','Blue'].forEach(n=>btn('Add '+n,C[n],()=>{if(sl.length>1){M('Press Reset to try again!');return}fill(sl.length,n);sl.push(n);tone(500,.15);say(n);M(sl.length==2?'Now press Mix!':'Pick one more color!')}));
+ btn('Mix! 🥄','#00acc1',()=>{if(sl.length<2){M('Pick two colors first!');return}const r=sl[0]==sl[1]?sl[0]:R[sl.slice().sort().join('+')];fill(2,r);tone(800,.4);M(sl[0]+' + '+sl[1]+' = '+r+'!');say(sl[0]+' plus '+sl[1]+' makes '+r)});
+ btn('Reset','#546e7a',()=>load(cur));
+}
+
+const svg=(t,c,s,k)=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="fill:${c};stroke:${k||'#0004'};stroke-width:4;filter:drop-shadow(0 6px 4px #0003)">`+{Circle:'<circle cx="50" cy="50" r="42"/>',Square:'<rect x="10" y="10" width="80" height="80" rx="6"/>',Triangle:'<polygon points="50,8 94,90 6,90"/>',Rectangle:'<rect x="4" y="25" width="92" height="50" rx="5"/>'}[t]+'</svg>';
+function shapes(){
+ const S=[['Circle','#e53935'],['Square','#1e88e5'],['Triangle','#43a047'],['Rectangle','#f9a825']];let sel=null,left;
+ const fr=el('','tray',{top:'70px',height:'42%'}),it=el('','tray',{top:'auto',bottom:'14px',height:'34%'});
+ const start=()=>{fr.innerHTML=it.innerHTML='';sel=null;left=4;M('Fit each shape into its frame!');
+  sh(S).forEach(s=>{const f=el(svg(s[0],'#cfd8dc',170,'#546e7a')+s[0],'frm',null,fr);f.n=s[0];f.onclick=()=>{if(!sel){M('Tap a shape first!');return}
+   if(sel.n==f.n){f.innerHTML=svg(f.n,sel.c,170)+f.n;sel.remove();sel=null;tone(700,.2);say(f.n);M(--left?'Yes! A '+f.n+'!':'Great job! All shapes fit!')}else bad('Oops! Try another frame!')}});
+  sh(S).forEach(s=>{const i=el(svg(s[0],s[1],110),'item',null,it);i.n=s[0];i.c=s[1];i.onclick=()=>{clr();sel=i;i.classList.add('sel');say(i.n);tone(400,.1)}})};
+ start();S.forEach((s,i)=>btn('This is a '+s[0],s[1],()=>{say('This is a '+s[0]);M('Find the '+s[0]+' frame!');fr.querySelectorAll('.frm').forEach(f=>{f.classList.remove('hint');if(f.n==s[0]){void f.offsetWidth;f.classList.add('hint')}})}));
+ btn('Restart','#546e7a',start);
+}
+
+function sortG(bins){
+ let sel=null,left,tray=el('','tray'),bk=el('','baskets');
+ const drop=(d,n)=>{if(!sel){M('Tap a thing first!');say('Tap a thing first');return}
+  if(sel.k==n){const i=sel;i.onclick=null;i.classList.remove('sel');i.style.fontSize='48px';d.querySelector('.bin').appendChild(i);sel=null;tone(700,.2);say(i.nm+' goes in '+bins[n][0]);M(--left?'Yes! '+i.nm+' goes here!':'Great job! All sorted!')}else bad('Oops! Try the other box!')};
+ const bn=bins.map((b,n)=>{const d=el('<div class=bt>'+b[0]+'</div><div class=bin></div>','basket',{background:'linear-gradient(rgba(255,255,255,.25),rgba(0,0,0,.15)),'+b[1]},bk);d.onclick=()=>drop(d,n);return d});
+ const start=()=>{tray.innerHTML='';bn.forEach(d=>d.querySelector('.bin').innerHTML='');sel=null;M('Tap a thing, then tap its box!');
+  const all=[];bins.forEach((b,k)=>sh(b[2]).slice(0,3).forEach(x=>all.push([x,k])));left=all.length;
+  sh(all).forEach(a=>{const i=el(a[0][0],'item',{fontSize:'84px'},tray);i.nm=a[0][1];i.k=a[1];i.onclick=()=>{clr();sel=i;i.classList.add('sel');say(i.nm);tone(400,.1)}})};
+ start();bins.forEach((b,n)=>btn('Learn: '+b[0],b[1],()=>{say(b[3]);M(b[3])}));btn('New Set','#8e24aa',start);
+}
+const living=()=>sortG([['LIVING','#43a047',[['🌱','Plant'],['🐱','Cat'],['👶','Baby'],['🌳','Tree'],['🐟','Fish'],['🐦','Bird']],'Living things grow, eat and breathe.'],['NON-LIVING','#78909c',[['🪑','Chair'],['🚗','Car'],['⚽','Ball'],['📚','Books'],['🧸','Teddy bear'],['🔨','Hammer']],'Non-living things do not grow or breathe.']]);
+const food=()=>sortG([['HEALTHY TUMMY','#43a047',[['🍎','Apple'],['🥕','Carrot'],['🍌','Banana'],['🥦','Broccoli'],['🍇','Grapes'],['🥛','Milk']],'Fruits and vegetables make our body strong.'],['JUNK BASKET','#e53935',[['🍬','Candy'],['🍟','Chips'],['🍩','Donut'],['🍭','Lollipop'],['🥤','Soda'],['🍫','Chocolate']],'Junk food has lots of sugar. Eat it only a little.']]);
+const hotcold=()=>sortG([['HOT','#e53935',[['☕','Tea'],['☀️','Sun'],['🍲','Soup'],['🔥','Fire'],['🍳','Hot pan'],['🍕','Hot pizza']],'Hot things can burn us. Be careful!'],['COLD','#1e88e5',[['🍦','Ice cream'],['🧊','Ice'],['🧃','Juice'],['⛄','Snowman'],['❄️','Snow'],['🥛','Cold milk']],'Cold things feel chilly, like ice.']]);
+
+function babies(){
+ const PR=[['🐄','Cow','🐄','Calf'],['🐔','Hen','🐥','Chick'],['🦆','Duck','🐤','Duckling'],['🐕','Dog','🐶','Puppy'],['🐈','Cat','🐱','Kitten'],['🐑','Sheep','🐑','Lamb']];
+ let set,sel,left;const tp=el('','tray',{top:'70px',height:'38%'}),bt=el('','tray',{top:'auto',bottom:'12px',height:'38%'});
+ const card=(k,p,par)=>{const c=el('<div style="font-size:'+(p?82:52)+'px">'+set[k][p?0:2]+'</div>'+set[k][p?1:3],'pc',null,p?tp:bt);c.k=k;c.p=p;c.nm=set[k][p?1:3];
+  c.onclick=()=>{if(!sel||sel.p==c.p){clr();sel=c;c.classList.add('sel');say(c.nm);return}
+   if(sel.k==c.k){[sel,c].forEach(x=>x.classList.add('ok'));tone(800,.3);say(set[c.k][1]+' and '+set[c.k][3]);M(set[c.k][1]+' and '+set[c.k][3]+'!');sel=null;if(!--left){M('Great job! All families matched!');say('Great job!')}}
+   else{clr();sel=null;bad('Not a match. Try again!')}}};
+ const start=()=>{tp.innerHTML=bt.innerHTML='';set=sh(PR).slice(0,5);left=5;sel=null;M('Match each parent with its baby!');sh([0,1,2,3,4]).forEach(k=>card(k,1));sh([0,1,2,3,4]).forEach(k=>card(k,0))};
+ start();btn('New Game','#8e24aa',start);
+ btn('Hint 💡','#f9a825',()=>{const k=[...tp.children].find(c=>!c.classList.contains('ok'));if(k)[...st.querySelectorAll('.pc')].filter(c=>c.k==k.k).forEach(c=>{c.classList.remove('hint');void c.offsetWidth;c.classList.add('hint')})});
+ btn('Say Names','#43a047',()=>say(set.map(s=>s[1]+' and '+s[3]).join('. ')));
+}
+
+function plant(){
+ let s=0;const NEED=['Add Soil','Put Seed','Add Water','Give Sunshine'];
+ const pot=el('<div class=soil></div>','pot'),so=pot.firstChild,sun=el('☀️','sun'),sd=el('🌰','seed',{opacity:0}),pl=el('🌱','pl2');
+ M('Step 1: Add soil to the pot!');
+ const rain=()=>{for(let i=0;i<14;i++){const d=el('💧','rn',{left:35+Math.random()*30+'%',animationDelay:Math.random()*.6+'s'});setTimeout(()=>d.remove(),1800)}};
+ const A=[()=>{so.style.height='60px'},()=>{sd.style.opacity=1;sd.style.bottom='160px'},()=>{rain();so.style.filter='brightness(.65)'},
+  ()=>{sun.style.opacity=1;sun.style.scale=1;sd.style.opacity=0;pl.style.transform='scale(1)';T.push(setTimeout(()=>{pl.textContent='🌿';pl.style.transform='scale(2)'},1800),setTimeout(()=>{pl.textContent='🌻';pl.style.transform='scale(3)';M('Hooray! Your sunflower grew!');say('Hooray! Your sunflower grew!')},3800))}];
+ NEED.forEach((n,k)=>btn((k+1)+'. '+n,P[k],()=>{if(s>3){M('Watch your plant grow!');return}if(k!=s){M('Not yet! Step '+(s+1)+': '+NEED[s]);say(NEED[s]+' first');return}
+  A[k]();tone(400+k*100,.2);say(n);s++;M(s<4?'Step '+(s+1)+': '+NEED[s]+'!':'Wait... it is growing!')}));
+ btn('Start Again','#546e7a',()=>load(cur));
+}
+
+function seesaw(){
+ const I=[['🐘','Elephant',9],['🚗','Car',8],['🪨','Rock',5],['🐶','Dog',3],['🐱','Cat',2],['🍎','Apple',1]];let L=null,Rt=null,nx=0;
+ el('','fulc');const bm=el('<div class=sl style="left:4%"></div><div class=sl style="right:4%"></div>','beam'),[a,b]=bm.children;M('Put two things on the seesaw!');
+ const draw=()=>{a.textContent=L?L[0]:'';b.textContent=Rt?Rt[0]:'';const lw=L?L[2]:0,rw=Rt?Rt[2]:0;bm.style.transform='rotate('+Math.max(-18,Math.min(18,(rw-lw)*3))+'deg)';
+  if(L&&Rt){const m=lw==rw?'Same weight! It is balanced!':(lw>rw?L[1]:Rt[1])+' is HEAVY! '+(lw>rw?Rt[1]:L[1])+' is LIGHT!';M(m);say(m)}else M('Now add one more thing!')};
+ I.forEach((it,i)=>btn(it[0]+' '+it[1],P[i],()=>{if(nx)Rt=it;else L=it;nx^=1;tone(300,.15);draw()}));
+ btn('Swap Sides','#8e24aa',()=>{[L,Rt]=[Rt,L];draw()});btn('Clear','#546e7a',()=>{L=Rt=null;nx=0;draw();M('Put two things on the seesaw!')});
+}
+
+function shadows(){
+ const SET={Toys:['🧸','🚗','⚽','🚀','👑','🎸','🎈','⛵'],Animals:['🐘','🦒','🐢','🦆','🐟','🦋','🐱','🐶']};let pool=SET.Toys,sel=null,left;
+ const sd=el('','tray',{top:'70px',height:'40%'}),it=el('','tray',{top:'auto',bottom:'14px',height:'36%'});
+ const start=()=>{sd.innerHTML=it.innerHTML='';sel=null;const f=sh(pool).slice(0,5);left=5;M('Put each one on its black shadow!');
+  sh(f).forEach(e=>{const d=el('<span>'+e+'</span>','shd',null,sd);d.e=e;d.onclick=()=>{if(!sel){M('Tap a picture first!');return}
+   if(sel.e==e){d.classList.add('ok');sel.remove();sel=null;tone(700,.2);say('Yes!');M(--left?'Yes! It fits!':'Great job! All shadows matched!')}else bad('That is not its shadow!')}});
+  sh(f).forEach(e=>{const i=el(e,'item',{fontSize:'90px'},it);i.e=e;i.onclick=()=>{clr();sel=i;i.classList.add('sel');tone(400,.1)}})};
+ start();Object.keys(SET).forEach((k,i)=>btn(k,P[i],()=>{pool=SET[k];start()}));
+ btn('Hint 💡','#f9a825',()=>{if(sel)sd.querySelectorAll('.shd').forEach(d=>{if(d.e==sel.e){d.classList.remove('hint');void d.offsetWidth;d.classList.add('hint')}});else M('Tap a picture first!')});
+ btn('Restart','#546e7a',start);
+}
+
+function germs(){
+ let wet=0,so=0,ri=0,G=[];const hz=el('<div class=hh>🖐️</div>','hz'),fm=el('','fm',null,hz);
+ const rain=()=>{for(let i=0;i<14;i++){const d=el('💧','rn',{left:Math.random()*90+'%',animationDelay:Math.random()*.6+'s'},hz);setTimeout(()=>d.remove(),1800)}};
+ const pop=g=>{g.style.scale=0;g.style.opacity=0;G=G.filter(x=>x!=g);tone(700+Math.random()*300,.1);setTimeout(()=>g.remove(),300);if(!G.length)M('All germs are gone! Now rinse.')};
+ for(let i=0;i<12;i++){const g=el('🦠','gm',{left:20+Math.random()*55+'%',top:15+Math.random()*60+'%'},hz);g.onclick=()=>so?pop(g):M('Add soap first!');G.push(g)}
+ M('Step 1: Wet your hands!');
+ btn('1. Wet Hands 💦','#1e88e5',()=>{wet=1;rain();tone(500,.3);M('Hands are wet! Now add soap.');say('Now add soap')});
+ btn('2. Add Soap 🧼','#d81b60',()=>{if(!wet){M('Wet your hands first!');return}so=1;fm.innerHTML='';for(let i=0;i<16;i++)el('🫧','',{left:Math.random()*80+'%',top:Math.random()*80+'%',animationDelay:Math.random()+'s'},fm).outerHTML;tone(600,.2);M('Soap bubbles! Now scrub!');say('Now scrub')});
+ btn('3. Scrub! 👏','#43a047',()=>{if(!so){M('Add soap first!');return}const n=Math.max(3,Math.ceil(G.length/3));sh(G).slice(0,n).forEach(pop);if(G.length)M('Keep scrubbing! '+G.length+' germs left.')});
+ btn('4. Rinse 🚿','#00acc1',()=>{if(!so){M('Add soap first!');return}if(G.length){M('Germs are still here! Scrub more!');say('Scrub more');return}fm.innerHTML='';rain();ri=1;M('Rinsed! Now dry your hands.');say('Now dry your hands')});
+ btn('5. Dry 🧻','#f9a825',()=>{if(!ri){M('Rinse first!');return}for(let i=0;i<8;i++)el('✨','',{left:Math.random()*80+'%',top:Math.random()*80+'%'},fm);tone(900,.4);M('Clean hands! Great job!');say('Clean hands! Great job!')});
+ btn('Reset','#546e7a',()=>load(cur));
+}
+
+const S=[mixer,shapes,living,babies,plant,food,seesaw,hotcold,shadows,germs];
+const N=['🎨 Color Mixer','🔷 Shape Sorter','🌱 Living or Not','🐥 Baby Match','🪴 Plant a Seed','🍎 Healthy Tummy','⚖️ Seesaw','🔥 Hot & Cold','🌑 Shadow Match','🧼 Germs Buster'];
+const tabs=N.map((n,i)=>btn(n,P[i%8],()=>load(i),nav));
+function load(i){T.forEach(clearTimeout);T=[];try{speechSynthesis.cancel()}catch(e){}cur=i;
+ st.innerHTML='<div class="msg" id="msg"></div>';ct.innerHTML='';tabs.forEach((t,k)=>t.classList.toggle('on',k==i));S[i]()}
+$('#fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+document.onfullscreenchange=()=>{$('#fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(()=>load(cur),250)};
+load(0);
+</script></body></html>

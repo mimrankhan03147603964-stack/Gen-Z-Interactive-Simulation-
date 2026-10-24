@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cambridge Scholar EdTech — ECCE Learning Areas</title>
+<style>
+:root{--navy:#082b57;--ink:#173452;--muted:#4a6076;
+  --shadow:0 22px 55px rgba(13,55,100,.18);
+  --line:#e1ebf4;--focus:#ff9800;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:#f7fbff}
+body{font-family:'Segoe UI',Arial,sans-serif;color:var(--ink);
+  min-height:100vh;overflow-x:hidden;line-height:1.5;
+  background:radial-gradient(circle at 10% 8%,rgba(22,119,255,.18),transparent 24%),
+    radial-gradient(circle at 90% 10%,rgba(240,79,159,.16),transparent 25%),
+    radial-gradient(circle at 80% 85%,rgba(22,185,107,.13),transparent 26%),
+    linear-gradient(135deg,#f7fbff 0%,#fff8fd 45%,#effffc 100%);
+  background-attachment:fixed}
+body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;
+  pointer-events:none;filter:blur(2px);opacity:.5;animation:floatOrb 10s ease-in-out infinite}
+body::before{width:220px;height:220px;left:-80px;top:28%;background:linear-gradient(135deg,#49c6ff,#7b5cff)}
+body::after{width:190px;height:190px;right:-60px;bottom:14%;background:linear-gradient(135deg,#ff62b0,#ffc83d);animation-delay:-4s}
+@keyframes floatOrb{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(20px,-30px,0) scale(1.1)}}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:12px}
+
+.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:blur(14px);box-shadow:0 8px 28px rgba(15,55,95,.10);
+  border-bottom:1px solid rgba(150,190,225,.45);
+  padding:12px 3vw;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;color:var(--navy);font-size:16px}
+.brand .logo-dot{width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,#1677ff,#7957ff 50%,#f04f9f);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:0 8px 18px rgba(22,119,255,.28);animation:pulseDot 3s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.brand .logo-dot svg{width:70%;height:70%}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav button{background:#edf5ff;color:#20537e;padding:11px 16px;border-radius:13px;
+  font-weight:900;box-shadow:0 5px 14px rgba(22,119,255,.10);
+  transition:transform .25s,box-shadow .25s,background .25s;font-size:14px}
+.nav button:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(22,119,255,.20)}
+.nav .on{background:#1677ff;color:#fff}
+
+.section{display:none;padding:35px 6vw 70px;animation:fadeIn .4s}
+.section.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.section h2{font-size:clamp(26px,3vw,38px);color:var(--navy);margin:0 0 7px}
+.sub{color:var(--muted);font-size:17px}
+
+.hero{padding:55px 6vw 40px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;position:relative}
+.badge{display:inline-block;background:#e6f4ff;color:#0870d7;padding:9px 14px;
+  border-radius:30px;font-weight:900;font-size:15px;animation:badgeFloat 4s ease-in-out infinite}
+@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+h1{font-size:clamp(30px,4.5vw,60px);line-height:1.05;color:var(--navy);margin:15px 0}
+h1 em{font-style:normal;color:#1677ff}
+.lead{font-size:18px;line-height:1.6;color:var(--muted)}
+.heroCard{background:linear-gradient(145deg,#063b85,#087ff5 60%,#12c7bd);color:#fff;
+  padding:32px;border-radius:34px;box-shadow:0 30px 75px rgba(5,76,145,.28);
+  position:relative;overflow:hidden}
+.heroCard::after{content:"";position:absolute;inset:-60% -20%;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.28) 50%,transparent 58%);
+  transform:translateX(-55%);animation:shine 5.5s linear infinite;pointer-events:none}
+@keyframes shine{to{transform:translateX(55%)}}
+.heroCard h2{font-size:24px;margin:0 0 8px}
+.heroCard p{margin:6px 0;font-size:15px}
+.heroCard .big-icon{width:110px;height:110px;margin-bottom:10px;
+  animation:bounceBig 3s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.25))}
+.heroCard .big-icon svg{width:100%;height:100%}
+@keyframes bounceBig{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:25px}
+.domainCard{border-top:8px solid var(--c);background:#fff;text-align:left;border-radius:25px;
+  padding:24px;min-height:320px;box-shadow:var(--shadow);
+  transition:transform .28s,box-shadow .28s;display:flex;flex-direction:column;
+  animation:cardIn .5s ease both;position:relative;overflow:hidden}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+.domainCard:hover{transform:translateY(-10px);box-shadow:0 32px 70px rgba(13,55,100,.24)}
+.domainCard .icon{width:72px;height:72px;margin-bottom:12px;transition:transform .35s}
+.domainCard:hover .icon{transform:scale(1.15) rotate(-6deg)}
+.domainCard .icon svg{width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(20,65,110,.18))}
+.domainCard b{color:var(--c);font-size:13px;letter-spacing:.6px}
+.domainCard h3{font-size:20px;color:var(--navy);margin:6px 0 4px;line-height:1.25}
+.domainCard .shortCode{color:var(--c);font-size:14px;font-weight:900;margin-bottom:10px}
+.domainCard p{color:var(--muted);line-height:1.5;margin:0 0 15px;flex-grow:1;font-size:15px}
+.domainCard span{display:inline-block;background:var(--c);color:#fff;padding:10px 14px;
+  border-radius:12px;font-weight:900;font-size:14px;align-self:flex-start;transition:transform .25s}
+.domainCard:hover span{transform:translateX(6px)}
+
+.domainPanel{display:none;background:#fff;border-radius:30px;padding:28px;margin-top:25px;
+  box-shadow:0 28px 75px rgba(20,60,100,.18);border:1px solid rgba(190,215,235,.55);
+  animation:panelIn .45s ease both}
+.domainPanel.show{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.panelHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:14px}
+.panelHead .headLeft{flex:1}
+.panelHead label{font-weight:900;font-size:14px;display:flex;align-items:center;gap:8px}
+.panelHead label .labelIcon{width:26px;height:26px;display:inline-block}
+.panelHead label .labelIcon svg{width:100%;height:100%}
+.panelHead h2{font-size:clamp(22px,2.6vw,34px);color:var(--navy);margin:10px 0 2px;line-height:1.2}
+.panelHead .panelCode{color:#1677ff;font-weight:900;font-size:15px;margin-bottom:8px}
+.panelHead button{background:#edf3fa;padding:10px 16px;border-radius:12px;
+  font-weight:900;flex-shrink:0;transition:transform .2s}
+.panelHead button:hover{transform:scale(1.05)}
+.definition{background:linear-gradient(135deg,#eef7ff,#fff0f7);
+  border-left:6px solid #1677ff;border-radius:20px;padding:20px;
+  font-size:17px;line-height:1.6;margin:15px 0}
+.standardsTitle{display:flex;align-items:center;gap:10px;margin:20px 0 12px;
+  color:var(--navy);font-size:18px}
+
+.stdGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px;margin-top:20px}
+.std{background:#f7fbff;border:1px solid var(--line);border-left:6px solid var(--sc,#12b8c6);
+  border-radius:18px;padding:18px;transition:transform .25s,box-shadow .25s;
+  display:flex;flex-direction:column;gap:14px;animation:stdIn .4s ease both}
+@keyframes stdIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.std:hover{transform:translateY(-6px);box-shadow:0 18px 38px rgba(20,60,100,.14);background:#fff}
+.std-head{display:flex;gap:14px;align-items:flex-start}
+.std .icon{width:52px;height:52px;flex-shrink:0;animation:iconFloat 4s ease-in-out infinite}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.std .icon svg{width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(20,65,110,.15))}
+.std .body{flex-grow:1}
+.std strong{color:var(--navy);display:block;margin-bottom:4px;font-size:16px}
+.std .stdCode{color:var(--sc);font-size:13px;font-weight:900;margin-bottom:6px}
+.std p{color:var(--muted);line-height:1.5;font-size:14px}
+.stdBtn{background:linear-gradient(90deg,var(--sc,#1677ff),#1677ff);
+  color:#fff;padding:12px 20px;border-radius:14px;font-weight:900;font-size:14px;
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  box-shadow:0 8px 20px rgba(20,70,110,.18);
+  transition:transform .22s,box-shadow .22s;
+  animation:btnGlow 3s ease-in-out infinite}
+@keyframes btnGlow{0%,100%{box-shadow:0 8px 20px rgba(20,70,110,.18)}
+  50%{box-shadow:0 14px 32px rgba(22,119,255,.32)}}
+.stdBtn:hover{transform:translateY(-3px) scale(1.03);
+  box-shadow:0 16px 34px rgba(20,70,110,.32)}
+.stdBtn svg{width:18px;height:18px;fill:#fff;flex-shrink:0}
+
+.explainPanel{display:none;background:#fff;border-radius:30px;padding:30px;margin-top:25px;
+  box-shadow:0 28px 75px rgba(20,60,100,.18);
+  border:1px solid rgba(190,215,235,.55);animation:panelIn .45s ease both}
+.explainPanel.show{display:block}
+.expHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;
+  margin-bottom:20px;flex-wrap:wrap}
+.expHead label{font-weight:900;font-size:14px;color:#1677ff;display:flex;
+  align-items:center;gap:8px}
+.expHead label .labelIcon{width:26px;height:26px;display:inline-block}
+.expHead label .labelIcon svg{width:100%;height:100%}
+.expHead h2{font-size:clamp(22px,2.6vw,32px);color:var(--navy);margin:8px 0 4px;line-height:1.2}
+.expHead .expCode{color:#1677ff;font-weight:900;font-size:16px}
+.expHead button{background:#edf3fa;padding:10px 16px;border-radius:12px;
+  font-weight:900;transition:transform .2s;flex-shrink:0}
+.expHead button:hover{transform:scale(1.05)}
+
+.expDef{background:linear-gradient(135deg,#eef7ff,#fff0f7);
+  border-left:6px solid #1677ff;border-radius:20px;padding:22px;
+  font-size:17px;line-height:1.7;margin:15px 0}
+.expDef b{color:#1677ff;display:block;margin-bottom:8px;font-size:15px;letter-spacing:.3px}
+
+.expPictures{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;margin:24px 0}
+.expPic{background:#fff;border:2px solid #eef4fa;border-radius:22px;padding:22px;
+  text-align:center;transition:transform .3s,box-shadow .3s;
+  box-shadow:0 8px 20px rgba(20,70,110,.06)}
+.expPic:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(20,70,110,.15)}
+.expPic .picIcon{width:110px;height:110px;margin:0 auto 14px;display:block;
+  animation:floatIcon 4s ease-in-out infinite}
+.expPic .picIcon svg{width:100%;height:100%;
+  filter:drop-shadow(0 6px 10px rgba(20,65,110,.2))}
+.expPic h4{color:var(--navy);font-size:16px;margin:8px 0;line-height:1.3}
+.expPic p{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+
+.expSteps{background:#f7fbff;border-radius:20px;padding:22px;margin-top:20px;
+  border:1px solid var(--line)}
+.expSteps h3{color:var(--navy);margin-bottom:14px;font-size:18px;
+  display:flex;align-items:center;gap:10px}
+.expSteps h3 .stepIcon{width:28px;height:28px;display:inline-block}
+.expSteps h3 .stepIcon svg{width:100%;height:100%}
+.expSteps ol{margin-left:20px;color:var(--ink);line-height:1.9;font-size:15px}
+.expSteps ol li{margin-bottom:8px}
+
+.expNote{background:linear-gradient(135deg,#fff7ed,#fef3c7);
+  border-left:6px solid #f59e0b;border-radius:16px;padding:18px;margin-top:20px;
+  font-size:15px;line-height:1.6;display:flex;gap:14px;align-items:flex-start}
+.expNote .noteIcon{width:38px;height:38px;flex-shrink:0}
+.expNote .noteIcon svg{width:100%;height:100%}
+.expNote b{color:#92400e}
+
+.legend{background:#f0f9ff;border:2px dashed #0284c7;border-radius:18px;
+  padding:18px;margin-top:20px}
+.legend h3{color:#0369a1;margin-bottom:12px;font-size:16px;
+  display:flex;align-items:center;gap:10px}
+.legend .legendIcon{width:24px;height:24px;display:inline-block}
+.legend .legendIcon svg{width:100%;height:100%}
+.legend .legendGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:8px;font-size:14px}
+.legend .legendItem{background:#fff;padding:8px 12px;border-radius:10px;
+  border-left:4px solid #0284c7;color:var(--ink)}
+.legend .legendItem b{color:#0369a1;margin-right:6px}
+
+footer{background:#06234a;color:#fff;text-align:center;padding:30px 6vw;
+  line-height:1.9;font-size:14px;position:relative;
+  box-shadow:0 -18px 40px rgba(5,35,74,.16)}
+footer::before{content:"";display:block;height:4px;margin:-30px -6vw 24px;
+  background:linear-gradient(90deg,#1677ff,#7957ff,#f04f9f,#ff9f2d,#16b96b,#10aebc);
+  background-size:200% 100%;animation:gradientMove 6s linear infinite}
+@keyframes gradientMove{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+footer strong{color:#67c9ff}
+footer .phone{display:inline-block;background:rgba(103,201,255,.12);
+  padding:4px 12px;border-radius:10px;margin:4px 6px;
+  border:1px solid rgba(103,201,255,.3)}
+
+@media(max-width:850px){
+  .hero{grid-template-columns:1fr;padding:40px 5vw 30px}
+  .section{padding:25px 4vw 50px}
+  .top{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* ===== COLOUR + 3D UPGRADE ===== */
+.nav button{background:linear-gradient(180deg,#5aa8ff,#1677ff);color:#fff;border-bottom:4px solid #0b4fb3;box-shadow:0 8px 16px rgba(22,119,255,.3)}
+.nav button:nth-child(2){background:linear-gradient(180deg,#b79cff,#7957ff);border-bottom-color:#4a2fc0}
+.nav button:active,.stdBtn:active{transform:translateY(3px);border-bottom-width:2px}
+.nav .on{filter:saturate(1.3) brightness(1.08);outline:3px solid #ffd166}
+.top{background:linear-gradient(90deg,rgba(255,255,255,.97),rgba(228,241,255,.97),rgba(255,236,247,.97))}
+.heroCard{transform:perspective(1000px) rotateY(-6deg) rotateX(3deg);transition:transform .4s;background:linear-gradient(145deg,#4a1fb8,#1677ff 55%,#12c7bd);box-shadow:0 40px 70px rgba(5,76,145,.35),0 0 0 4px rgba(255,255,255,.25) inset}
+.heroCard:hover{transform:perspective(1000px) rotateY(0) rotateX(0) translateY(-6px)}
+.domainCard{transform-style:preserve-3d;background:linear-gradient(160deg,#fff 55%,color-mix(in srgb,var(--c) 16%,#fff));box-shadow:0 2px 0 #fff inset,0 10px 0 -4px color-mix(in srgb,var(--c) 35%,#fff),var(--shadow)}
+.domainCard:hover{transform:perspective(900px) translateY(-12px) rotateX(5deg) rotateY(-4deg)}
+.domainCard .icon{filter:drop-shadow(0 10px 8px rgba(0,0,0,.25))}
+.domainCard span,.stdBtn{background:linear-gradient(180deg,color-mix(in srgb,var(--c,var(--sc)) 62%,#fff),var(--c,var(--sc)));border-bottom:5px solid color-mix(in srgb,var(--c,var(--sc)) 55%,#000);text-shadow:0 1px 2px rgba(0,0,0,.35);animation:none}
+.std{background:linear-gradient(160deg,#fff,color-mix(in srgb,var(--sc) 9%,#f7fbff));box-shadow:0 10px 0 -5px color-mix(in srgb,var(--sc) 30%,#fff),0 14px 26px rgba(20,60,100,.12)}
+.std:hover{transform:perspective(800px) translateY(-8px) rotateX(3deg)}
+.btnRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.simBtn{--sc:#16b96b}
+.panelHead button,.expHead button.xb{background:linear-gradient(180deg,#ff9a9a,#ef4444);color:#fff;border-bottom:4px solid #a11d1d;border-radius:12px;padding:10px 16px;font-weight:900}
+.expPic{background:linear-gradient(160deg,#fff,#f1f7ff);box-shadow:0 8px 0 -3px #dbe8f6,0 16px 26px rgba(20,70,110,.1)}
+.expPic:hover{transform:perspective(700px) translateY(-8px) rotateX(5deg)}
+/* ===== SIMULATION ===== */
+.simOv{position:fixed;inset:0;z-index:999;background:rgba(8,20,50,.75);backdrop-filter:blur(6px);display:flex;padding:1.5vh 1.5vw}
+.simBox{flex:1;display:flex;flex-direction:column;min-height:0;color:#fff;border-radius:26px;overflow:hidden;background:linear-gradient(160deg,#0f1f4d,#1b2f6e 60%,#34196a);box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.simBox:fullscreen{border-radius:0}
+.simTop{display:flex;justify-content:space-between;align-items:center;padding:10px 22px;background:rgba(255,255,255,.08)}
+.simBrand{font-weight:900;font-size:clamp(18px,2.2vw,28px);letter-spacing:2px;background:linear-gradient(90deg,#ffd166,#ff6bb5,#4cc9f0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.simTop button{background:linear-gradient(180deg,#ff9a9a,#ef4444);border-bottom:4px solid #a11d1d;color:#fff;font-weight:900;padding:8px 16px;border-radius:12px}
+.simTitle{padding:8px 22px 0;font-size:clamp(17px,1.8vw,24px);font-weight:800}
+.tabs{display:flex;gap:10px;padding:8px 22px}
+.tabs button{padding:10px 22px;border-radius:12px;font-weight:900;color:#fff;border-bottom:4px solid rgba(0,0,0,.35)}
+.tabs button:nth-child(1){background:linear-gradient(180deg,#6bd6f5,#1677ff)}
+.tabs button:nth-child(2){background:linear-gradient(180deg,#ffc36b,#ff7a1a)}
+.tabs button:nth-child(3){background:linear-gradient(180deg,#6cf0aa,#16a34a)}
+.tabs .on{outline:3px solid #fff}
+.tabP{display:none;flex:1;min-height:0;overflow:auto;padding:6px 22px 10px}
+.tabP.on{display:flex;flex-direction:column}
+.txt{background:rgba(255,255,255,.1);border-radius:18px;padding:18px;font-size:clamp(16px,1.5vw,20px);line-height:1.7;margin-bottom:12px;border-left:8px solid #ffd166}
+.pts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pts div{background:rgba(255,255,255,.12);border-radius:18px;padding:14px;text-align:center}
+.pts svg{width:70px;height:70px}
+.stage{flex:1;min-height:220px;position:relative;perspective:1000px;border-radius:20px;overflow:hidden;background:linear-gradient(#6ec6ff,#d6f1ff 52%,#f3d9a4 52%)}
+.floor{position:absolute;left:-20%;right:-20%;bottom:-28%;height:78%;transform:rotateX(58deg);transform-origin:bottom;background:repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 3px,transparent 3px 90px),linear-gradient(#d9a066,#9a6531);box-shadow:0 -10px 40px rgba(0,0,0,.3)}
+.objs{position:absolute;inset:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;align-content:flex-end;gap:0 8px;padding:0 10px 4%}
+.o{position:relative;text-align:center;cursor:pointer;padding:0 12px;transition:transform .15s;transform-style:preserve-3d}
+.o i{display:block;font-style:normal;font-size:clamp(56px,8.5vw,120px);line-height:1.15;filter:drop-shadow(0 16px 8px rgba(0,0,0,.4))}
+.o span{display:inline-block;background:#fff;color:#123;font-weight:900;border-radius:10px;padding:3px 12px;font-size:clamp(13px,1.2vw,17px);box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.o.sel i{filter:drop-shadow(0 0 20px #ffd166) drop-shadow(0 16px 8px rgba(0,0,0,.4))}
+.bd{position:absolute;top:0;right:4px;width:46px;height:46px;border-radius:50%;background:linear-gradient(#ff7aa2,#e11d48);color:#fff;font-weight:900;font-size:24px;display:none;align-items:center;justify-content:center;border:3px solid #fff}
+.bd.on{display:flex}
+.cap{margin:10px 0 8px;background:#fff;color:#123;border-radius:16px;padding:12px 18px;font-size:clamp(16px,1.7vw,22px);font-weight:800;border-left:8px solid #ff9f2d;min-height:54px}
+.sb{display:flex;flex-wrap:wrap;gap:10px}
+.sb button{padding:12px 18px;border-radius:14px;font-weight:900;color:#fff;font-size:clamp(13px,1.1vw,16px);border-bottom:5px solid rgba(0,0,0,.3);text-shadow:0 1px 2px rgba(0,0,0,.4);transition:transform .12s}
+.sb button:hover{transform:translateY(-3px)}
+.sb button:active{transform:translateY(3px);border-bottom-width:2px}
+.simFoot{text-align:center;padding:7px;font-size:12px;background:rgba(0,0,0,.25)}
+.simFoot b{font-size:13px;font-weight:900;background:#ffd166;color:#3b2a00;padding:1px 9px;border-radius:8px}
+@keyframes f_bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-70px) scale(1.12)}60%{transform:translateY(0)}80%{transform:translateY(-28px)}}
+@keyframes f_spin{to{transform:rotateY(360deg) scale(1.2)}}
+@keyframes f_grow{50%{transform:scale(1.7)}}
+@keyframes f_shrink{50%{transform:scale(.45)}}
+@keyframes f_glow{50%{transform:scale(1.25);filter:brightness(1.4) drop-shadow(0 0 30px #ffe066)}}
+@keyframes f_shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-22px) rotate(-8deg)}40%{transform:translateX(22px) rotate(8deg)}60%{transform:translateX(-16px)}80%{transform:translateX(16px)}}
+@keyframes f_flip{to{transform:rotateX(360deg)}}
+@keyframes f_fly{50%{transform:translate(50px,-150px) rotate(18deg) scale(1.15)}}
+[class^=f_]{animation-duration:1.2s;animation-timing-function:ease-in-out}
+.f_bounce{animation-name:f_bounce}.f_spin{animation-name:f_spin}.f_grow{animation-name:f_grow}.f_shrink{animation-name:f_shrink}.f_glow{animation-name:f_glow}.f_shake{animation-name:f_shake}.f_flip{animation-name:f_flip}.f_fly{animation-name:f_fly}
+
+/* ===== DESKTOP REALISM ===== */
+.simOv{padding:1vh 1vw}.simBox{min-width:1000px}
+.stt{font-weight:900;font-size:18px;color:#ffe066}
+.tabP.sim3{flex-direction:row;gap:16px}
+.lp{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.rp{width:min(34vw,470px);overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
+.rc{background:rgba(255,255,255,.1);border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.55}
+.rc h3{font-size:16px;color:#ffd166;margin-bottom:6px}
+#stl{margin-left:22px}#stl li{padding:3px 8px;border-radius:8px;margin-bottom:3px;opacity:.8}
+#stl li.ac{background:#ffd166;color:#3b2a00;opacity:1;font-weight:800}
+#stl li.dn{opacity:1;color:#8affb5;text-decoration:line-through}
+.pg{height:10px;background:rgba(255,255,255,.2);border-radius:6px;margin-top:8px;overflow:hidden}
+#pgb{height:100%;width:0;background:linear-gradient(90deg,#6cf0aa,#ffd166);transition:width .6s}
+.kp{display:flex;gap:10px;align-items:center;margin-bottom:6px}.kp svg{width:44px;height:44px}
+.op{display:block;width:100%;margin:6px 0;padding:10px;border-radius:12px;font-weight:900;color:#fff;background:linear-gradient(180deg,#6bd6f5,#1677ff);border-bottom:4px solid rgba(0,0,0,.3)}
+.op:hover{filter:brightness(1.15)}.qq{font-weight:800;margin:8px 0}.res{font-size:20px;font-weight:900;color:#ffe066;margin-top:8px}
+.stage{min-height:340px;background:linear-gradient(#ffeed8,#ffd2a6 54%,#c08a55 54%);box-shadow:inset 0 0 140px rgba(0,0,0,.35),0 14px 30px rgba(0,0,0,.4)}
+.stage::before{content:"";position:absolute;left:6%;top:7%;width:15%;height:32%;border:10px solid #fff;border-radius:8px;background:linear-gradient(#7ec8ff,#e0f4ff);box-shadow:0 10px 18px rgba(0,0,0,.25),inset 0 0 20px rgba(255,255,255,.8)}
+.stage::after{content:"🪴";position:absolute;right:3%;bottom:30%;font-size:clamp(60px,7vw,110px);filter:drop-shadow(0 12px 8px rgba(0,0,0,.35))}
+.o{isolation:isolate}
+.o::after{content:"";position:absolute;left:4%;right:4%;bottom:26px;height:26px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.9),rgba(120,120,160,.5) 60%,transparent 72%);z-index:-1}
+@keyframes idle{50%{transform:translateY(-9px)}}
+.o i:not([class^=f_]){animation:idle 3.2s ease-in-out infinite}
+.o:nth-child(2n) i:not([class^=f_]){animation-delay:-1.4s}
+
+/* ===== ECCE POSTER STYLE ===== */
+.ecce{display:flex;gap:6px;margin-bottom:6px}
+.ecce i{font-style:normal;font-weight:1000;font-size:clamp(80px,10vw,150px);line-height:1;color:var(--k);-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 3px 0 color-mix(in srgb,var(--k) 60%,#000),0 6px 0 color-mix(in srgb,var(--k) 50%,#000),0 14px 18px rgba(0,0,0,.3);transform:perspective(500px) rotateX(8deg)}
+.h1b{font-size:clamp(34px,4.4vw,64px);color:#0d1b3d;margin:6px 0 14px;font-weight:900}.h1b em{color:#e8335e}
+.ribbon{display:inline-block;background:linear-gradient(180deg,#2f5fd0,#0d2f8f);color:#fff;font-weight:900;padding:10px 26px;border-radius:10px;font-size:18px;border-bottom:4px solid #081d5c}
+.goBtn{margin-top:20px;background:linear-gradient(180deg,#ffb347,#f97316);color:#fff;font-weight:900;font-size:18px;padding:15px 28px;border-radius:16px;border-bottom:6px solid #b45309;text-shadow:0 1px 2px #0005}
+.goBtn:active{transform:translateY(4px);border-bottom-width:2px}
+.hR{display:flex;flex-direction:column;gap:16px}
+.hc{display:flex;align-items:center;gap:16px;background:#fff;border-radius:22px;padding:12px 22px;border:3px solid var(--k);border-left-width:12px;box-shadow:0 12px 0 -5px color-mix(in srgb,var(--k) 35%,#fff),0 18px 28px rgba(20,40,90,.18);transition:transform .3s}
+.hc:hover{transform:perspective(700px) rotateY(-6deg) translateX(-8px)}
+.hc b{width:66px;height:66px;border-radius:50%;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--k) 55%,#fff),var(--k));color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;border:4px solid #fff;box-shadow:0 6px 12px rgba(0,0,0,.25)}
+.hc span{flex:1;font-weight:900;font-size:26px;font-style:italic;color:var(--k)}.hc i{font-style:normal;font-size:50px}
+.areaTitle{text-align:center;font-size:clamp(28px,3.4vw,46px)!important;font-weight:1000;color:#0d1b3d!important}
+.g1{background:linear-gradient(90deg,#c026d3,#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}.g2{color:#16a34a}
+.dc{position:relative;text-align:left;background:linear-gradient(160deg,#fff 55%,color-mix(in srgb,var(--c) 14%,#fff));border-radius:26px 26px 40px 26px;padding:26px 20px 22px 70px;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-bottom:9px solid var(--c);box-shadow:0 18px 32px rgba(20,40,90,.16);transition:transform .3s;animation:cardIn .5s ease both}
+.dc:hover{transform:perspective(900px) translateY(-10px) rotateX(5deg) rotateY(-4deg)}
+.dc .dn{position:absolute;left:0;top:0;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 70%,#fff),var(--c));color:#fff;font-weight:1000;font-size:26px;padding:12px 16px;border-radius:26px 0 26px 0}
+.dc h3{font-size:21px;color:#0d1b3d;font-style:italic;line-height:1.25;max-width:60%}
+.dc .art{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:128px;height:128px;border-radius:50%;border:3px solid var(--c);background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;font-size:42px;line-height:1.1;box-shadow:inset 0 0 18px color-mix(in srgb,var(--c) 25%,#fff),0 8px 14px rgba(0,0,0,.15)}
+.dc small{color:var(--c);font-weight:900}
+.domainPanel{background:linear-gradient(180deg,#fff,#f7f4ff)}
+.dBanner{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.dNum{width:96px;height:96px;flex-shrink:0;border-radius:50%;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--c) 55%,#fff),var(--c));color:#fff;font-size:60px;font-weight:1000;display:flex;align-items:center;justify-content:center;border:6px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.dTitle{flex:1;background:linear-gradient(90deg,var(--c),var(--c2));clip-path:polygon(0 0,95% 0,100% 50%,95% 100%,0 100%);padding:18px 60px 18px 30px;box-shadow:0 10px 20px rgba(0,0,0,.2)}
+.dTitle h2{color:#fff;font-style:italic;font-size:clamp(24px,2.8vw,40px);text-shadow:0 2px 4px #0004}
+.dArt{font-size:56px;filter:drop-shadow(0 8px 6px #0003)}
+.dPill{display:inline-block;background:linear-gradient(90deg,var(--c),var(--c2));color:#fff;font-weight:900;padding:8px 26px;border-radius:0 20px 20px 0;margin:10px 0 6px;font-size:16px}
+.dDef{background:#fff;border-radius:18px;padding:18px 24px;font-size:20px;font-weight:700;color:#0d1b3d;border-left:6px solid var(--c);box-shadow:0 6px 16px rgba(20,40,90,.1)}
+.dTiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:10px}
+.tile{display:flex;align-items:center;gap:14px;text-align:left;color:#fff;border-radius:22px;padding:14px 18px;background:linear-gradient(135deg,color-mix(in srgb,var(--t) 70%,#fff),var(--t));border-bottom:7px solid color-mix(in srgb,var(--t) 55%,#000);box-shadow:0 12px 22px rgba(0,0,0,.18);transition:transform .25s;text-shadow:0 1px 3px #0005}
+.tile:hover{transform:perspective(700px) translateY(-6px) rotateX(5deg)}.tile:active{transform:translateY(3px)}
+.tile .tc{width:76px;height:76px;flex-shrink:0;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:40px;border:4px solid rgba(255,255,255,.7);box-shadow:inset 0 0 12px #0002,0 6px 10px #0003}
+.tile .tn{font-size:30px;font-weight:1000;display:block;line-height:1}.tile b{font-size:19px;display:block}
+.expHead{display:none}
+.stdPage{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;background:linear-gradient(135deg,#fff 60%,color-mix(in srgb,var(--sc) 12%,#fff));border-radius:28px;padding:24px;margin:25px 0 -10px;border:3px solid var(--sc);box-shadow:0 20px 40px rgba(20,40,90,.18);position:relative;z-index:1}
+.spL{display:flex;align-items:center;gap:16px}
+.spBadge{background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 65%,#fff),var(--sc));color:#fff;text-align:center;padding:12px 18px;border-radius:18px 4px 34px 4px;font-weight:900;font-size:15px;border-bottom:5px solid color-mix(in srgb,var(--sc) 55%,#000)}
+.spBadge b{display:block;font-size:44px;line-height:1}
+.spIcon{width:110px;height:110px;border-radius:50%;background:#fff;border:7px solid var(--sc);display:flex;align-items:center;justify-content:center;font-size:58px;box-shadow:0 10px 18px rgba(0,0,0,.2)}
+.spM h2{font-size:clamp(26px,3vw,40px);color:var(--sc);font-weight:1000;margin-bottom:10px}
+.spRow{display:flex;gap:14px;align-items:center;padding:8px 0;border-top:1px solid #0001}
+.pill{flex-shrink:0;width:130px;text-align:center;background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 65%,#fff),var(--sc));color:#fff;font-weight:900;border-radius:20px;padding:7px 10px;font-size:15px}
+.pill.ex{background:linear-gradient(180deg,#ffe066,#f5a800);color:#4a3200}
+.spRow p{font-size:clamp(15px,1.4vw,19px);color:#0d1b3d;font-weight:600;line-height:1.5}
+.spArt{width:210px;height:210px;border-radius:50%;border:8px solid var(--sc);background:radial-gradient(circle,#fff,color-mix(in srgb,var(--sc) 14%,#fff));display:flex;flex-wrap:wrap;align-items:center;justify-content:center;font-size:64px;line-height:1.05;box-shadow:inset 0 0 30px color-mix(in srgb,var(--sc) 30%,#fff),0 14px 24px rgba(0,0,0,.25);animation:iconFloat 4s ease-in-out infinite}
+.spBtns{grid-column:1/-1;display:flex;gap:12px}
+.o i{font-size:clamp(50px,6.4vw,96px)!important}.o{padding:0 6px}.rp .btnRow button{padding:10px 14px;border-radius:12px;font-weight:900;color:#fff;border-bottom:4px solid rgba(0,0,0,.3);text-shadow:0 1px 2px #0005}</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo-dot" id="brandIcon"></div>
+    <span>Cambridge Scholar EdTech Schools Program</span>
+  </div>
+  <nav class="nav" aria-label="Main navigation">
+    <button class="on" onclick="home()">Home</button>
+    <button onclick="areas()">7 Learning Areas</button>
+  </nav>
+</header>
+
+<section id="home" class="hero">
+  <div>
+    <div class="ecce"><i style="--k:#2563eb">E</i><i style="--k:#0f9d8a">C</i><i style="--k:#f59e0b">C</i><i style="--k:#8b3fd9">E</i></div>
+    <h1 class="h1b">Early Childhood<br><em>Care &amp; Education</em></h1>
+    <span class="ribbon">NCP 2022-23 &nbsp;•&nbsp; Teacher Training</span><br>
+    <button class="goBtn" onclick="areas()">🚀 Open 7 Learning Areas →</button>
+  </div>
+  <div class="hR">
+    <div class="hc" style="--k:#2563eb"><b>🧠</b><span>LEARNING</span><i>📚</i></div>
+    <div class="hc" style="--k:#f59e0b"><b>7</b><span>7 AREAS</span><i>🎨</i></div>
+    <div class="hc" style="--k:#0f9d8a"><b>📋</b><span>38 STANDARDS</span><i>🎯</i></div>
+    <div class="hc" style="--k:#e8335e"><b>📖</b><span>190 ELOs</span><i>🚀</i></div>
+  </div>
+</section>
+
+<section id="areas" class="section">
+  <h2 class="areaTitle">ECCE – <span class="g1">7 LEARNING AREAS</span> / <span class="g2">DOMAINS</span></h2><p class="sub" style="text-align:center">Click a domain, then click a standard to see its Definition, Example and 3D Simulation.</p>
+  <div class="grid" id="areasGrid"></div>
+  <div id="dpContainer"></div>
+  <div id="explainContainer"></div>
+</section>
+
+<footer>
+  Cambridge Scholar EdTech Schools Program • ECCE Interactive Learning<br>
+  Developer: <strong>Muhammad Imran Khan</strong> • Regional Manager Sahiwal<br>
+  Phone: <span class="phone"><strong>0300-7603964</strong></span>
+  <span class="phone"><strong>0314-7603964</strong></span><br>
+  Cambridge Scholar EdTech Schools Program • CANTAB PUBLISHER<br>
+  <small style="opacity:.75">Version 5.0 • 2026</small>
+</footer>
+
+<script>
+/* === SVG ICONS === */
+const SVG_ICONS = {
+  d1:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g1" cx="30%" cy="30%"><stop offset="0" stop-color="#ff8ab0"/><stop offset="1" stop-color="#e11d48"/></radialGradient></defs><path fill="url(#g1)" d="M50 82C20 62 12 45 18 30c5-13 22-18 32-7 10-11 27-6 32 7 6 15-2 32-32 52z"/><ellipse cx="40" cy="40" rx="7" ry="5" fill="#fff" opacity=".6"/></svg>',
+  d2:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#5b21b6"/></linearGradient></defs><rect x="14" y="20" width="34" height="62" rx="4" fill="url(#g2)"/><rect x="52" y="20" width="34" height="62" rx="4" fill="#7c3aed"/><line x1="22" y1="38" x2="40" y2="38" stroke="#fff" stroke-width="2.5"/><line x1="22" y1="50" x2="40" y2="50" stroke="#fff" stroke-width="2.5"/><line x1="22" y1="62" x2="34" y2="62" stroke="#fff" stroke-width="2.5"/><line x1="60" y1="38" x2="78" y2="38" stroke="#fff" stroke-width="2.5"/><line x1="60" y1="50" x2="78" y2="50" stroke="#fff" stroke-width="2.5"/></svg>',
+  d3:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g3" cx="30%" cy="30%"><stop offset="0" stop-color="#6ee7b7"/><stop offset="1" stop-color="#047857"/></radialGradient></defs><circle cx="58" cy="20" r="10" fill="url(#g3)"/><path fill="#10b981" d="M44 32l18 7 12 22-10 5-12-16-8 16-22 8-4-10 18-10 8-14-10-5z"/></svg>',
+  d4:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#c2410c"/></linearGradient></defs><rect x="24" y="28" width="52" height="58" rx="18" fill="url(#g4)"/><path d="M38 28c2-16 22-16 24 0" fill="none" stroke="#78350f" stroke-width="5"/><circle cx="40" cy="54" r="4" fill="#78350f"/><circle cx="60" cy="62" r="4" fill="#78350f"/></svg>',
+  d5:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#831843"/></linearGradient></defs><rect x="14" y="14" width="72" height="72" rx="16" fill="url(#g5)"/><text x="50" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="36" font-weight="900" fill="#fff">123</text></svg>',
+  d6:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g6" cx="30%" cy="30%"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#4c1d95"/></radialGradient></defs><path fill="url(#g6)" d="M50 15c22 0 38 15 38 33 0 13-9 22-21 22h-9c-6 0-8 9-14 9-19 0-32-15-32-33 0-17 16-31 38-31z"/><circle cx="32" cy="40" r="4.5" fill="#fbbf24"/><circle cx="50" cy="32" r="4.5" fill="#ef4444"/><circle cx="68" cy="40" r="4.5" fill="#3b82f6"/><circle cx="58" cy="58" r="4.5" fill="#10b981"/></svg>',
+  d7:'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g7" cx="30%" cy="30%"><stop offset="0" stop-color="#67e8f9"/><stop offset="1" stop-color="#155e75"/></radialGradient></defs><circle cx="50" cy="50" r="36" fill="url(#g7)"/><path d="M14 50h72M50 14c14 12 14 60 0 72M50 14c-14 12-14 60 0 72" fill="none" stroke="#fff" stroke-width="2.5"/></svg>',
+  s1_1:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s11" cx="30%" cy="30%"><stop offset="0" stop-color="#fef3c7"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs><circle cx="50" cy="50" r="34" fill="url(#s11)" stroke="#b45309" stroke-width="3"/><circle cx="38" cy="42" r="4.5" fill="#111"/><circle cx="62" cy="42" r="4.5" fill="#111"/><path d="M38 62q12 10 24 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/></svg>',
+  s1_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#86efac"/><stop offset="1" stop-color="#16a34a"/></linearGradient></defs><rect x="18" y="40" width="64" height="38" rx="10" fill="url(#s12)" stroke="#065f46" stroke-width="3"/><path d="M36 40V26a14 14 0 0128 0v14" fill="none" stroke="#065f46" stroke-width="5"/><circle cx="50" cy="59" r="6" fill="#065f46"/></svg>',
+  s1_3:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s13" cx="30%" cy="30%"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs><circle cx="50" cy="50" r="35" fill="url(#s13)" stroke="#b45309" stroke-width="3"/><circle cx="38" cy="42" r="4.5" fill="#111"/><circle cx="62" cy="42" r="4.5" fill="#111"/><path d="M35 63q15 14 30 0" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/></svg>',
+  s1_4:'<svg viewBox="0 0 100 100"><circle cx="33" cy="34" r="12" fill="#60a5fa"/><circle cx="67" cy="34" r="12" fill="#f472b6"/><path d="M12 84c0-16 9-24 21-24s21 8 21 24" fill="none" stroke="#1e40af" stroke-width="4"/><path d="M46 84c0-16 9-24 21-24s21 8 21 24" fill="none" stroke="#9d174d" stroke-width="4"/></svg>',
+  s1_5:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s15" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><path d="M15 50l20-14 15 10 15-10 20 14-12 15-14-9-14 11-11-8z" fill="url(#s15)" stroke="#78350f" stroke-width="3" stroke-linejoin="round"/></svg>',
+  s1_6:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s16" cx="30%" cy="30%"><stop offset="0" stop-color="#fb7185"/><stop offset="1" stop-color="#be123c"/></radialGradient></defs><path d="M50 84C22 66 14 48 22 34c6-12 22-14 28-3 6-11 22-9 28 3 8 14 0 32-28 50z" fill="url(#s16)"/></svg>',
+  s2_1:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s21" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fda4af"/><stop offset="1" stop-color="#be123c"/></linearGradient></defs><path d="M68 30c-4-18-32-18-36 2-3 20 13 18 12 32-1 11 16 15 24 3" fill="none" stroke="url(#s21)" stroke-width="10" stroke-linecap="round"/></svg>',
+  s2_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s22" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><path d="M30 48c0-10 6-18 20-18s20 8 20 18v14c0 10-6 18-20 18s-20-8-20-18z" fill="url(#s22)"/><path d="M22 48c0-16 12-26 28-26s28 10 28 26" fill="none" stroke="#4c1d95" stroke-width="3"/><circle cx="42" cy="52" r="2.5" fill="#111"/><circle cx="58" cy="52" r="2.5" fill="#111"/></svg>',
+  s2_3:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s23" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect x="22" y="16" width="56" height="68" rx="6" fill="url(#s23)"/><line x1="32" y1="34" x2="68" y2="34" stroke="#fff" stroke-width="3"/><line x1="32" y1="48" x2="68" y2="48" stroke="#fff" stroke-width="3"/><line x1="32" y1="62" x2="54" y2="62" stroke="#fff" stroke-width="3"/></svg>',
+  s2_4:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s24a" cx="30%" cy="30%"><stop offset="0" stop-color="#e9d5ff"/><stop offset="1" stop-color="#a855f7"/></radialGradient><radialGradient id="s24b" cx="30%" cy="30%"><stop offset="0" stop-color="#fbcfe8"/><stop offset="1" stop-color="#ec4899"/></radialGradient></defs><circle cx="34" cy="50" r="24" fill="url(#s24a)" stroke="#6b21a8" stroke-width="3"/><text x="34" y="62" text-anchor="middle" font-size="28" font-weight="900" fill="#fff" font-family="Arial">A</text><circle cx="70" cy="50" r="20" fill="url(#s24b)" stroke="#9d174d" stroke-width="3"/><text x="70" y="60" text-anchor="middle" font-size="24" font-weight="900" fill="#fff" font-family="Arial">B</text></svg>',
+  s2_5:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s25" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><path d="M28 82l10-52 32 6-10 52z" fill="url(#s25)" stroke="#78350f" stroke-width="3"/><path d="M38 30l10-14 22 3-3 17z" fill="#f472b6" stroke="#9d174d" stroke-width="3"/></svg>',
+  s3_1:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s31" cx="30%" cy="30%"><stop offset="0" stop-color="#86efac"/><stop offset="1" stop-color="#059669"/></radialGradient></defs><circle cx="60" cy="18" r="10" fill="url(#s31)"/><path d="M42 30l20 8 12 22-11 5-12-14-9 15-22 8-4-11 19-11 8-13-11-5z" fill="#10b981"/></svg>',
+  s3_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s32" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><path d="M26 55c-4-9 9-13 13-4l5 11 0-26c1-10 14-10 15 0l1 24 2-26c1-9 14-7 14 2l-1 26 5-17c3-9 16-5 13 6l-7 26c-4 13-15 19-28 16-13-3-24-14-32-28z" fill="url(#s32)" stroke="#78350f" stroke-width="2.5"/></svg>',
+  s3_3:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s33a" cx="30%" cy="30%"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#2563eb"/></radialGradient><radialGradient id="s33b" cx="30%" cy="30%"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></radialGradient></defs><ellipse cx="38" cy="52" rx="22" ry="14" fill="url(#s33a)" stroke="#1e40af" stroke-width="3"/><circle cx="38" cy="52" r="6" fill="#1e3a8a"/><circle cx="74" cy="38" r="12" fill="url(#s33b)" stroke="#78350f" stroke-width="3"/></svg>',
+  s3_4:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s34" cx="30%" cy="30%"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6d28d9"/></radialGradient></defs><circle cx="50" cy="20" r="9" fill="url(#s34)"/><path d="M50 30v22M50 36l-22-12M50 36l22-12M50 52L30 80M50 52l20 28" stroke="#7c3aed" stroke-width="9" stroke-linecap="round" fill="none"/></svg>',
+  s3_5:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s35" cx="30%" cy="30%"><stop offset="0" stop-color="#fef3c7"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs><circle cx="50" cy="50" r="32" fill="url(#s35)" stroke="#78350f" stroke-width="3"/><path d="M50 22l6 15 16 2-12 11 3 16-13-9-13 9 3-16-12-11 16-2z" fill="#fff" stroke="#78350f" stroke-width="2"/></svg>',
+  s4_1:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s41" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><rect x="22" y="28" width="56" height="58" rx="16" fill="url(#s41)" stroke="#78350f" stroke-width="3"/><circle cx="38" cy="52" r="4.5" fill="#fff"/><circle cx="58" cy="62" r="4.5" fill="#fff"/><circle cx="48" cy="74" r="3" fill="#fff"/></svg>',
+  s4_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s42a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#86efac"/><stop offset="1" stop-color="#059669"/></linearGradient><radialGradient id="s42b" cx="30%" cy="30%"><stop offset="0" stop-color="#fca5a5"/><stop offset="1" stop-color="#dc2626"/></radialGradient></defs><path d="M20 54h60l-6 26H26z" fill="url(#s42a)" stroke="#065f46" stroke-width="3"/><circle cx="38" cy="46" r="11" fill="url(#s42b)"/><circle cx="60" cy="42" r="9" fill="#fbbf24"/></svg>',
+  s4_3:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s43" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs><path d="M50 12l32 14v22c0 20-14 32-32 38-18-6-32-18-32-38V26z" fill="url(#s43)" stroke="#1e3a8a" stroke-width="3" stroke-linejoin="round"/><path d="M36 50l9 11 20-24" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  s4_4:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s44" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><path d="M62 22l-10 46" stroke="#78350f" stroke-width="7" stroke-linecap="round"/><path d="M42 55h32l8 22H18l8-22z" fill="url(#s44)" stroke="#78350f" stroke-width="3"/></svg>',
+  s5_1:'<svg viewBox="0 0 100 100"><circle cx="28" cy="36" r="14" fill="#ec4899"/><circle cx="50" cy="36" r="14" fill="#a855f7"/><circle cx="72" cy="36" r="14" fill="#3b82f6"/><circle cx="39" cy="62" r="14" fill="#10b981"/><circle cx="61" cy="62" r="14" fill="#f59e0b"/></svg>',
+  s5_2:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s52" cx="30%" cy="30%"><stop offset="0" stop-color="#fbcfe8"/><stop offset="1" stop-color="#db2777"/></radialGradient></defs><circle cx="50" cy="50" r="34" fill="url(#s52)"/><path d="M50 24v52M24 50h52" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>',
+  s5_3:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s53a" cx="30%" cy="30%"><stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#1d4ed8"/></radialGradient><radialGradient id="s53b" cx="30%" cy="30%"><stop offset="0" stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></radialGradient></defs><circle cx="28" cy="38" r="15" fill="url(#s53a)" stroke="#1e3a8a" stroke-width="3"/><path d="M30 82l16-32 16 32z" fill="url(#s53b)" stroke="#9d174d" stroke-width="3" stroke-linejoin="round"/><rect x="58" y="26" width="28" height="28" fill="#34d399" stroke="#065f46" stroke-width="3"/></svg>',
+  s5_4:'<svg viewBox="0 0 100 100"><circle cx="20" cy="50" r="11" fill="#ef4444"/><circle cx="46" cy="50" r="11" fill="#3b82f6"/><circle cx="72" cy="50" r="11" fill="#ef4444"/><text x="50" y="90" text-anchor="middle" font-size="26" fill="#111" font-weight="900" font-family="Arial">?</text></svg>',
+  s5_5:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s55" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><rect x="12" y="40" width="76" height="20" rx="5" fill="url(#s55)" stroke="#78350f" stroke-width="3"/><line x1="20" y1="40" x2="20" y2="60" stroke="#78350f" stroke-width="2"/><line x1="32" y1="40" x2="32" y2="60" stroke="#78350f" stroke-width="2"/><line x1="44" y1="40" x2="44" y2="60" stroke="#78350f" stroke-width="2"/><line x1="56" y1="40" x2="56" y2="60" stroke="#78350f" stroke-width="2"/><line x1="68" y1="40" x2="68" y2="60" stroke="#78350f" stroke-width="2"/><line x1="80" y1="40" x2="80" y2="60" stroke="#78350f" stroke-width="2"/></svg>',
+  s5_6:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s56" cx="30%" cy="30%"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6d28d9"/></radialGradient></defs><path d="M40 25h20v8h6a14 14 0 010 28h-6v8H40v-8h-6a14 14 0 010-28h6z" fill="url(#s56)" stroke="#4c1d95" stroke-width="3" stroke-linejoin="round"/></svg>',
+  s6_1:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s61a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fca5a5"/><stop offset="1" stop-color="#b91c1c"/></linearGradient><linearGradient id="s61b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><path d="M20 82l12-56 34 6-12 56z" fill="url(#s61a)" stroke="#7f1d1d" stroke-width="3"/><path d="M32 26l14-16 26 4-4 18z" fill="url(#s61b)" stroke="#78350f" stroke-width="3"/></svg>',
+  s6_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s62" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><path d="M40 70V26l30-6v44" fill="none" stroke="url(#s62)" stroke-width="9" stroke-linecap="round"/><circle cx="30" cy="74" r="11" fill="#7c3aed"/><circle cx="72" cy="64" r="11" fill="#7c3aed"/></svg>',
+  s6_3:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s63" cx="30%" cy="30%"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></radialGradient></defs><path d="M22 42c0-16 12-27 28-27s28 11 28 27v6c0 11-9 20-20 20-7 0-8 9-15 9s-21-9-21-20z" fill="url(#s63)" stroke="#78350f" stroke-width="3"/><circle cx="37" cy="42" r="4.5" fill="#111"/><circle cx="63" cy="42" r="4.5" fill="#111"/><path d="M40 57q10 9 20 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/></svg>',
+  s6_4:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s64" cx="30%" cy="30%"><stop offset="0" stop-color="#e9d5ff"/><stop offset="1" stop-color="#7c3aed"/></radialGradient></defs><circle cx="50" cy="50" r="35" fill="url(#s64)"/><circle cx="32" cy="42" r="5" fill="#fbbf24"/><circle cx="50" cy="34" r="5" fill="#ef4444"/><circle cx="68" cy="42" r="5" fill="#3b82f6"/><circle cx="58" cy="62" r="5" fill="#10b981"/></svg>',
+  s7_1:'<svg viewBox="0 0 100 100"><circle cx="34" cy="30" r="12" fill="#60a5fa"/><circle cx="66" cy="30" r="12" fill="#f472b6"/><circle cx="50" cy="54" r="9" fill="#fbbf24"/><path d="M16 82c0-20 8-30 18-30s18 10 18 30M48 82c0-18 6-26 13-26s13 8 13 26M40 82c0-14 4-20 10-20s10 6 10 20" fill="none" stroke="#1e3a8a" stroke-width="3"/></svg>',
+  s7_2:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s72a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1e40af"/></linearGradient><linearGradient id="s72b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#9d174d"/></linearGradient></defs><rect x="18" y="42" width="28" height="40" fill="url(#s72a)"/><rect x="46" y="28" width="36" height="54" fill="url(#s72b)"/><rect x="40" y="55" width="8" height="15" fill="#92400e"/><rect x="56" y="42" width="6" height="6" fill="#fff"/><rect x="68" y="42" width="6" height="6" fill="#fff"/><rect x="56" y="58" width="6" height="6" fill="#fff"/><rect x="68" y="58" width="6" height="6" fill="#fff"/></svg>',
+  s7_3:'<svg viewBox="0 0 100 100"><path d="M50 80V46" stroke="#065f46" stroke-width="5"/><path d="M50 52Q26 36 26 18q24 2 24 26z" fill="#34d399"/><path d="M50 48Q74 32 74 14q-24 2-24 26z" fill="#16a34a"/><circle cx="50" cy="86" r="3" fill="#78350f"/></svg>',
+  s7_4:'<svg viewBox="0 0 100 100"><circle cx="35" cy="40" r="10" fill="#fbbf24" stroke="#92400e" stroke-width="2"/><circle cx="35" cy="40" r="3" fill="#111"/><path d="M30 35l-6-6M40 35l6-6" stroke="#92400e" stroke-width="3"/><path d="M55 65l20-25 5 30z" fill="#60a5fa" stroke="#1e3a8a" stroke-width="3" stroke-linejoin="round"/><circle cx="80" cy="30" r="6" fill="#34d399"/></svg>',
+  s7_5:'<svg viewBox="0 0 100 100"><defs><radialGradient id="s75" cx="30%" cy="30%"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs><circle cx="50" cy="50" r="20" fill="url(#s75)" stroke="#92400e" stroke-width="2"/><path d="M50 10v14M50 76v14M10 50h14M76 50h14M22 22l10 10M68 68l10 10M78 22L68 32M32 68L22 78" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/></svg>',
+  s7_6:'<svg viewBox="0 0 100 100"><path d="M42 20l-8 12 8 12-8 12 8 12-8 12" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/><path d="M58 20l8 12-8 12 8 12-8 12 8 12" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/></svg>',
+  s7_7:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s77" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs><path d="M10 78l25-42 13 20 12-29 30 51z" fill="url(#s77)" stroke="#1e3a8a" stroke-width="3" stroke-linejoin="round"/><path d="M48 56l12-29 8 14" fill="none" stroke="#fff" stroke-width="4"/></svg>',
+  s7_8:'<svg viewBox="0 0 100 100"><defs><linearGradient id="s78" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#5b21b6"/></linearGradient></defs><rect x="28" y="12" width="44" height="76" rx="8" fill="url(#s78)" stroke="#4c1d95" stroke-width="3"/><rect x="34" y="22" width="32" height="52" rx="3" fill="#e0e7ff"/><circle cx="50" cy="80" r="3" fill="#fff"/></svg>'
+};
+function svg(k){return SVG_ICONS[k]||'';}
+
+/* === DOMAIN DATA === */
+const DOMAINS = [
+  { num:1, code:'PSED', color:'#1677ff', icon:'d1',
+    title:'Personal, Social & Emotional Development',
+    short:'Develops personality, emotions, self-confidence, relationships and positive behaviour.',
+    definition:'This area develops the child’s personality, emotions, self-confidence, relationships and positive behaviour.',
+    standards:[
+      {id:'1.1', code:'SA', name:'Self-Awareness', svgKey:'s1_1',
+       desc:'Child knows own name, identity, likes and feelings.',
+       explanation:'Self-awareness means a child understands who they are. They know their own name, recognise their face in a mirror, identify what they like or do not like, and can name basic feelings like happy, sad, angry or scared.',
+       points:[
+         {icon:'s1_1', title:'Know Your Name', text:'A child can say their own name when asked.'},
+         {icon:'s1_3', title:'Know Your Feelings', text:'A child can say how they feel — happy, sad or angry.'},
+         {icon:'s1_6', title:'Know Your Likes', text:'A child knows what toys, foods and games they enjoy.'}
+       ],
+       steps:['Look in a mirror and say your name.','Point to your eyes, nose and ears.','Say one thing you like and one thing you do not like.','Name a feeling you have right now.'],
+       tip:'Talk with the child about their daily feelings and preferences to build strong self-awareness.'
+      },
+      {id:'1.2', code:'SCI', name:'Self-Confidence and Independence', svgKey:'s1_2',
+       desc:'Child tries to do simple tasks without unnecessary help.',
+       explanation:'Self-confidence and independence mean a child believes in their own ability to do things. They try new tasks, take care of small things themselves, and feel proud when they succeed.',
+       points:[
+         {icon:'s1_2', title:'Try New Things', text:'A child attempts new tasks on their own.'},
+         {icon:'s1_4', title:'Do It Yourself', text:'A child wears shoes, eats and cleans up without always asking for help.'},
+         {icon:'s1_6', title:'Feel Proud', text:'A child feels happy and proud after finishing a task.'}
+       ],
+       steps:['Encourage the child to try simple tasks like buttoning a shirt.','Praise effort, not only success.','Let the child make small choices like picking a colour.','Celebrate small achievements every day.'],
+       tip:'Give the child time to try things alone before stepping in to help.'
+      },
+      {id:'1.3', code:'EC', name:'Emotional Control', svgKey:'s1_3',
+       desc:'Child begins to manage anger, fear, sadness and excitement in safe ways.',
+       explanation:'Emotional control means a child can notice and manage strong feelings in safe ways. They learn to calm down, ask for help, and express feelings with words instead of hitting or crying.',
+       points:[
+         {icon:'s1_3', title:'Notice the Feeling', text:'A child can say “I feel angry” or “I feel sad”.'},
+         {icon:'s1_5', title:'Calm Down', text:'A child uses breathing, counting or a hug to calm down.'},
+         {icon:'s1_6', title:'Ask for Help', text:'A child tells an adult when feelings are too big.'}
+       ],
+       steps:['Name the feeling out loud.','Take three deep breaths.','Count slowly from 1 to 10.','Ask a grown-up for a hug or help.'],
+       tip:'Model calm behaviour yourself — children learn by watching adults.'
+      },
+      {id:'1.4', code:'SI', name:'Social Interaction', svgKey:'s1_4',
+       desc:'Child plays, talks and works with other children.',
+       explanation:'Social interaction means a child can play and communicate with others. They take turns, join a group, listen to friends, and share ideas during play and learning.',
+       points:[
+         {icon:'s1_4', title:'Play Together', text:'A child joins group games and plays with friends.'},
+         {icon:'s1_5', title:'Take Turns', text:'A child waits for their turn and shares toys.'},
+         {icon:'s1_6', title:'Make Friends', text:'A child greets others, smiles and starts conversations.'}
+       ],
+       steps:['Say “hello” to a friend.','Ask “may I play with you?”','Take turns during the game.','Say “thank you” at the end.'],
+       tip:'Give children many opportunities to play in pairs and small groups.'
+      },
+      {id:'1.5', code:'SC', name:'Sharing and Cooperation', svgKey:'s1_5',
+       desc:'Child shares materials, space and ideas with others.',
+       explanation:'Sharing and cooperation mean a child can work and play with others happily. They share toys, take turns, help friends, and work as a team to finish a task.',
+       points:[
+         {icon:'s1_5', title:'Share Toys', text:'A child lets others use their things.'},
+         {icon:'s1_4', title:'Help Friends', text:'A child offers help when someone needs it.'},
+         {icon:'s1_6', title:'Team Work', text:'A child works with others towards a shared goal.'}
+       ],
+       steps:['Pick a game to play with a friend.','Share the toys fairly.','Help your friend if they are stuck.','Say “well done” at the end.'],
+       tip:'Praise acts of sharing and kindness immediately so the child repeats them.'
+      },
+      {id:'1.6', code:'RV', name:'Respect and Values', svgKey:'s1_6',
+       desc:'Child shows respect, courtesy, honesty, empathy and care.',
+       explanation:'Respect and values mean a child treats others kindly. They say “please” and “thank you”, listen when others speak, tell the truth, and care about how other people feel.',
+       points:[
+         {icon:'s1_6', title:'Be Polite', text:'A child says please, thank you and sorry.'},
+         {icon:'s1_1', title:'Be Honest', text:'A child tells the truth even when it is hard.'},
+         {icon:'s1_4', title:'Be Caring', text:'A child helps sad or hurt friends.'}
+       ],
+       steps:['Say please and thank you every day.','Listen quietly when someone is speaking.','Tell the truth even if you made a mistake.','Comfort a friend who is sad.'],
+       tip:'Be a role model — children copy the respect and care they see around them.'
+      }
+    ]
+  },
+  { num:2, code:'LL', color:'#7957ff', icon:'d2',
+    title:'Language & Literacy',
+    short:'Develops listening, speaking, vocabulary, early reading and early writing.',
+    definition:'This area develops listening, speaking, vocabulary, early reading and early writing.',
+    standards:[
+      {id:'2.1', code:'LS', name:'Listening Skills', svgKey:'s2_1',
+       desc:'Child understands and responds to simple instructions and spoken language.',
+       explanation:'Listening skills mean a child can hear, understand and respond to what others say. They follow simple directions, answer questions, and enjoy stories being read aloud.',
+       points:[
+         {icon:'s2_1', title:'Hear Carefully', text:'A child listens without interrupting.'},
+         {icon:'s2_2', title:'Understand Words', text:'A child understands simple instructions.'},
+         {icon:'s2_3', title:'Respond Well', text:'A child answers questions or does the task.'}
+       ],
+       steps:['Sit quietly and look at the speaker.','Listen to the whole instruction.','Repeat the instruction in your mind.','Do the task or answer the question.'],
+       tip:'Read stories aloud daily and ask simple questions afterwards.'
+      },
+      {id:'2.2', code:'SS', name:'Speaking Skills', svgKey:'s2_2',
+       desc:'Child speaks clearly enough to share needs, ideas, experiences and feelings.',
+       explanation:'Speaking skills mean a child can use words to express what they need, feel or think. They speak clearly, use full sentences, and take part in conversations.',
+       points:[
+         {icon:'s2_2', title:'Speak Clearly', text:'A child pronounces words so others understand.'},
+         {icon:'s2_3', title:'Use Sentences', text:'A child speaks in short but complete sentences.'},
+         {icon:'s2_4', title:'Share Ideas', text:'A child tells stories about their day.'}
+       ],
+       steps:['Look at the person you are talking to.','Use a clear, medium voice.','Say what you need in a full sentence.','Wait for the other person to reply.'],
+       tip:'Talk with the child during daily routines — meals, bath time, walks.'
+      },
+      {id:'2.3', code:'VD', name:'Vocabulary Development', svgKey:'s2_3',
+       desc:'Child learns and uses new words from daily life, stories and activities.',
+       explanation:'Vocabulary development means a child learns and uses new words. They name everyday objects, understand word meanings, and use interesting words when they speak.',
+       points:[
+         {icon:'s2_3', title:'Learn New Words', text:'A child picks up words from stories and daily life.'},
+         {icon:'s2_5', title:'Name Things', text:'A child names common objects around them.'},
+         {icon:'s2_2', title:'Use in Speech', text:'A child uses the new words while talking.'}
+       ],
+       steps:['Point to objects and name them.','Read a story and pick 3 new words.','Use each new word in a sentence.','Repeat the words during the day.'],
+       tip:'Repeat new words often and use them in different situations.'
+      },
+      {id:'2.4', code:'ERS', name:'Early Reading Skills', svgKey:'s2_4',
+       desc:'Child recognises familiar letters, sounds, names, words and simple book features.',
+       explanation:'Early reading means a child begins to understand that letters have sounds and words have meaning. They recognise their name, common letters, signs and logos, and enjoy looking at books.',
+       points:[
+         {icon:'s2_4', title:'Know Letters', text:'A child recognises letters like A, B, C.'},
+         {icon:'s2_3', title:'Know Sounds', text:'A child knows the sound each letter makes.'},
+         {icon:'s2_1', title:'Enjoy Books', text:'A child holds a book the right way and turns pages.'}
+       ],
+       steps:['Sing the ABC song together.','Point to letters and say their sounds.','Read the child’s name and point to each letter.','Look at picture books and talk about them.'],
+       tip:'Label everyday items with their names to build letter recognition.'
+      },
+      {id:'2.5', code:'EWS', name:'Early Writing Skills', svgKey:'s2_5',
+       desc:'Child uses drawings, marks, symbols and familiar letters to communicate meaning.',
+       explanation:'Early writing means a child uses marks, drawings and letters to share ideas. They scribble, draw shapes, copy letters, and begin to write their own name.',
+       points:[
+         {icon:'s2_5', title:'Hold a Pencil', text:'A child holds a pencil or crayon with three fingers.'},
+         {icon:'s2_4', title:'Make Marks', text:'A child draws lines, circles and zigzags.'},
+         {icon:'s2_2', title:'Write Letters', text:'A child copies simple letters and their name.'}
+       ],
+       steps:['Hold the crayon between thumb and two fingers.','Draw a picture of your family.','Trace big letters with a finger.','Try writing the first letter of your name.'],
+       tip:'Provide crayons, chalk and paper daily so writing feels natural and fun.'
+      }
+    ]
+  },
+  { num:3, code:'PD', color:'#16b96b', icon:'d3',
+    title:'Physical Development',
+    short:'Develops body movement, balance, coordination, strength, control and sensory-motor skills.',
+    definition:'This area develops body movement, balance, coordination, strength, control and sensory-motor skills.',
+    standards:[
+      {id:'3.1', code:'GMS', name:'Gross Motor Skills', svgKey:'s3_1',
+       desc:'Child uses large muscles for running, jumping, hopping, skipping and other movements.',
+       explanation:'Gross motor skills involve the big muscles of the body. A child uses them to run, jump, hop, throw, catch, climb and dance. These skills build strength, balance and overall fitness.',
+       points:[
+         {icon:'s3_1', title:'Run and Jump', text:'A child runs, jumps and hops with control.'},
+         {icon:'s3_4', title:'Balance', text:'A child stands on one foot for a few seconds.'},
+         {icon:'s3_5', title:'Play Games', text:'A child takes part in physical games.'}
+       ],
+       steps:['Run from one point to another.','Jump with both feet together.','Hop on one foot three times.','Kick or throw a ball to a friend.'],
+       tip:'Play outdoor games daily — running, catching and dancing build gross motor skills.'
+      },
+      {id:'3.2', code:'FMS', name:'Fine Motor Skills', svgKey:'s3_2',
+       desc:'Child uses hands and fingers to hold tools and materials with increasing control.',
+       explanation:'Fine motor skills involve the small muscles of the hands and fingers. A child uses them to hold a pencil, button clothes, thread beads, cut with scissors and eat with a spoon.',
+       points:[
+         {icon:'s3_2', title:'Hold Tools', text:'A child holds a pencil, spoon or brush with control.'},
+         {icon:'s2_5', title:'Small Movements', text:'A child picks up small objects with fingers.'},
+         {icon:'s5_1', title:'Do Daily Tasks', text:'A child buttons, zips or ties shoes.'}
+       ],
+       steps:['Pick up small beads one by one.','Thread beads on a string.','Button or unbutton a shirt.','Cut paper along a straight line.'],
+       tip:'Offer daily activities like threading, kneading dough and drawing.'
+      },
+      {id:'3.3', code:'Coord', name:'Coordination', svgKey:'s3_3',
+       desc:'Child uses eyes and hands together during play and learning.',
+       explanation:'Coordination means the eyes and hands (or feet) work together smoothly. A child uses coordination to catch a ball, thread a needle, colour inside lines and copy shapes.',
+       points:[
+         {icon:'s3_3', title:'Eyes + Hands', text:'A child uses both together for tasks.'},
+         {icon:'s3_1', title:'Catch a Ball', text:'A child catches a ball with both hands.'},
+         {icon:'s3_2', title:'Draw Inside Lines', text:'A child colours without going outside.'}
+       ],
+       steps:['Throw a ball and catch it back.','Draw a big circle and colour inside it.','Thread a big bead on a string.','Clap hands to a simple rhythm.'],
+       tip:'Practise catching, throwing and colouring every day.'
+      },
+      {id:'3.4', code:'S&C', name:'Strength and Control', svgKey:'s3_4',
+       desc:'Child develops balance, body control and safe movement.',
+       explanation:'Strength and control mean the child can move their body safely and with balance. They can walk on a line, stand on one foot, carry light objects and stop when needed.',
+       points:[
+         {icon:'s3_4', title:'Balance', text:'A child balances on one foot or a beam.'},
+         {icon:'s3_1', title:'Control', text:'A child stops running when told to.'},
+         {icon:'s3_3', title:'Move Safely', text:'A child avoids dangerous movements.'}
+       ],
+       steps:['Stand on one foot for 5 seconds.','Walk slowly along a line on the floor.','Carry a light box without dropping it.','Stop and start on a signal.'],
+       tip:'Use play equipment like balance beams and hopscotch.'
+      },
+      {id:'3.5', code:'Part', name:'Participation', svgKey:'s3_5',
+       desc:'Child takes part willingly in age-appropriate physical activities.',
+       explanation:'Participation means a child happily joins physical activities. They take part in games, follow rules, work with a team and enjoy being active every day.',
+       points:[
+         {icon:'s3_5', title:'Join In', text:'A child joins games and exercises.'},
+         {icon:'s1_4', title:'Work with Team', text:'A child plays with others in a team.'},
+         {icon:'s1_5', title:'Follow Rules', text:'A child follows simple game rules.'}
+       ],
+       steps:['Say “yes” when a game is offered.','Follow the rules of the game.','Help your team score.','Cheer for everyone at the end.'],
+       tip:'Make physical activity fun so children want to join every day.'
+      }
+    ]
+  },
+  { num:4, code:'HHS', color:'#ff9f2d', icon:'d4',
+    title:'Health, Hygiene & Safety',
+    short:'Develops healthy habits, personal hygiene, safety awareness and personal security.',
+    definition:'This area develops healthy habits, personal hygiene, safety awareness and personal security.',
+    standards:[
+      {id:'4.1', code:'PH', name:'Personal Hygiene', svgKey:'s4_1',
+       desc:'Child follows basic habits for keeping the body clean and healthy.',
+       explanation:'Personal hygiene means keeping the body clean. A child washes hands, brushes teeth, takes a bath, uses the toilet properly and keeps their clothes neat and clean.',
+       points:[
+         {icon:'s4_1', title:'Wash Hands', text:'A child washes hands before eating and after using the toilet.'},
+         {icon:'s4_2', title:'Brush Teeth', text:'A child brushes teeth twice a day.'},
+         {icon:'s4_4', title:'Keep Clean', text:'A child bathes and wears clean clothes.'}
+       ],
+       steps:['Wet hands with water.','Add soap and rub for 20 seconds.','Rinse well and dry with a clean towel.','Brush teeth morning and night.'],
+       tip:'Make hygiene a fun daily routine with songs and charts.'
+      },
+      {id:'4.2', code:'HH', name:'Healthy Habits', svgKey:'s4_2',
+       desc:'Child understands simple healthy food, water, rest and active-living habits.',
+       explanation:'Healthy habits mean a child eats good food, drinks water, rests well and stays active. They know that fruits and vegetables help the body grow strong.',
+       points:[
+         {icon:'s4_2', title:'Eat Healthy', text:'A child eats fruits, vegetables and healthy food.'},
+         {icon:'s5_5', title:'Drink Water', text:'A child drinks 6–8 glasses of water every day.'},
+         {icon:'s4_1', title:'Rest Well', text:'A child sleeps enough at night.'}
+       ],
+       steps:['Eat one fruit every day.','Drink water after every meal.','Sleep 8–10 hours at night.','Play outside every day.'],
+       tip:'Involve children in choosing and preparing healthy food.'
+      },
+      {id:'4.3', code:'SAf', name:'Safety Awareness', svgKey:'s4_3',
+       desc:'Child recognises common dangers and knows when to ask for help.',
+       explanation:'Safety awareness means a child knows how to stay safe. They avoid dangerous places, do not touch hot or sharp things, and tell an adult if something feels wrong.',
+       points:[
+         {icon:'s4_3', title:'Stay Safe', text:'A child avoids dangerous things and places.'},
+         {icon:'s1_3', title:'Ask for Help', text:'A child tells an adult when unsafe.'},
+         {icon:'s7_7', title:'Know the Rules', text:'A child follows safety rules at home and school.'}
+       ],
+       steps:['Never touch hot stoves or sharp knives.','Hold an adult’s hand near the road.','Say “no” to strangers.','Tell an adult if something feels wrong.'],
+       tip:'Practise safety rules and praise the child when they follow them.'
+      },
+      {id:'4.4', code:'CE4', name:'Clean Environment', svgKey:'s4_4',
+       desc:'Child helps keep the classroom, playground and surroundings clean.',
+       explanation:'Clean environment means keeping the places around us neat and tidy. A child throws waste in the bin, keeps their desk clean, and helps care for plants and animals.',
+       points:[
+         {icon:'s4_4', title:'Use the Bin', text:'A child throws waste in the dustbin.'},
+         {icon:'s7_6', title:'Keep Tidy', text:'A child keeps their desk and room clean.'},
+         {icon:'s7_3', title:'Care for Nature', text:'A child helps water plants and protect animals.'}
+       ],
+       steps:['Throw wrappers in the bin, not on the floor.','Clean your desk after class.','Water a plant once a week.','Remind friends to keep things clean.'],
+       tip:'Set up a “clean-up time” every day and make it fun.'
+      }
+    ]
+  },
+  { num:5, code:'BMS', color:'#f04f9f', icon:'d5',
+    title:'Basic Mathematics Skills',
+    short:'Develops early number, shape, measurement, pattern, logical thinking and problem-solving.',
+    definition:'This area develops early number, shape, measurement, pattern, logical thinking and problem-solving skills.',
+    standards:[
+      {id:'5.1', code:'NS', name:'Number Sense', svgKey:'s5_1',
+       desc:'Child understands quantity and counts objects meaningfully.',
+       explanation:'Number sense means understanding how many objects there are. A child counts from 1 to 10 or 20, matches numbers to quantity, and understands “more”, “less” and “same”.',
+       points:[
+         {icon:'s5_1', title:'Count Objects', text:'A child counts 1 to 10 correctly.'},
+         {icon:'s5_2', title:'Match Numbers', text:'A child matches a number to the right number of objects.'},
+         {icon:'s5_4', title:'Compare', text:'A child says which group has more or less.'}
+       ],
+       steps:['Count 1 to 10 using fingers.','Count 5 toys on the table.','Point to the group with more.','Match number cards to objects.'],
+       tip:'Count everything — steps, spoons, cars, buttons.'
+      },
+      {id:'5.2', code:'BO', name:'Basic Operations', svgKey:'s5_2',
+       desc:'Child begins to solve simple addition and subtraction problems with objects.',
+       explanation:'Basic operations mean adding and taking away. A child uses real objects (counters, fingers, toys) to solve simple addition and subtraction stories.',
+       points:[
+         {icon:'s5_2', title:'Add Objects', text:'A child adds small groups together.'},
+         {icon:'s5_1', title:'Take Away', text:'A child removes objects and counts what is left.'},
+         {icon:'s5_6', title:'Solve Stories', text:'A child solves simple word problems.'}
+       ],
+       steps:['Put 2 apples in a basket.','Add 1 more apple.','Count how many apples now.','Take 1 away and count again.'],
+       tip:'Use real objects like fruits, buttons and blocks when adding or subtracting.'
+      },
+      {id:'5.3', code:'SG', name:'Shapes and Geometry', svgKey:'s5_3',
+       desc:'Child recognises common shapes and understands simple positions.',
+       explanation:'Shapes and geometry mean knowing the world of forms. A child recognises circles, squares, triangles and rectangles, and understands positions like up, down, inside and next to.',
+       points:[
+         {icon:'s5_3', title:'Name Shapes', text:'A child names circle, square, triangle and rectangle.'},
+         {icon:'s5_5', title:'Find Shapes', text:'A child spots shapes in the world around them.'},
+         {icon:'s5_1', title:'Positions', text:'A child understands up, down, in, out, next to.'}
+       ],
+       steps:['Draw a circle and colour it.','Find a circle at home (plate, clock).','Point up, down, inside and outside.','Sort shapes into groups.'],
+       tip:'Hunt for shapes during walks — signs, wheels, windows.'
+      },
+      {id:'5.4', code:'Pat', name:'Patterns', svgKey:'s5_4',
+       desc:'Child notices, copies and extends simple patterns.',
+       explanation:'Patterns mean seeing order in things. A child copies patterns like red-blue-red-blue and continues them. Patterns are the base of early maths and reading.',
+       points:[
+         {icon:'s5_4', title:'Notice Patterns', text:'A child sees patterns in colours and shapes.'},
+         {icon:'s5_3', title:'Copy Patterns', text:'A child copies a pattern made by an adult.'},
+         {icon:'s5_1', title:'Extend Patterns', text:'A child continues a pattern on their own.'}
+       ],
+       steps:['Make a pattern with 2 colours.','Say the pattern aloud.','Copy the same pattern.','Add the next two items.'],
+       tip:'Use beads, blocks, stickers or claps to make patterns.'
+      },
+      {id:'5.5', code:'Meas', name:'Measurement', svgKey:'s5_5',
+       desc:'Child compares objects using simple measurement language.',
+       explanation:'Measurement means comparing size, length, weight or time. A child says which is big, small, long, short, heavy, light, full or empty.',
+       points:[
+         {icon:'s5_5', title:'Compare Size', text:'A child says big/small, long/short.'},
+         {icon:'s5_4', title:'Compare Weight', text:'A child says heavy/light.'},
+         {icon:'s5_1', title:'Compare Amount', text:'A child says full/empty, more/less.'}
+       ],
+       steps:['Line up 3 pencils from short to long.','Compare two bags — which is heavier?','Fill one cup and leave one empty.','Say “more” and “less” for two plates.'],
+       tip:'Measure with hands, feet and other everyday items.'
+      },
+      {id:'5.6', code:'PS', name:'Problem-Solving', svgKey:'s5_6',
+       desc:'Child uses simple logical thinking to find solutions.',
+       explanation:'Problem-solving means using thinking to find answers. A child tries different ways to solve a simple puzzle, ask questions, and think before acting.',
+       points:[
+         {icon:'s5_6', title:'Think First', text:'A child looks at the problem before trying.'},
+         {icon:'s5_4', title:'Try Solutions', text:'A child tries different ways to fix it.'},
+         {icon:'s1_3', title:'Stay Calm', text:'A child does not give up when stuck.'}
+       ],
+       steps:['Look at the problem carefully.','Try one way to solve it.','If it does not work, try another way.','Ask a friend or adult if needed.'],
+       tip:'Give children simple puzzles and let them solve at their own pace.'
+      }
+    ]
+  },
+  { num:6, code:'CA', color:'#8559ff', icon:'d6',
+    title:'Creative Arts',
+    short:'Develops creativity, imagination, self-expression and confidence through art, music, movement and drama.',
+    definition:'This area develops creativity, imagination, self-expression and confidence through art, music, movement and drama.',
+    standards:[
+      {id:'6.1', code:'DP', name:'Drawing and Painting', svgKey:'s6_1',
+       desc:'Child uses lines, colours, shapes and different art materials to express ideas.',
+       explanation:'Drawing and painting mean using art to share ideas and feelings. A child draws, colours with crayons, paints with brushes, and enjoys making their own pictures.',
+       points:[
+         {icon:'s6_1', title:'Draw Freely', text:'A child draws whatever they like.'},
+         {icon:'s5_3', title:'Use Colours', text:'A child chooses and uses different colours.'},
+         {icon:'s6_4', title:'Be Creative', text:'A child makes their own unique art.'}
+       ],
+       steps:['Hold the crayon correctly.','Draw a picture of your family.','Colour inside the lines.','Show your art to a friend.'],
+       tip:'Never judge children’s art — let them enjoy the process.'
+      },
+      {id:'6.2', code:'MR', name:'Music and Rhythm', svgKey:'s6_2',
+       desc:'Child listens to, identifies and explores sounds, rhythms and rhymes.',
+       explanation:'Music and rhythm mean enjoying sounds and beats. A child sings songs, claps to a rhythm, plays simple instruments, and listens carefully to sounds around them.',
+       points:[
+         {icon:'s6_2', title:'Sing Songs', text:'A child sings rhymes and songs.'},
+         {icon:'s6_4', title:'Clap Beats', text:'A child claps or taps to a rhythm.'},
+         {icon:'s2_1', title:'Listen', text:'A child listens to sounds and identifies them.'}
+       ],
+       steps:['Sing a familiar rhyme together.','Clap the rhythm slowly.','Clap the rhythm fast.','Play a drum or shaker.'],
+       tip:'Sing every day — during transitions, cleanup or outdoor play.'
+      },
+      {id:'6.3', code:'DRP', name:'Drama and Role Play', svgKey:'s6_3',
+       desc:'Child uses role play and movement to express ideas, experiences and imagination.',
+       explanation:'Drama and role play mean pretending to be someone or something else. A child acts like a doctor, teacher or animal, uses their voice and body, and shares stories through acting.',
+       points:[
+         {icon:'s6_3', title:'Pretend Play', text:'A child pretends to be different people.'},
+         {icon:'s2_2', title:'Use Voice', text:'A child changes their voice to match the role.'},
+         {icon:'s3_1', title:'Use Body', text:'A child uses movement to act out the role.'}
+       ],
+       steps:['Pick a role — doctor, teacher, animal.','Speak like that person.','Move like that person.','Act out a small story.'],
+       tip:'Provide simple props — hats, scarves, toy phones — to encourage role play.'
+      },
+      {id:'6.4', code:'CE6', name:'Creative Expression', svgKey:'s6_4',
+       desc:'Child uses imagination to make original art, models and craft work.',
+       explanation:'Creative expression means making something new and original. A child uses their imagination with clay, paper, blocks and natural materials to create their own art.',
+       points:[
+         {icon:'s6_4', title:'Imagine', text:'A child thinks of new ideas to make.'},
+         {icon:'s6_1', title:'Make Things', text:'A child builds, moulds and assembles.'},
+         {icon:'s5_6', title:'Try New Ways', text:'A child experiments with materials.'}
+       ],
+       steps:['Pick a material like clay or paper.','Think of something to make.','Try making it.','Show and talk about your creation.'],
+       tip:'Save recycled boxes, paper and fabric for creative projects.'
+      }
+    ]
+  },
+  { num:7, code:'WAU', color:'#10aebc', icon:'d7',
+    title:'World Around Us',
+    short:'Helps children understand family, people, places, nature, living things, weather, resources and technology.',
+    definition:'This area helps children understand family, people, places, nature, living things, weather, resources and basic technology.',
+    standards:[
+      {id:'7.1', code:'FU', name:'Family Understanding', svgKey:'s7_1',
+       desc:'Child understands family relationships, roles and simple family history.',
+       explanation:'Family understanding means knowing the people we live with. A child names their parents, brothers, sisters, grandparents and cousins, and knows what each member does at home.',
+       points:[
+         {icon:'s7_1', title:'Name Family', text:'A child names members of their family.'},
+         {icon:'s1_4', title:'Know Roles', text:'A child knows what each member does.'},
+         {icon:'s1_6', title:'Show Love', text:'A child shows love and respect to family.'}
+       ],
+       steps:['Draw a picture of your family.','Name each person in the picture.','Say what each one does at home.','Say one thing you love about each.'],
+       tip:'Talk about family photos and share simple family stories.'
+      },
+      {id:'7.2', code:'PP', name:'People and Places', svgKey:'s7_2',
+       desc:'Child recognises important people and places in the local community.',
+       explanation:'People and places mean knowing the community around us. A child knows the doctor, teacher, driver, shopkeeper, and understands places like home, school, market and hospital.',
+       points:[
+         {icon:'s7_2', title:'Know People', text:'A child names community helpers.'},
+         {icon:'s5_5', title:'Know Places', text:'A child knows home, school, market, hospital.'},
+         {icon:'s1_4', title:'Be Safe', text:'A child knows who to ask for help.'}
+       ],
+       steps:['Name three community helpers.','Say where each one works.','Draw a picture of your street.','Visit a nearby shop with an adult.'],
+       tip:'Take short walks in the neighbourhood and point out important places.'
+      },
+      {id:'7.3', code:'LNT', name:'Living and Non-living Things', svgKey:'s7_3',
+       desc:'Child notices basic differences between living and non-living things.',
+       explanation:'Living and non-living means knowing which things are alive. Living things like plants and animals breathe, eat, grow and move. Non-living things like chairs and stones do not.',
+       points:[
+         {icon:'s7_3', title:'Living Things', text:'A child names plants and animals.'},
+         {icon:'s7_4', title:'Non-living Things', text:'A child names chairs, stones and toys.'},
+         {icon:'s5_4', title:'Sort Them', text:'A child sorts things into living/non-living.'}
+       ],
+       steps:['Point to a plant — is it living?','Point to a chair — is it living?','Say why each one is living or not.','Sort pictures into two groups.'],
+       tip:'Use real objects from the garden and home to sort.'
+      },
+      {id:'7.4', code:'PA', name:'Plants and Animals', svgKey:'s7_4',
+       desc:'Child recognises common plants, animals and basic habitats.',
+       explanation:'Plants and animals means knowing the natural world. A child names common plants like trees and flowers, common animals like cats and cows, and where they live.',
+       points:[
+         {icon:'s7_4', title:'Name Plants', text:'A child names trees, flowers and grass.'},
+         {icon:'s7_3', title:'Name Animals', text:'A child names pets, farm animals and wild animals.'},
+         {icon:'s7_7', title:'Habitats', text:'A child knows where animals live.'}
+       ],
+       steps:['Point to 3 plants in the garden.','Name 3 animals you know.','Say where a fish lives.','Say where a bird lives.'],
+       tip:'Visit a garden, park or farm to see plants and animals closely.'
+      },
+      {id:'7.5', code:'WS', name:'Weather and Seasons', svgKey:'s7_5',
+       desc:'Child observes weather and understands simple seasonal changes.',
+       explanation:'Weather and seasons mean knowing daily and yearly changes. A child knows sunny, rainy, cloudy and windy weather, and the seasons summer, winter, spring and autumn.',
+       points:[
+         {icon:'s7_5', title:'Daily Weather', text:'A child says if it is sunny, rainy or cloudy.'},
+         {icon:'s5_4', title:'Seasons', text:'A child names the four seasons.'},
+         {icon:'s7_6', title:'Dress Right', text:'A child wears clothes that match the weather.'}
+       ],
+       steps:['Look outside and say the weather.','Say what clothes to wear.','Name one season and its weather.','Draw a sunny and a rainy day.'],
+       tip:'Keep a weather chart and update it every morning.'
+      },
+      {id:'7.6', code:'CE7', name:'Care for Environment', svgKey:'s7_6',
+       desc:'Child shows care for the environment and natural resources.',
+       explanation:'Care for environment means looking after nature. A child saves water, throws waste in the bin, plants trees, and looks after animals and plants around them.',
+       points:[
+         {icon:'s7_6', title:'Save Water', text:'A child closes taps and does not waste water.'},
+         {icon:'s4_4', title:'Keep Clean', text:'A child keeps surroundings clean.'},
+         {icon:'s7_3', title:'Plant Trees', text:'A child helps plant and water trees.'}
+       ],
+       steps:['Close the tap after washing hands.','Throw waste in the bin.','Water a plant every week.','Say “no” to cutting trees.'],
+       tip:'Make the child the “nature helper” of the day — it builds pride.'
+      },
+      {id:'7.7', code:'NR', name:'Natural Resources', svgKey:'s7_7',
+       desc:'Child recognises simple natural resources and physical features of Earth.',
+       explanation:'Natural resources mean the gifts of nature. A child knows water, air, soil, trees, sunlight and mountains. They understand these things come from nature, not factories.',
+       points:[
+         {icon:'s7_7', title:'Name Resources', text:'A child names water, air, soil, trees, sun.'},
+         {icon:'s7_5', title:'Features of Earth', text:'A child knows mountains, rivers and seas.'},
+         {icon:'s5_4', title:'Sort', text:'A child sorts natural vs man-made.'}
+       ],
+       steps:['Name three natural resources.','Say where water comes from.','Draw a mountain, river or sea.','Sort natural and man-made things.'],
+       tip:'Point out natural resources during walks — sun, trees, water.'
+      },
+      {id:'7.8', code:'BTA', name:'Basic Technology Awareness', svgKey:'s7_8',
+       desc:'Child recognises and explores common technology safely.',
+       explanation:'Basic technology means knowing simple tools and devices. A child recognises phones, tablets, TVs, fans and lights. They learn to use them safely with an adult.',
+       points:[
+         {icon:'s7_8', title:'Know Devices', text:'A child names phone, tablet, TV, fan.'},
+         {icon:'s4_3', title:'Use Safely', text:'A child uses devices with adult help.'},
+         {icon:'s5_4', title:'Handle with Care', text:'A child keeps devices away from water and heat.'}
+       ],
+       steps:['Name three devices at home.','Say what each one is used for.','Ask an adult before using any device.','Never touch wires or plugs.'],
+       tip:'Model safe use of devices and explain why rules matter.'
+      }
+    ]
+  }
+];
+
+/* === NAVIGATION === */
+function navOn(i){
+  document.querySelectorAll('.nav button').forEach((b,k)=>{
+    b.classList.toggle('on', k===i);
+  });
+}
+function hideAll(){
+  document.getElementById('home').style.display='none';
+  document.getElementById('areas').classList.remove('show');
+  document.querySelectorAll('.domainPanel').forEach(x=>x.classList.remove('show'));
+  document.querySelectorAll('.explainPanel').forEach(x=>x.classList.remove('show'));
+}
+function home(){hideAll();document.getElementById('home').style.display='grid';navOn(0);window.scrollTo({top:0,behavior:'smooth'});}
+function areas(){hideAll();document.getElementById('areas').classList.add('show');navOn(1);window.scrollTo({top:0,behavior:'smooth'});}
+
+function buildAreas(){
+  const grid=document.getElementById('areasGrid');
+  const panels=document.getElementById('dpContainer');
+  grid.innerHTML='';panels.innerHTML='';
+  DOMAINS.forEach((d,i)=>{
+    const card=document.createElement('button');
+    card.className='domainCard';
+    card.style.setProperty('--c', d.color);
+    card.style.animationDelay=(i*0.07)+'s';
+    card.innerHTML=`
+      <div class="icon">${svg(d.icon)}</div>
+      <b>DOMAIN ${d.num}</b>
+      <h3>${d.title}</h3>
+      <div class="shortCode">(${d.code})</div>
+      <p>${d.short}</p>
+      <span>View Standards →</span>
+    `;
+    card.onclick=()=>openDomain(i);
+    grid.appendChild(card);
+
+    const panel=document.createElement('div');
+    panel.className='domainPanel';
+    panel.id='dp'+i;
+    panel.innerHTML=`
+      <div class="panelHead">
+        <div class="headLeft">
+          <label style="color:${d.color}">
+            <span class="labelIcon">${svg(d.icon)}</span> DOMAIN ${d.num}
+          </label>
+          <h2>${d.title}</h2>
+          <div class="panelCode">(${d.code})</div>
+        </div>
+        <button onclick="closeDomain()">✕</button>
+      </div>
+      <div class="definition"><b>Definition</b><br>${d.definition}</div>
+      <h3 class="standardsTitle">Standards (click Explanation for full details)</h3>
+      <div class="stdGrid">
+        ${d.standards.map(s=>`
+          <div class="std" style="--sc:${d.color}">
+            <div class="std-head">
+              <div class="icon">${svg(s.svgKey)}</div>
+              <div class="body">
+                <strong>${s.id} ${s.name}</strong>
+                <div class="stdCode">(${s.code})</div>
+                <p>${s.desc}</p>
+              </div>
+            </div>
+            <div class="btnRow"><button class="stdBtn" style="--sc:${d.color}" onclick="openExplanation(${i}, '${s.id}')">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              Explanation
+            </button><button class="stdBtn simBtn" onclick="openSim(${i}, '${s.id}')">🎮 Simulation</button></div>
+          </div>`).join('')}
+      </div>
+    `;
+    panels.appendChild(panel);
+  });
+}
+
+function closeDomain(){
+  document.querySelectorAll('.domainPanel').forEach(x=>x.classList.remove('show'));
+  document.querySelectorAll('.explainPanel').forEach(x=>x.classList.remove('show'));
+}
+function openDomain(i){
+  areas();
+  document.querySelectorAll('.domainPanel').forEach(x=>x.classList.remove('show'));
+  document.querySelectorAll('.explainPanel').forEach(x=>x.classList.remove('show'));
+  const p=document.getElementById('dp'+i);
+  if(p){p.classList.add('show');p.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
+function openExplanationOld(domainIdx, stdId){
+  const d=DOMAINS[domainIdx];
+  const s=d.standards.find(x=>x.id===stdId);
+  if(!s) return;
+  const container=document.getElementById('explainContainer');
+  container.innerHTML=`
+    <div class="explainPanel show">
+      <div class="expHead">
+        <div>
+          <label style="color:${d.color}">
+            <span class="labelIcon">${svg(d.icon)}</span> STANDARD ${s.id} — EXPLANATION
+          </label>
+          <h2>${s.name}</h2>
+          <div class="expCode">(${s.code}) — ${d.title} (${d.code})</div>
+        </div>
+        <div class="btnRow"><button class="stdBtn simBtn" onclick="openSim(${domainIdx}, '${s.id}')">🎮 Simulation</button><button class="xb" onclick="document.getElementById('explainContainer').innerHTML=''">✕ Close</button></div>
+      </div>
+      <div class="expDef"><b>WHAT IT MEANS</b>${s.explanation}</div>
+      <h3 style="color:var(--navy);margin-top:22px;font-size:18px">Key Points with Pictures</h3>
+      <div class="expPictures">
+        ${s.points.map(p=>`
+          <div class="expPic">
+            <div class="picIcon">${svg(p.icon)}</div>
+            <h4>${p.title}</h4>
+            <p>${p.text}</p>
+          </div>`).join('')}
+      </div>
+      <div class="expSteps">
+        <h3><span class="stepIcon">${svg('s5_6')}</span>How to Practise</h3>
+        <ol>${s.steps.map(st=>`<li>${st}</li>`).join('')}</ol>
+      </div>
+      <div class="expNote">
+        <div class="noteIcon">${svg('s1_6')}</div>
+        <div><b>Teacher / Parent Tip:</b> ${s.tip}</div>
+      </div>
+      <div class="legend">
+        <h3><span class="legendIcon">${svg('s2_3')}</span>Short Codes in This Domain</h3>
+        <div class="legendGrid">
+          <div class="legendItem"><b>${d.code}</b> ${d.title}</div>
+          ${d.standards.map(x=>`<div class="legendItem"><b>${x.code}</b> ${x.name}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  container.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const bi=document.getElementById('brandIcon');if(bi)bi.innerHTML=svg('d1');
+  buildAreas();
+});
+
+/* ===== SIMULATIONS ===== */
+const SIM_RAW=`1.1|🪞:Mirror,🧒:Me,😊:Happy Face,😢:Sad Face,😠:Angry Face|Say My Name~bounce~I know my name and who I am!;Look in Mirror~flip~I can see my face in the mirror.;Happy~glow~I feel happy when I play.;Angry~shake~I feel angry. I can say it with words!
+1.2|👟:Shoes,👕:Shirt,🪥:Toothbrush,🎒:Backpack,🏆:Trophy|Wear Shoes~grow~I can put on my shoes myself!;Pack Bag~bounce~I packed my bag by myself.;Brush Teeth~shake~I brush my teeth on my own.;Win Trophy~glow~I feel proud of my work!
+1.3|😡:Angry Face,🌬️:Deep Breath,🔢:Numbers,🧸:Teddy Bear,🤗:Hug|Deep Breath~grow~Breathe in slowly and breathe out.;Count to 10~spin~Count slowly to feel calm.;Hug Teddy~glow~A hug helps me feel calm.;Ask for Help~bounce~I tell a grown-up about my big feelings.
+1.4|👦:Boy,👧:Girl,⚽:Football,🧩:Puzzle,🪁:Kite|Say Hello~bounce~Hello, friend!;Play Together~spin~We play together!;Take Turns~fly~First you, then me.;Say Thank You~glow~Thank you for playing!
+1.5|🧸:Toy,🍪:Cookies,🖍️:Crayons,📚:Books,🍎:Apple|Share Toy~fly~I share my toy with a friend.;Split Cookies~shrink~We share the cookies equally.;Help Friend~bounce~I help when you are stuck.;Team Work~spin~Together we finish faster!
+1.6|🙏:Please,💐:Flowers,🤝:Handshake,👂:Listening Ear,❤️:Kind Heart|Say Please~bounce~Please may I have it?;Say Thank You~glow~Thank you very much!;Listen Quietly~shrink~I listen when others speak.;Tell the Truth~grow~I always tell the truth.
+2.1|👂:Ear,📖:Storybook,🎧:Headphones,🔔:Bell,🧑‍🏫:Teacher|Hear the Bell~shake~I hear the bell ring.;Story Time~glow~I listen to the whole story.;Follow Instruction~fly~I do exactly what the teacher says.;Answer~bounce~I answer the question.
+2.2|🎤:Microphone,💬:Speech Bubble,📞:Telephone,👄:Mouth,📢:Megaphone|Speak Clearly~grow~I speak clearly so everyone understands.;Full Sentence~glow~I am hungry. May I have an apple?;Phone Call~shake~Hello! How are you?;Tell a Story~bounce~Today I played in the park.
+2.3|🍎:Apple,🚗:Car,🐶:Dog,🪑:Chair,⚽:Ball|Name It~bounce~This is an apple.;New Word~glow~A new word! Car.;Use in Sentence~grow~The dog runs fast.;Say Again~spin~Repeat after me!
+2.4|🔤:Alphabet,📕:Book,🅰️:Letter A,🔊:Sound,🪧:Sign Board|Find the Letter~glow~I can find the letter A.;Make the Sound~bounce~A says aaa as in apple.;Turn Page~flip~I turn the page carefully.;Read Name~grow~I can read my name.
+2.5|✏️:Pencil,🖍️:Crayon,📝:Paper,🖊️:Pen,📏:Ruler|Hold Pencil~grow~Hold it with thumb and two fingers.;Draw Lines~fly~I draw lines and circles.;Trace Letter~glow~I trace big letters with my finger.;Write Name~bounce~I write the first letter of my name.
+3.1|🏃:Running,🦘:Jumping,⚽:Football,🚲:Bicycle,🧗:Climbing|Run~fly~I run fast!;Jump~bounce~I jump with both feet.;Kick Ball~spin~I kick the ball to my friend.;Climb~grow~I climb up safely.
+3.2|📿:Beads,🔘:Button,✂️:Scissors,🥄:Spoon,🧵:Thread|Pick Beads~bounce~I pick up small beads with my fingers.;Thread Beads~fly~I thread the beads on a string.;Do Button~shrink~I button my shirt.;Cut Paper~shake~I cut along the line.
+3.3|🥎:Ball,🎯:Target,🖍️:Crayon,👏:Hands,🪀:Yo-yo|Throw~fly~I throw the ball.;Catch~grow~I catch it with both hands.;Colour Inside~glow~I colour inside the lines.;Clap Rhythm~shake~Clap, clap, clap!
+3.4|🧍:Standing,🪵:Balance Beam,📦:Box,🛑:Stop Sign,🤸:Balance|Balance~shake~I stand on one foot.;Walk the Line~fly~I walk slowly along the line.;Carry Box~grow~I carry a light box safely.;Stop~shrink~I stop when I am told.
+3.5|🏐:Volleyball,🏆:Trophy,🧘:Exercise,👥:Team,📣:Cheer|Join In~bounce~I join the game happily.;Follow Rules~glow~I follow the rules of the game.;Team Play~spin~We play as a team.;Cheer~grow~Well done, everyone!
+4.1|🧼:Soap,🪥:Toothbrush,🚿:Shower,🧻:Tissue,🖐️:Clean Hands|Wash Hands~shake~Rub with soap for 20 seconds.;Brush Teeth~bounce~Brush morning and night.;Take a Bath~glow~I take a bath to stay clean.;Use Tissue~flip~I cover my sneeze with a tissue.
+4.2|🍎:Fruit,🥦:Vegetables,💧:Water,🛌:Bed,🏃:Exercise|Eat Fruit~grow~Fruit keeps me healthy.;Drink Water~glow~I drink clean water every day.;Sleep Early~shrink~I sleep early to grow strong.;Exercise~bounce~I play and move every day.
+4.3|🚦:Traffic Light,🔥:Fire,🔌:Socket,🧯:Extinguisher,🪖:Helmet|Stop at Red~glow~Red means stop. Green means go.;Stay Away from Fire~shake~Fire is dangerous. Keep away!;Wear Helmet~grow~I wear a helmet to stay safe.;Tell an Adult~bounce~I tell a grown-up if I am in danger.
+4.4|🗑️:Dustbin,🧹:Broom,♻️:Recycling,🧃:Juice Box,🌳:Tree|Pick Up Litter~fly~I pick up the litter.;Use the Bin~bounce~Rubbish goes in the bin.;Sweep~shake~I help to sweep the floor.;Recycle~spin~I recycle paper and plastic.
+5.1|1️⃣:One,2️⃣:Two,3️⃣:Three,🍎:Apples,🧮:Abacus|Number One~glow~This is number one.;Number Two~bounce~This is number two.;Number Three~grow~This is number three.;Slide Abacus~fly~I count with the abacus.
+5.2|➕:Plus,➖:Minus,🍎:Apple,🍌:Banana,🟰:Equals|Add~grow~Two apples plus one apple makes three apples.;Take Away~shrink~Three apples minus one apple leaves two.;Equals~glow~Equals means the same as.;Solve~bounce~I can solve it!
+5.3|🔴:Circle,🟦:Square,🔺:Triangle,⭐:Star,🏠:House|Circle~spin~A circle is round.;Square~flip~A square has four equal sides.;Triangle~bounce~A triangle has three sides.;Star~glow~A star has five points.
+5.4|🔴:Red,🔵:Blue,🟡:Yellow,🟢:Green,🟣:Purple|Make Pattern~glow~Red, blue, red, blue.;Repeat~spin~A pattern repeats again and again.;What Comes Next~bounce~What comes next in the pattern?;Break Pattern~shake~Oops! The pattern is broken.
+5.5|📏:Ruler,⚖️:Scale,🥛:Cup,🌡️:Thermometer,⏰:Clock|Measure Length~fly~I measure with a ruler.;Weigh~shake~I weigh things on a scale.;Fill the Cup~grow~The cup is full.;Tell Time~spin~The clock tells the time.
+5.6|🧩:Puzzle,🔑:Key,🔒:Lock,🧱:Blocks,💡:Idea|Try Puzzle~flip~I try different pieces.;Find the Key~bounce~I look for the right key.;Open Lock~shake~Click! It opens.;Good Idea~glow~I have an idea!
+6.1|🎨:Palette,🖌️:Paintbrush,🖍️:Crayons,🖼️:Picture,✏️:Pencil|Mix Colours~spin~Red and yellow make orange.;Paint~fly~I paint with my brush.;Frame It~glow~I show my picture.;Draw~bounce~I draw what I imagine.
+6.2|🥁:Drum,🎹:Piano,🎸:Guitar,🎵:Music Notes,🔔:Bell|Beat the Drum~shake~Boom, boom, boom!;Play Piano~bounce~Do, re, mi!;Strum Guitar~spin~I strum the strings.;Sing~glow~La, la, la!
+6.3|🎭:Masks,👑:Crown,🧑‍🍳:Chef,🧑‍⚕️:Doctor,🎬:Stage|Wear Crown~grow~I am a king or queen.;Be a Chef~bounce~I cook a pretend meal.;Be a Doctor~glow~I care for the patient.;Take a Bow~flip~Thank you, everyone!
+6.4|🧱:Blocks,🪁:Kite,✂️:Scissors,🎈:Balloon,🧶:Wool|Build~grow~I build a tall tower.;Cut and Paste~shake~I make a collage.;Make a Kite~fly~My kite flies high!;Show Work~glow~I proudly show my work.
+7.1|👨:Father,👩:Mother,👧:Sister,👦:Brother,👴:Grandfather|Meet Parents~bounce~My mother and father love me.;Grandparents~glow~My grandparents tell me stories.;Brothers and Sisters~spin~We play together.;Our Home~grow~Our family lives together.
+7.2|🏫:School,🏥:Hospital,🕌:Mosque,🏪:Shop,🚌:Bus|Visit School~bounce~We learn at school.;Visit Hospital~glow~Doctors help sick people.;Go Shopping~grow~We buy food at the shop.;Ride Bus~fly~The bus takes us places.
+7.3|🐶:Dog,🌱:Plant,🪨:Rock,🚗:Car,🐟:Fish|Does It Grow?~grow~Living things grow.;Does It Breathe?~glow~Animals and plants are alive.;Does It Move?~fly~Animals move by themselves.;Non-living~shrink~Rocks and cars are not alive.
+7.4|🐄:Cow,🐓:Hen,🌻:Sunflower,🌳:Tree,🐝:Bee|Water Plants~grow~Plants need water to grow.;Feed Animals~bounce~Animals need food.;Bee Buzz~shake~Bees help flowers.;Plant a Seed~glow~A seed grows into a plant.
+7.5|☀️:Sunny,🌧️:Rainy,❄️:Snowy,💨:Windy,☁️:Cloudy|Sunny Day~glow~It is hot and sunny.;Rain~fly~Rain falls from the clouds.;Windy Day~shake~The wind is blowing.;Snow~spin~Snow is cold and white.
+7.6|🌳:Tree,🚰:Tap,🗑️:Dustbin,🐦:Bird,♻️:Recycling|Plant a Tree~grow~Trees give us fresh air.;Save Water~shrink~Turn off the tap.;Clean Up~bounce~Keep our place clean.;Feed Birds~fly~I care for birds.
+7.7|💧:Water,☀️:Sunlight,🌬️:Air,🌳:Wood,🪨:Stones|Use Water~fly~We need water to live.;Sun Energy~glow~The sun gives light and heat.;Fresh Air~spin~We breathe fresh air.;Save Resources~shrink~Do not waste them.
+7.8|💻:Laptop,📱:Mobile,📺:Television,🖨️:Printer,🔦:Torch|Switch On~glow~I switch on the torch.;Type~shake~I type on the keyboard.;Make a Call~bounce~I call my family.;Switch Off~shrink~I switch it off to save power.`;
+const SIMD={};SIM_RAW.split('\n').forEach(l=>{const[a,b,c]=l.split('|');SIMD[a]={o:b.split(',').map(x=>{const[e,n]=x.split(':');return{e,n}}),b:c.split(';').map(x=>{const[l,f,t]=x.split('~');return{l,f,t}})}});
+const PAL=[['#ff7a7a','#e11d48'],['#ffc36b','#f97316'],['#ffe066','#d99a00'],['#6cf0aa','#16a34a'],['#6bd6f5','#0284c7'],['#c4a8ff','#7c3aed']];
+let SM=null;
+const $s=q=>document.querySelector('#simOv '+q),$$s=q=>[...document.querySelectorAll('#simOv '+q)];
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+function cap(t,say){const c=$s('.cap');if(!c)return;c.textContent=t;if(say)speak(t)}
+function fx(el,f){el.className='';void el.offsetWidth;el.className='f_'+f;clearTimeout(el._t);el._t=setTimeout(()=>el.removeAttribute('class'),1300)}
+function openSim(di,id){
+  const d=DOMAINS[di],s=d.standards.find(x=>x.id===id),z=SIMD[id];if(!z)return;closeSim();SM={d,s,z,step:0};
+  const cb=(l,c,fn)=>`<button style="background:linear-gradient(180deg,${c[0]},${c[1]})" onclick="${fn}">${l}</button>`;
+  const sp=z.b.map((b,i)=>cb(b.l,PAL[i%6],`simRun(${i})`)).join('');
+  const ov=document.createElement('div');ov.id='simOv';ov.className='simOv';
+  ov.innerHTML=`<div class="simBox" id="simBox">
+   <div class="simTop"><div class="simBrand">GEN Z EDTECH INTERACTIVE</div><div class="stt">⏱ Time <span id="tm">00:00</span> &nbsp; ⭐ Score <span id="sc">0</span></div><button onclick="closeSim()">✕ Close</button></div>
+   <div class="simTitle">Standard ${s.id} — ${s.name} (${d.code})</div>
+   <div class="tabs"><button onclick="simTab(0)">Definition</button><button onclick="simTab(1)">Explanation</button><button class="on" onclick="simTab(2)">Simulation</button></div>
+   <div class="tabP"><div class="txt"><b>Definition</b><br>${d.definition}</div><div class="txt"><b>${s.name}:</b> ${s.desc}</div></div>
+   <div class="tabP"><div class="txt">${s.explanation}</div><div class="pts">${s.points.map(p=>`<div>${svg(p.icon)}<h4>${p.title}</h4><p>${p.text}</p></div>`).join('')}</div><div class="txt" style="margin-top:12px"><b>Tip:</b> ${s.tip}</div></div>
+   <div class="tabP on sim3"><div class="lp"><div class="stage"><div class="floor"></div><div class="objs"></div></div><div class="cap"></div>
+   <div class="sb">${sp}${cb('▶ Next Step',['#6bd6f5','#1677ff'],'simStep()')}${cb('🔢 Count',['#5eead4','#0d9488'],'simCount()')}${cb('🔀 Shuffle',['#d8b4fe','#9333ea'],'simShuf()')}${cb('🔊 Speak',['#ff9ed0','#db2777'],'speak($s(\'.cap\').textContent)')}${cb('🔄 Reset',['#cbd5e1','#64748b'],'simReset()')}<button id="fsB" style="background:linear-gradient(180deg,#ffe066,#e6a800);color:#3b2a00;margin-left:auto" onclick="simFS()">⛶ Full Screen</button></div></div>
+   <div class="rp"><div class="rc"><h3>📘 What It Means</h3><p>${s.explanation}</p></div>
+   <div class="rc"><h3>🪜 Lesson Steps</h3><ol id="stl">${s.steps.map((t,i)=>`<li id="st${i}">${t}</li>`).join('')}</ol><div class="pg"><div id="pgb"></div></div></div>
+   <div class="rc"><h3>🔑 Key Points</h3>${s.points.map(p=>`<div class="kp"><span>${svg(p.icon)}</span><div><b>${p.title}</b><br>${p.text}</div></div>`).join('')}</div>
+   <div class="rc"><h3>🎮 Practice</h3><div class="btnRow">${cb('▶ Start Lesson',['#6cf0aa','#16a34a'],'simLesson()')}${cb('🎯 Find the Object',['#ffc36b','#f97316'],'simQuiz(1)')}${cb('🧠 Key Points Quiz',['#c4a8ff','#7c3aed'],'simQuiz(2)')}</div><div id="qz"></div></div></div>
+   </div>
+   <div class="simFoot">GEN Z EDTECH INTERACTIVE • Developer: <b>Muhammad Imran Khan</b></div></div>`;
+  document.body.appendChild(ov);document.body.style.overflow='hidden';
+  const st=$s('.objs');
+  z.o.forEach(o=>{const e=document.createElement('div');e.className='o';e.innerHTML=`<i>${o.e}</i><span>${o.n}</span><b class="bd"></b>`;
+    e.onclick=()=>{if(SM.q&&SM.m==1){const ok=SM.q.a===o.n;fx(e.firstChild,ok?'glow':'shake');simAns(o.n);return}$$s('.o').forEach(x=>x.classList.remove('sel'));e.classList.add('sel');fx(e.firstChild,'bounce');cap('This is '+(/^[aeiou]/i.test(o.n)?'an ':'a ')+o.n+'.',1)};
+    e.onmousemove=ev=>{const r=e.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;e.style.transform=`perspective(500px) rotateY(${x*35}deg) rotateX(${-y*35}deg) translateZ(25px)`};
+    e.onmouseleave=()=>e.style.transform='';st.appendChild(e)});
+  simTab(2);cap('Welcome! Press Start Lesson to learn step by step, or click any object.');SM.t0=Date.now();SM.sc=0;SM.tm=[];SM.iv=setInterval(()=>{const e=document.getElementById('tm');if(e){const t=(Date.now()-SM.t0)/1000|0;e.textContent=String(t/60|0).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}},1000);
+}
+function simTab(n){$$s('.tabP').forEach((p,i)=>p.classList.toggle('on',i===n));$$s('.tabs button').forEach((b,i)=>b.classList.toggle('on',i===n))}
+function simRun(i){const b=SM.z.b[i];cap(b.t||`Let's practise: ${b.l}!`,1);$$s('.o').forEach((o,k)=>setTimeout(()=>fx(o.firstChild,b.f),k*220))}
+function simStep(){const st=SM.s.steps,n=SM.step%st.length,o=$$s('.o');SM.step++;cap(`Step ${n+1} of ${st.length}: ${st[n]}`,1);$$s('.o').forEach(x=>x.classList.remove('sel'));const t=o[n%o.length];t.classList.add('sel');fx(t.firstChild,'bounce')}
+function simCount(){clr();const o=$$s('.o');o.forEach(x=>x.querySelector('.bd').classList.remove('on'));o.forEach((x,k)=>T(()=>{const b=x.querySelector('.bd');b.textContent=k+1;b.classList.add('on');fx(x.firstChild,'bounce');speak(String(k+1));cap(`${k+1}!`)},k*900));T(()=>cap(`There are ${o.length} things. Well done!`,1),o.length*900)}
+function simShuf(){$$s('.o').forEach(x=>{x.style.order=Math.random()*20|0;fx(x.firstChild,'flip')});cap('The objects are mixed up!',1)}
+function simReset(){clr();document.getElementById('qz').innerHTML='';document.getElementById('pgb').style.width='0';SM.s.steps.forEach((_,k)=>document.getElementById('st'+k).className='');$$s('.o').forEach(x=>{x.style.order='';x.classList.remove('sel');x.querySelector('.bd').classList.remove('on')});SM.step=0;cap('Reset done. Try again!')}
+function simFS(){const b=document.getElementById('simBox');document.fullscreenElement?document.exitFullscreen():b.requestFullscreen&&b.requestFullscreen()}
+document.addEventListener('fullscreenchange',()=>{const f=document.getElementById('fsB');if(f)f.textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen'});
+function closeSim(){if(SM){clearInterval(SM.iv);(SM.tm||[]).forEach(clearTimeout)}try{speechSynthesis.cancel()}catch(e){}if(document.fullscreenElement)document.exitFullscreen();const o=document.getElementById('simOv');if(o)o.remove();document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.fullscreenElement)closeSim()});
+
+/* ===== LESSON + QUIZ ENGINE ===== */
+function T(fn,ms){SM.tm.push(setTimeout(fn,ms))}
+function clr(){SM.tm.forEach(clearTimeout);SM.tm=[];SM.q=null;try{speechSynthesis.cancel()}catch(e){}}
+function sc(){document.getElementById('sc').textContent=SM.sc}
+function simLesson(){clr();const st=SM.s.steps,o=$$s('.o'),n=st.length,b=SM.z.b;document.getElementById('qz').innerHTML='';
+ st.forEach((t,i)=>T(()=>{st.forEach((_,k)=>document.getElementById('st'+k).className=k<i?'dn':k===i?'ac':'');
+  document.getElementById('pgb').style.width=(i/n*100)+'%';const ob=o[i%o.length],bb=b[i%b.length];
+  o.forEach(x=>x.classList.remove('sel'));ob.classList.add('sel');fx(ob.firstChild,bb.f);
+  cap(`Step ${i+1}: ${t}  ➜  Example with the ${ob.querySelector('span').textContent}: ${bb.t||bb.l}`);speak(`Step ${i+1}. ${t}`)},i*6500));
+ T(()=>{st.forEach((_,k)=>document.getElementById('st'+k).className='dn');document.getElementById('pgb').style.width='100%';SM.sc++;sc();cap('Lesson complete! Great job. Now try the quiz.',1)},n*6500)}
+function simQuiz(m){clr();SM.rd=0;SM.ok=0;SM.m=m;SM.n=m==1?5:SM.s.points.length;nextQ()}
+function nextQ(){const o=$$s('.o'),qz=document.getElementById('qz');
+ if(SM.rd>=SM.n){SM.q=null;const r=`You got ${SM.ok} of ${SM.n} right! `+'⭐'.repeat(Math.max(1,Math.round(SM.ok/SM.n*3)));qz.innerHTML=`<div class="res">${r}</div>`;cap(r,1);return}
+ SM.rd++;
+ if(SM.m==1){const a=o[Math.random()*o.length|0].querySelector('span').textContent;SM.q={a};qz.innerHTML=`<div class="qq">Question ${SM.rd}/${SM.n}: Click the <b>${a}</b> on the table!</div>`;cap(`Click the ${a}!`,1)}
+ else{const p=SM.s.points,c=p[SM.rd-1],op=[...p].sort(()=>Math.random()-.5);SM.q={a:c.title};qz.innerHTML=`<div class="qq">Question ${SM.rd}/${SM.n}: Which key point says “${c.text}”?</div>`+op.map(x=>`<button class="op" onclick="simAns(this.textContent)">${x.title}</button>`).join('');cap('Read the question and choose the answer.')}}
+function simAns(a){if(!SM.q)return;if(a===SM.q.a){SM.ok++;SM.sc++;sc();SM.q=null;cap('✅ Correct! Well done!',1);T(nextQ,1700)}else cap('❌ Not quite. Try again!',1)}
+
+/* ===== POSTER-STYLE PAGES ===== */
+const EXM={};`1.1|A child points to a feelings chart and says, “I feel happy today.”
+1.2|A child puts on their own shoes and says, “I did it myself!”
+1.3|A child feels angry, takes three deep breaths and then asks a teacher for help.
+1.4|Two children greet each other and play together with blocks.
+1.5|Children share crayons and take turns using the colours.
+1.6|A child says “please” and “thank you” when asking for a toy.
+2.1|The teacher says, “Pick up your pencil, put it on the table and clap twice,” and the child follows the steps.
+2.2|A child says, “I went to the park yesterday. I played on the swing.”
+2.3|After a fruit activity, children use words such as “sweet,” “round,” “soft,” “red” and “banana.”
+2.4|A child finds their name card in the attendance area and points to the first letter.
+2.5|A child draws a house and writes the first letter of their name beside it.
+3.1|Children hop from one floor marker to another without stepping outside the safe area.
+3.2|A child cuts along a short straight line using child-safe scissors.
+3.3|A child throws a soft ball into a large basket from a short distance.
+3.4|A child walks along a curved line while carrying a bean bag safely.
+3.5|A child joins a group stretching game and follows the teacher’s movement safely.
+4.1|Children practise the hand-washing steps before snack time.
+4.2|Children sort picture cards into “healthy food” and “sometimes food.”
+4.3|A child sees a broken electrical wire and immediately tells a teacher instead of touching it.
+4.4|After an activity, children collect paper scraps and place them in the waste bin.
+5.1|The teacher gives 8 blocks and asks the child to count them and show the number 8.
+5.2|“You have 3 apples and I give you 2 more. How many apples do you have now?”
+5.3|Children go on a “shape hunt” and find circles in a clock, wheels and plates.
+5.4|Red–blue–red–blue; the child chooses blue as the next item.
+5.5|Children compare two ribbons and say which one is longer.
+5.6|A child tries different ways to fit blocks together and explains, “This one fits because it is smaller.”
+6.1|Children paint “My Happy Day” and choose their own colours and shapes.
+6.2|The teacher claps “clap-clap-pause” and children copy the rhythm.
+6.3|Children act out a simple “shop” scene and take turns being the shopkeeper and customer.
+6.4|Children use cardboard, paper pieces and bottle caps to make a model of a house.
+7.1|A child draws their family and names each family member.
+7.2|Children name the people and places they see on a walk around the school.
+7.3|Children sort picture cards into “living” and “non-living” things.
+7.4|Children water the class plant and name the animals they see in the garden.
+7.5|Children look outside and say whether the weather is sunny, cloudy or rainy.
+7.6|Children plant a seedling and put litter in the bin.
+7.7|Children name water, air and sunlight and say how people use them.
+7.8|A child shows how to switch a torch on and off safely with a teacher.`.split('\n').forEach(l=>{const i=l.indexOf('|');EXM[l.slice(0,i)]=l.slice(i+1)});
+const DS=[['#5b3bd6','#e0409a','🧒👧❤️'],['#0e8f8f','#17b3a3','🔤📖✏️'],['#f47b20','#ffb02e','🏃⚽🏅'],['#e8335e','#ff6b7a','🧼🛡️🍎'],['#7a2fc0','#a35cf0','🔢➕🧮'],['#14877f','#3cc0a0','🎨🎵🎭'],['#e8245f','#ff5c8a','🌍🌳🏫']];
+const TP=['#14b8a6','#f59e0b','#ec4899','#2563eb','#65a30d','#9333ea','#ef4444','#0891b2'];
+function buildAreas(){
+  DOMAINS[4].title='Basic Mathematics Skill';
+  DOMAINS[4].definition='This area develops early number, shape, measurement, pattern, logical thinking and problem-solving skills.';
+  DOMAINS[5].definition='This area develops creativity, imagination, self-expression and confidence through art, music, movement and drama.';
+  DOMAINS[6].definition='This area helps children understand family, people, places, nature, living things, weather, resources and basic technology.';
+  const grid=document.getElementById('areasGrid'),panels=document.getElementById('dpContainer');grid.innerHTML='';panels.innerHTML='';
+  DOMAINS.forEach((d,i)=>{const [c,c2,art]=DS[i];d.color=c;
+    const card=document.createElement('button');card.className='dc';card.style.cssText=`--c:${c};animation-delay:${i*.07}s`;
+    card.innerHTML=`<span class="dn">0${d.num}</span><h3>${d.title}</h3><small>${d.standards.length} Standards</small><div class="art">${art}</div>`;
+    card.onclick=()=>openDomain(i);grid.appendChild(card);
+    const p=document.createElement('div');p.className='domainPanel';p.id='dp'+i;p.style.cssText=`--c:${c};--c2:${c2}`;
+    p.innerHTML=`<div class="dBanner"><div class="dNum">${d.num}.</div><div class="dTitle"><h2>${d.title}</h2></div><div class="dArt">${art}</div><button class="xb" style="background:linear-gradient(180deg,#ff9a9a,#ef4444);color:#fff;border-bottom:4px solid #a11d1d;border-radius:12px;padding:10px 16px;font-weight:900" onclick="closeDomain()">✕</button></div>
+     <div class="dPill">📖 DEFINITION</div><div class="dDef">${d.definition}</div><div class="dPill">⭐ STANDARDS IN THIS DOMAIN</div>
+     <div class="dTiles">${d.standards.map((s,k)=>`<button class="tile" style="--t:${TP[k%8]}" onclick="openExplanation(${i},'${s.id}')"><span class="tc">${(SIMD[s.id]||{o:[{e:'⭐'}]}).o[0].e}</span><span><span class="tn">${s.id}</span><b>${s.name}</b></span></button>`).join('')}</div>`;
+    panels.appendChild(p)})}
+function openExplanation(di,id){
+  openExplanationOld(di,id);const d=DOMAINS[di],s=d.standards.find(x=>x.id===id),z=SIMD[id],c=document.getElementById('explainContainer');
+  c.insertAdjacentHTML('afterbegin',`<div class="stdPage" style="--sc:${d.color}">
+   <div class="spL"><div class="spBadge">STANDARD<b>${s.id}</b></div><div class="spIcon">${z.o[0].e}</div></div>
+   <div class="spM"><h2>${s.name}</h2><div class="spRow"><span class="pill">📖 Definition</span><p>${s.desc}</p></div><div class="spRow"><span class="pill ex">💡 Example</span><p>${EXM[id]||''}</p></div></div>
+   <div class="spArt">${z.o.slice(0,3).map(o=>o.e).join('')}</div>
+   <div class="spBtns"><button class="stdBtn simBtn" onclick="openSim(${di},'${id}')">🎮 Open 3D Simulation</button><button class="xb" style="background:linear-gradient(180deg,#ff9a9a,#ef4444);color:#fff;border-bottom:4px solid #a11d1d;border-radius:14px;padding:12px 20px;font-weight:900" onclick="document.getElementById('explainContainer').innerHTML=''">✕ Close</button></div></div>`);
+  c.scrollIntoView({behavior:'smooth',block:'start'})}
+</script>
+</body>
+</html>

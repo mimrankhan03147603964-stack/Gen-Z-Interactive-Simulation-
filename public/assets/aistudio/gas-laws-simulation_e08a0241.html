@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boyle's Law and Charles's Law | GEN Z EDTECH INTERACTIVE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:#eaf0fa;color:#14213d}
+header{text-align:center;padding:12px 10px 2px}
+h1.brand{margin:0;font-size:2.3rem;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#4f46e5,#06b6d4,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-weight:600;color:#475569;margin-top:2px}
+nav{display:flex;justify-content:center;gap:10px;margin:12px}
+nav button{border:0;border-radius:14px;padding:10px 26px;font-size:1.05rem;font-weight:800;cursor:pointer;background:#fff;color:#4f46e5;box-shadow:0 2px 6px rgba(20,33,61,.15)}
+nav button.on{background:#4f46e5;color:#fff}
+.pane{display:none;max-width:1250px;margin:0 auto 14px;padding:0 14px}
+.pane.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:#fff;border-radius:18px;padding:18px 22px;box-shadow:0 4px 14px rgba(20,33,61,.1);line-height:1.55}
+.card h2{margin:0 0 6px;font-size:1.35rem}
+.f{font-size:1.6rem;font-weight:800;text-align:center;padding:10px;border-radius:12px;margin:8px 0}
+.b1{border-top:6px solid #ef4444}.b1 .f{background:#fee2e2;color:#b91c1c}
+.b2{border-top:6px solid #3b82f6}.b2 .f{background:#dbeafe;color:#1d4ed8}
+#box{height:calc(100vh - 215px);min-height:540px;display:flex;flex-direction:column;background:#f6f9ff;border-radius:18px;box-shadow:0 4px 14px rgba(20,33,61,.15);overflow:hidden}
+#box:fullscreen{height:100vh;border-radius:0}
+#top{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#14213d;flex-wrap:wrap}
+#top .m{border:0;border-radius:10px;padding:8px 16px;font-weight:800;cursor:pointer;background:#334155;color:#cbd5e1}
+#top .m.on{background:#06b6d4;color:#042f3a}
+#hint{color:#fde68a;font-weight:700;margin-left:auto}
+#stage{flex:1;min-height:0;background:linear-gradient(#f3f8ff,#d6e4f7)}
+canvas{display:block}
+#ctl{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;background:#14213d;align-items:center}
+.b{border:0;border-radius:12px;padding:9px 14px;font-weight:800;font-size:.95rem;color:#fff;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.b:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.sl{color:#fff;font-weight:700;display:flex;gap:8px;align-items:center}
+.sl input{width:200px}
+ul{padding-left:20px;margin:6px 0}
+footer{text-align:center;padding:10px 10px 18px;font-size:.78rem;color:#475569}
+.dev{font-size:.8rem;font-weight:700;background:#fde68a;color:#78350f;padding:2px 8px;border-radius:6px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1 class="brand">GEN Z EDTECH INTERACTIVE</h1><div class="sub">Boyle's Law and Charles's Law: How Gases Behave</div></header>
+<nav><button class="on" data-p="def">Definition</button><button data-p="exp">Explanation</button><button data-p="sim">Simulation</button></nav>
+
+<section id="def" class="pane on"><div class="grid">
+<div class="card b1"><h2>Boyle's Law</h2>
+<p>For a fixed amount of gas at a <b>constant temperature</b>, when the <b>volume goes down</b>, the <b>pressure goes up</b>. They move in opposite directions.</p>
+<div class="f">P &prop; 1/V &nbsp; or &nbsp; P<sub>1</sub>V<sub>1</sub> = P<sub>2</sub>V<sub>2</sub></div>
+<p>P = pressure, V = volume. Squeeze the gas into half the space and the pressure doubles.</p></div>
+<div class="card b2"><h2>Charles's Law</h2>
+<p>For a fixed amount of gas at a <b>constant pressure</b>, when the <b>temperature goes up</b>, the <b>volume goes up</b>. Hot gas takes more space.</p>
+<div class="f">V &prop; T &nbsp; or &nbsp; V<sub>1</sub>/T<sub>1</sub> = V<sub>2</sub>/T<sub>2</sub></div>
+<p>T must be in <b>Kelvin</b>: K = &deg;C + 273.15.</p></div></div></section>
+
+<section id="exp" class="pane"><div class="grid">
+<div class="card b1"><h2>Why does Boyle's Law happen?</h2>
+<p>Gas is made of tiny particles zooming around and bumping into walls. Those bumps are the pressure.</p>
+<ul><li>Smaller space: particles hit the walls more often, so pressure rises.</li><li>Bigger space: hits are rarer, so pressure drops.</li></ul>
+<p><b>Everyday examples:</b> a syringe, a bicycle pump, a scuba tank, the "pop" of a squeezed bottle.</p>
+<p><b>Example:</b> 50 mL of gas at 100 kPa is squeezed to 25 mL. P<sub>2</sub> = 100 &times; 50 &divide; 25 = <b>200 kPa</b>.</p></div>
+<div class="card b2"><h2>Why does Charles's Law happen?</h2>
+<p>Heat makes particles move faster. Faster particles push harder, so a flexible container such as a balloon stretches until the pressure is balanced again.</p>
+<ul><li>Heat the gas: balloon grows.</li><li>Cool the gas: balloon shrinks.</li></ul>
+<p><b>Everyday examples:</b> a hot-air balloon, a basketball that gets soft in cold weather, bread rising in an oven.</p>
+<p><b>Example:</b> 300 mL of gas at 0&deg;C (273 K) is heated to 100&deg;C (373 K). V<sub>2</sub> = 300 &times; 373 &divide; 273 &asymp; <b>410 mL</b>.</p></div></div></section>
+
+<section id="sim" class="pane"><div id="box">
+<div id="top"><button class="m on" data-m="boyle">Boyle's Law: Syringe</button><button class="m" data-m="charles">Charles's Law: Balloon</button><span id="hint"></span></div>
+<div id="stage"><canvas id="cv"></canvas></div>
+<div id="ctl"></div></div></section>
+
+<footer>GEN Z EDTECH INTERACTIVE &nbsp;|&nbsp; Developed by <span class="dev">Muhammad Imran Khan, MSc Computer Science</span></footer>
+
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),g=cv.getContext('2d'),W=1200,H=620;
+let mode='boyle',paused=false,showP=true,showG=true,auto=false,t=0,sc=1,ox=0,oy=0,DPR=1;
+let V=50,tV=50,nP=101.3,T=25,tT=25,hits=0,hitR=0,ht=0,hint='',bal={};
+const K=5065,pts={boyle:[],charles:[]};
+const BP=Array.from({length:40},()=>{const a=Math.random()*6.28;return{x:245+Math.random()*150,y:255+Math.random()*90,vx:Math.cos(a),vy:Math.sin(a),f:.8+Math.random()*.4}});
+const CP=Array.from({length:34},()=>{const a=Math.random()*6.28;return{x:420+(Math.random()-.5)*60,y:400+Math.random()*90,vx:Math.cos(a),vy:Math.sin(a),f:.8+Math.random()*.4}});
+const vol=()=>300*(T+273.15)/273.15;
+function fit(){const r=$('#stage').getBoundingClientRect();if(!r.width)return;DPR=devicePixelRatio||1;cv.width=r.width*DPR;cv.height=r.height*DPR;cv.style.width=r.width+'px';cv.style.height=r.height+'px';sc=Math.min(r.width/W,r.height/H);ox=(r.width-W*sc)/2;oy=(r.height-H*sc)/2}
+new ResizeObserver(fit).observe($('#stage'));
+const rr=(x,y,w,h,r)=>{g.beginPath();g.roundRect(x,y,w,h,r)};
+const lg=(x0,y0,x1,y1,s)=>{const q=g.createLinearGradient(x0,y0,x1,y1);s.forEach((c,i)=>q.addColorStop(i/(s.length-1),c));return q};
+const tx=(s,x,y,f,c,a)=>{g.font=f;g.fillStyle=c;g.textAlign=a||'left';g.fillText(s,x,y)};
+function lab(s,x,y,px,py){g.strokeStyle='#475569';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y-10);g.lineTo(px,py);g.stroke();g.beginPath();g.arc(px,py,3.5,0,7);g.fillStyle='#475569';g.fill();g.font='600 14px Segoe UI';const w=g.measureText(s).width+18;rr(x-w/2,y-22,w,24,12);g.fillStyle='#1e293b';g.fill();tx(s,x,y-5,'600 14px Segoe UI','#fff','center')}
+function card(x,y,w,h,ti,v,c){g.save();g.shadowColor='rgba(20,33,61,.2)';g.shadowBlur=10;rr(x,y,w,h,16);g.fillStyle='#fff';g.fill();g.restore();rr(x,y,8,h,4);g.fillStyle=c;g.fill();tx(ti,x+24,y+30,'600 15px Segoe UI','#64748b');tx(v,x+24,y+h-20,'800 30px Segoe UI',c)}
+function graph(x,y,w,h,xr,yr,xl,yl,f,x0,P,cur,col){
+ g.save();g.shadowColor='rgba(20,33,61,.2)';g.shadowBlur=10;rr(x,y,w,h,16);g.fillStyle='#fff';g.fill();g.restore();
+ const L=x+64,R=x+w-20,Tp=y+34,B=y+h-44,X=v=>L+(v-xr[0])/(xr[1]-xr[0])*(R-L),Y=v=>B-(v-yr[0])/(yr[1]-yr[0])*(B-Tp);
+ tx(yl+' vs '+xl,x+w/2,y+24,'700 15px Segoe UI','#14213d','center');
+ g.lineWidth=1;for(let i=0;i<=5;i++){const a=xr[0]+(xr[1]-xr[0])*i/5,b=yr[0]+(yr[1]-yr[0])*i/5;g.strokeStyle='#e2e8f0';g.beginPath();g.moveTo(X(a),Tp);g.lineTo(X(a),B);g.moveTo(L,Y(b));g.lineTo(R,Y(b));g.stroke();tx(Math.round(a),X(a),B+16,'12px Segoe UI','#64748b','center');tx(Math.round(b),L-6,Y(b)+4,'12px Segoe UI','#64748b','right')}
+ g.strokeStyle='#14213d';g.lineWidth=2;g.beginPath();g.moveTo(L,Tp);g.lineTo(L,B);g.lineTo(R,B);g.stroke();
+ tx(xl,(L+R)/2,B+36,'600 13px Segoe UI','#334155','center');
+ g.strokeStyle=col;g.lineWidth=3;g.beginPath();for(let i=0;i<=60;i++){const a=x0+(xr[1]-x0)*i/60;i?g.lineTo(X(a),Y(f(a))):g.moveTo(X(a),Y(f(a)))}g.stroke();
+ P.forEach(p=>{g.beginPath();g.arc(X(p[0]),Y(p[1]),6,0,7);g.fillStyle='#8b5cf6';g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke()});
+ g.beginPath();g.arc(X(cur[0]),Y(cur[1]),9,0,7);g.fillStyle='#ef4444';g.fill();g.strokeStyle='#fff';g.lineWidth=3;g.stroke()}
+function gauge(cx,cy,R,P){
+ g.beginPath();g.arc(cx,cy,R+9,0,7);g.fillStyle=lg(cx-R,cy-R,cx+R,cy+R,['#f1f5f9','#64748b','#e2e8f0']);g.fill();
+ const q=g.createRadialGradient(cx-R*.3,cy-R*.3,R*.1,cx,cy,R);q.addColorStop(0,'#fff');q.addColorStop(1,'#dbe4f0');g.beginPath();g.arc(cx,cy,R,0,7);g.fillStyle=q;g.fill();
+ for(let v=0;v<=600;v+=20){const a=(135+v/600*270)*Math.PI/180,m=v%100==0,c=Math.cos(a),s=Math.sin(a);g.strokeStyle=v>=500?'#dc2626':'#1e293b';g.lineWidth=m?3:1.5;g.beginPath();g.moveTo(cx+c*R*(m?.8:.87),cy+s*R*(m?.8:.87));g.lineTo(cx+c*R*.95,cy+s*R*.95);g.stroke();if(m)tx(v,cx+c*R*.65,cy+s*R*.65+5,'700 13px Segoe UI','#1e293b','center')}
+ tx('PRESSURE',cx,cy-R*.28,'700 11px Segoe UI','#475569','center');tx('kPa',cx,cy+R*.5,'700 14px Segoe UI','#475569','center');
+ const a=(135+Math.min(P,600)/600*270)*Math.PI/180;g.strokeStyle='#dc2626';g.lineWidth=4;g.lineCap='round';g.beginPath();g.moveTo(cx-Math.cos(a)*14,cy-Math.sin(a)*14);g.lineTo(cx+Math.cos(a)*R*.78,cy+Math.sin(a)*R*.78);g.stroke();g.lineCap='butt';
+ g.beginPath();g.arc(cx,cy,7,0,7);g.fillStyle='#1e293b';g.fill()}
+function calcBal(){const r=42*Math.cbrt((vol()-250)/50),ry=r*1.15;bal={r,ry,cy:255-ry+8}}
+function inC(x,y){const dx=Math.abs(x-420);
+ if(y>=255&&y<=335&&dx<15)return true;
+ if(y>335&&y<510&&dx<20+(y-335)/165*60-5)return true;
+ const a=(x-420)/(bal.r-5),b=(y-bal.cy)/(bal.ry-5);return a*a+b*b<1}
+function step(dt){t+=dt;
+ if(mode=='boyle'){if(auto)tV=55+43*Math.sin(t*.6);V+=(tV-V)*Math.min(1,dt*5);nP+=(K/V-nP)*Math.min(1,dt*8);
+  const px=230+V/100*510;
+  BP.forEach(p=>{const s=170*p.f;p.x+=p.vx*s*dt;p.y+=p.vy*s*dt;if(p.x<237){p.x=237;p.vx=Math.abs(p.vx)}if(p.x>px-7){p.x=px-7;p.vx=-Math.abs(p.vx);hits++}if(p.y<249){p.y=249;p.vy=Math.abs(p.vy)}if(p.y>351){p.y=351;p.vy=-Math.abs(p.vy)}});
+  ht+=dt;if(ht>.5){hitR=hits/ht;hits=0;ht=0}
+  const d=tV-V;hint=Math.abs(d)<.6?'Press the red or blue button to move the plunger.':d<0?'Volume is getting smaller, so pressure goes UP!':'Volume is getting bigger, so pressure goes DOWN!'}
+ else{if(auto)tT=50+48*Math.sin(t*.25);const d=tT-T;T+=Math.sign(d)*Math.min(Math.abs(d),12*dt);calcBal();
+  const k=Math.sqrt((T+273.15)/298);
+  CP.forEach(p=>{if(!inC(p.x,p.y)){p.x+=(420-p.x)*.1;p.y+=(430-p.y)*.1;return}const s=80*p.f*k;
+   if(!inC(p.x+p.vx*s*dt,p.y))p.vx*=-1;if(!inC(p.x,p.y+p.vy*s*dt))p.vy*=-1;
+   const nx=p.x+p.vx*s*dt,ny=p.y+p.vy*s*dt;if(inC(nx,ny)){p.x=nx;p.y=ny}});
+  hint=Math.abs(d)<.5?'Press Heat or Cool to change the temperature.':d>0?'Gas is heating up, so the balloon grows!':'Gas is cooling down, so the balloon shrinks!'}
+ if($('#hint').textContent!=hint)$('#hint').textContent=hint;
+ const s=$('#sld');if(s&&document.activeElement!==s)s.value=mode=='boyle'?tV:tT}
+function bg(){g.fillStyle=lg(0,0,0,565,['#f3f8ff','#d6e4f7']);g.fillRect(0,0,W,565);g.fillStyle=lg(0,565,0,620,['#c8975a','#8a5a2b']);g.fillRect(0,565,W,55);g.fillStyle='rgba(255,255,255,.35)';g.fillRect(0,565,W,4)}
+function drawB(){const px=230+V/100*510,P=K/V;
+ rr(294,185,12,60,4);g.fillStyle=lg(294,0,306,0,['#94a3b8','#e5e9ee','#64748b']);g.fill();gauge(300,105,82,nP);
+ rr(168,284,60,32,6);g.fillStyle=lg(0,284,0,316,['#e0f2fe','#7dd3fc','#bae6fd']);g.fill();
+ rr(112,293,60,14,7);g.fillStyle='#f97316';g.fill();
+ rr(225,235,520,130,16);g.fillStyle='rgba(190,225,250,.35)';g.fill();
+ g.fillStyle='rgba(255,150,30,'+(.1+.35*P/506)+')';g.fillRect(230,242,px-230,116);
+ if(showP)BP.forEach(p=>{const q=g.createRadialGradient(p.x-2,p.y-2,1,p.x,p.y,6);q.addColorStop(0,'#fde68a');q.addColorStop(1,'#d97706');g.beginPath();g.arc(p.x,p.y,6,0,7);g.fillStyle=q;g.fill()});
+ rr(px-16,242,16,116,3);g.fillStyle=lg(px-16,0,px,0,['#111827','#4b5563','#111827']);g.fill();
+ rr(738,212,16,176,6);g.fillStyle=lg(738,0,754,0,['#cbd5e1','#64748b']);g.fill();
+ g.fillStyle=lg(0,292,0,308,['#e5e7eb','#94a3b8','#e5e7eb']);g.fillRect(px,292,310,16);
+ rr(px+306,250,20,100,9);g.fillStyle=lg(px+306,0,px+326,0,['#e2e8f0','#94a3b8']);g.fill();
+ rr(225,235,520,130,16);g.lineWidth=4;g.strokeStyle='rgba(80,120,160,.85)';g.stroke();
+ for(let v=0;v<=100;v+=10){const x=230+v/100*510;g.strokeStyle='#1e293b';g.lineWidth=2;g.beginPath();g.moveTo(x,365);g.lineTo(x,375);g.stroke();tx(v,x,392,'12px Segoe UI','#334155','center')}
+ tx('mL',752,392,'bold 12px Segoe UI','#334155');
+ lab('Sealed tip',140,262,142,298);lab('Gas particles',470,218,470,262);lab('Piston',px-8,425,px-8,366);lab('Plunger',px+160,425,px+160,310);
+ card(60,455,255,115,'Pressure',nP.toFixed(0)+' kPa','#ef4444');card(335,455,255,115,'Volume',V.toFixed(0)+' mL','#3b82f6');
+ card(610,455,255,115,'P x V (constant)',(nP*V/1000).toFixed(2)+' (÷1000)','#8b5cf6');card(885,455,255,115,'Piston hits per second',hitR.toFixed(0),'#f59e0b');
+ if(showG)graph(790,10,385,225,[0,100],[0,600],'Volume (mL)','Pressure (kPa)',x=>K/x,10,pts.boyle,[V,K/V],'#ef4444')}
+function drawC(){calcBal();const c=Math.min(1,T/100),hue=210-T*1.9,wc=`rgba(${80+175*c|0},${160-50*c|0},${255-185*c|0},.5)`,heat=tT>T+.3;
+ rr(235,535,370,30,8);g.fillStyle=lg(0,535,0,565,['#475569','#1e293b']);g.fill();
+ g.strokeStyle=heat?'#ff5a1f':'#7c2d12';g.lineWidth=5;g.beginPath();g.moveTo(260,550);for(let i=0;i<14;i++)g.lineTo(260+i*25.5,i%2?556:544);g.stroke();
+ if(heat){g.fillStyle='rgba(255,120,30,.25)';g.fillRect(255,500,330,35)}
+ rr(255,290,330,245,[0,0,22,22]);g.fillStyle='rgba(215,235,255,.3)';g.fill();
+ g.beginPath();g.moveTo(400,255);[[400,335],[340,500],[352,516],[488,516],[500,500],[440,335],[440,255]].forEach(p=>g.lineTo(p[0],p[1]));g.closePath();
+ g.fillStyle=`hsla(${hue},90%,60%,.3)`;g.fill();g.lineWidth=3;g.strokeStyle='rgba(70,110,150,.85)';g.stroke();
+ if(showP)CP.forEach(p=>{g.beginPath();g.arc(p.x,p.y,5,0,7);g.fillStyle=`hsl(${hue},90%,50%)`;g.fill();g.strokeStyle='#fff';g.lineWidth=1.5;g.stroke()});
+ g.fillStyle=wc;g.fillRect(258,365,324,167);g.fillStyle='rgba(255,255,255,.35)';g.fillRect(258,365,324,3);
+ if(T>55)for(let i=0;i<12;i++){const ph=(t*.6+i*.37)%1;g.beginPath();g.arc(272+(i*83%300)+Math.sin(t*3+i)*5,530-ph*160,4,0,7);g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=2;g.stroke()}
+ if(T<15||tT<12)[[285,0],[350,1],[470,2],[530,3]].forEach(a=>{const y=362+Math.sin(t*2+a[1])*3;rr(a[0]-18,y,36,34,6);g.fillStyle='rgba(235,248,255,.8)';g.fill();g.strokeStyle='#7dd3fc';g.lineWidth=2;g.stroke()});
+ rr(255,290,330,245,[0,0,22,22]);g.lineWidth=4;g.strokeStyle='rgba(80,120,160,.85)';g.stroke();
+ for(let y=330;y<=500;y+=50){g.strokeStyle='#1e293b';g.lineWidth=2;g.beginPath();g.moveTo(255,y);g.lineTo(272,y);g.stroke()}
+ rr(396,252,48,9,4);g.fillStyle='#94a3b8';g.fill();rr(404,244,32,18,3);g.fillStyle='#be123c';g.fill();
+ const q=g.createRadialGradient(420-bal.r*.35,bal.cy-bal.ry*.4,3,420,bal.cy,bal.ry);q.addColorStop(0,'#ffb3c0');q.addColorStop(.5,'#ef3b5d');q.addColorStop(1,'#9f1239');
+ g.beginPath();g.ellipse(420,bal.cy,bal.r,bal.ry,0,0,7);g.fillStyle=q;g.fill();
+ g.beginPath();g.ellipse(420-bal.r*.4,bal.cy-bal.ry*.45,bal.r*.12,bal.ry*.2,-.6,0,7);g.fillStyle='rgba(255,255,255,.5)';g.fill();
+ rr(652,170,16,350,8);g.fillStyle='rgba(235,245,255,.9)';g.fill();g.strokeStyle='#64748b';g.lineWidth=2;g.stroke();
+ g.beginPath();g.arc(660,515,18,0,7);g.fillStyle='#e11d48';g.fill();g.stroke();
+ const my=500-T/100*300;g.fillStyle='#e11d48';g.fillRect(656,my,8,515-my);
+ for(let v=0;v<=100;v+=10){const y=500-v*3;g.strokeStyle='#1e293b';g.lineWidth=v%20?1:2;g.beginPath();g.moveTo(670,y);g.lineTo(v%20?676:682,y);g.stroke();if(v%20==0)tx(v+'°',688,y+4,'12px Segoe UI','#334155')}
+ lab('Balloon',560,140,bal.r+420-4,bal.cy-10);lab('Flask',560,440,490,470);lab('Water bath',165,420,257,420);lab('Hot plate',420,595,420,553);lab('Thermometer',660,150,660,175);
+ const TK=T+273.15;
+ card(790,330,185,110,'Temperature',T.toFixed(0)+' °C','#ef4444');card(990,330,185,110,'Temperature',TK.toFixed(0)+' K','#f97316');
+ card(790,455,185,110,'Gas volume',vol().toFixed(0)+' mL','#3b82f6');card(990,455,185,110,'V ÷ T (constant)',(vol()/TK).toFixed(3),'#10b981');
+ if(showG)graph(790,10,385,300,[0,100],[250,450],'Temperature (°C)','Volume (mL)',x=>300*(x+273.15)/273.15,0,pts.charles,[T,vol()],'#3b82f6')}
+function draw(){g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.setTransform(DPR*sc,0,0,DPR*sc,DPR*ox,DPR*oy);bg();mode=='boyle'?drawB():drawC()}
+let last=performance.now();
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(!paused)step(dt);draw();requestAnimationFrame(loop)}
+const off=f=>()=>{auto=false;f()};
+const clampV=v=>Math.max(10,Math.min(100,v)),clampT=v=>Math.max(0,Math.min(100,v));
+const common=[
+ {l:()=>auto?'Stop Auto Demo':'Auto Demo',c:'#ec4899',f:()=>auto=!auto},
+ {l:()=>paused?'Play':'Pause',c:'#64748b',f:()=>paused=!paused},
+ {l:()=>showP?'Hide Particles':'Show Particles',c:'#0ea5e9',f:()=>showP=!showP},
+ {l:()=>showG?'Hide Graph':'Show Graph',c:'#14b8a6',f:()=>showG=!showG},
+ {l:()=>'Record Point',c:'#eab308',f:()=>{const a=pts[mode];a.push(mode=='boyle'?[V,K/V]:[T,vol()]);if(a.length>14)a.shift()}},
+ {l:()=>'Clear Points',c:'#a855f7',f:()=>pts[mode]=[]},
+ {l:()=>'Reset',c:'#334155',f:()=>{auto=false;V=tV=50;T=tT=25;nP=101.3;pts[mode]=[]}},
+ {l:()=>document.fullscreenElement?'Exit Full Screen':'Full Screen',c:'#16a34a',f:()=>document.fullscreenElement?document.exitFullscreen():$('#box').requestFullscreen()}];
+const defs={
+ boyle:[{l:()=>'Push Plunger',c:'#ef4444',f:off(()=>tV=clampV(tV-10))},{l:()=>'Pull Plunger',c:'#3b82f6',f:off(()=>tV=clampV(tV+10))},{l:()=>'Squeeze Fully',c:'#f97316',f:off(()=>tV=10)},{l:()=>'Release Fully',c:'#10b981',f:off(()=>tV=100)}],
+ charles:[{l:()=>'Heat +10°C',c:'#ef4444',f:off(()=>tT=clampT(tT+10))},{l:()=>'Cool -10°C',c:'#3b82f6',f:off(()=>tT=clampT(tT-10))},{l:()=>'Hot Bath 95°C',c:'#f97316',f:off(()=>tT=95)},{l:()=>'Ice Bath 0°C',c:'#06b6d4',f:off(()=>tT=0)},{l:()=>'Room 25°C',c:'#10b981',f:off(()=>tT=25)}]};
+function build(){const c=$('#ctl');c.innerHTML='';const b=mode=='boyle';
+ c.insertAdjacentHTML('beforeend',`<label class="sl">${b?'Volume':'Temperature'}<input id="sld" type="range" min="${b?10:0}" max="100" value="${b?tV:tT}"></label>`);
+ $('#sld').oninput=e=>{auto=false;const v=+e.target.value;b?tV=v:tT=v};
+ [...defs[mode],...common].forEach(d=>{const e=document.createElement('button');e.className='b';e.style.background=d.c;if(d.c=='#eab308')e.style.color='#422006';e.textContent=d.l();e.onclick=()=>{d.f();refresh()};e._d=d;c.appendChild(e)})}
+function refresh(){document.querySelectorAll('#ctl .b').forEach(e=>e.textContent=e._d.l())}
+document.querySelectorAll('.m').forEach(b=>b.onclick=()=>{mode=b.dataset.m;auto=false;document.querySelectorAll('.m').forEach(x=>x.classList.toggle('on',x==b));build()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p));fit()});
+document.addEventListener('fullscreenchange',()=>{setTimeout(fit,80);refresh()});
+build();requestAnimationFrame(loop);
+</script></body></html>

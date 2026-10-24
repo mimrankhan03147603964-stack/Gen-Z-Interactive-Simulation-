@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>White Light and the Glass Prism</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;background:#0a1330;color:#fff;height:100vh;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 80% 10%,#6d28d9,#0a1330 65%)}
+header{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#0007;flex-wrap:wrap}
+h1{font-size:21px;flex:1;min-width:260px;text-shadow:0 3px 0 #0008}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#cv{flex:1;min-height:0;width:100%;display:block}
+aside{width:300px;padding:12px;overflow:auto;background:#0006;display:flex;flex-direction:column;gap:8px}
+aside h3{font-size:14px;color:#ffd23f;margin-top:4px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.b{background:linear-gradient(var(--c),color-mix(in srgb,var(--c) 75%,#000));color:#fff;border:0;border-radius:11px;padding:11px 6px;font:700 14px 'Trebuchet MS',Arial;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,#000),0 7px 10px #0006;text-shadow:0 1px 2px #0007}
+.b:hover{filter:brightness(1.15)}
+.b:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 45%,#000)}
+.w{grid-column:span 2}
+.msg{background:#0009;border-left:6px solid #ffd23f;padding:12px 16px;font-size:18px;line-height:1.4;min-height:70px}
+.note{background:#0008;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.4}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>🌈 White Light and the Glass Prism</h1>
+ <button class="b" style="--c:#e11d48" id="fsb" onclick="fs()">⛶ Full Screen</button>
+</header>
+<main>
+ <div id="stage"><canvas id="cv"></canvas><div id="msg" class="msg"></div></div>
+ <aside>
+  <h3>🎬 Learn Step by Step</h3>
+  <div class="g">
+   <button class="b" style="--c:#2563eb" onclick="setStage(1)">1️⃣ White Light</button>
+   <button class="b" style="--c:#16a34a" onclick="setStage(2)">2️⃣ Enters Prism</button>
+   <button class="b" style="--c:#ea580c" onclick="setStage(3)">3️⃣ Colours Split</button>
+   <button class="b" style="--c:#9333ea" onclick="playAll()">▶ Play All</button>
+  </div>
+  <h3>🔦 Torch</h3>
+  <div class="g">
+   <button class="b w" style="--c:#dc2626" onclick="on=!on;m(on?'Torch is ON.':'Torch is OFF. No light, so no colours.')">⏻ Torch On / Off</button>
+   <button class="b" style="--c:#0891b2" onclick="fo=Math.max(-.25,fo-.08)">⬆ Move Up</button>
+   <button class="b" style="--c:#0d9488" onclick="fo=Math.min(.25,fo+.08)">⬇ Move Down</button>
+  </div>
+  <h3>🔺 Prism</h3>
+  <div class="g">
+   <button class="b" style="--c:#f97316" onclick="rot=Math.max(-12,rot-3)">↺ Turn Left</button>
+   <button class="b" style="--c:#a855f7" onclick="rot=Math.min(18,rot+3)">↻ Turn Right</button>
+  </div>
+  <h3>👀 View</h3>
+  <div class="g">
+   <button class="b" style="--c:#0284c7" onclick="labs=!labs">🏷️ Names On / Off</button>
+   <button class="b" style="--c:#64748b" onclick="reset()">♻️ Reset</button>
+  </div>
+  <div class="note">White light is a mix of <b>7 colours</b>. A prism bends each colour by a different amount. <b>Red</b> bends the least and <b>Violet</b> bends the most. So the colours spread apart.</div>
+ </aside>
+</main></div>
+<script>
+const $=id=>document.getElementById(id),app=$('app'),cv=$('cv'),c=cv.getContext('2d'),PI=Math.PI;
+function fs(){document.fullscreenElement?document.exitFullscreen():app.requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'⛶ Exit Full Screen':'⛶ Full Screen';
+function m(t){$('msg').textContent=t}
+const COLS=[['Red',700,'#ff2a2a'],['Orange',620,'#ff8a1f'],['Yellow',580,'#ffe81f'],['Green',530,'#2ee05a'],['Blue',470,'#2f7bff'],['Indigo',440,'#5b4bf2'],['Violet',410,'#a24bff']];
+const MSG=['Welcome! A torch shines white light on a glass prism. Press the step buttons or "Play All".','Step 1: The torch makes WHITE light. It looks like one colour, but it is really a mix of 7 colours.','Step 2: The white light enters the glass prism and starts to bend.','Step 3: Each colour bends by a different amount. Red bends least, Violet bends most. White light splits into 7 colours!'];
+let on=true,labs=true,stage=3,rot=-10,fo=0,P,M,tx,ty,sx,cx,cy,Hp,timers=[];const AL=-25*PI/180;
+function setStage(n){timers.forEach(clearTimeout);timers=[];stage=n;on=true;m(MSG[n])}
+function playAll(){setStage(1);timers=[setTimeout(()=>setStage(2),2200),setTimeout(()=>setStage(3),4400)];timers.forEach(t=>t)}
+function reset(){timers.forEach(clearTimeout);on=true;labs=true;stage=3;rot=-10;fo=0;m(MSG[0])}
+const nOf=l=>{const u=l/1000;return 1.46+.0336/(u*u)};
+function build(W,H){cx=W*.36;cy=H*.4;Hp=Math.min(H*.36,230);sx=W-170;
+ const h=Hp*Math.tan(PI/6),a=rot*PI/180,co=Math.cos(a),si=Math.sin(a),L=[[0,-2*Hp/3],[-h,Hp/3],[h,Hp/3]];
+ P=L.map(v=>[cx+v[0]*co-v[1]*si,cy+v[0]*si+v[1]*co]);const f=.5+fo;M=[P[0][0]+(P[1][0]-P[0][0])*f,P[0][1]+(P[1][1]-P[0][1])*f];
+ tx=W*.07;ty=M[1]+Math.tan(AL)*(tx-M[0])}
+function trace(lam){const n=nOf(lam);let p=[M[0],M[1]],d=[Math.cos(AL),Math.sin(AL)],ins=false,pts=[[tx,ty],p.slice()];
+ for(let s=0;s<6;s++){let b=null;for(let e=0;e<3;e++){const a=P[e],q=P[(e+1)%3],ex=q[0]-a[0],ey=q[1]-a[1],den=d[0]*ey-d[1]*ex;if(Math.abs(den)<1e-9)continue;const wx=a[0]-p[0],wy=a[1]-p[1],t=(wx*ey-wy*ex)/den,u=(wx*d[1]-wy*d[0])/den;if(t>1e-3&&u>=0&&u<=1&&(!b||t<b.t))b={t,ex,ey,a,q}}
+  if(s==0&&!ins){/* entry is at M: refract on left face */}
+  if(!b)break;
+  let q=p,no;
+  if(s==0){const l=Math.hypot(P[1][0]-P[0][0],P[1][1]-P[0][1]);no=[(P[1][1]-P[0][1])/l,-(P[1][0]-P[0][0])/l];if(no[0]*(M[0]-cx)+no[1]*(M[1]-cy)<0)no=[-no[0],-no[1]]}
+  else{q=[p[0]+d[0]*b.t,p[1]+d[1]*b.t];pts.push(q);const l=Math.hypot(b.ex,b.ey);no=[b.ey/l,-b.ex/l];const mid=[(b.a[0]+b.q[0])/2,(b.a[1]+b.q[1])/2];if(no[0]*(mid[0]-cx)+no[1]*(mid[1]-cy)<0)no=[-no[0],-no[1]]}
+  const nr=d[0]*no[0]+d[1]*no[1]<0?no:[-no[0],-no[1]],eta=ins?n:1/n,ci=-(d[0]*nr[0]+d[1]*nr[1]),k=1-eta*eta*(1-ci*ci);
+  if(k<0){d=[d[0]+2*ci*nr[0],d[1]+2*ci*nr[1]];}else{const f=eta*ci-Math.sqrt(k);d=[eta*d[0]+f*nr[0],eta*d[1]+f*nr[1]];ins=!ins}
+  p=q;if(s>0&&!ins)break}
+ let hit=null;if(!ins&&d[0]>.05){const t=(sx-p[0])/d[0];hit=p[1]+d[1]*t;pts.push([sx,hit])}
+ return{pts,hit,ok:hit!=null&&pts.length==4}}
+function line(a,b,w,col){c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke()}
+function txt(s,x,y,sz=15,col='#fff',al='center'){c.font='bold '+sz+'px Trebuchet MS,Arial';c.fillStyle=col;c.textAlign=al;c.fillText(s,x,y)}
+function poly(Q,o=[0,0]){c.beginPath();Q.forEach((v,i)=>c[i?'lineTo':'moveTo'](v[0]+o[0],v[1]+o[1]));c.closePath()}
+function prism(front){const o=[24,-16];if(!front){for(let e=0;e<3;e++){const a=P[e],b=P[(e+1)%3];c.fillStyle='rgba(160,220,255,.2)';c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.lineTo(b[0]+o[0],b[1]+o[1]);c.lineTo(a[0]+o[0],a[1]+o[1]);c.fill();c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1.5;c.stroke()}
+  const g=c.createLinearGradient(P[1][0],P[0][1],P[2][0],P[2][1]);g.addColorStop(0,'rgba(190,235,255,.5)');g.addColorStop(1,'rgba(90,160,230,.35)');c.fillStyle=g;poly(P);c.fill()}
+ else{c.strokeStyle='rgba(255,255,255,.95)';c.lineWidth=3;poly(P);c.stroke()}}
+function torch(){c.save();c.translate(tx,ty);c.rotate(AL);c.fillStyle='#475569';c.beginPath();c.roundRect(-120,-17,106,34,8);c.fill();c.fillStyle='#ef4444';c.fillRect(-95,-17,12,34);c.fillStyle='#94a3b8';c.beginPath();c.moveTo(-14,-17);c.lineTo(10,-30);c.lineTo(10,30);c.lineTo(-14,17);c.fill();c.fillStyle=on?'#fff':'#cbd5e1';c.beginPath();c.ellipse(10,0,6,28,0,0,7);c.fill();c.restore()}
+function frame(){if(cv.width!=cv.clientWidth||cv.height!=cv.clientHeight){cv.width=cv.clientWidth;cv.height=cv.clientHeight}
+ const W=cv.width,H=cv.height;if(W){build(W,H);
+ let g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b1026');g.addColorStop(1,'#1a1f3a');c.fillStyle=g;c.fillRect(0,0,W,H);
+ const tb=H*.86;c.fillStyle='#6b4423';c.fillRect(0,tb,W,H-tb);c.fillStyle='#8b5a2b';c.fillRect(0,tb,W,8);
+ c.fillStyle='#64748b';c.fillRect(cx-14,cy+Hp*.42,28,tb-cy-Hp*.42);c.fillStyle='#94a3b8';c.beginPath();c.ellipse(cx,cy+Hp*.42,50,10,0,0,7);c.fill();
+ const st=cy-110;c.fillStyle='#f1f5f9';c.fillRect(sx,st,140,tb-st);c.strokeStyle='#94a3b8';c.lineWidth=5;c.strokeRect(sx,st,140,tb-st);
+ const T=COLS.map(k=>trace(k[1]));let ok=on&&T.every(t=>t.ok);
+ if(on&&stage>=3&&ok){const h=T.map(t=>t.hit);
+  COLS.forEach((k,i)=>{const t0=i?(h[i-1]+h[i])/2:h[0]-(h[1]-h[0])/2,t1=i<6?(h[i]+h[i+1])/2:h[6]+(h[6]-h[5])/2,y0=Math.max(t0,st+3),y1=Math.min(t1,tb-3);if(y1>y0){c.fillStyle=k[2];c.fillRect(sx+4,y0,132,y1-y0);if(labs&&y1-y0>14)txt(k[0],sx+70,(y0+y1)/2+5,15,'#111')}});
+  for(let i=0;i<6;i++){const a=T[i].pts,b=T[i+1].pts;c.globalAlpha=.4;c.fillStyle=COLS[i][2];c.beginPath();c.moveTo(a[2][0],a[2][1]);c.lineTo(b[2][0],b[2][1]);c.lineTo(b[3][0],b[3][1]);c.lineTo(a[3][0],a[3][1]);c.fill();c.globalAlpha=1}}
+ prism(false);
+ if(on){const t=T[3],bx=tx+Math.cos(AL)*14,by=ty+Math.sin(AL)*14;
+  if(stage>=1){line([bx,by],M,16,'rgba(255,255,255,.18)');line([bx,by],M,6,'#fff')}
+  if(stage>=2&&t.pts.length>2){line(t.pts[1],t.pts[2],6,'rgba(255,255,255,.9)')}
+  if(stage>=3)T.forEach((k,i)=>{if(k.ok)line(k.pts[2],k.pts[3],5,COLS[i][2])})}
+ prism(true);torch();
+ if(labs){txt('Torch',tx-20,ty+60,16);txt('Glass Prism',cx+10,cy-Hp*.72,17,'#ffd23f');txt('Screen',sx+70,st-10,16);
+  if(on&&stage>=1)txt('White light',(tx+M[0])/2+10,(ty+M[1])/2-34,16,'#fff');
+  if(on&&stage>=3&&ok){txt('Red bends least ▶',sx-10,T[0].hit+5,15,'#ff8a8a','right');txt('Violet bends most ▶',sx-10,T[6].hit+5,15,'#c4a0ff','right')}}
+ if(on&&stage>=3&&!ok)txt('Some light is trapped inside the glass. Turn the prism back.',W/2,H*.12,18,'#ffd23f')}
+ requestAnimationFrame(frame)}
+m(MSG[0]);requestAnimationFrame(frame);
+</script></body></html>

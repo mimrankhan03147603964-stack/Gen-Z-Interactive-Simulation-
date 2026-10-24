@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plant Respiration – GEN Z EDTECH INTERACTIVE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Trebuchet MS','Segoe UI',sans-serif;background:#eef6ee;color:#14321d}
+header{background:linear-gradient(120deg,#14321d,#1b6b3a);color:#fff;text-align:center;padding:14px 10px}
+header h1{margin:0;font-size:34px;font-weight:900;letter-spacing:1px}
+header p{margin:4px 0 0;font-size:18px;opacity:.9}
+nav{display:flex;gap:10px;justify-content:center;padding:12px}
+nav button{font:700 17px inherit;font-family:inherit;padding:10px 28px;border:0;border-radius:12px;background:#fff;color:#1b6b3a;cursor:pointer;box-shadow:0 2px 6px #0003}
+nav button.on{background:#ff6f00;color:#fff}
+.tab{display:none;max-width:1100px;margin:0 auto;padding:0 16px 16px}.tab.on{display:block}
+.card{background:#fff;border-radius:16px;padding:20px 26px;margin-bottom:14px;box-shadow:0 3px 10px #0002;font-size:18px;line-height:1.6}
+.card h2{margin:0 0 8px;color:#1b6b3a}
+.eq{background:#fff3e0;border-left:6px solid #ff6f00;padding:10px 16px;border-radius:8px;font-weight:700}
+.stage{background:#14321d;border-radius:16px;padding:10px;max-width:1200px;margin:0 auto}
+.view{position:relative;display:flex;justify-content:center;align-items:center}
+canvas{width:100%;max-width:100%;aspect-ratio:1000/520;border-radius:12px;display:block;background:#ddd}
+.hud{position:absolute;top:47%;left:10px;display:flex;flex-direction:column;gap:6px;width:19%}
+.box{background:#14321dd9;color:#fff;border-radius:10px;padding:5px 10px;font-size:12px}
+.box b{display:block;font-size:15px}
+#msg{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:70%;text-align:center;background:#14321de6;color:#ffe066;font-weight:700;font-size:15px;border-radius:10px;padding:6px 12px}
+.ctl{display:flex;flex-direction:column;gap:6px;padding-top:10px}
+.grp{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.grp button{font:700 14px inherit;font-family:inherit;color:#fff;border:3px solid transparent;border-radius:10px;padding:8px 13px;cursor:pointer;box-shadow:0 3px 0 #0006;transition:transform .1s}
+.grp button:hover{transform:translateY(-2px)}.grp button:active{transform:translateY(2px)}
+.grp button.sel{border-color:#ffe066;outline:2px solid #fff}
+.stage:fullscreen{display:flex;flex-direction:column;border-radius:0;padding:8px}
+.stage:fullscreen .view{flex:1;min-height:0}
+.stage:fullscreen canvas{max-height:100%;width:auto;height:100%}
+.stage:fullscreen .ctl{max-height:36vh;overflow:auto}
+.sf{text-align:center;color:#cfd8dc;font-size:12px;padding-top:6px}
+footer{text-align:center;padding:16px;font-size:13px}
+footer b.br{font-size:14px;letter-spacing:1px}
+.dev,.sf span{font-weight:700;font-size:12px;background:#ffe066;color:#14321d;padding:2px 8px;border-radius:6px}
+</style></head><body>
+<header><h1>GEN Z EDTECH INTERACTIVE</h1><p>Plant Respiration in Sunlight vs. Complete Darkness</p></header>
+<nav><button class="on" data-t="def">Definition</button><button data-t="exp">Explanation</button><button data-t="sim">Simulation</button></nav>
+
+<section class="tab on" id="def">
+<div class="card"><h2>What is respiration in plants?</h2>
+Respiration is the process that releases energy from food. Every living part of a plant, such as its leaves, stems and roots, uses oxygen to break down sugar (glucose) and release energy. Carbon dioxide and water are the waste products.
+<p class="eq">Plants respire all the time, in sunlight and in darkness.</p></div>
+<div class="card"><h2>Key words</h2><b>Respiration:</b> using oxygen to get energy from sugar. It happens day and night.<br><b>Photosynthesis:</b> making sugar from carbon dioxide and water using light energy. It happens only when there is light.<br><b>Stomata:</b> tiny doors on a leaf that let gases in and out.<br><b>Mitochondria:</b> the parts of a cell where respiration happens.<br><b>Chloroplasts:</b> the green parts of a cell where photosynthesis happens.</div>
+</section>
+
+<section class="tab" id="exp">
+<div class="card"><h2>In bright sunlight</h2>
+The plant does both jobs at once. Photosynthesis is much faster than respiration, so the plant makes more oxygen than it uses and takes in more carbon dioxide than it gives out. Overall, oxygen goes out of the leaves and carbon dioxide goes in.</div>
+<div class="card"><h2>In complete darkness</h2>
+With no light, photosynthesis stops. Respiration carries on, so the plant only uses oxygen and gives out carbon dioxide. A plant in a sealed jar in the dark slowly uses up the oxygen and fills the jar with carbon dioxide. Limewater turns milky when carbon dioxide is present, which makes a simple test.</div>
+<div class="card"><h2>The two equations</h2>
+<p class="eq">Respiration: glucose + oxygen → carbon dioxide + water + energy</p>
+<p class="eq">Photosynthesis: carbon dioxide + water + light → glucose + oxygen</p>
+At one dim light level the two processes are equal, and no gas leaves or enters the plant. This is called the compensation point.</div>
+<div class="card"><h2>What to try in the simulation</h2>
+1. Start in <b>Bright Sunlight</b> and watch the oxygen level rise.<br>2. Press <b>Complete Darkness</b> and watch oxygen fall while carbon dioxide rises.<br>3. Press <b>Dim Light</b> to find the balance point.<br>4. Use <b>Zoom Into Leaf</b> to see the chloroplasts, the mitochondria and the stoma.<br>5. Check the <b>limewater</b> beaker: it turns milky when there is a lot of carbon dioxide.<br><i>Note: the speeds and gas levels are simplified so that changes are quick to see.</i></div>
+</section>
+
+<section class="tab" id="sim">
+<div class="stage" id="stage">
+<div class="view"><canvas id="cv"></canvas>
+<div class="hud"><div class="box">Light<b id="lt"></b></div><div class="box">Photosynthesis<b id="ph"></b></div><div class="box">Respiration<b id="rs"></b></div><div class="box">Net result<b id="nt"></b></div></div>
+<div id="msg"></div></div>
+<div class="ctl" id="ctl"></div>
+<div class="sf">GEN Z EDTECH INTERACTIVE &nbsp; <span>Muhammad Imran Khan, MSc Computer Science</span></div>
+</div>
+</section>
+
+<footer><b class="br">GEN Z EDTECH INTERACTIVE</b><br><span class="dev">Muhammad Imran Khan, MSc Computer Science</span></footer>
+
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),g=cv.getContext('2d');
+cv.width=2000;cv.height=1040;g.scale(2,2);
+const S={run:1,sp:1,slow:1,L:1,Lt:1,o2:50,co2:50,lab:1,gas:1,arr:0,lime:1,zoom:0,cyc:0,ct:0,t:0,milk:0,pa:[]};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.tab').forEach(e=>e.classList.remove('on'));b.classList.add('on');$('#'+b.dataset.t).classList.add('on')});
+
+/* buttons */
+const ctl=$('#ctl');let d;
+function grp(){d=document.createElement('div');d.className='grp';ctl.appendChild(d)}
+function mk(label,col,fn,set,dark){const b=document.createElement('button'),r=d;b.textContent=label;b.style.background=col;if(dark)b.style.color='#222';b.onclick=()=>{fn(b);if(set){r.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}};d.appendChild(b);return b}
+const tg=(n,k,t)=>b=>{S[k]=!S[k];b.textContent=t+(S[k]?'On':'Off')};
+grp();
+mk('⏸ Pause','#2ecc71',b=>{S.run=!S.run;b.textContent=S.run?'⏸ Pause':'▶ Play'});
+mk('↺ Reset Gases','#e53935',()=>{S.o2=S.co2=50;S.pa=[];S.milk=0});
+mk('🐢 Slow Motion: Off','#8e44ad',b=>{S.slow=S.slow==1?.3:1;b.textContent='🐢 Slow Motion: '+(S.slow==1?'Off':'On')});
+mk('➖ Slower','#f39c12',()=>S.sp=Math.max(.5,S.sp-.5));
+mk('➕ Faster','#e67e22',()=>S.sp=Math.min(4,S.sp+.5));
+grp();
+mk('☀ Bright Sunlight','#fbc02d',()=>{S.Lt=1;S.cyc=0;cy.textContent='🔄 Day–Night Cycle: Off'},'li',1).classList.add('sel');
+mk('⛅ Dim Light','#5c6bc0',()=>{S.Lt=.36;S.cyc=0;cy.textContent='🔄 Day–Night Cycle: Off'},'li');
+mk('🌙 Complete Darkness','#37474f',()=>{S.Lt=0;S.cyc=0;cy.textContent='🔄 Day–Night Cycle: Off'},'li');
+const cy=mk('🔄 Day–Night Cycle: Off','#7cb342',b=>{S.cyc=!S.cyc;S.ct=0;b.textContent='🔄 Day–Night Cycle: '+(S.cyc?'On':'Off')});
+grp();
+mk('🔬 Zoom Into Leaf: Off','#00acc1',b=>{S.zoom=!S.zoom;b.textContent='🔬 Zoom Into Leaf: '+(S.zoom?'On':'Off')});
+mk('🏷 Labels: On','#d81b60',tg(0,'lab','🏷 Labels: '));
+mk('💨 Gas Particles: On','#26c6da',tg(0,'gas','💨 Gas Particles: '),0,1);
+mk('➡ Net Gas Arrows: Off','#6d4c41',tg(0,'arr','➡ Net Gas Arrows: '));
+mk('🧪 Limewater Test: On','#ec407a',tg(0,'lime','🧪 Limewater Test: '));
+const fs=mk('⛶ Full Screen','#212121',()=>{document.fullscreenElement?document.exitFullscreen():$('#stage').requestFullscreen()});
+fs.style.borderColor='#ffd54f';
+document.onfullscreenchange=()=>fs.textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen';
+
+/* scene data */
+const LV=[[320,-.5,70],[300,-2.65,68],[270,-.7,62],[250,-2.5,60],[222,-.9,52],[205,-2.3,48],[182,-1.45,40]].map(([y,a,l])=>({x:470,y,a,l}));
+const rr=(x,y,w,h,r,c)=>{g.fillStyle=c;g.beginPath();g.roundRect(x,y,w,h,r);g.fill()};
+const mix=(a,b,t)=>a+(b-a)*t;
+function wall(){
+ g.fillStyle='#e7dcc8';g.fillRect(0,0,1000,430);g.fillStyle='#d9ccb2';g.fillRect(0,420,1000,10);
+ g.fillStyle='#8d6e63';g.fillRect(0,430,1000,36);g.fillStyle='#7a5c52';for(let x=0;x<1000;x+=120)g.fillRect(x,430,3,36);
+ g.fillStyle='#5d4037';g.fillRect(0,466,1000,54);
+ const L=S.L;if(L>.05){g.fillStyle='rgba(255,236,150,'+(.16*L)+')';g.beginPath();g.moveTo(250,40);g.lineTo(250,230);g.lineTo(640,430);g.lineTo(330,330);g.fill()}}
+function windowDraw(){
+ const L=S.L;let n=g.createLinearGradient(0,30,0,230);n.addColorStop(0,'#0b1a3a');n.addColorStop(1,'#25386b');g.fillStyle=n;g.fillRect(30,30,220,200);
+ g.fillStyle='#fff';for(let i=0;i<14;i++)g.fillRect(40+(i*53)%200,40+(i*37)%140,2,2);
+ g.fillStyle='#f5f0c8';g.beginPath();g.arc(190,85,18,0,7);g.fill();g.fillStyle='#1b2b5a';g.beginPath();g.arc(198,80,16,0,7);g.fill();
+ g.globalAlpha=Math.min(1,L*1.2);let s=g.createLinearGradient(0,30,0,230);s.addColorStop(0,'#5fb3f0');s.addColorStop(1,'#dff1fb');g.fillStyle=s;g.fillRect(30,30,220,200);
+ g.fillStyle='#ffd54f';g.shadowColor='#ffd54f';g.shadowBlur=30;g.beginPath();g.arc(90,85,26,0,7);g.fill();g.shadowBlur=0;
+ g.fillStyle='#fff';[[150,70],[190,150],[70,170]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,16,0,7);g.arc(x+16,y+3,13,0,7);g.arc(x-14,y+4,11,0,7);g.fill()});
+ g.globalAlpha=1;g.strokeStyle='#fafafa';g.lineWidth=10;g.strokeRect(30,30,220,200);g.lineWidth=6;g.beginPath();g.moveTo(140,30);g.lineTo(140,230);g.moveTo(30,130);g.lineTo(250,130);g.stroke();g.fillStyle='#eee';g.fillRect(20,230,240,10)}
+function plant(){
+ const L=S.L,t=S.t;
+ g.fillStyle='rgba(0,0,0,.25)';g.beginPath();g.ellipse(470,432,70,8,0,0,7);g.fill();
+ g.strokeStyle='hsl(120,40%,'+(18+16*L)+'%)';g.lineWidth=7;g.lineCap='round';g.beginPath();g.moveTo(470,345);g.quadraticCurveTo(466,260,470,175);g.stroke();
+ LV.forEach((v,i)=>{g.save();g.translate(v.x,v.y);g.rotate(v.a+Math.sin(t*1.1+i)*.03);const w=v.l*.4;g.fillStyle='hsl('+(112+6*L)+',55%,'+(20+24*L)+'%)';g.beginPath();g.moveTo(0,0);g.bezierCurveTo(v.l*.3,-w,v.l*.75,-w,v.l,0);g.bezierCurveTo(v.l*.75,w,v.l*.3,w,0,0);g.fill();g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=1.5;g.beginPath();g.moveTo(0,0);g.lineTo(v.l*.9,0);g.stroke();g.restore()});
+ g.save();g.translate(470,170);for(let i=0;i<8;i++){g.rotate(Math.PI/4);g.fillStyle='hsl(335,70%,'+(45+20*L)+'%)';g.beginPath();g.ellipse(0,-(14+6*L),6,11+4*L,0,0,7);g.fill()}g.fillStyle='#fdd835';g.beginPath();g.arc(0,0,8,0,7);g.fill();g.restore();
+ g.fillStyle='#bf5b30';g.beginPath();g.moveTo(420,358);g.lineTo(520,358);g.lineTo(508,425);g.lineTo(432,425);g.fill();rr(412,340,116,20,5,'#d9774a');
+ g.fillStyle='#4e342e';g.beginPath();g.ellipse(470,342,54,6,0,0,7);g.fill();g.fillStyle='#d9774a';g.beginPath();g.ellipse(470,428,62,7,0,0,7);g.fill()}
+function jar(){
+ g.fillStyle='rgba(190,225,255,.16)';g.strokeStyle='rgba(255,255,255,.7)';g.lineWidth=3;g.beginPath();g.moveTo(320,430);g.lineTo(320,210);g.bezierCurveTo(320,95,620,95,620,210);g.lineTo(620,430);g.closePath();g.fill();g.stroke();
+ g.strokeStyle='rgba(255,255,255,.5)';g.lineWidth=6;g.beginPath();g.moveTo(336,400);g.lineTo(336,230);g.stroke();rr(310,426,320,8,3,'#cfd8dc')}
+function lime(){
+ if(!S.lime)return;
+ g.strokeStyle='#b0bec5';g.lineWidth=7;g.lineJoin='round';g.beginPath();g.moveTo(620,402);g.lineTo(715,402);g.lineTo(715,418);g.stroke();
+ g.fillStyle='rgba(220,240,250,.55)';g.beginPath();g.roundRect(700,360,90,70,[2,2,12,12]);g.fill();
+ g.fillStyle='rgba(255,255,255,'+(.15+.8*S.milk)+')';g.beginPath();g.roundRect(703,380,84,47,[0,0,10,10]);g.fill();
+ g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=3;g.beginPath();g.roundRect(700,360,90,70,[2,2,12,12]);g.stroke();
+ if(S.co2>55&&S.run)for(let i=0;i<3;i++){const y=415-((S.t*30+i*14)%35);g.fillStyle='rgba(255,255,255,.8)';g.beginPath();g.arc(715+Math.sin(S.t*5+i)*3,y,2.5,0,7);g.fill()}}
+function tag(t,x,y,lx,ly){g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y);g.lineTo(lx,ly);g.stroke();g.font='bold 12px sans-serif';const w=g.measureText(t).width+12;rr(lx-w/2,ly-10,w,20,6,'#14321de6');g.fillStyle='#fff';g.textAlign='center';g.fillText(t,lx,ly+4);g.textAlign='left'}
+function parts(){if(!S.lab)return;tag('Leaf',531,287,590,262);tag('Flower',470,160,420,145);tag('Pot with soil',445,395,395,408);tag('Sealed glass jar',322,300,265,320);tag('Window light',140,240,140,262);if(S.lime)tag('Limewater',745,385,745,345)}
+function meters(){
+ rr(650,20,335,92,12,'rgba(20,50,29,.9)');g.font='bold 13px sans-serif';
+ [['Oxygen (O₂) in jar',S.o2,'#42a5f5'],['Carbon dioxide (CO₂) in jar',S.co2,'#ff9800']].forEach(([t,v,c],i)=>{const y=34+i*38;g.fillStyle='#fff';g.fillText(t,662,y+12);rr(662,y+18,310,12,6,'#ffffff30');rr(662,y+18,310*v/100,12,6,c)})}
+function zoom(){
+ if(!S.zoom)return;const L=S.L,t=S.t;
+ rr(650,120,335,205,12,'rgba(255,255,255,.95)');g.fillStyle='#14321d';g.font='bold 13px sans-serif';g.fillText('Inside a leaf cell',662,138);
+ rr(662,146,310,125,16,'#e8f5e9');g.strokeStyle='#2e7d32';g.lineWidth=3;g.beginPath();g.roundRect(662,146,310,125,16);g.stroke();
+ g.fillStyle='#bbdefb';g.beginPath();g.ellipse(815,205,52,26,0,0,7);g.fill();g.fillStyle='#7e57c2';g.beginPath();g.arc(930,185,13,0,7);g.fill();
+ [[700,175],[760,250],[870,255],[705,240]].forEach(([x,y])=>{g.save();g.shadowColor='#c6ff00';g.shadowBlur=18*L;g.fillStyle='hsl(115,60%,'+(24+20*L)+'%)';g.beginPath();g.ellipse(x,y,22,11,.3,0,7);g.fill();g.restore()});
+ [[740,200],[900,235],[790,160]].forEach(([x,y],i)=>{const p=1+.06*Math.sin(t*5+i);g.fillStyle='#ff8a65';g.beginPath();g.ellipse(x,y,15*p,8*p,-.4,0,7);g.fill();g.strokeStyle='#bf360c';g.lineWidth=1.5;g.beginPath();g.moveTo(x-8,y);g.lineTo(x-3,y-3);g.lineTo(x+2,y+3);g.lineTo(x+8,y);g.stroke();if(S.run){g.fillStyle='#ffee58';g.beginPath();g.arc(x+((t*25+i*9)%24),y-12-((t*20+i*7)%14),2.5,0,7);g.fill()}});
+ const op=3+8*(L>.05?1:.35);g.strokeStyle='#388e3c';g.lineWidth=8;g.lineCap='butt';g.beginPath();g.moveTo(662,277);g.lineTo(815-op-10,277);g.moveTo(815+op+10,277);g.lineTo(972,277);g.stroke();
+ g.fillStyle='#66bb6a';[-1,1].forEach(s=>{g.beginPath();g.ellipse(815+s*(op+5),277,5,11,0,0,7);g.fill()});
+ const up=L>.4;for(let i=0;i<3;i++){const f=((t*.6+i/3)%1);g.fillStyle='#455a64';g.beginPath();g.arc(808,up?318-f*60:258+f*60+20,5,0,7);g.fill();g.fillStyle='#42a5f5';g.beginPath();g.arc(824,up?258+f*60+20:318-f*60,5,0,7);g.fill()}
+ g.font='bold 11px sans-serif';g.fillStyle='#1b5e20';g.fillText(up?'Chloroplasts work: CO₂ in, O₂ out':'No light: chloroplasts stop',662,296);g.fillStyle='#bf360c';g.fillText('Mitochondria always work: they release energy',662,310);g.fillStyle='#37474f';g.fillText('Stoma = gas door   dark dot = CO₂   blue dot = O₂',662,322)}
+function arrows(net){
+ if(!S.arr)return;const bal=Math.abs(net)<.08;
+ [['O₂',net>0,250,'#42a5f5'],['CO₂',net<=0,305,'#ff9800']].forEach(([n,out,y,c])=>{
+  g.font='bold 13px sans-serif';if(bal){g.fillStyle='#fff';g.fillText(n+': balanced',240,y+4);return}
+  const len=Math.min(60,22+Math.abs(net)*50),x0=out?300:240,x1=out?300-len:240+len,dr=out?-1:1;
+  g.strokeStyle=c;g.fillStyle=c;g.lineWidth=7;g.beginPath();g.moveTo(out?310:230,y);g.lineTo(out?310-len:230+len,y);g.stroke();const e=out?310-len:230+len;g.beginPath();g.moveTo(e+dr*14,y);g.lineTo(e,y-10);g.lineTo(e,y+10);g.fill();g.fillStyle='#fff';g.fillText(n+(out?' out':' in'),out?e-48:e+16,y+4)})}
+function particles(){
+ if(!S.gas)return;g.font='bold 9px sans-serif';g.textAlign='center';
+ S.pa.forEach(p=>{g.globalAlpha=p.m=='free'?Math.min(1,p.age/1.5):1;const o=p.k=='O';g.fillStyle=o?'#42a5f5':'#ef6c00';g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(p.x,p.y,o?8:10,0,7);g.fill();g.stroke();g.fillStyle='#fff';g.fillText(o?'O₂':'CO₂',p.x,p.y+3)});
+ g.globalAlpha=1;g.textAlign='left'}
+function spawn(k,m){if(S.pa.length>130)return;const v=LV[Math.random()*LV.length|0],f=.35+Math.random()*.6,lx=v.x+Math.cos(v.a)*v.l*f,ly=v.y+Math.sin(v.a)*v.l*f,ax=340+Math.random()*250,ay=135+Math.random()*270;
+ S.pa.push(m=='in'?{k,x:ax,y:ay,tx:lx,ty:ly,m,age:6}:{k,x:lx,y:ly,tx:ax,ty:ay,m,age:6})}
+const lvl=x=>x<.03?'Stopped':x<.35?'Slow':x<.7?'Medium':'Fast';
+let last=0,aP=0,aR=0;
+function frame(ts){
+ const dt=S.run?Math.min((ts-last)/1000,.05)*S.sp*S.slow:0;last=ts;S.t+=dt;
+ if(S.cyc){S.ct+=dt;if(S.ct>12){S.ct=0;S.Lt=S.Lt>.5?0:1}}
+ S.L+=Math.sign(S.Lt-S.L)*Math.min(Math.abs(S.Lt-S.L),1.2*dt);
+ const P=1.4*S.L,R=.5,net=P-R;
+ S.o2=Math.max(3,Math.min(97,S.o2+net*2.2*dt));S.co2=Math.max(3,Math.min(97,S.co2-net*2.2*dt));
+ S.milk+=((Math.max(0,Math.min(1,(S.co2-35)/45)))-S.milk)*Math.min(1,dt*.8);
+ aP+=P*3*dt;aR+=R*3*dt;while(aP>1){aP--;spawn('C','in');spawn('O','out')}while(aR>1){aR--;spawn('O','in');spawn('C','out')}
+ S.pa=S.pa.filter(p=>{if(p.m=='free'){p.x+=p.vx*dt;p.y+=p.vy*dt;p.age-=dt;return p.age>0}
+  const dx=p.tx-p.x,dy=p.ty-p.y,d=Math.hypot(dx,dy),v=(p.m=='in'?110:80)*dt;
+  if(d<v+2){if(p.m=='in')return false;p.m='free';p.vx=Math.random()*30-15;p.vy=Math.random()*30-15;p.age=3;return true}
+  p.x+=dx/d*v+Math.sin(S.t*6+p.tx)*.5;p.y+=dy/d*v;return true});
+ g.clearRect(0,0,1000,520);wall();plant();jar();lime();
+ g.fillStyle='rgba(5,10,36,'+(.58*(1-S.L))+')';g.fillRect(0,0,1000,520);
+ windowDraw();particles();arrows(net);parts();meters();zoom();
+ $('#lt').textContent=S.L>.85?'Bright sunlight':S.L>.05?'Dim light':'Complete darkness';
+ $('#ph').textContent=lvl(P/1.4*(S.L>.05?1:0));$('#rs').textContent='Always running';
+ $('#nt').textContent=net>.08?'Gives out O₂':Math.abs(net)<=.08?'Balanced':'Uses O₂, gives out CO₂';
+ $('#msg').textContent=net>.08?'Photosynthesis is faster than respiration, so the plant gives out extra oxygen.':Math.abs(net)<=.08?'Balance point: photosynthesis and respiration are equal, so no gas is gained or lost.':S.L>.05?'Light is too dim: respiration is faster than photosynthesis, so oxygen is used up.':'No light, so no photosynthesis. Respiration uses oxygen and gives out carbon dioxide.';
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

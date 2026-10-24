@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Play Group Fun Lab (Age 3–4)</title>
+<style>
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;font-family:"Comic Sans MS","Trebuchet MS",sans-serif}
+body{background:linear-gradient(135deg,#ffe9a8,#ffc2e2 50%,#b9e6ff)}
+#app{height:100%;display:flex;flex-direction:column;padding:10px 14px;gap:10px}
+#top{display:flex;align-items:center;gap:12px}
+h1{margin:0;flex:1;font-size:28px;color:#5b2a86;text-shadow:2px 2px 0 #fff}
+#nav,#ctrl{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
+.b:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.b:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.b.on{outline:4px solid #fff;outline-offset:2px}
+#stage{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:24px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 40px rgba(255,255,255,.4);background:linear-gradient(#bde8ff,#eaf9ff)}
+.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 26px;border-radius:30px;font-size:26px;font-weight:bold;color:#5b2a86;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap}
+/* bubbles */
+.bub{position:absolute;bottom:-150px;border-radius:50%;cursor:pointer;animation:rise linear forwards;box-shadow:inset -8px -8px 18px #0003,0 6px 14px #0003;transition:scale .2s,opacity .2s,filter .2s}
+@keyframes rise{to{transform:translateY(-130vh)}}
+/* grids */
+.grid{position:absolute;inset:66px 20px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;background:linear-gradient(#c8f5b0,#7ed957);border-radius:22px;box-shadow:0 8px 0 #3b8f2a,0 14px 20px #0003;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.an{font-size:clamp(60px,13vh,110px);position:absolute;transform:translateY(60px) scale(.3);opacity:0;transition:.4s}
+.card.open .an{transform:none;opacity:1}
+.bush{font-size:clamp(90px,19vh,170px);position:absolute;transition:.5s;filter:drop-shadow(0 8px 6px #0004)}
+.card.open .bush{transform:translateX(-130%) rotate(-25deg);opacity:0}
+.nm{position:absolute;bottom:8px;font-weight:bold;font-size:24px;color:#2c5d1d}
+/* sorter */
+.tray{position:absolute;top:66px;left:0;right:0;height:38%;display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:center}
+.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1}
+.item.sel{transform:scale(1.2) rotate(-8deg);filter:drop-shadow(0 0 16px gold)}
+.baskets{position:absolute;bottom:14px;left:0;right:0;height:44%;display:flex;gap:40px;justify-content:center;padding:0 30px}
+.basket{flex:1;max-width:480px;background:repeating-linear-gradient(90deg,#d9a55b 0 18px,#c28f45 18px 22px);border-radius:20px 20px 70px 70px;box-shadow:0 8px 0 #6b4116,0 14px 20px #0004;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px;overflow:hidden}
+.bt{color:#fff;font-weight:bold;font-size:24px;text-shadow:2px 2px #0007}
+.bin{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:4px}
+/* touch */
+.tc{background:#fff;box-shadow:0 8px 0 #0003,0 14px 20px #0003}
+.big{font-size:clamp(70px,16vh,140px);filter:drop-shadow(0 10px 8px #0004)}
+.lb{position:absolute;bottom:10px;font-size:30px;font-weight:bold;color:#333;text-shadow:1px 1px #fff}
+.squish{animation:sq .7s}.shk{animation:shk .4s}.gl{animation:gl .8s}.vib{animation:vib .5s}
+@keyframes sq{0%,100%{transform:scale(1)}30%{transform:scale(1.3,.55)}60%{transform:scale(.85,1.2)}}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes gl{0%{transform:translateX(-60px)}100%{transform:translateX(0)}}
+@keyframes vib{0%,100%{transform:rotate(0)}10%{transform:rotate(-6deg)}30%{transform:rotate(6deg)}50%{transform:rotate(-6deg)}70%{transform:rotate(6deg)}}
+/* body */
+.face{position:absolute;left:50%;top:56%;width:min(56vh,440px);height:min(56vh,440px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe0bd,#f1b98a 70%,#d9945f);box-shadow:inset -20px -25px 40px #0003,0 20px 30px #0003}
+.face::before{content:"";position:absolute;top:-5%;left:6%;right:6%;height:32%;border-radius:50% 50% 30% 30%;background:linear-gradient(#5d4037,#3e2723)}
+.part{position:absolute;transform:translate(-50%,-50%) scaleX(var(--f,1));cursor:pointer;z-index:2;filter:drop-shadow(0 6px 5px #0004);transition:.2s}
+.part:hover{scale:1.15}
+.part.bnc{animation:bnc .6s}.part.glow{animation:glow .5s 4;filter:drop-shadow(0 0 22px #ff0)}
+@keyframes bnc{50%{transform:translate(-50%,-70%) scale(1.4) scaleX(var(--f,1))}}
+@keyframes glow{50%{transform:translate(-50%,-50%) scale(1.35) scaleX(var(--f,1))}}
+/* water */
+.tub{position:absolute;bottom:0;left:14%;right:14%;height:48%;border-radius:0 0 90px 90px;background:linear-gradient(rgba(64,170,255,.55),rgba(0,90,200,.75));border:8px solid #fff;border-top:0;z-index:6;pointer-events:none;box-shadow:inset 0 10px 20px #fff6}
+.drop{position:absolute;z-index:5;line-height:1;transform:translateX(-50%)}
+.bob{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{margin-top:-10px}}
+.dr{position:absolute;z-index:7;animation:spl .8s forwards;pointer-events:none}
+@keyframes spl{40%{transform:translate(calc(var(--dx)*.6),-110px)}100%{transform:translate(var(--dx),40px);opacity:0}}
+/* day night */
+.room{position:absolute;inset:0;background:linear-gradient(#ffe0b2,#ffcc80);transition:.8s}
+.room.night{background:linear-gradient(#546e7a,#37474f)}
+.dk{position:absolute;inset:0;background:#000a30;opacity:0;transition:.8s;pointer-events:none;z-index:1}
+.room.night .dk{opacity:.55}.room.night.lampon .dk{opacity:.2}
+.floor{position:absolute;bottom:0;left:0;right:0;height:22%;background:repeating-linear-gradient(90deg,#a1723a 0 60px,#8d6130 60px 64px);z-index:0}
+.win{position:absolute;left:50%;top:70px;width:340px;height:290px;margin-left:-170px;border:14px solid #8d5524;border-radius:10px;overflow:hidden;z-index:2;box-shadow:0 10px 20px #0005}
+.win::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:10px;margin-left:-5px;background:#8d5524;z-index:3}
+.win::after{content:"";position:absolute;top:50%;left:0;right:0;height:10px;margin-top:-5px;background:#8d5524;z-index:3}
+.sky{position:absolute;inset:0;background:linear-gradient(#4fc3f7,#b3e5fc 70%,#7cb342 71%);transition:.8s}
+.room.night .sky{background:linear-gradient(#0b1a4a,#1a237e 70%,#1b3a2a 71%)}
+.sun,.moon{position:absolute;font-size:80px;transition:1s;line-height:1}
+.sun{left:58%;top:10%}.moon{left:22%;top:115%}
+.room.night .sun{top:115%}.room.night .moon{top:8%}
+.stars{position:absolute;inset:0;font-size:26px;opacity:0;transition:1s;word-spacing:60px;padding:20px}
+.room.night .stars{opacity:1}
+.lamp,.swt,.furn{position:absolute;z-index:3;cursor:pointer}
+.lamp{left:12%;top:32%;font-size:100px;filter:grayscale(1) brightness(.6);transition:.5s}
+.room.lampon .lamp{filter:drop-shadow(0 0 35px gold)}
+.swt{right:12%;top:38%;width:60px;height:100px;background:#fff;border-radius:10px;box-shadow:0 5px 0 #0003;border:3px solid #ccc}
+.knob{position:absolute;left:10px;right:10px;top:10px;height:42px;border-radius:8px;background:#e53935;box-shadow:0 4px 0 #0004;transition:.3s}
+.room.night .knob{top:44px;background:#1e88e5}
+.furn{font-size:140px;bottom:5%;left:8%;cursor:default;z-index:3}
+</style></head>
+<body><div id="app">
+<div id="top"><h1>🎈 Play Group Fun Lab (Age 3–4)</h1><button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button></div>
+<div id="nav"></div>
+<div id="stage"></div>
+<div id="ctrl"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),st=$('#stage'),ct=$('#ctrl'),nav=$('#nav');
+const P=['#e53935','#1e88e5','#f9a825','#43a047','#8e24aa','#00acc1','#fb8c00','#d81b60'];
+let T=[],cur=0,ac;
+const M=t=>{const m=$('#msg');if(m)m.textContent=t};
+const say=t=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.8;u.pitch=1.3;u.lang='en-US';speechSynthesis.speak(u)}catch(e){}};
+const tone=(f=600,d=.15,ty='sine')=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}};
+const btn=(l,c,fn,p=ct)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',c);b.textContent=l;b.onclick=fn;p.appendChild(b);return b};
+const el=(h,cls,s,p=st)=>{const d=document.createElement('div');d.className=cls||'';d.innerHTML=h||'';if(s)Object.assign(d.style,s);p.appendChild(d);return d};
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+function bubbles(){
+ const C={Red:'#ff3b3b',Blue:'#2f7bff',Yellow:'#f2b600',Green:'#2fc24f'};let tg='Any',sc=0;
+ const upd=()=>M((tg=='Any'?'Pop any bubble!':'Pop the '+tg.toUpperCase()+' bubbles!')+'  Score: '+sc);upd();
+ const spawn=()=>{const n=pick(Object.keys(C)),c=C[n],s=70+Math.random()*60;
+  const b=el('','bub',{width:s+'px',height:s+'px',left:Math.random()*Math.max(10,st.clientWidth-s)+'px',background:`radial-gradient(circle at 30% 28%,rgba(255,255,255,.95) 0 7%,${c} 30%,${c} 60%,rgba(0,0,0,.4) 100%)`,animationDuration:(6+Math.random()*4)+'s'});
+  b.onclick=()=>{if(tg=='Any'||tg==n){sc++;b.style.scale=1.6;b.style.opacity=0;tone(450+sc*15,.2);say(n);upd();setTimeout(()=>b.remove(),250)}else{b.style.filter='grayscale(1)';tone(150,.2,'square');setTimeout(()=>b.style.filter='',350)}};
+  b.onanimationend=()=>b.remove()};
+ for(let i=0;i<5;i++)setTimeout(spawn,i*250);T.push(setInterval(spawn,650));
+ Object.keys(C).forEach(n=>btn('Pop '+n,C[n],()=>{tg=n;upd();say('Pop the '+n+' bubbles')}));
+ btn('Pop Any','#8e24aa',()=>{tg='Any';upd()});btn('Reset Score','#546e7a',()=>{sc=0;upd()});
+}
+
+function animals(){
+ let A=[['🐮','Cow','Moo moo!'],['🐶','Dog','Woof woof!'],['🐱','Cat','Meow meow!'],['🐑','Sheep','Baa baa!'],['🐸','Frog','Ribbit ribbit!'],['🦆','Duck','Quack quack!']];
+ M('Tap a bush to find a hidden animal!');const g=el('','grid');let cards=[];
+ const show=(c,a)=>{c.classList.add('open');c.querySelector('.nm').textContent=a[1];M(a[1]+' says '+a[2]);say(a[1]+' says '+a[2]);tone(500,.2)};
+ const build=()=>{g.innerHTML='';cards=A.map(a=>{const c=el('<div class=an>'+a[0]+'</div><div class=bush>🌳</div><div class=nm></div>','card',null,g);c.onclick=()=>show(c,a);return c})};build();
+ btn('Shuffle Animals','#8e24aa',()=>{A=sh(A);build();M('The animals are hiding again!')});
+ btn('Hide All','#546e7a',()=>{cards.forEach(c=>c.classList.remove('open'));M('Peek-a-boo! Where did they go?')});
+ btn('Show All','#43a047',()=>{cards.forEach((c,i)=>{c.classList.add('open');c.querySelector('.nm').textContent=A[i][1]});M('Here they all are!')});
+ A.forEach((a,i)=>btn('Find '+a[1],P[i],()=>{M('Find the '+a[1]+'!');say('Where is the '+a[1]+'?')}));
+}
+
+function sorter(){
+ let kind='🍎',sel=null,left=6;const tray=el('','tray'),bk=el('','baskets');
+ const mk=t=>el('<div class=bt>'+t+'</div><div class=bin></div>','basket',null,bk);
+ const bigB=mk('BIG BASKET'),smB=mk('SMALL BASKET');
+ const drop=(b,want)=>{if(!sel){M('Tap a thing first!');say('Tap a thing first');return}
+  if(!!sel.big===want){const i=sel;i.onclick=null;i.classList.remove('sel');i.style.fontSize=want?'54px':'28px';b.querySelector('.bin').appendChild(i);sel=null;tone(700,.2);say(want?'Big!':'Small!');if(--left==0){M('Great job! All sorted!');say('Great job!')}else M('Yes! Now sort the next one!')}
+  else{tone(150,.3,'square');M('Oops! Try the other basket!');say('Try again')}};
+ bigB.onclick=()=>drop(bigB,true);smB.onclick=()=>drop(smB,false);
+ const start=()=>{tray.innerHTML='';bigB.querySelector('.bin').innerHTML='';smB.querySelector('.bin').innerHTML='';sel=null;left=6;M('Tap a thing, then tap its basket!');
+  sh([1,1,1,0,0,0]).forEach(big=>{const i=el(kind,'item',{fontSize:(big?96:44)+'px'},tray);i.big=big;i.onclick=()=>{[...tray.children].forEach(x=>x.classList.remove('sel'));sel=i;i.classList.add('sel');tone(400,.1);say('Big or small?')}})};
+ start();
+ [['Apples','🍎'],['Toys','🧸'],['Balls','⚽'],['Cars','🚗']].forEach((k,i)=>btn(k[0],P[i],()=>{kind=k[1];start()}));
+ btn('Restart','#546e7a',start);
+}
+
+function touch(){
+ const D=[['🧸','Soft','squish','#ff80ab'],['🧱','Hard','shk','#90a4ae'],['🥚','Smooth','gl','#4fc3f7'],['🌵','Rough','vib','#9ccc65']];let qz=null;
+ M('Tap a card to feel it!');const g=el('','grid g4');
+ const feel=(d,c)=>{const e=c.firstChild;e.className='big';void e.offsetWidth;e.className='big '+d[2];tone({Soft:300,Hard:120,Smooth:700,Rough:200}[d[1]],.25,d[1]=='Rough'?'sawtooth':'sine');
+  if(qz){if(qz==d){M('Yes! That is '+d[1]+'!');say('Well done! '+d[1]);qz=null}else{M('Try again!');say('Try again')}}else{M(d[1]+'!');say('This is '+d[1])}};
+ const cs=D.map(d=>{const c=el('<div class=big>'+d[0]+'</div><div class=lb>'+d[1]+'</div>','card tc',{background:'linear-gradient(#fff,'+d[3]+')'},g);c.onclick=()=>feel(d,c);return c});
+ D.forEach((d,i)=>btn('Touch '+d[1],P[i],()=>{qz=null;feel(d,cs[i])}));
+ btn('Quiz Me!','#8e24aa',()=>{qz=pick(D);M('Find the '+qz[1].toUpperCase()+' one!');say('Find the '+qz[1]+' one')});
+}
+
+function trace(){
+ const cv=document.createElement('canvas');cv.width=st.clientWidth;cv.height=st.clientHeight;cv.style.cssText='position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair';st.appendChild(cv);
+ const x=cv.getContext('2d'),W=cv.width,H=cv.height;let shape='Line',col='#e53935';
+ const path=()=>{x.beginPath();const cx=W/2,cy=H/2+25;
+  if(shape=='Line'){x.moveTo(W*.15,cy);x.lineTo(W*.85,cy)}
+  else if(shape=='Circle')x.arc(cx,cy,Math.min(W,H)*.3,0,7)
+  else if(shape=='Wave'){for(let i=0;i<=100;i++){const px=W*.1+W*.8*i/100,py=cy+Math.sin(i/100*Math.PI*4)*H*.16;i?x.lineTo(px,py):x.moveTo(px,py)}}
+  else{for(let i=0;i<=8;i++){const px=W*.1+W*.8*i/8,py=cy+(i%2?1:-1)*H*.16;i?x.lineTo(px,py):x.moveTo(px,py)}}};
+ const draw=()=>{x.clearRect(0,0,W,H);x.lineCap=x.lineJoin='round';path();x.strokeStyle='#fff';x.lineWidth=48;x.stroke();path();x.strokeStyle='#78909c';x.lineWidth=6;x.setLineDash([4,18]);x.stroke();x.setLineDash([]);M('Trace the '+shape.toUpperCase()+' with your finger!')};draw();
+ let dn=false,lx,ly;const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]};
+ cv.onpointerdown=e=>{dn=true;[lx,ly]=pos(e);cv.setPointerCapture(e.pointerId)};
+ cv.onpointermove=e=>{if(!dn)return;const[px,py]=pos(e);x.strokeStyle=col;x.lineWidth=22;x.beginPath();x.moveTo(lx,ly);x.lineTo(px,py);x.stroke();lx=px;ly=py};
+ cv.onpointerup=cv.onpointercancel=()=>{if(dn){dn=false;tone(800,.1)}};
+ ['Line','Circle','Wave','Zigzag'].forEach((s,i)=>btn('Trace '+s,P[i],()=>{shape=s;draw();say(s)}));
+ [['Red','#e53935'],['Blue','#1e88e5'],['Green','#43a047'],['Purple','#8e24aa'],['Orange','#fb8c00']].forEach(c=>btn(c[0]+' Pen',c[1],()=>{col=c[1];say(c[0])}));
+ btn('Clear','#546e7a',draw);
+}
+
+function body(){
+ M('Tap a body part to learn its name!');const f=el('','face');
+ const B=[['👀','Eyes',50,36,110],['👃','Nose',50,54,80],['👂','Ear',2,46,90],['👂','Ear',98,46,90,1],['👄','Mouth',50,74,100],['✋','Hand',-14,98,100],['✋','Hand',114,98,100,1]];
+ B.forEach(b=>{const p=el(b[0],'part',{left:b[2]+'%',top:b[3]+'%',fontSize:b[4]+'px',lineHeight:1},f);p.dataset.n=b[1];if(b[5])p.style.setProperty('--f',-1);
+  p.onclick=()=>{p.classList.remove('bnc');void p.offsetWidth;p.classList.add('bnc');M('These are my '+b[1]+'!'.replace('These are','This is').replace('This is my Eyes','These are my Eyes'));say((b[1]=='Eyes'?'These are my eyes':'This is my '+b[1].toLowerCase()));tone(500+b[3]*5,.2)}});
+ [...new Set(B.map(b=>b[1]))].forEach((k,i)=>btn('Find '+k,P[i],()=>{f.querySelectorAll('.part').forEach(p=>{p.classList.remove('glow');if(p.dataset.n==k){void p.offsetWidth;p.classList.add('glow')}});M('Where is the '+k.toLowerCase()+'?');say('Show me the '+k.toLowerCase())}));
+}
+
+function water(){
+ M('Drop things in the water!');el('','tub');
+ const I=[['🪶','Feather',1],['🍃','Leaf',1],['🏐','Ball',1],['🦆','Rubber duck',1],['🧱','Brick',0],['🔑','Key',0],['🪙','Coin',0],['⚓','Anchor',0]];
+ const go=it=>{const H=st.clientHeight,W=st.clientWidth,sf=H*.52,x=W*.25+Math.random()*W*.5;
+  const old=st.querySelectorAll('.drop');if(old.length>11)old[0].remove();
+  const i=el(it[0],'drop',{left:x+'px',top:'-100px',fontSize:'64px'});void i.offsetWidth;i.style.transition='top .7s cubic-bezier(.5,0,1,.6)';i.style.top=(sf-60)+'px';tone(400,.1);
+  setTimeout(()=>{tone(200,.3,'triangle');for(let k=0;k<10;k++)el('💧','dr',{left:x+'px',top:sf+'px',fontSize:'24px','--dx':(Math.random()*180-90)+'px'}).addEventListener('animationend',e=>e.target.remove());
+   if(it[2]){i.style.transition='top .6s ease-out';i.style.top=(sf-45)+'px';i.classList.add('bob')}else{i.style.transition='top 1.6s ease-in';i.style.top=(H-95)+'px'}
+   M(it[1]+(it[2]?' floats! 🌊':' sinks! ⬇️'));say(it[1]+(it[2]?' floats':' sinks'))},700)};
+ I.forEach((it,i)=>btn(it[0]+' '+it[1],P[i],()=>go(it)));
+ btn('Empty Tub','#546e7a',()=>{st.querySelectorAll('.drop').forEach(d=>d.remove());M('The tub is empty. Drop more!')});
+}
+
+function daynight(){
+ let night=false,lamp=false;
+ const r=el('<div class=floor></div><div class=win><div class=sky><div class=sun>🌞</div><div class=moon>🌙</div><div class=stars>✨ ✨ ✨<br><br>✨ ✨<br><br>✨ ✨ ✨</div></div></div><div class=lamp>💡</div><div class=swt><div class=knob></div></div><div class=furn>🛏️</div><div class=dk></div>','room');
+ const set=()=>{r.classList.toggle('night',night);r.classList.toggle('lampon',lamp);M(night?(lamp?'Night time. The lamp is ON!':'Night time. The moon and stars are out!'):'Day time. The sun is shining!')};
+ const sw=()=>{night=!night;if(!night)lamp=false;set();tone(night?200:700,.2);say(night?'Good night!':'Good morning!')};
+ const lp=()=>{lamp=!lamp;set();tone(500,.1);say(lamp?'Lamp on':'Lamp off')};
+ r.querySelector('.swt').onclick=sw;r.querySelector('.lamp').onclick=lp;set();
+ btn('Day ☀️','#f9a825',()=>{night=false;lamp=false;set();say('Day time')});
+ btn('Night 🌙','#3949ab',()=>{night=true;set();say('Night time')});
+ btn('Light Switch','#e53935',sw);btn('Lamp On / Off','#43a047',lp);
+}
+
+const S=[bubbles,animals,sorter,touch,trace,body,water,daynight];
+const N=['🫧 Bubble Pop','🐮 Animal Peek-a-Boo','🍎 Big vs. Small','🧸 Touch & Feel','✏️ Finger Tracing','👀 Body Parts','💦 Sink or Splash','🌞 Day & Night'];
+const tabs=N.map((n,i)=>btn(n,P[i],()=>load(i),nav));
+function load(i){T.forEach(clearInterval);T=[];try{speechSynthesis.cancel()}catch(e){}cur=i;
+ st.innerHTML='<div class="msg" id="msg"></div>';ct.innerHTML='';tabs.forEach((t,k)=>t.classList.toggle('on',k==i));S[i]()}
+$('#fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+document.onfullscreenchange=()=>{$('#fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(()=>load(cur),250)};
+load(0);
+</script></body></html>
