@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SimulationItem } from '../types';
 import { getSimTheme, getDisciplineColor } from '../data/simTheme';
 import { 
@@ -272,12 +272,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   ];
 
   const handleCategoryChange = (catKey: string) => {
+    if (catKey !== 'All Simulations') {
+      const countInCurrentTier = activeSimulations.filter(s => s.category === catKey && matchesGradeTier(s, selectedGradeTier)).length;
+      if (countInCurrentTier === 0) {
+        setSelectedGradeTier('all');
+      }
+    }
     if (onSelectCategory) {
       onSelectCategory(catKey);
     } else {
       setInternalCategory(catKey);
     }
   };
+
+  useEffect(() => {
+    if (controlledCategory && controlledCategory !== 'All Simulations') {
+      const countInCurrentTier = simulations.filter(
+        s => s.category === controlledCategory && matchesGradeTier(s, selectedGradeTier)
+      ).length;
+      if (countInCurrentTier === 0) {
+        setSelectedGradeTier('all');
+      }
+    }
+  }, [controlledCategory, simulations, selectedGradeTier]);
 
   const handleCardClick = (sim: SimulationItem) => {
     openSimulationInNewTab(sim);

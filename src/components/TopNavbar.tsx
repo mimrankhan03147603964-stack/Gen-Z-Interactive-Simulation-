@@ -8,6 +8,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { SimulationItem } from '../types';
+import { SIMULATIONS_LIST } from '../data/simulationsData';
 
 interface TopNavbarProps {
   activeSim?: SimulationItem | null;
@@ -114,15 +115,22 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     }
   }, [onBackToCatalog, onSelectCategory]);
 
+  const getCategoryCount = (key: string) => {
+    if (key === 'All Simulations') return SIMULATIONS_LIST.length;
+    return SIMULATIONS_LIST.filter(s => s.category === key).length;
+  };
+
   const stemDropdownItems = [
-    { label: `All Interactive Labs (${totalSimulations})`, categoryKey: 'All Simulations' },
-    { label: 'Physics & Mechanics (15)', categoryKey: 'Physics & Motion' },
-    { label: 'Chemistry & Matter (13)', categoryKey: 'Chemistry & Matter' },
-    { label: 'Biology & Genetics (14)', categoryKey: 'Biology & Life' },
-    { label: 'Mathematics & Logic (13)', categoryKey: 'Mathematics & Logic' },
-    { label: 'Earth & Solar System (10)', categoryKey: 'Earth & Space' },
-    { label: 'Computer Science & IT (5)', categoryKey: 'Computer Science & IT' },
-    { label: 'Early Childhood Care & Education (ECCE)', categoryKey: 'Early Childhood (ECCE)' },
+    { label: `All Interactive Labs (${SIMULATIONS_LIST.length})`, categoryKey: 'All Simulations' },
+    { label: `Physics & Mechanics (${getCategoryCount('Physics & Motion')})`, categoryKey: 'Physics & Motion' },
+    { label: `Chemistry & Matter (${getCategoryCount('Chemistry & Matter')})`, categoryKey: 'Chemistry & Matter' },
+    { label: `Biology & Genetics (${getCategoryCount('Biology & Life')})`, categoryKey: 'Biology & Life' },
+    { label: `Earth & Solar System (${getCategoryCount('Earth & Space')})`, categoryKey: 'Earth & Space' },
+    { label: `Mathematics & Logic (${getCategoryCount('Mathematics & Logic')})`, categoryKey: 'Mathematics & Logic' },
+    { label: `Computer Science & IT (${getCategoryCount('Computer Science & IT')})`, categoryKey: 'Computer Science & IT' },
+    { label: `English & Grammar (${getCategoryCount('English & Grammar')})`, categoryKey: 'English & Grammar' },
+    { label: `Early Childhood Care & Education (ECCE) (${getCategoryCount('Early Childhood (ECCE)')})`, categoryKey: 'Early Childhood (ECCE)' },
+    { label: `Urdu & Linguistics (${getCategoryCount('Urdu & Linguistics')})`, categoryKey: 'Urdu & Linguistics' },
   ];
 
   const hubDropdownItems = [
@@ -263,11 +271,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[290px] sm:w-[315px] rounded-xl overflow-hidden select-none"
+                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none"
                   style={{
                     backgroundColor: '#86eb16',
                     border: '1.5px solid #6ec40d',
-                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)'
+                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)',
+                    maxHeight: 'calc(100vh - 75px)',
+                    overflowY: 'auto'
                   }}
                 >
                   {/* Dropdown Header */}
