@@ -102,7 +102,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       return;
     }
 
-    // 4. Smooth scroll to target section with sticky navbar offset consideration
+    // 4. Smooth scroll to target section with sticky/fixed navbar offset consideration
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -131,67 +131,80 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   return (
     <header 
       ref={headerRef}
-      className="sticky top-0 left-0 w-full z-50 border-b border-slate-200 bg-white transition-all select-none shadow-sm"
+      className="fixed top-0 left-0 w-full z-[9999] border-b border-slate-200/90 bg-white/98 backdrop-blur-md transition-all select-none shadow-xs"
       style={{ 
-        position: 'sticky', 
+        position: 'fixed', 
         top: 0, 
         left: 0, 
         width: '100%', 
-        zIndex: 50,
-        backgroundColor: '#ffffff',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.06)'
+        zIndex: 9999,
+        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
       }}
     >
-      <div className="max-w-[1720px] 2xl:max-w-[1820px] mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-3 relative">
+      <div 
+        className="w-full max-w-[1720px] 2xl:max-w-[1820px] mx-auto px-2 sm:px-4 lg:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4 flex-nowrap"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'nowrap'
+        }}
+      >
         
         {/* Left: Official Rectangular Logo & Portal Subtitle */}
         <div 
           onClick={() => handleItemClick('#top')}
-          className="flex items-center gap-3 shrink-0 cursor-pointer group"
+          className="flex items-center gap-2 sm:gap-2.5 shrink-0 cursor-pointer group min-w-0"
           title="Gen Z Interactive Simulations Home"
         >
-          {/* GZ Monogram Logo - Exact-Fit Box Tightly Shrink-Wrapped around Logo */}
+          {/* GZ Monogram Logo */}
           <div 
-            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border-2 border-sky-500 bg-[#240854] shadow-[0_2px_6px_rgba(0,0,0,0.3)] transition-all duration-150 group-hover:scale-105"
-            style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '8px' }}
+            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border border-sky-500/80 bg-[#240854] shadow-[0_2px_4px_rgba(0,0,0,0.25)] transition-all duration-150 group-hover:scale-105"
+            style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '7px' }}
           >
             <img 
               src="/genz-official-logo.png" 
               alt="Gen Z Interactive Simulations Official Logo" 
               className="block select-none pointer-events-none rounded-md" 
-              style={{ display: 'block', maxHeight: '38px', width: 'auto', objectFit: 'contain' }}
+              style={{ display: 'block', maxHeight: '34px', width: 'auto', objectFit: 'contain' }}
             />
           </div>
 
           <div className="hidden sm:block shrink-0">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-black tracking-tight text-slate-900 font-heading group-hover:text-sky-600 transition-colors">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[11px] lg:text-xs font-black tracking-tight text-slate-900 font-heading group-hover:text-sky-600 transition-colors whitespace-nowrap">
                 DIGITAL LABORATORY PORTAL
               </span>
               <span 
-                className="px-2 py-0.5 rounded-full text-[10px] font-mono font-black text-white shadow-xs"
+                className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black text-white shadow-2xs whitespace-nowrap"
                 style={{ backgroundColor: '#0284c7', border: '1px solid #0369a1', color: '#ffffff' }}
               >
                 4K UHD
               </span>
             </div>
-            <div className="text-[11px] font-semibold flex items-center gap-1.5 flex-wrap mt-0.5">
-              <span className="font-extrabold text-blue-700">{totalSimulations} Verified Interactive Simulations</span>
-              <span className="text-slate-400 font-bold">&bull;</span>
+            <div className="text-[10px] lg:text-[11px] font-semibold flex items-center gap-1.5 flex-nowrap mt-0.5 whitespace-nowrap">
+              <span className="font-extrabold text-blue-700">{totalSimulations} Verified Labs</span>
+              <span className="hidden xl:inline text-slate-300 font-bold">&bull;</span>
               <span 
-                className="px-2 py-0.5 rounded-full text-[10px] font-extrabold text-white shadow-xs"
+                className="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[9px] font-extrabold text-white shadow-2xs whitespace-nowrap"
                 style={{ backgroundColor: '#059669', border: '1px solid #047857', color: '#ffffff' }}
               >
-                National Curriculum of Pakistan (Session 2026-27)
+                NCP Aligned (Session 2026-27)
               </span>
             </div>
           </div>
         </div>
 
-        {/* Navigation Items (No overflow-x-auto, ensuring dropdowns float above without clipping) */}
+        {/* Navigation Items (Single horizontal line, flex-nowrap, no horizontal overflow) */}
         <nav 
-          className="flex flex-row items-center justify-end gap-1 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap"
+          className="flex flex-row items-center justify-end gap-1 sm:gap-1.5 md:gap-2 shrink-0 flex-nowrap whitespace-nowrap"
           style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            flexWrap: 'nowrap',
             position: 'relative'
           }}
         >
@@ -199,10 +212,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#top')}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold text-slate-800 hover:text-sky-600 hover:bg-slate-100 transition-all cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:text-sky-600 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Return to Home Portal"
           >
-            <Home className="w-3.5 h-3.5 text-slate-500" />
+            <Home className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             <span>Home</span>
           </button>
 
@@ -215,7 +228,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button
               type="button"
               onClick={() => toggleDropdown('catalog')}
-              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all cursor-pointer shrink-0 ${
+              className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'catalog' 
                   ? 'text-sky-700 bg-sky-50 ring-2 ring-sky-300' 
                   : 'text-slate-800 hover:text-sky-600 hover:bg-slate-100'
@@ -224,24 +237,24 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               aria-haspopup="true"
               title="Browse STEM Catalog by Discipline"
             >
-              <Layers className="w-3.5 h-3.5 text-sky-600" />
+              <Layers className="w-3.5 h-3.5 text-sky-600 shrink-0" />
               <span>STEM Catalog ({totalSimulations})</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'catalog' ? 'rotate-180 text-sky-600' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-sky-600' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel (z-[100], solid white background, high-contrast shadow) */}
+            {/* Floating Dropdown Panel (z-[10000], sits above fixed navbar and content) */}
             {openDropdown === 'catalog' && (
               <div 
-                className="absolute right-0 sm:left-0 top-full mt-2 w-72 sm:w-84 md:w-96 bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-2 z-[100] transition-all"
+                className="absolute right-0 top-full mt-1.5 w-72 sm:w-80 md:w-88 bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-2 z-[10000] transition-all"
                 style={{
-                  zIndex: 100,
+                  zIndex: 10000,
                   backgroundColor: '#ffffff',
-                  boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.22), 0 8px 16px -4px rgba(0, 0, 0, 0.1)'
+                  boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1)'
                 }}
                 onMouseEnter={() => handleMouseEnter('catalog')}
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 mb-1">
+                <div className="px-3 py-1.5 flex items-center justify-between border-b border-slate-100 mb-1">
                   <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-500">
                     STEM Disciplines &amp; Catalog
                   </span>
@@ -250,7 +263,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   </span>
                 </div>
 
-                <div className="max-h-[380px] overflow-y-auto scrollbar-thin py-1 space-y-0.5">
+                <div className="max-h-[380px] overflow-y-auto scrollbar-thin py-0.5 space-y-0.5">
                   {catalogDropdownItems.map((item, idx) => (
                     <button
                       key={idx}
@@ -263,7 +276,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                         style={{ backgroundColor: item.color || '#0284c7' }} 
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-sky-700 transition-colors flex items-center justify-between">
+                        <div className="text-xs sm:text-[13px] font-bold text-slate-800 group-hover:text-sky-700 transition-colors flex items-center justify-between">
                           <span className="truncate">{item.label}</span>
                         </div>
                         <div className="text-[11px] text-slate-500 leading-tight truncate">
@@ -286,7 +299,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button
               type="button"
               onClick={() => toggleDropdown('hub')}
-              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all cursor-pointer shrink-0 ${
+              className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'hub' 
                   ? 'text-indigo-700 bg-indigo-50 ring-2 ring-indigo-300' 
                   : 'text-slate-800 hover:text-indigo-600 hover:bg-slate-100'
@@ -295,24 +308,25 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               aria-haspopup="true"
               title="Pedagogical Audience & Standards"
             >
-              <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Educators &amp; Students Hub</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'hub' ? 'rotate-180 text-indigo-600' : 'text-slate-400'}`} />
+              <BookOpen className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+              <span className="hidden sm:inline">Educators &amp; Students Hub</span>
+              <span className="sm:hidden">Hub</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-indigo-600' : 'text-slate-400'}`} />
             </button>
 
-            {/* Floating Dropdown Panel (z-[100], solid white background, high-contrast shadow) */}
+            {/* Floating Dropdown Panel (z-[10000], sits above fixed navbar and content) */}
             {openDropdown === 'hub' && (
               <div 
-                className="absolute right-0 sm:left-0 top-full mt-2 w-72 sm:w-84 md:w-96 bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-2 z-[100] transition-all"
+                className="absolute right-0 top-full mt-1.5 w-72 sm:w-80 md:w-88 bg-white rounded-2xl border-2 border-slate-200 shadow-2xl p-2 z-[10000] transition-all"
                 style={{
-                  zIndex: 100,
+                  zIndex: 10000,
                   backgroundColor: '#ffffff',
-                  boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.22), 0 8px 16px -4px rgba(0, 0, 0, 0.1)'
+                  boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1)'
                 }}
                 onMouseEnter={() => handleMouseEnter('hub')}
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 mb-1">
+                <div className="px-3 py-1.5 flex items-center justify-between border-b border-slate-100 mb-1">
                   <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-slate-500">
                     Pedagogical Audience &amp; Framework
                   </span>
@@ -334,7 +348,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                         style={{ backgroundColor: item.color || '#6366f1' }} 
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-indigo-700 transition-colors flex items-center justify-between">
+                        <div className="text-xs sm:text-[13px] font-bold text-slate-800 group-hover:text-indigo-700 transition-colors flex items-center justify-between">
                           <span className="truncate">{item.label}</span>
                         </div>
                         <div className="text-[11px] text-slate-500 leading-tight truncate">
@@ -352,22 +366,23 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold text-slate-800 hover:text-emerald-600 hover:bg-slate-100 transition-all cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:text-emerald-600 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Go to Developer & Contact Section"
           >
-            <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Developer &amp; Contact</span>
+            <UserCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span className="hidden md:inline">Developer &amp; Contact</span>
+            <span className="md:hidden">Contact</span>
           </button>
 
           {/* Link 5: Explore All Labs Grid */}
           <button
             type="button"
             onClick={() => handleItemClick('#catalog', 'All Simulations')}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 hover:text-sky-800 border border-sky-200 transition-all cursor-pointer shrink-0 shadow-xs"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 hover:text-sky-800 border border-sky-200 transition-colors whitespace-nowrap shrink-0 shadow-2xs cursor-pointer"
             title="Explore Full STEM Labs Catalog Grid"
           >
             <Sparkles className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-            <span>Explore All Labs Grid</span>
+            <span>Explore All Labs</span>
           </button>
         </nav>
 

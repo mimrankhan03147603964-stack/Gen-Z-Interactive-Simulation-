@@ -247,8 +247,8 @@ export default function App() {
       {/* 3D STEM Simulation Interactive Background strictly in background */}
       <ThreeStemBackground />
       
-      {/* Website Content Container with position: relative, z-index: 10 */}
-      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen">
+      {/* Website Content Container with position: relative, z-index: 10, offset by fixed navbar height */}
+      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14">
         {/* Top Website Header Navbar (Desktop-Optimized, Sticky at Top) */}
         <TopNavbar
           totalSimulations={allSimulations.length}
