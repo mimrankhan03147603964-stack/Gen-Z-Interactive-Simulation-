@@ -248,7 +248,7 @@ export default function App() {
       <ThreeStemBackground />
       
       {/* Website Content Container with position: relative, z-index: 1 */}
-      <div className="relative z-1 flex flex-col flex-1 w-full min-h-screen">
+      <div className="relative z-1 flex flex-col flex-1 w-full min-h-screen overflow-x-hidden">
         {/* Top Website Header Navbar (Desktop-Optimized, No Hamburger Menu) */}
         <TopNavbar
           totalSimulations={allSimulations.length}
@@ -277,9 +277,9 @@ export default function App() {
           />
         )}
 
-        {/* Main Catalog Portal & Dashboard for Laptop & Desktop Screens (Full Widescreen Span) */}
+        {/* Main Catalog Portal & Dashboard for Mobile, Tablet, Laptop & Desktop Screens */}
         <main 
-          className="flex-1 w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100"
+          className="flex-1 w-full max-w-none px-3 sm:px-6 lg:px-8 xl:px-12 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100 overflow-x-hidden"
           style={{
             backgroundColor: 'transparent'
           }}

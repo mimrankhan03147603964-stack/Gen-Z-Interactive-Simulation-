@@ -254,7 +254,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div className="flex-1 min-w-0">
-            <h1 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] whitespace-normal sm:whitespace-nowrap">
+            <h1 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] break-words">
               Gen Z Interactive Simulations Portal
             </h1>
             <p className="mt-2 text-sm sm:text-base font-black text-sky-300 tracking-wide flex items-center gap-2 drop-shadow-sm">
@@ -269,14 +269,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
             <div className="relative z-10 mt-6 flex items-center gap-4 flex-wrap">
               <a
                 href="#catalog"
-                className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-blue-500 text-white font-black px-6 py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-xl border-2 border-sky-200 transition-all transform active:scale-95"
+                className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-blue-500 text-white font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-xl border-2 border-sky-200 transition-all transform active:scale-95"
               >
                 <Layers className="w-4 h-4 text-white pointer-events-none" />
                 <span>Explore All Labs Grid</span>
               </a>
               <a
                 href="#stage"
-                className="bg-slate-900 hover:bg-amber-400 text-amber-300 hover:text-slate-950 px-6 py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-amber-400 transition-all transform active:scale-95"
+                className="bg-slate-900 hover:bg-amber-400 text-amber-300 hover:text-slate-950 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-amber-400 transition-all transform active:scale-95"
               >
                 <Play className="w-4 h-4 fill-amber-400 group-hover:fill-slate-950 text-amber-400 pointer-events-none" />
                 <span>Interactive Stage &amp; Dedicated Tabs</span>
@@ -289,8 +289,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Monogram Logo" 
-              className="block select-none pointer-events-none transition-transform duration-300 hover:scale-105"
-              style={{ display: 'block', maxHeight: '105px', width: 'auto', objectFit: 'contain', background: 'transparent' }}
+              className="block select-none pointer-events-none transition-transform duration-300 hover:scale-105 max-h-[75px] sm:max-h-[90px] md:max-h-[105px] w-auto object-contain"
+              style={{ display: 'block', background: 'transparent' }}
             />
           </div>
         </div>

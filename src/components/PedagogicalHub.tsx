@@ -84,20 +84,14 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
         </div>
       </div>
 
-      {/* Two Prominent Widescreen Desktop/Laptop Cards (Strict 2-Column Side-by-Side Grid, Compact Landscape Height) */}
+      {/* Two Prominent Widescreen Desktop/Laptop Cards (Strict 2-Column Side-by-Side Grid on Laptops/Desktop, 1-Column on Mobile) */}
       <div 
-        className="grid grid-cols-2 gap-5 w-full max-w-none"
-        style={{
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-          gap: '1.25rem',
-        }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 w-full max-w-none"
       >
         
         {/* CARD 1: FOR TEACHERS & EDUCATORS - Solid Deep Navy / Midnight Blue */}
         <div 
-          className="w-full flex-1 relative overflow-hidden rounded-2xl py-3.5 px-5 sm:px-6 flex flex-col justify-between border-2 border-sky-400 shadow-xl group text-white transition-all hover:shadow-[0_20px_40px_-10px_rgba(2,28,77,0.7)]"
+          className="w-full flex-1 relative overflow-hidden rounded-2xl py-3.5 px-4 sm:px-6 flex flex-col justify-between border-2 border-sky-400 shadow-xl group text-white transition-all hover:shadow-[0_20px_40px_-10px_rgba(2,28,77,0.7)]"
           style={{
             background: 'linear-gradient(145deg, #071a3d 0%, #0d2857 50%, #123774 100%)',
             width: '100%'
@@ -114,7 +108,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
                   <GraduationCap className="w-5 h-5 text-cyan-300 pointer-events-none" />
                 </div>
                 <div className="flex items-center gap-2 flex-wrap min-w-0">
-                  <h3 className="text-base sm:text-lg font-black text-white font-heading tracking-tight drop-shadow-sm whitespace-nowrap">
+                  <h3 className="text-base sm:text-lg font-black text-white font-heading tracking-tight drop-shadow-sm">
                     For Teachers &amp; Educators
                   </h3>
                   <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-950 border border-sky-400/60 text-sky-200 shadow-xs">
@@ -187,7 +181,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
         {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS - Solid Dark Royal Violet / Rich Amethyst */}
         <div 
-          className="w-full flex-1 relative overflow-hidden rounded-2xl py-3.5 px-5 sm:px-6 flex flex-col justify-between border-2 border-purple-400 shadow-xl group text-white transition-all hover:shadow-[0_20px_40px_-10px_rgba(59,7,100,0.7)]"
+          className="w-full flex-1 relative overflow-hidden rounded-2xl py-3.5 px-4 sm:px-6 flex flex-col justify-between border-2 border-purple-400 shadow-xl group text-white transition-all hover:shadow-[0_20px_40px_-10px_rgba(59,7,100,0.7)]"
           style={{
             background: 'linear-gradient(145deg, #1f0838 0%, #300f54 50%, #461678 100%)',
             width: '100%'
@@ -204,7 +198,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
                   <Compass className="w-5 h-5 text-pink-300 pointer-events-none" />
                 </div>
                 <div className="flex items-center gap-2 flex-wrap min-w-0">
-                  <h3 className="text-base sm:text-lg font-black text-white font-heading tracking-tight drop-shadow-sm whitespace-nowrap">
+                  <h3 className="text-base sm:text-lg font-black text-white font-heading tracking-tight drop-shadow-sm">
                     For Students &amp; Young Scientists
                   </h3>
                   <span className="text-[10px] font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-950 border border-purple-400/60 text-purple-200 shadow-xs">

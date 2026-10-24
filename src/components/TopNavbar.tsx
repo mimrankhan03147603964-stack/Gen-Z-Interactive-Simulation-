@@ -148,14 +148,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         {/* Navigation Items strictly in ONE single horizontal line side-by-side */}
         <nav 
           ref={navRef}
-          className="flex flex-row items-center justify-end shrink-0"
+          className="flex flex-row items-center justify-end shrink-0 max-w-[calc(100vw-65px)] sm:max-w-none overflow-x-auto scrollbar-none"
           style={{
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'nowrap',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            gap: '10px'
+            gap: '10px',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
           }}
         >
           {/* Link 1: Home */}
