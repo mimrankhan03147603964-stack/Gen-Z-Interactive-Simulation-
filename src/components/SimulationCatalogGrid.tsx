@@ -12,7 +12,20 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
-  ArrowLeft
+  ArrowLeft,
+  ArrowRight,
+  Home,
+  Atom,
+  FlaskConical,
+  Dna,
+  Globe,
+  Calculator,
+  Laptop,
+  BookOpen,
+  Languages,
+  GraduationCap,
+  Compass,
+  BrainCircuit
 } from 'lucide-react';
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
@@ -57,13 +70,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#0ea5e9',
     activeBorder: '#38bdf8',
     glowColor: 'rgba(14, 165, 233, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 2 7 12 12 22 7 12 2" fill={isSelected ? 'rgba(255,255,255,0.35)' : 'rgba(56,189,248,0.2)'} stroke={isSelected ? '#ffffff' : '#38bdf8'} />
-        <polyline points="2 17 12 22 22 17" stroke={isSelected ? '#ffffff' : '#38bdf8'} />
-        <polyline points="2 12 12 17 22 12" stroke={isSelected ? '#ffffff' : '#0ea5e9'} />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Layers className={className || "w-4 h-4"} />
   },
   {
     key: 'Physics & Motion',
@@ -73,22 +80,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#3b82f6',
     activeBorder: '#60a5fa',
     glowColor: 'rgba(37, 99, 235, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <defs>
-          <radialGradient id="physNucleus" cx="40%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="35%" stopColor="#38bdf8" />
-            <stop offset="70%" stopColor="#2563eb" />
-            <stop offset="100%" stopColor="#1e3a8a" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="36" cy="36" rx="28" ry="11" transform="rotate(30 36 36)" stroke={isSelected ? '#ffffff' : '#38bdf8'} strokeWidth="2.5" opacity="0.9" />
-        <ellipse cx="36" cy="36" rx="28" ry="11" transform="rotate(-30 36 36)" stroke={isSelected ? '#ffffff' : '#60a5fa'} strokeWidth="2.5" opacity="0.9" />
-        <circle cx="36" cy="36" r="9" fill="url(#physNucleus)" />
-        <circle cx="58" cy="49" r="3.5" fill="#00f5ff" />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Atom className={className || "w-4 h-4"} />
   },
   {
     key: 'Chemistry & Matter',
@@ -98,19 +90,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#a855f7',
     activeBorder: '#d8b4fe',
     glowColor: 'rgba(147, 51, 234, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <path d="M30 8 H42 V22 L58 54 C60 58 57 62 53 62 H19 C15 62 12 58 14 54 L30 22 V8 Z" 
-          stroke={isSelected ? '#ffffff' : '#d8b4fe'} 
-          strokeWidth="2.5" 
-          strokeLinejoin="round" 
-          fill="rgba(168, 85, 247, 0.15)" 
-        />
-        <rect x="27" y="6" width="18" height="3" rx="1.5" fill={isSelected ? '#ffffff' : '#c084fc'} />
-        <path d="M19 44 Q28 41 36 45 T53 43 L56 54 C57 57 55 60 52 60 H20 C17 60 15 57 16 54 Z" fill="#a855f7" />
-        <circle cx="30" cy="51" r="2.8" fill="#ffffff" opacity="0.9" />
-      </svg>
-    )
+    renderIcon: ({ className }) => <FlaskConical className={className || "w-4 h-4"} />
   },
   {
     key: 'Biology & Life',
@@ -120,18 +100,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#22c55e',
     activeBorder: '#86efac',
     glowColor: 'rgba(22, 163, 74, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <path d="M38 12 C49 14 62 25 60 44 C58 56 46 62 34 60 C32 50 31 38 38 12 Z" 
-          fill="#22c55e" 
-          opacity="0.85" 
-          stroke={isSelected ? '#ffffff' : '#86efac'} 
-          strokeWidth="1.5" 
-        />
-        <path d="M12 14 Q28 24 19 34 Q10 44 28 54 Q19 64 12 68" stroke={isSelected ? '#ffffff' : '#34d399'} strokeWidth="3" fill="none" />
-        <path d="M26 14 Q10 24 19 34 Q28 44 10 54 Q19 64 26 68" stroke={isSelected ? '#e0f2fe' : '#10b981'} strokeWidth="3" fill="none" />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Dna className={className || "w-4 h-4"} />
   },
   {
     key: 'Earth & Space',
@@ -141,14 +110,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#0284c7',
     activeBorder: '#7dd3fc',
     glowColor: 'rgba(2, 132, 199, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <ellipse cx="36" cy="36" rx="32" ry="11" transform="rotate(-22 36 36)" stroke="#f59e0b" strokeWidth="2.5" opacity="0.7" strokeDasharray="36 36" />
-        <circle cx="36" cy="36" r="20" fill="#0284c7" stroke={isSelected ? '#ffffff' : '#7dd3fc'} strokeWidth="1.5" />
-        <path d="M26 26 C28 22 37 23 41 26 C44 29 45 34 42 37 C38 40 33 36 31 38 C29 40 27 34 26 26 Z" fill="#22c55e" />
-        <circle cx="60" cy="25" r="3.5" fill={isSelected ? '#ffffff' : '#fbbf24'} />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Globe className={className || "w-4 h-4"} />
   },
   {
     key: 'Mathematics & Logic',
@@ -158,14 +120,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#f59e0b',
     activeBorder: '#fdba74',
     glowColor: 'rgba(234, 88, 12, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <line x1="10" y1="56" x2="62" y2="56" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="2" />
-        <line x1="16" y1="10" x2="16" y2="62" stroke={isSelected ? '#ffffff' : '#fb923c'} strokeWidth="2" />
-        <path d="M16 56 Q28 18 42 42 T62 20" stroke={isSelected ? '#ffffff' : '#f59e0b'} strokeWidth="3" fill="none" />
-        <circle cx="36" cy="16" r="4" fill="#fbbf24" stroke={isSelected ? '#ffffff' : '#7c2d12'} strokeWidth="1.2" />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Calculator className={className || "w-4 h-4"} />
   },
   {
     key: 'Computer Science & IT',
@@ -175,14 +130,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#14b8a6',
     activeBorder: '#5eead4',
     glowColor: 'rgba(13, 148, 136, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <rect x="12" y="10" width="48" height="34" rx="4" fill="#042f2e" stroke={isSelected ? '#ffffff' : '#2dd4bf'} strokeWidth="2.5" />
-        <line x1="18" y1="18" x2="30" y2="18" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
-        <line x1="33" y1="18" x2="42" y2="18" stroke="#34d399" strokeWidth="2" strokeLinecap="round" />
-        <rect x="25" y="52" width="22" height="3" rx="1.5" fill={isSelected ? '#ffffff' : '#14b8a6'} />
-      </svg>
-    )
+    renderIcon: ({ className }) => <Laptop className={className || "w-4 h-4"} />
   },
   {
     key: 'English & Grammar',
@@ -192,17 +140,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#8b5cf6',
     activeBorder: '#c4b5fd',
     glowColor: 'rgba(99, 102, 241, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <path d="M36 54 C26 49 14 49 8 51 V21 C14 19 26 19 36 24 C46 19 58 19 64 21 V51 C58 49 46 49 36 54 Z" 
-          fill="#312e81" 
-          stroke={isSelected ? '#ffffff' : '#fbbf24'} 
-          strokeWidth="2.2" 
-        />
-        <circle cx="26" cy="12" r="7" fill="#fbbf24" />
-        <text x="23" y="16" fill="#1e1b4b" fontSize="11" fontWeight="900">A</text>
-      </svg>
-    )
+    renderIcon: ({ className }) => <BookOpen className={className || "w-4 h-4"} />
   },
   {
     key: 'Early Childhood (ECCE)',
@@ -212,14 +150,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#f43f5e',
     activeBorder: '#fecdd3',
     glowColor: 'rgba(244, 63, 94, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <polygon points="16,32 30,39 16,46 2,39" fill="#fda4af" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
-        <polygon points="2,39 16,46 16,60 2,53" fill="#e11d48" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
-        <polygon points="16,46 30,39 30,53 16,60" fill="#be123c" stroke={isSelected ? '#ffffff' : '#fbbf24'} strokeWidth="1.5" />
-        <text x="5" y="53" fill="#ffffff" fontSize="11" fontWeight="900">A</text>
-      </svg>
-    )
+    renderIcon: ({ className }) => <Sparkles className={className || "w-4 h-4"} />
   },
   {
     key: 'Urdu & Linguistics',
@@ -229,16 +160,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#10b981',
     activeBorder: '#6ee7b7',
     glowColor: 'rgba(16, 185, 129, 0.45)',
-    renderIcon: ({ isSelected, className }) => (
-      <svg className={className || "w-6 h-6"} viewBox="0 0 72 72" fill="none">
-        <path d="M12 20 C22 18 34 18 36 24 C38 18 50 18 60 20 V54 C50 52 38 52 36 57 C34 52 22 52 12 54 Z" 
-          fill={isSelected ? '#064e3b' : '#065f46'} 
-          stroke={isSelected ? '#ffffff' : '#34d399'} 
-          strokeWidth="2.2" 
-        />
-        <text x="36" y="42" fill="#fbbf24" fontSize="14" fontWeight="900" textAnchor="middle">اردو</text>
-      </svg>
-    )
+    renderIcon: ({ className }) => <Languages className={className || "w-4 h-4"} />
   }
 ];
 
@@ -275,11 +197,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
   const gradeTiers = [
-    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12' },
-    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE' },
-    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics' },
-    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS' },
-    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus' },
+    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12', icon: GraduationCap },
+    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE', icon: Sparkles },
+    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics', icon: Compass },
+    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS', icon: FlaskConical },
+    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus', icon: BrainCircuit },
   ];
 
   const handleGradeTierChange = (tierKey: string) => {
@@ -687,44 +609,50 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       case 'all':
         return {
           btn: isSelected
-            ? 'bg-blue-600 text-white border-2 border-blue-400 shadow-md font-black'
-            : 'bg-blue-50 text-blue-950 border-2 border-blue-400 hover:bg-blue-100 font-bold',
-          badge: isSelected ? 'bg-blue-800 text-white font-black' : 'bg-blue-700 text-white font-black'
+            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white border-2 border-white shadow-xl shadow-blue-500/50 font-black ring-2 ring-blue-400'
+            : 'bg-[#153a7a] text-white border-2 border-sky-400 hover:bg-[#1e4d9e] hover:border-sky-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-cyan-300 font-mono font-black border border-cyan-300' : 'bg-slate-950/90 text-sky-200 font-mono font-black border border-sky-400',
+          iconBox: isSelected ? 'bg-blue-500/40 text-white border border-white/60' : 'bg-sky-500/30 text-white border border-sky-400'
         };
       case 'primary':
         return {
           btn: isSelected
-            ? 'bg-emerald-600 text-white border-2 border-emerald-400 shadow-md font-black'
-            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
-          badge: isSelected ? 'bg-emerald-800 text-white font-black' : 'bg-emerald-700 text-white font-black'
+            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white border-2 border-white shadow-xl shadow-emerald-500/50 font-black ring-2 ring-emerald-400'
+            : 'bg-[#0f5439] text-white border-2 border-emerald-400 hover:bg-[#15734e] hover:border-emerald-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-emerald-300 font-mono font-black border border-emerald-300' : 'bg-slate-950/90 text-emerald-200 font-mono font-black border border-emerald-400',
+          iconBox: isSelected ? 'bg-emerald-500/40 text-white border border-white/60' : 'bg-emerald-500/30 text-white border border-emerald-400'
         };
       case 'middle':
         return {
           btn: isSelected
-            ? 'bg-amber-500 text-slate-950 border-2 border-amber-400 shadow-md font-black'
-            : 'bg-amber-50 text-amber-950 border-2 border-amber-400 hover:bg-amber-100 font-bold',
-          badge: isSelected ? 'bg-amber-700 text-white font-black' : 'bg-amber-600 text-white font-black'
+            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-2 border-white shadow-xl shadow-amber-500/50 font-black ring-2 ring-amber-400'
+            : 'bg-[#6b3805] text-white border-2 border-amber-400 hover:bg-[#8f4b07] hover:border-amber-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-amber-300 font-mono font-black border border-amber-300' : 'bg-slate-950/90 text-amber-200 font-mono font-black border border-amber-400',
+          iconBox: isSelected ? 'bg-amber-500/40 text-white border border-white/60' : 'bg-amber-500/30 text-white border border-amber-400'
         };
       case 'secondary':
         return {
           btn: isSelected
-            ? 'bg-rose-600 text-white border-2 border-rose-400 shadow-md font-black'
-            : 'bg-rose-50 text-rose-950 border-2 border-rose-400 hover:bg-rose-100 font-bold',
-          badge: isSelected ? 'bg-rose-800 text-white font-black' : 'bg-rose-700 text-white font-black'
+            ? 'bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 text-white border-2 border-white shadow-xl shadow-rose-500/50 font-black ring-2 ring-rose-400'
+            : 'bg-[#691436] text-white border-2 border-rose-400 hover:bg-[#8a1a47] hover:border-rose-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-rose-300 font-mono font-black border border-rose-300' : 'bg-slate-950/90 text-rose-200 font-mono font-black border border-rose-400',
+          iconBox: isSelected ? 'bg-rose-500/40 text-white border border-white/60' : 'bg-rose-500/30 text-white border border-rose-400'
         };
       case 'higher':
         return {
           btn: isSelected
-            ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-md font-black'
-            : 'bg-purple-50 text-purple-950 border-2 border-purple-400 hover:bg-purple-100 font-bold',
-          badge: isSelected ? 'bg-purple-800 text-white font-black' : 'bg-purple-700 text-white font-black'
+            ? 'bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-700 text-white border-2 border-white shadow-xl shadow-purple-500/50 font-black ring-2 ring-purple-400'
+            : 'bg-[#4d1678] text-white border-2 border-purple-400 hover:bg-[#681ea3] hover:border-purple-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-purple-300 font-mono font-black border border-purple-300' : 'bg-slate-950/90 text-purple-200 font-mono font-black border border-purple-400',
+          iconBox: isSelected ? 'bg-purple-500/40 text-white border border-white/60' : 'bg-purple-500/30 text-white border border-purple-400'
         };
       default:
         return {
           btn: isSelected
-            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
-            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
-          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black'
+            ? 'bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white border-2 border-white shadow-xl shadow-sky-500/50 font-black ring-2 ring-sky-400'
+            : 'bg-[#153a7a] text-white border-2 border-sky-400 hover:bg-[#1e4d9e] font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-sky-300 font-mono font-black border border-sky-300' : 'bg-slate-950/90 text-sky-200 font-mono font-black border border-sky-400',
+          iconBox: isSelected ? 'bg-sky-500/40 text-white border border-white/60' : 'bg-sky-500/30 text-white border border-sky-400'
         };
     }
   };
@@ -734,90 +662,90 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       case 'All Simulations':
         return {
           btn: isSelected
-            ? 'bg-blue-600 text-white border-2 border-blue-400 shadow-md font-black'
-            : 'bg-blue-50 text-blue-950 border-2 border-blue-400 hover:bg-blue-100 font-bold',
-          badge: isSelected ? 'bg-blue-800 text-white font-black' : 'bg-blue-700 text-white font-black',
-          iconBg: isSelected ? 'bg-blue-800 text-white' : 'bg-blue-200 text-blue-900'
+            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white border-2 border-white shadow-xl shadow-blue-500/50 font-black ring-2 ring-blue-400'
+            : 'bg-[#153a7a] text-white border-2 border-blue-400 hover:bg-[#1e4d9e] hover:border-blue-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-cyan-300 font-mono font-black border border-cyan-300' : 'bg-slate-950/90 text-blue-200 font-mono font-black border border-blue-400',
+          iconBox: isSelected ? 'bg-blue-500/40 text-white border border-white/60' : 'bg-blue-500/30 text-white border border-blue-400'
         };
       case 'Physics & Motion':
         return {
           btn: isSelected
-            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
-            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
-          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black',
-          iconBg: isSelected ? 'bg-sky-800 text-white' : 'bg-sky-200 text-sky-900'
+            ? 'bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white border-2 border-white shadow-xl shadow-sky-500/50 font-black ring-2 ring-sky-400'
+            : 'bg-[#0f4a82] text-white border-2 border-sky-400 hover:bg-[#1563ae] hover:border-sky-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-sky-300 font-mono font-black border border-sky-300' : 'bg-slate-950/90 text-sky-200 font-mono font-black border border-sky-400',
+          iconBox: isSelected ? 'bg-sky-500/40 text-white border border-white/60' : 'bg-sky-500/30 text-white border border-sky-400'
         };
       case 'Chemistry & Matter':
         return {
           btn: isSelected
-            ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-md font-black'
-            : 'bg-purple-50 text-purple-950 border-2 border-purple-400 hover:bg-purple-100 font-bold',
-          badge: isSelected ? 'bg-purple-800 text-white font-black' : 'bg-purple-700 text-white font-black',
-          iconBg: isSelected ? 'bg-purple-800 text-white' : 'bg-purple-200 text-purple-900'
+            ? 'bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 text-white border-2 border-white shadow-xl shadow-teal-500/50 font-black ring-2 ring-teal-400'
+            : 'bg-[#0e5450] text-white border-2 border-teal-400 hover:bg-[#14706b] hover:border-teal-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-amber-300 font-mono font-black border border-amber-300' : 'bg-slate-950/90 text-teal-200 font-mono font-black border border-teal-400',
+          iconBox: isSelected ? 'bg-teal-500/40 text-amber-300 border border-white/60' : 'bg-teal-500/30 text-amber-300 border border-teal-400'
         };
       case 'Biology & Life':
         return {
           btn: isSelected
-            ? 'bg-emerald-600 text-white border-2 border-emerald-400 shadow-md font-black'
-            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
-          badge: isSelected ? 'bg-emerald-800 text-white font-black' : 'bg-emerald-700 text-white font-black',
-          iconBg: isSelected ? 'bg-emerald-800 text-white' : 'bg-emerald-200 text-emerald-900'
+            ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-teal-700 text-white border-2 border-white shadow-xl shadow-emerald-500/50 font-black ring-2 ring-emerald-400'
+            : 'bg-[#105c36] text-white border-2 border-emerald-400 hover:bg-[#167847] hover:border-emerald-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-emerald-300 font-mono font-black border border-emerald-300' : 'bg-slate-950/90 text-emerald-200 font-mono font-black border border-emerald-400',
+          iconBox: isSelected ? 'bg-emerald-500/40 text-white border border-white/60' : 'bg-emerald-500/30 text-white border border-emerald-400'
         };
       case 'Earth & Space':
         return {
           btn: isSelected
-            ? 'bg-teal-600 text-white border-2 border-teal-400 shadow-md font-black'
-            : 'bg-teal-50 text-teal-950 border-2 border-teal-400 hover:bg-teal-100 font-bold',
-          badge: isSelected ? 'bg-teal-800 text-white font-black' : 'bg-teal-700 text-white font-black',
-          iconBg: isSelected ? 'bg-teal-800 text-white' : 'bg-teal-200 text-teal-900'
+            ? 'bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-700 text-white border-2 border-white shadow-xl shadow-cyan-500/50 font-black ring-2 ring-cyan-400'
+            : 'bg-[#0e4e80] text-white border-2 border-cyan-400 hover:bg-[#1466a6] hover:border-cyan-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-cyan-300 font-mono font-black border border-cyan-300' : 'bg-slate-950/90 text-cyan-200 font-mono font-black border border-cyan-400',
+          iconBox: isSelected ? 'bg-cyan-500/40 text-white border border-white/60' : 'bg-cyan-500/30 text-white border border-cyan-400'
         };
       case 'Mathematics & Logic':
         return {
           btn: isSelected
-            ? 'bg-amber-500 text-slate-950 border-2 border-amber-400 shadow-md font-black'
-            : 'bg-amber-50 text-amber-950 border-2 border-amber-400 hover:bg-amber-100 font-bold',
-          badge: isSelected ? 'bg-amber-700 text-white font-black' : 'bg-amber-600 text-white font-black',
-          iconBg: isSelected ? 'bg-amber-700 text-white' : 'bg-amber-200 text-amber-900'
+            ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-2 border-white shadow-xl shadow-purple-500/50 font-black ring-2 ring-purple-400'
+            : 'bg-[#4d1b8c] text-white border-2 border-purple-400 hover:bg-[#6423b5] hover:border-purple-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-purple-300 font-mono font-black border border-purple-300' : 'bg-slate-950/90 text-purple-200 font-mono font-black border border-purple-400',
+          iconBox: isSelected ? 'bg-purple-500/40 text-white border border-white/60' : 'bg-purple-500/30 text-white border border-purple-400'
         };
       case 'Computer Science & IT':
         return {
           btn: isSelected
-            ? 'bg-cyan-700 text-white border-2 border-cyan-500 shadow-md font-black'
-            : 'bg-cyan-50 text-cyan-950 border-2 border-cyan-400 hover:bg-cyan-100 font-bold',
-          badge: isSelected ? 'bg-cyan-900 text-white font-black' : 'bg-cyan-700 text-white font-black',
-          iconBg: isSelected ? 'bg-cyan-900 text-white' : 'bg-cyan-200 text-cyan-900'
+            ? 'bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 text-white border-2 border-white shadow-xl shadow-cyan-500/50 font-black ring-2 ring-cyan-400'
+            : 'bg-[#0f5c6b] text-white border-2 border-cyan-400 hover:bg-[#157a8f] hover:border-cyan-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-cyan-300 font-mono font-black border border-cyan-300' : 'bg-slate-950/90 text-cyan-200 font-mono font-black border border-cyan-400',
+          iconBox: isSelected ? 'bg-cyan-500/40 text-white border border-white/60' : 'bg-cyan-500/30 text-white border border-cyan-400'
         };
       case 'English & Grammar':
         return {
           btn: isSelected
-            ? 'bg-indigo-600 text-white border-2 border-indigo-400 shadow-md font-black'
-            : 'bg-indigo-50 text-indigo-950 border-2 border-indigo-400 hover:bg-indigo-100 font-bold',
-          badge: isSelected ? 'bg-indigo-800 text-white font-black' : 'bg-indigo-700 text-white font-black',
-          iconBg: isSelected ? 'bg-indigo-800 text-white' : 'bg-indigo-200 text-indigo-900'
+            ? 'bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white border-2 border-white shadow-xl shadow-amber-500/50 font-black ring-2 ring-amber-400'
+            : 'bg-[#6b380a] text-white border-2 border-amber-400 hover:bg-[#8f4a0e] hover:border-amber-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-amber-300 font-mono font-black border border-amber-300' : 'bg-slate-950/90 text-amber-200 font-mono font-black border border-amber-400',
+          iconBox: isSelected ? 'bg-amber-500/40 text-white border border-white/60' : 'bg-amber-500/30 text-white border border-amber-400'
         };
       case 'Early Childhood (ECCE)':
         return {
           btn: isSelected
-            ? 'bg-pink-600 text-white border-2 border-pink-400 shadow-md font-black'
-            : 'bg-pink-50 text-pink-950 border-2 border-pink-400 hover:bg-pink-100 font-bold',
-          badge: isSelected ? 'bg-pink-800 text-white font-black' : 'bg-pink-700 text-white font-black',
-          iconBg: isSelected ? 'bg-pink-800 text-white' : 'bg-pink-200 text-pink-900'
+            ? 'bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 text-white border-2 border-white shadow-xl shadow-pink-500/50 font-black ring-2 ring-pink-400'
+            : 'bg-[#6e1640] text-white border-2 border-pink-400 hover:bg-[#911d54] hover:border-pink-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-pink-300 font-mono font-black border border-pink-300' : 'bg-slate-950/90 text-pink-200 font-mono font-black border border-pink-400',
+          iconBox: isSelected ? 'bg-pink-500/40 text-white border border-white/60' : 'bg-pink-500/30 text-white border border-pink-400'
         };
       case 'Urdu & Linguistics':
         return {
           btn: isSelected
-            ? 'bg-emerald-700 text-white border-2 border-emerald-500 shadow-md font-black'
-            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
-          badge: isSelected ? 'bg-emerald-900 text-white font-black' : 'bg-emerald-700 text-white font-black',
-          iconBg: isSelected ? 'bg-emerald-900 text-white' : 'bg-emerald-200 text-emerald-900'
+            ? 'bg-gradient-to-r from-emerald-600 via-teal-700 to-amber-700 text-white border-2 border-white shadow-xl shadow-emerald-500/50 font-black ring-2 ring-amber-400'
+            : 'bg-[#24542d] text-white border-2 border-emerald-400 hover:bg-[#306e3b] hover:border-emerald-300 font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-amber-300 font-mono font-black border border-amber-300' : 'bg-slate-950/90 text-emerald-200 font-mono font-black border border-emerald-400',
+          iconBox: isSelected ? 'bg-emerald-500/40 text-white border border-white/60' : 'bg-emerald-500/30 text-white border border-emerald-400'
         };
       default:
         return {
           btn: isSelected
-            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
-            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
-          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black',
-          iconBg: isSelected ? 'bg-sky-800 text-white' : 'bg-sky-200 text-sky-900'
+            ? 'bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white border-2 border-white shadow-xl shadow-sky-500/50 font-black ring-2 ring-sky-400'
+            : 'bg-[#153a7a] text-white border-2 border-sky-400 hover:bg-[#1e4d9e] font-extrabold shadow-md',
+          badge: isSelected ? 'bg-slate-950 text-sky-300 font-mono font-black border border-sky-300' : 'bg-slate-950/90 text-sky-200 font-mono font-black border border-sky-400',
+          iconBox: isSelected ? 'bg-sky-500/40 text-white border border-white/60' : 'bg-sky-500/30 text-white border border-sky-400'
         };
     }
   };
@@ -829,15 +757,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     >
       {/* If Dedicated Catalog View: Show Top Back Navigation Header */}
       {!isHomeView && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-[#07193b] via-[#102a6b] to-[#1e104a] p-5 sm:p-6 rounded-3xl border-2 border-sky-400/80 shadow-2xl text-white">
+        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#07193b] p-5 sm:p-6 rounded-xl border-2 border-sky-400/80 shadow-2xl text-white">
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white bg-gradient-to-r from-rose-500 via-red-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 border-2 border-white/90 shadow-lg shadow-rose-500/40 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-sans font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 hover:from-rose-500 hover:to-red-500 border-2 border-white shadow-xl shadow-red-600/40 transition-all transform hover:-translate-y-0.5 hover:scale-105 active:translate-y-0 cursor-pointer shrink-0"
             title="Return to Main Home Screen"
           >
-            <ArrowLeft className="w-5 h-5 text-white pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wide uppercase font-black">Back to Home</span>
+            <Home className="w-5 h-5 text-white pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wide uppercase font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+              Back to Home
+            </span>
           </button>
           
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -855,13 +785,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       )}
 
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
-      <div className="bg-gradient-to-br from-[#07193b] via-[#0d2757] to-[#14316d] border-2 border-sky-400/80 shadow-[0_12px_35px_rgba(7,25,59,0.35)] rounded-3xl p-5 sm:p-6 text-white transition-all">
+      <div className="relative z-10 bg-[#07193b] border-2 border-sky-400/80 shadow-[0_12px_35px_rgba(7,25,59,0.5)] rounded-xl p-5 sm:p-6 text-white transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-sky-400 to-cyan-300 shadow-sm border border-cyan-200">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-sky-400 to-cyan-300 shadow-sm border border-cyan-200 shrink-0">
               GRADE FILTER
             </span>
-            <span className="text-sm sm:text-base font-black text-white font-heading">
+            <span className="text-sm sm:text-base font-black text-white font-heading drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
@@ -881,11 +811,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Colorful Grade Filter Buttons */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full">
           {gradeTiers.map((tier) => {
             const isSelectedTier = selectedGradeTier === tier.key;
             const count = getGradeTierCount(tier.key);
             const style = getGradeTierStyle(tier.key, isSelectedTier);
+            const TierIcon = tier.icon;
 
             return (
               <button
@@ -894,15 +825,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleGradeTierChange(tier.key)}
                 data-grade={tier.key}
                 data-filter={tier.key}
-                className={`inline-flex items-center gap-2.5 rounded-xl text-xs sm:text-sm font-sans font-bold transition-all duration-200 cursor-pointer select-none active:scale-95 ${style.btn}`}
-                style={{
-                  padding: '8px 14px'
-                }}
+                className={`inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-sans transition-all duration-200 cursor-pointer select-none shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 shrink-0 max-w-full ${style.btn}`}
                 title={`${tier.label}: ${tier.desc}`}
               >
-                <span className="font-heading font-black tracking-normal">{tier.label}</span>
+                <div className={`shrink-0 w-6 h-6 flex items-center justify-center rounded-lg p-1 ${style.iconBox}`}>
+                  <TierIcon className="w-4 h-4 pointer-events-none shrink-0" />
+                </div>
+                <span className="font-heading font-black tracking-normal whitespace-nowrap text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{tier.label}</span>
                 <span
-                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full ${style.badge}`}
+                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full shrink-0 ${style.badge}`}
                 >
                   {count}
                 </span>
@@ -913,13 +844,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       </div>
 
       {/* Subject Filter Section: Colorful Category Buttons */}
-      <div className="bg-gradient-to-br from-[#1b0a33] via-[#2c104e] to-[#3f136e] border-2 border-purple-400/80 shadow-[0_12px_35px_rgba(27,10,51,0.35)] rounded-3xl p-5 sm:p-6 text-white transition-all">
+      <div className="relative z-10 bg-[#17082e] border-2 border-purple-400/80 shadow-[0_12px_35px_rgba(23,8,46,0.5)] rounded-xl p-5 sm:p-6 text-white transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-purple-400 to-pink-300 shadow-sm border border-pink-200">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-purple-400 to-pink-300 shadow-sm border border-pink-200 shrink-0">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-sm sm:text-base font-black text-white font-heading">
+            <span className="text-sm sm:text-base font-black text-white font-heading drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               Select Discipline &amp; Learning Track
             </span>
           </div>
@@ -939,7 +870,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Colorful Subject Category Buttons */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full">
           {subjectCategories.map((cat) => {
             const isSelected = selectedCategory === cat.key;
             const count = getCategoryCount(cat.key);
@@ -952,18 +883,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleCategoryChange(cat.key)}
                 data-subject={cat.key}
                 data-filter={cat.key}
-                className={`inline-flex items-center gap-2.5 rounded-xl text-xs sm:text-sm font-sans font-bold transition-all duration-200 cursor-pointer select-none active:scale-95 ${style.btn}`}
-                style={{
-                  padding: '8px 14px'
-                }}
+                className={`inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-sans transition-all duration-200 cursor-pointer select-none shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 shrink-0 max-w-full ${style.btn}`}
                 title={`Filter simulations by ${cat.fullTitle} (${count} available)`}
               >
-                <div className={`shrink-0 w-5 h-5 flex items-center justify-center pointer-events-none rounded-lg p-0.5 ${style.iconBg}`}>
-                  {cat.renderIcon({ isSelected, className: 'w-4 h-4' })}
+                <div className={`shrink-0 w-6 h-6 flex items-center justify-center rounded-lg p-1 ${style.iconBox}`}>
+                  {cat.renderIcon({ isSelected, className: 'w-4 h-4 pointer-events-none' })}
                 </div>
-                <span className="font-heading font-black tracking-normal">{cat.shortLabel}</span>
+                <span className="font-heading font-black tracking-normal whitespace-nowrap text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{cat.shortLabel}</span>
                 <span 
-                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full ${style.badge}`}
+                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full shrink-0 ${style.badge}`}
                 >
                   {count}
                 </span>
@@ -975,28 +903,32 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* IF HOME VIEW: Render Clean Navigation Callout and DO NOT render the 86 simulation cards */}
       {isHomeView ? (
-        <div className="p-6 sm:p-8 rounded-3xl border-2 border-cyan-400 shadow-[0_15px_45px_rgba(6,182,212,0.25)] bg-gradient-to-r from-[#041a3d] via-[#161247] to-[#300a4a] text-white flex flex-col sm:flex-row items-center justify-between gap-5 select-none">
-          <div className="space-y-1.5 text-center sm:text-left">
-            <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <Sparkles className="w-5 h-5 text-amber-400 animate-pulse pointer-events-none" />
-              <span className="text-xs font-mono font-black uppercase tracking-wider text-cyan-300">
+        <div className="relative z-10 p-6 sm:p-8 rounded-xl border-2 border-cyan-400 shadow-[0_15px_45px_rgba(6,182,212,0.35)] bg-[#07132b] text-white flex flex-col lg:flex-row items-center justify-between gap-6 select-none">
+          <div className="space-y-2 text-center lg:text-left flex-1 min-w-0">
+            <div className="flex items-center gap-2 justify-center lg:justify-start">
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-cyan-400 to-sky-300 shadow-sm border border-cyan-200">
+                <Sparkles className="w-3.5 h-3.5 text-slate-950" />
                 LABORATORY WORKSPACE
               </span>
             </div>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white font-heading">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-white font-heading tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
               Click Any Grade or Subject Above to Open Interactive Labs
             </h3>
-            <p className="text-xs sm:text-sm text-sky-200 font-medium">
-              Select any category above to view dedicated simulations in a clean, focused view.
+            <p className="text-xs sm:text-sm text-sky-100 font-bold leading-relaxed max-w-2xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+              Select any curriculum grade tier or STEM discipline above to view dedicated simulation laboratories in a high-contrast, distraction-free environment.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="px-6 py-4 rounded-2xl text-xs sm:text-sm font-sans font-black text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 border-2 border-white shadow-xl shadow-cyan-500/30 transition-all transform hover:scale-105 active:scale-95 cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5"
+            className="relative z-20 px-6 sm:px-8 py-4 sm:py-4.5 rounded-xl text-sm sm:text-base font-sans font-black text-slate-950 bg-gradient-to-r from-amber-400 via-yellow-300 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 border-2 border-white shadow-2xl shadow-cyan-500/40 transition-all transform hover:-translate-y-1 hover:scale-105 active:translate-y-0 cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3"
+            title="Open Complete STEM Simulations Catalog"
           >
-            <Layers className="w-5 h-5 text-slate-950 pointer-events-none" />
-            <span className="font-heading tracking-wide uppercase font-black">Open All {activeSimulations.length} Labs Catalog &rarr;</span>
+            <BookOpen className="w-5 h-5 text-slate-950 pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wider uppercase font-black text-slate-950">
+              Open All {activeSimulations.length} Labs Catalog
+            </span>
+            <ArrowRight className="w-5 h-5 text-slate-950 pointer-events-none shrink-0" />
           </button>
         </div>
       ) : (

@@ -57,7 +57,8 @@ export const ThreeStemBackground: React.FC = () => {
     // 3A. Atom Model with Nucleus and Orbiting Electron Rings
     // -------------------------------------------------------------------------
     const atomGroup = new THREE.Group();
-    atomGroup.position.set(-14, 8, -4);
+    atomGroup.position.set(-18, 11, -12);
+    atomGroup.scale.set(0.75, 0.75, 0.75);
     masterGroup.add(atomGroup);
 
     // Nucleus (cluster of vibrant proton/neutron spheres)
@@ -138,7 +139,8 @@ export const ThreeStemBackground: React.FC = () => {
     // 3B. DNA Double Helix (Vibrant Cyan & Royal Blue Strands)
     // -------------------------------------------------------------------------
     const dnaGroup = new THREE.Group();
-    dnaGroup.position.set(15, -6, -3);
+    dnaGroup.position.set(20, -10, -14);
+    dnaGroup.scale.set(0.75, 0.75, 0.75);
     dnaGroup.rotation.z = Math.PI / 7;
     masterGroup.add(dnaGroup);
 
@@ -213,7 +215,8 @@ export const ThreeStemBackground: React.FC = () => {
     // 3C. Molecular Crystal Cluster (Benzene / Octahedral Crystal)
     // -------------------------------------------------------------------------
     const moleculeGroup = new THREE.Group();
-    moleculeGroup.position.set(13, 11, -5);
+    moleculeGroup.position.set(18, 14, -14);
+    moleculeGroup.scale.set(0.75, 0.75, 0.75);
     masterGroup.add(moleculeGroup);
 
     const molAtomGeo = new THREE.SphereGeometry(0.5, 18, 18);
@@ -301,14 +304,16 @@ export const ThreeStemBackground: React.FC = () => {
       opacity: 0.55
     });
     const polyMesh = new THREE.Mesh(polyGeo, polyMat);
-    polyMesh.position.set(-11, -10, -5);
+    polyMesh.position.set(-16, -12, -14);
+    polyMesh.scale.set(0.75, 0.75, 0.75);
     masterGroup.add(polyMesh);
 
     // -------------------------------------------------------------------------
     // 3E. Celestial Ringed Planet (Saturn Style Astronomy Model)
     // -------------------------------------------------------------------------
     const saturnGroup = new THREE.Group();
-    saturnGroup.position.set(16, 7, -6);
+    saturnGroup.position.set(22, 12, -16);
+    saturnGroup.scale.set(0.65, 0.65, 0.65);
     saturnGroup.rotation.z = Math.PI / 6.5;
     saturnGroup.rotation.x = Math.PI / 8;
     masterGroup.add(saturnGroup);
@@ -530,9 +535,9 @@ export const ThreeStemBackground: React.FC = () => {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 0,
+        zIndex: -1,
         pointerEvents: 'none',
-        opacity: 0.85,
+        opacity: 0.5,
         overflow: 'hidden'
       }}
       aria-hidden="true"
