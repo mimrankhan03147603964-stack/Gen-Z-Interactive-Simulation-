@@ -274,6 +274,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     if (tier === 'middle') {
       return (
         grade.includes('middle') ||
+        grade.includes('class 6') ||
+        grade.includes('class 7') ||
+        grade.includes('class 8') ||
         grade.includes('grades 6') ||
         grade.includes('grades 7') ||
         grade.includes('grades 8') ||
@@ -288,6 +291,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       return (
         grade.includes('secondary') ||
         grade.includes('matric') ||
+        grade.includes('class 9') ||
+        grade.includes('class 10') ||
         grade.includes('grades 9') ||
         grade.includes('grades 10') ||
         grade.includes('9–10') ||

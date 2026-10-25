@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 8 Maths Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font:16px 'Trebuchet MS','Segoe UI',sans-serif;background:linear-gradient(135deg,#0f2748,#064e3b);color:#10243f;height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:16px;padding:10px 18px;color:#fff}
+h1{font-size:22px;flex:1}
+nav{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+nav button{font-size:12px;padding:6px 9px;opacity:.75}
+nav button.on{opacity:1;outline:3px solid #fff}
+main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:12px;padding:0 14px 14px}
+#stage{background:linear-gradient(#e6f3ff,#fff6e3);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
+#stage svg{width:100%;height:100%}
+aside{background:#fff;border-radius:18px;padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+aside h2{font-size:18px;color:#1e3a8a}aside p{font-size:14px;color:#334155}
+.info{background:#eef5ff;border-radius:12px;padding:10px;line-height:1.55;font-size:15px}
+#ctl{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button{border:0;color:#fff;font:700 14px 'Trebuchet MS',sans-serif;padding:9px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.28)}
+button:active{transform:translateY(3px);box-shadow:none}
+button.s{padding:5px 10px}
+</style></head><body>
+<header><h1>🎓 GEN Z EDTECH — Class 8 Maths Lab</h1><button id="fsb" style="background:#7c3aed" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><section id="stage"></section><aside><h2 id="ttl"></h2><p id="dsc"></p><div class="info" id="inf"></div><div id="ctl"></div></aside></main>
+<script>
+const $$=s=>document.querySelector(s),R=Math.round,PI=Math.PI;
+const C={b:'#2563eb',g:'#16a34a',o:'#ea580c',r:'#dc2626',p:'#7c3aed',t:'#0d9488',k:'#db2777',a:'#b45309',n:'#475569'};
+const B=(t,c,m,...a)=>`<button class="${c.slice(1)}" style="background:${C[c[0]]}" onclick='g("${m}"${a.map(x=>","+JSON.stringify(x)).join('')})'>${t}</button>`;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v)),rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),rd=v=>+v.toFixed(2);
+const svg=(b,vb='0 0 900 420')=>`<svg viewBox="${vb}">${b}</svg>`;
+const T=(x,y,s,t,f='#10243f',w=700,an='middle')=>`<text x="${x}" y="${y}" font-size="${s}" fill="${f}" font-weight="${w}" text-anchor="${an}">${t}</text>`;
+const fac=n=>{const f=[];for(let p=2;n>1;p++)while(n%p==0){f.push(p);n/=p}return f};
+const ps=(a,b,c)=>{let s='';[[a,'x²'],[b,'x'],[c,'']].forEach(([k,t])=>{if(!k)return;const ab=Math.abs(k),co=(ab==1&&t)?'':ab;s+=(s?(k<0?' − ':' + '):(k<0?'−':''))+co+t});return s||'0'};
+const eq=(m,c)=>'y = '+(m?(m==1?'x':m==-1?'−x':m+'x')+(c?(c<0?' − ':' + ')+Math.abs(c):''):c);
+let cur=0,S={};
+const g=(m,...a)=>{if(acts[cur][m](...a)!==0)render()};
+const anim=(k,st=.04)=>{const id=setInterval(()=>{if(acts[cur].n!=k){clearInterval(id);return}S.t=Math.min(1,S.t+st);if(S.t>=1){clearInterval(id);acts[cur].end&&acts[cur].end()}render()},40)};
+const acts=[
+/* 1 REAL NUMBERS */
+{n:'Real Numbers',c:'b',t:'Real Number System Venn Diagram',d:'Pick a number. It drops into the smallest set that holds it. Try the quiz to test yourself.',
+V:[['7',0],['0',1],['−3',2],['1/2',3],['0.75',3],['√2',4],['π',4],['√9',0],['−2/3',3],['1.5',3],['√5',4],['0.333…',3],['100',0],['−8',2]],
+L:['Natural numbers','Whole numbers','Integers','Rational numbers','Irrational numbers'],
+i(){S={v:0,t:1,hl:-1,q:0,msg:''}},
+pk(i){S.v=i;S.t=0;S.q=0;S.msg='';anim('Real Numbers',.06)},hl(l){S.hl=l},
+qz(){S.q=1;S.v=rnd(0,13);S.t=1;S.msg='Which is the smallest set that holds this number?'},
+an(l){const a=this.V[S.v][1];S.msg=l==a?'✔ Correct! It is a '+this.L[a].toLowerCase()+' number.':'✘ Not quite. Try again.';if(l==a){S.t=0;anim('Real Numbers',.06)}},
+v(){const a=this.V[S.v][1],pos=[[235,255],[355,245],[455,235],[560,225],[760,235]][a],t=S.t,tx=450+(pos[0]-450)*t,ty=20+(pos[1]-20)*t;
+ const E=[[330,225,290,160,'#dbeafe'],[300,235,210,120,'#bfdbfe'],[270,240,130,80,'#93c5fd'],[235,245,75,45,'#60a5fa']],lb=[[330,85,'Rational'],[300,135,'Integers'],[270,178,'Whole'],[235,222,'Natural']];
+ let s=`<rect x="15" y="15" width="870" height="390" rx="30" fill="#eff6ff" stroke="#1e40af" stroke-width="4"/>`+T(450,42,22,'Real numbers','#1e3a8a');
+ E.forEach((e,i)=>s+=`<ellipse cx="${e[0]}" cy="${e[1]}" rx="${e[2]}" ry="${e[3]}" fill="${e[4]}" stroke="${S.hl==3-i?'#f59e0b':'#1e40af'}" stroke-width="${S.hl==3-i?7:2}"/>`);
+ lb.forEach(l=>s+=T(l[0],l[1],17,l[2],'#1e3a8a'));
+ s+=`<ellipse cx="760" cy="215" rx="120" ry="150" fill="#fde68a" stroke="${S.hl==4?'#f59e0b':'#b45309'}" stroke-width="${S.hl==4?7:2}"/>`+T(760,95,17,'Irrational','#78350f');
+ s+=`<rect x="${tx-38}" y="${ty-20}" width="76" height="38" rx="12" fill="#fff" stroke="#dc2626" stroke-width="3"/>`+T(tx,ty+7,22,this.V[S.v][0],'#dc2626');
+ const sets=a<4?this.L.slice(a,4).concat(['Real numbers']):['Irrational numbers','Real numbers'];
+ return[svg(s),S.q?`<b>Quiz:</b> ${S.msg}`:`<b>${this.V[S.v][0]}</b> belongs to:<br>${sets.join('<br>')}`,
+ this.V.map((q,i)=>B(q[0],'bgorpt'[i%6]+'s','pk',i)).join('')+'<div style="width:100%"></div>'+this.L.map((q,i)=>B('Show '+q.split(' ')[0],'bgopk'[i]+'s','hl',i)).join('')+B('Hide','ns','hl',-1)+B('🎯 Quiz me','r','qz')+(S.q?this.L.map((q,i)=>B(q.split(' ')[0],'bgopk'[i]+'s','an',i)).join(''):'')]}},
+/* 2 CUBES */
+{n:'Cubes',c:'o',t:'Cube and Cube Root 3D Blocks',d:'Stack layers of small cubes to build a big cube. The side length of the big cube is the cube root.',
+i(){S={n:3,l:0}},ch(v){S.n=cl(S.n+v,1,6);S.l=0},ns(n){S.n=n;S.l=0},ad(v){S.l=cl(S.l+v,0,S.n)},all(){S.l=S.n},
+v(){const{n,l}=S,s=Math.min(30,170/n),cw=s*.866,hh=s*.5,P=(a,b,c)=>[450+(a-b)*cw,215+(a+b)*hh-c*s-(n*hh)+n*hh*0].map(Math.round);let o='';
+ for(let q=0;q<=2*n-2;q++)for(let k=0;k<l;k++)for(let i=0;i<n;i++){const j=q-i;if(j<0||j>=n)continue;const h=k*50+20,pl=(...p)=>p.map(z=>P(...z)).join(' ');
+  o+=`<polygon points="${pl([i,j,k+1],[i+1,j,k+1],[i+1,j+1,k+1],[i,j+1,k+1])}" fill="hsl(${h},85%,65%)" stroke="#fff" stroke-width="1"/><polygon points="${pl([i+1,j,k],[i+1,j+1,k],[i+1,j+1,k+1],[i+1,j,k+1])}" fill="hsl(${h},80%,42%)" stroke="#fff" stroke-width="1"/><polygon points="${pl([i,j+1,k],[i+1,j+1,k],[i+1,j+1,k+1],[i,j+1,k+1])}" fill="hsl(${h},80%,52%)" stroke="#fff" stroke-width="1"/>`}
+ o+=T(450,36,24,`Side = ${n} → ${l} layer${l==1?'':'s'} × ${n*n} = ${l*n*n} cubes`,'#1e3a8a');
+ const V=n**3,f=fac(V),gr=[];for(let i=0;i<f.length;i+=3)gr.push('('+f.slice(i,i+3).join('×')+')');
+ return[svg(o),`${n}³ = ${n} × ${n} × ${n} = <b>${V}</b><br>Cube root: ∛${V} = <b>${n}</b><br>Prime triples: ${gr.join(' × ')||'1'}<br>One from each triple: ${f.filter((_,i)=>i%3==0).join(' × ')||'1'} = ${n}`,
+ B('Add layer','g','ad',1)+B('Remove layer','r','ad',-1)+B('Build all','b','all')+B('Side +1','o','ch',1)+B('Side −1','p','ch',-1)+[1,2,3,4,5,6].map((q,i)=>B(q**3,'bgorpt'[i]+'s','ns',q)).join('')]}},
+/* 3 INTEREST */
+{n:'Interest',c:'g',t:'Simple vs Compound Interest Growth',d:'Money in a piggy bank grows. Simple interest grows in a straight line. Compound interest curves upward.',
+i(){S={p:10000,r:10,y:10,t:1}},ch(k,v){S[k]=cl(S[k]+v,k=='p'?1000:1,k=='p'?50000:20);S.t=1},pl(){S.t=0;anim('Interest',.02)},
+v(){const{p,r,y,t}=S,SI=x=>p*(1+r*x/100),CI=x=>p*Math.pow(1+r/100,x),mx=CI(y)*1.05,xm=t*y,gx=x=>90+x/y*560,gy=a=>340-a/mx*290;
+ let s=`<rect x="90" y="50" width="560" height="290" fill="#fff" stroke="#94a3b8"/>`;
+ for(let i=0;i<=4;i++)s+=`<line x1="90" x2="650" y1="${50+i*72.5}" y2="${50+i*72.5}" stroke="#e2e8f0"/>`+T(84,345-i*72.5,13,'$'+R(mx*i/4),'#10243f',600,'end')+T(90+i*140,360,14,rd(y*i/4));
+ let a=[],b=[];for(let x=0;x<=xm+1e-9;x+=.25){a.push(gx(x)+','+gy(SI(x)));b.push(gx(x)+','+gy(CI(x)))}
+ if(a.length>1)s+=`<polygon points="${b.join(' ')} ${a.slice().reverse().join(' ')}" fill="#22c55e44"/><polyline points="${a.join(' ')}" fill="none" stroke="#2563eb" stroke-width="4"/><polyline points="${b.join(' ')}" fill="none" stroke="#dc2626" stroke-width="4"/>`;
+ s+=`<circle cx="${gx(xm)}" cy="${gy(SI(xm))}" r="7" fill="#2563eb"/><circle cx="${gx(xm)}" cy="${gy(CI(xm))}" r="7" fill="#dc2626"/>`+T(370,386,16,'Years','#334155')+T(770,110,80,'🐷')+T(770,170,18,'Year '+rd(xm),'#334155')+T(770,215,18,'Simple: $'+R(SI(xm)),'#2563eb')+T(770,245,18,'Compound: $'+R(CI(xm)),'#dc2626')+T(770,285,40,'🪙'.repeat(Math.min(5,1+Math.floor(CI(xm)/p))));
+ return[svg(s,'0 0 900 400'),`P = $${p}, R = ${r}%, T = ${y} years<br>Simple: P + PRT/100 = <b>$${R(SI(y))}</b><br>Compound: P(1+R/100)<sup>T</sup> = <b>$${R(CI(y))}</b><br>Compound earns <b>$${R(CI(y)-SI(y))}</b> more.`,
+ B('▶ Play','p','pl')+B('Money +1000','g','ch','p',1000)+B('Money −1000','r','ch','p',-1000)+B('Rate +1%','o','ch','r',1)+B('Rate −1%','b','ch','r',-1)+B('Years +1','t','ch','y',1)+B('Years −1','k','ch','y',-1)]}},
+/* 4 POLYNOMIALS */
+{n:'Polynomials',c:'p',t:'Polynomial Operations with Tiles',d:'Big square = x². Long bar = x. Small square = 1. Red-type tiles are negative. Add, subtract or multiply.',
+i(){S={op:'add',P:[2,3,1],Q:[1,-2,3],M:[2,3,1,-2]}},op(o){S.op=o},
+nw(){const r=()=>rnd(-3,4);S.P=[r(),r(),r()];S.Q=[r(),r(),r()];S.M=[rnd(1,3),rnd(-4,4)||1,rnd(1,3),rnd(-4,4)||2]},
+mm(k,v){let n=S.M[k]+v;if(k%2&&!n)n+=v;S.M[k]=cl(n,k%2?-5:1,k%2?5:3)},
+v(){const{op,P,Q,M}=S;let s='',info;
+ const row=(y,c,lb)=>{let o=T(20,y+22,17,lb,'#10243f',700,'start');[[2,130],[1,420],[0,710]].forEach(([d,x0])=>{const k=c[2-d],n=Math.abs(k),ng=k<0,w=d==2?32:d==1?32:12,hh=d==2?32:d==1?12:12,gp=d==2?34:d==1?34:14,col=d==2?(ng?'#ef4444':'#3b82f6'):d==1?(ng?'#f97316':'#22c55e'):(ng?'#a855f7':'#eab308');for(let i=0;i<n;i++)o+=`<rect x="${x0+i*gp}" y="${y+(32-hh)}" width="${w}" height="${hh}" rx="3" fill="${col}" stroke="#fff"/>`});return o};
+ if(op!='mul'){const Rr=op=='add'?P.map((p,i)=>p+Q[i]):P.map((p,i)=>p-Q[i]);s=T(130,28,16,'x² tiles','#334155',700,'start')+T(420,28,16,'x tiles','#334155',700,'start')+T(710,28,16,'1 tiles','#334155',700,'start')+row(50,P,'P')+T(20,102,17,ps(...P),'#334155',600,'start')+row(135,Q,'Q')+T(20,187,17,ps(...Q),'#334155',600,'start')+`<line x1="20" x2="880" y1="215" y2="215" stroke="#334155" stroke-width="3"/>`+row(240,Rr,op=='add'?'P+Q':'P−Q')+T(20,300,20,ps(...Rr),'#7c3aed',700,'start');
+  info=`P = ${ps(...P)}<br>Q = ${ps(...Q)}<br>${op=='add'?'P + Q':'P − Q'} = <b>${ps(...Rr)}</b><br>${op=='add'?'Add like tiles together.':'Subtract: change the signs of Q, then add like tiles.'}`}
+ else{const[a,b,c,d]=M,wa=a*50,wb=Math.abs(b)*18,hc=c*50,hd=Math.abs(d)*18,ox=300,oy=90,cell=(x,y,w,h,col,lb,gx,gy)=>{let o=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${col}" stroke="#fff" stroke-width="3"/>`;for(let i=1;i<gx;i++)o+=`<line x1="${x+i*w/gx}" x2="${x+i*w/gx}" y1="${y}" y2="${y+h}" stroke="#fff9"/>`;for(let i=1;i<gy;i++)o+=`<line x1="${x}" x2="${x+w}" y1="${y+i*h/gy}" y2="${y+i*h/gy}" stroke="#fff9"/>`;return o+T(x+w/2,y+h/2+6,Math.min(18,w/3,h/1.5+4),lb,'#fff')};
+  s=T(ox+wa/2,oy-12,20,a+'x','#1e3a8a')+T(ox+wa+wb/2,oy-12,20,b,'#1e3a8a')+T(ox-14,oy+hc/2+6,20,c+'x','#1e3a8a',700,'end')+T(ox-14,oy+hc+hd/2+6,20,d,'#1e3a8a',700,'end')+cell(ox,oy,wa,hc,'#3b82f6',a*c+'x²',a,c)+cell(ox+wa,oy,wb,hc,b*c>0?'#22c55e':'#f97316',b*c+'x',Math.abs(b),c)+cell(ox,oy+hc,wa,hd,a*d>0?'#22c55e':'#f97316',a*d+'x',a,Math.abs(d))+cell(ox+wa,oy+hc,wb,hd,b*d>0?'#eab308':'#a855f7',''+b*d,Math.abs(b),Math.abs(d));
+  info=`(${ps(0,a,b)}) × (${ps(0,c,d)})<br>= ${a*c}x² + ${a*d}x + ${b*c}x + ${b*d}<br>= <b>${ps(a*c,a*d+b*c,b*d)}</b><br>Each box in the grid is one product.`}
+ return[svg(s,'0 0 900 360'),info,B('Add','g','op','add')+B('Subtract','r','op','sub')+B('Multiply','b','op','mul')+B('New problem','k','nw')+(op=='mul'?['a','b','c','d'].map((q,i)=>B(q+' +','os','mm',i,1)+B(q+' −','ps','mm',i,-1)).join(''):'')]}},
+/* 5 FACTORIZATION */
+{n:'Factorization',c:'k',t:'Factorization of x² + bx + c',d:'Find p and q so that p + q = b and p × q = c. The area model shows the rectangle (x + p)(x + q).',
+i(){this.nw()},nw(){S={tp:rnd(1,7),tq:rnd(1,7),p:1,q:1,x:'Choose p and q, then press Check.',sh:0}},
+pq(k,v){S[k]=cl(S[k]+v,1,7)},ck(){const b=S.tp+S.tq,c=S.tp*S.tq;S.x=S.p+S.q==b&&S.p*S.q==c?'✔ Correct! Both rules match.':`✘ p+q = ${S.p+S.q} (need ${b}), p×q = ${S.p*S.q} (need ${c}).`},
+sw(){S.p=S.tp;S.q=S.tq;S.x='Here is the answer.'},
+v(){const{tp,tq,p,q}=S,b=tp+tq,c=tp*tq,X=140,u=24,ox=400,oy=90,ok=p+q==b&&p*q==c;
+ let s=T(450,38,28,`Factorize:  x² + ${b}x + ${c}`,'#1e3a8a')+T(20,80,17,'Factor pairs of '+c,'#334155',700,'start');
+ for(let i=1,r=0;i<=c;i++)if(c%i==0&&i<=c/i){s+=T(20,110+r*28,17,`${i} × ${c/i} → sum ${i+c/i}${i+c/i==b?' ✔':''}`,i+c/i==b?'#16a34a':'#475569',700,'start');r++}
+ const cell=(x,y,w,h,col,lb,gx,gy)=>{let o=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${col}" stroke="#fff" stroke-width="3"/>`;for(let i=1;i<gx;i++)o+=`<line x1="${x+i*w/gx}" x2="${x+i*w/gx}" y1="${y}" y2="${y+h}" stroke="#fff9"/>`;for(let i=1;i<gy;i++)o+=`<line x1="${x}" x2="${x+w}" y1="${y+i*h/gy}" y2="${y+i*h/gy}" stroke="#fff9"/>`;return o+T(x+w/2,y+h/2+6,18,lb,'#fff')};
+ s+=cell(ox,oy,X,X,'#3b82f6','x²',1,1)+cell(ox+X,oy,q*u,X,'#22c55e',q+'x',q,1)+cell(ox,oy+X,X,p*u,'#22c55e',p+'x',1,p)+cell(ox+X,oy+X,q*u,p*u,'#eab308',''+p*q,q,p)+T(ox+X/2,oy-10,20,'x')+T(ox+X+q*u/2,oy-10,20,q)+T(ox-14,oy+X/2+6,20,'x','#10243f',700,'end')+T(ox-14,oy+X+p*u/2+6,20,p,'#10243f',700,'end');
+ if(ok)s+=`<rect x="${ox-4}" y="${oy-4}" width="${X+q*u+8}" height="${X+p*u+8}" fill="none" stroke="#f59e0b" stroke-width="6" stroke-dasharray="10 6"/>`;
+ return[svg(s),`Your guess: p = <b>${p}</b>, q = <b>${q}</b><br>p + q = ${p+q} (b = ${b}) · p × q = ${p*q} (c = ${c})<br>${S.x}<br>`+(ok?`x² + ${b}x + ${c} = x² + ${p}x + ${q}x + ${p*q} = <b>(x + ${p})(x + ${q})</b>`:'Split the middle term bx into px + qx.'),
+ B('p +1','g','pq','p',1)+B('p −1','r','pq','p',-1)+B('q +1','b','pq','q',1)+B('q −1','o','pq','q',-1)+B('Check','p','ck')+B('Show answer','a','sw')+B('New quadratic','k','nw')]}},
+/* 6 SIMULTANEOUS */
+{n:'Equations',c:'t',t:'Simultaneous Equations: Graphical Solution',d:'Two roads cross where both equations are true. Plot both lines and find the crossing point.',
+i(){this.nw()},nw(){const x=rnd(-5,5),y=rnd(-5,5),a=rnd(-3,3);let b;do b=rnd(-3,3);while(b==a);S={m1:a,c1:y-a*x,m2:b,c2:y-b*x,s1:0,s2:0,sol:0}},
+ch(k,v){S[k]=cl(S[k]+v,k[0]=='m'?-4:-9,k[0]=='m'?4:9)},sh(k){S[k]=1},ans(){S.s1=S.s2=S.sol=1},
+v(){const{m1,c1,m2,c2,s1,s2,sol}=S,X=q=>300+q*24,Y=q=>270-q*24;
+ let s=`<defs><clipPath id="cp"><rect x="60" y="30" width="480" height="480"/></clipPath></defs><rect x="60" y="30" width="480" height="480" fill="#f0fdf4"/>`;
+ for(let i=-10;i<=10;i++)s+=`<line x1="${X(i)}" x2="${X(i)}" y1="30" y2="510" stroke="${i?'#d1fae5':'#111'}" stroke-width="${i?1:3}"/><line x1="60" x2="540" y1="${Y(i)}" y2="${Y(i)}" stroke="${i?'#d1fae5':'#111'}" stroke-width="${i?1:3}"/>`+(i&&i%2==0?T(X(i),Y(0)+14,11,i,'#334155')+T(X(0)-5,Y(i)+4,11,i,'#334155',700,'end'):'');
+ const ln=(m,c,col)=>`<g clip-path="url(#cp)"><line x1="${X(-10)}" y1="${Y(-10*m+c)}" x2="${X(10)}" y2="${Y(10*m+c)}" stroke="#4b5563" stroke-width="14" stroke-linecap="round"/><line x1="${X(-10)}" y1="${Y(-10*m+c)}" x2="${X(10)}" y2="${Y(10*m+c)}" stroke="${col}" stroke-width="4" stroke-dasharray="12 8"/></g>`;
+ if(s1)s+=ln(m1,c1,'#fca5a5');if(s2)s+=ln(m2,c2,'#93c5fd');
+ let res='Press "Find solution".';
+ if(m1==m2)res=c1==c2?'Same line: infinite solutions.':'Parallel roads never meet: no solution.';
+ else{const xs=(c2-c1)/(m1-m2),ys=m1*xs+c1;res=`Crossing point: x = ${rd(xs)}, y = ${rd(ys)}`;if(sol&&s1&&s2&&Math.abs(xs)<=10&&Math.abs(ys)<=10)s+=T(X(xs),Y(ys)+10,34,'🚦')+`<circle cx="${X(xs)}" cy="${Y(ys)}" r="8" fill="#facc15" stroke="#111" stroke-width="2"/>`+T(X(xs)+14,Y(ys)-14,15,`(${rd(xs)}, ${rd(ys)})`,'#7c2d12',700,'start')}
+ return[svg(s,'0 0 600 540'),`<span style="color:#dc2626"><b>Line 1:</b> ${eq(m1,c1)}</span><br><span style="color:#2563eb"><b>Line 2:</b> ${eq(m2,c2)}</span><br>${sol?res:'Plot both lines first.'}`,
+ B('Plot line 1','r','sh','s1')+B('Plot line 2','b','sh','s2')+B('Find solution','g','ans')+B('New problem','k','nw')+B('m1 +','os','ch','m1',1)+B('m1 −','os','ch','m1',-1)+B('c1 +','ps','ch','c1',1)+B('c1 −','ps','ch','c1',-1)+B('m2 +','ts','ch','m2',1)+B('m2 −','ts','ch','m2',-1)+B('c2 +','as','ch','c2',1)+B('c2 −','as','ch','c2',-1)]}},
+/* 7 PYTHAGORAS */
+{n:'Pythagoras',c:'r',t:'Pythagoras Theorem Water & Tile Visualizer',d:'The two small square tanks hold water. Pour it into the big square on the longest side. It fills exactly!',
+i(){S={a:3,b:4,t:0,tl:1}},ch(k,v){S[k]=cl(S[k]+v,1,8);S.t=0},ab(a,b){S.a=a;S.b=b;S.t=0},pl(){S.t=0;anim('Pythagoras',.02)},z(){S.t=0},tg(){S.tl=1-S.tl},
+v(){const{a,b,t,tl}=S,c=Math.sqrt(a*a+b*b),u=Math.min(22,400/(2*a+b),860/(a+2*b)),x0=450-(a+2*b)*u/2+b*u,y0=210+b*u/2,Px=x0+a*u,Py=y0,Qx=x0,Qy=y0-b*u,ci=Number.isInteger(c);
+ const grid=(x,y,w,h,n,m)=>{let o='';for(let i=1;i<n;i++)o+=`<line x1="${x+i*w/n}" x2="${x+i*w/n}" y1="${y}" y2="${y+h}" stroke="#fff9"/>`;for(let i=1;i<m;i++)o+=`<line x1="${x}" x2="${x+w}" y1="${y+i*h/m}" y2="${y+i*h/m}" stroke="#fff9"/>`;return o};
+ let s=`<rect x="${x0}" y="${y0}" width="${a*u}" height="${a*u}" fill="#93c5fd" stroke="#1e40af" stroke-width="3"/><rect x="${x0}" y="${y0+a*u*t}" width="${a*u}" height="${a*u*(1-t)}" fill="#2563eb" opacity=".85"/>`+(tl?grid(x0,y0,a*u,a*u,a,a):'')+
+ `<rect x="${x0-b*u}" y="${y0-b*u}" width="${b*u}" height="${b*u}" fill="#86efac" stroke="#166534" stroke-width="3"/><rect x="${x0-b*u}" y="${y0-b*u+b*u*t}" width="${b*u}" height="${b*u*(1-t)}" fill="#16a34a" opacity=".85"/>`+(tl?grid(x0-b*u,y0-b*u,b*u,b*u,b,b):'')+
+ `<g transform="matrix(${-a*u} ${-b*u} ${b*u} ${-a*u} ${Px} ${Py})"><rect width="1" height="1" fill="#fed7aa" stroke="#9a3412" stroke-width="3" vector-effect="non-scaling-stroke"/><rect width="1" height="${t}" fill="#f97316" opacity=".9"/>`+(tl&&ci?Array.from({length:c-1},(_,i)=>`<line x1="${(i+1)/c}" x2="${(i+1)/c}" y1="0" y2="1" stroke="#fff9" stroke-width="1" vector-effect="non-scaling-stroke"/><line y1="${(i+1)/c}" y2="${(i+1)/c}" x1="0" x2="1" stroke="#fff9" stroke-width="1" vector-effect="non-scaling-stroke"/>`).join(''):'')+`</g>`+
+ `<polygon points="${x0},${y0} ${Px},${Py} ${Qx},${Qy}" fill="#fde68a" stroke="#78350f" stroke-width="4"/><path d="M${x0+10} ${y0}V${y0-10}H${x0}" fill="none" stroke="#78350f" stroke-width="2"/>`+
+ T(x0+a*u/2,y0+a*u/2+6,20,'a² = '+a*a,'#fff')+T(x0-b*u/2,y0-b*u/2+6,20,'b² = '+b*b,'#fff')+T(Px+(-a*u+b*u)/2,Py+(-b*u-a*u)/2+6,22,'c² = '+(a*a+b*b),'#7c2d12')+T(x0+a*u/2,y0-8,16,'a = '+a)+T(x0-8,y0-b*u/2,16,'b = '+b,'#10243f',700,'end');
+ return[svg(s),`a² + b² = ${a*a} + ${b*b} = <b>${a*a+b*b}</b><br>c² = ${a*a+b*b}, so c = √${a*a+b*b} = <b>${rd(c)}</b>${ci?' (a perfect triple!)':''}<br>Water in the big tank: ${R(t*100)}%`,
+ B('💧 Pour water','b','pl')+B('Reset','n','z')+B('Show / hide tiles','p','tg')+B('a +1','g','ch','a',1)+B('a −1','r','ch','a',-1)+B('b +1','o','ch','b',1)+B('b −1','t','ch','b',-1)+B('3-4-5','ks','ab',3,4)+B('6-8-10','as','ab',6,8)+B('5-5','bs','ab',5,5)+B('1-1','gs','ab',1,1)]}},
+/* 8 TRIANGLES */
+{n:'Triangles',c:'a',t:'Congruent and Similar Triangles',d:'Turn, flip and zoom the orange triangle. The marks show which parts are equal for each rule.',
+ZK:[.5,.75,1,1.25,1.5,2],
+i(){S={sh:'sc',r:30,f:0,zi:2,cr:'SSS',t:0}},tn(d){S.r=(S.r+d+360)%360;S.t=0},fl(){S.f=1-S.f;S.t=0},zm(d){S.zi=cl(S.zi+d,0,5);S.t=0},mt(){S.r=0;S.f=0;S.zi=2;S.t=0},z(){S.t=0},
+cr(c){S.cr=c;if(c=='RHS')S.sh='rt'},shp(s){S.sh=s;if(s=='sc'&&S.cr=='RHS')S.cr='SSS'},
+sd(){if(S.r%360||S.f||S.zi!=2){S.cr0='Use "Make it the same" first.';return}S.t=0;anim('Triangles',.03)},
+v(){const SH={sc:[[0,0],[170,0],[60,110]],rt:[[0,0],[150,0],[0,110]]},P=SH[S.sh],cx=(P[0][0]+P[1][0]+P[2][0])/3,cy=(P[0][1]+P[1][1]+P[2][1])/3,k=this.ZK[S.zi],cr=S.cr;
+ const mk=()=>{let o='';const tk=(i,n)=>{const a=P[i],b=P[(i+1)%3],m=[(a[0]+b[0])/2,(a[1]+b[1])/2],l=Math.hypot(b[0]-a[0],b[1]-a[1]),tx=(b[0]-a[0])/l,ty=(b[1]-a[1])/l;for(let j=0;j<n;j++){const q=(j-(n-1)/2)*7;o+=`<line x1="${m[0]+q*tx+8*ty}" y1="${m[1]+q*ty-8*tx}" x2="${m[0]+q*tx-8*ty}" y2="${m[1]+q*ty+8*tx}" stroke="#111" stroke-width="3" vector-effect="non-scaling-stroke"/>`}},
+ ar=(i,n)=>{const v=P[i],u=P[(i+1)%3],w=P[(i+2)%3],d1=[u[0]-v[0],u[1]-v[1]],d2=[w[0]-v[0],w[1]-v[1]],l1=Math.hypot(...d1),l2=Math.hypot(...d2),cp=d1[0]*d2[1]-d1[1]*d2[0];for(let j=0;j<n;j++){const r=22+j*7;o+=`<path d="M${v[0]+r*d1[0]/l1} ${v[1]+r*d1[1]/l1}A${r} ${r} 0 0 ${cp>0?1:0} ${v[0]+r*d2[0]/l2} ${v[1]+r*d2[1]/l2}" fill="none" stroke="#dc2626" stroke-width="3" vector-effect="non-scaling-stroke"/>`}};
+ if(cr=='SSS'){tk(0,1);tk(1,2);tk(2,3)}if(cr=='SAS'){tk(0,1);tk(2,2);ar(0,1)}if(cr=='ASA'){ar(0,1);ar(1,2);tk(0,1)}if(cr=='AA'){ar(0,1);ar(1,2)}
+ if(cr=='RHS'){o+=`<path d="M16 0V16H0" fill="none" stroke="#dc2626" stroke-width="3" vector-effect="non-scaling-stroke"/>`;tk(1,1);tk(0,2)}return o};
+ const grp=(tr,fill,st)=>`<g transform="${tr}"><polygon points="${P.join(' ')}" fill="${fill}" stroke="${st}" stroke-width="4" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".9"/>${mk()}</g>`;
+ const ox2=650-400*S.t,sc=S.f?-k:k,rr=S.r*PI/180,lt=(p,ox,sx,sy,ra)=>{const dx=(p[0]-cx)*sx,dy=(p[1]-cy)*sy;return[ox+dx*Math.cos(ra)-dy*Math.sin(ra),210+dx*Math.sin(ra)+dy*Math.cos(ra)]};
+ let s=grp(`translate(250 210) translate(${-cx} ${-cy})`,'#93c5fd','#1e40af')+grp(`translate(${ox2} 210) rotate(${S.r}) scale(${sc} ${k}) translate(${-cx} ${-cy})`,'#fdba74','#9a3412');
+ [[250,1,1,0,'#1e40af'],[ox2,sc,k,rr,'#9a3412']].forEach(([ox,sx,sy,ra,col])=>P.forEach((p,i)=>{const q=lt(p,ox,sx,sy,ra),dx=q[0]-ox,dy=q[1]-210,l=Math.hypot(dx,dy)||1;s+=T(q[0]+18*dx/l,q[1]+18*dy/l+6,18,'ABC'[i],col)}));
+ s+=T(250,390,18,'Triangle 1 (fixed)','#1e40af')+T(650,390,18,'Triangle 2 (you move it)','#9a3412');
+ const txt={SSS:'SSS: three pairs of sides are equal.',SAS:'SAS: two sides and the angle between them are equal.',ASA:'ASA: two angles and the side between them are equal.',RHS:'RHS: right angle, hypotenuse and one side are equal.',AA:'AA: two angles are equal, so the triangles are similar.'}[cr];
+ return[svg(s),`<b>${txt}</b><br>Size of triangle 2 = ${k} × triangle 1<br>`+(k==1?'<b style="color:#16a34a">Congruent ✔</b> same size and shape.':`<b style="color:#7c3aed">Similar ✔</b> same shape, sides in ratio ${k} : 1.`)+(S.cr0?'<br>'+S.cr0:''),
+ B('SSS','bs','cr','SSS')+B('SAS','gs','cr','SAS')+B('ASA','os','cr','ASA')+B('RHS','ps','cr','RHS')+B('AA (similar)','ks','cr','AA')+B('Scalene','ts','shp','sc')+B('Right triangle','as','shp','rt')+B('↺ Turn','r','tn',-15)+B('↻ Turn','b','tn',15)+B('Flip','p','fl')+B('Zoom in','g','zm',1)+B('Zoom out','o','zm',-1)+B('Make it the same','t','mt')+B('Slide onto triangle 1','k','sd')+B('Reset','n','z')]}},
+/* 9 SOLIDS */
+{n:'Solids',c:'p',t:'Cylinder, Cone and Sphere: Fill and Compare',d:'All three have the same radius. Pour water to compare the volumes. The cone and sphere fit inside the cylinder.',
+i(){S={r:3,h:4,mo:null,t:0}},ch(k,v){S[k]=cl(S[k]+v,1,k=='r'?4:8);S.mo=null;S.t=0},
+pc(){S.mo='cone';S.t=0;anim('Solids',.012)},ps_(){S.h=cl(2*S.r,1,8);S.mo='sph';S.t=0;anim('Solids',.015)},z(){S.mo=null;S.t=0},
+v(){const{r,h,mo,t}=S,u=18,ru=r*u,hu=h*u,ry=ru*.3,yb=340;let cy=0,co=1,sp=1;
+ if(mo=='cone'){const P=t*3;cy=Math.min(1,P/3);co=t>=1?0:1-(P%1)}if(mo=='sph'){cy=t*Math.min(1,4*r/(3*h));sp=1-t}
+ const cx1=170,cx2=450,cx3=730;let z=0;{let lo=0,hi=2;for(let i=0;i<30;i++){z=(lo+hi)/2;(z*z*(3-z)/4<sp?lo=z:hi=z)}}
+ const wh=cy*hu,f=Math.cbrt(co);
+ let s=`<ellipse cx="${cx1}" cy="${yb}" rx="${ru}" ry="${ry}" fill="#e0f2fe" stroke="#0369a1" stroke-width="3"/>`+(cy>0?`<rect x="${cx1-ru}" y="${yb-wh}" width="${2*ru}" height="${wh}" fill="#38bdf8"/><ellipse cx="${cx1}" cy="${yb}" rx="${ru}" ry="${ry}" fill="#38bdf8"/><ellipse cx="${cx1}" cy="${yb-wh}" rx="${ru}" ry="${ry}" fill="#7dd3fc"/>`:'')+`<line x1="${cx1-ru}" x2="${cx1-ru}" y1="${yb-hu}" y2="${yb}" stroke="#0369a1" stroke-width="4"/><line x1="${cx1+ru}" x2="${cx1+ru}" y1="${yb-hu}" y2="${yb}" stroke="#0369a1" stroke-width="4"/><ellipse cx="${cx1}" cy="${yb-hu}" rx="${ru}" ry="${ry}" fill="none" stroke="#0369a1" stroke-width="4"/>`+T(cx1,yb+50,20,'Cylinder');
+ s+=`<polygon points="${cx2-ru},${yb-hu} ${cx2+ru},${yb-hu} ${cx2},${yb}" fill="#fef3c7" stroke="#b45309" stroke-width="4"/>`+(co>0?`<polygon points="${cx2},${yb} ${cx2-ru*f},${yb-hu*f} ${cx2+ru*f},${yb-hu*f}" fill="#f59e0b"/><ellipse cx="${cx2}" cy="${yb-hu*f}" rx="${ru*f}" ry="${ry*f}" fill="#fcd34d"/>`:'')+`<ellipse cx="${cx2}" cy="${yb-hu}" rx="${ru}" ry="${ry}" fill="none" stroke="#b45309" stroke-width="4"/>`+T(cx2,yb+50,20,'Cone');
+ const sc=yb-ru,zr=z*ru,chord=ru*Math.sqrt(Math.max(0,1-(1-z)**2));
+ s+=`<defs><clipPath id="sk"><circle cx="${cx3}" cy="${sc}" r="${ru}"/></clipPath></defs><circle cx="${cx3}" cy="${sc}" r="${ru}" fill="#fce7f3" stroke="#be185d" stroke-width="4"/>`+(sp>0?`<g clip-path="url(#sk)"><rect x="${cx3-ru}" y="${yb-zr}" width="${2*ru}" height="${zr}" fill="#ec4899"/></g><ellipse cx="${cx3}" cy="${yb-zr}" rx="${chord}" ry="${chord*.3}" fill="#f9a8d4"/>`:'')+T(cx3,yb+50,20,'Sphere')+T(450,28,22,mo=='cone'?`Pour ${Math.min(3,Math.floor(t*3)+1)} of 3: the cone fills the cylinder 3 times`:mo=='sph'?'Sphere water fills 2/3 of the cylinder (when h = 2r)':'Press a pour button','#1e3a8a');
+ const p3=3.14,l=Math.sqrt(r*r+h*h);
+ return[svg(s,'0 0 900 410'),`r = ${r}, h = ${h}<br><b>Cylinder:</b> V = πr²h = ${rd(p3*r*r*h)}; curved = 2πrh = ${rd(2*p3*r*h)}; total = 2πr(r+h) = ${rd(2*p3*r*(r+h))}<br><b>Cone:</b> V = ⅓πr²h = ${rd(p3*r*r*h/3)}; l = ${rd(l)}; curved = πrl = ${rd(p3*r*l)}; total = πr(r+l) = ${rd(p3*r*(r+l))}<br><b>Sphere:</b> V = 4/3πr³ = ${rd(4/3*p3*r**3)}; area = 4πr² = ${rd(4*p3*r*r)}`,
+ B('Pour cone → cylinder','b','pc')+B('Pour sphere → cylinder','k','ps_')+B('Reset','n','z')+B('Radius +','g','ch','r',1)+B('Radius −','r','ch','r',-1)+B('Height +','o','ch','h',1)+B('Height −','t','ch','h',-1)]}},
+/* 10 HISTOGRAM */
+{n:'Histogram',c:'g',t:'Histogram & Frequency Polygon Plotter',d:'These are the test marks of 30 students. Change the class width and watch the bars and the polygon change.',
+i(){S={w:10,t:1,hs:1,pg:1};this.nd()},nd(){const d=[];for(let i=0;i<30;i++)d.push(cl(R((Math.random()+Math.random()+Math.random())/3*50),0,49));S.d=d;S.t=0;anim('Histogram',.05)},
+wd(w){S.w=w;S.t=0;anim('Histogram',.05)},tg(k){S[k]=1-S[k]},rp(){S.t=0;anim('Histogram',.05)},
+v(){const{w,t,hs,pg,d}=S,nb=50/w,fq=Array(nb).fill(0);d.forEach(q=>fq[Math.floor(q/w)]++);const mx=Math.max(...fq),ym=Math.ceil((mx+1)/2)*2,gx=q=>90+(q+w)/(50+2*w)*720,gy=q=>340-q/ym*280;
+ let s=`<rect x="15" y="10" width="870" height="395" rx="14" fill="#166534" stroke="#92400e" stroke-width="10"/>`+T(450,42,22,'Marks of 30 students (out of 50)','#fef9c3');
+ for(let i=0;i<=ym;i+=ym>10?4:2)s+=`<line x1="90" x2="810" y1="${gy(i)}" y2="${gy(i)}" stroke="#ffffff33"/>`+T(80,gy(i)+5,14,i,'#f1f5f9',600,'end');
+ for(let i=0;i<=nb;i++)s+=T(gx(i*w),362,14,i*w,'#f1f5f9',600);
+ s+=`<line x1="90" x2="810" y1="340" y2="340" stroke="#f1f5f9" stroke-width="3"/><line x1="${gx(0)}" x2="${gx(0)}" y1="60" y2="340" stroke="#f1f5f9" stroke-width="3"/>`+T(450,392,16,'Marks (class intervals)','#f1f5f9')+T(40,200,16,'Students','#f1f5f9');
+ if(hs)fq.forEach((f,i)=>s+=`<rect x="${gx(i*w)}" y="${gy(f*t)}" width="${gx(w)-gx(0)}" height="${f*t/ym*280}" fill="hsl(${i*360/nb},75%,60%)" stroke="#fff" stroke-width="2"/>`+(t>=1?T(gx(i*w+w/2),gy(f)-6,15,f,'#fef9c3'):''));
+ if(pg){const pts=[[-w/2,0],...fq.map((f,i)=>[i*w+w/2,f*t]),[50+w/2,0]];s+=`<polyline points="${pts.map(p=>gx(p[0])+','+gy(p[1])).join(' ')}" fill="none" stroke="#fde047" stroke-width="4"/>`+pts.map(p=>`<circle cx="${gx(p[0])}" cy="${gy(p[1])}" r="5" fill="#ef4444" stroke="#fff"/>`).join('')}
+ return[svg(s,'0 0 900 415'),fq.map((f,i)=>`${i*w}–${i*w+w}: <b>${f}</b>`).join('<br>')+`<br>Total = ${d.length}`,
+ [5,10,25].map((q,i)=>B('Width '+q,'bgo'[i]+'s','wd',q)).join('')+B('Histogram on/off','b','tg','hs')+B('Polygon on/off','o','tg','pg')+B('New data','k','nd')+B('▶ Replay','p','rp')]}},
+/* 11 PROBABILITY */
+{n:'Probability',c:'t',t:'Probability Spinner & Dice Simulator',d:'Roll many times. Watch the experimental probability (bars) move toward the theoretical probability (dashed line).',
+O:{coin:['Heads','Tails'],dice:['1','2','3','4','5','6'],spin:['Red','Blue','Green','Yellow','Purple']},CL:['#ef4444','#3b82f6','#22c55e','#eab308','#a855f7'],
+i(){S={m:'dice',c:Array(6).fill(0),n:0,t:1,res:0,rot:0,r0:0,rt:0}},md(m){S.m=m;S.c=Array(this.O[m].length).fill(0);S.n=0;S.t=1},z(){S.c=S.c.map(()=>0);S.n=0},
+ro(k){const L=this.O[S.m].length;if(k==1){if(S.t<1)return 0;S.res=rnd(0,L-1);S.t=0;if(S.m=='spin'){S.r0=S.rot;S.rt=S.r0+1080+(((-(S.res+.5)*72-S.r0)%360)+360)%360}anim('Probability',S.m=='spin'?.02:.05)}else{for(let i=0;i<k;i++)S.c[rnd(0,L-1)]++;S.n+=k}},
+end(){S.c[S.res]++;S.n++;if(S.m=='spin')S.rot=S.rt},
+v(){const{m,c,n,t,res}=S,L=this.O[m].length,nm=this.O[m],th=1/L;let s='';
+ if(m=='coin'){const face=t>=1?res:Math.floor(t*10)%2,sx=t>=1?1:Math.abs(Math.cos(t*PI*5));s+=`<g transform="translate(200 210) scale(${sx} 1)"><circle r="95" fill="#fbbf24" stroke="#b45309" stroke-width="8"/><circle r="75" fill="none" stroke="#b45309" stroke-width="3"/>`+T(0,28,80,face?'T':'H','#92400e',800)+`</g>`}
+ else if(m=='dice'){const f=t>=1?res:(Math.floor(t*14)+res)%6,pp=[[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]][f];s+=`<g transform="rotate(${t>=1?0:t*360} 200 210)"><rect x="115" y="125" width="170" height="170" rx="30" fill="#fff" stroke="#94a3b8" stroke-width="5"/>`+pp.map(q=>`<circle cx="${200+(q%3-1)*45}" cy="${210+(Math.floor(q/3)-1)*45}" r="15" fill="#111"/>`).join('')+`</g>`}
+ else{const rot=t>=1?S.rot:S.r0+(S.rt-S.r0)*(1-Math.pow(1-t,3));s+=`<g transform="rotate(${rot} 200 215)">`+nm.map((q,i)=>{const a1=(i*72-90)*PI/180,a2=((i+1)*72-90)*PI/180,am=((i+.5)*72-90)*PI/180;return`<path d="M200 215L${200+130*Math.cos(a1)} ${215+130*Math.sin(a1)}A130 130 0 0 1 ${200+130*Math.cos(a2)} ${215+130*Math.sin(a2)}Z" fill="${this.CL[i]}" stroke="#fff" stroke-width="4"/>`+T(200+80*Math.cos(am),215+80*Math.sin(am)+5,15,q,'#fff')}).join('')+`</g><circle cx="200" cy="215" r="14" fill="#1e293b"/><polygon points="185,70 215,70 200,100" fill="#111"/>`}
+ const mxf=Math.max(th*2,...c.map(q=>n?q/n*1.15:0)),bw=Math.min(60,380/L-10),gy=f=>340-f/mxf*250;
+ s+=`<line x1="470" x2="880" y1="340" y2="340" stroke="#334155" stroke-width="3"/><line x1="470" x2="880" y1="${gy(th)}" y2="${gy(th)}" stroke="#111" stroke-width="3" stroke-dasharray="10 6"/>`+T(880,gy(th)-8,14,'Theory '+rd(th*100)/100,'#111',700,'end');
+ nm.forEach((q,i)=>{const x=490+i*(400/L)+(400/L-bw)/2,f=n?c[i]/n:0;s+=`<rect x="${x}" y="${gy(f)}" width="${bw}" height="${340-gy(f)}" rx="5" fill="${m=='spin'?this.CL[i]:m=='coin'?['#f59e0b','#6366f1'][i]:'hsl('+i*55+',75%,55%)'}"/>`+T(x+bw/2,gy(f)-6,13,c[i]+' · '+rd(f))+T(x+bw/2,362,14,q,'#334155')});
+ s+=T(680,40,20,'Experimental probability = count ÷ trials','#1e3a8a')+T(200,395,22,'Trials: '+n,'#1e3a8a');
+ return[svg(s,'0 0 900 410'),nm.map((q,i)=>`${q}: ${c[i]} → <b>${n?rd(c[i]/n):0}</b> (theory ${rd(th)})`).join('<br>')+'<br>More trials = closer to theory!',
+ B('🪙 Coin','as','md','coin')+B('🎲 Dice','bs','md','dice')+B('🎡 Spinner','ps','md','spin')+B('Roll ×1','g','ro',1)+B('Roll ×10','b','ro',10)+B('Roll ×100','o','ro',100)+B('Roll ×1000','r','ro',1000)+B('Reset','n','z')]}}
+];
+function render(){const a=acts[cur],[s,i,c]=a.v();$$('#stage').innerHTML=s;$$('#inf').innerHTML=i;$$('#ctl').innerHTML=c;$$('#ttl').textContent=cur+1+'. '+a.t;$$('#dsc').textContent=a.d;document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('on',j==cur))}
+function show(i){cur=i;S={};acts[i].i();render()}
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.addEventListener('fullscreenchange',()=>$$('#fsb').textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen');
+$$('#nav').innerHTML=acts.map((a,i)=>`<button style="background:${C[a.c]}" onclick="show(${i})">${i+1}. ${a.n}</button>`).join('');
+show(0);
+</script></body></html>

@@ -2417,6 +2417,154 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
+    // 100: Theories of Acids and Bases: Arrhenius, Brønsted-Lowry & Lewis
+    case 100:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="acidGrad100" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#7c3aed" />
+            </linearGradient>
+          </defs>
+          <path d="M26 12 H38 V22 L48 48 C50 53 46 56 40 56 H24 C18 56 14 53 16 48 L26 22 Z" fill="#0f172a" stroke="#f59e0b" strokeWidth="2.5" />
+          <path d="M19 44 L45 44 C44 50 41 54 38 54 H26 C23 54 20 50 19 44 Z" fill="url(#acidGrad100)" opacity="0.85" />
+          <circle cx="28" cy="48" r="2.5" fill="#fde047" />
+          <circle cx="36" cy="46" r="3" fill="#38bdf8" />
+          <circle cx="31" cy="38" r="2" fill="#4ade80" />
+          <text x="32" y="30" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">H⁺/OH⁻</text>
+        </svg>
+      );
+
+    // 101: Class 6 Mathematics Lab (Integers, Ratio, Algebra, Geometry)
+    case 101:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#1e3a8a" stroke="#60a5fa" strokeWidth="2" />
+          <line x1="14" y1="26" x2="50" y2="26" stroke="#93c5fd" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="20" cy="26" r="3.5" fill="#ef4444" />
+          <circle cx="32" cy="26" r="3.5" fill="#facc15" />
+          <circle cx="44" cy="26" r="3.5" fill="#22c55e" />
+          <text x="32" y="44" fill="#f8fafc" fontSize="13" fontWeight="900" textAnchor="middle">CL-6</text>
+          <path d="M16 46 L22 36 L28 46 Z" fill="#38bdf8" opacity="0.6" />
+        </svg>
+      );
+
+    // 102: Class 7 Mathematics Lab (Rational Line, Exponents, Geometry)
+    case 102:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#4c1d95" stroke="#c084fc" strokeWidth="2" />
+          <circle cx="32" cy="22" r="9" fill="#7c3aed" stroke="#fde047" strokeWidth="2" />
+          <text x="32" y="26" fill="#ffffff" fontSize="10" fontWeight="900" textAnchor="middle">xⁿ</text>
+          <text x="32" y="46" fill="#fde047" fontSize="13" fontWeight="900" textAnchor="middle">CL-7</text>
+          <line x1="14" y1="34" x2="50" y2="34" stroke="#a78bfa" strokeWidth="1.5" strokeDasharray="2 2" />
+        </svg>
+      );
+
+    // 103: Class 8 Mathematics Lab (Real Numbers, 3D Cubes, Factorization)
+    case 103:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#064e3b" stroke="#34d399" strokeWidth="2" />
+          <ellipse cx="28" cy="24" rx="14" ry="10" fill="#047857" stroke="#6ee7b7" strokeWidth="1.5" />
+          <ellipse cx="38" cy="24" rx="12" ry="9" fill="#0f766e" stroke="#5eead4" strokeWidth="1.5" opacity="0.75" />
+          <text x="32" y="47" fill="#fde047" fontSize="13" fontWeight="900" textAnchor="middle">CL-8</text>
+          <circle cx="33" cy="24" r="3" fill="#ffffff" />
+        </svg>
+      );
+
+    // 104: Electronic Configuration & Aufbau Principle Lab
+    case 104:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#0f2e3d" stroke="#2dd4bf" strokeWidth="2" />
+          {/* Energy Shelf Stairs */}
+          <path d="M14 44 H24 V34 H36 V24 H48" stroke="#f59e0b" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <circle cx="19" cy="39" r="3.5" fill="#38bdf8" stroke="#fff" strokeWidth="1" />
+          <circle cx="30" cy="29" r="3.5" fill="#4ade80" stroke="#fff" strokeWidth="1" />
+          <circle cx="42" cy="19" r="3.5" fill="#f43f5e" stroke="#fff" strokeWidth="1" />
+          <text x="32" y="52" fill="#5eead4" fontSize="8" fontWeight="bold" textAnchor="middle">1s² 2s² 2p⁶</text>
+        </svg>
+      );
+
+    // 105: Human Heart & Blood Circulation Laboratory
+    case 105:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="26" fill="#0f172a" stroke="#e11d48" strokeWidth="2.5" />
+          {/* Heart Shape */}
+          <path d="M32 46 C20 36 14 28 14 20 C14 14 19 11 24 11 C28 11 31 14 32 16 C33 14 36 11 40 11 C45 11 50 14 50 20 C50 28 44 36 32 46 Z" fill="#e11d48" stroke="#fecdd3" strokeWidth="1.5" />
+          {/* Arterial/Venous Dual Loop */}
+          <path d="M22 24 C22 19 28 19 28 24 C28 30 22 30 22 24" stroke="#38bdf8" strokeWidth="2" fill="none" />
+          <path d="M36 24 C36 19 42 19 42 24 C42 30 36 30 36 24" stroke="#f43f5e" strokeWidth="2" fill="none" />
+        </svg>
+      );
+
+    // 106: Structure of the Human Ear & Hearing Mechanism
+    case 106:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="26" fill="#0c2340" stroke="#16a34a" strokeWidth="2.5" />
+          {/* Outer Ear & Helix */}
+          <path d="M26 14 C36 14 42 20 42 28 C42 38 34 44 28 46 C24 47 22 44 24 40 C28 32 30 26 26 22 C22 18 20 22 20 26" stroke="#4ade80" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* Cochlea Spiral */}
+          <path d="M36 32 A4 4 0 0 1 40 36 A6 6 0 0 1 34 42 A8 8 0 0 1 26 34" stroke="#facc15" strokeWidth="2" fill="none" strokeLinecap="round" />
+          {/* Sound Wave Waves */}
+          <path d="M12 28 C15 30 15 34 12 36 M16 25 C20 28 20 37 16 40" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" fill="none" />
+        </svg>
+      );
+
+    // 107: Intermolecular Forces: Hydrogen Bonding & Dipole-Dipole
+    case 107:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#082f49" stroke="#38bdf8" strokeWidth="2" />
+          {/* Water Molecule 1 */}
+          <circle cx="22" cy="24" r="7" fill="#ef4444" />
+          <circle cx="16" cy="17" r="3.5" fill="#f8fafc" />
+          <circle cx="28" cy="17" r="3.5" fill="#f8fafc" />
+          {/* Water Molecule 2 */}
+          <circle cx="42" cy="38" r="7" fill="#ef4444" />
+          <circle cx="36" cy="45" r="3.5" fill="#f8fafc" />
+          <circle cx="48" cy="45" r="3.5" fill="#f8fafc" />
+          {/* Hydrogen Bond Dotted Attraction Line */}
+          <line x1="28" y1="24" x2="36" y2="38" stroke="#fde047" strokeWidth="3" strokeDasharray="3 3" />
+        </svg>
+      );
+
+    // 108: Mechanism of Breathing: Inhalation, Exhalation & Gas Exchange
+    case 108:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="26" fill="#064e3b" stroke="#10b981" strokeWidth="2.5" />
+          {/* Trachea */}
+          <rect x="30" y="12" width="4" height="12" rx="2" fill="#cbd5e1" />
+          {/* Left & Right Lungs */}
+          <path d="M30 24 C24 24 16 30 18 42 C20 46 28 46 30 40 Z" fill="#34d399" opacity="0.9" />
+          <path d="M34 24 C40 24 48 30 46 42 C44 46 36 46 34 40 Z" fill="#34d399" opacity="0.9" />
+          {/* Diaphragm Curve */}
+          <path d="M16 48 Q32 40 48 48" stroke="#fbbf24" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 109: Rutherford's & Bohr's Atomic Models Laboratory
+    case 109:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="44" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="2" />
+          {/* Nucleus */}
+          <circle cx="32" cy="32" r="5" fill="#f59e0b" stroke="#fff" strokeWidth="1" />
+          {/* Quantized Bohr Orbit 1 */}
+          <ellipse cx="32" cy="32" rx="14" ry="9" stroke="#38bdf8" strokeWidth="1.5" fill="none" transform="rotate(-25 32 32)" />
+          {/* Quantized Bohr Orbit 2 */}
+          <ellipse cx="32" cy="32" rx="20" ry="13" stroke="#a78bfa" strokeWidth="1.5" fill="none" transform="rotate(35 32 32)" />
+          {/* Jumping Electron & Photon */}
+          <circle cx="43" cy="22" r="3" fill="#22c55e" />
+          <path d="M36 28 L46 20" stroke="#f43f5e" strokeWidth="1.5" strokeDasharray="2 2" />
+        </svg>
+      );
+
     // Default Fallback
     default:
       return (

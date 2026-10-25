@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Theories of Acids and Bases - Chemistry Class 10</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0b1224;color:#e8eefc;font-family:'Segoe UI',Tahoma,Arial,sans-serif;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;background:linear-gradient(90deg,#be123c,#7c3aed 55%,#1d4ed8);border-bottom:3px solid #fbbf24}
+h1{font-size:19px;flex:1;line-height:1.2}h1 small{display:block;font-size:11px;font-weight:400;opacity:.85;margin-top:2px}
+.btn,.tab{border:0;border-radius:10px;padding:9px 8px;font:700 12.5px 'Segoe UI',Arial,sans-serif;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);transition:transform .08s,filter .15s;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.btn:hover,.tab:hover{filter:brightness(1.18)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.4)}.btn.on{outline:3px solid #fff;outline-offset:1px}
+.tab{padding:10px 13px;font-size:13px;background:#334155;opacity:.75}.tab.act{opacity:1;background:linear-gradient(#f59e0b,#d97706)}
+.k1{background:linear-gradient(#22c55e,#15803d)}.k2{background:linear-gradient(#ef4444,#b91c1c)}.k3{background:linear-gradient(#3b82f6,#1d4ed8)}.k4{background:linear-gradient(#f97316,#c2410c)}
+.k5{background:linear-gradient(#a855f7,#7e22ce)}.k6{background:linear-gradient(#06b6d4,#0e7490)}.k7{background:linear-gradient(#ec4899,#be185d)}.k8{background:linear-gradient(#eab308,#a16207)}
+.k9{background:linear-gradient(#14b8a6,#0f766e)}.k10{background:linear-gradient(#6366f1,#4338ca)}.k11{background:linear-gradient(#64748b,#334155)}.k12{background:linear-gradient(#84cc16,#4d7c0f)}.k13{background:linear-gradient(#f43f5e,#9f1239)}
+main{flex:1;display:flex;min-height:0}#stage{flex:1;position:relative;min-width:0}#cv{position:absolute;left:0;top:0}
+aside{width:370px;overflow:auto;padding:10px;background:#101a33;border-left:2px solid #1e3a5f}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.grid .w{grid-column:span 2}
+h3{font-size:13px;margin:8px 0 6px;color:#fbbf24}
+.box{background:#0b1224;border:1px solid #274472;border-radius:10px;padding:9px;font-size:12.5px;line-height:1.55;margin-bottom:8px}.box b{color:#fcd34d}
+footer{font-size:10.5px;text-align:center;padding:4px;background:#0a1020;color:#94a3b8}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>Theories of Acids and Bases<small>Arrhenius, Br&oslash;nsted-Lowry &amp; Lewis &bull; Chemistry Class 10 (PTBB) &bull; GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+ <button class="tab act" id="t1" onclick="setMode(1)">1. Arrhenius</button>
+ <button class="tab" id="t2" onclick="setMode(2)">2. Br&oslash;nsted-Lowry</button>
+ <button class="tab" id="t3" onclick="setMode(3)">3. Lewis</button>
+ <button class="btn k13" id="fs">Full Screen</button>
+</header>
+<main>
+ <div id="stage"><canvas id="cv"></canvas></div>
+ <aside>
+  <div id="g1">
+   <h3>Choose a compound from the bottle</h3>
+   <div class="grid">
+    <button class="btn k2 on" id="a_hcl" onclick="selA('hcl')">HCl (acid)</button>
+    <button class="btn k8" id="a_vin" onclick="selA('vin')">Vinegar (weak acid)</button>
+    <button class="btn k3" id="a_naoh" onclick="selA('naoh')">NaOH (base)</button>
+    <button class="btn k5" id="a_koh" onclick="selA('koh')">KOH (base)</button>
+   </div>
+   <h3>Actions</h3>
+   <div class="grid">
+    <button class="btn k1" onclick="addU(1)">Add 1 Unit</button>
+    <button class="btn k4" onclick="addU(5)">Add 5 Units</button>
+    <button class="btn k6" onclick="dip('ph')">Dip pH Paper</button>
+    <button class="btn k7" onclick="dip('lit')">Litmus Test</button>
+    <button class="btn k10" id="bSt" onclick="tgA('stir',this,'Stir')">Stir: OFF</button>
+    <button class="btn k9 on" id="bLb" onclick="tgA('lab',this,'Ion Labels')">Ion Labels: ON</button>
+    <button class="btn k11 w" onclick="resetA()">Empty the Beaker</button>
+   </div>
+   <div class="box" id="r1"></div>
+   <div class="box"><b>Arrhenius theory</b><br><b>Acid:</b> a substance that gives H&#8314; ions in water.<br><b>Base:</b> a substance that gives OH&#8315; ions in water.<br>H&#8314; and OH&#8315; join to form water: this is neutralisation.</div>
+  </div>
+  <div id="g2" style="display:none">
+   <h3>Choose a reaction</h3>
+   <div class="grid">
+    <button class="btn k2 on" id="b_0" onclick="selB(0)">HCl + H&#8322;O</button>
+    <button class="btn k3" id="b_1" onclick="selB(1)">H&#8322;O + NH&#8323;</button>
+    <button class="btn k4" id="b_2" onclick="selB(2)">CH&#8323;COOH + H&#8322;O</button>
+    <button class="btn k5" id="b_3" onclick="selB(3)">H&#8322;O + H&#8322;O</button>
+    <button class="btn k6 w" id="b_4" onclick="selB(4)">HCl + NH&#8323;</button>
+   </div>
+   <h3>Actions</h3>
+   <div class="grid">
+    <button class="btn k1" onclick="goB(1)">Transfer Proton (H&#8314;)</button>
+    <button class="btn k2" onclick="goB(-1)">Reverse Reaction</button>
+    <button class="btn k8" onclick="resetB()">Reset Molecules</button>
+    <button class="btn k10 on" id="bPr" onclick="tgB('pairs',this,'Conjugate Pairs')">Conjugate Pairs: ON</button>
+    <button class="btn k7 on" id="bAr" onclick="tgB('arrow',this,'Curved Arrow')">Curved Arrow: ON</button>
+    <button class="btn k9 on" id="bLp" onclick="tgB('lp',this,'Lone Pairs')">Lone Pairs: ON</button>
+    <button class="btn k12 on" id="bCh" onclick="tgB('chg',this,'Charges')">Charges: ON</button>
+    <button class="btn k11" id="bSl" onclick="tgB('slow',this,'Slow Motion')">Slow Motion: OFF</button>
+   </div>
+   <div class="box" id="r2"></div>
+   <div class="box"><b>Br&oslash;nsted-Lowry theory</b><br><b>Acid:</b> proton (H&#8314;) donor.<br><b>Base:</b> proton acceptor.<br>After the transfer, the acid becomes its <b>conjugate base</b> and the base becomes its <b>conjugate acid</b>. A conjugate pair differs by one H&#8314;.</div>
+  </div>
+  <div id="g3" style="display:none">
+   <h3>Choose a reaction</h3>
+   <div class="grid">
+    <button class="btn k2 on" id="c_0" onclick="selC(0)">NH&#8323; + BF&#8323;</button>
+    <button class="btn k3" id="c_1" onclick="selC(1)">OH&#8315; + H&#8314;</button>
+    <button class="btn k4" id="c_2" onclick="selC(2)">NH&#8323; + H&#8314;</button>
+    <button class="btn k5" id="c_3" onclick="selC(3)">Cl&#8315; + AlCl&#8323;</button>
+   </div>
+   <h3>Actions</h3>
+   <div class="grid">
+    <button class="btn k1" onclick="goC(1)">Donate Electron Pair</button>
+    <button class="btn k2" onclick="goC(-1)">Reverse Reaction</button>
+    <button class="btn k8" onclick="resetC()">Reset Molecules</button>
+    <button class="btn k11" id="bSl3" onclick="tgC('slow',this,'Slow Motion')">Slow Motion: OFF</button>
+    <button class="btn k9 on" id="bLp3" onclick="tgC('lp',this,'Lone Pairs')">Lone Pairs: ON</button>
+    <button class="btn k7 on" id="bOr" onclick="tgC('orb',this,'Empty Orbital')">Empty Orbital: ON</button>
+   </div>
+   <div class="box" id="r3"></div>
+   <div class="box"><b>Lewis theory</b><br><b>Acid:</b> an electron-pair <b>acceptor</b> (has an empty orbital).<br><b>Base:</b> an electron-pair <b>donor</b> (has a lone pair).<br>They share the pair in a coordinate (dative) bond. This theory also covers acids without H, such as BF&#8323;.</div>
+  </div>
+ </aside>
+</main>
+<footer>GEN Z EDTECH INTERACTIVE &bull; Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),rand=(a,b)=>a+Math.random()*(b-a),TAU=Math.PI*2,lerp=(a,b,t)=>a+(b-a)*t,gauss=()=>(Math.random()+Math.random()+Math.random()-1.5)*1.4;
+let W=800,H=600,mode=1,fr=0;
+function resize(){const r=$('stage').getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;cv.style.width=r.width+'px';cv.style.height=r.height+'px';ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height}
+addEventListener('resize',resize);
+$('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})};
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(resize,150)});
+function setMode(m){mode=m;[1,2,3].forEach(i=>{$('t'+i).classList.toggle('act',i==m);$('g'+i).style.display=i==m?'':'none'})}
+function pill(t,x,y,col){ctx.font='bold 13px Segoe UI,Arial';const w=ctx.measureText(t).width+14;ctx.fillStyle='rgba(8,14,30,.82)';ctx.beginPath();ctx.roundRect(x-w/2,y-12,w,22,8);ctx.fill();ctx.strokeStyle=col||'#fbbf24';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y)}
+function bg(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#101c3c');g.addColorStop(1,'#060b18');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);const t=ctx.createLinearGradient(0,H-26,0,H);t.addColorStop(0,'#8b5a2b');t.addColorStop(1,'#5a3a1a');ctx.fillStyle=t;ctx.fillRect(0,H-26,W,26)}
+function sph(x,y,r,c1,c2){const g=ctx.createRadialGradient(x-r*.3,y-r*.3,r*.1,x,y,r);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill()}
+function head(x,y,a,c,s){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-s*Math.cos(a-.4),y-s*Math.sin(a-.4));ctx.lineTo(x-s*Math.cos(a+.4),y-s*Math.sin(a+.4));ctx.fill()}
+function qarrow(x1,y1,cx,cy,x2,y2,c,w){ctx.strokeStyle=c;ctx.lineWidth=w||4;ctx.beginPath();ctx.moveTo(x1,y1);ctx.quadraticCurveTo(cx,cy,x2,y2);ctx.stroke();head(x2,y2,Math.atan2(y2-cy,x2-cx),c,14)}
+function rr(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke()}}
+/* ---------- daily-life items (x,y = bottom centre) ---------- */
+function item(k,x,y,h){ctx.save();ctx.translate(x,y);const s=h/120;ctx.scale(s,s);
+ const bottle=(c1,c2,cap,lab,lc)=>{let g=ctx.createLinearGradient(-26,0,26,0);g.addColorStop(0,c1);g.addColorStop(.45,c2);g.addColorStop(1,c1);rr(-26,-86,52,86,10,g);rr(-12,-110,24,28,4,g);rr(-15,-122,30,16,4,cap);rr(-22,-62,44,38,4,'#f8fafc');ctx.fillStyle=lc;ctx.font='bold 15px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lab,0,-43);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(-20,-80,5,50)};
+ if(k=='tc')bottle('#0e7490','#67e8f9','#dc2626','HCl','#be123c');
+ else if(k=='vin')bottle('#78350f','#d97706','#111827','Vinegar','#78350f');
+ else if(k=='win')bottle('#1d4ed8','#93c5fd','#f8fafc','NH\u2083','#1d4ed8');
+ else if(k=='lye'){rr(-34,-70,68,70,8,'#f1f5f9','#cbd5e1');rr(-37,-84,74,16,5,'#ea580c');rr(-26,-56,52,34,4,'#fde68a');ctx.fillStyle='#9a3412';ctx.font='bold 15px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(sel1()=='koh'?'KOH':'NaOH',0,-39)}
+ else if(k=='water'){ctx.fillStyle='rgba(56,189,248,.55)';ctx.beginPath();ctx.moveTo(-30,-62);ctx.lineTo(30,-62);ctx.lineTo(24,0);ctx.lineTo(-24,0);ctx.fill();ctx.strokeStyle='rgba(220,240,255,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-34,-85);ctx.lineTo(-25,0);ctx.lineTo(25,0);ctx.lineTo(34,-85);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect(-26,-80,5,70)}
+ else if(k=='salt'){let g=ctx.createLinearGradient(-26,0,26,0);g.addColorStop(0,'#cbd5e1');g.addColorStop(.5,'#fff');g.addColorStop(1,'#cbd5e1');rr(-26,-70,52,70,8,'rgba(226,240,255,.85)',null);rr(-28,-86,56,18,8,'#94a3b8');ctx.fillStyle='#334155';[-12,0,12].forEach(d=>{ctx.beginPath();ctx.arc(d,-77,2.5,0,TAU);ctx.fill()});ctx.fillStyle='#fff';ctx.fillRect(-20,-62,40,58)}
+ else if(k=='cyl'){let g=ctx.createLinearGradient(-24,0,24,0);g.addColorStop(0,'#4b5563');g.addColorStop(.4,'#d1d5db');g.addColorStop(1,'#374151');rr(-24,-100,48,100,12,g);rr(-8,-116,16,18,3,'#6b7280');ctx.fillStyle='#16a34a';ctx.fillRect(-24,-60,48,12)}
+ else if(k=='lem'){ctx.fillStyle='#facc15';ctx.beginPath();ctx.ellipse(0,-34,48,34,0,0,TAU);ctx.fill();sph(-8,-44,22,'#fef9c3','#eab308');ctx.fillStyle='#fde047';ctx.beginPath();ctx.ellipse(0,-34,48,34,0,0,TAU);ctx.globalAlpha=.55;ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#16a34a';ctx.beginPath();ctx.ellipse(18,-70,16,7,-.6,0,TAU);ctx.fill()}
+ ctx.restore()}
+/* ---------- molecules ---------- */
+const AC={H:['#fff','#94a3b8',.45],O:['#fecaca','#dc2626',.72],N:['#bfdbfe','#2563eb',.75],C:['#cbd5e1','#334155',.78],Cl:['#bbf7d0','#16a34a',1],B:['#fbcfe8','#db2777',.7],F:['#d9f99d','#65a30d',.62],Al:['#e5e7eb','#6b7280',1]};
+function dmol(m,x,y,s,o){o=o||{};const hide=o.hide||[];ctx.lineCap='round';
+ m.b.forEach(b=>{if(hide.includes(b[0])||hide.includes(b[1]))return;const A=m.a[b[0]],B=m.a[b[1]],ax=x+A[1]*s,ay=y+A[2]*s,bx=x+B[1]*s,by=y+B[2]*s,dx=by-ay,dy=ax-bx,l=Math.hypot(dx,dy)||1;ctx.strokeStyle='#e2e8f0';ctx.lineWidth=s*.11;const n=b[2]==2?[-1,1]:[0];n.forEach(k=>{const ox=dx/l*k*s*.1,oy=dy/l*k*s*.1;ctx.beginPath();ctx.moveTo(ax+ox,ay+oy);ctx.lineTo(bx+ox,by+oy);ctx.stroke()})});
+ if(o.dative){const A=m.a[0];}
+ let mx=-9,mn=9;m.a.forEach((a,i)=>{if(hide.includes(i))return;const c=AC[a[0]],r=c[2]*s*.6;sph(x+a[1]*s,y+a[2]*s,r,c[0],c[1]);ctx.fillStyle='#0f172a';ctx.font=`bold ${Math.max(10,r*.95)}px Segoe UI`;ctx.textAlign='center';ctx.textBaseline='middle';const lb=(m.lab||[]).find(q=>q[0]==i);ctx.fillText(lb?lb[1]:a[0],x+a[1]*s,y+a[2]*s+1);mx=Math.max(mx,a[1]+c[2]*.6);mn=Math.min(mn,a[2]-c[2]*.6)});
+ if(o.lp)(m.lp||[]).forEach(p=>{if(hide.includes(p[0]))return;const a=m.a[p[0]],r=AC[a[0]][2]*s*.6+8,an=p[1]*Math.PI/180,hl=p[2]&&o.hl,px=x+a[1]*s+r*Math.cos(an),py=y+a[2]*s+r*Math.sin(an);ctx.fillStyle=hl?'#fde047':'#fbbf24';ctx.shadowColor='#fde047';ctx.shadowBlur=hl?16:4;[-1,1].forEach(k=>{ctx.beginPath();ctx.arc(px-Math.sin(an)*5*k,py+Math.cos(an)*5*k,hl?4.5:3.2,0,TAU);ctx.fill()});ctx.shadowBlur=0});
+ if(m.q&&(o.chg!==false)){const bx=x+mx*s+4,by=y+mn*s-6;ctx.fillStyle=m.q.includes('+')?'#ef4444':'#3b82f6';ctx.beginPath();ctx.arc(bx,by,12,0,TAU);ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 16px Segoe UI';ctx.textAlign='center';ctx.fillText(m.q,bx,by+1)}}
+const wp=(m,i,x,y,s)=>[x+m.a[i][1]*s,y+m.a[i][2]*s];
+const ext=m=>{let l=0,r=0;m.a.forEach(a=>{const rad=AC[a[0]][2]*.6;l=Math.min(l,a[1]-rad);r=Math.max(r,a[1]+rad)});return[-l,r]};
+const MD={
+ H2O:{a:[['O',0,0],['H',-.95,.65],['H',.95,.65]],b:[[0,1],[0,2]],lp:[[0,-55],[0,-125]],n:'H\u2082O'},
+ H3O:{a:[['O',0,0],['H',-1,.55],['H',1,.55],['H',0,1.2]],b:[[0,1],[0,2],[0,3]],lp:[[0,-90]],q:'+',n:'H\u2083O\u207A'},
+ OH:{a:[['O',0,0],['H',0,1.1]],b:[[0,1]],lp:[[0,-150],[0,-90],[0,-30]],q:'\u2212',n:'OH\u207B'},
+ HCl:{a:[['Cl',0,0],['H',1.45,0]],b:[[0,1]],lp:[],n:'HCl'},
+ Cl:{a:[['Cl',0,0]],b:[],lp:[[0,-135],[0,-45],[0,45],[0,135]],q:'\u2212',n:'Cl\u207B'},
+ NH3:{a:[['N',0,0],['H',-1,.55],['H',1,.55],['H',0,1.2]],b:[[0,1],[0,2],[0,3]],lp:[[0,-90]],n:'NH\u2083'},
+ NH4:{a:[['N',0,0],['H',-1,-.75],['H',1,-.75],['H',-1,.75],['H',1,.75]],b:[[0,1],[0,2],[0,3],[0,4]],lp:[],q:'+',n:'NH\u2084\u207A'},
+ AcOH:{a:[['C',-1.9,0],['C',0,0],['O',.2,-1.25],['O',1.3,.75],['H',2.2,.75]],b:[[0,1],[1,2,2],[1,3],[3,4]],lp:[],n:'CH\u2083COOH',lab:[[0,'CH\u2083']]},
+ Ac:{a:[['C',-1.9,0],['C',0,0],['O',.2,-1.25],['O',1.3,.75]],b:[[0,1],[1,2,2],[1,3]],lp:[[3,-20],[3,40]],q:'\u2212',n:'CH\u2083COO\u207B',lab:[[0,'CH\u2083']]}};
+/* ================= TAB 1: ARRHENIUS ================= */
+const AS={hcl:{f:'HCl',cat:'H',an:'Cl',st:1,eq:'HCl \u2192 H\u207A + Cl\u207B',it:'tc',nm:'Hydrochloric acid (toilet cleaner)',col:'#ef4444'},vin:{f:'CH\u2083COOH',cat:'H',an:'Ac',st:.12,eq:'CH\u2083COOH \u21CC H\u207A + CH\u2083COO\u207B',it:'vin',nm:'Vinegar: a weak acid, few molecules split',col:'#d97706'},naoh:{f:'NaOH',cat:'Na',an:'OH',st:1,eq:'NaOH \u2192 Na\u207A + OH\u207B',it:'lye',nm:'Sodium hydroxide (drain cleaner)',col:'#3b82f6'},koh:{f:'KOH',cat:'K',an:'OH',st:1,eq:'KOH \u2192 K\u207A + OH\u207B',it:'lye',nm:'Potassium hydroxide (lye)',col:'#d946ef'}};
+const PT={H:['#ef4444','H\u207A',11],OH:['#3b82f6','OH\u207B',14],Cl:['#16a34a','Cl\u207B',14],Ac:['#f59e0b','Ac\u207B',15],Na:['#8b5cf6','Na\u207A',14],K:['#d946ef','K\u207A',14],W:['#0ea5e9','H\u2082O',15]};
+const AR={sel:'hcl',P:[],fx:[],stir:false,lab:true,dp:null,neut:0};
+const sel1=()=>AR.sel;
+function bkx(){return{x:W*.33,y:H*.2,w:W*.32,h:H*.56}}
+function selA(k){AR.sel=k;['hcl','vin','naoh','koh'].forEach(i=>$('a_'+i).classList.toggle('on',i==k))}
+function tgA(k,b,l){AR[k]=!AR[k];b.textContent=l+': '+(AR[k]?'ON':'OFF');b.classList.toggle('on',AR[k])}
+function addU(n){const b=bkx();for(let i=0;i<n;i++)AR.P.push({k:'drop',f:AR.sel,x:b.x+rand(.15,.85)*b.w,y:b.y-20-i*45,vx:0,vy:0})}
+function resetA(){AR.P=[];AR.fx=[];AR.neut=0;AR.dp=null}
+function dip(k){if(!AR.dp)AR.dp={k,t:0}}
+function pHnow(){const h=AR.P.filter(p=>p.k=='H').length,o=AR.P.filter(p=>p.k=='OH').length,n=h-o;if(n==0)return 7;return n>0?-Math.log10(1e-7+n*.005):14+Math.log10(1e-7+(-n)*.005)}
+const phCol=p=>`hsl(${Math.max(0,Math.min(1,(p-1)/12))*280},85%,52%)`;
+function updA(){const b=bkx(),wy=b.y+b.h*.2;
+ AR.P.forEach(p=>{if(p.k=='drop'){p.vy+=.35;p.y+=p.vy;if(p.y>wy){const d=AS[p.f];p.k='mol';p.y=wy+14;p.vx=rand(-.6,.6);p.vy=0;p.w=rand(35,80);AR.fx.push({x:p.x,y:wy,t:0})}}
+  else{const s=AR.stir?.4:.1;p.vx=(p.vx+gauss()*s)*.95;p.vy=(p.vy+gauss()*s)*.95;if(p.k=='mol'){p.w--;if(p.w<=0){const d=AS[p.f];if(Math.random()<d.st){p.k='x'}else p.w=9999}}
+   p.x+=p.vx;p.y+=p.vy;const m=PT[p.k]?PT[p.k][2]:20;if(p.x<b.x+m+4){p.x=b.x+m+4;p.vx=Math.abs(p.vx)}if(p.x>b.x+b.w-m-4){p.x=b.x+b.w-m-4;p.vx=-Math.abs(p.vx)}if(p.y<wy+m){p.y=wy+m;p.vy=Math.abs(p.vy)*.5}if(p.y>b.y+b.h-m-6){p.y=b.y+b.h-m-6;p.vy=-Math.abs(p.vy)}}});
+ const add=[];AR.P=AR.P.filter(p=>{if(p.k=='x'){const d=AS[p.f];add.push({k:d.cat,x:p.x-14,y:p.y,vx:-1.6,vy:rand(-1,1)},{k:d.an,x:p.x+14,y:p.y,vx:1.6,vy:rand(-1,1)});AR.fx.push({x:p.x,y:p.y,t:0});return false}return true});AR.P.push(...add);
+ const H1=AR.P.filter(p=>p.k=='H'),O1=AR.P.filter(p=>p.k=='OH');
+ for(const h of H1){if(h.dead)continue;for(const o of O1){if(o.dead)continue;if(Math.hypot(h.x-o.x,h.y-o.y)<26){h.dead=o.dead=1;AR.neut++;AR.P.push({k:'W',x:(h.x+o.x)/2,y:(h.y+o.y)/2,vx:0,vy:0});AR.fx.push({x:h.x,y:h.y,t:0,c:'#fde047'});break}}}
+ AR.P=AR.P.filter(p=>!p.dead);AR.fx.forEach(f=>f.t++);AR.fx=AR.fx.filter(f=>f.t<30);
+ if(AR.dp){AR.dp.t+=.006;if(AR.dp.t>=1)AR.dp=null}
+ if(fr%8==0){const h=AR.P.filter(p=>p.k=='H').length,o=AR.P.filter(p=>p.k=='OH').length,m=AR.P.filter(p=>p.k=='mol').length,ph=pHnow(),d=AS[AR.sel];$('r1').innerHTML=`<b>${d.nm}</b><br><b>Equation:</b> ${d.eq}<br><b>H\u207A ions:</b> ${h} &nbsp; <b>OH\u207B ions:</b> ${o}<br><b>Undissociated molecules:</b> ${m}<br><b>Water formed (neutralisation):</b> ${AR.neut}<br><b>pH:</b> ${ph.toFixed(1)} &mdash; ${ph<6.9?'ACIDIC':ph>7.1?'BASIC (alkaline)':'NEUTRAL'}`}}
+function drawA(){bg();const b=bkx(),wy=b.y+b.h*.2,d=AS[AR.sel],ph=pHnow();
+ item(d.it,W*.16,b.y+b.h,Math.min(H*.3,170));pill(d.nm.split(' (')[0]+' bottle',W*.16,b.y+b.h+28,d.col);
+ // water
+ let g=ctx.createLinearGradient(0,wy,0,b.y+b.h);g.addColorStop(0,'rgba(125,211,252,.55)');g.addColorStop(1,'rgba(14,116,144,.7)');ctx.fillStyle=g;ctx.fillRect(b.x+3,wy,b.w-6,b.h*.8-3);ctx.strokeStyle='#e0f2fe';ctx.lineWidth=2;ctx.beginPath();for(let x=b.x+3;x<=b.x+b.w-3;x+=4){const y=wy+Math.sin(x*.05+fr*.05)*1.8;x==b.x+3?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+ // particles
+ AR.P.forEach(p=>{if(p.k=='drop'){sph(p.x,p.y,10,'#fff',AS[p.f].col);return}
+  if(p.k=='mol'){const t=AS[p.f].f;ctx.font='bold 12px Segoe UI';const w=ctx.measureText(t).width+14;rr(p.x-w/2,p.y-11,w,22,10,'rgba(15,23,42,.9)',AS[p.f].col);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,p.x,p.y+1);return}
+  const q=PT[p.k];sph(p.x,p.y,q[2],'#fff',q[0]);ctx.fillStyle='#fff';ctx.font=`bold ${AR.lab?11:15}px Segoe UI`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='#000';ctx.shadowBlur=3;ctx.fillText(AR.lab||p.k=='W'?q[1]:q[1].slice(-1),p.x,p.y+1);ctx.shadowBlur=0});
+ AR.fx.forEach(f=>{ctx.strokeStyle=f.c||'#fff';ctx.globalAlpha=1-f.t/30;ctx.lineWidth=3;ctx.beginPath();ctx.arc(f.x,f.y,6+f.t,0,TAU);ctx.stroke();ctx.globalAlpha=1});
+ // beaker glass
+ ctx.strokeStyle='rgba(200,235,255,.85)';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(b.x,b.y-12);ctx.lineTo(b.x,b.y+b.h-14);ctx.quadraticCurveTo(b.x,b.y+b.h,b.x+16,b.y+b.h);ctx.lineTo(b.x+b.w-16,b.y+b.h);ctx.quadraticCurveTo(b.x+b.w,b.y+b.h,b.x+b.w,b.y+b.h-14);ctx.lineTo(b.x+b.w,b.y-12);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(b.x+10,b.y+10,8,b.h-40);pill('Beaker of water',b.x+b.w/2,b.y+b.h+28,'#38bdf8');
+ // paper dip
+ if(AR.dp){const t=AR.dp.t,e=t<.3?t/.3:t<.7?1:(1-t)/.3,sy=lerp(b.y-70,wy+b.h*.25,e*e*(3-2*e)),sub=Math.max(0,(sy-wy)/70),cx=b.x+b.w/2,strips=AR.dp.k=='ph'?[[0,'#f5efc9',phCol(ph),'pH paper']]:[[-24,'#6d7be0',ph<6.9?'#ef6a80':'#6d7be0','Blue litmus'],[24,'#f0647a',ph>7.1?'#6d7be0':'#f0647a','Red litmus']];
+  strips.forEach(s=>{const x=cx+s[0]-9,top=sy-90;ctx.fillStyle=s[1];ctx.fillRect(x,top,18,90);const wet=Math.min(90,Math.max(0,(sy-wy)));if(wet>0){ctx.fillStyle=s[2];ctx.fillRect(x,sy-wet,18,wet)}ctx.strokeStyle='#64748b';ctx.lineWidth=1;ctx.strokeRect(x,top,18,90);if(t<.9)pill(s[3],cx+s[0],top-14,'#fbbf24')})}
+ // pH scale
+ const sx=W*.8,sy0=H*.16,sh=H*.62;pill('pH scale',sx+14,sy0-22,'#fbbf24');for(let i=0;i<=14;i++){ctx.fillStyle=phCol(i);ctx.fillRect(sx,sy0+sh*(i/14),28,sh/14+1);ctx.fillStyle='#e2e8f0';ctx.font='11px Segoe UI';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(i+(i==0?'  strong acid':i==7?'  neutral':i==14?'  strong base':''),sx+34,sy0+sh*((i+.5)/14))}
+ const my=sy0+sh*Math.max(0,Math.min(1,ph/14));ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(sx-2,my);ctx.lineTo(sx-18,my-9);ctx.lineTo(sx-18,my+9);ctx.fill();pill('pH '+ph.toFixed(1),sx-52,my,'#fff');
+ // real-life
+ pill('Acids: lemon, vinegar, stomach acid',W*.3,H*.09,'#ef4444');pill('Bases: soap, drain cleaner, antacid',W*.62,H*.09,'#3b82f6')}
+/* ================= TAB 2: BRONSTED-LOWRY ================= */
+const RB=[{a:'HCl',hi:1,b:'H2O',ti:0,cb:'Cl',si:0,ca:'H3O',ci:3,it:['tc','water'],eq:'HCl + H\u2082O \u21C4 Cl\u207B + H\u2083O\u207A'},
+ {a:'H2O',hi:1,b:'NH3',ti:0,cb:'OH',si:0,ca:'NH4',ci:4,it:['water','win'],eq:'H\u2082O + NH\u2083 \u21C4 OH\u207B + NH\u2084\u207A'},
+ {a:'AcOH',hi:4,b:'H2O',ti:0,cb:'Ac',si:3,ca:'H3O',ci:3,it:['vin','water'],eq:'CH\u2083COOH + H\u2082O \u21C4 CH\u2083COO\u207B + H\u2083O\u207A'},
+ {a:'H2O',hi:1,b:'H2O',ti:0,cb:'OH',si:0,ca:'H3O',ci:3,it:['water','water'],eq:'H\u2082O + H\u2082O \u21C4 OH\u207B + H\u2083O\u207A (water is amphoteric)'},
+ {a:'HCl',hi:1,b:'NH3',ti:0,cb:'Cl',si:0,ca:'NH4',ci:4,it:['tc','win'],eq:'HCl + NH\u2083 \u2192 Cl\u207B + NH\u2084\u207A'}];
+const BL={rx:0,t:0,run:false,dir:1,after:false,pairs:true,arrow:true,lp:true,chg:true,slow:false};
+function selB(i){BL.rx=i;BL.t=0;BL.run=false;BL.after=false;for(let k=0;k<5;k++)$('b_'+k).classList.toggle('on',k==i)}
+function resetB(){selB(BL.rx)}
+function tgB(k,b,l){BL[k]=!BL[k];b.textContent=l+': '+(BL[k]?'ON':'OFF');b.classList.toggle('on',BL[k])}
+function goB(d){if(BL.run)return;if(d>0&&BL.after)return;if(d<0&&!BL.after)return;BL.dir=d;BL.run=true;BL.t=0}
+function updB(){if(BL.run){BL.t+=BL.slow?.004:.011;if(BL.t>=1){BL.run=false;BL.after=BL.dir>0;BL.t=0}}
+ if(fr%8==0){const r=RB[BL.rx];$('r2').innerHTML=`<b>${r.eq}</b><br><b>Acid (proton donor):</b> ${MD[r.a].n}<br><b>Base (proton acceptor):</b> ${MD[r.b].n}<br><b>Conjugate pair 1:</b> ${MD[r.a].n} / ${MD[r.cb].n}<br><b>Conjugate pair 2:</b> ${MD[r.b].n} / ${MD[r.ca].n}<br>${BL.run?'The proton is moving...':BL.after?'Transfer complete: pairs formed.':'Press Transfer Proton.'}`}}
+function drawB(){bg();const r=RB[BL.rx],Rz=Math.min(W*.2,H*.3),s=Rz/2.5,Lx=W*.3,Rx=W*.7,cy=H*.42,fwd=BL.dir>0;
+ [[Lx,0],[Rx,1]].forEach(([x,i])=>{ctx.fillStyle='rgba(7,14,32,.9)';ctx.beginPath();ctx.arc(x,cy,Rz,0,TAU);ctx.fill();ctx.strokeStyle='#64748b';ctx.lineWidth=5;ctx.stroke();item(r.it[i],x,H*.9,Math.min(H*.2,130))});
+ pill('Magnified view',Lx,cy-Rz-18,'#94a3b8');pill('Magnified view',Rx,cy-Rz-18,'#94a3b8');
+ let lm,rm,lh=[],rh=[];if(!BL.after){lm=MD[r.a];rm=MD[r.b];if(BL.run&&fwd)lh=[r.hi]}else{lm=MD[r.cb];rm=MD[r.ca];if(BL.run&&!fwd)rh=[r.ci]}
+ if(BL.run){if(fwd){lm=MD[r.a];rm=MD[r.b];lh=[r.hi]}else{lm=MD[r.cb];rm=MD[r.ca];rh=[r.ci]}}
+ // halos
+ if(BL.pairs){[[Lx,'#fb923c'],[Rx,'#38bdf8']].forEach(([x,c])=>{ctx.strokeStyle=c;ctx.lineWidth=6;ctx.shadowColor=c;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(x,cy,Rz+8,0,TAU);ctx.stroke();ctx.shadowBlur=0})}
+ const dopt=h=>({hide:h,lp:BL.lp,chg:BL.chg});
+ dmol(lm,Lx,cy,s,dopt(lh));dmol(rm,Rx,cy,s,dopt(rh));
+ const ae=BL.after&&!BL.run||(BL.run&&!fwd);
+ const roleL=!BL.after?'ACID (proton donor)':'CONJUGATE BASE',roleR=!BL.after?'BASE (proton acceptor)':'CONJUGATE ACID';
+ pill(MD[BL.after?r.cb:r.a].n+'  =  '+roleL,Lx,cy+Rz+22,'#fb923c');pill(MD[BL.after?r.ca:r.b].n+'  =  '+roleR,Rx,cy+Rz+22,'#38bdf8');
+ if(BL.pairs){pill(BL.after?'Conjugate pair 1':'Pair 1: acid side',Lx,cy-Rz-44,'#fb923c');pill(BL.after?'Conjugate pair 2':'Pair 2: base side',Rx,cy-Rz-44,'#38bdf8')}
+ pill(r.eq,W*.5,H*.06,'#fbbf24');
+ // proton
+ const ph=wp(MD[r.a],r.hi,Lx,cy,s),tg=wp(MD[r.b],r.ti,Rx,cy,s),bk=wp(MD[r.ca],r.ci,Rx,cy,s),sb=wp(MD[r.cb],r.si,Lx,cy,s);
+ if(BL.run){const t=BL.t,e=t*t*(3-2*t),p0=fwd?ph:bk,p1=fwd?tg:sb,x=lerp(p0[0],p1[0],e),y=lerp(p0[1],p1[1],e)-Math.sin(Math.PI*e)*Rz*.9;for(let k=1;k<6;k++){const e2=Math.max(0,e-k*.04);ctx.globalAlpha=.4-k*.06;sph(lerp(p0[0],p1[0],e2),lerp(p0[1],p1[1],e2)-Math.sin(Math.PI*e2)*Rz*.9,s*.2,'#fde047','#f59e0b')}ctx.globalAlpha=1;ctx.shadowColor='#fde047';ctx.shadowBlur=20;sph(x,y,s*.3,'#fff7ae','#f59e0b');ctx.shadowBlur=0;ctx.fillStyle='#7c2d12';ctx.font='bold 13px Segoe UI';ctx.textAlign='center';ctx.fillText('H\u207A',x,y+1);pill('Proton (H\u207A) in motion',W*.5,cy-Rz*.2,'#fde047')}
+ else if(!BL.after&&BL.arrow){const mx=(ph[0]+wp(MD[r.a],0,Lx,cy,s)[0])/2,my=(ph[1]+wp(MD[r.a],0,Lx,cy,s)[1])/2;qarrow(mx,my-6,W*.5,cy-Rz*1.05,tg[0]-6,tg[1]-AC[MD[r.b].a[r.ti][0]][2]*s*.6-20,'#f43f5e',4);pill('Proton moves to the lone pair',W*.5,cy-Rz*1.15,'#f43f5e')}
+ else if(BL.after){ctx.fillStyle='#86efac';ctx.font='bold 40px Segoe UI';ctx.textAlign='center';ctx.fillText('\u21C4',W*.5,cy)}
+ if(!BL.run&&!BL.after){ctx.fillStyle='#e2e8f0';ctx.font='bold 40px Segoe UI';ctx.textAlign='center';ctx.fillText('+',W*.5,cy+4)}}
+/* ================= TAB 3: LEWIS ================= */
+const LD={NH3:{a:[['N',0,0],['H',-.9,-1],['H',-.9,1],['H',-1.55,0]],b:[[0,1],[0,2],[0,3]],lp:[[0,0,1]],n:'NH\u2083'},
+ OH:{a:[['O',0,0],['H',-1.15,0]],b:[[0,1]],lp:[[0,0,1],[0,-70],[0,70]],q:'\u2212',n:'OH\u207B'},
+ Cl:{a:[['Cl',0,0]],b:[],lp:[[0,0,1],[0,-90],[0,90],[0,180]],q:'\u2212',n:'Cl\u207B'},
+ BF3:{a:[['B',0,0],['F',.55,-1.55],['F',.55,1.55],['F',1.7,0]],b:[[0,1],[0,2],[0,3]],lp:[],n:'BF\u2083'},
+ AlCl3:{a:[['Al',0,0],['Cl',.6,-1.9],['Cl',.6,1.9],['Cl',2,0]],b:[[0,1],[0,2],[0,3]],lp:[],n:'AlCl\u2083'},
+ Hp:{a:[['H',0,0]],b:[],lp:[],q:'+',n:'H\u207A'}};
+const RL=[{d:'NH3',a:'BF3',it:['win','cyl'],prod:'F\u2083B\u2190NH\u2083 (adduct)',eq:'NH\u2083 + BF\u2083 \u2192 H\u2083N\u2192BF\u2083',dn:'Window cleaner (ammonia)',an:'Chemical gas cylinder'},
+ {d:'OH',a:'Hp',it:['lye','lem'],prod:'H\u2082O (water)',eq:'OH\u207B + H\u207A \u2192 H\u2082O',dn:'Drain cleaner (NaOH)',an:'Lemon (acid, gives H\u207A)'},
+ {d:'NH3',a:'Hp',it:['win','lem'],prod:'NH\u2084\u207A (ammonium ion)',eq:'NH\u2083 + H\u207A \u2192 NH\u2084\u207A',dn:'Window cleaner (ammonia)',an:'Lemon (acid, gives H\u207A)'},
+ {d:'Cl',a:'AlCl3',it:['salt','cyl'],prod:'AlCl\u2084\u207B (complex ion)',eq:'Cl\u207B + AlCl\u2083 \u2192 AlCl\u2084\u207B',dn:'Table salt (gives Cl\u207B)',an:'Chemical gas cylinder'}];
+const LW={rx:0,t:0,run:false,dir:1,after:false,lp:true,orb:true,slow:false};
+function selC(i){LW.rx=i;LW.t=0;LW.run=false;LW.after=false;for(let k=0;k<4;k++)$('c_'+k).classList.toggle('on',k==i)}
+function resetC(){selC(LW.rx)}
+function tgC(k,b,l){LW[k]=!LW[k];b.textContent=l+': '+(LW[k]?'ON':'OFF');b.classList.toggle('on',LW[k])}
+function goC(d){if(LW.run)return;if(d>0&&LW.after)return;if(d<0&&!LW.after)return;LW.dir=d;LW.run=true;LW.t=0}
+let lwP=0;
+function updC(){const tgt=LW.after?1:0;if(LW.run){LW.t+=LW.slow?.004:.01;lwP=LW.dir>0?LW.t:1-LW.t;if(LW.t>=1){LW.run=false;LW.after=LW.dir>0;LW.t=0}}else lwP=tgt;
+ if(fr%8==0){const r=RL[LW.rx];$('r3').innerHTML=`<b>${r.eq}</b><br><b>Lewis base (donor):</b> ${LD[r.d].n}<br><b>Lewis acid (acceptor):</b> ${LD[r.a].n}<br><b>Product:</b> ${r.prod}<br>${LW.run?'The lone pair is being shared...':LW.after?'A coordinate (dative) bond has formed.':'Press Donate Electron Pair.'}`}}
+function drawC(){bg();const r=RL[LW.rx],D=LD[r.d],A=LD[r.a],s=Math.min(W*.075,H*.11),ax=W*.62,y=H*.42,de=ext(D),ae=ext(A),startX=W*.22,endX=ax-(de[1]+ae[0]+.5)*s,p=lwP<.7?lwP/.7:1,e=p*p*(3-2*p),dx=lerp(startX,endX,e),bond=lwP<.7?0:(lwP-.7)/.3;
+ item(r.it[0],W*.14,H*.9,Math.min(H*.2,130));item(r.it[1],W*.82,H*.9,Math.min(H*.2,130));pill(r.dn,W*.14,H*.9+22,'#fde047');pill(r.an,W*.82,H*.9+22,'#38bdf8');
+ // stage glow
+ const g=ctx.createRadialGradient(W*.45,y,10,W*.45,y,W*.4);g.addColorStop(0,'rgba(76,29,149,.35)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ if(LW.orb&&bond==0&&A.a.length>=1){const ac=wp(A,0,ax,y,s),rad=AC[A.a[0][0]][2]*s*.6;ctx.setLineDash([6,5]);ctx.strokeStyle='#67e8f9';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(ac[0]-rad-s*.35,ac[1],s*.38,s*.65,0,0,TAU);ctx.stroke();ctx.setLineDash([]);pill('Empty orbital',ac[0]-rad-s*.35,ac[1]-s*1.3,'#67e8f9')}
+ const dopt={lp:LW.lp&&bond<1,hl:true,chg:true};
+ dmol(A,ax,y,s,{chg:true});dmol(D,dx,y,s,{lp:LW.lp&&bond==0,hl:true});
+ if(bond>0){const d0=wp(D,0,dx,y,s),a0=wp(A,0,ax,y,s),rd=AC[D.a[0][0]][2]*s*.6;const x1=d0[0]+rd*.6,x2=lerp(x1,a0[0],bond);ctx.strokeStyle='#fde047';ctx.lineWidth=s*.16;ctx.shadowColor='#fde047';ctx.shadowBlur=14;ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();head(x2,y,0,'#fde047',s*.28);ctx.shadowBlur=0;if(bond>.8)pill('Coordinate (dative) bond: pair shared by donor',(x1+a0[0])/2,y-s*2.3,'#fde047')}
+ else if(lwP>.02&&LW.lp){const d0=wp(D,0,dx,y,s),rd=AC[D.a[0][0]][2]*s*.6;qarrow(d0[0]+rd+10,y-14,(d0[0]+ax)/2,y-s*1.8,wp(A,0,ax,y,s)[0]-AC[A.a[0][0]][2]*s*.6-6,y-12,'#f43f5e',4)}
+ else if(LW.lp&&!LW.after){const d0=wp(D,0,dx,y,s),rd=AC[D.a[0][0]][2]*s*.6;pill('Lone pair (donor)',d0[0]+rd+30,y-s*1.6,'#fde047')}
+ pill('Lewis BASE: electron-pair donor',dx,y+s*2.5,'#fde047');pill('Lewis ACID: electron-pair acceptor',ax,y+s*2.5,'#38bdf8');
+ pill(r.eq,W*.5,H*.06,'#fbbf24');if(bond>=1||LW.after)pill('Product: '+r.prod,W*.5,H*.7,'#86efac');
+ if(LW.run||LW.after){ctx.fillStyle='#e2e8f0'}}
+function loop(){fr++;if(mode==1){updA();drawA()}else if(mode==2){updB();drawB()}else{updC();drawC()}requestAnimationFrame(loop)}
+resize();selB(0);selC(0);loop();
+</script></body></html>

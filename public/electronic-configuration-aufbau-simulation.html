@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Electronic Configuration &amp; Aufbau Principle - Chemistry Class 9</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0a1a24;color:#e8f1f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;overflow:hidden}
+:root{--cup:clamp(30px,2.5vw,40px)}
+#app{height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:8px 14px;background:linear-gradient(90deg,#0f766e,#1d4ed8 60%,#7c3aed);border-bottom:3px solid #fbbf24}
+h1{font-size:19px;flex:1;line-height:1.2}h1 small{display:block;font-size:11px;font-weight:400;opacity:.85;margin-top:2px}
+.btn{border:0;border-radius:10px;padding:9px 8px;font:700 12.5px 'Segoe UI',Arial,sans-serif;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);transition:transform .08s,filter .15s;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.btn:hover{filter:brightness(1.18)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.4)}.btn.on{outline:3px solid #fff;outline-offset:1px}
+.k1{background:linear-gradient(#22c55e,#15803d)}.k2{background:linear-gradient(#ef4444,#b91c1c)}.k3{background:linear-gradient(#3b82f6,#1d4ed8)}.k4{background:linear-gradient(#f97316,#c2410c)}
+.k5{background:linear-gradient(#a855f7,#7e22ce)}.k6{background:linear-gradient(#06b6d4,#0e7490)}.k7{background:linear-gradient(#ec4899,#be185d)}.k8{background:linear-gradient(#eab308,#a16207)}
+.k9{background:linear-gradient(#14b8a6,#0f766e)}.k10{background:linear-gradient(#6366f1,#4338ca)}.k11{background:linear-gradient(#64748b,#334155)}.k12{background:linear-gradient(#84cc16,#4d7c0f)}.k13{background:linear-gradient(#f43f5e,#9f1239)}
+main{flex:1;display:flex;min-height:0}
+.col{overflow:auto;padding:10px}
+#L{width:330px;background:#0d2230;border-right:2px solid #1e4a63}
+#C{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+#Rt{width:320px;background:#0d2230;border-left:2px solid #1e4a63}
+h3{font-size:13px;margin:6px 0;color:#fbbf24}
+.els{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:8px}
+.el{border:0;border-radius:8px;padding:4px 0;color:#fff;font-weight:800;font-size:14px;cursor:pointer;line-height:1.1;box-shadow:0 3px 0 rgba(0,0,0,.4);position:relative}
+.el small{display:block;font-size:9px;font-weight:600;opacity:.9}.el.sel{outline:3px solid #fff}.el.dn::after{content:'\2713';position:absolute;top:-4px;right:-2px;background:#fff;color:#16a34a;border-radius:50%;width:14px;height:14px;font-size:10px;line-height:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}.grid .w{grid-column:span 2}
+#jar{min-height:96px;border:3px solid rgba(255,255,255,.4);border-radius:14px 14px 34px 34px;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03));padding:8px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-end;box-shadow:inset 0 -10px 18px rgba(0,0,0,.35)}
+.mb{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#e0f2fe,#3b82f6 52%,#1e3a8a);box-shadow:0 2px 4px rgba(0,0,0,.6),inset -2px -3px 5px rgba(0,0,0,.35);cursor:grab;color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center}
+.mb:active{cursor:grabbing}.cnt{font-size:12px;margin:5px 0;text-align:center}
+#shelf{flex:1;min-height:0;overflow:auto;background:linear-gradient(90deg,#6b4423,#8b5a2b 8%,#8b5a2b 92%,#6b4423);border:4px solid #4a2c12;border-radius:10px;padding:6px 8px;box-shadow:inset 0 0 30px rgba(0,0,0,.5)}
+.floor{display:flex;align-items:flex-end;gap:10px;padding:6px 4px 0;border-bottom:10px solid #a16a34;box-shadow:0 6px 8px -4px rgba(0,0,0,.6);background:linear-gradient(#2a1a0d,#3b2514);margin-bottom:8px;border-radius:4px;flex-wrap:wrap}
+.floor.glow{box-shadow:0 0 0 3px #fde047,0 0 24px #fde047}
+.plate{width:64px;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(#fcd34d,#b45309);color:#3b1d02;border-radius:6px;font-weight:900;font-size:22px;margin-bottom:6px}.plate small{font-size:10px;font-weight:700}
+.tray{background:linear-gradient(#e0d6bf,#b3a581);border-radius:9px;padding:3px 6px 6px;margin-bottom:6px;box-shadow:0 4px 6px rgba(0,0,0,.5);transition:transform .15s}
+.tray.over{transform:scale(1.04);filter:brightness(1.2)}.tray.hint{animation:pl .7s infinite alternate}.tray.full{background:linear-gradient(#bbf7d0,#4ade80)}
+.tray.shake{animation:sk .4s}
+@keyframes pl{to{box-shadow:0 0 0 3px #fde047,0 0 22px #fde047}}@keyframes sk{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.tl{font-weight:800;font-size:13px;color:#3b2a10;display:flex;justify-content:space-between;gap:8px}.tl small{font-weight:600}.badge{background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;text-align:center;line-height:18px}
+.cups{display:flex;gap:4px}
+.cup{width:var(--cup);height:calc(var(--cup)*1.1);border:2px solid #6b5a38;border-radius:4px 4px 50% 50%/4px 4px 70% 70%;background:radial-gradient(circle at 50% 70%,#7a6c4c,#cbbf9f);display:flex;align-items:flex-end;justify-content:center;gap:1px;padding-bottom:3px;cursor:pointer}
+.ball{width:calc(var(--cup)*.4);height:calc(var(--cup)*.4);border-radius:50%;background:radial-gradient(circle at 32% 30%,#e0f2fe,#3b82f6 52%,#1e3a8a);color:#fff;font-size:calc(var(--cup)*.3);font-weight:900;line-height:calc(var(--cup)*.4);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.6);animation:pop .3s}
+@keyframes pop{from{transform:scale(0)}}
+#msg{padding:9px 12px;border-radius:10px;font-weight:700;font-size:14px;background:#0f3a4f;border-left:6px solid #38bdf8}#msg.ok{background:#14532d;border-color:#4ade80}#msg.bad{background:#7f1d1d;border-color:#f87171}
+.box{background:#07141d;border:1px solid #1e4a63;border-radius:10px;padding:9px;font-size:12.5px;line-height:1.55;margin-bottom:8px}.box b{color:#fcd34d}
+.cfg{font-size:19px;font-weight:800;color:#86efac;word-break:break-word}
+.sc{display:flex;gap:6px}.sc div{flex:1;text-align:center;border-radius:8px;padding:4px;font-size:11px;background:#07141d}.sc b{display:block;font-size:18px}
+#atom{width:100%;max-height:300px}
+.ring{transform-origin:150px 150px;animation:spin linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9}#modal.show{display:flex}
+#mb2{background:#0d2230;border:3px solid #fbbf24;border-radius:14px;padding:14px;width:min(560px,92vw);text-align:center}
+.cf{position:fixed;top:-20px;width:10px;height:14px;z-index:8;animation:fall 1.7s linear forwards}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+footer{font-size:10.5px;text-align:center;padding:4px;background:#07131b;color:#8aa4b5}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>Electronic Configuration &amp; Aufbau Principle<small>Chemistry Class 9 (PTBB) &bull; GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+ <button class="btn k13" id="fs">Full Screen</button>
+</header>
+<main>
+ <div class="col" id="L">
+  <h3>1. Choose an element (1 to 18)</h3><div class="els" id="els"></div>
+  <h3>2. Drag marbles (electrons) to the egg trays</h3>
+  <div id="jar"></div><div class="cnt" id="cnt"></div>
+  <h3>Action buttons</h3>
+  <div class="grid">
+   <button class="btn k1" id="bAuto" onclick="autoFill()">Auto Fill</button>
+   <button class="btn k3" onclick="nextE()">Next Electron</button>
+   <button class="btn k4" onclick="undo()">Undo</button>
+   <button class="btn k2" onclick="clr()">Clear All</button>
+   <button class="btn k8" onclick="hint()">Hint</button>
+   <button class="btn k9" onclick="check()">Check Answer</button>
+   <button class="btn k10" onclick="step(-1)">Previous Element</button>
+   <button class="btn k6" onclick="step(1)">Next Element</button>
+   <button class="btn k7" onclick="rnd()">Random Element</button>
+   <button class="btn k5" onclick="$('modal').classList.add('show')">Aufbau Chart</button>
+   <button class="btn k12" id="bOrd" onclick="flip('ord',this,'Energy Order')">Energy Order: OFF</button>
+   <button class="btn k13" id="bVal" onclick="flip('val',this,'Valence Shell')">Valence Shell: OFF</button>
+   <button class="btn k11 w" onclick="resetScore()">Reset Score</button>
+  </div>
+ </div>
+ <div class="col" id="C">
+  <div id="shelf"></div>
+  <div id="msg">Pick an element, then drag its electrons into the lowest-energy tray first.</div>
+ </div>
+ <div class="col" id="Rt">
+  <h3>Atom model</h3><svg id="atom" viewBox="0 0 300 300"></svg>
+  <div class="box" id="info"></div>
+  <div class="sc"><div style="color:#4ade80"><b id="sg">0</b>Correct</div><div style="color:#f87171"><b id="sb">0</b>Mistakes</div><div style="color:#fbbf24"><b id="sd">0</b>Elements done</div></div>
+  <h3>The three rules</h3>
+  <div class="box"><b>Aufbau:</b> fill the lowest-energy subshell first.<br><b>Pauli:</b> one orbital (cup) holds at most 2 electrons, with opposite spins (&uarr;&darr;).<br><b>Hund:</b> fill each cup in a subshell with one electron before pairing.</div>
+ </div>
+</main>
+<footer>GEN Z EDTECH INTERACTIVE &bull; Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science</footer>
+</div>
+<div id="modal"><div id="mb2"><h3 style="font-size:16px">Aufbau (diagonal) chart: follow the arrows</h3><svg id="chart" viewBox="0 0 420 270" width="100%"></svg><div class="box" style="margin-top:8px">Order: 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 4d, 4f</div><button class="btn k2" onclick="$('modal').classList.remove('show')">Close</button></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const EL=[['H','Hydrogen','n'],['He','Helium','g'],['Li','Lithium','a'],['Be','Beryllium','e'],['B','Boron','m'],['C','Carbon','n'],['N','Nitrogen','n'],['O','Oxygen','n'],['F','Fluorine','h'],['Ne','Neon','g'],['Na','Sodium','a'],['Mg','Magnesium','e'],['Al','Aluminium','p'],['Si','Silicon','m'],['P','Phosphorus','n'],['S','Sulphur','n'],['Cl','Chlorine','h'],['Ar','Argon','g']];
+const COL={n:'#16a34a',g:'#db2777',a:'#ea580c',e:'#ca8a04',m:'#0d9488',h:'#9333ea',p:'#2563eb'};
+const ORDER=['1s','2s','2p','3s','3p','4s','3d','4p','4d','4f'],SH=[['K',['1s']],['L',['2s','2p']],['M',['3s','3p','3d']],['N',['4s','4p','4d','4f']]];
+const SHOW=['1s','2s','2p','3s','3p','3d','4s','4p','4d','4f'],CAP={s:2,p:6,d:10,f:14},CUPS={s:1,p:3,d:5,f:7};
+const sup=n=>String(n).replace(/\d/g,d=>'\u2070\u00B9\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079'[d]);
+let Z=1,st={},hist=[],good=0,bad=0,done=new Set(),auto=null,F={ord:false,val:false},hintOn=false;
+const tot=k=>st[k].reduce((a,b)=>a+b,0),placed=()=>ORDER.reduce((a,k)=>a+tot(k),0),capOf=k=>CAP[k[1]],nextSub=()=>ORDER.find(k=>tot(k)<capOf(k));
+function msg(t,c){const m=$('msg');m.textContent=t;m.className=c||''}
+function flip(k,b,l){F[k]=!F[k];b.textContent=l+': '+(F[k]?'ON':'OFF');b.classList.toggle('on',F[k]);render()}
+function init(){const g=$('els');EL.forEach((e,i)=>{const b=document.createElement('button');b.className='el';b.style.background=COL[e[2]];b.innerHTML=`${e[0]}<small>${i+1}</small>`;b.title=e[1];b.onclick=()=>setZ(i+1);g.appendChild(b)})}
+function setZ(z){stopAuto();Z=z;ORDER.forEach(k=>st[k]=Array(CUPS[k[1]]).fill(0));hist=[];msg(`${EL[z-1][1]} has ${z} electron${z>1?'s':''}. Drag them into the trays, lowest energy first.`);render()}
+function place(sub,idx,el){
+ if(placed()>=Z){msg('All electrons are placed. Press Check Answer, or choose another element.','ok');return false}
+ const nx=nextSub(),arr=st[sub];
+ if(sub!==nx){bad++;msg(`Aufbau rule: ${sub} has higher energy. Fill ${nx} first.`,'bad');shake(el);score();return false}
+ if(idx==null||idx<0)idx=arr.indexOf(0)>=0?arr.indexOf(0):arr.indexOf(1);
+ if(arr[idx]>=2){bad++;msg('Pauli rule: one cup holds only 2 electrons.','bad');shake(el);score();return false}
+ if(arr[idx]==1&&arr.includes(0)){bad++;msg("Hund's rule: put one electron in every empty cup before pairing.",'bad');shake(el);score();return false}
+ arr[idx]++;hist.push([sub,idx]);good++;hintOn=false;
+ msg(`Correct! Electron ${placed()} goes into ${sub}.`,'ok');score();render();
+ if(placed()==Z)finish();return true}
+function shake(el){if(!el)return;el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),420)}
+function finish(){done.add(Z);msg(`Excellent! ${EL[Z-1][1]}: ${cfg()}. Configuration complete.`,'ok');score();confetti();render()}
+function undo(){stopAuto();const h=hist.pop();if(!h)return msg('Nothing to undo.');st[h[0]][h[1]]--;done.delete(Z);msg('Last electron removed.');render()}
+function clr(){stopAuto();setZ(Z)}
+function nextE(){const s=nextSub();if(!s||placed()>=Z)return msg('All electrons are placed.','ok');const a=st[s];place(s,null,null)}
+function autoFill(){if(auto)return stopAuto();if(placed()>=Z)return msg('Already complete. Press Clear All to try again.');$('bAuto').textContent='Stop Auto';$('bAuto').classList.add('on');auto=setInterval(()=>{if(placed()>=Z)stopAuto();else nextE()},650)}
+function stopAuto(){clearInterval(auto);auto=null;const b=$('bAuto');b.textContent='Auto Fill';b.classList.remove('on')}
+function hint(){const s=nextSub();if(placed()>=Z)return msg('No hint needed: all electrons are placed.','ok');hintOn=true;msg(`Hint: the lowest-energy subshell that is not full is ${s}.`);render();setTimeout(()=>{hintOn=false;render()},3000)}
+function check(){const r=Z-placed();if(r>0)return msg(`${r} electron${r>1?'s':''} still in the jar. Keep placing.`,'bad');msg(`Correct! ${cfg()} (${bad} mistake${bad==1?'':'s'} so far). Try the next element.`,'ok');confetti()}
+function step(d){setZ((Z-1+d+18)%18+1)}function rnd(){let z;do z=1+Math.floor(Math.random()*18);while(z==Z);setZ(z)}
+function resetScore(){good=bad=0;done.clear();score();render();msg('Score reset.')}
+function score(){$('sg').textContent=good;$('sb').textContent=bad;$('sd').textContent=done.size}
+function cfg(){return SHOW.filter(k=>tot(k)>0).map(k=>k+sup(tot(k))).join(' ')||'(no electrons yet)'}
+function shells(){return SH.map(s=>s[1].reduce((a,k)=>a+tot(k),0))}
+function confetti(){const c=['#f43f5e','#fbbf24','#22c55e','#3b82f6','#a855f7'];for(let i=0;i<45;i++){const d=document.createElement('div');d.className='cf';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}}
+function render(){
+ // jar
+ const left=Z-placed();$('jar').innerHTML=Array.from({length:left},(_,i)=>`<div class="mb" draggable="true">e&#8315;</div>`).join('');$('cnt').textContent=left>0?`${left} electron marble${left>1?'s':''} left in the jar`:'The jar is empty: all electrons placed!';
+ // elements
+ [...$('els').children].forEach((b,i)=>{b.classList.toggle('sel',i+1==Z);b.classList.toggle('dn',done.has(i+1))});
+ // shelf
+ const nx=nextSub(),sh=shells(),outer=sh.reduce((a,v,i)=>v>0?i:a,0);let h='';
+ [...SH].reverse().forEach(([nm,subs],ri)=>{const i=3-ri;h+=`<div class="floor${F.val&&sh[i]>0&&i==outer?' glow':''}"><div class="plate">${nm}<small>n = ${i+1}</small></div>`;
+  subs.forEach(k=>{const t=tot(k),c=capOf(k);h+=`<div class="tray${t==c?' full':''}${hintOn&&k==nx?' hint':''}" data-sub="${k}"><div class="tl"><span>${k}</span><small>${t}/${c}</small>${F.ord?`<span class="badge">${ORDER.indexOf(k)+1}</span>`:''}</div><div class="cups">`;
+   st[k].forEach((v,j)=>{h+=`<div class="cup" data-i="${j}">${v>=1?'<div class="ball">&uarr;</div>':''}${v==2?'<div class="ball">&darr;</div>':''}</div>`});h+='</div></div>'});h+='</div>'});
+ $('shelf').innerHTML=h;
+ // atom
+ let s='<defs><radialGradient id="ng"><stop offset="0" stop-color="#fecaca"/><stop offset="1" stop-color="#dc2626"/></radialGradient><radialGradient id="eg"><stop offset="0" stop-color="#e0f2fe"/><stop offset="1" stop-color="#2563eb"/></radialGradient></defs>';
+ const rr=[50,80,110,140],cl=['#f87171','#fbbf24','#4ade80','#38bdf8'];
+ rr.forEach((r,i)=>{s+=`<circle cx="150" cy="150" r="${r}" fill="none" stroke="${cl[i]}" stroke-opacity=".6" stroke-width="2" stroke-dasharray="5 5"/>`});
+ rr.forEach((r,i)=>{const n=sh[i];if(!n)return;s+=`<g class="ring" style="animation-duration:${14+i*6}s">`;for(let j=0;j<n;j++){const a=-Math.PI/2+j*2*Math.PI/n;s+=`<circle cx="${150+r*Math.cos(a)}" cy="${150+r*Math.sin(a)}" r="7" fill="url(#eg)" stroke="#fff" stroke-width=".8"/>`}s+='</g>'});
+ s+=`<circle cx="150" cy="150" r="20" fill="url(#ng)"/><text x="150" y="155" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${Z}p</text>`;
+ rr.forEach((r,i)=>{s+=`<text x="${150+r*.71+2}" y="${150-r*.71-2}" font-size="11" font-weight="700" fill="${cl[i]}">${SH[i][0]}</text>`});
+ $('atom').innerHTML=s;
+ // info
+ const e=EL[Z-1],sn=sh.filter(v=>v>0).join(', ')||'-',val=sh[outer]||0,sg=Z>10?'[Ne] ':Z>2?'[He] ':'',rest=SHOW.filter(k=>tot(k)>0&&!(Z>10&&['1s','2s','2p'].includes(k))&&!(Z>2&&Z<=10&&k=='1s')).map(k=>k+sup(tot(k))).join(' ');
+ $('info').innerHTML=`<b>${e[1]} (${e[0]})</b> &bull; atomic number ${Z}<br><b>Configuration:</b><div class="cfg">${cfg()}</div><b>Shell notation:</b> ${sn}<br><b>Short form:</b> ${placed()?sg+rest:'-'}<br><b>Valence electrons:</b> ${placed()?val:'-'}<br><b>Placed:</b> ${placed()} of ${Z}`}
+// drag and drop
+let drag=false;
+$('jar').addEventListener('dragstart',e=>{drag=true;e.dataTransfer.setData('text','e')});document.addEventListener('dragend',()=>{drag=false;document.querySelectorAll('.over').forEach(x=>x.classList.remove('over'))});
+const sh=$('shelf');
+sh.addEventListener('dragover',e=>{const t=e.target.closest('.tray');if(drag&&t){e.preventDefault();document.querySelectorAll('.over').forEach(x=>x!==t&&x.classList.remove('over'));t.classList.add('over')}});
+sh.addEventListener('drop',e=>{e.preventDefault();const t=e.target.closest('.tray'),c=e.target.closest('.cup');drag=false;if(t)place(t.dataset.sub,c?+c.dataset.i:null,t)});
+sh.addEventListener('click',e=>{const t=e.target.closest('.tray'),c=e.target.closest('.cup');if(t)place(t.dataset.sub,c?+c.dataset.i:null,t)});
+// full screen
+$('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})};
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen'});
+// chart
+(function(){let s='<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0L8,4L0,8z" fill="#fbbf24"/></marker></defs>';const pos=k=>[70+'spdf'.indexOf(k[1])*95,35+(k[0]-1)*62];
+ [['4f'],['4d'],['4p','3d'],['4s','3p'],['3s','2p'],['2s'],['1s']].forEach(g=>{if(g.length>1){const a=pos(g[0]),b=pos(g[g.length-1]);s+=`<line x1="${a[0]-10}" y1="${a[1]+10}" x2="${b[0]+10}" y2="${b[1]-10}" stroke="#fbbf24" stroke-width="3" marker-end="url(#ar)"/>`}});
+ ORDER.forEach((k,i)=>{const p=pos(k);s+=`<rect x="${p[0]-28}" y="${p[1]-16}" width="56" height="32" rx="8" fill="#1d4ed8" stroke="#fff"/><text x="${p[0]}" y="${p[1]+5}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">${k}</text><circle cx="${p[0]+28}" cy="${p[1]-16}" r="9" fill="#ef4444"/><text x="${p[0]+28}" y="${p[1]-12}" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">${i+1}</text>`});
+ $('chart').innerHTML=s})();
+init();setZ(1);score();
+</script></body></html>

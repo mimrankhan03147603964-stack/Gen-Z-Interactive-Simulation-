@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rutherford's &amp; Bohr's Atomic Models - Chemistry Class 9</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#0b1224;color:#e8eefc;font-family:'Segoe UI',Tahoma,Arial,sans-serif;overflow:hidden}
+#app{height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;background:linear-gradient(90deg,#312e81,#0e4c7a 60%,#0f766e);border-bottom:3px solid #f59e0b}
+h1{font-size:19px;flex:1;line-height:1.2}
+h1 small{display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:2px}
+.btn,.tab{border:0;border-radius:10px;padding:9px 10px;font:700 13px 'Segoe UI',Arial,sans-serif;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);transition:transform .08s,filter .15s;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.btn:hover,.tab:hover{filter:brightness(1.18)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.on{outline:3px solid #fff;outline-offset:1px}
+.tab{padding:10px 16px;font-size:14px;opacity:.7;background:#334155}
+.tab.act{opacity:1;background:linear-gradient(#f59e0b,#d97706);transform:translateY(-1px)}
+main{flex:1;display:flex;min-height:0}
+#stage{flex:1;position:relative;min-width:0}
+#cv{position:absolute;left:0;top:0}
+aside{width:370px;overflow:auto;padding:10px;background:#101a33;border-left:2px solid #1e3a5f}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.grid .wide{grid-column:span 2}
+h3{font-size:13px;margin:8px 0 6px;color:#fbbf24}
+.k1{background:linear-gradient(#22c55e,#15803d)}.k2{background:linear-gradient(#ef4444,#b91c1c)}.k3{background:linear-gradient(#3b82f6,#1d4ed8)}
+.k4{background:linear-gradient(#f97316,#c2410c)}.k5{background:linear-gradient(#a855f7,#7e22ce)}.k6{background:linear-gradient(#06b6d4,#0e7490)}
+.k7{background:linear-gradient(#ec4899,#be185d)}.k8{background:linear-gradient(#eab308,#a16207)}.k9{background:linear-gradient(#14b8a6,#0f766e)}
+.k10{background:linear-gradient(#6366f1,#4338ca)}.k11{background:linear-gradient(#64748b,#334155)}.k12{background:linear-gradient(#84cc16,#4d7c0f)}
+.sl{font-size:12px;margin:6px 0}.sl input{width:100%}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
+.stat{background:#0b1224;border-radius:8px;padding:5px 2px;text-align:center;font-size:10px;border-top:3px solid var(--c)}
+.stat b{display:block;font-size:17px;color:var(--c)}
+.box{background:#0b1224;border:1px solid #274472;border-radius:10px;padding:9px;font-size:12.5px;line-height:1.5;margin-bottom:8px}
+.box b{color:#fcd34d}
+#log div{padding:3px 0;border-bottom:1px dashed #274472}
+#log div:first-child{color:#86efac}
+footer{font-size:10.5px;text-align:center;padding:4px;background:#0a1020;color:#94a3b8}
+</style></head><body>
+<div id="app">
+<header>
+ <h1>Rutherford's &amp; Bohr's Atomic Models<small>Chemistry Class 9 (PTBB) &bull; GEN Z EDTECH INTERACTIVE SIMULATIONS</small></h1>
+ <button class="tab act" id="tR" onclick="setMode('r')">Rutherford: Gold Foil</button>
+ <button class="tab" id="tB" onclick="setMode('b')">Bohr: Electron Jumps</button>
+ <button class="btn k2" id="fs">Full Screen</button>
+</header>
+<main>
+ <div id="stage"><canvas id="cv"></canvas></div>
+ <aside>
+  <div id="gR">
+   <h3>Alpha-particle scattering controls</h3>
+   <div class="grid">
+    <button class="btn k1" onclick="fire(1)">Fire 1 Particle</button>
+    <button class="btn k2" onclick="fire(30)">Fire Burst x30</button>
+    <button class="btn k3" id="bBeam" onclick="tog('beam',this,'Beam')">Beam: OFF</button>
+    <button class="btn k4" onclick="stopP()">Stop Particles</button>
+    <button class="btn k5" onclick="clearScr()">Clear Screen</button>
+    <button class="btn k6 on" id="bNuc" onclick="tog('nuc',this,'Show Nuclei')">Show Nuclei: ON</button>
+    <button class="btn k7 on" id="bTr" onclick="tog('trail',this,'Trails')">Trails: ON</button>
+    <button class="btn k8" id="bZoom" onclick="tog('zoom',this,'Atom Close-up')">Atom Close-up: OFF</button>
+    <button class="btn k9 wide" id="bModel" onclick="toggleModel()">Switch to Thomson Plum-Pudding Model</button>
+    <button class="btn k10" id="bSlow" onclick="tog('slow',this,'Slow Motion')">Slow Motion: OFF</button>
+    <button class="btn k11" onclick="resetR()">Reset All</button>
+   </div>
+   <div class="sl">Gold foil layers: <b id="vL">2</b><input type="range" min="1" max="3" value="2" oninput="RS.layers=+this.value;$('vL').textContent=this.value"></div>
+   <div class="sl">Particle speed: <b id="vS">1.0x</b><input type="range" min="5" max="25" value="10" oninput="RS.spd=this.value/10;$('vS').textContent=(this.value/10).toFixed(1)+'x'"></div>
+   <h3>Screen counts</h3>
+   <div class="stats">
+    <div class="stat" style="--c:#e2e8f0"><b id="sT">0</b>Total</div>
+    <div class="stat" style="--c:#84cc16"><b id="sS">0</b>Straight</div>
+    <div class="stat" style="--c:#facc15"><b id="sM">0</b>Small</div>
+    <div class="stat" style="--c:#fb923c"><b id="sL">0</b>Large</div>
+    <div class="stat" style="--c:#ef4444"><b id="sB">0</b>Rebound</div>
+   </div>
+   <div class="box" id="obs"><b>Observation:</b> Fire some alpha particles at the thin gold foil and watch the glowing screen.</div>
+   <div class="box"><b>Rutherford's conclusions</b><br>1. Most particles pass straight: an atom is mostly empty space.<br>2. Some bend: the centre is positively charged.<br>3. A few bounce back: the centre (nucleus) is tiny, dense and heavy.<br>4. Electrons move around the nucleus.<br><i>Note: in real life only about 1 in 8000 particles rebounds. This simulation exaggerates it so you can see it.</i></div>
+  </div>
+  <div id="gB" style="display:none">
+   <h3>Electron jump controls (hydrogen atom)</h3>
+   <div class="grid">
+    <button class="btn k1" onclick="goStep(1)">Absorb Photon (n up)</button>
+    <button class="btn k2" onclick="goStep(-1)">Emit Photon (n down)</button>
+    <button class="btn k3" onclick="goto(1)">Jump to n = 1</button>
+    <button class="btn k4" onclick="goto(2)">Jump to n = 2</button>
+    <button class="btn k5" onclick="goto(3)">Jump to n = 3</button>
+    <button class="btn k6" onclick="goto(4)">Jump to n = 4</button>
+    <button class="btn k7" onclick="wrongPhoton()">Send Wrong Photon</button>
+    <button class="btn k8" onclick="exciteMax()">Excite Step by Step</button>
+    <button class="btn k9" onclick="cascade()">Cascade Down</button>
+    <button class="btn k10" onclick="randJump()">Random Jump</button>
+    <button class="btn k12" id="bAuto" onclick="tog('auto',this,'Auto Cycle')">Auto Cycle: OFF</button>
+    <button class="btn k3 on" id="bLab" onclick="tog('lab',this,'Orbit Labels')">Orbit Labels: ON</button>
+    <button class="btn k4 on" id="bLad" onclick="tog('lad',this,'Energy Ladder')">Energy Ladder: ON</button>
+    <button class="btn k5" onclick="clearSpec()">Clear Spectrum</button>
+    <button class="btn k11 wide" onclick="resetB()">Reset Atom</button>
+   </div>
+   <div class="box" id="hud"></div>
+   <h3>Event log</h3>
+   <div class="box" id="log"><div>Ready. The electron is in the ground state (n = 1).</div></div>
+   <div class="box"><b>Bohr's postulates</b><br>1. Electrons move in fixed circular orbits (shells) without losing energy.<br>2. Each shell has a fixed energy: K (n=1), L (n=2), M (n=3), N (n=4).<br>3. An electron absorbs energy to jump up and emits energy as light when it falls down. Photon energy = E<sub>high</sub> &minus; E<sub>low</sub>.</div>
+  </div>
+ </aside>
+</main>
+<footer>GEN Z EDTECH INTERACTIVE &bull; Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),rand=(a,b)=>a+Math.random()*(b-a),TAU=Math.PI*2;
+let W=800,H=600,mode='r',R,cx,cy;
+function resize(){const r=$('stage').getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;cv.style.width=r.width+'px';cv.style.height=r.height+'px';ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height;R=Math.max(120,Math.min(H*.4,(W-190)/2));cx=150+R;cy=H/2-8}
+addEventListener('resize',resize);
+$('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})};
+document.addEventListener('fullscreenchange',()=>{$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(resize,150)});
+function setMode(m){mode=m;$('gR').style.display=m=='r'?'':'none';$('gB').style.display=m=='b'?'':'none';$('tR').classList.toggle('act',m=='r');$('tB').classList.toggle('act',m=='b');if(m=='b')hud()}
+function tog(k,btn,label){const o=mode=='r'?RS:B;o[k]=!o[k];btn.textContent=label+': '+(o[k]?'ON':'OFF');btn.classList.toggle('on',o[k])}
+function pill(t,x,y,col){ctx.font='bold 13px Segoe UI,Arial';const w=ctx.measureText(t).width+14;ctx.fillStyle='rgba(8,14,30,.78)';ctx.beginPath();ctx.roundRect(x-w/2,y-12,w,22,8);ctx.fill();ctx.strokeStyle=col||'#fbbf24';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y)}
+function bg(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d1b38');g.addColorStop(1,'#050a17');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);const t=ctx.createLinearGradient(0,H-30,0,H);t.addColorStop(0,'#8b5a2b');t.addColorStop(1,'#5a3a1a');ctx.fillStyle=t;ctx.fillRect(0,H-30,W,30)}
+
+/* ================= RUTHERFORD ================= */
+const RS={beam:false,pend:0,model:'nuc',layers:2,nuc:true,trail:true,zoom:false,slow:false,spd:1,st:{t:0,s:0,m:0,l:0,b:0},parts:[],fl:[],fr:0};
+const V0=7,K=70,SP=170,OFF=[0,.37,.71];
+function fire(n){RS.pend+=n}
+function spawn(){if(RS.parts.length<140)RS.parts.push({x:cx-R-20,y:cy+rand(-.3,.3)*R,vx:V0,vy:0,tr:[],in:false,pl:false,age:0})}
+function stopP(){RS.parts=[];RS.pend=0;if(RS.beam){RS.beam=false;const b=$('bBeam');b.textContent='Beam: OFF';b.classList.remove('on')}}
+function clearScr(){RS.fl=[];RS.st={t:0,s:0,m:0,l:0,b:0};stats()}
+function resetR(){stopP();clearScr();RS.model='nuc';$('bModel').textContent='Switch to Thomson Plum-Pudding Model';$('obs').innerHTML='<b>Observation:</b> Fire some alpha particles at the thin gold foil and watch the glowing screen.'}
+function toggleModel(){RS.model=RS.model=='nuc'?'plum':'nuc';$('bModel').textContent=RS.model=='nuc'?'Switch to Thomson Plum-Pudding Model':'Switch to Rutherford Nuclear Model';clearScr();stopP()}
+function stats(){const s=RS.st;$('sT').textContent=s.t;$('sS').textContent=s.s;$('sM').textContent=s.m;$('sL').textContent=s.l;$('sB').textContent=s.b;
+ let h='<b>Observation:</b> ';if(s.t<10)h+='Keep firing particles to collect enough data.';
+ else if(RS.model=='plum')h+='With the plum-pudding model every particle goes almost straight through. This does NOT match what Rutherford saw.';
+ else{h+=Math.round(100*s.s/s.t)+'% went straight (empty space). ';if(s.l+s.b>0)h+=(s.l+s.b)+' bent through large angles'+(s.b?' and '+s.b+' bounced back, so the nucleus is tiny, dense and positive!':' (strong repulsion by the positive nucleus).');else h+='Fire more to find the rare large-angle ones.'}
+ $('obs').innerHTML=h}
+function stepP(p,dt){
+ if(RS.model=='nuc'){for(let l=0;l<RS.layers;l++){const lx=cx+(l-(RS.layers-1)/2)*14;if(Math.abs(p.x-lx)>70)continue;const off=OFF[l]*SP,k0=Math.round((p.y-cy-off)/SP);
+  for(let k=k0-1;k<=k0+1;k++){const dx=p.x-lx,dy=p.y-(cy+off+k*SP),r2=dx*dx+dy*dy;if(r2>4900)continue;const r=Math.sqrt(r2)+1e-6,a=K/(r2+6);p.vx+=a*dx/r*dt;p.vy+=a*dy/r*dt}}}
+ else if(!p.pl&&p.x>cx){p.pl=true;const a=(Math.random()+Math.random()+Math.random()-1.5)*.03,c=Math.cos(a),s=Math.sin(a),vx=p.vx*c-p.vy*s;p.vy=p.vx*s+p.vy*c;p.vx=vx}
+ p.x+=p.vx*dt;p.y+=p.vy*dt}
+function updR(){RS.fr++;
+ if(RS.pend>0&&RS.fr%2==0){spawn();RS.pend--}
+ if(RS.beam&&RS.fr%4==0)spawn();
+ const dt=RS.spd*(RS.slow?.3:1)/8;
+ for(let i=RS.parts.length-1;i>=0;i--){const p=RS.parts[i];for(let s=0;s<8;s++)stepP(p,dt);p.age++;
+  if(RS.fr%2==0){p.tr.push([p.x,p.y]);if(p.tr.length>70)p.tr.shift()}
+  const d=Math.hypot(p.x-cx,p.y-cy);if(d<R-2)p.in=true;
+  if((p.in&&d>R)||p.age>3000||p.x<-30||p.y<-30||p.y>H+30){
+   if(p.in){const ang=Math.abs(Math.atan2(p.vy,p.vx))*180/Math.PI,s=RS.st;s.t++;let c;
+    if(ang<10){s.s++;c='#84cc16'}else if(ang<30){s.m++;c='#facc15'}else if(ang<90){s.l++;c='#fb923c'}else{s.b++;c='#ef4444'}
+    const f=Math.atan2(p.y-cy,p.x-cx);RS.fl.push({x:cx+R*Math.cos(f),y:cy+R*Math.sin(f),c,t:50});stats()}
+   RS.parts.splice(i,1)}}
+ RS.fl.forEach(f=>f.t--);RS.fl=RS.fl.filter(f=>f.t>0||Math.random()<0)}
+let insetP=null;
+function mkInset(){insetP=[70,32,12,3].map(b=>{let x=-110,y=-b,vx=5,vy=0,pts=[];for(let i=0;i<900;i++){const r2=x*x+y*y,r=Math.sqrt(r2),a=250/(r2+6);vx+=a*x/r*.3;vy+=a*y/r*.3;x+=vx*.3;y+=vy*.3;if(i%3==0)pts.push([x,y]);if(Math.abs(x)>130||Math.abs(y)>130)break}return pts})}
+function drawR(){bg();
+ // lead box source
+ const sx=14,sw=cx-R-70-sx,gh=.3*R;
+ let g=ctx.createLinearGradient(0,cy-.5*R,0,cy+.5*R);g.addColorStop(0,'#cbd5e1');g.addColorStop(.5,'#64748b');g.addColorStop(1,'#334155');ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(sx,cy-.5*R,sw,R,10);ctx.fill();
+ ctx.fillStyle=g;ctx.fillRect(cx-R-70,cy-.5*R,40,.5*R-gh);ctx.fillRect(cx-R-70,cy+gh,40,.5*R-gh);
+ ctx.fillStyle='#0b1224';ctx.fillRect(sx+sw-6,cy-gh,10,2*gh);
+ ctx.save();ctx.translate(sx+sw/2-8,cy);ctx.fillStyle='#facc15';ctx.beginPath();ctx.arc(0,0,26,0,TAU);ctx.fill();ctx.fillStyle='#111';for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,21,i*TAU/3-Math.PI/2-.5,i*TAU/3-Math.PI/2+.5);ctx.fill()}ctx.beginPath();ctx.arc(0,0,4,0,TAU);ctx.fill();ctx.restore();
+ pill('Alpha source in lead box',sx+sw/2,cy-.5*R-16,'#94a3b8');pill('Lead slit',cx-R-50,cy+.5*R+16,'#94a3b8');
+ // fluorescent screen
+ ctx.save();ctx.lineWidth=16;ctx.strokeStyle='rgba(74,222,128,.16)';ctx.shadowColor='#4ade80';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(cx,cy,R+8,0,TAU);ctx.stroke();ctx.restore();
+ ctx.lineWidth=3;ctx.strokeStyle='#86efac';ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.stroke();
+ pill('Zinc sulphide screen (glows at each hit)',cx,cy+R+22,'#4ade80');
+ // flashes
+ RS.fl.forEach(f=>{const a=f.t/50;ctx.save();ctx.globalAlpha=Math.min(1,a*1.5);ctx.shadowColor=f.c;ctx.shadowBlur=22;ctx.fillStyle=f.c;ctx.beginPath();ctx.arc(f.x,f.y,3+7*a,0,TAU);ctx.fill();ctx.restore()});
+ // gold foil
+ const n=RS.layers,fw=14*(n-1)+14,fx=cx-fw/2,fh=R*1.9;
+ let gf=ctx.createLinearGradient(fx,0,fx+fw,0);gf.addColorStop(0,'#fde68a');gf.addColorStop(.4,'#f59e0b');gf.addColorStop(.7,'#fcd34d');gf.addColorStop(1,'#b45309');
+ ctx.shadowColor='rgba(251,191,36,.6)';ctx.shadowBlur=12;ctx.fillStyle=gf;ctx.fillRect(fx,cy-fh/2,fw,fh);ctx.shadowBlur=0;
+ for(let l=0;l<n;l++){const lx=cx+(l-(n-1)/2)*14,off=OFF[l]*SP;for(let k=-8;k<=8;k++){const y=cy+off+k*SP;if(Math.abs(y-cy)>fh/2-6)continue;
+  if(RS.model=='plum'){const rg=ctx.createRadialGradient(lx-3,y-3,1,lx,y,16);rg.addColorStop(0,'#fecdd3');rg.addColorStop(1,'#e11d48');ctx.fillStyle=rg;ctx.beginPath();ctx.arc(lx,y,16,0,TAU);ctx.fill();ctx.fillStyle='#4c0519';[[-6,-3],[5,-6],[1,6],[-5,7],[7,3]].forEach(q=>{ctx.beginPath();ctx.arc(lx+q[0],y+q[1],1.8,0,TAU);ctx.fill()})}
+  else{ctx.fillStyle='rgba(56,189,248,.18)';ctx.beginPath();ctx.arc(lx,y,30,0,TAU);ctx.fill();if(RS.nuc){ctx.shadowColor='#f87171';ctx.shadowBlur=10;ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(lx,y,4,0,TAU);ctx.fill();ctx.shadowBlur=0}}}}
+ pill('Thin gold foil (like gold leaf)',cx,cy-fh/2-14,'#fbbf24');
+ // particles
+ RS.parts.forEach(p=>{if(RS.trail&&p.tr.length>1){ctx.strokeStyle='rgba(253,224,71,.7)';ctx.lineWidth=2;ctx.beginPath();p.tr.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.lineTo(p.x,p.y);ctx.stroke()}
+  ctx.save();ctx.shadowColor='#fde047';ctx.shadowBlur=14;ctx.fillStyle='#fff7ae';ctx.beginPath();ctx.arc(p.x,p.y,4,0,TAU);ctx.fill();ctx.restore()});
+ // inset
+ if(RS.zoom){if(!insetP)mkInset();const ix=W-125,iy=135,ir=105;ctx.save();ctx.beginPath();ctx.arc(ix,iy,ir,0,TAU);ctx.clip();ctx.fillStyle='#07101f';ctx.fillRect(ix-ir,iy-ir,2*ir,2*ir);
+  const cg=ctx.createRadialGradient(ix,iy,10,ix,iy,ir);cg.addColorStop(0,'rgba(56,189,248,.05)');cg.addColorStop(1,'rgba(56,189,248,.4)');ctx.fillStyle=cg;ctx.fillRect(ix-ir,iy-ir,2*ir,2*ir);
+  ['#84cc16','#facc15','#fb923c','#ef4444'].forEach((c,i)=>{ctx.strokeStyle=c;ctx.lineWidth=2;ctx.beginPath();insetP[i].forEach((q,j)=>j?ctx.lineTo(ix+q[0]*.8,iy+q[1]*.8):ctx.moveTo(ix+q[0]*.8,iy+q[1]*.8));ctx.stroke()});
+  ctx.restore();ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(ix,iy,ir,0,TAU);ctx.stroke();
+  ctx.shadowColor='#ef4444';ctx.shadowBlur=14;ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(ix,iy,6,0,TAU);ctx.fill();ctx.shadowBlur=0;
+  pill('One gold atom (magnified)',ix,iy-ir-16,'#38bdf8');pill('Nucleus (+)',ix,iy+22,'#ef4444');pill('Mostly empty space',ix,iy+ir+16,'#38bdf8')}
+ pill(RS.model=='nuc'?"Model: Rutherford's nuclear atom":"Model: Thomson's plum-pudding atom",W-150,H-48,'#a78bfa')}
+
+/* ================= BOHR ================= */
+const B={n:1,ang:0,tr:null,ph:[],busy:false,bulb:0,bcol:'#fff',spec:[],auto:false,at:0,lab:true,lad:true,q:[],fl:0,note:''};
+const E=n=>-13.6/(n*n),dE=(a,b)=>13.6*(1/(a*a)-1/(b*b)),sh=['K','L','M','N'];
+function wl2rgb(w){let r=0,g=0,b=0;if(w<440){r=(440-w)/60;b=1}else if(w<490){g=(w-440)/50;b=1}else if(w<510){g=1;b=(510-w)/20}else if(w<580){r=(w-510)/70;g=1}else if(w<645){r=1;g=(645-w)/65}else r=1;
+ const f=w<420?.3+.7*(w-380)/40:w>700?.3+.7*(750-w)/50:1;return`rgb(${Math.round(255*r*f)},${Math.round(255*g*f)},${Math.round(255*b*f)})`}
+const phCol=l=>l<380?'#c4b5fd':l>750?'#fb7185':wl2rgb(l),region=l=>l<380?'ultraviolet (invisible)':l>750?'infrared (invisible)':'visible light';
+function geo(){const Ra=Math.min(W*.27,H*.4),ax=W*.5,ay=H*.47;return{Ra,ax,ay,rad:n=>Ra*[.14,.38,.66,1][n-1],torch:[90,H-95],bulb:[W-150,70]}}
+function log(t){const d=document.createElement('div');d.textContent=t;$('log').prepend(d);while($('log').children.length>6)$('log').lastChild.remove()}
+function hud(){const n=B.n;$('hud').innerHTML=`<b>Current level:</b> n = ${n} (${sh[n-1]} shell)<br><b>Energy:</b> ${E(n).toFixed(2)} eV &nbsp; <b>Orbit radius:</b> ${(n*n*0.0529).toFixed(3)} nm<br><b>State:</b> ${n==1?'Ground state (most stable)':'Excited state (unstable)'}`}
+function goto(m){if(B.busy||B.tr)return log('Wait: a jump is in progress.');if(m==B.n)return log('The electron is already in n = '+m+'.');const f=B.n,hi=Math.max(m,f),lo=Math.min(m,f),e=dE(lo,hi),lam=1240/e,g=geo();B.busy=true;
+ if(m>f){B.ph.push({k:'abs',x0:g.torch[0],y0:g.torch[1],x1:g.ax,y1:g.ay,t:0,col:phCol(lam),e,lam,to:m,from:f});log(`Photon of ${e.toFixed(2)} eV (${Math.round(lam)} nm) is sent. Absorbed: n=${f} to n=${m}.`)}
+ else{B.tr={f,t:m,k:0,emit:{e,lam}};log(`Electron falls n=${f} to n=${m} and emits ${e.toFixed(2)} eV (${Math.round(lam)} nm, ${region(lam)}).`)}}
+function goStep(d){const m=B.n+d;if(m<1)return log('n = 1 is the lowest level. No more energy can be emitted.');if(m>4)return log('This simulation shows shells up to n = 4.');goto(m)}
+function wrongPhoton(){if(B.busy)return;const g=geo(),e=rand(4,9),lam=1240/e;B.busy=true;B.ph.push({k:'wrong',x0:g.torch[0],y0:g.torch[1],x1:g.ax+(g.ax-g.torch[0])*.9,y1:g.ay+(g.ay-g.torch[1])*.9,t:0,col:'#e2e8f0',e,lam});log(`Photon of ${e.toFixed(2)} eV does not match any gap between shells, so it passes through.`)}
+function exciteMax(){B.q=[];for(let i=B.n+1;i<=4;i++)B.q.push(i);if(!B.q.length)log('Already at n = 4.')}
+function cascade(){B.q=[];for(let i=B.n-1;i>=1;i--)B.q.push(i);if(!B.q.length)log('Already in the ground state.')}
+function randJump(){const o=[1,2,3,4].filter(x=>x!=B.n);goto(o[Math.floor(Math.random()*o.length)])}
+function clearSpec(){B.spec=[];log('Spectrum cleared.')}
+function resetB(){Object.assign(B,{n:1,tr:null,ph:[],busy:false,bulb:0,spec:[],q:[],auto:false});const a=$('bAuto');a.textContent='Auto Cycle: OFF';a.classList.remove('on');$('log').innerHTML='<div>Atom reset to ground state (n = 1).</div>';hud()}
+function updB(){B.ang+=.03;B.fl=Math.max(0,B.fl-1);B.bulb=Math.max(0,B.bulb-1);
+ B.ph.forEach(p=>p.t+=p.k=='wrong'?.012:.016);
+ B.ph=B.ph.filter(p=>{if(p.t<1)return true;if(p.k=='abs')B.tr={f:p.from,t:p.to,k:0};else if(p.k=='emit'){B.bulb=90;B.bcol=p.col;B.note=region(p.lam);if(p.lam>=380&&p.lam<=750&&!B.spec.some(s=>Math.abs(s.l-p.lam)<1))B.spec.push({l:p.lam,c:p.col});B.busy=false}else B.busy=false;return false});
+ if(B.tr){B.tr.k+=.03;if(B.tr.k>=1){B.n=B.tr.t;const em=B.tr.emit,g=geo();B.fl=25;if(em)B.ph.push({k:'emit',x0:g.ax,y0:g.ay,x1:g.bulb[0],y1:g.bulb[1],t:0,col:phCol(em.lam),e:em.e,lam:em.lam});else B.busy=false;B.tr=null;hud()}}
+ if(!B.busy&&!B.tr&&B.q.length)goto(B.q.shift());
+ if(B.auto&&!B.busy&&!B.tr&&!B.q.length&&++B.at>60){B.at=0;randJump()}}
+function wave(p,t){const x=p.x0+(p.x1-p.x0)*t,y=p.y0+(p.y1-p.y0)*t,a=Math.atan2(p.y1-p.y0,p.x1-p.x0);ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.strokeStyle=p.col;ctx.lineWidth=3.5;ctx.shadowColor=p.col;ctx.shadowBlur=14;ctx.beginPath();for(let i=-34;i<=34;i+=2){const yy=Math.sin(i*.45)*9*(1-Math.abs(i)/40);i==-34?ctx.moveTo(i,yy):ctx.lineTo(i,yy)}ctx.stroke();ctx.restore()}
+function drawB(){bg();const g=geo(),{Ra,ax,ay}=g;
+ // orbits
+ for(let n=1;n<=4;n++){ctx.setLineDash([6,6]);ctx.strokeStyle=n==B.n?'rgba(250,204,21,.9)':'rgba(148,163,184,.45)';ctx.lineWidth=n==B.n?2.5:1.5;ctx.beginPath();ctx.arc(ax,ay,g.rad(n),0,TAU);ctx.stroke();ctx.setLineDash([]);
+  if(B.lab)pill(`n=${n} (${sh[n-1]})  ${E(n).toFixed(2)} eV`,ax+g.rad(n)*.72,ay-g.rad(n)*.72-(n==1?14:0),'#64748b')}
+ // nucleus
+ const ng=ctx.createRadialGradient(ax-3,ay-3,1,ax,ay,13);ng.addColorStop(0,'#fecaca');ng.addColorStop(1,'#dc2626');ctx.shadowColor='#ef4444';ctx.shadowBlur=20;ctx.fillStyle=ng;ctx.beginPath();ctx.arc(ax,ay,12,0,TAU);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='bold 15px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+',ax,ay+1);
+ pill('Nucleus (proton)',ax,ay+g.rad(1)+24,'#ef4444');
+ // electron
+ let r=g.rad(B.n);if(B.tr){const k=B.tr.k,s=k*k*(3-2*k);r=g.rad(B.tr.f)+(g.rad(B.tr.t)-g.rad(B.tr.f))*s}
+ const ex=ax+r*Math.cos(B.ang),ey=ay+r*Math.sin(B.ang);
+ if(B.fl||B.tr){ctx.fillStyle='rgba(250,204,21,.35)';ctx.beginPath();ctx.arc(ex,ey,22+(B.fl||0),0,TAU);ctx.fill()}
+ const eg=ctx.createRadialGradient(ex-2,ey-2,1,ex,ey,9);eg.addColorStop(0,'#bfdbfe');eg.addColorStop(1,'#2563eb');ctx.shadowColor='#60a5fa';ctx.shadowBlur=16;ctx.fillStyle=eg;ctx.beginPath();ctx.arc(ex,ey,9,0,TAU);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.fillText('\u2212',ex,ey);
+ pill('Electron (e\u207B)',ex,ey-22,'#60a5fa');
+ // torch
+ const [tx,ty]=g.torch,ta=Math.atan2(ay-ty,ax-tx);ctx.save();ctx.translate(tx,ty);ctx.rotate(ta);
+ const on=B.ph.some(p=>p.k!='emit');if(on){ctx.fillStyle='rgba(255,240,150,.22)';ctx.beginPath();ctx.moveTo(34,-12);ctx.lineTo(240,-50);ctx.lineTo(240,50);ctx.lineTo(34,12);ctx.fill()}
+ let tg=ctx.createLinearGradient(0,-16,0,16);tg.addColorStop(0,'#fca5a5');tg.addColorStop(.5,'#dc2626');tg.addColorStop(1,'#7f1d1d');ctx.fillStyle=tg;ctx.beginPath();ctx.roundRect(-46,-14,62,28,6);ctx.fill();
+ ctx.fillStyle='#111827';for(let i=0;i<4;i++)ctx.fillRect(-38+i*8,-14,3,28);
+ let hg=ctx.createLinearGradient(0,-24,0,24);hg.addColorStop(0,'#f1f5f9');hg.addColorStop(.5,'#94a3b8');hg.addColorStop(1,'#475569');ctx.fillStyle=hg;ctx.beginPath();ctx.moveTo(16,-14);ctx.lineTo(36,-24);ctx.lineTo(36,24);ctx.lineTo(16,14);ctx.fill();
+ ctx.fillStyle=on?'#fef08a':'#a8a29e';ctx.shadowColor='#fde047';ctx.shadowBlur=on?24:0;ctx.fillRect(34,-20,5,40);ctx.restore();ctx.shadowBlur=0;
+ pill('Torch (photon source)',tx+10,ty+42,'#f87171');
+ // neon tube
+ const [bx,by]=g.bulb,gl=B.bulb/90;ctx.save();if(gl>0){ctx.shadowColor=B.bcol;ctx.shadowBlur=40*gl}
+ ctx.fillStyle='#64748b';ctx.fillRect(bx-98,by-9,12,18);ctx.fillRect(bx+86,by-9,12,18);
+ ctx.fillStyle=gl>0?B.bcol:'rgba(203,213,225,.25)';ctx.globalAlpha=gl>0?.35+.65*gl:1;ctx.beginPath();ctx.roundRect(bx-88,by-10,176,20,10);ctx.fill();ctx.restore();
+ ctx.strokeStyle='rgba(226,232,240,.6)';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(bx-88,by-10,176,20,10);ctx.stroke();
+ pill(gl>0?'Light emitted: '+B.note:'Neon tube lamp',bx,by+34,gl>0?B.bcol:'#94a3b8');
+ // ladder
+ if(B.lad){const lx=62,top=H*.17,bot=H*.64,yy=n=>bot-(n-1)*(bot-top)/3;
+  const wg=ctx.createLinearGradient(lx,0,lx+14,0);wg.addColorStop(0,'#d6a76b');wg.addColorStop(1,'#7a4a1f');ctx.fillStyle=wg;ctx.fillRect(lx,top-26,12,bot-top+60);ctx.fillRect(lx+78,top-26,12,bot-top+60);
+  for(let n=1;n<=4;n++){ctx.fillStyle=n==B.n?'#fbbf24':'#b9822f';ctx.fillRect(lx+10,yy(n)-4,70,8);ctx.fillStyle='#e2e8f0';ctx.font='bold 12px Segoe UI';ctx.textAlign='left';ctx.fillText(`n=${n}  ${E(n).toFixed(2)} eV`,lx+98,yy(n))}
+  let ly=yy(B.n);if(B.tr){const k=B.tr.k;ly=yy(B.tr.f)+(yy(B.tr.t)-yy(B.tr.f))*k}
+  const bg2=ctx.createRadialGradient(lx+43,ly-16,1,lx+45,ly-12,10);bg2.addColorStop(0,'#bfdbfe');bg2.addColorStop(1,'#2563eb');ctx.fillStyle=bg2;ctx.beginPath();ctx.arc(lx+45,ly-13,10,0,TAU);ctx.fill();
+  pill('Energy ladder (like stairs)',lx+45,top-44,'#d6a76b')}
+ // photons
+ B.ph.forEach(p=>wave(p,p.t));
+ // spectrum
+ const sx=Math.max(60,W*.2),sw=W-sx-60,sy=H-78;let sg=ctx.createLinearGradient(sx,0,sx+sw,0);for(let w=380;w<=750;w+=30)sg.addColorStop((w-380)/370,wl2rgb(w));
+ ctx.fillStyle='#050a17';ctx.fillRect(sx-4,sy-4,sw+8,34);ctx.globalAlpha=.1;ctx.fillStyle=sg;ctx.fillRect(sx,sy,sw,26);ctx.globalAlpha=1;
+ B.spec.forEach(s=>{const x=sx+(s.l-380)/370*sw;ctx.save();ctx.shadowColor=s.c;ctx.shadowBlur=14;ctx.fillStyle=s.c;ctx.fillRect(x-2,sy,4,26);ctx.restore();ctx.fillStyle='#fff';ctx.font='11px Segoe UI';ctx.textAlign='center';ctx.fillText(Math.round(s.l)+' nm',x,sy-10)});
+ ctx.fillStyle='#94a3b8';ctx.font='11px Segoe UI';[400,500,600,700].forEach(w=>ctx.fillText(w,sx+(w-380)/370*sw,sy+40));
+ pill('Emission spectrum screen (visible lines)',sx-sx*.0+Math.min(170,sw*.3),sy-30,'#a78bfa')}
+
+function loop(){if(mode=='r'){updR();drawR()}else{updB();drawB()}requestAnimationFrame(loop)}
+resize();hud();stats();loop();
+</script></body></html>

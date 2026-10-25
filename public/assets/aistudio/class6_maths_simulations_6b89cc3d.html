@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 6 Maths Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font:16px 'Trebuchet MS','Segoe UI',sans-serif;background:linear-gradient(135deg,#0f2748,#1e1b4b);color:#10243f;height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:16px;padding:10px 18px;color:#fff}
+h1{font-size:22px;flex:1}
+nav{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+nav button{font-size:13px;padding:7px 10px;opacity:.75}
+nav button.on{opacity:1;outline:3px solid #fff}
+main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:12px;padding:0 14px 14px}
+#stage{background:linear-gradient(#e6f3ff,#fff6e3);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0;flex-direction:column}
+#stage svg{width:100%;height:100%}
+aside{background:#fff;border-radius:18px;padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+aside h2{font-size:18px;color:#1e3a8a}aside p{font-size:14px;color:#334155}
+.info{background:#eef5ff;border-radius:12px;padding:10px;line-height:1.5;font-size:15px}
+#ctl{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button{border:0;color:#fff;font:700 14px 'Trebuchet MS',sans-serif;padding:9px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.28)}
+button:active{transform:translateY(3px);box-shadow:none}
+button.s{padding:4px 9px}
+.pop{animation:pop .35s}@keyframes pop{from{transform:scale(.4);opacity:0}}
+.tray{background:#a16207;border:8px solid #713f12;border-radius:16px;width:86%;min-height:220px;padding:16px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start;box-shadow:inset 0 0 30px rgba(0,0,0,.4)}
+.tile{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;border-radius:8px;box-shadow:0 4px 0 rgba(0,0,0,.35),inset 0 0 0 3px rgba(255,255,255,.35)}
+.tx{width:96px;height:48px;background:#16a34a}.t1{width:48px;height:48px;background:#eab308;color:#422006}
+.tile.neg.tx{background:#dc2626}.tile.neg.t1{background:#ea580c;color:#fff}
+.big{font-size:38px;font-weight:800;color:#1e3a8a;margin:14px}
+</style></head><body>
+<header><h1>🎓 GEN Z EDTECH — Class 6 Maths Lab</h1><button id="fsb" style="background:#7c3aed" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><section id="stage"></section><aside><h2 id="ttl"></h2><p id="dsc"></p><div class="info" id="inf"></div><div id="ctl"></div></aside></main>
+<script>
+const $=s=>$$(s),$$=s=>document.querySelector(s),R=Math.round,PI=Math.PI;
+const C={b:'#2563eb',g:'#16a34a',o:'#ea580c',r:'#dc2626',p:'#7c3aed',t:'#0d9488',k:'#db2777',a:'#b45309',n:'#475569'};
+const B=(t,c,m,...a)=>`<button class="${c.slice(1)}" style="background:${C[c[0]]}" onclick='g("${m}"${a.map(x=>","+JSON.stringify(x)).join('')})'>${t}</button>`;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v)),rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const svg=(b,vb='0 0 900 420')=>`<svg viewBox="${vb}">${b}</svg>`;
+const T=(x,y,s,t,f='#10243f',w=700,an='middle')=>`<text x="${x}" y="${y}" font-size="${s}" fill="${f}" font-weight="${w}" text-anchor="${an}">${t}</text>`;
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+let cur=0,S={};
+const g=(m,...a)=>{if(acts[cur][m](...a)!==0)render()};
+const acts=[
+/* 1 INTEGERS */
+{n:'Integer Line',c:'b',t:'Integer Number Line & Temperature Climber',d:'Adding a positive number moves you right and up. Subtracting a negative number also moves you up! Watch the thermometer.',
+i(){S={p:0,q:null,x:'You start at 0°C.',w:0}},
+mv(o,n){if(S.w)return 0;const s=S.p,t=cl(s+o*n,-10,10),d=Math.sign(t-s);if(!d)return;S.w=1;
+ const k=setInterval(()=>{if(acts[cur].n!='Integer Line'){clearInterval(k);return}S.p+=d;render();
+ if(S.p==t){clearInterval(k);S.w=0;S.x=`${s} ${o>0?'+':'−'} ${n<0?'('+n+')':n} = ${t}`+(S.q===t?' ✔ Quest complete! 🎉':'');render()}},120)},
+q(){S.q=rnd(-8,8);S.x='New quest!'},z(){if(!S.w){S.p=0;S.q=null;S.x='Back to 0°C.'}},
+v(){const p=S.p,y=q=>340-(q+10)*14,x=q=>250+(q+10)*28;let s=`<polygon points="230,330 450,120 560,230 650,100 840,330" fill="#94a3b8"/><polygon points="650,100 615,150 640,142 662,156 690,142" fill="#fff"/><rect x="230" y="330" width="610" height="14" rx="7" fill="#334155"/>`;
+ for(let i=-10;i<=10;i++)s+=`<line x1="${x(i)}" x2="${x(i)}" y1="330" y2="344" stroke="#fff" stroke-width="2"/>`+T(x(i),368,i==0?18:13,i,i<0?'#dc2626':'#15803d');
+ const col=p<0?'#2563eb':'#dc2626';
+ s+=`<rect x="78" y="50" width="24" height="300" rx="12" fill="#fff" stroke="#334155" stroke-width="3"/><rect x="83" y="${y(p)}" width="14" height="${350-y(p)}" fill="${col}"/><circle cx="90" cy="372" r="26" fill="${col}" stroke="#334155" stroke-width="3"/>`;
+ [-10,-5,0,5,10].forEach(q=>s+=T(112,y(q)+5,14,q+'°','#334155',700,'start'));
+ s+=T(90,32,26,p+'°C',col)+T(x(p),322,46,'🧗')+T(800,70,60,p<=-4?'❄️':p<5?'⛅':'☀️');
+ if(S.q!==null)s+=T(x(S.q),300,34,'🚩');
+ return[svg(s),`<b>${S.x}</b><br>Now: ${p}°C`+(S.q!==null?`<br>Quest: reach ${S.q}°C. You need ${S.q-p>=0?'+':''}${S.q-p}.`:''),
+ B('Add +2','b','mv',1,2)+B('Add +5','g','mv',1,5)+B('Add −2','o','mv',1,-2)+B('Add −5','r','mv',1,-5)+B('Subtract +3','p','mv',-1,3)+B('Subtract −3','t','mv',-1,-3)+B('New Quest','k','q')+B('Reset','n','z')]}},
+/* 2 RATIO */
+{n:'Ratio',c:'o',t:'Ratio and Proportion Bar Model',d:'Share sweets in the ratio Amy : Ben. Every block is one equal part.',
+i(){S={a:2,b:3,k:2}},
+ch(k,v){S[k]=cl(S[k]+v,1,k=='k'?4:6)},sim(){const d=gcd(S.a,S.b);S.a/=d;S.b/=d},z(){S={a:2,b:3,k:2}},
+v(){const{a,b,k}=S,u=58,bl=(n,y,c,o=0)=>Array.from({length:n},(_,i)=>`<rect class="pop" x="${150+(o+i)*u}" y="${y}" width="${u-4}" height="56" rx="8" fill="${c}"/>`+T(150+(o+i)*u+27,y+36,20,k+'🍬','#fff')).join('');
+ let s=T(140,76,22,'👧 Amy','#b91c1c',700,'end')+bl(a,48,'#ef4444')+T(140,156,22,'👦 Ben','#1d4ed8',700,'end')+bl(b,128,'#3b82f6')+T(140,244,22,'Total','#334155',700,'end')+bl(a,216,'#ef4444')+bl(b,216,'#3b82f6',a)+
+ T(60,326,22,'👧 '+'🍬'.repeat(a*k),'#000',400,'start')+T(60,376,22,'👦 '+'🍬'.repeat(b*k),'#000',400,'start');
+ return[svg(s),`Ratio Amy : Ben = <b>${a} : ${b}</b><br>Total parts = ${a}+${b} = ${a+b}<br>One part = ${k} sweets<br>Amy = ${a}×${k} = <b>${a*k}</b><br>Ben = ${b}×${k} = <b>${b*k}</b><br>All sweets = ${(a+b)*k}`,
+ B('Amy +1','r','ch','a',1)+B('Amy −1','o','ch','a',-1)+B('Ben +1','b','ch','b',1)+B('Ben −1','t','ch','b',-1)+B('Part +1','g','ch','k',1)+B('Part −1','p','ch','k',-1)+B('Simplify','k','sim')+B('Reset','n','z')]}},
+/* 3 UNITARY */
+{n:'Unitary',c:'g',t:'Unitary Method Price Calculator',d:'Step 1: find the price of ONE item (divide). Step 2: find the price of MANY items (multiply).',
+I:[['📓','Notebook',4],['🧃','Juice box',3],['🍎','Apple',2],['🚗','Toy car',7],['🖊️','Pen',5]],
+i(){S={i:0,k:3,n:7,s:0}},
+ch(k,v){S[k]=cl(S[k]+v,k=='k'?2:1,k=='k'?8:12)},it(i){S.i=i},st(s){S.s=s},
+v(){const[e,nm,u]=this.I[S.i],{k,n,s}=S,row=(y,c,txt)=>{const sp=Math.min(70,700/c),x0=450-(c-1)*sp/2;return Array.from({length:c},(_,i)=>`<text class="pop" x="${x0+i*sp}" y="${y}" font-size="48" text-anchor="middle">${e}</text>`).join('')+T(450,y+40,20,txt,'#0f172a')};
+ let o=row(80,k,`${k} ${nm}s cost $${k*u}`);if(s>=1)o+=row(205,1,`1 ${nm} costs $${k*u} ÷ ${k} = $${u}`);if(s>=2)o+=row(330,n,`${n} ${nm}s cost $${u} × ${n} = $${u*n}`);
+ return[svg(o),`Given: <b>${k} ${nm}s = $${k*u}</b><br>`+(s>=1?`Step 1: 1 ${nm} = $${u}<br>`:'')+(s>=2?`Step 2: ${n} ${nm}s = <b>$${u*n}</b> 🧾`:'Press the step buttons.'),
+ this.I.map((q,i)=>B(q[0]+' '+q[1],'bgorpt'[i%6].replace('','')+'','it',i).replace('class=""','class="s"')).join('')+B('Given items +1','g','ch','k',1)+B('Given items −1','o','ch','k',-1)+B('Find items +1','b','ch','n',1)+B('Find items −1','r','ch','n',-1)+B('Step 1: Divide','p','st',1)+B('Step 2: Multiply','k','st',2)+B('Reset steps','n','st',0)]}},
+/* 4 ALGEBRA TILES */
+{n:'Algebra Tiles',c:'p',t:'Algebraic Tiles (Variables & Constants)',d:'Green tile = x. Yellow tile = 1. Red or orange tiles are negative. A positive and a negative tile cancel each other.',
+i(){S={t:[],xv:null,l:0}},
+add(s,v){if(S.t.length<24){S.t.push({s,v});S.l=1}},
+zp(){const n={x:0,'1':0};S.t.forEach(q=>n[q.s]+=q.v);S.t=[];['x','1'].forEach(s=>{for(let i=0;i<Math.abs(n[s]);i++)S.t.push({s,v:Math.sign(n[s])})});S.l=0},
+cx(v){S.xv=v},cr(){S.t=[];S.xv=null;S.l=0},
+v(){let a=0,b=0;S.t.forEach(q=>q.s=='x'?a+=q.v:b+=q.v);
+ const ex=(a?(a==1?'x':a==-1?'−x':(a<0?'−':'')+Math.abs(a)+'x'):'')+(b?(a?(b<0?' − ':' + '):(b<0?'−':''))+Math.abs(b):''),e=ex||'0';
+ const tl=S.t.map((q,i)=>`<div class="tile ${q.s=='x'?'tx':'t1'} ${q.v<0?'neg':''} ${S.l&&i==S.t.length-1?'pop':''}">${q.v<0?'−':''}${q.s}</div>`).join('');
+ return[`<div class="big">${e}</div><div class="tray">${tl||'<span style="color:#fef3c7">Add tiles to the tray…</span>'}</div>`,
+ `Expression: <b>${e}</b><br>x tiles: ${a} · number tiles: ${b}`+(S.xv!==null?`<br>If x = ${S.xv}: ${a}×${S.xv} + (${b}) = <b>${a*S.xv+b}</b>`:''),
+ B('+ x','g','add','x',1)+B('− x','r','add','x',-1)+B('+ 1','a','add','1',1)+B('− 1','o','add','1',-1)+B('Remove zero pairs','p','zp')+B('Try x = 2','b','cx',2)+B('Try x = 5','t','cx',5)+B('Clear tray','n','cr')]}},
+/* 5 BALANCE */
+{n:'Balance',c:'t',t:'Linear Equation Balance Scale',d:'Solve x + a = b. Whatever you do to one side, do to the other side too!',
+i(){const v=rnd(1,8),a=rnd(1,6);S={v,a,b:v+a,r:0}},
+both(d){if(d<0&&S.a<1||d>0&&S.a>7)return;S.a+=d;S.b+=d},left(d){S.a=cl(S.a+d,0,8)},rv(){S.r=1},
+v(){const{v,a,b}=S,df=v+a-b,ang=cl(df*3,-18,18),r=-ang*PI/180,cx=450,cy=150,L=230,lx=cx-L*Math.cos(r),ly=cy-L*Math.sin(r),rx=cx+L*Math.cos(r),ry=cy+L*Math.sin(r);
+ const pan=(px,py,inner)=>`<g transform="translate(${px},${py})"><path d="M0 0L-75 100M0 0L75 100" stroke="#475569" stroke-width="3"/><rect x="-85" y="100" width="170" height="12" rx="6" fill="#f59e0b"/>${inner}</g>`;
+ const ones=(c,n,pc,x0)=>Array.from({length:n},(_,i)=>`<circle cx="${x0+(i%pc)*24}" cy="${88-Math.floor(i/pc)*24}" r="11" fill="#facc15" stroke="#a16207"/>`+T(x0+(i%pc)*24,93-Math.floor(i/pc)*24,13,1,'#422006')).join('');
+ let s=`<polygon points="450,150 400,385 500,385" fill="#64748b"/><rect x="360" y="380" width="180" height="16" rx="8" fill="#334155"/><line x1="${lx}" y1="${ly}" x2="${rx}" y2="${ry}" stroke="#78350f" stroke-width="12" stroke-linecap="round"/><circle cx="450" cy="150" r="14" fill="#fbbf24"/>`+
+ pan(lx,ly,`<rect x="-80" y="46" width="54" height="54" rx="6" fill="#3b82f6"/>`+T(-53,80,S.r?15:26,S.r?'x='+v:'x','#fff')+ones(0,a,4,-6))+pan(rx,ry,ones(0,b,6,-60));
+ const ok=df==0;
+ return[svg(s),`Equation: <b>x + ${a} = ${b}</b><br>`+(ok?(a==0?`<b>Solved! x = ${b} 🎉</b>`:'Balanced ✔'):'<b style="color:#dc2626">Not balanced!</b> Do the same on both sides.'),
+ B('Take 1 off both sides','gs','both',-1).replace('class="s"','')+B('Add 1 to both sides','b','both',1)+B('Take 1 off left only','r','left',-1)+B('Add 1 to left only','o','left',1)+B('Reveal x','p','rv')+B('New equation','k','i')]}},
+/* 6 PARALLEL LINES */
+{n:'Angles',c:'r',t:'Parallel Lines and Transversal Angle Explorer',d:'Two railway tracks are crossed by a road. Choose a pair type to see how its angles are related.',
+P:{corr:[[0,4],[1,5],[2,6],[3,7]],alt:[[2,4],[3,5]],vert:[[0,2],[1,3],[4,6],[5,7]],co:[[3,4],[2,5]]},
+N:{corr:'Corresponding angles (equal)',alt:'Alternate interior angles (equal)',vert:'Vertically opposite angles (equal)',co:'Co-interior angles (add to 180°)'},
+i(){S={th:60,m:'corr',k:0}},th(d){S.th=cl(S.th+d,20,160)},ts(v){S.th=v},md(m){S.m=m;S.k=0},nx(){S.k++},
+v(){const th=S.th,r=th*PI/180,c=Math.cos(r),sn=Math.sin(r),o=80*c/sn,P=[[450+o,140],[450-o,300]],pr=this.P[S.m],pa=pr[S.k%pr.length],col=['#f43f5e','#22c55e'],L='abcdefgh';
+ const val=i=>i%2?180-th:th,pt=(q,a,rd)=>[P[q][0]+rd*Math.cos(a*PI/180),P[q][1]-rd*Math.sin(a*PI/180)].map(Math.round);
+ let s='';[140,300].forEach(y=>s+=`<line x1="30" x2="870" y1="${y}" y2="${y}" stroke="#a8a29e" stroke-width="14"/><line x1="30" x2="870" y1="${y}" y2="${y}" stroke="#57534e" stroke-width="14" stroke-dasharray="3 13"/><line x1="30" x2="870" y1="${y}" y2="${y}" stroke="#e7e5e4" stroke-width="2"/>`+T(850,y-14,16,'▶▶','#57534e'));
+ s+=`<line x1="${P[0][0]+130*c}" y1="${140-130*sn}" x2="${P[1][0]-130*c}" y2="${300+130*sn}" stroke="#374151" stroke-width="22" stroke-linecap="round"/><line x1="${P[0][0]+130*c}" y1="${140-130*sn}" x2="${P[1][0]-130*c}" y2="${300+130*sn}" stroke="#facc15" stroke-width="3" stroke-dasharray="12 10"/>`;
+ for(let q=0;q<2;q++){const R_=[[0,th],[th,180],[180,180+th],[180+th,360]];R_.forEach(([a1,a2],j)=>{const i=q*4+j,f=i==pa[0]?col[0]:i==pa[1]?col[1]:'#fde68a',A=pt(q,a1,40),Bp=pt(q,a2,40),m=pt(q,(a1+a2)/2,70);
+ s+=`<path d="M${P[q]}L${A}A40 40 0 0 0 ${Bp}Z" fill="${f}" opacity="${f=='#fde68a'?.6:.95}" stroke="#78350f"/>`+T(m[0],m[1]+5,15,`${L[i]}=${val(i)}°`,'#10243f')})}
+ const a0=pa[0],a1=pa[1];
+ return[svg(s,'0 0 900 440'),`<b>${this.N[S.m]}</b><br>`+(S.m=='co'?`${L[a0]} + ${L[a1]} = ${val(a0)}° + ${val(a1)}° = 180°`:`${L[a0]} = ${val(a0)}° and ${L[a1]} = ${val(a1)}°`)+`<br>Road angle: ${th}°`,
+ B('Corresponding','r','md','corr')+B('Alternate','b','md','alt')+B('Vertically opposite','g','md','vert')+B('Co-interior','o','md','co')+B('Next pair','p','nx')+B('Angle −10°','t','th',-10)+B('Angle +10°','k','th',10)+B('Set 45°','a','ts',45)+B('Set 90°','n','ts',90)+B('Set 120°','b','ts',120)]}},
+/* 7 COMPOSITE */
+{n:'Area',c:'a',t:'Perimeter and Area of Composite Shapes',d:'A room (blue) joins a porch (orange). 1 square = 1 square metre. Change the sizes and find the area and perimeter.',
+i(){S={w1:5,h1:4,w2:3,h2:2,m:0}},
+ch(k,v){S[k]=cl(S[k]+v,1,k=='w1'?8:k=='w2'?6:7);if(S.h2>S.h1)S.h2=S.h1;if(k=='h1'&&v<0&&S.h2>S.h1)S.h2=S.h1},md(m){S.m=m},
+v(){const{w1,h1,w2,h2,m}=S,cs=40,ox=(900-(w1+w2)*cs)/2,oy=60;let s='',n=0;
+ for(let y=0;y<h1;y++)for(let x=0;x<w1+w2;x++){const A=x<w1,Bq=x>=w1&&y>=h1-h2;if(!A&&!Bq)continue;n++;s+=`<rect x="${ox+x*cs}" y="${oy+y*cs}" width="${cs}" height="${cs}" fill="${A?'#bfdbfe':'#fed7aa'}" stroke="#fff" stroke-width="2"/>`+(m==1?T(ox+x*cs+20,oy+y*cs+26,13,n,'#334155'):'')}
+ let p=[[0,0],[w1,0],[w1,h1-h2],[w1+w2,h1-h2],[w1+w2,h1],[0,h1]].filter((q,i,a)=>!i||q[0]!=a[i-1][0]||q[1]!=a[i-1][1]);
+ const E=p.map((q,i)=>{const z=p[(i+1)%p.length],dx=z[0]-q[0],dy=z[1]-q[1];return{q,z,l:Math.abs(dx)+Math.abs(dy),dx:Math.sign(dx),dy:Math.sign(dy)}}).filter(e=>e.l);
+ s+=`<polygon points="${p.map(q=>[ox+q[0]*cs,oy+q[1]*cs]).join(' ')}" fill="none" stroke="${m==2?'#dc2626':'#334155'}" stroke-width="${m==2?7:3}"/>`;
+ if(m==2)E.forEach(e=>s+=T(ox+(e.q[0]+e.z[0])/2*cs+e.dy*22,oy+(e.q[1]+e.z[1])/2*cs-e.dx*22+6,20,e.l,'#b91c1c'));
+ if(m!=1)s+=T(ox+w1*cs/2,oy+h1*cs/2+14,44,'🛋️')+T(ox+(w1+w2/2)*cs,oy+(h1-h2/2)*cs+14,40,'🌿');
+ s+=T(450,34,20,'Floor plan: room + porch (1 square = 1 m²)','#78350f');
+ const A1=w1*h1,A2=w2*h2,per=E.reduce((t,e)=>t+e.l,0);
+ return[svg(s),`Room: ${w1}×${h1} = ${A1} m²<br>Porch: ${w2}×${h2} = ${A2} m²<br>Total area = <b>${A1+A2} m²</b><br>Perimeter = ${E.map(e=>e.l).join('+')} = <b>${per} m</b>`,
+ B('Room wide +','b','ch','w1',1)+B('Room wide −','r','ch','w1',-1)+B('Room tall +','g','ch','h1',1)+B('Room tall −','o','ch','h1',-1)+B('Porch wide +','p','ch','w2',1)+B('Porch wide −','k','ch','w2',-1)+B('Porch tall +','t','ch','h2',1)+B('Porch tall −','a','ch','h2',-1)+B('Count Area','g','md',1)+B('Show Perimeter','r','md',2)+B('Clear','n','md',0)]}},
+/* 8 CUBOID */
+{n:'Cuboid',c:'k',t:'Surface Area & Volume of Cubes and Cuboids',d:'Turn the gift box, unfold it into a net with 6 faces, and fill it with layers of unit cubes.',
+i(){S={l:4,w:3,h:2,v:'box',ry:-30,rx:-25,f:0}},
+ch(k,v){S[k]=cl(S[k]+v,1,6);S.f=0},cube(){S.l=S.w=S.h=3;S.f=0},vw(v){S.v=v},fill(d){S.f=cl(S.f+d,0,S.h)},
+rot(a,b){S.ry+=a;S.rx+=b;const e=$$('#bx');if(e)e.style.transform=`rotateX(${S.rx}deg) rotateY(${S.ry}deg)`;return 0},
+v(){const{l,w,h,f}=S,u=34,F=[['A',l,h,l*h,'#3b82f6'],['A',w,h,w*h,'#ef4444'],['A',l,w,l*w,'#22c55e']],sa=2*(l*w+l*h+w*h);let st;
+ if(S.v=='box'){const fc=(wd,ht,tr,c,tx,ex='')=>`<div style="position:absolute;width:${wd*u}px;height:${ht*u}px;${ex}transform:${tr};background:${c};border:2px solid #fff8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">${tx}</div>`;
+ st=`<div style="perspective:1000px;height:300px;display:flex;align-items:center;justify-content:center"><div id="bx" style="position:relative;width:${l*u}px;height:${h*u}px;transform-style:preserve-3d;transform:rotateX(${S.rx}deg) rotateY(${S.ry}deg);transition:transform .5s">`+
+ fc(l,h,`translateZ(${w*u/2}px)`,'#3b82f6',`${l}×${h}`)+fc(l,h,`rotateY(180deg) translateZ(${w*u/2}px)`,'#1d4ed8',`${l}×${h}`)+fc(w,h,`rotateY(90deg) translateZ(${l*u/2}px)`,'#ef4444',`${w}×${h}`,`left:${(l-w)*u/2}px;`)+fc(w,h,`rotateY(-90deg) translateZ(${l*u/2}px)`,'#b91c1c',`${w}×${h}`,`left:${(l-w)*u/2}px;`)+
+ fc(l,w,`rotateX(90deg) translateZ(${h*u/2}px)`,'#22c55e',`${l}×${w}`,`top:${(h-w)*u/2}px;`)+fc(l,w,`rotateX(-90deg) translateZ(${h*u/2}px)`,'#15803d',`${l}×${w}`,`top:${(h-w)*u/2}px;`)+`</div></div>`+
+ `<div style="width:60%;height:18px;background:#e2e8f0;border-radius:9px;overflow:hidden"><div style="width:${f/h*100}%;height:100%;background:#16a34a"></div></div><b style="margin:6px">Cubes inside: ${f}×${l}×${w} = ${f*l*w}</b>`}
+ else{const s=20,W=(2*w+2*l)*s,ox=(900-W)/2,oy=20,rc=(x,y,a,b,c,t)=>`<rect x="${ox+x*s}" y="${oy+y*s}" width="${a*s}" height="${b*s}" fill="${c}" stroke="#fff" stroke-width="2"/>`+T(ox+(x+a/2)*s,oy+(y+b/2)*s+5,15,t,'#fff');
+ st=svg(rc(w,0,l,w,'#22c55e','Top '+l*w)+rc(0,w,w,h,'#ef4444','Left '+w*h)+rc(w,w,l,h,'#3b82f6','Front '+l*h)+rc(w+l,w,w,h,'#b91c1c','Right '+w*h)+rc(2*w+l,w,l,h,'#1d4ed8','Back '+l*h)+rc(w,w+h,l,w,'#15803d','Bottom '+l*w),'0 0 900 440')}
+ return[st,`Box: ${l} × ${w} × ${h}<br>Surface area = 2(${l*w}+${l*h}+${w*h}) = <b>${sa}</b><br>Volume = ${l}×${w}×${h} = <b>${l*w*h}</b>`,
+ B('Length +','b','ch','l',1)+B('Length −','r','ch','l',-1)+B('Width +','g','ch','w',1)+B('Width −','o','ch','w',-1)+B('Height +','p','ch','h',1)+B('Height −','k','ch','h',-1)+B('Make a cube','t','cube')+B('Unfold net','a','vw','net')+B('Fold into box','b','vw','box')+B('Turn ◀','p','rot',-40,0)+B('Turn ▶','g','rot',40,0)+B('Tilt ▲','o','rot',0,-20)+B('Tilt ▼','r','rot',0,20)+B('Add layer','k','fill',1)+B('Remove layer','n','fill',-1)]}},
+/* 9 STATS */
+{n:'Statistics',c:'t',t:'Mean, Median, Mode & Range Visualizer',d:'Each tower is a stack of books. Change the towers, then press the buttons to find mean, median, mode and range.',
+D:[4,7,3,6,4,8,5],i(){S={d:[...this.D],me:0,md:0,mo:0,ra:0,lv:0}},
+ch(i,v){S.d[i]=cl(S.d[i]+v,1,9);S.lv=0;S.md=0},f(k){S[k]=1;if(k=='md')S.d.sort((a,b)=>a-b);if(k=='lv'){S.me=1}},rn(){S.d=S.d.map(()=>rnd(1,9));S.lv=S.md=0},z(){this.i()},
+v(){const d=S.d,sum=d.reduce((a,b)=>a+b,0),mean=sum/7,col=['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#3b82f6','#a855f7'],mx=Math.max(...d),mn=Math.min(...d),cnt={};d.forEach(q=>cnt[q]=(cnt[q]||0)+1);
+ const mf=Math.max(...Object.values(cnt)),modes=Object.keys(cnt).filter(k=>cnt[k]==mf&&mf>1),y=h=>320-h*30;let s='<rect x="20" y="320" width="860" height="22" rx="6" fill="#92400e"/>';
+ d.forEach((q,i)=>{const h=S.lv?mean:q,x=60+i*115;s+=`<rect x="${x}" y="${y(h)}" width="70" height="${h*30}" rx="4" fill="${col[i]}" stroke="${S.md&&i==3?'#facc15':'#0000'}" stroke-width="6"/>`;for(let j=1;j<h;j++)s+=`<line x1="${x}" x2="${x+70}" y1="${y(j)}" y2="${y(j)}" stroke="#fff6" stroke-width="2"/>`;
+ s+=T(x+35,y(h)-10,20,S.lv?mean.toFixed(1):q)+T(x+35,362,15,'Tower '+(i+1),'#334155');if(S.mo&&modes.includes(''+q))s+=T(x+35,y(h)-36,24,'⭐')});
+ if(S.me)s+=`<line x1="30" x2="880" y1="${y(mean)}" y2="${y(mean)}" stroke="#111" stroke-width="3" stroke-dasharray="10 6"/>`+T(40,y(mean)-6,16,'Mean '+mean.toFixed(1),'#111',700,'start');
+ if(S.ra)s+=`<line x1="30" x2="880" y1="${y(mx)}" y2="${y(mx)}" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4 5"/><line x1="30" x2="880" y1="${y(mn)}" y2="${y(mn)}" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4 5"/>`+T(880,y(mx)-6,16,`Range = ${mx} − ${mn} = ${mx-mn}`,'#7c3aed',700,'end');
+ s+=T(450,28,18,'Values: '+d.join(', '),'#334155');
+ return[svg(s,'0 0 900 380'),(S.me?`<b>Mean</b> = ${sum} ÷ 7 = ${mean.toFixed(1)}<br>`:'')+(S.md?`<b>Median</b> (middle of sorted) = ${d[3]}<br>`:'')+(S.mo?`<b>Mode</b> = ${modes.length?modes.join(' and '):'none (no repeats)'}<br>`:'')+(S.ra?`<b>Range</b> = ${mx} − ${mn} = ${mx-mn}`:'')||'Press a button to explore.',
+ B('Show Mean','b','f','me')+B('Level Out','g','f','lv')+B('Sort + Median','o','f','md')+B('Show Mode','p','f','mo')+B('Show Range','r','f','ra')+B('Random','k','rn')+B('Reset','n','z')+'<div style="width:100%;font-size:13px;color:#475569">Change a tower:</div>'+d.map((q,i)=>`<span style="font-weight:700">${i+1}</span>`+B('▲','gs','ch',i,1)+B('▼','rs','ch',i,-1)).join('')]}},
+/* 10 COORDINATES */
+{n:'Coordinates',c:'b',t:'Cartesian Coordinate Plane (Quadrant I)',d:'Set the point with the buttons or click the grid. Press Plot Point to place the next point of the shape, in order.',
+SH:[['House','🏠',[[2,1],[8,1],[8,5],[5,8],[2,5]]],['Kite','🪁',[[5,1],[8,5],[5,9],[2,5]]],['Boat','⛵',[[1,3],[9,3],[7,1],[3,1]]],['Rocket','🚀',[[5,9],[7,6],[7,2],[5,3],[3,2],[3,6]]]],
+i(){S={s:S.s||0,pl:[],cx:0,cy:0,h:0,msg:'Plot point 1.'}},
+sh(i){S={s:i,pl:[],cx:0,cy:0,h:0,msg:'Plot point 1.'}},mv(a,b){S.cx=cl(S.cx+a,0,10);S.cy=cl(S.cy+b,0,10)},ht(){S.h=1},
+un(){S.pl.pop();S.msg='Removed last point.'},cr(){S.pl=[];S.msg='Cleared.'},
+pk(x,y){S.cx=x;S.cy=y},
+pl(){const t=this.SH[S.s][2][S.pl.length];if(!t)return;if(t[0]==S.cx&&t[1]==S.cy){S.pl.push(t);S.msg=S.pl.length==this.SH[S.s][2].length?'🎉 Shape complete! Well done!':'✔ Correct! Plot the next point.';S.h=0}else S.msg=`✘ Not yet. You set (${S.cx}, ${S.cy}). Look at the list.`},
+v(){const[nm,em,P]=this.SH[S.s],X=q=>70+48*q,Y=q=>500-48*q;let s='';
+ for(let i=0;i<=10;i++)s+=`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(0)}" y2="${Y(10)}" stroke="#cbd5e1"/><line x1="${X(0)}" x2="${X(10)}" y1="${Y(i)}" y2="${Y(i)}" stroke="#cbd5e1"/>`+T(X(i),522,15,i,'#334155')+T(52,Y(i)+5,15,i,'#334155');
+ s+=`<line x1="${X(0)}" x2="${X(10)+20}" y1="${Y(0)}" y2="${Y(0)}" stroke="#111" stroke-width="3"/><line x1="${X(0)}" x2="${X(0)}" y1="${Y(0)}" y2="${Y(10)-20}" stroke="#111" stroke-width="3"/>`+T(X(10)+20,Y(0)+22,18,'x','#b91c1c')+T(X(0)-24,Y(10)-14,18,'y','#1d4ed8');
+ const done=S.pl.length==P.length,pts=S.pl.map(q=>X(q[0])+','+Y(q[1])).join(' ');
+ if(S.pl.length>1)s+=`<polygon points="${pts}" fill="${done?'#38bdf855':'none'}" stroke="#2563eb" stroke-width="4" ${done?'':'stroke-linejoin="round"'}/>`;
+ if(!done&&S.pl.length==1||0)s+='';
+ S.pl.forEach((q,i)=>s+=`<circle cx="${X(q[0])}" cy="${Y(q[1])}" r="8" fill="#dc2626"/>`+T(X(q[0])+12,Y(q[1])-10,15,i+1,'#7f1d1d'));
+ if(done)s+=T(X(5),Y(5)+14,70,em);
+ if(S.h&&!done){const t=P[S.pl.length];s+=`<circle cx="${X(t[0])}" cy="${Y(t[1])}" r="16" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="5 4"/>`}
+ s+=`<line x1="${X(S.cx)}" x2="${X(S.cx)}" y1="${Y(S.cy)}" y2="${Y(0)}" stroke="#f97316" stroke-dasharray="5 4" stroke-width="2"/><line x1="${X(0)}" x2="${X(S.cx)}" y1="${Y(S.cy)}" y2="${Y(S.cy)}" stroke="#f97316" stroke-dasharray="5 4" stroke-width="2"/><circle cx="${X(S.cx)}" cy="${Y(S.cy)}" r="9" fill="#f97316" stroke="#fff" stroke-width="3"/>`;
+ const l=P.map((q,i)=>(i<S.pl.length?'✔ ':i==S.pl.length?'👉 ':'')+`(${q[0]}, ${q[1]})`).join('<br>');
+ return[`<svg viewBox="0 0 620 540" onclick="pk(event)">${s}</svg>`,`<b>${nm}</b> ${em} — plot in order:<br>${l}<br><b>Your point: (${S.cx}, ${S.cy})</b><br>${S.msg}`,
+ B('x −1','r','mv',-1,0)+B('x +1','g','mv',1,0)+B('y −1','o','mv',0,-1)+B('y +1','b','mv',0,1)+B('Plot Point','p','pl')+B('Show Hint','k','ht')+B('Undo','a','un')+B('Clear','n','cr')+this.SH.map((q,i)=>B(q[1]+' '+q[0],'tgbo'[i]+'s','sh',i)).join('')]}}
+];
+function pk(e){const r=e.currentTarget.getBoundingClientRect(),sc=Math.min(r.width/620,r.height/540),vx=(e.clientX-r.left-(r.width-620*sc)/2)/sc,vy=(e.clientY-r.top-(r.height-540*sc)/2)/sc;g('pk',cl(R((vx-70)/48),0,10),cl(R((500-vy)/48),0,10))}
+function render(){const a=acts[cur],[s,i,c]=a.v();$$('#stage').innerHTML=s;$$('#inf').innerHTML=i;$$('#ctl').innerHTML=c;$$('#ttl').textContent=cur+1+'. '+a.t;$$('#dsc').textContent=a.d;document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('on',j==cur))}
+function show(i){cur=i;S={};acts[i].i();render()}
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.addEventListener('fullscreenchange',()=>$$('#fsb').textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen');
+$$('#nav').innerHTML=acts.map((a,i)=>`<button style="background:${C[a.c]}" onclick="show(${i})">${i+1}. ${a.n}</button>`).join('');
+show(0);
+</script></body></html>

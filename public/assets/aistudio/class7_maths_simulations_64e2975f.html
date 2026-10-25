@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Class 7 Maths Simulations</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font:16px 'Trebuchet MS','Segoe UI',sans-serif;background:linear-gradient(135deg,#0f2748,#2e1065);color:#10243f;height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:16px;padding:10px 18px;color:#fff}
+h1{font-size:22px;flex:1}
+nav{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+nav button{font-size:12px;padding:6px 9px;opacity:.75}
+nav button.on{opacity:1;outline:3px solid #fff}
+main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:12px;padding:0 14px 14px}
+#stage{background:linear-gradient(#e6f3ff,#fff6e3);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
+#stage svg{width:100%;height:100%}
+aside{background:#fff;border-radius:18px;padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+aside h2{font-size:18px;color:#1e3a8a}aside p{font-size:14px;color:#334155}
+.info{background:#eef5ff;border-radius:12px;padding:10px;line-height:1.55;font-size:15px}
+#ctl{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button{border:0;color:#fff;font:700 14px 'Trebuchet MS',sans-serif;padding:9px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.28)}
+button:active{transform:translateY(3px);box-shadow:none}
+button.s{padding:5px 10px}
+.pop{animation:pop .35s}@keyframes pop{from{opacity:0}}
+</style></head><body>
+<header><h1>🎓 GEN Z EDTECH — Class 7 Maths Lab</h1><button id="fsb" style="background:#7c3aed" onclick="fs()">⛶ Full Screen</button></header>
+<nav id="nav"></nav>
+<main><section id="stage"></section><aside><h2 id="ttl"></h2><p id="dsc"></p><div class="info" id="inf"></div><div id="ctl"></div></aside></main>
+<script>
+const $$=s=>document.querySelector(s),R=Math.round,PI=Math.PI;
+const C={b:'#2563eb',g:'#16a34a',o:'#ea580c',r:'#dc2626',p:'#7c3aed',t:'#0d9488',k:'#db2777',a:'#b45309',n:'#475569'};
+const B=(t,c,m,...a)=>`<button class="${c.slice(1)}" style="background:${C[c[0]]}" onclick='g("${m}"${a.map(x=>","+JSON.stringify(x)).join('')})'>${t}</button>`;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v)),rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),gcd=(a,b)=>b?gcd(b,a%b):a;
+const svg=(b,vb='0 0 900 420')=>`<svg viewBox="${vb}">${b}</svg>`;
+const T=(x,y,s,t,f='#10243f',w=700,an='middle')=>`<text x="${x}" y="${y}" font-size="${s}" fill="${f}" font-weight="${w}" text-anchor="${an}">${t}</text>`;
+const fr=(n,m)=>(n<0?'−':'')+Math.abs(n)+'/'+m,sup=(a,e)=>`${a}<sup>${e}</sup>`,rd=v=>+v.toFixed(2);
+const fac=n=>{const f=[];for(let p=2;n>1;p++)while(n%p==0){f.push(p);n/=p}return f};
+let cur=0,S={};
+const g=(m,...a)=>{if(acts[cur][m](...a)!==0)render()};
+const anim=(k,fn)=>{const id=setInterval(()=>{if(acts[cur].n!=k){clearInterval(id);return}S.t=Math.min(1,S.t+.04);render();if(S.t>=1)clearInterval(id)},40)};
+const acts=[
+/* 1 RATIONAL */
+{n:'Rational Line',c:'b',t:'Rational Numbers on a Number Line',d:'Move the ladybug along the ruler to the target number. The ruler is cut into equal steps. One step = 1 over the denominator.',
+i(){S={d:4,k:0,tn:-5,td:4,h:0,x:'Move the ladybug to the target.'}},
+den(d){S.d=d;S.k=cl(S.k,-3*d,3*d)},mv(n){S.k=cl(S.k+n,-3*S.d,3*S.d)},wh(n){S.k=cl(S.k+n*S.d,-3*S.d,3*S.d)},ht(){S.h=1},
+nw(){const td=[2,3,4,5,8,10][rnd(0,5)];let tn=0;while(!tn)tn=rnd(-3*td,3*td);S.tn=tn;S.td=td;S.h=0;S.x='New target!'},
+ck(){S.x=S.k*S.td==S.tn*S.d?'✔ Correct! 🎉 Press New Target.':'✘ Not yet. Count the steps again.'},
+v(){const{d,k,tn,td}=S,x=q=>450+q*140,val=k/d,gg=gcd(Math.abs(k),d);
+ let s=`<rect x="30" y="200" width="840" height="70" rx="8" fill="#fde68a" stroke="#a16207" stroke-width="3"/>`;
+ for(let i=-3*d;i<=3*d;i++){const w=i%d==0;s+=`<line x1="${x(i/d)}" x2="${x(i/d)}" y1="200" y2="${w?250:228}" stroke="#78350f" stroke-width="${w?3:1.5}"/>`;if(w)s+=T(x(i/d),296,22,i/d,i<0?'#b91c1c':'#166534')}
+ s+=T(450,50,32,'Target: '+fr(tn,td),'#1e3a8a')+T(450,88,18,`Each step = 1/${d}`,'#475569')+(S.h?T(x(tn/td),190,34,'🚩'):'')+T(x(val),178,44,'🐞')+T(x(val),138,22,fr(k,d),val<0?'#b91c1c':'#166534')+T(450,360,20,S.x,'#334155');
+ return[svg(s),`Ladybug: <b>${fr(k,d)}</b> = ${+val.toFixed(3)}`+(k&&gg>1?`<br>Simplest form: ${fr(k/gg,d/gg)}`:'')+`<br>Target: ${fr(tn,td)} = ${+(tn/td).toFixed(3)}`,
+ [2,3,4,5,8,10].map((q,i)=>B('Steps of 1/'+q,'bgopkt'[i]+'s','den',q)).join('')+B('◀ 1 step','r','mv',-1)+B('1 step ▶','g','mv',1)+B('◀ 1 whole','o','wh',-1)+B('1 whole ▶','b','wh',1)+B('Hint','a','ht')+B('Check','p','ck')+B('New Target','k','nw')]}},
+/* 2 EXPONENTS */
+{n:'Exponents',c:'o',t:'Laws of Exponents & Powers Sandbox',d:'Each ball is one copy of the base number. Count the balls to see why the laws work.',
+i(){S={a:2,m:3,n:2,l:'mul'}},
+ch(k,v){S[k]=cl(S[k]+v,1,6);if(S.l=='div'&&S.n>S.m)S.n=S.m},ba(a){S.a=a},lw(l){S.l=l;if(l=='div'&&S.n>S.m)S.n=S.m},
+v(){const{a,m,n,l}=S,dot=(x,y,c,r=17)=>`<circle class="pop" cx="${x}" cy="${y}" r="${r}" fill="${c}" stroke="#fff" stroke-width="2"/>`+T(x,y+6,r-1,a,'#fff'),A='#3b82f6',O='#f97316';let s='',r,t;
+ const row=(y,n,c,lb,sk=0)=>{let o=T(40,y-28,18,lb,'#334155',700,'start');for(let i=0;i<n;i++)o+=dot(60+i*50,y,i<sk?'#9ca3af':c)+(i<sk?T(60+i*50,y+8,26,'✖','#dc2626'):'');return o};
+ if(l=='mul'){s=row(80,m,A,`${a}^${m} = ${m} balls`)+row(190,n,O,`${a}^${n} = ${n} balls`)+T(40,262,18,`Together: ${m+n} balls = ${a}^${m+n}`,'#334155',700,'start');for(let i=0;i<m+n;i++)s+=dot(60+i*50,300,i<m?A:O);t=`${sup(a,m)} × ${sup(a,n)} = ${sup(a,m+n)} = ${a**(m+n)}`}
+ else if(l=='div'){s=row(90,m,A,`${a}^${m}: cross out ${n} balls (divide by ${a}^${n})`,n)+T(40,190,18,`${m-n} balls are left = ${a}^${m-n}`,'#334155',700,'start');for(let i=0;i<m-n;i++)s+=dot(60+i*50,235,A);t=`${sup(a,m)} ÷ ${sup(a,n)} = ${sup(a,m-n)} = ${a**(m-n)}`}
+ else{s=T(40,36,18,`${n} groups of ${a}^${m} (each group has ${m} balls)`,'#334155',700,'start');for(let j=0;j<n;j++)for(let i=0;i<m;i++)s+=dot(60+i*40,80+j*54,['#3b82f6','#f97316','#22c55e','#a855f7','#ec4899','#14b8a6'][j],14);s+=T(480,230,26,`${m} × ${n} = ${m*n} balls`,'#1e3a8a',700,'start');t=`(${sup(a,m)})<sup>${n}</sup> = ${sup(a,m*n)}`+(m*n<=12?` = ${a**(m*n)}`:'')}
+ return[svg(s),`<b>${t}</b><br>`+(l=='mul'?'Same base: ADD the powers.':l=='div'?'Same base: SUBTRACT the powers.':'Power of a power: MULTIPLY the powers.'),
+ [2,3,5].map((q,i)=>B('Base '+q,'bgo'[i]+'s','ba',q)).join('')+B('× Multiply','b','lw','mul')+B('÷ Divide','r','lw','div')+B('Power of power','p','lw','pow')+B('m +1','g','ch','m',1)+B('m −1','o','ch','m',-1)+B('n +1','t','ch','n',1)+B('n −1','k','ch','n',-1)]}},
+/* 3 SQUARE ROOT */
+{n:'Square Root',c:'g',t:'Square Root by Prime Factorization',d:'Divide by primes again and again. Then make pairs of equal primes. One from each pair gives the square root.',
+N:[36,64,144,196,225,324,400,72],
+i(){S={n:144,s:0,pr:0,rt:0}},nm(n){S={n,s:0,pr:0,rt:0}},nx(){S.s=Math.min(S.s+1,fac(S.n).length)},all(){S.s=fac(S.n).length},pa(){S.s=fac(S.n).length;S.pr=1},pick(){this.pa();S.rt=1},
+v(){const n=S.n,f=fac(n),s=S.s,col={2:'#ef4444',3:'#3b82f6',5:'#22c55e',7:'#a855f7'};let o='',rem=n;
+ f.slice(0,s).forEach((p,j)=>{const y=60+j*46;o+=T(75,y,28,p,col[p],800,'end')+`<path d="M88 ${y-30}V${y+12}H190" fill="none" stroke="#334155" stroke-width="3"/>`+T(100,y,28,rem,'#10243f',700,'start');rem/=p});
+ if(s==f.length&&s)o+=T(100,60+s*46,28,1,'#10243f',700,'start');
+ f.slice(0,s).forEach((p,i)=>o+=`<circle class="pop" cx="${300+i*56}" cy="110" r="22" fill="${col[p]}"/>`+T(300+i*56,119,24,p,'#fff'));
+ let pairs=[],left=[];if(S.pr){for(let i=0;i<f.length;){if(f[i]==f[i+1]){pairs.push(f[i]);o+=`<path d="M${300+i*56-20} 146v12H${300+(i+1)*56+20}v-12" fill="none" stroke="#f59e0b" stroke-width="4"/>`+(S.rt?`<circle cx="${300+i*56}" cy="110" r="27" fill="none" stroke="#facc15" stroke-width="5"/>`:'');i+=2}else{left.push(f[i]);o+=T(300+i*56,172,26,'❓');i++}}}
+ const root=pairs.reduce((a,b)=>a*b,1);let t='Press Next Factor.';
+ if(S.rt&&!left.length){const ts=Math.min(30,230/root);for(let i=0;i<root;i++)for(let j=0;j<root;j++)o+=`<rect x="${560+i*ts}" y="${190+j*ts}" width="${ts}" height="${ts}" fill="${(i+j)%2?'#7dd3fc':'#38bdf8'}" stroke="#fff"/>`;o+=T(560+root*ts/2,185,18,`Floor of ${root} × ${root} = ${n} tiles`,'#0c4a6e');t=`√${n} = ${pairs.join(' × ')} = <b>${root}</b><br>Check: ${root} × ${root} = ${root*root}`}
+ else if(S.rt)t=`${left.join(', ')} has no partner, so ${n} is NOT a perfect square.<br>√${n} is about ${Math.sqrt(n).toFixed(2)}`;
+ else if(S.pr)t='Equal primes make pairs. Press "Pick one from each pair".';else if(s)t=`Factors so far: ${f.slice(0,s).join(' × ')}`;
+ return[svg(o),`Number: <b>${n}</b><br>${t}`,this.N.map((q,i)=>B(q,'bgorpt'[i%6]+'s','nm',q)).join('')+B('Next Factor','b','nx')+B('Show All','g','all')+B('Make Pairs','o','pa')+B('Pick One From Each','p','pick')+B('Reset','n','nm',n)]}},
+/* 4 PROPORTION */
+{n:'Proportion',c:'p',t:'Direct and Inverse Proportion Graphs',d:'Direct: more time, more distance. Inverse: more speed, less time. Plot points and draw the graph.',
+XS:[10,20,30,40,60,120],
+i(){S={m:'dir',k:30,x:3,xi:2,pl:[],ln:0}},
+md(m){S.m=m;S.pl=[];S.ln=0;S.x=m=='dir'?3:30;S.xi=2},ch(v){S.k=cl(S.k+v,10,60);S.pl=[];S.ln=0},
+mx(v){if(S.m=='dir')S.x=cl(S.x+v,1,8);else{S.xi=cl(S.xi+v,0,5);S.x=this.XS[S.xi]}},plot(){if(!S.pl.includes(S.x))S.pl.push(S.x)},dl(){S.ln=1},cr(){S.pl=[];S.ln=0},
+v(){const dir=S.m=='dir',k=S.k,xm=dir?8:120,ym=dir?k*8:12,f=x=>dir?k*x:120/x,gx=x=>70+x/xm*480,gy=y=>340-y/ym*290,x=S.x,y=f(x);
+ let s=`<rect x="70" y="50" width="480" height="290" fill="#fff" stroke="#94a3b8"/>`;
+ for(let i=0;i<=4;i++)s+=`<line x1="${70+i*120}" x2="${70+i*120}" y1="50" y2="340" stroke="#e2e8f0"/><line x1="70" x2="550" y1="${50+i*72.5}" y2="${50+i*72.5}" stroke="#e2e8f0"/>`+T(70+i*120,362,15,xm*i/4)+T(62,345-i*72.5,15,ym*i/4,'#10243f',700,'end');
+ s+=T(310,392,16,dir?'Time (hours)':'Speed (km/h)','#334155')+T(310,34,18,dir?'Distance = speed × time':'Time = distance ÷ speed','#1e3a8a');
+ if(S.ln){const pts=[];if(dir)pts.push([0,0],[8,k*8]);else for(let q=10;q<=120;q+=2)pts.push([q,f(q)]);s+=`<polyline points="${pts.map(p=>gx(p[0])+','+gy(p[1])).join(' ')}" fill="none" stroke="#7c3aed" stroke-width="4"/>`}
+ S.pl.forEach(q=>s+=`<circle cx="${gx(q)}" cy="${gy(f(q))}" r="7" fill="#dc2626"/>`);
+ s+=`<line x1="${gx(x)}" x2="${gx(x)}" y1="${gy(y)}" y2="340" stroke="#f97316" stroke-dasharray="5 4" stroke-width="2"/><line x1="70" x2="${gx(x)}" y1="${gy(y)}" y2="${gy(y)}" stroke="#f97316" stroke-dasharray="5 4" stroke-width="2"/><circle cx="${gx(x)}" cy="${gy(y)}" r="10" fill="#f97316" stroke="#fff" stroke-width="3"/>`;
+ s+=`<rect x="600" y="70" width="280" height="50" rx="6" fill="#4b5563"/><line x1="610" x2="870" y1="95" y2="95" stroke="#fde047" stroke-width="3" stroke-dasharray="14 10"/>`+T(600+Math.min(1,y/ym)*230+20,112,44,'🚗')+T(740,150,16,dir?`${k} km/h for ${x} h → ${y} km`:`120 km at ${x} km/h → ${y} h`,'#334155')+T(740,190,16,dir?'x | y | y ÷ x':'x | y | x × y','#7c3aed');
+ S.pl.slice(-6).forEach((q,i)=>s+=T(740,220+i*26,16,dir?`${q} | ${f(q)} | ${k}`:`${q} | ${f(q)} | 120`,'#10243f',600));
+ return[svg(s,'0 0 900 410'),dir?`Direct: y ÷ x is always <b>${k}</b><br>Straight line through the origin.`:`Inverse: x × y is always <b>120</b><br>The graph is a curve that falls.`,
+ B('Direct','b','md','dir')+B('Inverse','r','md','inv')+B('x ◀','o','mx',-1)+B('x ▶','g','mx',1)+B('Plot point','p','plot')+B('Draw graph','t','dl')+B('Clear','n','cr')+(dir?B('Speed +10','k','ch',10)+B('Speed −10','a','ch',-10):'')]}},
+/* 5 PROFIT LOSS */
+{n:'Profit & Loss',c:'k',t:'Profit, Loss and Discount Calculator',d:'Change the cost price, the marked price and the discount. Watch the bars and the percentage.',
+I:[['👟','Shoes',800,1000],['🎒','School bag',600,900],['🎧','Headphones',1200,1500],['📱','Phone',9000,12000]],
+i(){S={cp:800,mp:1000,d:10,e:'👟'}},it(i){const q=this.I[i];S.e=q[0];S.cp=q[2];S.mp=q[3];S.d=10},ch(k,v){S[k]=cl(S[k]+v,k=='d'?0:50,k=='d'?50:20000)},
+v(){const{cp,mp,d,e}=S,sp=mp*(1-d/100),pl=sp-cp,mx=Math.max(cp,mp,sp)*1.05,w=q=>q/mx*500,x0=190,bar=(y,lb,wd,c,val)=>`<rect x="${x0}" y="${y}" width="${wd}" height="56" rx="8" fill="${c}"/>`+T(x0-10,y+36,18,lb,'#334155',700,'end')+T(x0+wd+8,y+36,20,'$'+rd(val),'#10243f',700,'start');
+ let s=T(70,80,64,e)+T(840,80,50,'🏷️')+bar(110,'Marked price',w(mp),'#60a5fa',mp)+`<rect x="${x0+w(sp)}" y="110" width="${w(mp)-w(sp)}" height="56" rx="8" fill="#ef4444"/>`+T(x0+w(sp)+(w(mp)-w(sp))/2,144,15,d?'−'+d+'%':'','#fff');
+ s+=bar(200,'Selling price',Math.min(w(sp),w(cp)),'#a78bfa',sp);
+ if(pl>0)s+=`<rect x="${x0+w(cp)}" y="200" width="${w(sp)-w(cp)}" height="56" rx="8" fill="#22c55e"/>`+T(x0+w(cp)+(w(sp)-w(cp))/2,234,15,'Profit','#fff');
+ if(pl<0)s+=`<rect x="${x0+w(sp)}" y="200" width="${w(cp)-w(sp)}" height="56" rx="8" fill="#fecaca" stroke="#dc2626" stroke-dasharray="6 4" stroke-width="3"/>`+T(x0+w(sp)+(w(cp)-w(sp))/2,234,15,'Loss','#b91c1c');
+ s+=bar(290,'Cost price',w(cp),'#fbbf24',cp);
+ const res=pl>0?`Profit = ${rd(sp)} − ${cp} = <b>$${rd(pl)}</b><br>Profit % = ${rd(pl)} ÷ ${cp} × 100 = <b>${rd(pl/cp*100)}%</b>`:pl<0?`Loss = ${cp} − ${rd(sp)} = <b>$${rd(-pl)}</b><br>Loss % = ${rd(-pl)} ÷ ${cp} × 100 = <b>${rd(-pl/cp*100)}%</b>`:'<b>No profit, no loss.</b>';
+ return[svg(s,'0 0 900 380'),`Discount = ${mp} × ${d}% = $${rd(mp*d/100)}<br>Selling price = ${mp} − ${rd(mp*d/100)} = <b>$${rd(sp)}</b><br>${res}`,
+ this.I.map((q,i)=>B(q[0]+' '+q[1],'bgop'[i]+'s','it',i)).join('')+B('Cost +50','g','ch','cp',50)+B('Cost −50','r','ch','cp',-50)+B('Marked +50','b','ch','mp',50)+B('Marked −50','o','ch','mp',-50)+B('Discount +5%','p','ch','d',5)+B('Discount −5%','k','ch','d',-5)]}},
+/* 6 TWO-STEP */
+{n:'Two-Step',c:'t',t:'Two-Step Linear Equations Balancer',d:'Solve ax + b = c. Step 1: subtract b from both sides. Step 2: divide both sides by a.',
+i(){const a=rnd(2,3),v=rnd(1,5),b=rnd(1,6);S={a,v,b,nb:a,lb:b,rc:a*v+b,r:0,x:'Step 1: subtract '+b+' from both sides.'}},
+sub(){if(S.lb==S.b&&S.nb==S.a){S.lb=0;S.rc-=S.b;S.x='Good! Now divide both sides by '+S.a+'.'}else S.x='Step 1 is done or not possible now.'},
+dv(){if(S.lb==0&&S.nb==S.a){S.nb=1;S.rc/=S.a;S.x='Solved! x = '+S.rc+' 🎉'}else S.x='First subtract '+S.b+' from both sides.'},
+lo(d){S.lb=cl(S.lb+d,0,9);S.x='Only the left side changed!'},rv(){S.r=1},
+v(){const{a,v,b,nb,lb,rc,r}=S,df=nb*v+lb-rc,ang=cl(df*2.5,-18,18),t=-ang*PI/180,L=230,lx=450-L*Math.cos(t),ly=150-L*Math.sin(t),rx=450+L*Math.cos(t),ry=150+L*Math.sin(t);
+ const ball=(x,y)=>`<circle cx="${x}" cy="${y}" r="11" fill="#facc15" stroke="#a16207"/>`+T(x,y+5,13,1,'#422006'),pan=(px,py,inn)=>`<g transform="translate(${px},${py})"><path d="M0 0L-80 100M0 0L80 100" stroke="#475569" stroke-width="3"/><rect x="-90" y="100" width="180" height="12" rx="6" fill="#f59e0b"/>${inn}</g>`;
+ let L1='',R1='';for(let i=0;i<nb;i++)L1+=`<rect x="${-80+i*54}" y="60" width="50" height="40" rx="5" fill="#3b82f6"/>`+T(-55+i*54,88,22,r?'x='+v:'x','#fff');
+ for(let j=0;j<lb;j++)L1+=ball(-70+j*26,46);for(let j=0;j<rc;j++)R1+=ball(-72+(j%7)*24,88-Math.floor(j/7)*24);
+ const s=`<polygon points="450,150 400,385 500,385" fill="#64748b"/><rect x="360" y="380" width="180" height="16" rx="8" fill="#334155"/><line x1="${lx}" y1="${ly}" x2="${rx}" y2="${ry}" stroke="#78350f" stroke-width="12" stroke-linecap="round"/><circle cx="450" cy="150" r="14" fill="#fbbf24"/>`+pan(lx,ly,L1)+pan(rx,ry,R1);
+ return[svg(s),`Original: <b>${a}x + ${b} = ${a*v+b}</b><br>Now: <b>${nb==1?'x':nb+'x'}${lb?' + '+lb:''} = ${rc}</b><br>${df?'<b style="color:#dc2626">Not balanced!</b> ':''}${S.x}`,
+ B('Step 1: Subtract '+b+' both sides','b','sub')+B('Step 2: Divide both sides by '+a,'g','dv')+B('Take 1 off left only','r','lo',-1)+B('Add 1 to left only','o','lo',1)+B('Reveal x','p','rv')+B('New equation','k','i')]}},
+/* 7 IDENTITIES */
+{n:'Identities',c:'a',t:'Algebraic Identities Expansion',d:'The floor tiles show each identity as areas. Count the coloured parts and add them.',
+i(){S={a:4,b:2,m:'p',nu:0}},
+ch(k,v){S[k]=cl(S[k]+v,1,k=='a'?6:5);if(S.m!='p'&&S.b>=S.a)S.b=S.a-1;if(S.m!='p'&&S.a<2){S.a=2;S.b=1}},md(m){S.m=m;if(m!='p'&&S.b>=S.a)S.b=S.a-1},nu(){S.nu=1-S.nu},
+v(){const{a,b,m,nu}=S,u=Math.min(46,m=='p'?330/(a+b):m=='m'?330/a:190/(a+b)),sq=(x,y,w,h,c,t,n)=>{let o=`<rect x="${x}" y="${y}" width="${w*u}" height="${h*u}" fill="${c}" stroke="#fff" stroke-width="3"/>`;for(let i=1;i<w;i++)o+=`<line x1="${x+i*u}" x2="${x+i*u}" y1="${y}" y2="${y+h*u}" stroke="#fff8"/>`;for(let i=1;i<h;i++)o+=`<line y1="${y+i*u}" y2="${y+i*u}" x1="${x}" x2="${x+w*u}" stroke="#fff8"/>`;return o+T(x+w*u/2,y+h*u/2+6,Math.min(22,w*u/2.5,h*u/1.6),nu?n:t,'#fff')};let s='',t;
+ if(m=='p'){const ox=450-(a+b)*u/2,oy=205-(a+b)*u/2;s=sq(ox,oy,a,a,'#3b82f6','a²',a*a)+sq(ox+a*u,oy,b,a,'#22c55e','ab',a*b)+sq(ox,oy+a*u,a,b,'#22c55e','ab',a*b)+sq(ox+a*u,oy+a*u,b,b,'#f97316','b²',b*b);t=`(${a}+${b})² = ${a}² + 2×${a}×${b} + ${b}² = ${a*a} + ${2*a*b} + ${b*b} = <b>${(a+b)**2}</b>`}
+ else if(m=='m'){const ox=450-a*u/2,oy=205-a*u/2,e=a-b;s=sq(ox,oy,e,e,'#3b82f6','(a−b)²',e*e)+sq(ox+e*u,oy,b,e,'#ef4444','b(a−b)',b*e)+sq(ox,oy+e*u,e,b,'#ef4444','b(a−b)',b*e)+sq(ox+e*u,oy+e*u,b,b,'#f97316','b²',b*b);t=`(${a}−${b})² = ${a}² − 2×${a}×${b} + ${b}² = ${a*a} − ${2*a*b} + ${b*b} = <b>${(a-b)**2}</b><br>Whole square a² minus two red strips, but the orange corner was removed twice, so add b² back.`}
+ else{const e=a-b,o1=250-a*u/2,o2=470;s=sq(o1,205-a*u/2,e,a,'#3b82f6','a−b',e*a)+sq(o1+e*u,205-a*u/2+b*u,b,e,'#3b82f6','',e*b)+`<rect x="${o1+e*u}" y="${205-a*u/2}" width="${b*u}" height="${b*u}" fill="none" stroke="#f97316" stroke-width="4" stroke-dasharray="6 4"/>`+T(o1+e*u+b*u/2,205-a*u/2+b*u/2+6,18,'b² cut','#c2410c')+sq(o2,205-e*u/2,a+b,e,'#22c55e','(a+b)(a−b)',(a+b)*e);t=`${a}² − ${b}² = ${a*a} − ${b*b} = ${a*a-b*b}<br>(${a}+${b})(${a}−${b}) = ${a+b} × ${a-b} = <b>${(a+b)*(a-b)}</b><br>The L-shape (left) has the same area as the rectangle (right).`}
+ return[svg(s),t,B('(a+b)²','b','md','p')+B('(a−b)²','r','md','m')+B('a² − b²','g','md','d')+B('a +1','o','ch','a',1)+B('a −1','k','ch','a',-1)+B('b +1','p','ch','b',1)+B('b −1','t','ch','b',-1)+B(nu?'Show letters':'Show numbers','n','nu')]}},
+/* 8 POLYGONS */
+{n:'Polygon Angles',c:'r',t:'Angles in Polygons',d:'Choose a polygon. Cut it into triangles to find the angle sum. Then see the interior and exterior angles.',
+NM:['Triangle','Square','Pentagon','Hexagon','Heptagon','Octagon'],
+i(){S={n:5,m:'none'}},sd(n){S.n=n},md(m){S.m=m},
+v(){const n=S.n,sum=(n-2)*180,ei=sum/n,ee=360/n,cx=450,cy=215,Rr=135,P=(x,y,a,r)=>[x+r*Math.cos(a*PI/180),y+r*Math.sin(a*PI/180)].map(Math.round),V=Array.from({length:n},(_,i)=>P(cx,cy,-90+i*ee,Rr)),fills=['#60a5fa','#34d399','#fbbf24','#f472b6','#a78bfa','#dc2626'],at=(p,q)=>Math.atan2(q[1]-p[1],q[0]-p[0])*180/PI;
+ let s=`<polygon points="${V.join(' ')}" fill="${fills[n-3]}" stroke="#1e293b" stroke-width="5" stroke-linejoin="round"/>`;
+ if(n==8)s+=T(cx,cy+12,44,'STOP','#fff',800);
+ if(S.m=='diag'){const cs=['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#14b8a6'];for(let i=1;i<n-1;i++)s+=`<polygon class="pop" points="${V[0]} ${V[i]} ${V[i+1]}" fill="${cs[i-1]}" stroke="#fff" stroke-width="3" opacity=".9"/>`}
+ V.forEach((v,i)=>{const nx=V[(i+1)%n],pv=V[(i+n-1)%n];if(S.m=='int'){const f=at(v,nx),a1=P(v[0],v[1],f,36),a2=P(v[0],v[1],f+ei,36),l=P(v[0],v[1],f+ei/2,62);s+=`<path d="M${v}L${a1}A36 36 0 0 1 ${a2}Z" fill="#facc15" stroke="#78350f"/>`+T(l[0],l[1]+5,14,rd(ei)+'°','#10243f')}
+ if(S.m=='ext'){const e=at(pv,v),a1=P(v[0],v[1],e,36),a2=P(v[0],v[1],e+ee,36),l=P(v[0],v[1],e+ee/2,66),x2=P(v[0],v[1],e,70);s+=`<line x1="${v[0]}" y1="${v[1]}" x2="${x2[0]}" y2="${x2[1]}" stroke="#1e293b" stroke-width="3" stroke-dasharray="6 4"/><path d="M${v}L${a1}A36 36 0 0 1 ${a2}Z" fill="#22c55e" stroke="#14532d"/>`+T(l[0],l[1]+5,14,rd(ee)+'°','#14532d')}});
+ s+=T(130,60,26,this.NM[n-3]+' · '+n+' sides','#1e3a8a',700,'start');
+ return[svg(s),`Triangles inside: ${n} − 2 = <b>${n-2}</b><br>Angle sum = ${n-2} × 180° = <b>${sum}°</b><br>Each interior angle (regular) = ${sum} ÷ ${n} = <b>${rd(ei)}°</b><br>Each exterior angle = 360 ÷ ${n} = <b>${rd(ee)}°</b><br>Interior + exterior = ${rd(ei+ee)}°`,
+ [3,4,5,6,7,8].map((q,i)=>B(this.NM[i],'bgopkt'[i]+'s','sd',q)).join('')+B('Cut into triangles','r','md','diag')+B('Interior angles','o','md','int')+B('Exterior angles','g','md','ext')+B('Hide','n','md','none')]}},
+/* 9 AREAS */
+{n:'Areas',c:'b',t:'Area of Parallelogram, Triangle and Trapezium',d:'Press Play to cut, move or turn a copy of the shape. It becomes a rectangle or a parallelogram, so the formula is clear.',
+i(){S={m:'par',b:5,h:3,s:2,a:3,t:0}},md(m){S.m=m;S.t=0},
+ch(k,v){S[k]=cl(S[k]+v,k=='s'?0:1,k=='h'?6:k=='s'?4:8);S.t=0},pl(){S.t=0;anim('Areas')},z(){S.t=0},
+v(){const{m,b,h,s,a,t}=S,u=34,W=(m=='trap'?a+b+s:b+s)*u,x0=450-W/2,by=330,ty=by-h*u,X=q=>x0+q*u,A=[X(0),by],Bb=[X(b),by],rot=(pts,c,ang)=>`<g transform="rotate(${ang} ${c[0]} ${c[1]})"><polygon points="${pts.join(' ')}" fill="#fb923c" stroke="#7c2d12" stroke-width="3" opacity=".92"/></g>`;let o='';
+ for(let i=0;i<=26;i++)o+=`<line x1="${i*34}" x2="${i*34}" y1="40" y2="${by}" stroke="#dbeafe"/>`;for(let j=0;j<=9;j++)o+=`<line x1="0" x2="900" y1="${by-j*34}" y2="${by-j*34}" stroke="#dbeafe"/>`;
+ let info;
+ if(m=='par'){const D=[X(s),ty],C_=[X(b+s),ty],E=[X(s),by];o+=`<polygon points="${E} ${Bb} ${C_} ${D}" fill="#38bdf8" stroke="#075985" stroke-width="3"/><polygon points="${A} ${E} ${D}" fill="#fb923c" stroke="#7c2d12" stroke-width="3" transform="translate(${t*b*u} 0)"/>`;info=`Cut the triangle and slide it to the other side.<br>It becomes a rectangle ${b} × ${h}.<br>Area = base × height = ${b} × ${h} = <b>${b*h}</b>`}
+ else if(m=='tri'){const D=[X(s),ty],C_=[X(b+s),ty],M=[(Bb[0]+D[0])/2,(Bb[1]+D[1])/2];o+=`<polygon points="${A} ${Bb} ${D}" fill="#38bdf8" stroke="#075985" stroke-width="3"/>`+rot([Bb,C_,D],M,180*(1-t));info=`Two equal triangles make a parallelogram with base ${b} and height ${h}.<br>One triangle is half of it.<br>Area = ½ × ${b} × ${h} = <b>${b*h/2}</b>`}
+ else{const D=[X(s),ty],C_=[X(s+a),ty],M=[(Bb[0]+C_[0])/2,(Bb[1]+C_[1])/2],Pq=[A,Bb,C_,D];o+=`<polygon points="${Pq.join(' ')}" fill="#38bdf8" stroke="#075985" stroke-width="3"/>`+rot(Pq.map(p=>[2*M[0]-p[0],2*M[1]-p[1]]),M,180*(1-t));info=`Two equal trapeziums make a parallelogram with base ${a}+${b} = ${a+b}.<br>One trapezium is half of it.<br>Area = ½ × (${a}+${b}) × ${h} = <b>${(a+b)*h/2}</b>`}
+ o+=T(X(m=='trap'?s+a/2:b/2+(m=='par'?0:0)),by+26,18,m=='trap'?`bottom = ${b}`:`base = ${b}`,'#1e3a8a')+`<line x1="${X(m=='trap'?s+a/2:s)}" x2="${X(m=='trap'?s+a/2:s)}" y1="${ty}" y2="${by}" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 4"/>`+T(X(m=='trap'?s+a/2:s)+8,(ty+by)/2,18,'h = '+h,'#dc2626',700,'start')+(m=='trap'?T(X(s+a/2),ty-10,18,'top = '+a,'#1e3a8a'):'');
+ return[svg(o),info,B('Parallelogram','b','md','par')+B('Triangle','g','md','tri')+B('Trapezium','o','md','trap')+B('▶ Play','p','pl')+B('Reset','n','z')+B('Base +','r','ch','b',1)+B('Base −','k','ch','b',-1)+B('Height +','t','ch','h',1)+B('Height −','a','ch','h',-1)+B('Slant +','b','ch','s',1)+B('Slant −','g','ch','s',-1)+(m=='trap'?B('Top +','o','ch','a',1)+B('Top −','r','ch','a',-1):'')]}},
+/* 10 CIRCLE */
+{n:'Circle',c:'p',t:'Circumference and Area of a Circle',d:'Cut a pizza into slices and arrange them: they make a rectangle. Or unroll the rope around a plate to measure the circumference.',
+i(){S={m:'cut',r:4,n:8,t:0}},md(m){S.m=m;S.t=0},ch(v){S.r=cl(S.r+v,1,6);S.t=0},sl(n){S.n=n;S.t=0},pl(){S.t=0;anim('Circle')},z(){S.t=0},
+v(){const{r,n,t,m}=S,PIv=3.14,Cc=2*PIv*r,Ar=PIv*r*r;let o='',info;
+ if(m=='cut'){const u=24,ru=r*u,th=2*PI/n,hw=ru*Math.sin(th/2),hh=ru*Math.cos(th/2),x0=450-(n-1)*hw/2,base=340;o+=`<ellipse cx="450" cy="${base+8}" rx="${Math.max(ru+30,(n+1)*hw/2+20)}" ry="14" fill="#0001"/>`;
+ for(let i=0;i<n;i++){const fa=i%2?180:0,ax=(1-t)*450+t*(x0+i*hw),ay=(1-t)*210+t*(i%2?base-ru:base),rt=(1-t)*(i*360/n)+t*fa;o+=`<path d="M0 0L${-hw} ${-hh}A${ru} ${ru} 0 0 1 ${hw} ${-hh}Z" transform="translate(${ax} ${ay}) rotate(${rt})" fill="${i%2?'#fbbf24':'#ef4444'}" stroke="#fff" stroke-width="2"/>`}
+ if(t>=1){o+=T(450,base+44,18,`length ≈ half of circumference = π × r = ${rd(PIv*r)}`,'#1e3a8a')+T(x0-hw-14,base-ru/2,18,'r = '+r,'#1e3a8a',700,'end')}
+ info=`Radius r = ${r}<br>The slices make a rectangle:<br>length = πr = ${rd(PIv*r)}, width = r = ${r}<br>Area = πr × r = πr² = 3.14 × ${r}² = <b>${rd(Ar)}</b>`}
+ else{const u=16,ru=r*u,Cp=2*PI*ru;o+=`<circle cx="450" cy="150" r="${ru}" fill="#fef3c7" stroke="#d97706" stroke-width="3"/><circle cx="450" cy="150" r="${ru}" fill="none" stroke="#94a3b8" stroke-width="10" stroke-dasharray="${Cp} ${Cp}" stroke-dashoffset="${-t*Cp}" transform="rotate(-90 450 150)"/>`+T(450,158,40,'🍽️');
+ const len=t*Cc*u,x0=150,d=2*ru;o+=`<rect x="${x0}" y="330" width="${len}" height="12" rx="6" fill="#94a3b8"/>`;for(let i=0;i<3;i++)if(len>=(i+1)*d)o+=`<rect x="${x0+i*d}" y="360" width="${d-4}" height="14" rx="4" fill="${['#ef4444','#3b82f6','#22c55e'][i]}"/>`+T(x0+i*d+d/2-2,392,16,'diameter '+(i+1));if(len>3*d)o+=`<rect x="${x0+3*d}" y="360" width="${Math.min(len-3*d,.14*d)}" height="14" rx="4" fill="#a855f7"/>`;
+ info=`Radius r = ${r}, diameter = ${2*r}<br>The rope fits 3 diameters and a little more.<br>Circumference = π × d = 3.14 × ${2*r} = <b>${rd(Cc)}</b><br>C = 2πr`}
+ return[svg(o),info,B('✂ Cut slices','p','md','cut')+B('🧵 Unroll rope','o','md','rope')+B('▶ Play','g','pl')+B('Reset','n','z')+B('Radius +','b','ch',1)+B('Radius −','r','ch',-1)+(m=='cut'?[4,8,16,32].map((q,i)=>B(q+' slices','tkab'[i]+'s','sl',q)).join(''):'')]}},
+/* 11 COORDINATES */
+{n:'4 Quadrants',c:'t',t:'4-Quadrant Coordinate Grid Game',d:'Read the position of the object, or place the object at the given point. Use the buttons or click the grid.',
+E:[['🚁','helicopter'],['🏝️','island'],['⭐','star'],['🚀','rocket'],['🐢','turtle'],['🎈','balloon'],['🐠','fish']],
+i(){S={mo:'read',cx:0,cy:0,sc:0,x:'Set the point and press Check.'};this.nt()},nt(){let x=0,y=0;while(!x||!y){x=rnd(-8,8);y=rnd(-8,8)}S.tx=x;S.ty=y;S.e=this.E[rnd(0,6)]},
+mo_(m){S.mo=m;this.nt()},mv(a,b){S.cx=cl(S.cx+a,-8,8);S.cy=cl(S.cy+b,-8,8)},pk(x,y){S.cx=x;S.cy=y},
+ck(){if(S.cx==S.tx&&S.cy==S.ty){S.sc++;S.x='✔ Correct! +1 point. New target.';this.nt()}else S.x=`✘ Not yet. You are at (${S.cx}, ${S.cy}). Go ${S.cx<S.tx?'right':S.cx>S.tx?'left':''} ${S.cy<S.ty?'up':S.cy>S.ty?'down':''}.`},
+v(){const X=q=>300+q*30,Y=q=>270-q*30,qd=(x,y)=>x>0&&y>0?'I (+,+)':x<0&&y>0?'II (−,+)':x<0&&y<0?'III (−,−)':x>0&&y<0?'IV (+,−)':'on an axis';let s='';
+ [[0,0,'#dbeafe'],[-8,0,'#dcfce7'],[-8,-8,'#fef9c3'],[0,-8,'#fce7f3']].forEach(q=>s+=`<rect x="${X(q[0])}" y="${Y(q[1]+8)}" width="240" height="240" fill="${q[2]}"/>`);
+ for(let i=-8;i<=8;i++)s+=`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(8)}" y2="${Y(-8)}" stroke="#cbd5e1"/><line x1="${X(-8)}" x2="${X(8)}" y1="${Y(i)}" y2="${Y(i)}" stroke="#cbd5e1"/>`+(i&&i%2==0?T(X(i),Y(0)+16,12,i,'#334155')+T(X(0)-6,Y(i)+4,12,i,'#334155',700,'end'):'');
+ s+=`<line x1="${X(-8)}" x2="${X(8)+14}" y1="${Y(0)}" y2="${Y(0)}" stroke="#111" stroke-width="3"/><line x1="${X(0)}" x2="${X(0)}" y1="${Y(-8)}" y2="${Y(8)+14}" stroke="#111" stroke-width="3"/>`+T(X(8)+22,Y(0)+5,16,'x')+T(X(0)+12,Y(8)-2,16,'y')+T(X(4),Y(7.5),14,'Quadrant I','#1e40af')+T(X(-4),Y(7.5),14,'Quadrant II','#166534')+T(X(-4),Y(-7.3),14,'Quadrant III','#854d0e')+T(X(4),Y(-7.3),14,'Quadrant IV','#9d174d');
+ if(S.mo=='read')s+=T(X(S.tx),Y(S.ty)+12,36,S.e[0]);
+ s+=`<circle cx="${X(S.cx)}" cy="${Y(S.cy)}" r="9" fill="#f97316" stroke="#fff" stroke-width="3"/>`;
+ return[`<svg viewBox="0 0 600 540" onclick="pk(event)">${s}</svg>`,(S.mo=='read'?`Where is the ${S.e[0]} ${S.e[1]}? Set the orange dot on it.`:`Place the ${S.e[0]} ${S.e[1]} at <b>(${S.tx}, ${S.ty})</b>`)+`<br>Your point: <b>(${S.cx}, ${S.cy})</b> in Quadrant ${qd(S.cx,S.cy)}<br>Score: ${S.sc}<br>${S.x}`,
+ B('x −1','r','mv',-1,0)+B('x +1','g','mv',1,0)+B('y −1','o','mv',0,-1)+B('y +1','b','mv',0,1)+B('Check','p','ck')+B('New target','k','nt')+B('Read the position','t','mo_','read')+B('Place the object','a','mo_','place')]}}
+];
+function pk(e){if(cur!=10)return;const r=e.currentTarget.getBoundingClientRect(),sc=Math.min(r.width/600,r.height/540),vx=(e.clientX-r.left-(r.width-600*sc)/2)/sc,vy=(e.clientY-r.top-(r.height-540*sc)/2)/sc;g('pk',cl(R((vx-300)/30),-8,8),cl(R((270-vy)/30),-8,8))}
+function render(){const a=acts[cur],[s,i,c]=a.v();$$('#stage').innerHTML=s;$$('#inf').innerHTML=i;$$('#ctl').innerHTML=c;$$('#ttl').textContent=cur+1+'. '+a.t;$$('#dsc').textContent=a.d;document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('on',j==cur))}
+function show(i){cur=i;S={};acts[i].i();render()}
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.addEventListener('fullscreenchange',()=>$$('#fsb').textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen');
+$$('#nav').innerHTML=acts.map((a,i)=>`<button style="background:${C[a.c]}" onclick="show(${i})">${i+1}. ${a.n}</button>`).join('');
+show(0);
+</script></body></html>

@@ -1629,6 +1629,275 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Sound Effects, Win/Loss Celebrations, and Quick Balancing Reset Buttons'
     ],
     gradeLevel: 'Middle & Secondary School Physics (Grades 6–9)'
+  },
+  {
+    id: 'sim-theories-of-acids-and-bases',
+    slug: 'acid-base-theories-simulation',
+    indexNumber: '100',
+    title: 'Theories of Acids and Bases: Arrhenius, Brønsted-Lowry & Lewis',
+    subject: 'Inorganic & Physical Chemistry (تیزاب اور اساس کے نظریات: ارہینیس، برونسٹڈ لوری اور لیوس ماڈل)',
+    category: 'Chemistry & Matter',
+    iconName: 'FlaskConical',
+    accentColor: '#ef4444',
+    description: 'Interactive chemistry laboratory exploring the three fundamental models of acids and bases: Arrhenius Theory (H⁺ and OH⁻ ions in aqueous solution with pH/litmus paper tests), Brønsted-Lowry Theory (proton donor and acceptor conjugate pairs), and Lewis Theory (coordinate covalent electron pair donation and reception). Features animated molecular reactions, live pH meters, ion particle counters, and titration stirrers.',
+    fileUrl: '/simulations/acid-base-theories-simulation.html',
+    topics: [
+      'Arrhenius Acid-Base Theory & Water Dissociation (H⁺ & OH⁻ Ions)',
+      'Brønsted-Lowry Proton Transfer & Conjugate Acid-Base Pairs',
+      'Lewis Coordinate Covalent Bond & Electron Pair Transfer',
+      'pH Indicator Paper & Litmus Strip Colorimetry (Acidic vs. Basic)',
+      'Neutralization Reaction & Salt Formation: H⁺ + OH⁻ → H₂O'
+    ],
+    features: [
+      'Interactive 3-Model Switcher: Arrhenius, Brønsted-Lowry, and Lewis Modes',
+      'Compound Dispenser: HCl, CH₃COOH Vinegar, NaOH, and KOH Reagents',
+      'Digital pH Dip Meter & Litmus Strip Chemical Reaction Indicators',
+      'Animated Magnetic Stirrer & Real-Time Ion Particle Stream Visualization'
+    ],
+    gradeLevel: 'Class 10 (Secondary School SSC-II / Grades 9–10)'
+  },
+  {
+    id: 'sim-class-6-maths-laboratory',
+    slug: 'class6-maths-lab',
+    indexNumber: '101',
+    title: 'Class 6 Mathematics Interactive Laboratory (8 Topics)',
+    subject: 'Middle School Mathematics (کلاس 6 ریاضی - صحیح اعداد، تناسب، الجبرا اور جیومیٹری)',
+    category: 'Mathematics & Logic',
+    iconName: 'Calculator',
+    accentColor: '#2563eb',
+    description: 'Comprehensive interactive mathematics suite for Class 6 containing 8 dedicated visual learning modules: Integer Number Line & Temperature Climber, Ratio & Proportion Bar Model, Fractions, Decimals & Percentages Converter, Algebra Balance Scale with positive/negative variable tiles, Angles & Geometry Interactive Protractor, Dynamic Grid Perimeter & Area Explorer, 3D Polyhedra & Euler\'s Formula (F+V-E=2), and Dynamic Bar Chart Data Maker.',
+    fileUrl: '/simulations/class6-maths-lab.html',
+    topics: [
+      'Integer Number Line: Positive/Negative Jumps & Thermometer Elevation',
+      'Ratio & Proportion: Unit Ratio Bar Models & Proportional Sharing',
+      'Fractions, Decimals & Percentages: Visual Segment Area Equivalence',
+      'Algebraic Tile Balance: Solving Linear Equations with Variable x and Number Tiles',
+      'Angles & Protractor: Acute, Right, Obtuse, Reflex & Angle Measurement',
+      'Perimeter and Area of Rectangles, Squares, and Compound Shapes',
+      '3D Polyhedra: Cubes, Prisms, Pyramids & Euler\'s Formula (F + V − E = 2)',
+      'Statistics: Bar Chart Constructor, Discrete Data, and Frequency Plotting'
+    ],
+    features: [
+      '8 Multi-Topic Navigation Tabs with Step-by-Step Guided Explorations',
+      'Algebra Tile Drag-and-Balance Tray with Dynamic Equality Scales',
+      'Interactive 360° Protractor Ray Sweeper with Real-Time Degree Readout',
+      'Interactive Temperature Climber Game with Target Sum Challenges'
+    ],
+    gradeLevel: 'Class 6 (Middle School / Grade 6)'
+  },
+  {
+    id: 'sim-class-7-maths-laboratory',
+    slug: 'class7-maths-lab',
+    indexNumber: '102',
+    title: 'Class 7 Mathematics Interactive Laboratory (8 Topics)',
+    subject: 'Middle School Mathematics (کلاس 7 ریاضی - ناطق اعداد، الجبری مساوات اور جیومیٹری)',
+    category: 'Mathematics & Logic',
+    iconName: 'Sigma',
+    accentColor: '#7c3aed',
+    description: 'Rich interactive mathematics suite for Class 7 featuring 8 dynamic modules: Rational Numbers on a Fine-Grained Ruler Number Line, Laws of Exponents & Powers Sandbox, Algebraic Expressions & Collecting Like Terms, Two-Pan Scale for Solving Linear Equations with Multi-Step Balances, Angles along Parallel Lines with Transversal (Alternate, Corresponding, Allied), Triangle Angle Sum Theorem & Congruence Criteria (SSS, SAS, ASA, RHS), Area & Perimeter of Trapeziums and Parallelograms, and Square Roots via Prime Factor Trees.',
+    fileUrl: '/simulations/class7-maths-lab.html',
+    topics: [
+      'Rational Numbers: Fractions on a Calibrated Subdivided Number Line',
+      'Laws of Exponents: Product Rule (aᵐ·aⁿ=aᵐ⁺ⁿ), Quotient Rule, and Power Rule',
+      'Algebraic Expressions: Identifying and Grouping Like Terms & Coefficients',
+      'Linear Equations: Solving Equations via Two-Pan Balance Operations',
+      'Parallel Lines & Transversal: Corresponding, Alternate Interior, and Interior Allied Angles',
+      'Triangle Angle Sum (180°) & Triangle Congruence (SSS, SAS, ASA, RHS)',
+      'Quadrilateral Mensuration: Area of Trapezium = ½(a+b)h & Parallelogram = b×h',
+      'Square Roots & Prime Factorization Trees for Perfect Squares'
+    ],
+    features: [
+      'Ladybug Step-by-Step Rational Coordinate Quest with Real-Time Fraction Simplifier',
+      'Visual Exponent Ball Sandbox Demonstrating Algebraic Proofs of Index Laws',
+      'Interactive Parallel Line Transversal Sweeper with Synchronized Angle Readouts',
+      'Prime Factorization Tree Builder with Live Prime Division Verification'
+    ],
+    gradeLevel: 'Class 7 (Middle School / Grade 7)'
+  },
+  {
+    id: 'sim-class-8-maths-laboratory',
+    slug: 'class8-maths-lab',
+    indexNumber: '103',
+    title: 'Class 8 Mathematics Interactive Laboratory (8 Topics)',
+    subject: 'Upper Middle Mathematics (کلاس 8 ریاضی - حقیقی اعداد، مکعب اور جدید الجبرا)',
+    category: 'Mathematics & Logic',
+    iconName: 'Binary',
+    accentColor: '#059669',
+    description: 'Advanced interactive mathematics suite for Class 8 featuring 8 high-level conceptual labs: Real Number System Venn Diagram (Natural, Whole, Integers, Rational, and Irrational sets), Cube & Cube Root 3D Stacking Blocks, Algebraic Factorization by Grouping & Standard Algebraic Identities (a²−b², (a±b)²), Linear Equations with Brackets and Variables on Both Sides, Direct and Inverse Proportion Sliders with Real-Time Graph Slopes, Pythagorean Theorem Water-Proof Geometric Proof, Surface Area & Volume of Cylinders, and Probability Multi-Sector Spinners & Dual Dice Simulator.',
+    fileUrl: '/simulations/class8-maths-lab.html',
+    topics: [
+      'Real Number System: Nested Set Classification (Natural, Whole, Integer, Rational, Irrational)',
+      '3D Cubes & Cube Roots: Volumetric Block Stacking (V = s³ & s = ∛V)',
+      'Algebraic Factorization: Common Monomials, Grouping Terms, and Difference of Squares',
+      'Multi-Step Linear Equations: Distributive Brackets and Balancing Unknown Variables',
+      'Direct & Inverse Proportion: Constant of Proportionality (y = kx vs. y = k/x)',
+      'Pythagoras\' Theorem (a² + b² = c²): Visual Liquid and Area Proof Modules',
+      'Cylinder Mensuration: Curved Surface Area (2πrh) and Volume (πr²h)',
+      'Theoretical & Experimental Probability: Wheel Spinners and 2-Dice Outcome Matrices'
+    ],
+    features: [
+      'Real Number Venn Drop Animator with Self-Paced Interactive Quiz Mode',
+      'Dynamic 3D Cube Layer Stacker with Isometric Projection Calculations',
+      'Interactive Direct vs. Inverse Proportion Plotter with Live Hyperbola Curves',
+      'Monte Carlo Dice & Spinner Probability Simulator with Instant Frequency Distributions'
+    ],
+    gradeLevel: 'Class 8 (Middle School / Grade 8)'
+  },
+  {
+    id: 'sim-electronic-configuration-aufbau',
+    slug: 'electronic-configuration-aufbau-simulation',
+    indexNumber: '104',
+    title: 'Electronic Configuration & Aufbau Principle Lab',
+    subject: 'Atomic Structure & Quantum Chemistry (کیمسٹری کلاس 9 - الیکٹرانک کنفیگریشن اور آفباؤ اصول)',
+    category: 'Chemistry & Matter',
+    iconName: 'Atom',
+    accentColor: '#0d9488',
+    description: 'Hands-on atomic physics and chemistry laboratory demonstrating how electrons fill shells and subshells following the Aufbau Principle (energy order: 1s, 2s, 2p, 3s, 3p, 4s, 3d), Pauli Exclusion Principle (maximum 2 opposite-spin electrons per orbital), and Hund\'s Rule. Select any element from Hydrogen (Z=1) to Krypton (Z=36), grab electrons from the charge jar, and place them into s, p, and d orbital cups on the staircase energy shelf while observing the live multi-ring Bohr atomic model and spectroscopic notation.',
+    fileUrl: '/simulations/electronic-configuration-aufbau-simulation.html',
+    topics: [
+      'Aufbau Principle: Energy Ordering of Orbitals (1s < 2s < 2p < 3s < 3p < 4s < 3d)',
+      'Pauli Exclusion Principle: Orbital Capacity (s:2, p:6, d:10, f:14)',
+      'Hund\'s Rule: Maximum Multiplicity and Degenerate Orbital Filling',
+      'Principal Quantum Numbers (n=1 K, n=2 L, n=3 M, n=4 N Shells)',
+      'Noble Gas Notation and Full Valence Electron Shell Stabilities'
+    ],
+    features: [
+      'Interactive Periodic Table Picker Covering Elements Z=1 (H) to Z=36 (Kr)',
+      'Interactive Physics Energy Shelf with Drag-and-Drop Electron Energy Cups',
+      'Real-Time Rotating Multiring Bohr Atom Model with Colored Electron Particle Spheres',
+      'Instant Validation Engine: Detects Aufbau and Spin Violations with Audio/Visual Guidance'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Grades 9–10)'
+  },
+  {
+    id: 'sim-human-heart-circulation-lab',
+    slug: 'heart-circulation-lab',
+    indexNumber: '105',
+    title: 'Human Heart & Blood Circulation Laboratory',
+    subject: 'Human Anatomy & Cardiovascular Physiology (بیالوجی کلاس 9 و 10 - انسانی دل اور دورانِ خون کا نظام)',
+    category: 'Biology & Life',
+    iconName: 'HeartPulse',
+    accentColor: '#e11d48',
+    description: 'High-resolution interactive anatomical laboratory of the human heart and double circulatory system. Explore systemic and pulmonary circulation loops, cardiac chambers (Right Atrium, Right Ventricle, Left Atrium, Left Ventricle), heart valves (Tricuspid, Bicuspid/Mitral, Aortic, Pulmonary Semilunar), major blood vessels (Vena Cava, Pulmonary Artery, Pulmonary Veins, Aorta), animated pulse rhythms, and oxygenation status (Deoxygenated vs. Oxygenated blood flow tracking).',
+    fileUrl: '/simulations/heart-circulation-lab.html',
+    topics: [
+      'Cardiovascular Anatomy: 4 Heart Chambers and Septum Wall',
+      'Double Circulation: Pulmonary Loop (Heart to Lungs) vs. Systemic Loop (Heart to Body)',
+      'Cardiac Valves: Preventing Backflow (Atrioventricular & Semilunar Valves)',
+      'Blood Composition & Gas Oxygenation: Oxygenated (Red) vs. Deoxygenated (Blue)',
+      'Cardiac Cycle: Systole (Contraction) vs. Diastole (Relaxation) Rhythms'
+    ],
+    features: [
+      'Interactive Anatomical Hotspot Rings with Instant Bilingual Structural Explanations',
+      'Live Guided Tour of Systemic and Pulmonary Blood Pathways',
+      'Synchronized Cardiac Pacemaker Pulse Simulation with Animated Pulsing Glow',
+      'Oxygenation Blood Trace Particle Demonstrating Capillary Gas Exchange'
+    ],
+    gradeLevel: 'Class 9 & 10 (Secondary School SSC / Grades 9–10)'
+  },
+  {
+    id: 'sim-human-ear-structure-acoustics',
+    slug: 'human-ear-simulation',
+    indexNumber: '106',
+    title: 'Structure of the Human Ear & Hearing Mechanism',
+    subject: 'Sensory Biology & Acoustics (بیالوجی اور صوتی طبیعیات - انسانی کان کی ساخت اور سماعت)',
+    category: 'Biology & Life',
+    iconName: 'Ear',
+    accentColor: '#16a34a',
+    description: 'Original anatomical and acoustic simulation of the human auditory system. Examine the three main divisions: Outer Ear (Pinna, Ear Canal/Auditory Meatus, Tympanic Membrane/Eardrum), Middle Ear (Auditory Ossicles: Malleus/Hammer, Incus/Anvil, Stapes/Stirrup, and Eustachian Tube), and Inner Ear (Cochlea, Auditory Nerve, Semicircular Canals for Balance). Click anatomical regions for deep zoom views, trigger sound wave transmission pulses from acoustic air vibrations to fluid pressure waves in the cochlea, and trace nerve impulses to the brain.',
+    fileUrl: '/simulations/human-ear-simulation.html',
+    topics: [
+      'Auditory Anatomy: Outer Ear, Middle Ear, and Inner Ear Regions',
+      'Tympanic Membrane: Conversion of Acoustic Air Pressure to Mechanical Motion',
+      'Ossicles Lever Action: Mechanical Sound Amplification (~20x Pressure Boost)',
+      'Cochlea & Organ of Corti: Hair Cell Receptor Transduction into Electrical Action Potentials',
+      'Vestibular System: Semicircular Canals and Dynamic Equilibrium Balance'
+    ],
+    features: [
+      'Deep Smooth Zoom Exploration of Middle Ear Bones and Inner Ear Labyrinth',
+      'Animated Sound Wave Pressure Pulses Propagating Through Auditory Canal',
+      'Interactive Highlighting of All 9 Critical Auditory Organs with Medical Explanations',
+      'Sound Wave Frequency & Hearing Path Step-by-Step Guided Walkthrough'
+    ],
+    gradeLevel: 'Class 9 & 10 (Secondary School SSC / Grades 9–10)'
+  },
+  {
+    id: 'sim-intermolecular-forces-simulation',
+    slug: 'intermolecular-forces-simulation',
+    indexNumber: '107',
+    title: 'Intermolecular Forces: Hydrogen Bonding & Dipole-Dipole',
+    subject: 'Chemical Bonding & Physical Chemistry (کیمسٹری کلاس 9 - بین سالماتی قوتیں اور ہائیڈروجن بانڈنگ)',
+    category: 'Chemistry & Matter',
+    iconName: 'Boxes',
+    accentColor: '#0284c7',
+    description: 'Interactive molecular kinetics laboratory comparing intermolecular forces across substances: Polar Water (H₂O) with strong intermolecular Hydrogen Bonds, Polar Hydrogen Chloride (HCl) with Dipole-Dipole interactions, and Nonpolar Methane (CH₄) governed by weak London Dispersion forces. Heat or cool liquids with gas stoves or ice baths to explore thermal kinetic vibrations, breaking of intermolecular networks, boiling point anomalies, vapor pressure under closed/open lids, and surface tension phenomena with floating needle physics.',
+    fileUrl: '/simulations/intermolecular-forces-simulation.html',
+    topics: [
+      'Intermolecular Forces vs. Intramolecular Covalent Chemical Bonds',
+      'Hydrogen Bonding in Water Molecules: Electronegativity Differences (O=3.5, H=2.1)',
+      'Permanent Dipole-Dipole Forces in Polar Molecules (HCl)',
+      'London Dispersion Forces in Nonpolar Molecules (CH₄)',
+      'Physical Properties: Boiling Point Trends, Heat of Vaporization, and Surface Tension'
+    ],
+    features: [
+      '3 Substance Cluster Simulators: Water (H₂O), Hydrochloric Acid (HCl), and Methane (CH₄)',
+      'Dynamic Heat & Ice Bath Controls with Real-Time Thermal Kinetic Vibration Readout',
+      'Toggleable Partial Charge Vectors (δ⁺, δ⁻) and Hydrogen Bond Attraction Lines',
+      'Surface Tension & Meniscus Experiment with Surface Molecule Cohesion Vectors'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Grades 9–10)'
+  },
+  {
+    id: 'sim-mechanism-of-breathing-physiology',
+    slug: 'mechanism-of-breathing',
+    indexNumber: '108',
+    title: 'Mechanism of Breathing: Inhalation, Exhalation & Gas Exchange',
+    subject: 'Human Respiratory Physiology (بیالوجی کلاس 9 و 10 - سانس لینے کا طریقہ کار اور پھیپھڑے)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#10b981',
+    description: 'Interactive physiological simulation of the mechanical pulmonary ventilation cycle in humans. Contrast Inhalation (Diaphragm contracts and flattens downwards, External Intercostal muscles pull ribs upwards and outwards, Thoracic cavity volume expands, Intrapulmonary pressure drops below atmospheric, drawing air inward) versus Exhalation (Diaphragm relaxes into dome shape, Ribcage moves downwards and inwards, Thoracic volume decreases, Lung pressure rises, expelling air). Features zoomable anatomical diagrams, live alveolar capillary gas exchange animations (O₂ uptake and CO₂ release), and breathing rate sliders.',
+    fileUrl: '/simulations/mechanism-of-breathing.html',
+    topics: [
+      'Pulmonary Mechanics: Diaphragm and Intercostal Muscle Contraction/Relaxation',
+      'Boyle\'s Law of Respiration: Pressure-Volume Inversion in Thoracic Cavity',
+      'Inhalation (Active Process) vs. Normal Exhalation (Passive Elastic Recoil)',
+      'Alveolar-Capillary Diffusion: Oxygenation of Erythrocytes & Carbon Dioxide Excretion',
+      'Respiratory Rate Controls: Resting (16 bpm) vs. Vigorous Exercise (30+ bpm)'
+    ],
+    features: [
+      'Realistic Anatomical Split-View of Thoracic Cavity During Inhale and Exhale Phases',
+      'Zoomable Microscopic Alveolus Chamber Demonstrating Red Blood Cell Gas Exchange',
+      'Interactive Motion Indicators & Animated Vector Directional Pressure Arrows',
+      'Adjustable Respiratory Rate Speed Slider with Live Respiration Telemetry'
+    ],
+    gradeLevel: 'Class 9 & 10 (Secondary School SSC / Grades 9–10)'
+  },
+  {
+    id: 'sim-rutherford-bohr-atomic-models',
+    slug: 'rutherford-bohr-atomic-models-simulation',
+    indexNumber: '109',
+    title: 'Rutherford\'s & Bohr\'s Atomic Models Laboratory',
+    subject: 'Atomic Structure & Modern Physics (کیمسٹری کلاس 9 - ردرفورڈ اور بوہر کے ایٹمی ماڈل)',
+    category: 'Chemistry & Matter',
+    iconName: 'Radio',
+    accentColor: '#4f46e5',
+    description: 'Historical and quantum atomic physics laboratory contrasting Rutherford\'s Alpha Particle Scattering Experiment with Neil Bohr\'s Quantized Planetary Atomic Model. Mode 1: Shoot high-energy Alpha particles (He²⁺) at a gold foil lattice, track straight-through paths, rare acute deflections, and dramatic 180° rebounds proving the tiny, dense positive nucleus. Mode 2: Stimulate hydrogen electrons across quantized energy levels (n=1 to n=5), calculate photon absorption/emission energies (ΔE = hc/λ), and observe spectral line wavelengths in the Balmer and Lyman series.',
+    fileUrl: '/simulations/rutherford-bohr-atomic-models-simulation.html',
+    topics: [
+      'Rutherford Alpha Particle Scattering Experiment (Gold Foil Deflection)',
+      'Discovery of the Dense Positively Charged Atomic Nucleus and Empty Atomic Space',
+      'Defects in Rutherford\'s Model: Classical Maxwell Electrodynamics & Continuous Spectrum',
+      'Bohr\'s Quantized Energy Shell Postulates (Angular Momentum mvr = nh/2π)',
+      'Photon Energy Emission/Absorption: ΔE = E₂ − E₁ = hν = hc/λ and Line Spectra'
+    ],
+    features: [
+      'Mode 1: Alpha Particle Cannon with Beam Stream, Particle Counter & Nucleus Close-Up',
+      'Live Deflection Angle Statistics: Undeflected, Slight Deflection, and Large Rebound Ratios',
+      'Mode 2: Quantized Bohr Hydrogen Orbitals with Manual Jump Buttons (n=1 to n=5)',
+      'Dynamic Photon Particle Emission with Real-Time Spectral Wavelength and Color Display'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Grades 9–10)'
   }
 ];
 
