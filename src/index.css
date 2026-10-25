@@ -638,7 +638,7 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Continuous Marquee Ticker Animation */
+/* Continuous Marquee Ticker Animation - Ultra-Calm Readable Speed */
 @keyframes marquee-scroll {
   0% {
     transform: translateX(0);
@@ -650,11 +650,13 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
 .animate-marquee-infinite {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 320s linear infinite;
+  animation: marquee-scroll 950s linear infinite;
   will-change: transform;
 }
 .animate-marquee-infinite:hover,
-.ticker-container:hover .animate-marquee-infinite {
+.ticker-container:hover .animate-marquee-infinite,
+.group\/ticker:hover .animate-marquee-infinite,
+.is-ticker-paused .animate-marquee-infinite {
   animation-play-state: paused !important;
 }
 

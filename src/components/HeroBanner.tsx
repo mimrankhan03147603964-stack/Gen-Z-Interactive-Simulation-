@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Sparkles, Layers, Play, Radio, Star, Rocket } from 'lucide-react';
+import { Clock, Sparkles, Layers, Play, Pause, Radio, Star, Rocket } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
@@ -34,6 +34,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
+  const [isTickerPaused, setIsTickerPaused] = useState<boolean>(false);
 
   // 100% of available simulation topics currently in the system library (86 verified labs)
   const allSimulationTopics = SIMULATIONS_LIST;
@@ -295,26 +296,48 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
           </div>
         </div>
 
-        {/* Continuous Right-to-Left Live Bulletin Ticker with Solid High-Contrast Styling */}
+        {/* Continuous Right-to-Left Live Bulletin Ticker with Solid High-Contrast Styling & Ultra-Calm Speed */}
         <div 
-          className="group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border-2 border-sky-400/60 bg-slate-950 shadow-2xl"
+          className={`group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border-2 border-sky-400/60 bg-slate-950 shadow-2xl ${isTickerPaused ? 'is-ticker-paused' : ''}`}
           title="Live STEM Bulletin — Hover to pause scrolling, click any lab to open"
         >
-          {/* Fixed Left Badge: Live STEM Bulletin */}
+          {/* Fixed Left Badge: Live STEM Bulletin with Pause/Play toggle */}
           <div 
-            className="shrink-0 z-20 px-4 py-3 flex items-center gap-2 font-black uppercase tracking-wider text-[11px] text-white shadow-lg"
+            onClick={() => setIsTickerPaused(!isTickerPaused)}
+            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-black uppercase tracking-wider text-[11px] text-white shadow-lg cursor-pointer select-none transition-all hover:brightness-110 active:scale-98"
             style={{
               background: 'linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%)'
             }}
+            title={isTickerPaused ? 'Click to resume scrolling' : 'Click to pause scrolling'}
           >
             <Radio className="w-4 h-4 animate-pulse text-amber-300 pointer-events-none" />
             <span className="whitespace-nowrap font-heading">LIVE STEM BULLETIN</span>
-            <span className="hidden lg:inline text-[9px] font-normal tracking-normal text-sky-100 opacity-90">(HOVER PAUSES)</span>
+            <button 
+              type="button" 
+              className="ml-1 px-1.5 py-0.5 rounded-md bg-black/40 text-[9px] font-mono text-cyan-200 border border-white/20 flex items-center gap-1"
+            >
+              {isTickerPaused ? (
+                <>
+                  <Play className="w-2.5 h-2.5 fill-current text-emerald-400" />
+                  <span>PAUSED</span>
+                </>
+              ) : (
+                <>
+                  <Pause className="w-2.5 h-2.5 fill-current text-amber-300" />
+                  <span className="hidden sm:inline">SLOW</span>
+                </>
+              )}
+            </button>
           </div>
 
-          {/* Endless Seamless Marquee Viewport */}
+          {/* Endless Seamless Marquee Viewport with Calm Readability */}
           <div className="flex-1 overflow-hidden relative py-3 cursor-pointer bg-slate-950">
-            <div className="animate-marquee-infinite flex items-center">
+            <div 
+              className="animate-marquee-infinite flex items-center"
+              style={{
+                animationPlayState: isTickerPaused ? 'paused' : undefined
+              }}
+            >
               
               <div className="flex items-center shrink-0">
                 {allSimulationTopics.map((sim) => (
