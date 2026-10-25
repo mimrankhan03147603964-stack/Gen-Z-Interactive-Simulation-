@@ -135,7 +135,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               <button
                 type="button"
                 onClick={() => setShowTeacherDetails(!showTeacherDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl bg-sky-950/80 hover:bg-sky-900 border border-sky-400/60 text-cyan-200 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 border border-sky-300/80 text-white transition-all cursor-pointer shadow-md active:scale-95"
               >
                 <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
                 <ChevronDown className={`w-4 h-4 text-cyan-300 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} />
@@ -176,10 +176,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-sky-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-              style={{
-                background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%)'
-              }}
+              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-white/90 transition-all transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 shadow-blue-500/40"
             >
               <SlidersHorizontal className="w-4 h-4 text-white pointer-events-none" />
               <span>Browse Teacher Catalog</span>
@@ -226,7 +223,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               <button
                 type="button"
                 onClick={() => setShowStudentDetails(!showStudentDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-400/60 text-pink-200 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-500 hover:to-pink-600 border border-pink-300/80 text-white transition-all cursor-pointer shadow-md active:scale-95"
               >
                 <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
                 <ChevronDown className={`w-4 h-4 text-pink-300 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} />
@@ -267,10 +264,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-pink-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-              style={{
-                background: 'linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%)'
-              }}
+              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-white/90 transition-all transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-r from-purple-500 via-pink-600 to-rose-600 hover:from-purple-400 hover:to-rose-500 shadow-pink-500/40"
             >
               <FlaskConical className="w-4 h-4 text-white pointer-events-none" />
               <span>Launch Experiment Labs</span>

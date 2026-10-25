@@ -685,6 +685,146 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     );
   };
 
+  const getGradeTierStyle = (tierKey: string, isSelected: boolean) => {
+    switch (tierKey) {
+      case 'all':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-blue-500/40 ring-2 ring-cyan-300'
+            : 'bg-gradient-to-r from-blue-100/90 via-indigo-50 to-blue-100 text-blue-950 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-200/90 hover:text-blue-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-blue-600 text-white font-black'
+        };
+      case 'primary':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-300'
+            : 'bg-gradient-to-r from-emerald-100/90 via-teal-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-600 text-white font-black'
+        };
+      case 'middle':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-2 border-amber-200 shadow-lg shadow-amber-500/40 ring-2 ring-amber-300'
+            : 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100 text-amber-950 border-2 border-amber-300 hover:border-amber-500 hover:bg-amber-200/90 hover:text-amber-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-amber-600 text-white font-black'
+        };
+      case 'secondary':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white border-2 border-rose-300 shadow-lg shadow-rose-500/40 ring-2 ring-rose-300'
+            : 'bg-gradient-to-r from-rose-100/90 via-pink-50 to-rose-100 text-rose-950 border-2 border-rose-300 hover:border-rose-500 hover:bg-rose-200/90 hover:text-rose-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-rose-600 text-white font-black'
+        };
+      case 'higher':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 text-white border-2 border-purple-300 shadow-lg shadow-purple-500/40 ring-2 ring-purple-300'
+            : 'bg-gradient-to-r from-purple-100/90 via-violet-50 to-purple-100 text-purple-950 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-200/90 hover:text-purple-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-purple-600 text-white font-black'
+        };
+      default:
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white border-2 border-sky-300 shadow-md ring-2 ring-sky-300'
+            : 'bg-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-sky-600 text-white font-black'
+        };
+    }
+  };
+
+  const getSubjectStyle = (key: string, isSelected: boolean) => {
+    switch (key) {
+      case 'All Simulations':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-blue-500/30 ring-2 ring-cyan-300'
+            : 'bg-gradient-to-r from-sky-100/90 via-blue-50 to-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200/90 hover:text-sky-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-sky-600 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-sky-200/80 text-sky-800'
+        };
+      case 'Physics & Motion':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-cyan-600 via-blue-600 to-cyan-700 text-white border-2 border-cyan-300 shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-300'
+            : 'bg-gradient-to-r from-cyan-100/90 via-blue-50 to-cyan-100 text-cyan-950 border-2 border-cyan-300 hover:border-cyan-500 hover:bg-cyan-200/90 hover:text-cyan-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-cyan-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-cyan-200/80 text-cyan-800'
+        };
+      case 'Chemistry & Matter':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-700 text-white border-2 border-purple-300 shadow-lg shadow-purple-500/30 ring-2 ring-purple-300'
+            : 'bg-gradient-to-r from-purple-100/90 via-fuchsia-50 to-purple-100 text-purple-950 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-200/90 hover:text-purple-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-purple-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-purple-200/80 text-purple-800'
+        };
+      case 'Biology & Life':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-300'
+            : 'bg-gradient-to-r from-emerald-100/90 via-green-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-emerald-200/80 text-emerald-800'
+        };
+      case 'Earth & Space':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-teal-600 via-cyan-700 to-teal-800 text-white border-2 border-teal-300 shadow-lg shadow-teal-500/30 ring-2 ring-teal-300'
+            : 'bg-gradient-to-r from-teal-100/90 via-cyan-50 to-teal-100 text-teal-950 border-2 border-teal-300 hover:border-teal-500 hover:bg-teal-200/90 hover:text-teal-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-teal-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-teal-200/80 text-teal-800'
+        };
+      case 'Mathematics & Logic':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-2 border-amber-300 shadow-lg shadow-amber-500/30 ring-2 ring-amber-300'
+            : 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100 text-amber-950 border-2 border-amber-300 hover:border-amber-500 hover:bg-amber-200/90 hover:text-amber-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-amber-600 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-amber-200/80 text-amber-800'
+        };
+      case 'Computer Science & IT':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-teal-500/30 ring-2 ring-cyan-300'
+            : 'bg-gradient-to-r from-teal-100/90 via-cyan-50 to-teal-100 text-teal-950 border-2 border-teal-300 hover:border-teal-500 hover:bg-teal-200/90 hover:text-teal-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-teal-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-teal-200/80 text-teal-800'
+        };
+      case 'English & Grammar':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700 text-white border-2 border-indigo-300 shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-300'
+            : 'bg-gradient-to-r from-indigo-100/90 via-violet-50 to-indigo-100 text-indigo-950 border-2 border-indigo-300 hover:border-indigo-500 hover:bg-indigo-200/90 hover:text-indigo-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-indigo-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-indigo-200/80 text-indigo-800'
+        };
+      case 'Early Childhood (ECCE)':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white border-2 border-pink-300 shadow-lg shadow-pink-500/30 ring-2 ring-pink-300'
+            : 'bg-gradient-to-r from-pink-100/90 via-rose-50 to-pink-100 text-pink-950 border-2 border-pink-300 hover:border-pink-500 hover:bg-pink-200/90 hover:text-pink-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-pink-600 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-pink-200/80 text-pink-800'
+        };
+      case 'Urdu & Linguistics':
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-600/30 ring-2 ring-emerald-300'
+            : 'bg-gradient-to-r from-emerald-100/90 via-teal-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-emerald-200/80 text-emerald-800'
+        };
+      default:
+        return {
+          btn: isSelected
+            ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white border-2 border-sky-300 shadow-md ring-2 ring-sky-300'
+            : 'bg-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200',
+          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-slate-700 text-white font-black',
+          iconBg: isSelected ? 'bg-white/20' : 'bg-slate-200'
+        };
+    }
+  };
+
   return (
     <section 
       id="catalog" 
@@ -692,25 +832,25 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     >
       {/* If Dedicated Catalog View: Show Top Back Navigation Header */}
       {!isHomeView && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-3xl border-2 border-slate-200 shadow-md">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-[#07193b] via-[#102a6b] to-[#1e104a] p-5 sm:p-6 rounded-3xl border-2 border-sky-400/80 shadow-2xl text-white">
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black text-slate-800 bg-slate-100 hover:bg-sky-50 hover:text-sky-700 border border-slate-300 transition-all cursor-pointer shadow-xs active:scale-95"
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white bg-gradient-to-r from-rose-500 via-red-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 border-2 border-white/90 shadow-lg shadow-rose-500/40 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
             title="Return to Main Home Screen"
           >
-            <ArrowLeft className="w-4 h-4 text-slate-700" />
-            <span>&larr; Back to Home (ہوم پیج پر واپس جائیں)</span>
+            <ArrowLeft className="w-5 h-5 text-white pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wide uppercase font-black">Back to Home</span>
           </button>
           
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-mono font-black bg-sky-50 text-sky-800 border border-sky-300 shadow-2xs">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="px-4 py-2 rounded-xl text-xs font-mono font-black bg-gradient-to-r from-sky-500 to-blue-600 text-white border-2 border-sky-300/80 shadow-md">
               Discipline: {isAllCategory ? 'All Disciplines' : activeSubjectConfig.fullTitle}
             </span>
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-mono font-black bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs">
+            <span className="px-4 py-2 rounded-xl text-xs font-mono font-black bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-2 border-emerald-300/80 shadow-md">
               Grade: {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'All Grades'}
             </span>
-            <span className="px-3 py-1.5 rounded-full text-xs font-mono font-black bg-purple-50 text-purple-800 border border-purple-300 shadow-2xs">
+            <span className="px-4 py-2 rounded-xl text-xs font-mono font-black bg-gradient-to-r from-purple-500 to-pink-600 text-white border-2 border-purple-300/80 shadow-md">
               {displayedSims.length} Labs Available
             </span>
           </div>
@@ -718,23 +858,23 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       )}
 
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
-      <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-4 sm:p-5 text-slate-800 transition-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-700 px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200">
+      <div className="bg-gradient-to-br from-[#07193b] via-[#0d2757] to-[#14316d] border-2 border-sky-400/80 shadow-[0_12px_35px_rgba(7,25,59,0.35)] rounded-3xl p-5 sm:p-6 text-white transition-all">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-sky-400 to-cyan-300 shadow-sm border border-cyan-200">
               GRADE FILTER
             </span>
-            <span className="text-xs sm:text-sm font-bold text-slate-900 font-heading">
+            <span className="text-sm sm:text-base font-black text-white font-heading">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-[11px] font-medium text-slate-500">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-sky-200">
             <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
                 onClick={() => handleGradeTierChange('all')}
-                className="text-sky-600 hover:text-blue-700 underline cursor-pointer text-xs font-semibold ml-1"
+                className="text-cyan-300 hover:text-white underline cursor-pointer text-xs font-black ml-1 transition-colors"
                 title="Reset grade filter to show all simulations"
               >
                 Reset to All {activeSimulations.length} Labs
@@ -743,11 +883,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Clean Minimal Grade Filter Buttons */}
-        <div className="flex flex-wrap items-center gap-2 w-full">
+        {/* Colorful Grade Filter Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5 w-full">
           {gradeTiers.map((tier) => {
             const isSelectedTier = selectedGradeTier === tier.key;
             const count = getGradeTierCount(tier.key);
+            const style = getGradeTierStyle(tier.key, isSelectedTier);
 
             return (
               <button
@@ -756,23 +897,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleGradeTierChange(tier.key)}
                 data-grade={tier.key}
                 data-filter={tier.key}
-                className={`inline-flex items-center gap-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer select-none border ${
-                  isSelectedTier
-                    ? 'bg-[#0284c7] text-white border-[#0284c7] shadow-xs'
-                    : 'bg-white text-[#0f172a] border-slate-200 hover:bg-[#f1f5f9] hover:text-[#0284c7] hover:border-slate-300'
-                }`}
+                className={`inline-flex items-center gap-2.5 rounded-xl text-xs sm:text-sm font-sans font-bold transition-all duration-200 cursor-pointer select-none active:scale-95 ${style.btn}`}
                 style={{
-                  padding: '6px 12px'
+                  padding: '8px 14px'
                 }}
                 title={`${tier.label}: ${tier.desc}`}
               >
-                <span>{tier.label}</span>
+                <span className="font-heading font-black tracking-normal">{tier.label}</span>
                 <span
-                  className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
-                    isSelectedTier
-                      ? 'bg-white/20 text-white font-bold'
-                      : 'bg-slate-100 text-slate-600 font-medium'
-                  }`}
+                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full ${style.badge}`}
                 >
                   {count}
                 </span>
@@ -782,24 +915,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* Subject Filter Section: Clean Minimal Buttons */}
-      <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-4 sm:p-5 text-slate-800 transition-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-700 px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200">
+      {/* Subject Filter Section: Colorful Category Buttons */}
+      <div className="bg-gradient-to-br from-[#1b0a33] via-[#2c104e] to-[#3f136e] border-2 border-purple-400/80 shadow-[0_12px_35px_rgba(27,10,51,0.35)] rounded-3xl p-5 sm:p-6 text-white transition-all">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-950 px-3 py-1 rounded-lg bg-gradient-to-r from-purple-400 to-pink-300 shadow-sm border border-pink-200">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-xs sm:text-sm font-bold text-slate-900 font-heading">
+            <span className="text-sm sm:text-base font-black text-white font-heading">
               Select Discipline &amp; Learning Track
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-[11px] font-medium text-slate-500">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-purple-200">
             <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
             {!isAllCategory && (
               <button 
                 type="button"
                 onClick={() => handleCategoryChange('All Simulations')}
-                className="text-sky-600 hover:text-sky-800 underline cursor-pointer text-xs font-semibold ml-1"
+                className="text-pink-300 hover:text-white underline cursor-pointer text-xs font-black ml-1 transition-colors"
                 title="Reset subject filter to show all simulations"
               >
                 Reset to All Subjects
@@ -808,11 +941,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Clean Minimal Subject Buttons */}
-        <div className="flex flex-wrap items-center gap-2 w-full">
+        {/* Colorful Subject Category Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5 w-full">
           {subjectCategories.map((cat) => {
             const isSelected = selectedCategory === cat.key;
             const count = getCategoryCount(cat.key);
+            const style = getSubjectStyle(cat.key, isSelected);
 
             return (
               <button
@@ -821,26 +955,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleCategoryChange(cat.key)}
                 data-subject={cat.key}
                 data-filter={cat.key}
-                className={`inline-flex items-center gap-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer select-none border ${
-                  isSelected
-                    ? 'bg-[#0284c7] text-white border-[#0284c7] shadow-xs'
-                    : 'bg-white text-[#0f172a] border-slate-200 hover:bg-[#f1f5f9] hover:text-[#0284c7] hover:border-slate-300'
-                }`}
+                className={`inline-flex items-center gap-2.5 rounded-xl text-xs sm:text-sm font-sans font-bold transition-all duration-200 cursor-pointer select-none active:scale-95 ${style.btn}`}
                 style={{
-                  padding: '6px 12px'
+                  padding: '8px 14px'
                 }}
                 title={`Filter simulations by ${cat.fullTitle} (${count} available)`}
               >
-                <div className="shrink-0 w-4 h-4 flex items-center justify-center pointer-events-none">
+                <div className={`shrink-0 w-5 h-5 flex items-center justify-center pointer-events-none rounded-lg p-0.5 ${style.iconBg}`}>
                   {cat.renderIcon({ isSelected, className: 'w-4 h-4' })}
                 </div>
-                <span>{cat.shortLabel}</span>
+                <span className="font-heading font-black tracking-normal">{cat.shortLabel}</span>
                 <span 
-                  className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
-                    isSelected 
-                      ? 'bg-white/20 text-white font-bold' 
-                      : 'bg-slate-100 text-slate-600 font-medium'
-                  }`}
+                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full ${style.badge}`}
                 >
                   {count}
                 </span>
@@ -852,10 +978,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* IF HOME VIEW: Render Clean Navigation Callout and DO NOT render the 86 simulation cards */}
       {isHomeView ? (
-        <div className="p-5 sm:p-7 rounded-3xl border-2 border-sky-400/80 bg-gradient-to-r from-[#07193b] via-[#0d2757] to-[#123773] text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 select-none">
+        <div className="p-6 sm:p-8 rounded-3xl border-2 border-cyan-400 shadow-[0_15px_45px_rgba(6,182,212,0.25)] bg-gradient-to-r from-[#041a3d] via-[#161247] to-[#300a4a] text-white flex flex-col sm:flex-row items-center justify-between gap-5 select-none">
           <div className="space-y-1.5 text-center sm:text-left">
             <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <Sparkles className="w-4 h-4 text-amber-400 animate-pulse pointer-events-none" />
+              <Sparkles className="w-5 h-5 text-amber-400 animate-pulse pointer-events-none" />
               <span className="text-xs font-mono font-black uppercase tracking-wider text-cyan-300">
                 LABORATORY WORKSPACE
               </span>
@@ -863,17 +989,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white font-heading">
               Click Any Grade or Subject Above to Open Interactive Labs
             </h3>
-            <p className="text-xs sm:text-sm text-sky-200 font-normal">
+            <p className="text-xs sm:text-sm text-sky-200 font-medium">
               Select any category above to view dedicated simulations in a clean, focused view.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-blue-500 border-2 border-sky-300 shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2"
+            className="px-6 py-4 rounded-2xl text-xs sm:text-sm font-sans font-black text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 border-2 border-white shadow-xl shadow-cyan-500/30 transition-all transform hover:scale-105 active:scale-95 cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5"
           >
-            <Layers className="w-4 h-4 text-white pointer-events-none" />
-            <span>Open All {activeSimulations.length} Labs Catalog &rarr;</span>
+            <Layers className="w-5 h-5 text-slate-950 pointer-events-none" />
+            <span className="font-heading tracking-wide uppercase font-black">Open All {activeSimulations.length} Labs Catalog &rarr;</span>
           </button>
         </div>
       ) : (
