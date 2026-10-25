@@ -15,9 +15,15 @@ import {
 
 interface PedagogicalHubProps {
   totalSimulations?: number;
+  onBrowseTeacher?: () => void;
+  onLaunchStudent?: () => void;
 }
 
-export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations = 86 }) => {
+export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ 
+  totalSimulations = 86,
+  onBrowseTeacher,
+  onLaunchStudent
+}) => {
   const [showTeacherDetails, setShowTeacherDetails] = useState<boolean>(false);
   const [showStudentDetails, setShowStudentDetails] = useState<boolean>(false);
 
@@ -160,8 +166,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
           {/* Action Row: Prominent Button as in the screenshot */}
           <div className="mt-6 pt-3 border-t border-sky-500/30 relative z-10">
-            <a 
-              href="#catalog"
+            <button 
+              type="button"
+              onClick={() => {
+                if (onBrowseTeacher) {
+                  onBrowseTeacher();
+                } else {
+                  const el = document.getElementById('catalog');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-sky-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%)'
@@ -169,7 +183,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
             >
               <SlidersHorizontal className="w-4 h-4 text-white pointer-events-none" />
               <span>Browse Teacher Catalog</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -243,8 +257,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
           {/* Action Row: Prominent Button as in the screenshot */}
           <div className="mt-6 pt-3 border-t border-purple-500/30 relative z-10">
-            <a 
-              href="#catalog"
+            <button 
+              type="button"
+              onClick={() => {
+                if (onLaunchStudent) {
+                  onLaunchStudent();
+                } else {
+                  const el = document.getElementById('catalog');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-pink-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%)'
@@ -252,7 +274,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
             >
               <FlaskConical className="w-4 h-4 text-white pointer-events-none" />
               <span>Launch Experiment Labs</span>
-            </a>
+            </button>
           </div>
         </div>
 

@@ -10,6 +10,7 @@ interface HeroBannerProps {
   activeSim?: SimulationItem | null;
   isDarkMode?: boolean;
   onSelectSim?: (sim: SimulationItem) => void;
+  onExploreLabs?: () => void;
 }
 
 const cleanTopicTitle = (title: string, category?: string): string => {
@@ -24,7 +25,7 @@ const cleanTopicTitle = (title: string, category?: string): string => {
   return clean;
 };
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
+export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLabs }) => {
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
@@ -268,13 +269,21 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim }) => {
 
             {/* High-Contrast Action Buttons */}
             <div className="relative z-10 mt-6 flex items-center gap-4 flex-wrap">
-              <a
-                href="#catalog"
+              <button
+                type="button"
+                onClick={() => {
+                  if (onExploreLabs) {
+                    onExploreLabs();
+                  } else {
+                    const el = document.getElementById('catalog');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
                 className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-blue-500 text-white font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-xl border-2 border-sky-200 transition-all transform active:scale-95"
               >
                 <Layers className="w-4 h-4 text-white pointer-events-none" />
                 <span>Explore All Labs Grid</span>
-              </a>
+              </button>
               <a
                 href="#stage"
                 className="bg-slate-900 hover:bg-amber-400 text-amber-300 hover:text-slate-950 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-amber-400 transition-all transform active:scale-95"

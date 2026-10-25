@@ -11,7 +11,8 @@ import {
   Loader2, 
   Layers,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ArrowLeft
 } from 'lucide-react';
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
@@ -22,12 +23,17 @@ interface SimulationCatalogGridProps {
   activeSim?: SimulationItem | null;
   selectedCategory?: string;
   onSelectCategory?: (category: string) => void;
+  selectedGradeTier?: string;
+  onSelectGradeTier?: (tier: string) => void;
   onSelectSim: (sim: SimulationItem) => void;
   onLaunchOnStage?: (sim: SimulationItem) => void;
   onTriggerAiGeneration?: (topic: string) => void;
   isGeneratingAi?: boolean;
   onLaunchFullscreenModal: (sim: SimulationItem) => void;
   isDarkMode?: boolean;
+  isHomeView?: boolean;
+  onOpenCatalog?: (category?: string, grade?: string) => void;
+  onBackToHome?: () => void;
 }
 
 // Subject configuration matching "All Simulations" default + all 8 STEM disciplines
@@ -241,16 +247,21 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   activeSim,
   selectedCategory: controlledCategory,
   onSelectCategory,
+  selectedGradeTier: controlledGradeTier,
+  onSelectGradeTier,
   onSelectSim,
   onLaunchOnStage,
   onTriggerAiGeneration,
   isGeneratingAi = false,
   onLaunchFullscreenModal,
-  isDarkMode = false
+  isDarkMode = false,
+  isHomeView = false,
+  onOpenCatalog,
+  onBackToHome
 }) => {
   // Tier 1 Grade Level filter state ('all' | 'primary' | 'middle' | 'secondary' | 'higher')
-  // Default to 'all' on initial load to keep all simulations active and visible across all grades
-  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
+  const [internalGradeTier, setInternalGradeTier] = useState<string>('all');
+  const selectedGradeTier = controlledGradeTier !== undefined ? controlledGradeTier : internalGradeTier;
 
   // Category state (Default to 'All Simulations' on initial load)
   const [internalCategory, setInternalCategory] = useState<string>('All Simulations');
@@ -271,17 +282,31 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus' },
   ];
 
+  const handleGradeTierChange = (tierKey: string) => {
+    if (onSelectGradeTier) {
+      onSelectGradeTier(tierKey);
+    } else {
+      setInternalGradeTier(tierKey);
+    }
+    if (isHomeView && onOpenCatalog) {
+      onOpenCatalog(undefined, tierKey);
+    }
+  };
+
   const handleCategoryChange = (catKey: string) => {
     if (catKey !== 'All Simulations') {
       const countInCurrentTier = activeSimulations.filter(s => s.category === catKey && matchesGradeTier(s, selectedGradeTier)).length;
       if (countInCurrentTier === 0) {
-        setSelectedGradeTier('all');
+        handleGradeTierChange('all');
       }
     }
     if (onSelectCategory) {
       onSelectCategory(catKey);
     } else {
       setInternalCategory(catKey);
+    }
+    if (isHomeView && onOpenCatalog) {
+      onOpenCatalog(catKey, undefined);
     }
   };
 
@@ -291,7 +316,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         s => s.category === controlledCategory && matchesGradeTier(s, selectedGradeTier)
       ).length;
       if (countInCurrentTier === 0) {
-        setSelectedGradeTier('all');
+        handleGradeTierChange('all');
       }
     }
   }, [controlledCategory, simulations, selectedGradeTier]);
@@ -665,6 +690,33 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       id="catalog" 
       className="w-full space-y-6 pt-2 scroll-mt-28 opacity-100"
     >
+      {/* If Dedicated Catalog View: Show Top Back Navigation Header */}
+      {!isHomeView && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-3xl border-2 border-slate-200 shadow-md">
+          <button
+            type="button"
+            onClick={onBackToHome}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black text-slate-800 bg-slate-100 hover:bg-sky-50 hover:text-sky-700 border border-slate-300 transition-all cursor-pointer shadow-xs active:scale-95"
+            title="Return to Main Home Screen"
+          >
+            <ArrowLeft className="w-4 h-4 text-slate-700" />
+            <span>&larr; Back to Home (ہوم پیج پر واپس جائیں)</span>
+          </button>
+          
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-mono font-black bg-sky-50 text-sky-800 border border-sky-300 shadow-2xs">
+              Discipline: {isAllCategory ? 'All Disciplines' : activeSubjectConfig.fullTitle}
+            </span>
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-mono font-black bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs">
+              Grade: {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'All Grades'}
+            </span>
+            <span className="px-3 py-1.5 rounded-full text-xs font-mono font-black bg-purple-50 text-purple-800 border border-purple-300 shadow-2xs">
+              {displayedSims.length} Labs Available
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
       <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-4 sm:p-5 text-slate-800 transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
@@ -681,7 +733,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
-                onClick={() => setSelectedGradeTier('all')}
+                onClick={() => handleGradeTierChange('all')}
                 className="text-sky-600 hover:text-blue-700 underline cursor-pointer text-xs font-semibold ml-1"
                 title="Reset grade filter to show all simulations"
               >
@@ -701,7 +753,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <button
                 key={tier.key}
                 type="button"
-                onClick={() => setSelectedGradeTier(tier.key)}
+                onClick={() => handleGradeTierChange(tier.key)}
                 data-grade={tier.key}
                 data-filter={tier.key}
                 className={`inline-flex items-center gap-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer select-none border ${
@@ -798,8 +850,35 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* Full-Width Simulation Catalog Main Content */}
-      <div className="w-full space-y-6">
+      {/* IF HOME VIEW: Render Clean Navigation Callout and DO NOT render the 86 simulation cards */}
+      {isHomeView ? (
+        <div className="p-5 sm:p-7 rounded-3xl border-2 border-sky-400/80 bg-gradient-to-r from-[#07193b] via-[#0d2757] to-[#123773] text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 select-none">
+          <div className="space-y-1.5 text-center sm:text-left">
+            <div className="flex items-center gap-2 justify-center sm:justify-start">
+              <Sparkles className="w-4 h-4 text-amber-400 animate-pulse pointer-events-none" />
+              <span className="text-xs font-mono font-black uppercase tracking-wider text-cyan-300">
+                LABORATORY WORKSPACE
+              </span>
+            </div>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white font-heading">
+              Click Any Grade or Subject Above to Open Interactive Labs
+            </h3>
+            <p className="text-xs sm:text-sm text-sky-200 font-normal">
+              Select any category above to view dedicated simulations in a clean, focused view.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
+            className="px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-blue-500 border-2 border-sky-300 shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2"
+          >
+            <Layers className="w-4 h-4 text-white pointer-events-none" />
+            <span>Open All {activeSimulations.length} Labs Catalog &rarr;</span>
+          </button>
+        </div>
+      ) : (
+        /* Dedicated Full-Width Simulation Catalog Main Content (Only shown in Catalog View) */
+        <div className="w-full space-y-6">
         
         {/* Top Breadcrumb & Quick Search Filter Bar */}
         <div className="bg-white border-2 border-slate-200 shadow-md rounded-3xl p-4 sm:p-5 transition-all text-slate-800">
@@ -950,7 +1029,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               </div>
             </div>
           )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

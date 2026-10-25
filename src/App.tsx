@@ -79,6 +79,10 @@ export default function App() {
 
   // Default active subject filter: "All Simulations" is the default initial state
   const [selectedSubject, setSelectedSubject] = useState<string>('All Simulations');
+  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
+  
+  // Clean View Navigation State: 'home' (zero-rush dashboard without 86 cards) or 'catalog' (dedicated lab catalog view)
+  const [currentView, setCurrentView] = useState<'home' | 'catalog'>('home');
   
   // Active stage simulation (auto-opened from search, catalog card, or AI generation)
   const [activeStageSim, setActiveStageSim] = useState<SimulationItem | null>(null);
@@ -214,12 +218,20 @@ export default function App() {
   const handleBackToCatalog = () => {
     setStandaloneLab(null);
     setActiveStageSim(null);
+    setCurrentView('home');
     try {
       window.history.pushState({}, '', '/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
       // Fallback
     }
+  };
+
+  const handleOpenCatalog = (category?: string, grade?: string) => {
+    if (category) setSelectedSubject(category);
+    if (grade) setSelectedGradeTier(grade);
+    setCurrentView('catalog');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Ensure initial load starts at top hero section without accidental jumping
@@ -257,10 +269,8 @@ export default function App() {
           onBackToCatalog={handleBackToCatalog}
           onSelectCategory={(cat) => {
             setSelectedSubject(cat);
-            const catEl = document.getElementById('catalog');
-            if (catEl) {
-              catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            setCurrentView('catalog');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
 
@@ -272,10 +282,8 @@ export default function App() {
             onSelectCategory={(cat) => {
               setSelectedSubject(cat);
               setSidebarOpen(false);
-              const catEl = document.getElementById('catalog');
-              if (catEl) {
-                catEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
+              setCurrentView('catalog');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onSelectSim={handleSelectSim}
             isOpen={sidebarOpen}
@@ -284,23 +292,13 @@ export default function App() {
           />
         )}
 
-        {/* Main Catalog Portal & Dashboard for Mobile, Tablet, Laptop & Desktop Screens */}
+        {/* Main Content Area: Switches between Clean Zero-Rush Home and Focused Lab Catalog */}
         <main 
           className="flex-1 w-full max-w-none px-3 sm:px-6 lg:px-8 xl:px-12 pt-3 pb-8 sm:pt-4 sm:pb-12 space-y-6 sm:space-y-8 relative z-10 transition-colors duration-200 opacity-100 overflow-x-clip"
           style={{
             backgroundColor: 'transparent'
           }}
         >
-          
-          {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs */}
-          <HeroBanner 
-            isDarkMode={isDarkMode}
-            onSelectSim={handleSelectSim}
-          />
-
-          {/* 2. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
-          <PedagogicalHub totalSimulations={allSimulations.length} />
-
           {/* AI Generation In-Progress Ambient HUD Banner */}
           {isGeneratingAi && (
             <div 
@@ -330,7 +328,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Interactive Simulation Stage (Mounted when selected from search auto-open, catalog card, or AI generation) */}
+          {/* Interactive Simulation Stage (Mounted when selected from search auto-open or AI generation) */}
           {activeStageSim && (
             <div className="scroll-mt-24" id="stage">
               <MainStage
@@ -343,21 +341,63 @@ export default function App() {
             </div>
           )}
 
-          {/* 2. STEM Catalog & Topic Cards Grid with Enhanced Search Bar */}
-          <SimulationCatalogGrid
-            simulations={allSimulations}
-            selectedCategory={selectedSubject}
-            onSelectCategory={(cat) => setSelectedSubject(cat)}
-            onSelectSim={handleSelectSim}
-            onLaunchOnStage={handleLaunchOnStage}
-            onTriggerAiGeneration={handleTriggerAiGeneration}
-            isGeneratingAi={isGeneratingAi}
-            onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-            isDarkMode={isDarkMode}
-          />
+          {currentView === 'home' ? (
+            /* VIEW 1: CLEAN ZERO-RUSH HOME VIEW (Without 86 Cards) */
+            <>
+              {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs */}
+              <HeroBanner 
+                isDarkMode={isDarkMode}
+                onSelectSim={handleSelectSim}
+                onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
+              />
 
-          {/* 4. Educational Standards & Digital Laboratory Architecture */}
-          <WebsiteFeatures isDarkMode={isDarkMode} />
+              {/* 2. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
+              <PedagogicalHub 
+                totalSimulations={allSimulations.length} 
+                onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+              />
+
+              {/* 3. Grade & Subject Selection Area (No Simulation Cards Rendered Here!) */}
+              <SimulationCatalogGrid
+                simulations={allSimulations}
+                selectedCategory={selectedSubject}
+                onSelectCategory={(cat) => setSelectedSubject(cat)}
+                selectedGradeTier={selectedGradeTier}
+                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                onSelectSim={handleSelectSim}
+                onLaunchOnStage={handleLaunchOnStage}
+                onTriggerAiGeneration={handleTriggerAiGeneration}
+                isGeneratingAi={isGeneratingAi}
+                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                isDarkMode={isDarkMode}
+                isHomeView={true}
+                onOpenCatalog={handleOpenCatalog}
+              />
+
+              {/* 4. Educational Standards & Digital Laboratory Architecture */}
+              <WebsiteFeatures isDarkMode={isDarkMode} />
+            </>
+          ) : (
+            /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW (With Back to Home Button) */
+            <>
+              <SimulationCatalogGrid
+                simulations={allSimulations}
+                selectedCategory={selectedSubject}
+                onSelectCategory={(cat) => setSelectedSubject(cat)}
+                selectedGradeTier={selectedGradeTier}
+                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                onSelectSim={handleSelectSim}
+                onLaunchOnStage={handleLaunchOnStage}
+                onTriggerAiGeneration={handleTriggerAiGeneration}
+                isGeneratingAi={isGeneratingAi}
+                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                isDarkMode={isDarkMode}
+                isHomeView={false}
+                onBackToHome={handleBackToCatalog}
+              />
+            </>
+          )}
 
         </main>
 
@@ -369,7 +409,7 @@ export default function App() {
           />
         )}
 
-        {/* Developer Website Footer strictly pinned to bottom */}
+        {/* Developer Website Footer strictly pinned to bottom under all conditions */}
         <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
 
       </div>
