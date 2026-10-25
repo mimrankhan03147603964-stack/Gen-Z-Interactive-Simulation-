@@ -84,14 +84,15 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
         </div>
       </div>
 
-      {/* Two Prominent Widescreen Desktop/Laptop Cards (Strict 2-Column Side-by-Side Grid on Laptops/Desktop) */}
+      {/* Two Prominent Widescreen Desktop/Laptop Cards (Strict 2-Column Side-by-Side Horizontal Grid on Laptops/Desktop across Full Screen) */}
       <div 
-        className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 w-full max-w-none items-stretch"
+        className="w-full max-w-none grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch"
+        style={{ width: '100%' }}
       >
         
         {/* CARD 1: FOR TEACHERS & EDUCATORS - Solid Deep Navy / Midnight Blue */}
         <div 
-          className="w-full flex-1 relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-sky-400/60 shadow-[0_20px_50px_-10px_rgba(2,28,77,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(2,28,77,0.75)] hover:border-sky-300"
+          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-sky-400/60 shadow-[0_20px_50px_-10px_rgba(2,28,77,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(2,28,77,0.75)] hover:border-sky-300"
           style={{
             background: 'linear-gradient(145deg, #07193b 0%, #0d2757 50%, #123773 100%)',
             width: '100%'
@@ -103,23 +104,23 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
           
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-950/90 text-cyan-300 flex items-center justify-center shadow-lg border-2 border-sky-400/80 shrink-0">
                   <GraduationCap className="w-6 h-6 text-cyan-300 pointer-events-none" />
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white font-heading tracking-tight drop-shadow-sm">
+                <h3 className="text-base sm:text-lg md:text-xl font-sans font-black text-white tracking-normal leading-snug drop-shadow-sm">
                   For Teachers &amp; Educators
                 </h3>
               </div>
 
-              <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-sky-950/90 text-cyan-300 border border-sky-400/70 shadow-md shrink-0">
+              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-sky-950/90 text-cyan-300 border border-sky-400/70 shadow-md shrink-0">
                 <span>START CLASSROOM</span>
               </span>
             </div>
 
             {/* Description Text */}
-            <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm text-sky-100 font-sans font-normal leading-relaxed tracking-normal">
               Empower lecture hall and science classrooms, with time-tested demonstrations mapped directly to Student Learning Outcomes (SLOs). Convert abstract concepts into interactive play in seconds.
             </p>
 
@@ -128,7 +129,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
               <button
                 type="button"
                 onClick={() => setShowTeacherDetails(!showTeacherDetails)}
-                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-xl bg-sky-950/80 hover:bg-sky-900 border border-sky-400/60 text-cyan-200 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl bg-sky-950/80 hover:bg-sky-900 border border-sky-400/60 text-cyan-200 transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
                 <ChevronDown className={`w-4 h-4 text-cyan-300 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} />
@@ -136,19 +137,19 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
               {showTeacherDetails && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs text-sky-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs font-sans text-sky-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-cyan-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">4K Smartboard Execution:</strong> High visual fidelity</span>
+                    <span><strong className="text-white font-bold">4K Smartboard:</strong> High visual fidelity</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs text-sky-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs font-sans text-sky-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">SLO Curriculum:</strong> National Curriculum (2026-27)</span>
+                    <span><strong className="text-white font-bold">SLO Curriculum:</strong> National Curriculum 2026-27</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs text-sky-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs font-sans text-sky-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Theory-to-Practice:</strong> Live variable tweaking</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs text-sky-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-900/70 border border-sky-500/30 text-xs font-sans text-sky-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-sky-300 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Parameter Reset:</strong> Instant test repetition</span>
                   </div>
@@ -161,7 +162,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
           <div className="mt-6 pt-3 border-t border-sky-500/30 relative z-10">
             <a 
               href="#catalog"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-black text-white shadow-xl border-2 border-sky-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-sky-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%)'
               }}
@@ -174,7 +175,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
         {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS - Solid Dark Royal Violet / Rich Amethyst */}
         <div 
-          className="w-full flex-1 relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-purple-400/60 shadow-[0_20px_50px_-10px_rgba(59,7,100,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(59,7,100,0.75)] hover:border-purple-300"
+          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-purple-400/60 shadow-[0_20px_50px_-10px_rgba(59,7,100,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(59,7,100,0.75)] hover:border-purple-300"
           style={{
             background: 'linear-gradient(145deg, #1d0831 0%, #300f53 50%, #471679 100%)',
             width: '100%'
@@ -186,23 +187,23 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-purple-950/90 text-pink-300 flex items-center justify-center shadow-lg border-2 border-purple-400/80 shrink-0">
                   <Compass className="w-6 h-6 text-pink-300 pointer-events-none" />
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white font-heading tracking-tight drop-shadow-sm">
+                <h3 className="text-base sm:text-lg md:text-xl font-sans font-black text-white tracking-normal leading-snug drop-shadow-sm">
                   For Students &amp; Young Scientists
                 </h3>
               </div>
 
-              <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-purple-950/90 text-pink-300 border border-purple-400/70 shadow-md shrink-0">
+              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-purple-950/90 text-pink-300 border border-purple-400/70 shadow-md shrink-0">
                 <span>HANDS-ON PRACTICE</span>
               </span>
             </div>
 
             {/* Description Text */}
-            <p className="text-xs sm:text-sm text-purple-100 font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm text-purple-100 font-sans font-normal leading-relaxed tracking-normal">
               Step into an open sandbox where curiosity leads investigation. Conduct experiments, test real-world physical laws, manipulate molecular atoms, and deepen intuition through play and observation.
             </p>
 
@@ -211,7 +212,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
               <button
                 type="button"
                 onClick={() => setShowStudentDetails(!showStudentDetails)}
-                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-400/60 text-pink-200 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-400/60 text-pink-200 transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
                 <ChevronDown className={`w-4 h-4 text-pink-300 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} />
@@ -219,19 +220,19 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
 
               {showStudentDetails && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs text-purple-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs font-sans text-purple-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-pink-400 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Zero-Risk Sandbox:</strong> No chemical hazards</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs text-purple-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs font-sans text-purple-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Infinite Repetitions:</strong> Free circuit wiring</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs text-purple-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs font-sans text-purple-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Parameter Control:</strong> Adjust gravity &amp; optics</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs text-purple-50 leading-tight">
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-purple-950/70 border border-purple-500/30 text-xs font-sans text-purple-50 leading-normal">
                     <CheckCircle2 className="w-4 h-4 text-cyan-300 shrink-0 pointer-events-none" />
                     <span><strong className="text-white font-bold">Dynamic Feedback:</strong> Live trajectory plots</span>
                   </div>
@@ -244,7 +245,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ totalSimulations
           <div className="mt-6 pt-3 border-t border-purple-500/30 relative z-10">
             <a 
               href="#catalog"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-black text-white shadow-xl border-2 border-pink-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-pink-300/60 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%)'
               }}

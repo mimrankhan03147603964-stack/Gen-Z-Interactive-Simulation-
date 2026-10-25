@@ -401,12 +401,6 @@
   box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.25);
 }
 
-/* Lab Cards Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
 
 /* Lab Cards: Soft Claymorphism & Modern Neumorphic Card Design */
 .card {
