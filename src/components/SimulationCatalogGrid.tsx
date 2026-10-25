@@ -514,14 +514,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           borderRadius: '24px',
           borderWidth: '2px',
           borderStyle: 'solid',
-          borderColor: 'rgba(255, 255, 255, 0.4)',
-          boxShadow: `0 12px 28px -5px ${simTheme.glowColor || 'rgba(0, 80, 180, 0.35)'}, 0 6px 12px -4px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.5)`,
+          borderColor: simTheme.borderColor || '#38bdf8',
+          boxShadow: `0 12px 28px -5px ${simTheme.glowColor || 'rgba(0, 80, 180, 0.35)'}, 0 6px 12px -4px rgba(0, 0, 0, 0.2)`,
           transform: 'translateZ(0)'
         }}
       >
-        {/* Subtle Specular Top Sheen */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/25" />
-
         {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
         <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
           {/* Realistic Visual Emblem Pedestal on Solid High-Contrast Surface */}
@@ -532,7 +529,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950/80 border-2 border-white/50 shadow-md"
+            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950 border-2 border-sky-400 shadow-md"
             title={`Open ${displayTitle} in new tab`}
           >
             <TopicRealisticIcon 
@@ -544,7 +541,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
           {/* 3D Lab / Concept Badge - Clearly Separated on Right */}
           <span 
-            className="font-mono text-xs font-black px-3.5 py-1 rounded-full bg-slate-950 text-white shadow-md border border-white/60 shrink-0 tracking-wide"
+            className="font-mono text-xs font-black px-3.5 py-1 rounded-full bg-slate-950 text-white shadow-md border-2 border-sky-400 shrink-0 tracking-wide"
           >
             {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
           </span>
@@ -553,7 +550,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         {/* Dedicated Grade / Class Level Area: Sits on its own unobstructed line with crisp readability */}
         <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
           <span 
-            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono shadow-xs bg-black/45 text-white border border-white/40 leading-normal inline-block max-w-full break-words text-left"
+            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono shadow-xs bg-slate-950 text-amber-300 border-2 border-amber-400 leading-normal inline-block max-w-full break-words text-left"
             title={displayGrade}
           >
             {displayGrade}
@@ -592,7 +589,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           {/* Concept Description with Click-to-Expand Progressive Disclosure */}
           <div className="mt-2">
             <p 
-              className={`text-xs sm:text-[13px] font-normal text-white/95 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] ${
+              className={`text-xs sm:text-[13px] font-normal text-white leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] ${
                 expandedDescIds[sim.id] ? '' : 'line-clamp-2'
               } ${isUrdu ? 'font-urdu leading-[2.2]' : ''}`}
               dir={isUrdu ? 'rtl' : 'ltr'}
@@ -631,7 +628,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               return (
                 <span
                   key={i}
-                  className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full truncate max-w-[150px] shadow-xs bg-white/20 text-white border border-white/40 font-mono backdrop-blur-none ${
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full truncate max-w-[150px] shadow-xs bg-slate-900 text-sky-200 border border-sky-400 font-mono ${
                     isTopicUrdu ? 'font-urdu leading-[2]' : ''
                   }`}
                   dir={isTopicUrdu ? 'rtl' : 'ltr'}
@@ -643,7 +640,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             })}
             {sim.topics.length > 2 && (
               <span 
-                className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs bg-black/35 text-white border border-white/40 font-mono"
+                className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs bg-slate-900 text-amber-300 border border-amber-400 font-mono"
               >
                 +{sim.topics.length - 2}
               </span>
@@ -652,7 +649,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Card Action Bar */}
-        <div className="relative z-10 pt-4 mt-auto border-t border-white/25 flex items-center justify-between gap-2">
+        <div className="relative z-10 pt-4 mt-auto border-t border-slate-700 flex items-center justify-between gap-2">
           {/* Action Button: Solid High-Contrast Dark Button with Vibrant Accent */}
           <a
             href={getSimulationStandaloneUrl(sim)}
@@ -661,7 +658,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="bg-slate-950 hover:bg-amber-400 text-white hover:text-slate-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-white/70 transition-all transform active:scale-95"
+            className="bg-slate-950 hover:bg-amber-400 text-white hover:text-slate-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-white transition-all transform active:scale-95"
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
             <ExternalLink className="w-3.5 h-3.5 text-amber-300 group-hover:text-slate-950 pointer-events-none shrink-0" />
@@ -675,7 +672,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               e.stopPropagation();
               onLaunchFullscreenModal(sim);
             }}
-            className="w-10 h-10 rounded-2xl bg-slate-950/80 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-white/60 transition-all cursor-pointer flex items-center justify-center shadow-md active:scale-95"
+            className="w-10 h-10 rounded-2xl bg-slate-950 hover:bg-amber-400 text-white hover:text-slate-950 border-2 border-amber-400 transition-all cursor-pointer flex items-center justify-center shadow-md active:scale-95"
             title="Launch in 4K Fullscreen View"
           >
             <Maximize2 className="w-4 h-4 pointer-events-none shrink-0" />
@@ -690,44 +687,44 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       case 'all':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-blue-500/40 ring-2 ring-cyan-300'
-            : 'bg-gradient-to-r from-blue-100/90 via-indigo-50 to-blue-100 text-blue-950 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-200/90 hover:text-blue-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-blue-600 text-white font-black'
+            ? 'bg-blue-600 text-white border-2 border-blue-400 shadow-md font-black'
+            : 'bg-blue-50 text-blue-950 border-2 border-blue-400 hover:bg-blue-100 font-bold',
+          badge: isSelected ? 'bg-blue-800 text-white font-black' : 'bg-blue-700 text-white font-black'
         };
       case 'primary':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-300'
-            : 'bg-gradient-to-r from-emerald-100/90 via-teal-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-600 text-white font-black'
+            ? 'bg-emerald-600 text-white border-2 border-emerald-400 shadow-md font-black'
+            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
+          badge: isSelected ? 'bg-emerald-800 text-white font-black' : 'bg-emerald-700 text-white font-black'
         };
       case 'middle':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-2 border-amber-200 shadow-lg shadow-amber-500/40 ring-2 ring-amber-300'
-            : 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100 text-amber-950 border-2 border-amber-300 hover:border-amber-500 hover:bg-amber-200/90 hover:text-amber-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-amber-600 text-white font-black'
+            ? 'bg-amber-500 text-slate-950 border-2 border-amber-400 shadow-md font-black'
+            : 'bg-amber-50 text-amber-950 border-2 border-amber-400 hover:bg-amber-100 font-bold',
+          badge: isSelected ? 'bg-amber-700 text-white font-black' : 'bg-amber-600 text-white font-black'
         };
       case 'secondary':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white border-2 border-rose-300 shadow-lg shadow-rose-500/40 ring-2 ring-rose-300'
-            : 'bg-gradient-to-r from-rose-100/90 via-pink-50 to-rose-100 text-rose-950 border-2 border-rose-300 hover:border-rose-500 hover:bg-rose-200/90 hover:text-rose-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-rose-600 text-white font-black'
+            ? 'bg-rose-600 text-white border-2 border-rose-400 shadow-md font-black'
+            : 'bg-rose-50 text-rose-950 border-2 border-rose-400 hover:bg-rose-100 font-bold',
+          badge: isSelected ? 'bg-rose-800 text-white font-black' : 'bg-rose-700 text-white font-black'
         };
       case 'higher':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 text-white border-2 border-purple-300 shadow-lg shadow-purple-500/40 ring-2 ring-purple-300'
-            : 'bg-gradient-to-r from-purple-100/90 via-violet-50 to-purple-100 text-purple-950 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-200/90 hover:text-purple-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-purple-600 text-white font-black'
+            ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-md font-black'
+            : 'bg-purple-50 text-purple-950 border-2 border-purple-400 hover:bg-purple-100 font-bold',
+          badge: isSelected ? 'bg-purple-800 text-white font-black' : 'bg-purple-700 text-white font-black'
         };
       default:
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white border-2 border-sky-300 shadow-md ring-2 ring-sky-300'
-            : 'bg-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-sky-600 text-white font-black'
+            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
+            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
+          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black'
         };
     }
   };
@@ -737,90 +734,90 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       case 'All Simulations':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-blue-500/30 ring-2 ring-cyan-300'
-            : 'bg-gradient-to-r from-sky-100/90 via-blue-50 to-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200/90 hover:text-sky-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-sky-600 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-sky-200/80 text-sky-800'
+            ? 'bg-blue-600 text-white border-2 border-blue-400 shadow-md font-black'
+            : 'bg-blue-50 text-blue-950 border-2 border-blue-400 hover:bg-blue-100 font-bold',
+          badge: isSelected ? 'bg-blue-800 text-white font-black' : 'bg-blue-700 text-white font-black',
+          iconBg: isSelected ? 'bg-blue-800 text-white' : 'bg-blue-200 text-blue-900'
         };
       case 'Physics & Motion':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-cyan-600 via-blue-600 to-cyan-700 text-white border-2 border-cyan-300 shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-300'
-            : 'bg-gradient-to-r from-cyan-100/90 via-blue-50 to-cyan-100 text-cyan-950 border-2 border-cyan-300 hover:border-cyan-500 hover:bg-cyan-200/90 hover:text-cyan-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-cyan-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-cyan-200/80 text-cyan-800'
+            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
+            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
+          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black',
+          iconBg: isSelected ? 'bg-sky-800 text-white' : 'bg-sky-200 text-sky-900'
         };
       case 'Chemistry & Matter':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-700 text-white border-2 border-purple-300 shadow-lg shadow-purple-500/30 ring-2 ring-purple-300'
-            : 'bg-gradient-to-r from-purple-100/90 via-fuchsia-50 to-purple-100 text-purple-950 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-200/90 hover:text-purple-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-purple-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-purple-200/80 text-purple-800'
+            ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-md font-black'
+            : 'bg-purple-50 text-purple-950 border-2 border-purple-400 hover:bg-purple-100 font-bold',
+          badge: isSelected ? 'bg-purple-800 text-white font-black' : 'bg-purple-700 text-white font-black',
+          iconBg: isSelected ? 'bg-purple-800 text-white' : 'bg-purple-200 text-purple-900'
         };
       case 'Biology & Life':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-300'
-            : 'bg-gradient-to-r from-emerald-100/90 via-green-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-emerald-200/80 text-emerald-800'
+            ? 'bg-emerald-600 text-white border-2 border-emerald-400 shadow-md font-black'
+            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
+          badge: isSelected ? 'bg-emerald-800 text-white font-black' : 'bg-emerald-700 text-white font-black',
+          iconBg: isSelected ? 'bg-emerald-800 text-white' : 'bg-emerald-200 text-emerald-900'
         };
       case 'Earth & Space':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-teal-600 via-cyan-700 to-teal-800 text-white border-2 border-teal-300 shadow-lg shadow-teal-500/30 ring-2 ring-teal-300'
-            : 'bg-gradient-to-r from-teal-100/90 via-cyan-50 to-teal-100 text-teal-950 border-2 border-teal-300 hover:border-teal-500 hover:bg-teal-200/90 hover:text-teal-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-teal-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-teal-200/80 text-teal-800'
+            ? 'bg-teal-600 text-white border-2 border-teal-400 shadow-md font-black'
+            : 'bg-teal-50 text-teal-950 border-2 border-teal-400 hover:bg-teal-100 font-bold',
+          badge: isSelected ? 'bg-teal-800 text-white font-black' : 'bg-teal-700 text-white font-black',
+          iconBg: isSelected ? 'bg-teal-800 text-white' : 'bg-teal-200 text-teal-900'
         };
       case 'Mathematics & Logic':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-2 border-amber-300 shadow-lg shadow-amber-500/30 ring-2 ring-amber-300'
-            : 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100 text-amber-950 border-2 border-amber-300 hover:border-amber-500 hover:bg-amber-200/90 hover:text-amber-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-amber-600 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-amber-200/80 text-amber-800'
+            ? 'bg-amber-500 text-slate-950 border-2 border-amber-400 shadow-md font-black'
+            : 'bg-amber-50 text-amber-950 border-2 border-amber-400 hover:bg-amber-100 font-bold',
+          badge: isSelected ? 'bg-amber-700 text-white font-black' : 'bg-amber-600 text-white font-black',
+          iconBg: isSelected ? 'bg-amber-700 text-white' : 'bg-amber-200 text-amber-900'
         };
       case 'Computer Science & IT':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 text-white border-2 border-cyan-300 shadow-lg shadow-teal-500/30 ring-2 ring-cyan-300'
-            : 'bg-gradient-to-r from-teal-100/90 via-cyan-50 to-teal-100 text-teal-950 border-2 border-teal-300 hover:border-teal-500 hover:bg-teal-200/90 hover:text-teal-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-teal-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-teal-200/80 text-teal-800'
+            ? 'bg-cyan-700 text-white border-2 border-cyan-500 shadow-md font-black'
+            : 'bg-cyan-50 text-cyan-950 border-2 border-cyan-400 hover:bg-cyan-100 font-bold',
+          badge: isSelected ? 'bg-cyan-900 text-white font-black' : 'bg-cyan-700 text-white font-black',
+          iconBg: isSelected ? 'bg-cyan-900 text-white' : 'bg-cyan-200 text-cyan-900'
         };
       case 'English & Grammar':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700 text-white border-2 border-indigo-300 shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-300'
-            : 'bg-gradient-to-r from-indigo-100/90 via-violet-50 to-indigo-100 text-indigo-950 border-2 border-indigo-300 hover:border-indigo-500 hover:bg-indigo-200/90 hover:text-indigo-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-indigo-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-indigo-200/80 text-indigo-800'
+            ? 'bg-indigo-600 text-white border-2 border-indigo-400 shadow-md font-black'
+            : 'bg-indigo-50 text-indigo-950 border-2 border-indigo-400 hover:bg-indigo-100 font-bold',
+          badge: isSelected ? 'bg-indigo-800 text-white font-black' : 'bg-indigo-700 text-white font-black',
+          iconBg: isSelected ? 'bg-indigo-800 text-white' : 'bg-indigo-200 text-indigo-900'
         };
       case 'Early Childhood (ECCE)':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white border-2 border-pink-300 shadow-lg shadow-pink-500/30 ring-2 ring-pink-300'
-            : 'bg-gradient-to-r from-pink-100/90 via-rose-50 to-pink-100 text-pink-950 border-2 border-pink-300 hover:border-pink-500 hover:bg-pink-200/90 hover:text-pink-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-pink-600 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-pink-200/80 text-pink-800'
+            ? 'bg-pink-600 text-white border-2 border-pink-400 shadow-md font-black'
+            : 'bg-pink-50 text-pink-950 border-2 border-pink-400 hover:bg-pink-100 font-bold',
+          badge: isSelected ? 'bg-pink-800 text-white font-black' : 'bg-pink-700 text-white font-black',
+          iconBg: isSelected ? 'bg-pink-800 text-white' : 'bg-pink-200 text-pink-900'
         };
       case 'Urdu & Linguistics':
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white border-2 border-emerald-300 shadow-lg shadow-emerald-600/30 ring-2 ring-emerald-300'
-            : 'bg-gradient-to-r from-emerald-100/90 via-teal-50 to-emerald-100 text-emerald-950 border-2 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-200/90 hover:text-emerald-900',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-emerald-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-emerald-200/80 text-emerald-800'
+            ? 'bg-emerald-700 text-white border-2 border-emerald-500 shadow-md font-black'
+            : 'bg-emerald-50 text-emerald-950 border-2 border-emerald-400 hover:bg-emerald-100 font-bold',
+          badge: isSelected ? 'bg-emerald-900 text-white font-black' : 'bg-emerald-700 text-white font-black',
+          iconBg: isSelected ? 'bg-emerald-900 text-white' : 'bg-emerald-200 text-emerald-900'
         };
       default:
         return {
           btn: isSelected
-            ? 'bg-gradient-to-r from-sky-600 to-blue-600 text-white border-2 border-sky-300 shadow-md ring-2 ring-sky-300'
-            : 'bg-sky-100 text-sky-950 border-2 border-sky-300 hover:border-sky-500 hover:bg-sky-200',
-          badge: isSelected ? 'bg-white/30 text-white font-black' : 'bg-slate-700 text-white font-black',
-          iconBg: isSelected ? 'bg-white/20' : 'bg-slate-200'
+            ? 'bg-sky-600 text-white border-2 border-sky-400 shadow-md font-black'
+            : 'bg-sky-50 text-sky-950 border-2 border-sky-400 hover:bg-sky-100 font-bold',
+          badge: isSelected ? 'bg-sky-800 text-white font-black' : 'bg-sky-700 text-white font-black',
+          iconBg: isSelected ? 'bg-sky-800 text-white' : 'bg-sky-200 text-sky-900'
         };
     }
   };

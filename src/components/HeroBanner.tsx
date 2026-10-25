@@ -121,10 +121,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         <div className="absolute inset-0 pointer-events-none opacity-25 bg-gradient-to-b from-white/40 via-transparent to-black/30" />
 
         <div className="flex items-center gap-3 min-w-0 flex-1 relative z-10">
-          {/* Simulation Vector Icon Badge on 3D Glass Pedestal */}
+          {/* Simulation Vector Icon Badge on Solid High-Contrast Pedestal */}
           <div 
             onClick={() => handleLaunchShowcase(sim)}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 p-1 cursor-pointer transition-transform hover:scale-110 bg-white/20 border border-white/40 shadow-md backdrop-blur-md"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 p-1 cursor-pointer transition-transform hover:scale-110 bg-slate-950 border-2 border-sky-400 shadow-md"
             title={`Open ${cleanTitle} simulation in new tab`}
           >
             <TopicRealisticIcon 
@@ -136,14 +136,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
           {/* Lab Number Tag */}
           <span 
-            className="font-mono text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-lg shrink-0 text-white bg-black/40 border border-white/25 shadow-md"
+            className="font-mono text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-lg shrink-0 text-white bg-slate-950 border border-sky-400 shadow-md"
           >
             LAB {sim.indexNumber}
           </span>
 
           {/* Category Badge */}
           <span 
-            className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-lg shrink-0 text-white bg-white/20 border border-white/30 hidden md:inline-block shadow-2xs backdrop-blur-xs"
+            className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-lg shrink-0 text-white bg-slate-950 border border-sky-400 hidden md:inline-block shadow-2xs"
           >
             {disc.name}
           </span>
@@ -192,15 +192,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
       
       {/* Main Modern Graphic Design Hero Card with Rich Solid Royal Blue/Navy Background & Tasteful Depth */}
       <div 
-        className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl border-2 border-sky-400/50 text-white shadow-[0_24px_50px_-10px_rgba(2,28,77,0.55),0_10px_25px_-5px_rgba(0,0,0,0.35),inset_0_1px_2px_rgba(255,255,255,0.25)]"
+        className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl border-2 border-sky-400 text-white shadow-[0_24px_50px_-10px_rgba(2,28,77,0.55),0_10px_25px_-5px_rgba(0,0,0,0.35)]"
         style={{
           background: 'linear-gradient(135deg, #071530 0%, #0c2352 40%, #0e3070 75%, #081a3d 100%)'
         }}
       >
-        {/* Soft Ambient Luminous Depth Flares */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 left-10 w-64 h-64 rounded-full bg-purple-500/15 blur-3xl pointer-events-none" />
 
         {/* Top Row: Left Pill Badges + Right Futuristic Cockpit Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">

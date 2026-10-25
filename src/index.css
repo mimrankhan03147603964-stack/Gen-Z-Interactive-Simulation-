@@ -4,10 +4,10 @@
   :root {
     --bg: #f8fafc;
     --bg2: #f1f5f9;
-    --surf: rgba(255, 255, 255, 0.88);
-    --surf-frosted: rgba(255, 255, 255, 0.82);
-    --line: rgba(220, 235, 255, 0.85);
-    --line-subtle: rgba(226, 232, 240, 0.8);
+    --surf: #ffffff;
+    --surf-frosted: #ffffff;
+    --line: #cbd5e1;
+    --line-subtle: #e2e8f0;
     --tx: #0f172a;
     --tx-heading: #091e42;
     --mut: #64748b;
@@ -402,28 +402,26 @@
 }
 
 
-/* Lab Cards: Soft Claymorphism & Modern Neumorphic Card Design */
+/* Lab Cards: Solid 100% Opaque High-Contrast Card Design (Zero Glassmorphism) */
 .card {
   --c: #0284c7;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #ffffff;
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 24px;
   overflow: hidden;
   border-radius: 22px;
-  border: 1px solid rgba(220, 235, 255, 0.85);
-  box-shadow: 0 10px 25px -5px rgba(0, 80, 180, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(0, 80, 180, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
   animation: up 0.5s both;
   color: #0f172a;
 }
 .card:hover {
   transform: translateY(-5px);
-  border-color: rgba(0, 162, 255, 0.45);
-  box-shadow: 0 16px 32px -6px rgba(0, 80, 180, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  border-color: #0284c7;
+  box-shadow: 0 16px 32px -6px rgba(0, 80, 180, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
 }
 @keyframes up {
   from {

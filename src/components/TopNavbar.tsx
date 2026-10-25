@@ -143,15 +143,15 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   return (
     <header 
       ref={headerRef}
-      className="fixed top-0 left-0 w-full z-[99999] border-b border-slate-200/90 bg-white/98 backdrop-blur-md transition-all select-none shadow-xs"
+      className="fixed top-0 left-0 w-full z-[99999] border-b-2 border-slate-300 bg-white transition-all select-none shadow-sm"
       style={{ 
         position: 'fixed', 
         top: 0, 
         left: 0, 
         width: '100%', 
         zIndex: 99999,
-        backgroundColor: 'rgba(255, 255, 255, 0.98)',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+        backgroundColor: '#ffffff',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
       }}
     >
       <div 
