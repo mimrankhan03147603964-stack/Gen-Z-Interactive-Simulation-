@@ -462,7 +462,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <TopicRealisticIcon 
               indexNumber={sim.indexNumber} 
               simId={sim.id} 
-              className="w-9 h-9 sm:w-10 sm:h-10 drop-shadow-sm group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
+              className="w-9 h-9 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
             />
           </a>
 
@@ -486,11 +486,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
         {/* Content: Title, Subject, Description, Topics */}
         <div className="relative z-10 flex-1 flex flex-col">
-          {/* Simulation Topic Title in Crisp White */}
+          {/* Simulation Topic Title in Crisp White with Native 4K Text Shadow */}
           <h4 
-            className={`text-base sm:text-lg font-black tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
+            className={`text-base sm:text-lg font-black tracking-wide text-white ${
               isUrdu ? 'font-urdu leading-[2.2]' : 'font-heading leading-snug line-clamp-2'
             }`}
+            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.85)' }}
             dir={isUrdu ? 'rtl' : 'ltr'}
           >
             <a
@@ -508,7 +509,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </h4>
 
           {/* Subject & Sub-discipline */}
-          <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-amber-300 drop-shadow-xs">
+          <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-amber-300">
             <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse inline-block shrink-0" />
             <span className="text-amber-200 font-extrabold">{displaySubject}</span>
           </p>
@@ -516,9 +517,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           {/* Concept Description with Click-to-Expand Progressive Disclosure */}
           <div className="mt-2">
             <p 
-              className={`text-xs sm:text-[13px] font-normal text-white leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] ${
+              className={`text-xs sm:text-[13px] font-medium text-white leading-relaxed ${
                 expandedDescIds[sim.id] ? '' : 'line-clamp-2'
               } ${isUrdu ? 'font-urdu leading-[2.2]' : ''}`}
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
               dir={isUrdu ? 'rtl' : 'ltr'}
             >
               {displayDesc}
@@ -530,7 +532,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   e.stopPropagation();
                   setExpandedDescIds(prev => ({ ...prev, [sim.id]: !prev[sim.id] }));
                 }}
-                className="mt-1 text-[11px] font-bold text-amber-300 hover:text-white underline cursor-pointer inline-flex items-center gap-1 transition-colors drop-shadow-xs"
+                className="mt-1 text-[11px] font-bold text-amber-300 hover:text-white underline cursor-pointer inline-flex items-center gap-1 transition-colors"
               >
                 {expandedDescIds[sim.id] ? (
                   <>

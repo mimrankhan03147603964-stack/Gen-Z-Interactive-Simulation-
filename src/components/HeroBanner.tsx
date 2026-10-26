@@ -130,7 +130,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             <TopicRealisticIcon 
               indexNumber={sim.indexNumber} 
               simId={sim.id} 
-              className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-md" 
+              className="w-8 h-8 sm:w-9 sm:h-9" 
             />
           </div>
 
@@ -157,7 +157,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               e.stopPropagation();
               handleLaunchShowcase(sim);
             }}
-            className="text-xs sm:text-sm md:text-base font-black truncate text-white drop-shadow-sm hover:text-amber-200 transition-colors"
+            className="text-xs sm:text-sm md:text-base font-black truncate text-white hover:text-amber-200 transition-colors"
             title={`Open ${cleanTitle} in new tab`}
           >
             {cleanTitle}
@@ -252,10 +252,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div className="flex-1 min-w-0">
-            <h1 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] break-words">
+            <h1 
+              className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight text-white break-words"
+              style={{ textShadow: '0 2px 10px rgba(0,0,0,0.9)' }}
+            >
               Gen Z Interactive Simulations Portal
             </h1>
-            <p className="mt-2 text-sm sm:text-base font-black text-sky-300 tracking-wide flex items-center gap-2 drop-shadow-sm">
+            <p className="mt-2 text-sm sm:text-base font-black text-sky-300 tracking-wide flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping inline-block shrink-0" />
               <span>Professional Multidisciplinary STEM Learning Portal</span>
             </p>

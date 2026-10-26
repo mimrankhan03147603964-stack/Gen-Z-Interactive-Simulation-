@@ -41,11 +41,33 @@
 
   *, *::before, *::after {
     box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: auto;
-    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
     forced-color-adjust: none !important;
     -ms-high-contrast-adjust: none !important;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+    color-rendering: optimizeQuality !important;
+    image-rendering: -webkit-optimize-contrast !important;
+  }
+
+  /* Universal 4K Vector Sharpness: Eliminate blur from all SVG icons, paths, and strokes */
+  svg, svg * {
+    shape-rendering: geometricPrecision !important;
+    text-rendering: geometricPrecision !important;
+  }
+
+  /* Universal Image Crispness: Eliminate blur from downscaled/upscaled logos and assets */
+  img {
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: high-quality !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   html, body {

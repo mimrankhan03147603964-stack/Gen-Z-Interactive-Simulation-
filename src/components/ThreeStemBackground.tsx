@@ -25,7 +25,7 @@ export const ThreeStemBackground: React.FC = () => {
       powerPreference: 'high-performance'
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
