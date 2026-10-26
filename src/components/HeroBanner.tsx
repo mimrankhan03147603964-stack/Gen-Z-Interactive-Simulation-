@@ -351,22 +351,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     href={getSimulationStandaloneUrl(sim)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center shrink-0 mr-8 hover:text-cyan-300 transition-colors text-slate-100 no-underline"
+                    className="flex items-center shrink-0 mr-10 hover:text-cyan-300 transition-colors text-white no-underline"
                     title={`Open ${sim.title} in new tab`}
                   >
                     <span 
-                      className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black mr-2 text-white font-mono shadow-md border border-white/30"
-                      style={{ backgroundColor: sim.accentColor }}
+                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2.5 text-white font-mono shadow-xs border border-white/40 tracking-wider"
+                      style={{ backgroundColor: sim.accentColor || '#0284c7' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-black text-white mr-1.5 font-heading text-xs drop-shadow-xs">
+                    <span className="font-black text-white mr-2 text-xs sm:text-sm font-sans tracking-tight">
                       {sim.title}
                     </span>
-                    <span className="text-sky-200 text-[11px] font-medium mr-2">
-                      ({sim.category}) &mdash; {sim.description}
+                    <span className="text-amber-300 text-xs font-bold mr-2">
+                      ({sim.category})
                     </span>
-                    <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 inline-block mx-2 shrink-0 pointer-events-none" />
+                    <span className="text-slate-100 text-xs font-semibold mr-3">
+                      &mdash; {sim.description}
+                    </span>
+                    <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 inline-block mx-2 shrink-0 pointer-events-none" />
                   </a>
                 ))}
               </div>
@@ -378,22 +381,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     href={getSimulationStandaloneUrl(sim)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center shrink-0 mr-8 hover:text-cyan-300 transition-colors text-slate-100 no-underline"
+                    className="flex items-center shrink-0 mr-10 hover:text-cyan-300 transition-colors text-white no-underline"
                     title={`Open ${sim.title} in new tab`}
                   >
                     <span 
-                      className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black mr-2 text-white font-mono shadow-md border border-white/30"
-                      style={{ backgroundColor: sim.accentColor }}
+                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2.5 text-white font-mono shadow-xs border border-white/40 tracking-wider"
+                      style={{ backgroundColor: sim.accentColor || '#0284c7' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-black text-white mr-1.5 font-heading text-xs drop-shadow-xs">
+                    <span className="font-black text-white mr-2 text-xs sm:text-sm font-sans tracking-tight">
                       {sim.title}
                     </span>
-                    <span className="text-sky-200 text-[11px] font-medium mr-2">
-                      ({sim.category}) &mdash; {sim.description}
+                    <span className="text-amber-300 text-xs font-bold mr-2">
+                      ({sim.category})
                     </span>
-                    <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 inline-block mx-2 shrink-0 pointer-events-none" />
+                    <span className="text-slate-100 text-xs font-semibold mr-3">
+                      &mdash; {sim.description}
+                    </span>
+                    <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 inline-block mx-2 shrink-0 pointer-events-none" />
                   </a>
                 ))}
               </div>

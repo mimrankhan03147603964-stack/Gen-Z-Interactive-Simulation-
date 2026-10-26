@@ -635,20 +635,26 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Continuous Marquee Ticker Animation - Ultra-Calm Readable Speed */
+/* Continuous Marquee Ticker Animation - Ultra-Calm Readable Speed with Razor-Sharp Subpixel Text */
 @keyframes marquee-scroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 .animate-marquee-infinite {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 950s linear infinite;
+  animation: marquee-scroll 3200s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
 }
 .animate-marquee-infinite:hover,
 .ticker-container:hover .animate-marquee-infinite,
