@@ -940,42 +940,42 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         /* Dedicated Full-Width Simulation Catalog Main Content (Only shown in Catalog View) */
         <div className="w-full space-y-6">
         
-        {/* Top Breadcrumb & Quick Search Filter Bar */}
-        <div className="bg-gradient-to-r from-[#0b1730] to-[#112347] border-2 border-blue-400 shadow-xl rounded-3xl p-4 sm:p-5 transition-all text-white">
+        {/* Top Breadcrumb & Quick Search Filter Bar (Matching Screenshot & Theme) */}
+        <div className="bg-[#9ae616] border-2 border-slate-900 shadow-md rounded-3xl p-5 sm:p-6 transition-all text-slate-900">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             
             {/* Breadcrumb & Subject Header */}
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-sky-300 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 flex-wrap">
                 <span 
                   onClick={() => handleCategoryChange('All Simulations')}
-                  className="cursor-pointer hover:text-cyan-200 text-sky-300 underline"
+                  className="cursor-pointer hover:underline text-slate-900 font-bold"
                 >
                   Interactive Catalog
                 </span>
                 <span>&gt;</span>
-                <span className="text-yellow-300 font-black">
+                <span className="text-slate-950 font-black">
                   {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white font-heading drop-shadow-sm">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 font-heading">
                   {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
                 </h2>
                 {!isAllCategory && (
                   <button
                     type="button"
                     onClick={() => handleCategoryChange('All Simulations')}
-                    className="px-3 py-1 rounded-full text-xs font-black bg-blue-900 hover:bg-blue-800 text-cyan-200 border border-cyan-400 flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
+                    className="px-3 py-1 rounded-full text-xs font-black bg-white text-slate-900 border-2 border-slate-900 flex items-center gap-1.5 cursor-pointer hover:bg-slate-100 transition-colors shadow-xs"
                     title="Reset discipline filter to show all simulations"
                   >
                     <span>Filter: {activeSubjectConfig.fullTitle}</span>
                     <span className="font-black text-sm">&times;</span>
                   </button>
                 )}
-                <span className="px-3 py-1 rounded-full text-xs font-black shadow-md flex items-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-mono border border-cyan-300">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-300" />
+                <span className="px-4 py-1.5 rounded-full text-xs font-black shadow-xs flex items-center gap-2 bg-white text-slate-900 border-2 border-slate-900 font-mono">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   {displayedSims.length === activeSimulations.length
                     ? `Showing All ${activeSimulations.length} Verified Labs`
                     : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
@@ -985,19 +985,19 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
             {/* Quick Search Bar to Filter Labs Instantly */}
             <div className="w-full md:w-80 shrink-0">
-              <div className="relative flex items-center rounded-2xl border-2 border-blue-400 bg-slate-950 shadow-md focus-within:border-cyan-300 focus-within:ring-2 focus-within:ring-cyan-500/40">
-                <Search className="w-4 h-4 ml-3.5 shrink-0 text-cyan-400" />
+              <div className="relative flex items-center rounded-2xl border-2 border-slate-900 bg-white shadow-xs focus-within:ring-2 focus-within:ring-black">
+                <Search className="w-4 h-4 ml-3.5 shrink-0 text-slate-900" />
                 <input
                   type="text"
                   placeholder="Search labs across disciplines..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-2.5 px-3 text-xs font-bold bg-transparent outline-none text-white placeholder-slate-400 font-sans"
+                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-bold bg-transparent outline-none text-slate-900 placeholder-slate-500 font-sans"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="mr-2 text-xs font-black px-1.5 py-0.5 rounded-full cursor-pointer bg-slate-800 text-slate-300 hover:text-white"
+                    className="mr-2 text-xs font-black px-1.5 py-0.5 rounded-full cursor-pointer bg-slate-200 text-slate-900 hover:bg-slate-300"
                     title="Clear search"
                   >
                     &times;
