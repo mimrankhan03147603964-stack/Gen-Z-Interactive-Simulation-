@@ -269,22 +269,22 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
           return (
             <div 
               key={idx}
-              className="p-5 sm:p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 text-white cursor-default select-none border-2 border-white shadow-lg hover:shadow-2xl"
+              className="p-5 sm:p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 text-white cursor-default select-none border border-white/20 shadow-md hover:shadow-lg"
               style={{
                 background: theme.gradient,
-                boxShadow: `0 10px 25px -5px ${theme.glow}, 0 4px 10px rgba(0,0,0,0.15)`
+                boxShadow: `0 8px 20px -4px ${theme.glow}, 0 2px 6px rgba(0,0,0,0.1)`
               }}
             >
               <div className="relative z-10">
                 {/* Header with 3D Icon & Feature Badge */}
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-slate-950 border-2 border-white shadow-md text-white"
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-slate-900 border border-slate-700 shadow-sm text-white"
                   >
                     {feat.renderIcon()}
                   </div>
                   <span 
-                    className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black tracking-wide uppercase bg-slate-950 text-cyan-300 shadow-md border-2 border-cyan-400"
+                    className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wide uppercase bg-black/40 text-slate-100 shadow-sm border border-white/20"
                   >
                     {feat.badge}
                   </span>

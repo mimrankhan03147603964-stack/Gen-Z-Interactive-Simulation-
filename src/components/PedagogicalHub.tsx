@@ -33,99 +33,85 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
       className="w-full max-w-none relative z-10 space-y-6 scroll-mt-24 select-none"
       style={{ width: '100%', maxWidth: '100%' }}
     >
-      {/* 4 Pillars Ambient Ribbon Banner - Each Box Completely Colored with a Different Solid Gradient */}
+      {/* 4 Pillars Ambient Ribbon Banner matching Screenshot 1 */}
       <div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-3xl border-2 border-slate-300 shadow-lg bg-white w-full max-w-none"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-3xl border-2 border-slate-200 shadow-md bg-white w-full max-w-none text-slate-900"
       >
-        {/* Box 1: Zero Lab Cost - Solid Deep Sky/Blue */}
-        <div className="flex items-center gap-3.5 p-4 rounded-2xl text-white shadow-md border-2 border-sky-400 transition-all hover:scale-[1.02]"
-          style={{ background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%)' }}
-        >
-          <div className="w-11 h-11 rounded-xl bg-slate-950 text-cyan-300 flex items-center justify-center shrink-0 shadow-md border-2 border-cyan-400">
-            <Zap className="w-5 h-5 pointer-events-none text-cyan-300" />
+        {/* Box 1: Zero Lab Cost (Sky Blue #7dd3fc) */}
+        <div className="flex items-center gap-3.5 p-3.5 rounded-2xl text-slate-900 shadow-sm border-2 border-slate-900 bg-[#7dd3fc] transition-all hover:scale-101">
+          <div className="w-10 h-10 rounded-xl bg-transparent text-slate-900 flex items-center justify-center shrink-0 border-2 border-slate-900">
+            <Zap className="w-5 h-5 pointer-events-none text-slate-900" />
           </div>
           <div>
-            <div className="text-xs sm:text-sm font-black text-white tracking-tight font-heading drop-shadow-xs">Zero Lab Cost</div>
-            <div className="text-[11px] text-sky-100 font-bold drop-shadow-2xs">100% Free &amp; Open Access</div>
+            <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight font-heading">Zero Lab Cost</div>
+            <div className="text-[11px] text-slate-800 font-bold">100% Free &amp; Open Access</div>
           </div>
         </div>
 
-        {/* Box 2: Real-Time 60 FPS Engines - Solid Deep Emerald */}
-        <div className="flex items-center gap-3.5 p-4 rounded-2xl text-white shadow-md border-2 border-emerald-400 transition-all hover:scale-[1.02]"
-          style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 50%, #064e3b 100%)' }}
-        >
-          <div className="w-11 h-11 rounded-xl bg-slate-950 text-emerald-300 flex items-center justify-center shrink-0 shadow-md border-2 border-emerald-400">
-            <Cpu className="w-5 h-5 pointer-events-none text-emerald-300" />
+        {/* Box 2: Real-Time 60 FPS Engines (Lime Green #a3e635) */}
+        <div className="flex items-center gap-3.5 p-3.5 rounded-2xl text-slate-900 shadow-sm border-2 border-slate-900 bg-[#a3e635] transition-all hover:scale-101">
+          <div className="w-10 h-10 rounded-xl bg-transparent text-slate-900 flex items-center justify-center shrink-0 border-2 border-slate-900">
+            <Cpu className="w-5 h-5 pointer-events-none text-slate-900" />
           </div>
           <div>
-            <div className="text-xs sm:text-sm font-black text-white tracking-tight font-heading drop-shadow-xs">Real-Time 60 FPS Engines</div>
-            <div className="text-[11px] text-emerald-100 font-bold drop-shadow-2xs">Runs 60 FPS &amp; Physics Engine</div>
+            <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight font-heading">Real-Time 60 FPS Engines</div>
+            <div className="text-[11px] text-slate-800 font-bold">Runs 60 FPS &amp; Physics Engine</div>
           </div>
         </div>
 
-        {/* Box 3: Safe Chemical Labs - Solid Deep Purple */}
-        <div className="flex items-center gap-3.5 p-4 rounded-2xl text-white shadow-md border-2 border-purple-400 transition-all hover:scale-[1.02]"
-          style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4c1d95 100%)' }}
-        >
-          <div className="w-11 h-11 rounded-xl bg-slate-950 text-purple-300 flex items-center justify-center shrink-0 shadow-md border-2 border-purple-400">
-            <FlaskConical className="w-5 h-5 pointer-events-none text-purple-300" />
+        {/* Box 3: Safe Chemical Labs (Light Blue #93c5fd) */}
+        <div className="flex items-center gap-3.5 p-3.5 rounded-2xl text-slate-900 shadow-sm border-2 border-slate-900 bg-[#93c5fd] transition-all hover:scale-101">
+          <div className="w-10 h-10 rounded-xl bg-transparent text-slate-900 flex items-center justify-center shrink-0 border-2 border-slate-900">
+            <FlaskConical className="w-5 h-5 pointer-events-none text-slate-900" />
           </div>
           <div>
-            <div className="text-xs sm:text-sm font-black text-white tracking-tight font-heading drop-shadow-xs">Safe Chemical Labs</div>
-            <div className="text-[11px] text-purple-100 font-bold drop-shadow-2xs">Virtual Hazard-Free Labs</div>
+            <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight font-heading">Safe Chemical Labs</div>
+            <div className="text-[11px] text-slate-800 font-bold">Virtual Hazard-Free Labs</div>
           </div>
         </div>
 
-        {/* Box 4: 100% Curriculum Aligned - Solid Deep Amber */}
-        <div className="flex items-center gap-3.5 p-4 rounded-2xl text-white shadow-md border-2 border-amber-400 transition-all hover:scale-[1.02]"
-          style={{ background: 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%)' }}
-        >
-          <div className="w-11 h-11 rounded-xl bg-slate-950 text-amber-300 flex items-center justify-center shrink-0 shadow-md border-2 border-amber-400">
-            <ShieldCheck className="w-5 h-5 pointer-events-none text-amber-300" />
+        {/* Box 4: 100% Curriculum Aligned (Tangerine Orange #fb923c) */}
+        <div className="flex items-center gap-3.5 p-3.5 rounded-2xl text-slate-900 shadow-sm border-2 border-slate-900 bg-[#fb923c] transition-all hover:scale-101">
+          <div className="w-10 h-10 rounded-xl bg-transparent text-slate-900 flex items-center justify-center shrink-0 border-2 border-slate-900">
+            <ShieldCheck className="w-5 h-5 pointer-events-none text-slate-900" />
           </div>
           <div>
-            <div className="text-xs sm:text-sm font-black text-white tracking-tight font-heading drop-shadow-xs">100% Curriculum Aligned</div>
-            <div className="text-[11px] text-amber-100 font-bold drop-shadow-2xs">Cambridge, FBISE &amp; Oxford</div>
+            <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight font-heading">100% Curriculum Aligned</div>
+            <div className="text-[11px] text-slate-800 font-bold">Cambridge, FBISE &amp; Oxford</div>
           </div>
         </div>
       </div>
 
-      {/* Two Prominent Widescreen Desktop/Laptop Cards (Strict 2-Column Side-by-Side Horizontal Grid on Laptops/Desktop across Full Screen) */}
+      {/* Two Prominent Cards matching Screenshot 1 */}
       <div 
         className="w-full max-w-none grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch"
         style={{ width: '100%' }}
       >
         
-        {/* CARD 1: FOR TEACHERS & EDUCATORS - Solid Deep Navy / Midnight Blue */}
+        {/* CARD 1: FOR TEACHERS & EDUCATORS (Vibrant Lime Green #a3e635) */}
         <div 
-          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-sky-400 shadow-[0_20px_50px_-10px_rgba(2,28,77,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(2,28,77,0.75)] hover:border-sky-300"
-          style={{
-            background: 'linear-gradient(145deg, #07193b 0%, #0d2757 50%, #123773 100%)',
-            width: '100%'
-          }}
+          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-slate-900 shadow-md group text-slate-900 transition-all bg-[#a3e635]"
+          style={{ width: '100%' }}
         >
-          {/* Top Decorative Solid Sheen */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-400 via-cyan-300 to-white" />
-          
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-slate-950 text-cyan-300 flex items-center justify-center shadow-lg border-2 border-sky-400 shrink-0">
-                  <GraduationCap className="w-6 h-6 text-cyan-300 pointer-events-none" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-transparent text-slate-900 flex items-center justify-center border-2 border-slate-900 shrink-0">
+                  <GraduationCap className="w-6 h-6 text-slate-900 pointer-events-none" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-sans font-black text-white tracking-normal leading-snug drop-shadow-sm">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-black text-slate-900 tracking-normal leading-snug">
                   For Teachers &amp; Educators
                 </h3>
               </div>
 
-              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-slate-950 text-cyan-300 border-2 border-sky-400 shadow-md shrink-0">
+              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full bg-transparent text-slate-900 border-2 border-slate-900 shrink-0">
                 <span>START CLASSROOM</span>
               </span>
             </div>
 
             {/* Description Text */}
-            <p className="text-xs sm:text-sm text-sky-100 font-sans font-normal leading-relaxed tracking-normal">
+            <p className="text-xs sm:text-sm text-slate-900 font-semibold leading-relaxed tracking-normal">
               Empower lecture hall and science classrooms, with time-tested demonstrations mapped directly to Student Learning Outcomes (SLOs). Convert abstract concepts into interactive play in seconds.
             </p>
 
@@ -134,37 +120,37 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               <button
                 type="button"
                 onClick={() => setShowTeacherDetails(!showTeacherDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 border border-sky-300/80 text-white transition-all cursor-pointer shadow-md active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2 rounded-xl bg-transparent hover:bg-black/5 border-2 border-slate-900 text-slate-900 transition-all cursor-pointer shadow-xs active:scale-95"
               >
                 <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
-                <ChevronDown className={`w-4 h-4 text-cyan-300 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-slate-900 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} />
               </button>
 
               {showTeacherDetails && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-sky-400 text-xs font-sans text-sky-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">4K Smartboard:</strong> High visual fidelity</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">4K Smartboard:</strong> High visual fidelity</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-sky-400 text-xs font-sans text-sky-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">SLO Curriculum:</strong> National Curriculum 2026-27</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">SLO Curriculum:</strong> National Curriculum 2026-27</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-sky-400 text-xs font-sans text-sky-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Theory-to-Practice:</strong> Live variable tweaking</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Theory-to-Practice:</strong> Live variable tweaking</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-sky-400 text-xs font-sans text-sky-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-sky-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Parameter Reset:</strong> Instant test repetition</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Parameter Reset:</strong> Instant test repetition</span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Action Row: Prominent Button as in the screenshot */}
-          <div className="mt-6 pt-3 border-t border-sky-500/30 relative z-10">
+          {/* Action Row matching Screenshot 1 */}
+          <div className="mt-6 pt-4 border-t border-slate-900/30 relative z-10">
             <button 
               type="button"
               onClick={() => {
@@ -175,45 +161,39 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-white/90 transition-all transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 shadow-blue-500/40"
+              className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-slate-900 shadow-sm border-2 border-slate-900 transition-all cursor-pointer bg-transparent hover:bg-black/10 active:scale-95"
             >
-              <SlidersHorizontal className="w-4 h-4 text-white pointer-events-none" />
+              <SlidersHorizontal className="w-4 h-4 text-slate-900 pointer-events-none shrink-0" />
               <span>Browse Teacher Catalog</span>
             </button>
           </div>
         </div>
 
-        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS - Solid Dark Royal Violet / Rich Amethyst */}
+        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (Vibrant Golden Yellow #facc15) */}
         <div 
-          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-purple-400 shadow-[0_20px_50px_-10px_rgba(59,7,100,0.6)] group text-white transition-all hover:shadow-[0_24px_60px_-10px_rgba(59,7,100,0.75)] hover:border-purple-300"
-          style={{
-            background: 'linear-gradient(145deg, #1d0831 0%, #300f53 50%, #471679 100%)',
-            width: '100%'
-          }}
+          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border-2 border-slate-900 shadow-md group text-slate-900 transition-all bg-[#facc15]"
+          style={{ width: '100%' }}
         >
-          {/* Top Decorative Solid Sheen */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-400 via-pink-300 to-white" />
-
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-slate-950 text-pink-300 flex items-center justify-center shadow-lg border-2 border-purple-400 shrink-0">
-                  <Compass className="w-6 h-6 text-pink-300 pointer-events-none" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-transparent text-slate-900 flex items-center justify-center border-2 border-slate-900 shrink-0">
+                  <Compass className="w-6 h-6 text-slate-900 pointer-events-none" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-sans font-black text-white tracking-normal leading-snug drop-shadow-sm">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-black text-slate-900 tracking-normal leading-snug">
                   For Students &amp; Young Scientists
                 </h3>
               </div>
 
-              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-slate-950 text-pink-300 border-2 border-purple-400 shadow-md shrink-0">
+              <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full bg-transparent text-slate-900 border-2 border-slate-900 shrink-0">
                 <span>HANDS-ON PRACTICE</span>
               </span>
             </div>
 
             {/* Description Text */}
-            <p className="text-xs sm:text-sm text-purple-100 font-sans font-normal leading-relaxed tracking-normal">
-              Step into an open sandbox where curiosity leads investigation. Conduct experiments, test real-world physical laws, manipulate molecular atoms, and deepen intuition through play and observation.
+            <p className="text-xs sm:text-sm text-slate-900 font-semibold leading-relaxed tracking-normal">
+              Step into an open sandbox where curiosity leads investigation. Conduct experiments, test real-world physical laws, manipulate molecular stoms, and deepen intuition through play and observation.
             </p>
 
             {/* Progressive Disclosure Toggle for Key Features */}
@@ -221,37 +201,37 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               <button
                 type="button"
                 onClick={() => setShowStudentDetails(!showStudentDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-500 hover:to-pink-600 border border-pink-300/80 text-white transition-all cursor-pointer shadow-md active:scale-95"
+                className="inline-flex items-center gap-2 text-xs font-sans font-black px-4 py-2 rounded-xl bg-transparent hover:bg-black/5 border-2 border-slate-900 text-slate-900 transition-all cursor-pointer shadow-xs active:scale-95"
               >
                 <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
-                <ChevronDown className={`w-4 h-4 text-pink-300 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-slate-900 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} />
               </button>
 
               {showStudentDetails && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-purple-400 text-xs font-sans text-purple-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-pink-400 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Zero-Risk Sandbox:</strong> No chemical hazards</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Zero-Risk Sandbox:</strong> No chemical hazards</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-purple-400 text-xs font-sans text-purple-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Infinite Repetitions:</strong> Free circuit wiring</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Infinite Repetitions:</strong> Free circuit wiring</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-purple-400 text-xs font-sans text-purple-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Parameter Control:</strong> Adjust gravity &amp; optics</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Parameter Control:</strong> Adjust gravity &amp; optics</span>
                   </div>
-                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-950 border border-purple-400 text-xs font-sans text-purple-50 leading-normal">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-300 shrink-0 pointer-events-none" />
-                    <span><strong className="text-white font-bold">Dynamic Feedback:</strong> Live trajectory plots</span>
+                  <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-white/40 border-2 border-slate-900 text-xs font-bold text-slate-900 leading-normal">
+                    <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 pointer-events-none" />
+                    <span><strong className="text-slate-950 font-black">Dynamic Feedback:</strong> Live trajectory plots</span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Action Row: Prominent Button as in the screenshot */}
-          <div className="mt-6 pt-3 border-t-2 border-purple-500 relative z-10">
+          {/* Action Row matching Screenshot 1 */}
+          <div className="mt-6 pt-4 border-t border-slate-900/30 relative z-10">
             <button 
               type="button"
               onClick={() => {
@@ -262,9 +242,9 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-white shadow-xl border-2 border-white/90 transition-all transform hover:scale-105 active:scale-95 cursor-pointer bg-gradient-to-r from-purple-500 via-pink-600 to-rose-600 hover:from-purple-400 hover:to-rose-500 shadow-pink-500/40"
+              className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black text-slate-900 shadow-sm border-2 border-slate-900 transition-all cursor-pointer bg-transparent hover:bg-black/10 active:scale-95"
             >
-              <FlaskConical className="w-4 h-4 text-white pointer-events-none" />
+              <FlaskConical className="w-4 h-4 text-slate-900 pointer-events-none shrink-0" />
               <span>Launch Experiment Labs</span>
             </button>
           </div>

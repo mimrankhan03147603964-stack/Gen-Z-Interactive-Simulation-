@@ -124,7 +124,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           {/* Simulation Vector Icon Badge on Solid High-Contrast Pedestal */}
           <div 
             onClick={() => handleLaunchShowcase(sim)}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 p-1 cursor-pointer transition-transform hover:scale-110 bg-slate-950 border-2 border-sky-400 shadow-md"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 p-1 cursor-pointer transition-transform hover:scale-110 bg-slate-900 border border-slate-700 shadow-sm"
             title={`Open ${cleanTitle} simulation in new tab`}
           >
             <TopicRealisticIcon 
@@ -136,14 +136,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
           {/* Lab Number Tag */}
           <span 
-            className="font-mono text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-lg shrink-0 text-white bg-slate-950 border border-sky-400 shadow-md"
+            className="font-mono text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-lg shrink-0 text-white bg-slate-900 border border-slate-700 shadow-sm"
           >
             LAB {sim.indexNumber}
           </span>
 
           {/* Category Badge */}
           <span 
-            className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-lg shrink-0 text-white bg-slate-950 border border-sky-400 hidden md:inline-block shadow-2xs"
+            className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-lg shrink-0 text-slate-200 bg-slate-900 border border-slate-700 hidden md:inline-block shadow-2xs"
           >
             {disc.name}
           </span>
@@ -192,7 +192,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
       
       {/* Main Modern Graphic Design Hero Card with Rich Solid Royal Blue/Navy Background & Tasteful Depth */}
       <div 
-        className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl border-2 border-sky-400 text-white shadow-[0_24px_50px_-10px_rgba(2,28,77,0.55),0_10px_25px_-5px_rgba(0,0,0,0.35)]"
+        className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl border border-slate-700/80 text-white shadow-[0_24px_50px_-10px_rgba(2,28,77,0.55),0_10px_25px_-5px_rgba(0,0,0,0.35)]"
         style={{
           background: 'linear-gradient(135deg, #071530 0%, #0c2352 40%, #0e3070 75%, #081a3d 100%)'
         }}
@@ -201,47 +201,47 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Top Row: Left Pill Badges + Right Futuristic Cockpit Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
           
-          {/* Left Pill Chip with Curriculum Alignment Tag (Yellow Accents) */}
+          {/* Left Pill Chip with Curriculum Alignment Tag */}
           <div className="flex items-center gap-2 flex-wrap">
             <div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-yellow-400/70 bg-slate-950 shadow-xl"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-500/40 bg-slate-900/90 shadow-md"
             >
-              <Sparkles className="w-4 h-4 text-yellow-400 pointer-events-none shrink-0 fill-yellow-400/20" />
-              <span className="font-heading font-black text-xs sm:text-sm tracking-wide text-yellow-400 drop-shadow-xs">
+              <Sparkles className="w-4 h-4 text-amber-300 pointer-events-none shrink-0 fill-amber-300/20" />
+              <span className="font-heading font-bold text-xs sm:text-sm tracking-wide text-amber-200">
                 GEN Z INTERACTIVE SIMULATIONS PORTAL
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black font-mono bg-yellow-400/15 text-yellow-400 shadow-md border border-yellow-400/60">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-amber-400/15 text-amber-300 border border-amber-400/30">
                 4K 3D
               </span>
             </div>
 
             <span 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold border-2 border-yellow-400/60 bg-slate-950 text-yellow-300 shadow-xl"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold border border-slate-700 bg-slate-900/90 text-slate-200 shadow-md"
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse shrink-0 shadow-[0_0_8px_#facc15]" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
               <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             </span>
           </div>
 
-          {/* Right Area: Futuristic Digital Cockpit Clock Widget */}
+          {/* Right Area: Digital Clock Widget */}
           <div className="flex items-center gap-2 flex-wrap ml-auto sm:ml-0">
             <div 
-              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border-2 border-sky-400 bg-slate-950 shadow-xl text-white"
+              className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-slate-700 bg-slate-900/90 shadow-md text-white"
             >
-              <div className="flex items-center gap-1.5 font-mono font-black text-xs sm:text-sm text-cyan-300">
-                <Clock className="w-4 h-4 text-cyan-400 animate-pulse shrink-0 pointer-events-none" />
-                <span className="font-mono text-cyan-300 tracking-wider text-sm sm:text-base font-black">
+              <div className="flex items-center gap-1.5 font-mono font-bold text-xs sm:text-sm text-sky-300">
+                <Clock className="w-4 h-4 text-sky-400 shrink-0 pointer-events-none" />
+                <span className="font-mono text-sky-200 tracking-wider text-sm sm:text-base font-bold">
                   {time || '00:00:00'}
                 </span>
               </div>
 
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-amber-400 text-slate-950 shadow-md">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40">
                 {period}
               </span>
 
-              <span className="text-sky-400 font-bold text-xs">|</span>
+              <span className="text-slate-600 font-bold text-xs">|</span>
 
-              <span className="font-bold whitespace-nowrap text-[11px] sm:text-xs text-slate-100 font-mono">
+              <span className="font-medium whitespace-nowrap text-[11px] sm:text-xs text-slate-300 font-mono">
                 {dateStr || 'Loading date...'}
               </span>
             </div>
@@ -275,16 +275,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-blue-500 text-white font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-xl border-2 border-sky-200 transition-all transform active:scale-95"
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md border border-blue-400/40 transition-all transform active:scale-95"
               >
                 <Layers className="w-4 h-4 text-white pointer-events-none" />
                 <span>Explore All Labs Grid</span>
               </button>
               <a
                 href="#stage"
-                className="bg-slate-900 hover:bg-amber-400 text-amber-300 hover:text-slate-950 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-amber-400 transition-all transform active:scale-95"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-md border border-slate-600 transition-all transform active:scale-95"
               >
-                <Play className="w-4 h-4 fill-amber-400 group-hover:fill-slate-950 text-amber-400 pointer-events-none" />
+                <Play className="w-4 h-4 fill-amber-400 text-amber-400 pointer-events-none" />
                 <span>Interactive Stage &amp; Dedicated Tabs</span>
               </a>
             </div>
@@ -303,15 +303,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
         {/* Continuous Right-to-Left Live Bulletin Ticker with Solid High-Contrast Styling & Ultra-Calm Speed */}
         <div 
-          className={`group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border-2 border-sky-400/60 bg-slate-950 shadow-2xl ${isTickerPaused ? 'is-ticker-paused' : ''}`}
+          className={`group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-950 shadow-xl ${isTickerPaused ? 'is-ticker-paused' : ''}`}
           title="Live STEM Bulletin — Hover to pause scrolling, click any lab to open"
         >
           {/* Fixed Left Badge: Live STEM Bulletin with Pause/Play toggle */}
           <div 
             onClick={() => setIsTickerPaused(!isTickerPaused)}
-            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-black uppercase tracking-wider text-[11px] text-white shadow-lg cursor-pointer select-none transition-all hover:brightness-110 active:scale-98"
+            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] text-white shadow-md cursor-pointer select-none transition-all hover:brightness-110 active:scale-98"
             style={{
-              background: 'linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%)'
+              background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)'
             }}
             title={isTickerPaused ? 'Click to resume scrolling' : 'Click to pause scrolling'}
           >
@@ -407,7 +407,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
       {/* 2-Second Rotating Showcase Item at Bottom with Solid High-Contrast Styling */}
       {currentSim && (
         <div 
-          className="w-full h-18 sm:h-20 rounded-2xl overflow-hidden shadow-xl relative select-none border-2 border-sky-400/60 bg-slate-900"
+          className="w-full h-18 sm:h-20 rounded-2xl overflow-hidden shadow-lg relative select-none border border-slate-700/80 bg-slate-900"
           onMouseEnter={() => setIsShowcaseHovered(true)}
           onMouseLeave={() => setIsShowcaseHovered(false)}
         >
