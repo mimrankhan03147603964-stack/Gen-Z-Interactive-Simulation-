@@ -164,38 +164,67 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       id="external-simulations" 
       className="w-full relative z-10 space-y-6 scroll-mt-24 select-none"
     >
-      {/* Top Banner / Section Header */}
-      <div className="bg-white border border-[#BDD8E9] shadow-sm rounded-2xl p-5 sm:p-7 text-[#001D39] transition-all">
+      {/* Top Banner / Section Header: Blue Ocean Palette Fill */}
+      <div 
+        className="border shadow-lg rounded-2xl p-5 sm:p-7 text-white transition-all"
+        style={{
+          background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
+          backgroundColor: '#001D39',
+          borderColor: '#4E8EA2',
+          boxShadow: '0 8px 30px rgba(0, 29, 57, 0.7)'
+        }}
+      >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#001D39] px-3.5 py-1 rounded-md bg-[#BDD8E9] border border-[#6EA2B3]">
-                <Globe className="w-3.5 h-3.5 text-[#0A4174]" />
+              <span 
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider px-3.5 py-1 rounded-md border"
+                style={{
+                  backgroundColor: '#0A4174',
+                  color: '#7BBDE8',
+                  borderColor: '#4E8EA2'
+                }}
+              >
+                <Globe className="w-3.5 h-3.5 text-[#7BBDE8]" />
                 SIMULATION HUB
               </span>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#BDD8E9]/50 text-[#0A4174] border border-[#7BBDE8] shadow-2xs flex items-center gap-1.5 font-mono">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#4E8EA2] shrink-0" />
+              <span 
+                className="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 font-mono"
+                style={{
+                  backgroundColor: '#001224',
+                  color: '#BDD8E9',
+                  borderColor: '#4E8EA2'
+                }}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#7BBDE8] shrink-0" />
                 8 Curated Global STEM Repositories
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#001D39] font-heading">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading">
               External Interactive Simulation Platforms
             </h2>
-            <p className="text-xs sm:text-sm text-[#49769F] font-normal max-w-3xl leading-relaxed">
+            <p className="text-xs sm:text-sm font-normal max-w-3xl leading-relaxed" style={{ color: '#BDD8E9' }}>
               Explore leading research-grade physics, chemistry, engineering, and mathematics interactive simulation engines worldwide with instant direct access.
             </p>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <div className="px-4 py-2 rounded-xl bg-[#BDD8E9]/30 border border-[#BDD8E9] shadow-2xs flex items-center gap-2 text-xs font-bold text-[#001D39]">
-              <Sparkles className="w-4 h-4 text-[#0A4174] shrink-0" />
+            <div 
+              className="px-4 py-2 rounded-xl border flex items-center gap-2 text-xs font-bold"
+              style={{
+                backgroundColor: '#0A4174',
+                borderColor: '#4E8EA2',
+                color: '#7BBDE8'
+              }}
+            >
+              <Sparkles className="w-4 h-4 text-[#7BBDE8] shrink-0" />
               <span>Direct External Access</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 8 External Simulation Cards Grid */}
+      {/* 8 External Simulation Cards Grid - Fully Filled With Blue Ocean Palette */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 w-full">
         {EXTERNAL_SIMULATION_RESOURCES.map((item) => {
           const IconComponent = item.icon;
@@ -203,7 +232,13 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
           return (
             <div
               key={item.id}
-              className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 bg-white border border-[#BDD8E9] shadow-sm hover:shadow-md hover:border-[#4E8EA2] hover:-translate-y-1 text-[#49769F]"
+              className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border text-white hover:-translate-y-1"
+              style={{
+                background: 'linear-gradient(145deg, #0A4174 0%, #001D39 55%, #001224 100%)',
+                backgroundColor: '#001D39',
+                borderColor: '#4E8EA2',
+                boxShadow: '0 8px 25px rgba(0, 29, 57, 0.65)'
+              }}
             >
               {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
               <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
@@ -212,15 +247,24 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-[#BDD8E9]/30 border border-[#BDD8E9] shadow-xs"
+                  className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border shadow-xs"
+                  style={{
+                    backgroundColor: '#001D39',
+                    borderColor: '#4E8EA2'
+                  }}
                   title={`Open ${item.title} in new tab`}
                 >
-                  <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 text-[#0A4174] group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
+                  <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 text-[#7BBDE8] group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
                 </a>
 
                 {/* Resource Badge */}
                 <span 
-                  className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#BDD8E9] text-[#001D39] border border-[#6EA2B3] shrink-0 tracking-wide"
+                  className="font-mono text-xs font-bold px-3 py-1 rounded-full border shrink-0 tracking-wide"
+                  style={{
+                    backgroundColor: '#4E8EA2',
+                    color: '#FFFFFF',
+                    borderColor: '#7BBDE8'
+                  }}
                 >
                   {item.badge}
                 </span>
@@ -229,7 +273,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               {/* Dedicated Grade / Class Level Area */}
               <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
                 <span 
-                  className="text-[11px] font-bold px-3 py-1 rounded-full font-mono bg-[#BDD8E9]/50 text-[#0A4174] border border-[#7BBDE8] leading-normal inline-block max-w-full break-words text-left"
+                  className="text-[11px] font-bold px-3 py-1 rounded-full font-mono border leading-normal inline-block max-w-full break-words text-left"
+                  style={{
+                    backgroundColor: '#0A4174',
+                    color: '#BDD8E9',
+                    borderColor: '#4E8EA2'
+                  }}
                   title={item.gradeTier}
                 >
                   {item.gradeTier}
@@ -240,13 +289,13 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               <div className="relative z-10 flex-1 flex flex-col">
                 {/* Title */}
                 <h4 
-                  className="text-base sm:text-lg font-bold tracking-tight text-[#001D39] font-heading leading-snug line-clamp-2"
+                  className="text-base sm:text-lg font-bold tracking-tight text-white font-heading leading-snug line-clamp-2"
                 >
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#0A4174] transition-colors"
+                    className="hover:text-[#7BBDE8] transition-colors"
                     title={`Open ${item.title} in new tab`}
                   >
                     {item.title}
@@ -254,15 +303,16 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </h4>
 
                 {/* Subject & Sub-discipline */}
-                <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-[#0A4174]">
-                  <span className="w-2 h-2 rounded-full bg-[#4E8EA2] inline-block shrink-0" />
-                  <span className="text-[#0A4174] font-bold">{item.category}</span>
+                <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5" style={{ color: '#7BBDE8' }}>
+                  <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: '#4E8EA2' }} />
+                  <span className="font-bold" style={{ color: '#7BBDE8' }}>{item.category}</span>
                 </p>
 
                 {/* Concept Description */}
                 <div className="mt-2 flex-1">
                   <p 
-                    className="text-xs sm:text-[13px] font-normal text-[#49769F] leading-relaxed line-clamp-3"
+                    className="text-xs sm:text-[13px] font-normal leading-relaxed line-clamp-3"
+                    style={{ color: '#BDD8E9' }}
                   >
                     {item.description}
                   </p>
@@ -273,7 +323,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   {item.topics.slice(0, 3).map((topic, i) => (
                     <span
                       key={i}
-                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] bg-[#BDD8E9]/35 text-[#0A4174] border border-[#BDD8E9] font-mono"
+                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] border font-mono"
+                      style={{
+                        backgroundColor: '#001D39',
+                        color: '#BDD8E9',
+                        borderColor: '#4E8EA2'
+                      }}
                       title={topic}
                     >
                       {topic}
@@ -281,7 +336,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   ))}
                   {item.topics.length > 3 && (
                     <span 
-                      className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#BDD8E9] text-[#001D39] border border-[#6EA2B3] font-mono"
+                      className="text-[11px] font-medium px-2 py-0.5 rounded-md border font-mono"
+                      style={{
+                        backgroundColor: '#0A4174',
+                        color: '#7BBDE8',
+                        borderColor: '#4E8EA2'
+                      }}
                     >
                       +{item.topics.length - 3}
                     </span>
@@ -290,13 +350,22 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               </div>
 
               {/* Card Action Bar */}
-              <div className="relative z-10 pt-4 mt-4 border-t border-[#BDD8E9] flex items-center justify-between gap-2">
-                {/* Action Button: Navy Blue Button with Crisp White Typography */}
+              <div 
+                className="relative z-10 pt-4 mt-4 border-t flex items-center justify-between gap-2"
+                style={{ borderColor: '#0A4174' }}
+              >
+                {/* Action Button: Ocean Teal with White Typography */}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-[#0A4174] hover:bg-[#001D39] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs border border-[#001D39] transition-all transform active:scale-95"
+                  className="flex-1 text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md border transition-all transform active:scale-95"
+                  style={{
+                    backgroundColor: '#4E8EA2',
+                    borderColor: '#7BBDE8'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#6EA2B3')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#4E8EA2')}
                   title={`Launch ${item.title} in new tab`}
                 >
                   <ExternalLink className="w-3.5 h-3.5 text-white pointer-events-none shrink-0" />
@@ -308,10 +377,17 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-[#BDD8E9] text-[#0A4174] border border-[#BDD8E9] transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95 shrink-0"
+                  className="w-10 h-10 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95 shrink-0"
+                  style={{
+                    backgroundColor: '#0A4174',
+                    borderColor: '#4E8EA2',
+                    color: '#7BBDE8'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#001D39')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0A4174')}
                   title={`Explore ${item.title} Now`}
                 >
-                  <Maximize2 className="w-4 h-4 text-[#0A4174] pointer-events-none shrink-0" />
+                  <Maximize2 className="w-4 h-4 text-[#7BBDE8] pointer-events-none shrink-0" />
                 </a>
               </div>
             </div>

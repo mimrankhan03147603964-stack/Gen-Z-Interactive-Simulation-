@@ -264,11 +264,14 @@ export default function App() {
     return <StandaloneLabPlayer sim={standaloneLab} />;
   }
 
-  // MAIN CATALOG PORTAL & DASHBOARD: Soft Claymorphism & Modern Neumorphic Light Theme
+  // MAIN CATALOG PORTAL & DASHBOARD: Steel & Ocean Blue Theme (Light Top to Dark Bottom)
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased relative"
-      style={{ backgroundColor: '#F4F7FB' }}
+      className="min-h-screen flex flex-col font-sans select-none antialiased relative text-white"
+      style={{ 
+        background: 'linear-gradient(180deg, #7BBDE8 0%, #4E8EA2 18%, #0A4174 50%, #001D39 85%, #001224 100%)',
+        backgroundColor: '#001D39'
+      }}
     >
       {/* 3D STEM Simulation Interactive Background strictly in background */}
       <ThreeStemBackground />
@@ -314,22 +317,27 @@ export default function App() {
             backgroundColor: 'transparent'
           }}
         >
-          {/* AI Generation In-Progress Ambient HUD Banner */}
+          {/* AI Generation In-Progress Ambient HUD Banner - Fully Color Filled */}
           {isGeneratingAi && (
             <div 
-              className="p-6 rounded-2xl border border-[#BDD8E9] shadow-sm transition-all flex flex-col items-center justify-center text-center space-y-3 bg-white"
+              className="p-6 rounded-2xl border shadow-lg transition-all flex flex-col items-center justify-center text-center space-y-3"
+              style={{
+                background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
+                borderColor: '#7BBDE8',
+                boxShadow: '0 8px 30px rgba(0, 29, 57, 0.6)'
+              }}
             >
               <div className="flex items-center gap-3">
-                <span className="w-3 h-3 rounded-full bg-[#0A4174] animate-ping" />
-                <span className="text-base sm:text-lg font-bold text-[#001D39]">
+                <span className="w-3 h-3 rounded-full bg-[#7BBDE8] animate-ping" />
+                <span className="text-base sm:text-lg font-bold text-[#BDD8E9]">
                   Synthesizing &ldquo;{aiGeneratingTopic}&rdquo; Interactive Simulation...
                 </span>
               </div>
-              <p className="text-xs font-normal text-[#49769F] max-w-md">
+              <p className="text-xs font-normal text-[#BDD8E9] max-w-md">
                 Generating mathematical models, real-time physics, and interactive parameter sliders.
               </p>
-              <div className="w-full max-w-md h-2 bg-[#BDD8E9]/30 border border-[#BDD8E9] rounded-full overflow-hidden">
-                <div className="h-full bg-[#0A4174] animate-pulse w-full" />
+              <div className="w-full max-w-md h-2 bg-[#001D39] border border-[#4E8EA2] rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-[#4E8EA2] to-[#7BBDE8] animate-pulse w-full" />
               </div>
             </div>
           )}
