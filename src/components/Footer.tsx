@@ -132,12 +132,13 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </a>
 
             <a
-              href="tel:03147603964"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-102 active:scale-95 cursor-pointer"
-              title="Call Developer Directly"
+              href="tel:03007603964"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-2.5 rounded-xl bg-white hover:bg-slate-100 text-black font-black text-xs sm:text-sm shadow-sm transition-all hover:scale-102 active:scale-95 cursor-pointer border-2 border-slate-900/40"
+              style={{ color: '#000000' }}
+              title="Call Developer Directly: 03007603964"
             >
-              <Phone className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span>Direct Call: 03147603964</span>
+              <Phone className="w-3.5 h-3.5 text-black shrink-0" style={{ color: '#000000' }} />
+              <span className="text-black font-black" style={{ color: '#000000' }}>Direct Call: 03007603964</span>
             </a>
           </div>
         </div>
