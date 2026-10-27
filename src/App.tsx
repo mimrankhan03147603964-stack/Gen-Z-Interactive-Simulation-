@@ -264,20 +264,17 @@ export default function App() {
     return <StandaloneLabPlayer sim={standaloneLab} />;
   }
 
-  // MAIN CATALOG PORTAL & DASHBOARD: Steel & Ocean Blue Theme (Light Top to Dark Bottom)
+  // MAIN CATALOG PORTAL & DASHBOARD: Full Solid Pure White Background with No Glass or Transparency
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased relative text-white"
+      className="min-h-screen flex flex-col font-sans select-none antialiased relative bg-[#FFFFFF]"
       style={{ 
-        background: 'linear-gradient(180deg, #7BBDE8 0%, #4E8EA2 18%, #0A4174 50%, #001D39 85%, #001224 100%)',
-        backgroundColor: '#001D39'
+        background: '#FFFFFF',
+        backgroundColor: '#FFFFFF'
       }}
     >
-      {/* 3D STEM Simulation Interactive Background strictly in background */}
-      <ThreeStemBackground />
-      
       {/* Website Content Container with position: relative, z-index: 10, offset by fixed navbar height */}
-      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14">
+      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14 bg-[#FFFFFF]">
         {/* Top Website Header Navbar (Desktop-Optimized, Sticky at Top) */}
         <TopNavbar
           totalSimulations={allSimulations.length}

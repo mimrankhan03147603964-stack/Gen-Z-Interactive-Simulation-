@@ -112,13 +112,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
       <div 
         className="w-full h-full flex items-center justify-between px-3 sm:px-6 gap-3 select-none text-white relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
-          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)'
+          background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)'
         }}
       >
-        {/* Specular Top Sheen */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/30 via-transparent to-black/30" />
-
         <div className="flex items-center gap-3 min-w-0 flex-1 relative z-10">
           {/* Simulation Vector Icon Badge on Solid High-Contrast Pedestal */}
           <div 
@@ -246,8 +242,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             <span 
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold border shadow-sm"
               style={{
-                backgroundColor: 'rgba(10, 65, 116, 0.75)',
-                borderColor: '#49769F',
+                backgroundColor: '#0A4174',
+                borderColor: '#4E8EA2',
                 color: '#BDD8E9'
               }}
             >

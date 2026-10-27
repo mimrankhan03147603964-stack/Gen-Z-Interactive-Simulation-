@@ -215,7 +215,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -226,7 +226,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -237,7 +237,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -248,7 +248,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -355,7 +355,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -366,7 +366,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -377,7 +377,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
@@ -388,7 +388,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   <div 
                     className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
                     style={{
-                      backgroundColor: 'rgba(10, 65, 116, 0.65)',
+                      backgroundColor: '#001D39',
                       borderColor: '#49769F',
                       color: '#BDD8E9'
                     }}
