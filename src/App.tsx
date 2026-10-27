@@ -317,19 +317,19 @@ export default function App() {
           {/* AI Generation In-Progress Ambient HUD Banner */}
           {isGeneratingAi && (
             <div 
-              className="p-6 rounded-2xl border border-[#D5DEEC] shadow-sm transition-all flex flex-col items-center justify-center text-center space-y-3 bg-white"
+              className="p-6 rounded-2xl border border-[#BDD8E9] shadow-sm transition-all flex flex-col items-center justify-center text-center space-y-3 bg-white"
             >
               <div className="flex items-center gap-3">
-                <span className="w-3 h-3 rounded-full bg-[#1E4FA3] animate-ping" />
-                <span className="text-base sm:text-lg font-bold text-[#14305F]">
+                <span className="w-3 h-3 rounded-full bg-[#0A4174] animate-ping" />
+                <span className="text-base sm:text-lg font-bold text-[#001D39]">
                   Synthesizing &ldquo;{aiGeneratingTopic}&rdquo; Interactive Simulation...
                 </span>
               </div>
-              <p className="text-xs font-normal text-[#4A5568] max-w-md">
+              <p className="text-xs font-normal text-[#49769F] max-w-md">
                 Generating mathematical models, real-time physics, and interactive parameter sliders.
               </p>
-              <div className="w-full max-w-md h-2 bg-[#F4F7FB] border border-[#D5DEEC] rounded-full overflow-hidden">
-                <div className="h-full bg-[#1E4FA3] animate-pulse w-full" />
+              <div className="w-full max-w-md h-2 bg-[#BDD8E9]/30 border border-[#BDD8E9] rounded-full overflow-hidden">
+                <div className="h-full bg-[#0A4174] animate-pulse w-full" />
               </div>
             </div>
           )}

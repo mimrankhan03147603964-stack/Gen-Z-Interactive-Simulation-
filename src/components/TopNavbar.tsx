@@ -154,7 +154,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   return (
     <header 
       ref={headerRef}
-      className="fixed top-0 left-0 w-full z-[99999] border-b border-[#D5DEEC] bg-white transition-all select-none shadow-sm"
+      className="fixed top-0 left-0 w-full z-[99999] border-b border-[#BDD8E9] bg-white transition-all select-none shadow-sm"
       style={{ 
         position: 'fixed', 
         top: 0, 
@@ -162,8 +162,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         width: '100%', 
         zIndex: 99999,
         backgroundColor: '#ffffff',
-        borderBottom: '1px solid #D5DEEC',
-        boxShadow: '0 2px 8px rgba(20, 48, 95, 0.06)'
+        borderBottom: '1px solid #BDD8E9',
+        boxShadow: '0 2px 10px rgba(0, 29, 57, 0.05)'
       }}
     >
       <div 
@@ -176,15 +176,15 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         }}
       >
         
-        {/* Left: Official Rectangular Logo & Portal Subtitle */}
+        {/* Left: Official Rectangular Logo & Portal Subtitle - Logo untouched */}
         <div 
           onClick={() => handleItemClick('#top')}
           className="flex items-center gap-2 sm:gap-2.5 shrink-0 cursor-pointer group min-w-0"
           title="Gen Z Interactive Simulations Home"
         >
-          {/* GZ Monogram Logo */}
+          {/* GZ Monogram Logo Container */}
           <div 
-            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border border-[#D5DEEC] bg-[#240854] shadow-[0_2px_4px_rgba(0,0,0,0.25)] transition-all duration-150 group-hover:scale-105"
+            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border border-[#BDD8E9] bg-[#240854] shadow-[0_2px_4px_rgba(0,0,0,0.25)] transition-all duration-150 group-hover:scale-105"
             style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '7px' }}
           >
             <img 
@@ -197,22 +197,22 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
           <div className="hidden sm:block shrink-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] lg:text-xs font-black tracking-tight text-[#14305F] font-heading group-hover:text-[#1E4FA3] transition-colors whitespace-nowrap">
+              <span className="text-[11px] lg:text-xs font-black tracking-tight text-[#001D39] font-heading group-hover:text-[#0A4174] transition-colors whitespace-nowrap">
                 DIGITAL LABORATORY PORTAL
               </span>
               <span 
-                className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black text-[#1E4FA3] shadow-2xs whitespace-nowrap"
-                style={{ backgroundColor: '#E4ECF8', border: '1px solid #1E4FA3', color: '#1E4FA3' }}
+                className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black text-[#001D39] shadow-2xs whitespace-nowrap"
+                style={{ backgroundColor: '#BDD8E9', border: '1px solid #4E8EA2', color: '#001D39' }}
               >
                 4K UHD
               </span>
             </div>
             <div className="text-[10px] lg:text-[11px] font-semibold flex items-center gap-1.5 flex-nowrap mt-0.5 whitespace-nowrap">
-              <span className="font-extrabold text-[#1E4FA3]">{totalSimulations} Verified Labs</span>
-              <span className="hidden xl:inline text-[#D5DEEC] font-bold">&bull;</span>
+              <span className="font-extrabold text-[#0A4174]">{totalSimulations} Verified Labs</span>
+              <span className="hidden xl:inline text-[#BDD8E9] font-bold">&bull;</span>
               <span 
-                className="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[9px] font-extrabold text-[#2BA58A] shadow-2xs whitespace-nowrap"
-                style={{ backgroundColor: '#E3F5F0', border: '1px solid #2BA58A', color: '#2BA58A' }}
+                className="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[9px] font-extrabold text-[#0A4174] shadow-2xs whitespace-nowrap"
+                style={{ backgroundColor: 'rgba(189, 216, 233, 0.55)', border: '1px solid #6EA2B3', color: '#0A4174' }}
               >
                 NCP Aligned (Session 2026-27)
               </span>
@@ -236,10 +236,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#top')}
-            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#1E4FA3] bg-[#E4ECF8] hover:bg-[#E4ECF8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#001D39] bg-[#BDD8E9] hover:bg-[#BDD8E9]/80 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Return to Home Portal"
           >
-            <Home className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
+            <Home className="w-3.5 h-3.5 text-[#0A4174] shrink-0" />
             <span>Home</span>
           </button>
 
@@ -257,16 +257,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'catalog' 
-                  ? 'text-[#1E4FA3] bg-[#E4ECF8] ring-1 ring-[#1E4FA3]/40' 
-                  : 'text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8]'
+                  ? 'text-[#001D39] bg-[#BDD8E9] ring-1 ring-[#0A4174]/40' 
+                  : 'text-[#49769F] hover:text-[#001D39] hover:bg-[#BDD8E9]/60'
               }`}
               aria-expanded={openDropdown === 'catalog'}
               aria-haspopup="true"
               title="Browse Full STEM Catalog by Discipline"
             >
-              <Layers className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
+              <Layers className="w-3.5 h-3.5 text-[#0A4174] shrink-0" />
               <span>STEM Catalog ({totalSimulations})</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-[#1E4FA3]' : 'text-[#4A5568]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-[#001D39]' : 'text-[#49769F]'}`} />
             </button>
 
             {/* Dropdown Panel in Clean Card Styling */}
@@ -283,19 +283,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none bg-white border border-[#D5DEEC] shadow-2xl"
+                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none bg-white border border-[#BDD8E9] shadow-2xl"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid #D5DEEC',
-                    boxShadow: '0 20px 45px rgba(20, 48, 95, 0.15)',
+                    border: '1px solid #BDD8E9',
+                    boxShadow: '0 20px 45px rgba(0, 29, 57, 0.15)',
                     maxHeight: 'calc(100vh - 75px)',
                     overflowY: 'auto'
                   }}
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#14305F] tracking-wider uppercase bg-[#F4F7FB]"
-                    style={{ borderBottom: '1px solid #D5DEEC' }}
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#001D39] tracking-wider uppercase bg-[#BDD8E9]/25"
+                    style={{ borderBottom: '1px solid #BDD8E9' }}
                   >
                     STEM DISCIPLINES &amp; LABORATORIES
                   </div>
@@ -312,9 +312,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick('#catalog', item.categoryKey);
                           }}
-                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#14305F] hover:bg-[#E4ECF8] hover:text-[#1E4FA3] active:bg-[#E4ECF8] transition-colors cursor-pointer"
+                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#001D39] hover:bg-[#BDD8E9]/50 hover:text-[#0A4174] active:bg-[#BDD8E9] transition-colors cursor-pointer"
                           style={{
-                            borderBottom: !isLast ? '1px solid #D5DEEC' : 'none'
+                            borderBottom: !isLast ? '1px solid #BDD8E9' : 'none'
                           }}
                         >
                           {item.label}
@@ -341,17 +341,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'hub' 
-                  ? 'text-[#1E4FA3] bg-[#E4ECF8] ring-1 ring-[#1E4FA3]/40' 
-                  : 'text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8]'
+                  ? 'text-[#001D39] bg-[#BDD8E9] ring-1 ring-[#0A4174]/40' 
+                  : 'text-[#49769F] hover:text-[#001D39] hover:bg-[#BDD8E9]/60'
               }`}
               aria-expanded={openDropdown === 'hub'}
               aria-haspopup="true"
               title="Pedagogical Audience & Standards"
             >
-              <BookOpen className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
+              <BookOpen className="w-3.5 h-3.5 text-[#0A4174] shrink-0" />
               <span className="hidden sm:inline">Educators &amp; Students Hub</span>
               <span className="sm:hidden">Hub</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-[#1E4FA3]' : 'text-[#4A5568]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-[#001D39]' : 'text-[#49769F]'}`} />
             </button>
 
             {/* Dropdown Panel in Clean Card Styling */}
@@ -368,17 +368,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[320px] sm:w-[350px] rounded-xl overflow-hidden select-none bg-white border border-[#D5DEEC] shadow-2xl"
+                  className="w-[320px] sm:w-[350px] rounded-xl overflow-hidden select-none bg-white border border-[#BDD8E9] shadow-2xl"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid #D5DEEC',
-                    boxShadow: '0 20px 45px rgba(20, 48, 95, 0.15)'
+                    border: '1px solid #BDD8E9',
+                    boxShadow: '0 20px 45px rgba(0, 29, 57, 0.15)'
                   }}
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#14305F] tracking-wider uppercase bg-[#F4F7FB]"
-                    style={{ borderBottom: '1px solid #D5DEEC' }}
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#001D39] tracking-wider uppercase bg-[#BDD8E9]/25"
+                    style={{ borderBottom: '1px solid #BDD8E9' }}
                   >
                     PEDAGOGICAL AUDIENCE &amp; FRAMEWORK
                   </div>
@@ -395,9 +395,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick(item.href);
                           }}
-                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#14305F] hover:bg-[#E4ECF8] hover:text-[#1E4FA3] active:bg-[#E4ECF8] transition-colors cursor-pointer"
+                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#001D39] hover:bg-[#BDD8E9]/50 hover:text-[#0A4174] active:bg-[#BDD8E9] transition-colors cursor-pointer"
                           style={{
-                            borderBottom: !isLast ? '1px solid #D5DEEC' : 'none'
+                            borderBottom: !isLast ? '1px solid #BDD8E9' : 'none'
                           }}
                         >
                           {item.label}
@@ -414,10 +414,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#external-simulations')}
-            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#1E4FA3] bg-[#E4ECF8] hover:bg-[#d8e5f7] border border-[#1E4FA3]/30 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#001D39] bg-[#BDD8E9] hover:bg-[#7BBDE8]/40 border border-[#4E8EA2] transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
             title="Jump to External Simulations & Global Science Platforms"
           >
-            <Globe className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
+            <Globe className="w-3.5 h-3.5 text-[#0A4174] shrink-0" />
             <span className="hidden md:inline">External Simulations</span>
             <span className="md:hidden">Sim Hub</span>
           </button>
@@ -426,28 +426,28 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#49769F] hover:text-[#001D39] hover:bg-[#BDD8E9]/60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Go to Developer & Contact Section"
           >
-            <UserCheck className="w-3.5 h-3.5 text-[#2BA58A] shrink-0" />
+            <UserCheck className="w-3.5 h-3.5 text-[#0A4174] shrink-0" />
             <span className="hidden md:inline">Developer &amp; Contact</span>
             <span className="md:hidden">Contact</span>
           </button>
 
-          {/* Link 5: Explore All Labs Grid (Accent Warm Orange #F5A623 with dark text #3D2600) */}
+          {/* Link 5: Explore All Labs Grid (Primary CTA Button with #0A4174 hover #001D39) */}
           <button
             type="button"
             onClick={() => handleItemClick('#catalog', 'All Simulations')}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 shadow-sm cursor-pointer hover:brightness-105 active:scale-95"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 shadow-sm cursor-pointer hover:bg-[#001D39] active:scale-95"
             style={{
-              backgroundColor: '#F5A623',
-              color: '#3D2600',
-              border: '1px solid #d98f19'
+              backgroundColor: '#0A4174',
+              color: '#FFFFFF',
+              border: '1px solid #001D39'
             }}
             title="Explore Full STEM Labs Catalog Grid"
           >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: '#3D2600' }} />
-            <span style={{ color: '#3D2600' }}>Explore All Labs</span>
+            <Sparkles className="w-3.5 h-3.5 shrink-0 text-white" />
+            <span className="text-white">Explore All Labs</span>
           </button>
         </nav>
 

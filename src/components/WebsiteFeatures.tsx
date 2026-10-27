@@ -219,27 +219,30 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
   return (
     <section 
       id="features" 
-      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all bg-white border border-[#D5DEEC] shadow-sm text-[#14305F]"
+      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all bg-white border border-[#BDD8E9] shadow-sm text-[#001D39]"
+      style={{
+        boxShadow: '0 6px 24px rgba(0, 29, 57, 0.06)'
+      }}
     >
       <div 
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D5DEEC] pb-4"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#BDD8E9] pb-4"
       >
         <div>
           <span 
-            className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] font-mono"
+            className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 bg-[#BDD8E9] text-[#001D39] border border-[#6EA2B3] font-mono"
           >
             Digital Laboratory Architecture
           </span>
           <h2 
-            className="text-xl sm:text-2xl font-black tracking-tight text-[#14305F] font-heading"
+            className="text-xl sm:text-2xl font-black tracking-tight text-[#001D39] font-heading"
           >
             Professional STEM Educational Website Capabilities
           </h2>
         </div>
         <div 
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 bg-[#E3F5F0] border border-[#2BA58A]/30 text-[#2BA58A] shadow-2xs"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 bg-[#BDD8E9]/50 border border-[#4E8EA2] text-[#0A4174] shadow-2xs"
         >
-          <ShieldCheck className="w-4 h-4 text-[#2BA58A]" />
+          <ShieldCheck className="w-4 h-4 text-[#0A4174]" />
           <span>Verified Digital Laboratory Standard</span>
         </div>
       </div>
@@ -249,30 +252,33 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
           return (
             <div 
               key={idx}
-              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 text-[#4A5568] cursor-default select-none bg-white border border-[#D5DEEC] shadow-sm hover:shadow-md hover:border-[#1E4FA3]/50"
+              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 text-[#49769F] cursor-default select-none bg-white border border-[#BDD8E9] shadow-sm hover:shadow-md hover:border-[#4E8EA2]"
+              style={{
+                boxShadow: '0 4px 16px rgba(0, 29, 57, 0.05)'
+              }}
             >
               <div className="relative z-10">
-                {/* Header with 3D Icon & Feature Badge */}
+                {/* Header with 3D Icon & Feature Badge - Icon SVG untouched */}
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-[#F4F7FB] border border-[#D5DEEC] shadow-xs"
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-[#BDD8E9]/30 border border-[#BDD8E9] shadow-xs"
                   >
                     {feat.renderIcon()}
                   </div>
                   <span 
-                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC]"
+                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase bg-[#BDD8E9] text-[#001D39] border border-[#6EA2B3]"
                   >
                     {feat.badge}
                   </span>
                 </div>
 
                 <h3 
-                  className="text-base font-bold tracking-tight mb-2 leading-snug text-[#14305F] font-heading"
+                  className="text-base font-bold tracking-tight mb-2 leading-snug text-[#001D39] font-heading"
                 >
                   {feat.title}
                 </h3>
                 <p 
-                  className="text-xs font-normal leading-relaxed text-[#4A5568]"
+                  className="text-xs font-normal leading-relaxed text-[#49769F]"
                 >
                   {feat.description}
                 </p>
