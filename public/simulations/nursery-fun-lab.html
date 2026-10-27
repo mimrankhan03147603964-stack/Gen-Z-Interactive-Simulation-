@@ -3,26 +3,26 @@
 <title>Nursery Fun Lab (Age 4–5)</title>
 <style>
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none}
-html,body{margin:0;height:100%;font-family:"Comic Sans MS","Trebuchet MS",sans-serif}
+html,body{margin:0;height:100%;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Comic Sans MS","Trebuchet MS",sans-serif}
 body{background:linear-gradient(135deg,#c9f2c7,#fff3a8 50%,#ffc9e0)}
 #app{height:100%;display:flex;flex-direction:column;padding:10px 14px;gap:9px}
 #top{display:flex;align-items:center;gap:12px}
-h1{margin:0;flex:1;font-size:28px;color:#1b5e8a;text-shadow:2px 2px 0 #fff}
+h1{margin:0;flex:1;font-size:28px;color:#1b5e8a;text-shadow:2px 2px 0 #fff;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Comic Sans MS",sans-serif}
 #nav,#ctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 #nav .b{padding:7px 11px;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.3)}
-.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
+.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
 .b:hover{filter:brightness(1.1);transform:translateY(-2px)}
 .b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
 .b.on{outline:4px solid #fff;outline-offset:2px}
 #stage{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:24px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 40px rgba(255,255,255,.4);background:linear-gradient(#bde8ff,#f2fbff)}
-.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 26px;border-radius:30px;font-size:25px;font-weight:bold;color:#1b5e8a;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap}
+.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 26px;border-radius:30px;font-size:25px;font-weight:bold;color:#1b5e8a;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .tray{position:absolute;top:66px;left:0;right:0;height:38%;display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:center}
-.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1}
+.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .item.sel{transform:scale(1.2) rotate(-8deg);filter:drop-shadow(0 0 16px gold)}
 .baskets{position:absolute;bottom:14px;left:0;right:0;height:44%;display:flex;gap:40px;justify-content:center;padding:0 30px}
 .basket{flex:1;max-width:480px;border-radius:20px 20px 70px 70px;box-shadow:0 8px 0 #0004,0 14px 20px #0004;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px;overflow:hidden}
-.bt{color:#fff;font-weight:bold;font-size:26px;text-shadow:2px 2px #0007}
-.bin{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:4px}
+.bt{color:#fff;font-weight:bold;font-size:26px;text-shadow:2px 2px #0007;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.bin{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:4px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .hint{animation:pu .5s 4}@keyframes pu{50%{transform:scale(1.2)}}
 /* mixer */
 .row{position:absolute;inset:70px 0 0;display:flex;align-items:center;justify-content:center;gap:36px}
@@ -34,27 +34,27 @@ h1{margin:0;flex:1;font-size:28px;color:#1b5e8a;text-shadow:2px 2px 0 #fff}
 /* shapes */
 .frm{display:flex;flex-direction:column;align-items:center;font-weight:bold;font-size:24px;color:#37474f;cursor:pointer}
 /* babies */
-.pc{display:flex;flex-direction:column;align-items:center;padding:8px 20px;border-radius:18px;background:#fff;cursor:pointer;box-shadow:0 6px 0 #0003;font-size:22px;font-weight:bold;transition:.2s}
+.pc{display:flex;flex-direction:column;align-items:center;padding:8px 20px;border-radius:18px;background:#fff;cursor:pointer;box-shadow:0 6px 0 #0003;font-size:22px;font-weight:bold;transition:.2s;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .pc.sel{outline:5px solid gold;transform:scale(1.1)}.pc.ok{background:#c8f5b0;opacity:.7;pointer-events:none}
 /* plant */
 .pot{position:absolute;left:50%;bottom:40px;width:230px;height:170px;margin-left:-115px;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);background:linear-gradient(90deg,#bf5b2c,#e8884f 40%,#9b4720)}
 .soil{position:absolute;left:0;right:0;top:0;height:0;background:#5d3a1a;transition:height .8s,filter .8s}
-.seed{position:absolute;left:50%;bottom:196px;margin-left:-18px;font-size:36px;transition:.6s}
-.pl2{position:absolute;left:50%;bottom:205px;margin-left:-40px;width:80px;font-size:60px;text-align:center;line-height:1;transform-origin:bottom;transform:scale(0);transition:transform 1.5s}
-.sun{position:absolute;right:8%;top:70px;font-size:110px;opacity:0;scale:.3;transition:1s;filter:drop-shadow(0 0 30px gold)}
-.rn{position:absolute;top:-10%;font-size:34px;animation:fall 1.2s linear forwards}@keyframes fall{to{top:100%;opacity:0}}
+.seed{position:absolute;left:50%;bottom:196px;margin-left:-18px;font-size:36px;transition:.6s;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.pl2{position:absolute;left:50%;bottom:205px;margin-left:-40px;width:80px;font-size:60px;text-align:center;line-height:1;transform-origin:bottom;transform:scale(0);transition:transform 1.5s;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.sun{position:absolute;right:8%;top:70px;font-size:110px;opacity:0;scale:.3;transition:1s;filter:drop-shadow(0 0 30px gold);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.rn{position:absolute;top:-10%;font-size:34px;animation:fall 1.2s linear forwards;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}@keyframes fall{to{top:100%;opacity:0}}
 /* seesaw */
 .beam{position:absolute;left:14%;right:14%;bottom:150px;height:24px;border-radius:12px;background:linear-gradient(#e0a25a,#a8702f);box-shadow:0 8px 14px #0004;transition:transform 1.2s cubic-bezier(.3,1.6,.5,1);z-index:2}
-.sl{position:absolute;bottom:20px;font-size:100px;line-height:1}
+.sl{position:absolute;bottom:20px;font-size:100px;line-height:1;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .fulc{position:absolute;left:50%;bottom:0;margin-left:-90px;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:162px solid #e53935;filter:drop-shadow(0 8px 6px #0004);z-index:1}
 /* shadows */
-.shd{width:150px;height:150px;border-radius:20px;background:#dfe9f3;box-shadow:inset 0 4px 10px #0003;display:flex;align-items:center;justify-content:center;font-size:90px;cursor:pointer}
+.shd{width:150px;height:150px;border-radius:20px;background:#dfe9f3;box-shadow:inset 0 4px 10px #0003;display:flex;align-items:center;justify-content:center;font-size:90px;cursor:pointer;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
 .shd span{filter:brightness(0) opacity(.8);transition:.4s}.shd.ok{background:#c8f5b0}.shd.ok span{filter:none}
 /* germs */
 .hz{position:absolute;left:50%;top:56%;width:min(50vh,340px);height:min(50vh,340px);transform:translate(-50%,-50%)}
-.hh{font-size:min(46vh,310px);line-height:1;text-align:center;filter:drop-shadow(0 12px 10px #0005)}
-.gm{position:absolute;font-size:38px;cursor:pointer;transition:.3s;animation:wig .6s infinite}@keyframes wig{50%{transform:rotate(15deg) translateY(-5px)}}
-.fm{position:absolute;inset:0;pointer-events:none}.fm div{position:absolute;font-size:52px;animation:bob 2s ease-in-out infinite}@keyframes bob{50%{margin-top:-10px}}
+.hh{font-size:min(46vh,310px);line-height:1;text-align:center;filter:drop-shadow(0 12px 10px #0005);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.gm{position:absolute;font-size:38px;cursor:pointer;transition:.3s;animation:wig .6s infinite;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}@keyframes wig{50%{transform:rotate(15deg) translateY(-5px)}}
+.fm{position:absolute;inset:0;pointer-events:none}.fm div{position:absolute;font-size:52px;animation:bob 2s ease-in-out infinite;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}@keyframes bob{50%{margin-top:-10px}}
 </style></head>
 <body><div id="app">
 <div id="top"><h1>🌈 Nursery Fun Lab (Age 4–5)</h1><button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button></div>
