@@ -267,7 +267,8 @@ export default function App() {
   // MAIN CATALOG PORTAL & DASHBOARD: Soft Claymorphism & Modern Neumorphic Light Theme
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased text-slate-800 bg-transparent relative"
+      className="min-h-screen flex flex-col font-sans select-none antialiased relative"
+      style={{ backgroundColor: '#F4F7FB' }}
     >
       {/* 3D STEM Simulation Interactive Background strictly in background */}
       <ThreeStemBackground />
@@ -316,28 +317,19 @@ export default function App() {
           {/* AI Generation In-Progress Ambient HUD Banner */}
           {isGeneratingAi && (
             <div 
-              className="p-6 rounded-2xl border shadow-2xl transition-all flex flex-col items-center justify-center text-center space-y-3"
-              style={{
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                backgroundColor: isDarkMode ? 'rgba(26, 16, 51, 0.95)' : 'rgba(250, 245, 255, 0.95)',
-                borderColor: '#a855f7',
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                boxShadow: '0 10px 40px rgba(168, 85, 247, 0.35)'
-              }}
+              className="p-6 rounded-2xl border border-[#D5DEEC] shadow-sm transition-all flex flex-col items-center justify-center text-center space-y-3 bg-white"
             >
               <div className="flex items-center gap-3">
-                <span className="w-4 h-4 rounded-full bg-purple-500 animate-ping" />
-                <span className="text-base sm:text-lg font-black text-purple-600 dark:text-purple-300">
-                  Synthesizing &ldquo;{aiGeneratingTopic}&rdquo; Interactive Simulation with Gemini API...
+                <span className="w-3 h-3 rounded-full bg-[#1E4FA3] animate-ping" />
+                <span className="text-base sm:text-lg font-bold text-[#14305F]">
+                  Synthesizing &ldquo;{aiGeneratingTopic}&rdquo; Interactive Simulation...
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 max-w-md">
-                Generating mathematical models, real-time Canvas 60 FPS physics, and interactive parameter sliders on the fly.
+              <p className="text-xs font-normal text-[#4A5568] max-w-md">
+                Generating mathematical models, real-time physics, and interactive parameter sliders.
               </p>
-              <div className="w-full max-w-md h-2 bg-purple-200 dark:bg-purple-950 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-pulse w-full" />
+              <div className="w-full max-w-md h-2 bg-[#F4F7FB] border border-[#D5DEEC] rounded-full overflow-hidden">
+                <div className="h-full bg-[#1E4FA3] animate-pulse w-full" />
               </div>
             </div>
           )}

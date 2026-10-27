@@ -413,10 +413,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return true;
   });
 
-  // Render a simulation card with deep frosted glassmorphism, unique multi-colored identity, and 3D tactile push buttons
+  // Render a simulation card with clean educational theme: white card, thin border, dark navy text, warm orange launcher button
   const renderCard = (sim: SimulationItem) => {
-    const simTheme = getSimTheme(sim.indexNumber);
-    const discStyle = getDisciplineColor(sim.category);
     const isActive = activeSim ? activeSim.id === sim.id : false;
     const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
     const displayTitle = cleanCardTitle(sim.title, sim.category);
@@ -433,22 +431,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           handleCardClick(sim);
         }}
-        className={`card-colored-3d rounded-3xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-300 text-white ${
-          isActive ? 'ring-4 ring-amber-300 scale-[1.02] shadow-2xl' : 'hover:-translate-y-1.5'
+        className={`rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-200 bg-white border border-[#D5DEEC] shadow-sm ${
+          isActive ? 'ring-3 ring-[#1E4FA3] border-[#1E4FA3] shadow-md scale-[1.01]' : 'hover:-translate-y-1 hover:shadow-md hover:border-[#1E4FA3]/50'
         }`}
-        style={{
-          background: simTheme.bgGradient,
-          borderRadius: '24px',
-          borderWidth: '2px',
-          borderStyle: 'solid',
-          borderColor: simTheme.borderColor || '#38bdf8',
-          boxShadow: `0 12px 28px -5px ${simTheme.glowColor || 'rgba(0, 80, 180, 0.35)'}, 0 6px 12px -4px rgba(0, 0, 0, 0.2)`,
-          transform: 'translateZ(0)'
-        }}
       >
         {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
         <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
-          {/* Realistic Visual Emblem Pedestal on Solid High-Contrast Surface */}
+          {/* Realistic Visual Emblem Pedestal (Icons 100% Untouched) */}
           <a
             href={getSimulationStandaloneUrl(sim)}
             target="_blank"
@@ -456,7 +445,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950 border-2 border-sky-400 shadow-md"
+            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-[#F4F7FB] border border-[#D5DEEC] shadow-xs"
             title={`Open ${displayTitle} in new tab`}
           >
             <TopicRealisticIcon 
@@ -466,18 +455,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             />
           </a>
 
-          {/* 3D Lab / Concept Badge - Clearly Separated on Right */}
+          {/* Lab / Concept Badge */}
           <span 
-            className="font-mono text-xs font-black px-3.5 py-1 rounded-full bg-slate-950 text-white shadow-md border-2 border-sky-400 shrink-0 tracking-wide"
+            className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] shrink-0 tracking-wide"
           >
             {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
           </span>
         </div>
 
-        {/* Dedicated Grade / Class Level Area: Sits on its own unobstructed line with crisp readability */}
+        {/* Dedicated Grade / Class Level Area */}
         <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
           <span 
-            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono shadow-xs bg-slate-950 text-amber-300 border-2 border-amber-400 leading-normal inline-block max-w-full break-words text-left"
+            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono bg-[#E3F5F0] text-[#2BA58A] border border-[#2BA58A]/30 leading-normal inline-block max-w-full break-words text-left"
             title={displayGrade}
           >
             {displayGrade}
@@ -486,12 +475,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
         {/* Content: Title, Subject, Description, Topics */}
         <div className="relative z-10 flex-1 flex flex-col">
-          {/* Simulation Topic Title in Crisp White with Native 4K Text Shadow */}
+          {/* Simulation Topic Title in Dark Navy */}
           <h4 
-            className={`text-base sm:text-lg font-black tracking-wide text-white ${
+            className={`text-base sm:text-lg font-bold tracking-tight text-[#14305F] ${
               isUrdu ? 'font-urdu leading-[2.2]' : 'font-heading leading-snug line-clamp-2'
             }`}
-            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.85)' }}
             dir={isUrdu ? 'rtl' : 'ltr'}
           >
             <a
@@ -501,7 +489,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="hover:underline text-white hover:text-amber-200 transition-colors"
+              className="hover:text-[#1E4FA3] transition-colors"
               title={`Open ${displayTitle} in new tab`}
             >
               {displayTitle}
@@ -509,18 +497,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </h4>
 
           {/* Subject & Sub-discipline */}
-          <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-amber-300">
-            <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse inline-block shrink-0" />
-            <span className="text-amber-200 font-extrabold">{displaySubject}</span>
+          <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-[#1E4FA3]">
+            <span className="w-2 h-2 rounded-full bg-[#2BA58A] inline-block shrink-0" />
+            <span className="text-[#1E4FA3] font-bold">{displaySubject}</span>
           </p>
 
-          {/* Concept Description with Click-to-Expand Progressive Disclosure */}
+          {/* Concept Description in Gray Text */}
           <div className="mt-2">
             <p 
-              className={`text-xs sm:text-[13px] font-medium text-white leading-relaxed ${
+              className={`text-xs sm:text-[13px] font-normal text-[#4A5568] leading-relaxed ${
                 expandedDescIds[sim.id] ? '' : 'line-clamp-2'
               } ${isUrdu ? 'font-urdu leading-[2.2]' : ''}`}
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
               dir={isUrdu ? 'rtl' : 'ltr'}
             >
               {displayDesc}
@@ -532,7 +519,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   e.stopPropagation();
                   setExpandedDescIds(prev => ({ ...prev, [sim.id]: !prev[sim.id] }));
                 }}
-                className="mt-1 text-[11px] font-bold text-amber-300 hover:text-white underline cursor-pointer inline-flex items-center gap-1 transition-colors"
+                className="mt-1 text-[11px] font-bold text-[#1E4FA3] hover:underline cursor-pointer inline-flex items-center gap-1 transition-colors"
               >
                 {expandedDescIds[sim.id] ? (
                   <>
@@ -549,7 +536,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             )}
           </div>
 
-          {/* Topic Tags in Rounded Pill Capsules */}
+          {/* Topic Tags */}
           <div className="flex flex-wrap gap-1.5 mt-3">
             {sim.topics.slice(0, 2).map((topic, i) => {
               const cleanT = cleanCardTopic(topic, sim.category);
@@ -557,7 +544,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               return (
                 <span
                   key={i}
-                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full truncate max-w-[150px] shadow-xs bg-slate-900 text-sky-200 border border-sky-400 font-mono ${
+                  className={`text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] bg-[#F4F7FB] text-[#4A5568] border border-[#D5DEEC] font-mono ${
                     isTopicUrdu ? 'font-urdu leading-[2]' : ''
                   }`}
                   dir={isTopicUrdu ? 'rtl' : 'ltr'}
@@ -569,7 +556,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             })}
             {sim.topics.length > 2 && (
               <span 
-                className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs bg-slate-900 text-amber-300 border border-amber-400 font-mono"
+                className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#F4F7FB] text-[#1E4FA3] border border-[#D5DEEC] font-mono"
               >
                 +{sim.topics.length - 2}
               </span>
@@ -578,8 +565,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Card Action Bar */}
-        <div className="relative z-10 pt-4 mt-auto border-t border-white/20 flex items-center justify-between gap-2">
-          {/* Action Button: Solid Radiant Amber/Gold Launcher Button with High-Contrast Jet-Black Typography */}
+        <div className="relative z-10 pt-4 mt-auto border-t border-[#D5DEEC] flex items-center justify-between gap-2">
+          {/* Main Action Button: Warm Orange CTA Button with Dark #3D2600 Text */}
           <a
             href={getSimulationStandaloneUrl(sim)}
             target="_blank"
@@ -587,174 +574,52 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-xl border-2 border-amber-200 transition-all transform active:scale-95"
+            className="bg-[#F5A623] hover:bg-[#e69818] text-[#3D2600] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-xs border border-[#e09210] transition-all transform active:scale-95"
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
-            <ExternalLink className="w-3.5 h-3.5 text-slate-950 pointer-events-none shrink-0" />
-            <span className="text-slate-950 font-black">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+            <ExternalLink className="w-3.5 h-3.5 text-[#3D2600] pointer-events-none shrink-0" />
+            <span className="text-[#3D2600] font-bold">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
           </a>
 
-          {/* Direct Fullscreen Modal Button: Solid Radiant Electric Cyan Button */}
+          {/* Direct Fullscreen Modal Button */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onLaunchFullscreenModal(sim);
             }}
-            className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 border-2 border-cyan-200 transition-all cursor-pointer flex items-center justify-center shadow-lg active:scale-95"
-            title="Launch in 4K Fullscreen View"
+            className="w-10 h-10 rounded-xl bg-white hover:bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95"
+            title="Launch in Fullscreen View"
           >
-            <Maximize2 className="w-4 h-4 text-slate-950 pointer-events-none shrink-0" />
+            <Maximize2 className="w-4 h-4 text-[#1E4FA3] pointer-events-none shrink-0" />
           </button>
         </div>
       </div>
     );
   };
 
-  const getGradeTierStyle = (tierKey: string, isSelected: boolean) => {
-    switch (tierKey) {
-      case 'all':
-        return {
-          btn: isSelected
-            ? 'bg-[#831843] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#831843] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'primary':
-        return {
-          btn: isSelected
-            ? 'bg-[#0284c7] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#0284c7] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'middle':
-        return {
-          btn: isSelected
-            ? 'bg-[#6b21a8] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#6b21a8] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'secondary':
-        return {
-          btn: isSelected
-            ? 'bg-[#059669] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#059669] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'higher':
-        return {
-          btn: isSelected
-            ? 'bg-[#d97706] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#d97706] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      default:
-        return {
-          btn: isSelected
-            ? 'bg-[#831843] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#831843] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-    }
+  const getGradeTierStyle = (_tierKey: string, isSelected: boolean) => {
+    return {
+      btn: isSelected
+        ? 'bg-[#1E4FA3] text-white border-2 border-[#1E4FA3] shadow-md font-bold scale-[1.02]'
+        : 'bg-white hover:bg-[#E4ECF8] text-[#4A5568] hover:text-[#1E4FA3] border border-[#D5DEEC] shadow-xs font-semibold',
+      badge: isSelected
+        ? 'bg-white/25 text-white font-mono font-bold'
+        : 'bg-[#F4F7FB] text-[#14305F] font-mono font-bold border border-[#D5DEEC]',
+      iconBox: isSelected ? 'bg-white/10 text-white' : 'bg-transparent text-[#1E4FA3]'
+    };
   };
 
-  const getSubjectStyle = (key: string, isSelected: boolean) => {
-    switch (key) {
-      case 'All Simulations':
-        return {
-          btn: isSelected
-            ? 'bg-[#e11d48] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#e11d48] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Physics & Motion':
-        return {
-          btn: isSelected
-            ? 'bg-[#06b6d4] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#06b6d4] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Chemistry & Matter':
-        return {
-          btn: isSelected
-            ? 'bg-[#f43f5e] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#f43f5e] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Biology & Life':
-        return {
-          btn: isSelected
-            ? 'bg-[#1d4ed8] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#1d4ed8] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Earth & Space':
-        return {
-          btn: isSelected
-            ? 'bg-[#d97706] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#d97706] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Mathematics & Logic':
-        return {
-          btn: isSelected
-            ? 'bg-[#10b981] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#10b981] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Computer Science & IT':
-        return {
-          btn: isSelected
-            ? 'bg-[#6b21a8] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#6b21a8] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'English & Grammar':
-        return {
-          btn: isSelected
-            ? 'bg-[#0891b2] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#0891b2] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Early Childhood (ECCE)':
-        return {
-          btn: isSelected
-            ? 'bg-[#be123c] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#be123c] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      case 'Urdu & Linguistics':
-        return {
-          btn: isSelected
-            ? 'bg-[#2563eb] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#2563eb] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-      default:
-        return {
-          btn: isSelected
-            ? 'bg-[#e11d48] text-white border-2 border-slate-900 shadow-xl font-black ring-4 ring-yellow-300 ring-offset-2 ring-offset-slate-900 scale-103'
-            : 'bg-[#e11d48] hover:opacity-90 text-white border-2 border-slate-900 shadow-md font-bold',
-          badge: 'bg-black text-white font-mono font-black border border-black/30',
-          iconBox: 'bg-transparent text-white'
-        };
-    }
+  const getSubjectStyle = (_key: string, isSelected: boolean) => {
+    return {
+      btn: isSelected
+        ? 'bg-[#1E4FA3] text-white border-2 border-[#1E4FA3] shadow-md font-bold scale-[1.02]'
+        : 'bg-white hover:bg-[#E4ECF8] text-[#4A5568] hover:text-[#1E4FA3] border border-[#D5DEEC] shadow-xs font-semibold',
+      badge: isSelected
+        ? 'bg-white/25 text-white font-mono font-bold'
+        : 'bg-[#F4F7FB] text-[#14305F] font-mono font-bold border border-[#D5DEEC]',
+      iconBox: isSelected ? 'bg-white/10 text-white' : 'bg-transparent text-[#1E4FA3]'
+    };
   };
 
   return (
@@ -762,53 +627,53 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       id="catalog" 
       className="w-full space-y-6 pt-2 scroll-mt-28 opacity-100"
     >
-      {/* If Dedicated Catalog View: Show Top Back Navigation Header (Matching Screenshot 4) */}
+      {/* If Dedicated Catalog View: Show Top Back Navigation Header */}
       {!isHomeView && (
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-sans font-black text-slate-950 bg-[#8ce00f] hover:bg-[#7bc50d] border-2 border-slate-900 shadow-md transition-all cursor-pointer shrink-0 active:scale-95"
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-bold text-white bg-[#1E4FA3] hover:bg-[#163c7e] border border-[#1E4FA3] shadow-xs transition-all cursor-pointer shrink-0 active:scale-95"
             title="Return to Main Home Screen"
           >
-            <Home className="w-4 h-4 text-slate-950 pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wide uppercase font-black text-slate-950">
+            <Home className="w-4 h-4 text-white pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wide uppercase font-bold text-white">
               BACK TO HOME
             </span>
           </button>
           
-          <div className="bg-[#fac515] border-2 border-slate-900 rounded-2xl p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3 flex-wrap shadow-md">
-            <span className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-white text-slate-900 border-2 border-slate-900 shadow-xs">
+          <div className="bg-white border border-[#D5DEEC] rounded-xl p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3 flex-wrap shadow-xs">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#F4F7FB] text-[#14305F] border border-[#D5DEEC]">
               Discipline: {isAllCategory ? 'All Disciplines' : activeSubjectConfig.fullTitle}
             </span>
-            <span className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-white text-slate-900 border-2 border-slate-900 shadow-xs">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#F4F7FB] text-[#14305F] border border-[#D5DEEC]">
               Grade: {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'All Grades'}
             </span>
-            <span className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-white text-slate-900 border-2 border-slate-900 shadow-xs">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC]">
               {displayedSims.length} Labs Available
             </span>
           </div>
         </div>
       )}
 
-      {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs (Matching Screenshot 3) */}
-      <div className="relative z-10 bg-[#9ae616] border-2 border-slate-900 shadow-md rounded-3xl p-5 sm:p-6 text-slate-900 transition-all">
+      {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
+      <div className="relative z-10 bg-white border border-[#D5DEEC] shadow-sm rounded-2xl p-5 sm:p-6 text-[#14305F] transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-900 px-3.5 py-1 rounded-lg bg-transparent border-2 border-slate-900 shrink-0 shadow-xs">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#1E4FA3] px-3 py-1 rounded-md bg-[#E4ECF8] border border-[#D5DEEC] shrink-0">
               GRADE FILTER
             </span>
-            <span className="text-sm sm:text-base font-black text-slate-900 font-heading">
+            <span className="text-sm sm:text-base font-bold text-[#14305F] font-heading">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-bold text-slate-900">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#4A5568]">
             <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
                 onClick={() => handleGradeTierChange('all')}
-                className="text-slate-900 underline cursor-pointer text-xs font-black ml-1 transition-colors"
+                className="text-[#1E4FA3] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
                 title="Reset grade filter to show all simulations"
               >
                 Reset to All {activeSimulations.length} Labs
@@ -850,24 +715,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* Subject Filter Section: Category Buttons (Matching Screenshot 3) */}
-      <div className="relative z-10 bg-[#fac515] border-2 border-slate-900 shadow-md rounded-3xl p-5 sm:p-6 text-slate-900 transition-all">
+      {/* Subject Filter Section: Category Buttons */}
+      <div className="relative z-10 bg-white border border-[#D5DEEC] shadow-sm rounded-2xl p-5 sm:p-6 text-[#14305F] transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-900 px-3.5 py-1 rounded-lg bg-transparent border-2 border-slate-900 shrink-0 shadow-xs">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#1E4FA3] px-3 py-1 rounded-md bg-[#E4ECF8] border border-[#D5DEEC] shrink-0">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-sm sm:text-base font-black text-slate-900 font-heading">
+            <span className="text-sm sm:text-base font-bold text-[#14305F] font-heading">
               Select Discipline &amp; Learning Track
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-bold text-slate-900">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#4A5568]">
             <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
             {!isAllCategory && (
               <button 
                 type="button"
                 onClick={() => handleCategoryChange('All Simulations')}
-                className="text-slate-900 underline cursor-pointer text-xs font-black ml-1 transition-colors"
+                className="text-[#1E4FA3] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
                 title="Reset subject filter to show all simulations"
               >
                 Reset to All Subjects
@@ -908,76 +773,76 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* IF HOME VIEW: Render Clean Navigation Callout (Matching Screenshot 5) */}
+      {/* IF HOME VIEW: Render Clean Navigation Callout */}
       {isHomeView ? (
-        <div className="relative z-10 p-6 sm:p-7 rounded-3xl border-2 border-slate-900 shadow-md bg-[#8ce00f] text-slate-900 flex flex-col lg:flex-row items-center justify-between gap-6 select-none">
+        <div className="relative z-10 p-6 sm:p-7 rounded-2xl border border-[#D5DEEC] shadow-sm bg-white text-[#14305F] flex flex-col lg:flex-row items-center justify-between gap-6 select-none">
           <div className="space-y-2 text-center lg:text-left flex-1 min-w-0">
             <div className="flex items-center gap-2 justify-center lg:justify-start">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-slate-900 px-3.5 py-1 rounded-lg bg-transparent border-2 border-slate-900">
-                <Sparkles className="w-3.5 h-3.5 text-slate-900" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#1E4FA3] px-3.5 py-1 rounded-md bg-[#E4ECF8] border border-[#D5DEEC]">
+                <Sparkles className="w-3.5 h-3.5 text-[#1E4FA3]" />
                 LABORATORY WORKSPACE
               </span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 font-heading tracking-tight leading-snug">
+            <h3 className="text-2xl sm:text-3xl font-black text-[#14305F] font-heading tracking-tight leading-snug">
               Click Any Grade or Subject Above to Open Interactive Labs
             </h3>
-            <p className="text-xs sm:text-sm text-slate-900 font-bold leading-relaxed max-w-2xl">
+            <p className="text-xs sm:text-sm text-[#4A5568] font-normal leading-relaxed max-w-2xl">
               Select any curriculum grade tier or STEM discipline above to view dedicated simulation laboratories in a high-contrast, distraction-free environment.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-sans font-black text-slate-900 bg-white hover:bg-slate-100 border-2 border-slate-900 shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3 active:scale-95"
+            className="relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-bold text-[#3D2600] bg-[#F5A623] hover:bg-[#e69818] border border-[#e09210] shadow-sm transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3 active:scale-95"
             title="Open Complete STEM Simulations Catalog"
           >
-            <BookOpen className="w-5 h-5 text-slate-900 pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-slate-900">
+            <BookOpen className="w-5 h-5 text-[#3D2600] pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wider uppercase font-bold text-[#3D2600]">
               OPEN ALL {activeSimulations.length} LABS CATALOG
             </span>
-            <ArrowRight className="w-5 h-5 text-slate-900 pointer-events-none shrink-0" />
+            <ArrowRight className="w-5 h-5 text-[#3D2600] pointer-events-none shrink-0" />
           </button>
         </div>
       ) : (
         /* Dedicated Full-Width Simulation Catalog Main Content (Only shown in Catalog View) */
         <div className="w-full space-y-6">
         
-        {/* Top Breadcrumb & Quick Search Filter Bar (Matching Screenshot & Theme) */}
-        <div className="bg-[#9ae616] border-2 border-slate-900 shadow-md rounded-3xl p-5 sm:p-6 transition-all text-slate-900">
+        {/* Top Breadcrumb & Quick Search Filter Bar */}
+        <div className="bg-white border border-[#D5DEEC] shadow-sm rounded-2xl p-5 sm:p-6 transition-all text-[#14305F]">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             
             {/* Breadcrumb & Subject Header */}
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-[#4A5568] flex-wrap">
                 <span 
                   onClick={() => handleCategoryChange('All Simulations')}
-                  className="cursor-pointer hover:underline text-slate-900 font-bold"
+                  className="cursor-pointer hover:underline text-[#1E4FA3] font-bold"
                 >
                   Interactive Catalog
                 </span>
                 <span>&gt;</span>
-                <span className="text-slate-950 font-black">
+                <span className="text-[#14305F] font-bold">
                   {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 font-heading">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#14305F] font-heading">
                   {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
                 </h2>
                 {!isAllCategory && (
                   <button
                     type="button"
                     onClick={() => handleCategoryChange('All Simulations')}
-                    className="px-3 py-1 rounded-full text-xs font-black bg-white text-slate-900 border-2 border-slate-900 flex items-center gap-1.5 cursor-pointer hover:bg-slate-100 transition-colors shadow-xs"
+                    className="px-3 py-1 rounded-lg text-xs font-bold bg-[#F4F7FB] text-[#14305F] border border-[#D5DEEC] flex items-center gap-1.5 cursor-pointer hover:bg-[#E4ECF8] transition-colors shadow-xs"
                     title="Reset discipline filter to show all simulations"
                   >
                     <span>Filter: {activeSubjectConfig.fullTitle}</span>
-                    <span className="font-black text-sm">&times;</span>
+                    <span className="font-bold text-sm">&times;</span>
                   </button>
                 )}
-                <span className="px-4 py-1.5 rounded-full text-xs font-black shadow-xs flex items-center gap-2 bg-white text-slate-900 border-2 border-slate-900 font-mono">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#E3F5F0] text-[#2BA58A] border border-[#2BA58A]/30 font-mono">
+                  <CheckCircle2 className="w-4 h-4 text-[#2BA58A] shrink-0" />
                   {displayedSims.length === activeSimulations.length
                     ? `Showing All ${activeSimulations.length} Verified Labs`
                     : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
@@ -987,19 +852,19 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
             {/* Quick Search Bar to Filter Labs Instantly */}
             <div className="w-full md:w-80 shrink-0">
-              <div className="relative flex items-center rounded-2xl border-2 border-slate-900 bg-white shadow-xs focus-within:ring-2 focus-within:ring-black">
-                <Search className="w-4 h-4 ml-3.5 shrink-0 text-slate-900" />
+              <div className="relative flex items-center rounded-xl border border-[#D5DEEC] bg-[#F4F7FB] shadow-xs focus-within:ring-2 focus-within:ring-[#1E4FA3] focus-within:bg-white">
+                <Search className="w-4 h-4 ml-3.5 shrink-0 text-[#1E4FA3]" />
                 <input
                   type="text"
                   placeholder="Search labs across disciplines..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-bold bg-transparent outline-none text-slate-900 placeholder-slate-500 font-sans"
+                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-[#14305F] placeholder-slate-400 font-sans"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="mr-2 text-xs font-black px-1.5 py-0.5 rounded-full cursor-pointer bg-slate-200 text-slate-900 hover:bg-slate-300"
+                    className="mr-2 text-xs font-bold px-1.5 py-0.5 rounded-full cursor-pointer bg-[#D5DEEC] text-[#14305F] hover:bg-slate-300"
                     title="Clear search"
                   >
                     &times;
@@ -1020,28 +885,19 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         ) : (
             <div 
-              className="rounded-2xl p-8 sm:p-12 text-center border shadow-xl transition-all"
-              style={{
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.95)',
-                borderColor: '#a855f7',
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                boxShadow: '0 12px 40px rgba(168, 85, 247, 0.25)'
-              }}
+              className="rounded-2xl p-8 sm:p-12 text-center bg-white border border-[#D5DEEC] shadow-sm transition-all"
             >
-              <div className="w-16 h-16 mx-auto rounded-3xl flex items-center justify-center bg-purple-500/20 text-purple-500 mb-4 shadow-lg border border-purple-500/30">
-                <Sparkles className="w-8 h-8 animate-pulse text-purple-400" />
+              <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#E4ECF8] text-[#1E4FA3] mb-4 border border-[#D5DEEC]">
+                <Sparkles className="w-8 h-8 text-[#1E4FA3]" />
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 inline-block mb-2">
+              <span className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider text-[#1E4FA3] bg-[#E4ECF8] border border-[#D5DEEC] inline-block mb-2 font-mono">
                 No Pre-Built Simulation Found
               </span>
-              <h3 className="text-xl sm:text-2xl font-black" style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#14305F]">
                 {searchTerm ? `Synthesize Simulation for "${searchTerm}"` : `No Labs Found`}
               </h3>
-              <p className="text-xs sm:text-sm font-bold mt-2 max-w-xl mx-auto leading-relaxed" style={{ color: isDarkMode ? '#cbd5e1' : '#475569' }}>
-                Use the Gemini AI generator below to synthesize a live 4K interactive physics canvas and controls on the fly.
+              <p className="text-xs sm:text-sm font-normal mt-2 max-w-xl mx-auto leading-relaxed text-[#4A5568]">
+                Use the generator below to synthesize an interactive simulation canvas and controls on the fly.
               </p>
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -1049,25 +905,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <button
                     disabled={isGeneratingAi}
                     onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
-                    className="btn-3d px-6 py-3 rounded-xl text-sm font-black text-white cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-xl disabled:opacity-50"
-                    style={{
-                      backgroundColor: '#9333ea',
-                      backgroundImage: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
-                      borderColor: '#c084fc',
-                      borderWidth: '1.5px',
-                      borderStyle: 'solid',
-                      boxShadow: '0 6px 20px rgba(168, 85, 247, 0.4)'
-                    }}
+                    className="px-6 py-3 rounded-xl text-sm font-bold text-[#3D2600] bg-[#F5A623] hover:bg-[#e69818] border border-[#e09210] cursor-pointer transition-all active:scale-95 flex items-center gap-2 shadow-xs disabled:opacity-50"
                   >
                     {isGeneratingAi ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Synthesizing Simulation with Gemini...</span>
+                        <Loader2 className="w-4 h-4 animate-spin text-[#3D2600]" />
+                        <span>Synthesizing Simulation...</span>
                       </>
                     ) : (
                       <>
-                        <Wand2 className="w-4 h-4" />
-                        <span>⚡ Synthesize &ldquo;{searchTerm}&rdquo; Lab with Gemini AI</span>
+                        <Wand2 className="w-4 h-4 text-[#3D2600]" />
+                        <span>Synthesize &ldquo;{searchTerm}&rdquo; Lab</span>
                       </>
                     )}
                   </button>
@@ -1078,13 +926,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     handleCategoryChange('All Simulations');
                     setSearchTerm('');
                   }}
-                  className="btn-3d px-4 py-3 rounded-xl text-xs font-black cursor-pointer transition-transform hover:scale-105"
-                  style={{
-                    backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9',
-                    borderColor: isDarkMode ? '#334155' : '#cbd5e1',
-                    borderWidth: '1px',
-                    color: isDarkMode ? '#cbd5e1' : '#475569'
-                  }}
+                  className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#F4F7FB] hover:bg-[#E4ECF8] text-[#14305F] border border-[#D5DEEC]"
                 >
                   View All Simulations
                 </button>

@@ -216,87 +216,63 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     }
   ];
 
-  const featureThemes = [
-    {
-      gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%)',
-      glow: 'rgba(14, 165, 233, 0.45)'
-    },
-    {
-      gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%)',
-      glow: 'rgba(245, 158, 11, 0.45)'
-    },
-    {
-      gradient: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4c1d95 100%)',
-      glow: 'rgba(124, 58, 237, 0.45)'
-    },
-    {
-      gradient: 'linear-gradient(135deg, #059669 0%, #047857 50%, #064e3b 100%)',
-      glow: 'rgba(16, 185, 129, 0.45)'
-    }
-  ];
-
   return (
     <section 
       id="features" 
-      className="w-full rounded-3xl p-6 sm:p-8 space-y-6 transition-all bg-white border-2 border-slate-200 shadow-md text-slate-800"
+      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all bg-white border border-[#D5DEEC] shadow-sm text-[#14305F]"
     >
       <div 
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D5DEEC] pb-4"
       >
         <div>
           <span 
-            className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-1.5 bg-sky-50 text-sky-700 border border-sky-200 font-mono shadow-2xs"
+            className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] font-mono"
           >
             Digital Laboratory Architecture
           </span>
           <h2 
-            className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading"
+            className="text-xl sm:text-2xl font-black tracking-tight text-[#14305F] font-heading"
           >
             Professional STEM Educational Website Capabilities
           </h2>
         </div>
         <div 
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-2xs"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 bg-[#E3F5F0] border border-[#2BA58A]/30 text-[#2BA58A] shadow-2xs"
         >
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <ShieldCheck className="w-4 h-4 text-[#2BA58A]" />
           <span>Verified Digital Laboratory Standard</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {features.map((feat, idx) => {
-          const theme = featureThemes[idx % featureThemes.length];
           return (
             <div 
               key={idx}
-              className="p-5 sm:p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 text-white cursor-default select-none border border-white/20 shadow-md hover:shadow-lg"
-              style={{
-                background: theme.gradient,
-                boxShadow: `0 8px 20px -4px ${theme.glow}, 0 2px 6px rgba(0,0,0,0.1)`
-              }}
+              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 text-[#4A5568] cursor-default select-none bg-white border border-[#D5DEEC] shadow-sm hover:shadow-md hover:border-[#1E4FA3]/50"
             >
               <div className="relative z-10">
                 {/* Header with 3D Icon & Feature Badge */}
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-slate-900 border border-slate-700 shadow-sm text-white"
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform bg-[#F4F7FB] border border-[#D5DEEC] shadow-xs"
                   >
                     {feat.renderIcon()}
                   </div>
                   <span 
-                    className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wide uppercase bg-black/40 text-slate-100 shadow-sm border border-white/20"
+                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC]"
                   >
                     {feat.badge}
                   </span>
                 </div>
 
                 <h3 
-                  className="text-base font-black tracking-wide mb-2 leading-snug text-white font-heading drop-shadow-sm"
+                  className="text-base font-bold tracking-tight mb-2 leading-snug text-[#14305F] font-heading"
                 >
                   {feat.title}
                 </h3>
                 <p 
-                  className="text-xs font-medium leading-relaxed text-white/95 drop-shadow-2xs"
+                  className="text-xs font-normal leading-relaxed text-[#4A5568]"
                 >
                   {feat.description}
                 </p>

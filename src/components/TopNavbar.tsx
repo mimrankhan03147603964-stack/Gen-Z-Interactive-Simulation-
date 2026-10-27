@@ -154,7 +154,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   return (
     <header 
       ref={headerRef}
-      className="fixed top-0 left-0 w-full z-[99999] border-b-2 border-slate-300 bg-white transition-all select-none shadow-sm"
+      className="fixed top-0 left-0 w-full z-[99999] border-b border-[#D5DEEC] bg-white transition-all select-none shadow-sm"
       style={{ 
         position: 'fixed', 
         top: 0, 
@@ -162,7 +162,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         width: '100%', 
         zIndex: 99999,
         backgroundColor: '#ffffff',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+        borderBottom: '1px solid #D5DEEC',
+        boxShadow: '0 2px 8px rgba(20, 48, 95, 0.06)'
       }}
     >
       <div 
@@ -183,7 +184,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         >
           {/* GZ Monogram Logo */}
           <div 
-            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border border-sky-500/80 bg-[#240854] shadow-[0_2px_4px_rgba(0,0,0,0.25)] transition-all duration-150 group-hover:scale-105"
+            className="inline-flex items-center justify-center shrink-0 rounded-lg overflow-hidden border border-[#D5DEEC] bg-[#240854] shadow-[0_2px_4px_rgba(0,0,0,0.25)] transition-all duration-150 group-hover:scale-105"
             style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '7px' }}
           >
             <img 
@@ -196,22 +197,22 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
           <div className="hidden sm:block shrink-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] lg:text-xs font-black tracking-tight text-slate-900 font-heading group-hover:text-sky-600 transition-colors whitespace-nowrap">
+              <span className="text-[11px] lg:text-xs font-black tracking-tight text-[#14305F] font-heading group-hover:text-[#1E4FA3] transition-colors whitespace-nowrap">
                 DIGITAL LABORATORY PORTAL
               </span>
               <span 
-                className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black text-white shadow-2xs whitespace-nowrap"
-                style={{ backgroundColor: '#0284c7', border: '1px solid #0369a1', color: '#ffffff' }}
+                className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-black text-[#1E4FA3] shadow-2xs whitespace-nowrap"
+                style={{ backgroundColor: '#E4ECF8', border: '1px solid #1E4FA3', color: '#1E4FA3' }}
               >
                 4K UHD
               </span>
             </div>
             <div className="text-[10px] lg:text-[11px] font-semibold flex items-center gap-1.5 flex-nowrap mt-0.5 whitespace-nowrap">
-              <span className="font-extrabold text-blue-700">{totalSimulations} Verified Labs</span>
-              <span className="hidden xl:inline text-slate-300 font-bold">&bull;</span>
+              <span className="font-extrabold text-[#1E4FA3]">{totalSimulations} Verified Labs</span>
+              <span className="hidden xl:inline text-[#D5DEEC] font-bold">&bull;</span>
               <span 
-                className="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[9px] font-extrabold text-white shadow-2xs whitespace-nowrap"
-                style={{ backgroundColor: '#059669', border: '1px solid #047857', color: '#ffffff' }}
+                className="hidden xl:inline-block px-1.5 py-0.2 rounded-full text-[9px] font-extrabold text-[#2BA58A] shadow-2xs whitespace-nowrap"
+                style={{ backgroundColor: '#E3F5F0', border: '1px solid #2BA58A', color: '#2BA58A' }}
               >
                 NCP Aligned (Session 2026-27)
               </span>
@@ -235,10 +236,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#top')}
-            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:text-sky-600 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#1E4FA3] bg-[#E4ECF8] hover:bg-[#E4ECF8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Return to Home Portal"
           >
-            <Home className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <Home className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
             <span>Home</span>
           </button>
 
@@ -256,19 +257,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'catalog' 
-                  ? 'text-slate-900 bg-slate-100 ring-1 ring-slate-300' 
-                  : 'text-slate-800 hover:text-sky-600 hover:bg-slate-100'
+                  ? 'text-[#1E4FA3] bg-[#E4ECF8] ring-1 ring-[#1E4FA3]/40' 
+                  : 'text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8]'
               }`}
               aria-expanded={openDropdown === 'catalog'}
               aria-haspopup="true"
               title="Browse Full STEM Catalog by Discipline"
             >
-              <Layers className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+              <Layers className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
               <span>STEM Catalog ({totalSimulations})</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-slate-800' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-[#1E4FA3]' : 'text-[#4A5568]'}`} />
             </button>
 
-            {/* Lime-Green Dropdown Panel exactly matching screenshot */}
+            {/* Dropdown Panel in Clean Card Styling */}
             {openDropdown === 'catalog' && (
               <div 
                 className="absolute left-0 top-full pt-1.5 z-[99999]"
@@ -282,19 +283,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none"
+                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none bg-white border border-[#D5DEEC] shadow-2xl"
                   style={{
-                    backgroundColor: '#86eb16',
-                    border: '1.5px solid #6ec40d',
-                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #D5DEEC',
+                    boxShadow: '0 20px 45px rgba(20, 48, 95, 0.15)',
                     maxHeight: 'calc(100vh - 75px)',
                     overflowY: 'auto'
                   }}
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-slate-900 tracking-wider uppercase"
-                    style={{ borderBottom: '1px solid #6ec40d' }}
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#14305F] tracking-wider uppercase bg-[#F4F7FB]"
+                    style={{ borderBottom: '1px solid #D5DEEC' }}
                   >
                     STEM DISCIPLINES &amp; LABORATORIES
                   </div>
@@ -311,9 +312,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick('#catalog', item.categoryKey);
                           }}
-                          className="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-900 hover:bg-black/5 active:bg-black/10 transition-colors cursor-pointer"
+                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#14305F] hover:bg-[#E4ECF8] hover:text-[#1E4FA3] active:bg-[#E4ECF8] transition-colors cursor-pointer"
                           style={{
-                            borderBottom: !isLast ? '1px solid #6ec40d' : 'none'
+                            borderBottom: !isLast ? '1px solid #D5DEEC' : 'none'
                           }}
                         >
                           {item.label}
@@ -340,20 +341,20 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 openDropdown === 'hub' 
-                  ? 'text-slate-900 bg-slate-100 ring-1 ring-slate-300' 
-                  : 'text-slate-800 hover:text-indigo-600 hover:bg-slate-100'
+                  ? 'text-[#1E4FA3] bg-[#E4ECF8] ring-1 ring-[#1E4FA3]/40' 
+                  : 'text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8]'
               }`}
               aria-expanded={openDropdown === 'hub'}
               aria-haspopup="true"
               title="Pedagogical Audience & Standards"
             >
-              <BookOpen className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+              <BookOpen className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
               <span className="hidden sm:inline">Educators &amp; Students Hub</span>
               <span className="sm:hidden">Hub</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-slate-800' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-[#1E4FA3]' : 'text-[#4A5568]'}`} />
             </button>
 
-            {/* Lime-Green Dropdown Panel exactly matching screenshot */}
+            {/* Dropdown Panel in Clean Card Styling */}
             {openDropdown === 'hub' && (
               <div 
                 className="absolute left-0 top-full pt-1.5 z-[99999]"
@@ -367,17 +368,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[320px] sm:w-[350px] rounded-xl overflow-hidden select-none"
+                  className="w-[320px] sm:w-[350px] rounded-xl overflow-hidden select-none bg-white border border-[#D5DEEC] shadow-2xl"
                   style={{
-                    backgroundColor: '#86eb16',
-                    border: '1.5px solid #6ec40d',
-                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.35)'
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #D5DEEC',
+                    boxShadow: '0 20px 45px rgba(20, 48, 95, 0.15)'
                   }}
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-slate-900 tracking-wider uppercase"
-                    style={{ borderBottom: '1px solid #6ec40d' }}
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#14305F] tracking-wider uppercase bg-[#F4F7FB]"
+                    style={{ borderBottom: '1px solid #D5DEEC' }}
                   >
                     PEDAGOGICAL AUDIENCE &amp; FRAMEWORK
                   </div>
@@ -394,9 +395,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick(item.href);
                           }}
-                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[15px] font-semibold text-slate-900 hover:bg-black/5 active:bg-black/10 transition-colors cursor-pointer"
+                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#14305F] hover:bg-[#E4ECF8] hover:text-[#1E4FA3] active:bg-[#E4ECF8] transition-colors cursor-pointer"
                           style={{
-                            borderBottom: !isLast ? '1px solid #6ec40d' : 'none'
+                            borderBottom: !isLast ? '1px solid #D5DEEC' : 'none'
                           }}
                         >
                           {item.label}
@@ -413,10 +414,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#external-simulations')}
-            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100 hover:text-indigo-900 border border-indigo-200/80 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#1E4FA3] bg-[#E4ECF8] hover:bg-[#d8e5f7] border border-[#1E4FA3]/30 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
             title="Jump to External Simulations & Global Science Platforms"
           >
-            <Globe className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+            <Globe className="w-3.5 h-3.5 text-[#1E4FA3] shrink-0" />
             <span className="hidden md:inline">External Simulations</span>
             <span className="md:hidden">Sim Hub</span>
           </button>
@@ -425,23 +426,28 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:text-emerald-600 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-[#4A5568] hover:text-[#1E4FA3] hover:bg-[#E4ECF8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             title="Go to Developer & Contact Section"
           >
-            <UserCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <UserCheck className="w-3.5 h-3.5 text-[#2BA58A] shrink-0" />
             <span className="hidden md:inline">Developer &amp; Contact</span>
             <span className="md:hidden">Contact</span>
           </button>
 
-          {/* Link 5: Explore All Labs Grid */}
+          {/* Link 5: Explore All Labs Grid (Accent Warm Orange #F5A623 with dark text #3D2600) */}
           <button
             type="button"
             onClick={() => handleItemClick('#catalog', 'All Simulations')}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 hover:text-sky-800 border border-sky-200 transition-colors whitespace-nowrap shrink-0 shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 shadow-sm cursor-pointer hover:brightness-105 active:scale-95"
+            style={{
+              backgroundColor: '#F5A623',
+              color: '#3D2600',
+              border: '1px solid #d98f19'
+            }}
             title="Explore Full STEM Labs Catalog Grid"
           >
-            <Sparkles className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-            <span>Explore All Labs</span>
+            <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: '#3D2600' }} />
+            <span style={{ color: '#3D2600' }}>Explore All Labs</span>
           </button>
         </nav>
 

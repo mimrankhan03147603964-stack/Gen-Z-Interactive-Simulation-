@@ -164,38 +164,38 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       id="external-simulations" 
       className="w-full relative z-10 space-y-6 scroll-mt-24 select-none"
     >
-      {/* Top Banner / Section Header matching portal aesthetic */}
-      <div className="bg-[#fac515] border-2 border-slate-900 shadow-md rounded-3xl p-5 sm:p-7 text-slate-900 transition-all">
+      {/* Top Banner / Section Header */}
+      <div className="bg-white border border-[#D5DEEC] shadow-sm rounded-2xl p-5 sm:p-7 text-[#14305F] transition-all">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-slate-900 px-3.5 py-1 rounded-lg bg-transparent border-2 border-slate-900 shadow-xs">
-                <Globe className="w-3.5 h-3.5 text-slate-900" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#1E4FA3] px-3.5 py-1 rounded-md bg-[#E4ECF8] border border-[#D5DEEC]">
+                <Globe className="w-3.5 h-3.5 text-[#1E4FA3]" />
                 SIMULATION HUB
               </span>
-              <span className="px-3 py-1 rounded-full text-xs font-black bg-white text-slate-900 border-2 border-slate-900 shadow-xs flex items-center gap-1.5 font-mono">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#E3F5F0] text-[#2BA58A] border border-[#2BA58A]/30 shadow-2xs flex items-center gap-1.5 font-mono">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#2BA58A] shrink-0" />
                 8 Curated Global STEM Repositories
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 font-heading">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#14305F] font-heading">
               External Interactive Simulation Platforms
             </h2>
-            <p className="text-xs sm:text-sm text-slate-900 font-bold max-w-3xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#4A5568] font-normal max-w-3xl leading-relaxed">
               Explore leading research-grade physics, chemistry, engineering, and mathematics interactive simulation engines worldwide with instant direct access.
             </p>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <div className="px-4 py-2 rounded-2xl bg-white border-2 border-slate-900 shadow-xs flex items-center gap-2 text-xs font-black text-slate-900">
-              <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+            <div className="px-4 py-2 rounded-xl bg-[#F4F7FB] border border-[#D5DEEC] shadow-2xs flex items-center gap-2 text-xs font-bold text-[#14305F]">
+              <Sparkles className="w-4 h-4 text-[#F5A623] shrink-0" />
               <span>Direct External Access</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 8 External Simulation Cards Grid matching the exact card design of current simulations */}
+      {/* 8 External Simulation Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 w-full">
         {EXTERNAL_SIMULATION_RESOURCES.map((item) => {
           const IconComponent = item.icon;
@@ -203,33 +203,24 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
           return (
             <div
               key={item.id}
-              className="card-colored-3d rounded-3xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-300 text-white hover:-translate-y-1.5"
-              style={{
-                background: item.bgGradient,
-                borderRadius: '24px',
-                borderWidth: '2px',
-                borderStyle: 'solid',
-                borderColor: item.borderColor,
-                boxShadow: `0 12px 28px -5px ${item.glowColor}, 0 6px 12px -4px rgba(0, 0, 0, 0.2)`,
-                transform: 'translateZ(0)'
-              }}
+              className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 bg-white border border-[#D5DEEC] shadow-sm hover:shadow-md hover:border-[#1E4FA3]/50 hover:-translate-y-1 text-[#4A5568]"
             >
-              {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
+              {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
               <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
-                {/* Realistic Visual Emblem Pedestal on Solid High-Contrast Surface */}
+                {/* Visual Emblem Pedestal (Icon 100% untouched) */}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-slate-950 border-2 border-sky-400 shadow-md"
+                  className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block bg-[#F4F7FB] border border-[#D5DEEC] shadow-xs"
                   title={`Open ${item.title} in new tab`}
                 >
-                  <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 text-sky-300 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
+                  <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 text-[#1E4FA3] group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
                 </a>
 
-                {/* 3D Lab / Resource Badge - Clearly Separated on Right */}
+                {/* Resource Badge */}
                 <span 
-                  className="font-mono text-xs font-black px-3.5 py-1 rounded-full bg-slate-950 text-white shadow-md border-2 border-sky-400 shrink-0 tracking-wide"
+                  className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] shrink-0 tracking-wide"
                 >
                   {item.badge}
                 </span>
@@ -238,7 +229,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               {/* Dedicated Grade / Class Level Area */}
               <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
                 <span 
-                  className="text-[11px] font-bold px-3 py-1 rounded-full font-mono shadow-xs bg-slate-950 text-amber-300 border-2 border-amber-400 leading-normal inline-block max-w-full break-words text-left"
+                  className="text-[11px] font-bold px-3 py-1 rounded-full font-mono bg-[#E3F5F0] text-[#2BA58A] border border-[#2BA58A]/30 leading-normal inline-block max-w-full break-words text-left"
                   title={item.gradeTier}
                 >
                   {item.gradeTier}
@@ -247,16 +238,15 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
 
               {/* Content: Title, Subject, Description, Topics */}
               <div className="relative z-10 flex-1 flex flex-col">
-                {/* Simulation Topic Title in Crisp White with Native 4K Text Shadow */}
+                {/* Title */}
                 <h4 
-                  className="text-base sm:text-lg font-black tracking-wide text-white font-heading leading-snug line-clamp-2"
-                  style={{ textShadow: '0 2px 4px rgba(0,0,0,0.85)' }}
+                  className="text-base sm:text-lg font-bold tracking-tight text-[#14305F] font-heading leading-snug line-clamp-2"
                 >
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline text-white hover:text-amber-200 transition-colors"
+                    className="hover:text-[#1E4FA3] transition-colors"
                     title={`Open ${item.title} in new tab`}
                   >
                     {item.title}
@@ -264,27 +254,26 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </h4>
 
                 {/* Subject & Sub-discipline */}
-                <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-amber-300">
-                  <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse inline-block shrink-0" />
-                  <span className="text-amber-200 font-extrabold">{item.category}</span>
+                <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5 text-[#1E4FA3]">
+                  <span className="w-2 h-2 rounded-full bg-[#2BA58A] inline-block shrink-0" />
+                  <span className="text-[#1E4FA3] font-bold">{item.category}</span>
                 </p>
 
                 {/* Concept Description */}
                 <div className="mt-2 flex-1">
                   <p 
-                    className="text-xs sm:text-[13px] font-medium text-white leading-relaxed line-clamp-3"
-                    style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
+                    className="text-xs sm:text-[13px] font-normal text-[#4A5568] leading-relaxed line-clamp-3"
                   >
                     {item.description}
                   </p>
                 </div>
 
-                {/* Topic Tags in Rounded Pill Capsules */}
+                {/* Topic Tags */}
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {item.topics.slice(0, 3).map((topic, i) => (
                     <span
                       key={i}
-                      className="text-[11px] font-bold px-2.5 py-0.5 rounded-full truncate max-w-[150px] shadow-xs bg-slate-900 text-sky-200 border border-sky-400 font-mono"
+                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] bg-[#F4F7FB] text-[#4A5568] border border-[#D5DEEC] font-mono"
                       title={topic}
                     >
                       {topic}
@@ -292,7 +281,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   ))}
                   {item.topics.length > 3 && (
                     <span 
-                      className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs bg-slate-900 text-amber-300 border border-amber-400 font-mono"
+                      className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#F4F7FB] text-[#1E4FA3] border border-[#D5DEEC] font-mono"
                     >
                       +{item.topics.length - 3}
                     </span>
@@ -301,28 +290,28 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               </div>
 
               {/* Card Action Bar */}
-              <div className="relative z-10 pt-4 mt-4 border-t border-white/20 flex items-center justify-between gap-2">
-                {/* Action Button: Solid Radiant Amber/Gold Launcher Button with High-Contrast Jet-Black Typography */}
+              <div className="relative z-10 pt-4 mt-4 border-t border-[#D5DEEC] flex items-center justify-between gap-2">
+                {/* Action Button: Warm Orange CTA Button with Dark #3D2600 Typography */}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 cursor-pointer shadow-xl border-2 border-amber-200 transition-all transform active:scale-95 group-hover:shadow-amber-500/25"
+                  className="flex-1 bg-[#F5A623] hover:bg-[#e69818] text-[#3D2600] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs border border-[#e09210] transition-all transform active:scale-95"
                   title={`Launch ${item.title} in new tab`}
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-slate-950 pointer-events-none shrink-0" />
-                  <span className="text-slate-950 font-black">Launch Lab</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-[#3D2600] pointer-events-none shrink-0" />
+                  <span className="text-[#3D2600] font-bold">Launch Lab</span>
                 </a>
 
-                {/* Direct External Link Icon Button: Solid Radiant Electric Cyan Button */}
+                {/* Direct External Link Icon Button */}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 border-2 border-cyan-200 transition-all cursor-pointer flex items-center justify-center shadow-lg active:scale-95 shrink-0"
+                  className="w-10 h-10 rounded-xl bg-white hover:bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC] transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95 shrink-0"
                   title={`Explore ${item.title} Now`}
                 >
-                  <Maximize2 className="w-4 h-4 text-slate-950 pointer-events-none shrink-0" />
+                  <Maximize2 className="w-4 h-4 text-[#1E4FA3] pointer-events-none shrink-0" />
                 </a>
               </div>
             </div>

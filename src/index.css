@@ -76,7 +76,7 @@
     font-family: var(--font-body);
     color: var(--tx);
     line-height: 1.6;
-    background-color: #f8fafc;
+    background-color: #F4F7FB;
     /* Clean white/light base featuring soft ambient pastel radial gradients (subtle cyan/sky blue, soft lavender, and light mint glows) */
     background-image: 
       radial-gradient(circle at 12% 15%, rgba(224, 242, 254, 0.75) 0%, transparent 42%),

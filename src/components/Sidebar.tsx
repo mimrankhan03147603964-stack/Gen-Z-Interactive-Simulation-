@@ -237,11 +237,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Drawer Header: Clean Solid White with Crisp Dark Contrast */}
         <div 
-          className="p-4 sm:p-5 border-b-2 border-slate-200 flex items-center justify-between gap-3 shrink-0 relative bg-white"
+          className="p-4 sm:p-5 border-b border-[#D5DEEC] flex items-center justify-between gap-3 shrink-0 relative bg-white"
         >
           <div className="flex items-center gap-3">
             <div 
-              className="inline-flex items-center justify-center rounded-lg bg-[#240854] border border-slate-300 shadow-sm shrink-0 overflow-hidden"
+              className="inline-flex items-center justify-center rounded-lg bg-[#240854] border border-[#D5DEEC] shadow-sm shrink-0 overflow-hidden"
               style={{ width: 'fit-content', height: 'auto', padding: '0px', borderRadius: '8px' }}
             >
               <img
@@ -252,39 +252,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
               />
             </div>
             <div>
-              <h2 className="text-sm font-black tracking-wide text-slate-900 uppercase font-heading">
+              <h2 className="text-sm font-black tracking-wide text-[#14305F] uppercase font-heading">
                 GEN Z SIMULATIONS
               </h2>
-              <p className="text-xs font-bold text-blue-600 flex items-center gap-1.5 mt-0.5">
+              <p className="text-xs font-bold text-[#1E4FA3] flex items-center gap-1.5 mt-0.5">
                 <span>STEM Disciplines</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-black bg-blue-100 text-blue-800 border border-blue-300">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E4ECF8] text-[#1E4FA3] border border-[#D5DEEC]">
                   {simulations.length} Labs
                 </span>
               </p>
             </div>
           </div>
 
-          {/* Close Button with Crisp Border */}
+          {/* Close Button */}
           <button
             type="button"
             onClick={onToggle}
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 text-slate-700 transition-all cursor-pointer shadow-xs active:scale-95"
+            className="p-2 rounded-xl bg-[#F4F7FB] hover:bg-[#E4ECF8] border border-[#D5DEEC] text-[#14305F] transition-all cursor-pointer shadow-xs active:scale-95"
             title="Close Drawer"
             aria-label="Close Drawer"
           >
-            <X className="w-5 h-5 text-slate-700" />
+            <X className="w-5 h-5 text-[#14305F]" />
           </button>
         </div>
 
         {/* View Switcher Tabs (Disciplines vs All Labs) */}
-        <div className="p-3 border-b-2 border-slate-200 bg-slate-50 grid grid-cols-2 gap-2 shrink-0">
+        <div className="p-3 border-b border-[#D5DEEC] bg-[#F4F7FB] grid grid-cols-2 gap-2 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('categories')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
+            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
               activeTab === 'categories'
-                ? 'bg-blue-600 text-white border-blue-700 shadow-md'
-                : 'bg-white text-slate-700 hover:text-blue-600 border-slate-300 shadow-xs'
+                ? 'bg-[#1E4FA3] text-white border-[#1E4FA3] shadow-xs'
+                : 'bg-white text-[#4A5568] hover:text-[#1E4FA3] border-[#D5DEEC] shadow-xs'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -293,10 +293,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('labs')}
-            className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border-2 ${
+            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
               activeTab === 'labs'
-                ? 'bg-blue-600 text-white border-blue-700 shadow-md'
-                : 'bg-white text-slate-700 hover:text-blue-600 border-slate-300 shadow-xs'
+                ? 'bg-[#1E4FA3] text-white border-[#1E4FA3] shadow-xs'
+                : 'bg-white text-[#4A5568] hover:text-[#1E4FA3] border-[#D5DEEC] shadow-xs'
             }`}
           >
             <Search className="w-3.5 h-3.5" />
@@ -304,12 +304,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Tab 1: STEM Subjects / Categories List - SOLID BLUE CARDS ON PURE WHITE */}
+        {/* Tab 1: STEM Subjects / Categories List */}
         {activeTab === 'categories' && (
-          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-white">
-            <div className="px-2 py-1 text-xs font-black uppercase tracking-wider text-slate-800 flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-white">
+            <div className="px-2 py-1 text-xs font-bold uppercase tracking-wider text-[#14305F] flex items-center justify-between border-b border-[#D5DEEC] pb-1.5 mb-2">
               <span>Filter By Subject</span>
-              <span className="text-[11px] font-mono font-bold text-slate-500">9 Available</span>
+              <span className="text-[11px] font-mono font-medium text-[#4A5568]">9 Available</span>
             </div>
 
             {CATEGORIES.map((cat) => {
@@ -321,32 +321,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={cat.key}
                   type="button"
                   onClick={() => handleCategoryClick(cat.key)}
-                  className={`w-full p-3 rounded-2xl text-left cursor-pointer transition-all duration-200 flex items-center justify-between group relative overflow-hidden border-2 text-white ${
+                  className={`w-full p-3 rounded-xl text-left cursor-pointer transition-all duration-150 flex items-center justify-between group relative border ${
                     isSelected
-                      ? 'ring-3 ring-amber-400 ring-offset-2 ring-offset-white scale-[1.02] shadow-xl border-white'
-                      : 'hover:scale-[1.01] hover:brightness-105 shadow-md border-blue-400/50'
+                      ? 'bg-[#1E4FA3] text-white border-[#1E4FA3] shadow-xs'
+                      : 'bg-white hover:bg-[#E4ECF8] text-[#14305F] border-[#D5DEEC] shadow-xs'
                   }`}
-                  style={{
-                    background: cat.gradient,
-                    boxShadow: `0 6px 18px -4px ${cat.glow}, inset 0 1px 1px rgba(255,255,255,0.4)`
-                  }}
                   title={`Filter by ${cat.name}`}
                 >
-                  {/* Top Specular Highlight */}
-                  <div className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-b from-white/40 via-transparent to-black/30" />
-
                   <div className="flex items-center gap-3 min-w-0 relative z-10">
-                    {/* Glowing Icon Box */}
+                    {/* Icon Box */}
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-2 transition-transform group-hover:scale-110 bg-black/25 border-white/50 shadow-sm"
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border transition-transform group-hover:scale-105 shadow-xs ${
+                        isSelected ? 'bg-white/15 border-white/30 text-white' : 'bg-[#F4F7FB] border-[#D5DEEC] text-[#1E4FA3]'
+                      }`}
                     >
                       {cat.icon}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs sm:text-sm font-black truncate leading-tight text-white drop-shadow-sm font-heading">
+                      <div className={`text-xs sm:text-sm font-bold truncate leading-tight font-heading ${
+                        isSelected ? 'text-white' : 'text-[#14305F]'
+                      }`}>
                         {cat.name}
                       </div>
-                      <div className="text-[11px] font-bold text-blue-100 drop-shadow-xs mt-0.5">
+                      <div className={`text-[11px] font-normal truncate mt-0.5 ${
+                        isSelected ? 'text-white/80' : 'text-[#4A5568]'
+                      }`}>
                         {cat.shortLabel}
                       </div>
                     </div>
@@ -354,15 +353,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                   <div className="flex items-center gap-2 shrink-0 ml-2 relative z-10">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-black ${
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${
                         isSelected
-                          ? 'bg-amber-300 text-slate-950 shadow-md'
-                          : 'bg-white text-slate-900 border border-white shadow-xs'
+                          ? 'bg-white/25 text-white'
+                          : 'bg-[#E3F5F0] text-[#2BA58A] border border-[#2BA58A]/30'
                       }`}
                     >
                       {count}
                     </span>
-                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${isSelected ? 'text-amber-300' : 'text-white'}`} />
+                    <ChevronRight className={`w-4 h-4 transition-transform group-hover:translate-x-0.5 ${
+                      isSelected ? 'text-white' : 'text-[#1E4FA3]'
+                    }`} />
                   </div>
                 </button>
               );
@@ -370,19 +371,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Tab 2: All Labs Direct Search & Launch - SOLID BLUE CARDS ON PURE WHITE */}
+        {/* Tab 2: All Labs Direct Search & Launch */}
         {activeTab === 'labs' && (
           <div className="flex-1 flex flex-col min-h-0 bg-white">
             {/* Search Input */}
-            <div className="p-3 border-b-2 border-slate-200 bg-slate-50">
+            <div className="p-3 border-b border-[#D5DEEC] bg-[#F4F7FB]">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#1E4FA3] pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search by title, number, or topic..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-8 py-2.5 text-xs font-bold rounded-xl border-2 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-xs"
+                  className="w-full pl-9 pr-8 py-2 text-xs font-medium rounded-xl border border-[#D5DEEC] bg-white text-[#14305F] placeholder-slate-400 focus:outline-none focus:border-[#1E4FA3] focus:ring-1 focus:ring-[#1E4FA3] shadow-xs"
                 />
                 {searchTerm && (
                   <button
@@ -396,11 +397,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
 
-            {/* List with Crisp Solid Blue Cards */}
+            {/* List with Clean White Cards */}
             <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-white">
-              <div className="px-2 py-1 text-xs font-black text-slate-800 flex justify-between border-b border-slate-200 pb-1 mb-2">
+              <div className="px-2 py-1 text-xs font-bold text-[#14305F] flex justify-between border-b border-[#D5DEEC] pb-1 mb-2">
                 <span>SIMULATIONS</span>
-                <span className="font-mono text-blue-700 font-bold">{filteredSims.length} FOUND</span>
+                <span className="font-mono text-[#1E4FA3] font-bold">{filteredSims.length} FOUND</span>
               </div>
 
               {filteredSims.map((sim) => (
@@ -410,31 +411,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onToggle()}
-                  className="p-3.5 rounded-2xl border-2 border-blue-500 hover:border-blue-300 transition-all flex items-center justify-between gap-3 group shadow-md no-underline text-white block relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%)',
-                    boxShadow: '0 4px 14px rgba(30, 58, 138, 0.25)'
-                  }}
+                  className="p-3 rounded-xl border border-[#D5DEEC] hover:border-[#1E4FA3] transition-all flex items-center justify-between gap-3 group shadow-xs no-underline block bg-white hover:bg-[#F4F7FB]"
                 >
-                  <div className="min-w-0 flex-1 relative z-10">
-                    <div className="flex items-center gap-1.5 mb-1.5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 mb-1">
                       <span 
-                        className="font-mono text-[10px] font-black px-2 py-0.5 rounded-full text-slate-950 bg-white shadow-xs"
+                        className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-md text-[#1E4FA3] bg-[#E4ECF8] border border-[#D5DEEC]"
                       >
                         LAB {sim.indexNumber}
                       </span>
-                      <span className="text-[10px] font-bold text-sky-200 truncate">
+                      <span className="text-[10px] font-medium text-[#2BA58A] truncate">
                         {sim.category}
                       </span>
                     </div>
-                    <h4 className="text-xs sm:text-sm font-black text-white group-hover:text-amber-200 truncate font-heading drop-shadow-xs">
+                    <h4 className="text-xs sm:text-sm font-bold text-[#14305F] group-hover:text-[#1E4FA3] truncate font-heading">
                       {sim.title}
                     </h4>
-                    <p className="text-[11px] font-normal text-sky-100 line-clamp-1 mt-0.5">
+                    <p className="text-[11px] font-normal text-[#4A5568] line-clamp-1 mt-0.5">
                       {sim.description}
                     </p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-white group-hover:text-amber-300 group-hover:scale-110 transition-all shrink-0 relative z-10" />
+                  <ExternalLink className="w-4 h-4 text-[#1E4FA3] group-hover:scale-110 transition-transform shrink-0" />
                 </a>
               ))}
             </div>
@@ -442,7 +439,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Quick Link to External Simulations Hub */}
-        <div className="p-3 bg-indigo-50 border-t-2 border-indigo-200 shrink-0">
+        <div className="p-3 bg-[#F4F7FB] border-t border-[#D5DEEC] shrink-0">
           <a
             href="#external-simulations"
             onClick={() => {
@@ -450,19 +447,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
               const el = document.getElementById('external-simulations');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="w-full py-2 px-3 rounded-xl text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full py-2.5 px-3 rounded-xl text-xs font-bold bg-[#F5A623] hover:bg-[#e69818] text-[#3D2600] shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-[#e09210]"
           >
-            <Globe className="w-4 h-4 text-white" />
+            <Globe className="w-4 h-4 text-[#3D2600]" />
             <span>Open External Simulation Hub (8 Labs)</span>
           </a>
         </div>
 
         {/* Drawer Footer with High Contrast Details */}
-        <div className="p-3.5 border-t-2 border-slate-200 bg-slate-50 text-center shrink-0">
-          <p className="text-xs font-black text-slate-800">
+        <div className="p-3.5 border-t border-[#D5DEEC] bg-[#F4F7FB] text-center shrink-0">
+          <p className="text-xs font-bold text-[#14305F]">
             Gen Z Interactive Simulations &bull; {simulations.length} Verified Labs
           </p>
-          <p className="text-[10px] font-bold text-blue-700 mt-0.5">
+          <p className="text-[10px] font-medium text-[#4A5568] mt-0.5">
             National Curriculum of Pakistan &bull; Session 2026-27
           </p>
         </div>
