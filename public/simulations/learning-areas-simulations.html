@@ -312,49 +312,55 @@ footer .phone{display:inline-block;background:rgba(103,201,255,.12);
 
 /* ===== ECCE POSTER STYLE ===== */
 .ecce{display:flex;gap:6px;margin-bottom:6px}
-.ecce i{font-style:normal;font-weight:1000;font-size:clamp(80px,10vw,150px);line-height:1;color:var(--k);-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 3px 0 color-mix(in srgb,var(--k) 60%,#000),0 6px 0 color-mix(in srgb,var(--k) 50%,#000),0 14px 18px rgba(0,0,0,.3);transform:perspective(500px) rotateX(8deg)}
+.ecce i{font-style:normal;font-weight:1000;font-size:clamp(80px,10vw,150px);line-height:1;color:var(--k);-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 3px 0 rgba(0,0,0,0.5),0 6px 0 rgba(0,0,0,0.4),0 14px 18px rgba(0,0,0,.3);transform:perspective(500px) rotateX(8deg)}
 .h1b{font-size:clamp(34px,4.4vw,64px);color:#0d1b3d;margin:6px 0 14px;font-weight:900}.h1b em{color:#e8335e}
 .ribbon{display:inline-block;background:linear-gradient(180deg,#2f5fd0,#0d2f8f);color:#fff;font-weight:900;padding:10px 26px;border-radius:10px;font-size:18px;border-bottom:4px solid #081d5c}
-.goBtn{margin-top:20px;background:linear-gradient(180deg,#ffb347,#f97316);color:#fff;font-weight:900;font-size:18px;padding:15px 28px;border-radius:16px;border-bottom:6px solid #b45309;text-shadow:0 1px 2px #0005}
+.goBtn{margin-top:20px;background:linear-gradient(180deg,#ffb347,#f97316);color:#fff;font-weight:900;font-size:18px;padding:15px 28px;border-radius:16px;border-bottom:6px solid #b45309;text-shadow:0 1px 2px #0005;cursor:pointer}
 .goBtn:active{transform:translateY(4px);border-bottom-width:2px}
 .hR{display:flex;flex-direction:column;gap:16px}
-.hc{display:flex;align-items:center;gap:16px;background:#fff;border-radius:22px;padding:12px 22px;border:3px solid var(--k);border-left-width:12px;box-shadow:0 12px 0 -5px color-mix(in srgb,var(--k) 35%,#fff),0 18px 28px rgba(20,40,90,.18);transition:transform .3s}
+.hc{display:flex;align-items:center;gap:16px;background:#fff;border-radius:22px;padding:12px 22px;border:3px solid var(--k);border-left-width:12px;box-shadow:0 8px 24px rgba(20,40,90,.16);transition:transform .3s}
 .hc:hover{transform:perspective(700px) rotateY(-6deg) translateX(-8px)}
-.hc b{width:66px;height:66px;border-radius:50%;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--k) 55%,#fff),var(--k));color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;border:4px solid #fff;box-shadow:0 6px 12px rgba(0,0,0,.25)}
-.hc span{flex:1;font-weight:900;font-size:26px;font-style:italic;color:var(--k)}.hc i{font-style:normal;font-size:50px}
+.hc b{width:66px;height:66px;border-radius:50%;background:var(--k);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;border:4px solid #fff;box-shadow:0 6px 12px rgba(0,0,0,.25);flex-shrink:0}
+.hc span{flex:1;font-weight:900;font-size:26px;font-style:italic;color:var(--k)}
+.hc i{font-style:normal;font-size:50px;display:flex;align-items:center;justify-content:center;width:56px;height:56px;flex-shrink:0}
+.hc i svg{width:52px;height:52px;display:block}
 .areaTitle{text-align:center;font-size:clamp(28px,3.4vw,46px)!important;font-weight:1000;color:#0d1b3d!important}
 .g1{background:linear-gradient(90deg,#c026d3,#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}.g2{color:#16a34a}
-.dc{position:relative;text-align:left;background:linear-gradient(160deg,#fff 55%,color-mix(in srgb,var(--c) 14%,#fff));border-radius:26px 26px 40px 26px;padding:26px 20px 22px 70px;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-bottom:9px solid var(--c);box-shadow:0 18px 32px rgba(20,40,90,.16);transition:transform .3s;animation:cardIn .5s ease both}
+.dc{position:relative;text-align:left;background:#ffffff;border-radius:26px 26px 40px 26px;padding:26px 20px 22px 70px;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:8px;border:3px solid #e2e8f0;border-bottom:9px solid var(--c);box-shadow:0 14px 28px rgba(20,40,90,.14);transition:transform .3s;animation:cardIn .5s ease both;cursor:pointer}
 .dc:hover{transform:perspective(900px) translateY(-10px) rotateX(5deg) rotateY(-4deg)}
-.dc .dn{position:absolute;left:0;top:0;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 70%,#fff),var(--c));color:#fff;font-weight:1000;font-size:26px;padding:12px 16px;border-radius:26px 0 26px 0}
-.dc h3{font-size:21px;color:#0d1b3d;font-style:italic;line-height:1.25;max-width:60%}
-.dc .art{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:128px;height:128px;border-radius:50%;border:3px solid var(--c);background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;font-size:42px;line-height:1.1;box-shadow:inset 0 0 18px color-mix(in srgb,var(--c) 25%,#fff),0 8px 14px rgba(0,0,0,.15)}
-.dc small{color:var(--c);font-weight:900}
-.domainPanel{background:linear-gradient(180deg,#fff,#f7f4ff)}
+.dc .dn{position:absolute;left:0;top:0;background:var(--c);color:#fff;font-weight:1000;font-size:26px;padding:12px 16px;border-radius:24px 0 24px 0}
+.dc h3{font-size:21px;color:#0d1b3d;font-style:italic;line-height:1.25;max-width:60%;font-weight:900}
+.dc .art{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:128px;height:128px;border-radius:50%;border:4px solid var(--c);background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;font-size:42px;line-height:1.1;box-shadow:0 8px 18px rgba(0,0,0,.15)}
+.dc small{color:var(--c);font-weight:900;font-size:15px}
+.domainPanel{background:#ffffff;border-radius:24px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.12);margin-top:20px}
 .dBanner{display:flex;align-items:center;gap:16px;margin-bottom:16px}
-.dNum{width:96px;height:96px;flex-shrink:0;border-radius:50%;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--c) 55%,#fff),var(--c));color:#fff;font-size:60px;font-weight:1000;display:flex;align-items:center;justify-content:center;border:6px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.dNum{width:96px;height:96px;flex-shrink:0;border-radius:50%;background:var(--c);color:#fff;font-size:56px;font-weight:1000;display:flex;align-items:center;justify-content:center;border:6px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.25)}
 .dTitle{flex:1;background:linear-gradient(90deg,var(--c),var(--c2));clip-path:polygon(0 0,95% 0,100% 50%,95% 100%,0 100%);padding:18px 60px 18px 30px;box-shadow:0 10px 20px rgba(0,0,0,.2)}
 .dTitle h2{color:#fff;font-style:italic;font-size:clamp(24px,2.8vw,40px);text-shadow:0 2px 4px #0004}
 .dArt{font-size:56px;filter:drop-shadow(0 8px 6px #0003)}
-.dPill{display:inline-block;background:linear-gradient(90deg,var(--c),var(--c2));color:#fff;font-weight:900;padding:8px 26px;border-radius:0 20px 20px 0;margin:10px 0 6px;font-size:16px}
-.dDef{background:#fff;border-radius:18px;padding:18px 24px;font-size:20px;font-weight:700;color:#0d1b3d;border-left:6px solid var(--c);box-shadow:0 6px 16px rgba(20,40,90,.1)}
+.dPill{display:inline-block;background:var(--c);color:#fff;font-weight:900;padding:10px 26px;border-radius:12px;margin:12px 0 8px;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,0.15)}
+.dDef{background:#f8fafc;border-radius:18px;padding:18px 24px;font-size:20px;font-weight:700;color:#0d1b3d;border-left:8px solid var(--c);box-shadow:0 4px 14px rgba(20,40,90,.08);margin-bottom:16px}
 .dTiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:10px}
-.tile{display:flex;align-items:center;gap:14px;text-align:left;color:#fff;border-radius:22px;padding:14px 18px;background:linear-gradient(135deg,color-mix(in srgb,var(--t) 70%,#fff),var(--t));border-bottom:7px solid color-mix(in srgb,var(--t) 55%,#000);box-shadow:0 12px 22px rgba(0,0,0,.18);transition:transform .25s;text-shadow:0 1px 3px #0005}
-.tile:hover{transform:perspective(700px) translateY(-6px) rotateX(5deg)}.tile:active{transform:translateY(3px)}
-.tile .tc{width:76px;height:76px;flex-shrink:0;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:40px;border:4px solid rgba(255,255,255,.7);box-shadow:inset 0 0 12px #0002,0 6px 10px #0003}
-.tile .tn{font-size:30px;font-weight:1000;display:block;line-height:1}.tile b{font-size:19px;display:block}
+.tile{display:flex;align-items:center;gap:14px;text-align:left;color:#ffffff !important;border-radius:20px;padding:14px 18px;background-color:var(--t) !important;background:var(--t) !important;border:2px solid rgba(255,255,255,0.45);border-bottom:7px solid rgba(0,0,0,0.35) !important;box-shadow:0 10px 20px rgba(0,0,0,0.22);transition:transform .2s;text-shadow:0 2px 4px rgba(0,0,0,0.6) !important;cursor:pointer}
+.tile:hover{transform:perspective(700px) translateY(-5px) scale(1.02);filter:brightness(1.08)}
+.tile:active{transform:translateY(3px)}
+.tile .tc{width:72px;height:72px;flex-shrink:0;border-radius:50%;background:#ffffff !important;display:flex;align-items:center;justify-content:center;border:3.5px solid #ffffff;box-shadow:0 6px 12px rgba(0,0,0,0.25);overflow:hidden}
+.tile .tc svg{width:48px;height:48px;display:block}
+.tile .tn{font-size:28px;font-weight:1000;display:block;line-height:1.1;color:#ffffff !important;text-shadow:0 2px 5px rgba(0,0,0,0.85) !important}
+.tile b{font-size:19px;display:block;font-weight:800;color:#ffffff !important;line-height:1.25;text-shadow:0 1px 3px rgba(0,0,0,0.85) !important}
 .expHead{display:none}
-.stdPage{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;background:linear-gradient(135deg,#fff 60%,color-mix(in srgb,var(--sc) 12%,#fff));border-radius:28px;padding:24px;margin:25px 0 -10px;border:3px solid var(--sc);box-shadow:0 20px 40px rgba(20,40,90,.18);position:relative;z-index:1}
+.stdPage{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;background:#ffffff;border-radius:28px;padding:24px;margin:25px 0 -10px;border:4px solid var(--sc);box-shadow:0 20px 40px rgba(20,40,90,.18);position:relative;z-index:1}
 .spL{display:flex;align-items:center;gap:16px}
-.spBadge{background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 65%,#fff),var(--sc));color:#fff;text-align:center;padding:12px 18px;border-radius:18px 4px 34px 4px;font-weight:900;font-size:15px;border-bottom:5px solid color-mix(in srgb,var(--sc) 55%,#000)}
+.spBadge{background:var(--sc);color:#fff;text-align:center;padding:12px 18px;border-radius:18px 4px 34px 4px;font-weight:900;font-size:15px;border-bottom:5px solid rgba(0,0,0,0.35)}
 .spBadge b{display:block;font-size:44px;line-height:1}
-.spIcon{width:110px;height:110px;border-radius:50%;background:#fff;border:7px solid var(--sc);display:flex;align-items:center;justify-content:center;font-size:58px;box-shadow:0 10px 18px rgba(0,0,0,.2)}
+.spIcon{width:110px;height:110px;border-radius:50%;background:#fff;border:6px solid var(--sc);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.2);overflow:hidden}
+.spIcon svg{width:72px;height:72px;display:block}
 .spM h2{font-size:clamp(26px,3vw,40px);color:var(--sc);font-weight:1000;margin-bottom:10px}
 .spRow{display:flex;gap:14px;align-items:center;padding:8px 0;border-top:1px solid #0001}
-.pill{flex-shrink:0;width:130px;text-align:center;background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 65%,#fff),var(--sc));color:#fff;font-weight:900;border-radius:20px;padding:7px 10px;font-size:15px}
+.pill{flex-shrink:0;width:130px;text-align:center;background:var(--sc);color:#fff;font-weight:900;border-radius:20px;padding:7px 10px;font-size:15px}
 .pill.ex{background:linear-gradient(180deg,#ffe066,#f5a800);color:#4a3200}
 .spRow p{font-size:clamp(15px,1.4vw,19px);color:#0d1b3d;font-weight:600;line-height:1.5}
-.spArt{width:210px;height:210px;border-radius:50%;border:8px solid var(--sc);background:radial-gradient(circle,#fff,color-mix(in srgb,var(--sc) 14%,#fff));display:flex;flex-wrap:wrap;align-items:center;justify-content:center;font-size:64px;line-height:1.05;box-shadow:inset 0 0 30px color-mix(in srgb,var(--sc) 30%,#fff),0 14px 24px rgba(0,0,0,.25);animation:iconFloat 4s ease-in-out infinite}
+.spArt{width:210px;height:210px;border-radius:50%;border:8px solid var(--sc);background:#ffffff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;box-shadow:0 14px 24px rgba(0,0,0,.25);animation:iconFloat 4s ease-in-out infinite;overflow:hidden}
 .spBtns{grid-column:1/-1;display:flex;gap:12px}
 .o i{font-size:clamp(50px,6.4vw,96px)!important}.o{padding:0 6px}.rp .btnRow button{padding:10px 14px;border-radius:12px;font-weight:900;color:#fff;border-bottom:4px solid rgba(0,0,0,.3);text-shadow:0 1px 2px #0005}</style>
 </head>
@@ -379,10 +385,10 @@ footer .phone{display:inline-block;background:rgba(103,201,255,.12);
     <button class="goBtn" onclick="areas()">🚀 Open 7 Learning Areas →</button>
   </div>
   <div class="hR">
-    <div class="hc" style="--k:#2563eb"><b>🧠</b><span>LEARNING</span><i>📚</i></div>
-    <div class="hc" style="--k:#f59e0b"><b>7</b><span>7 AREAS</span><i>🎨</i></div>
-    <div class="hc" style="--k:#0f9d8a"><b>📋</b><span>38 STANDARDS</span><i>🎯</i></div>
-    <div class="hc" style="--k:#e8335e"><b>📖</b><span>190 ELOs</span><i>🚀</i></div>
+    <div class="hc" style="--k:#2563eb"><b><svg viewBox="0 0 100 100" width="38" height="38"><path d="M50 25c-8-12-25-10-28 4-8 1-12 10-8 18-5 6-2 16 4 18 1 8 8 15 17 15h15V25z" fill="#ff70a6"/><path d="M50 25c8-12 25-10 28 4 8 1 12 10 8 18 5 6 2 16-4 18-1 8-8 15-17 15H50V25z" fill="#ff5388"/><path d="M35 45q8-8 15 0M65 45q-8-8-15 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></svg></b><span>LEARNING</span><i><svg viewBox="0 0 100 100" width="52" height="52"><rect x="15" y="65" width="70" height="18" rx="4" fill="#3b82f6"/><rect x="20" y="44" width="65" height="18" rx="4" fill="#10b981"/><rect x="25" y="23" width="60" height="18" rx="4" fill="#f59e0b"/><rect x="20" y="68" width="8" height="12" fill="#fff" opacity=".5"/><rect x="25" y="47" width="8" height="12" fill="#fff" opacity=".5"/><rect x="30" y="26" width="8" height="12" fill="#fff" opacity=".5"/></svg></i></div>
+    <div class="hc" style="--k:#f59e0b"><b><span style="font-size:36px;font-weight:1000;color:#fff">7</span></b><span>7 AREAS</span><i><svg viewBox="0 0 100 100" width="52" height="52"><path d="M50 15c22 0 38 15 38 33 0 13-9 22-21 22h-9c-6 0-8 9-14 9-19 0-32-15-32-33 0-17 16-31 38-31z" fill="#f59e0b" stroke="#b45309" stroke-width="3"/><circle cx="32" cy="40" r="5" fill="#ef4444"/><circle cx="50" cy="30" r="5" fill="#3b82f6"/><circle cx="68" cy="40" r="5" fill="#10b981"/><circle cx="58" cy="56" r="5" fill="#a855f7"/></svg></i></div>
+    <div class="hc" style="--k:#0f9d8a"><b><svg viewBox="0 0 100 100" width="38" height="38"><rect x="22" y="24" width="56" height="66" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="3"/><rect x="36" y="14" width="28" height="16" rx="4" fill="#0f9d8a"/><path d="M34 45l8 8 16-16M34 65l8 8 16-16" fill="none" stroke="#0f9d8a" stroke-width="4" stroke-linecap="round"/></svg></b><span>38 STANDARDS</span><i><svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="50" r="42" fill="#ef4444"/><circle cx="50" cy="50" r="32" fill="#ffffff"/><circle cx="50" cy="50" r="22" fill="#ef4444"/><circle cx="50" cy="50" r="10" fill="#f59e0b"/><polygon points="78,22 88,12 85,25" fill="#3b82f6"/></svg></i></div>
+    <div class="hc" style="--k:#e8335e"><b><svg viewBox="0 0 100 100" width="38" height="38"><path d="M50 75C35 65 20 66 12 70V26c8-4 23-5 38 6 15-11 30-10 38-6v44c-8-4-23-5-38 5z" fill="#fff" stroke="#be123c" stroke-width="3"/><line x1="50" y1="28" x2="50" y2="76" stroke="#be123c" stroke-width="3"/></svg></b><span>190 ELOs</span><i><svg viewBox="0 0 100 100" width="52" height="52"><path d="M50 12c-14 20-18 42-18 56h36c0-14-4-36-18-56z" fill="#ef4444"/><circle cx="50" cy="44" r="8" fill="#67e8f9" stroke="#fff" stroke-width="2"/><path d="M32 58L16 72l16-4zM68 58l16 14-16-4z" fill="#e11d48"/><path d="M42 68l8 20 8-20z" fill="#f59e0b"/><path d="M46 68l4 12 4-12z" fill="#fef08a"/></svg></i></div>
   </div>
 </section>
 
@@ -1286,7 +1292,7 @@ function buildAreas(){
     const p=document.createElement('div');p.className='domainPanel';p.id='dp'+i;p.style.cssText=`--c:${c};--c2:${c2}`;
     p.innerHTML=`<div class="dBanner"><div class="dNum">${d.num}.</div><div class="dTitle"><h2>${d.title}</h2></div><div class="dArt">${art}</div><button class="xb" style="background:linear-gradient(180deg,#ff9a9a,#ef4444);color:#fff;border-bottom:4px solid #a11d1d;border-radius:12px;padding:10px 16px;font-weight:900" onclick="closeDomain()">✕</button></div>
      <div class="dPill">📖 DEFINITION</div><div class="dDef">${d.definition}</div><div class="dPill">⭐ STANDARDS IN THIS DOMAIN</div>
-     <div class="dTiles">${d.standards.map((s,k)=>`<button class="tile" style="--t:${TP[k%8]}" onclick="openExplanation(${i},'${s.id}')"><span class="tc">${getSimItemSvg((SIMD[s.id]||{o:[{n:s.name}]}).o[0].n,36)}</span><span><span class="tn">${s.id}</span><b>${s.name}</b></span></button>`).join('')}</div>`;
+     <div class="dTiles">${d.standards.map((s,k)=>`<button class="tile" style="--t:${TP[k%8]}" onclick="openExplanation(${i},'${s.id}')"><span class="tc">${svg(s.svgKey) || getSimItemSvg((SIMD[s.id]||{o:[{n:s.name}]}).o[0].n,48)}</span><span><span class="tn">${s.id}</span><b>${s.name}</b></span></button>`).join('')}</div>`;
     panels.appendChild(p)})}
 function openExplanation(di,id){
   openExplanationOld(di,id);const d=DOMAINS[di],s=d.standards.find(x=>x.id===id),z=SIMD[id],c=document.getElementById('explainContainer');
