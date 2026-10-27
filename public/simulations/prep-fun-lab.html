@@ -1,251 +1,763 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Prep Fun Lab (Age 5–6)</title>
 <style>
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none}
-html,body{margin:0;height:100%;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Comic Sans MS","Trebuchet MS",sans-serif}
+html,body{margin:0;height:100%;font-family:"Segoe UI","Comic Sans MS","Trebuchet MS",sans-serif}
 body{background:linear-gradient(135deg,#bfe9ff,#d7f5c4 50%,#ffe0b2)}
 #app{height:100%;display:flex;flex-direction:column;padding:10px 14px;gap:9px}
 #top{display:flex;align-items:center;gap:12px}
-h1{margin:0;flex:1;font-size:28px;color:#0d5c63;text-shadow:2px 2px 0 #fff;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji","Comic Sans MS",sans-serif}
+h1{margin:0;flex:1;font-size:26px;color:#0d5c63;text-shadow:2px 2px 0 #fff;display:flex;align-items:center;gap:10px;font-weight:900}
 #nav,#ctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-#nav .b{padding:7px 11px;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.3)}
-.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",inherit;font-weight:bold;font-size:17px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s}
+#nav .b{padding:7px 13px;font-size:14px;box-shadow:0 4px 0 rgba(0,0,0,.3);display:inline-flex;align-items:center;gap:6px}
+.b{--c:#e53935;border:0;border-radius:14px;padding:10px 16px;font-family:inherit;font-weight:bold;font-size:16px;color:#fff;background:linear-gradient(rgba(255,255,255,.3),rgba(0,0,0,.08)),var(--c);box-shadow:0 6px 0 rgba(0,0,0,.3),0 9px 12px rgba(0,0,0,.2);cursor:pointer;text-shadow:1px 1px 2px rgba(0,0,0,.45);transition:transform .08s,filter .1s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .b:hover{filter:brightness(1.1);transform:translateY(-2px)}
 .b:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
 .b.on{outline:4px solid #fff;outline-offset:2px}
 #stage{flex:1;min-height:0;position:relative;overflow:hidden;border-radius:24px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 0 40px rgba(255,255,255,.4);background:linear-gradient(#bde8ff,#f2fbff)}
-.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 26px;border-radius:30px;font-size:24px;font-weight:bold;color:#0d5c63;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.tray{position:absolute;top:66px;left:0;right:0;height:38%;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center}
-.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 6px #0004);line-height:1;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.item.sel{transform:scale(1.2) rotate(-8deg);filter:drop-shadow(0 0 16px gold)}
-.baskets{position:absolute;bottom:14px;left:0;right:0;height:44%;display:flex;gap:26px;justify-content:center;padding:0 24px}
-.basket{flex:1;max-width:420px;border-radius:20px 20px 60px 60px;box-shadow:0 8px 0 #0004,0 14px 20px #0004;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px;overflow:hidden}
-.bt{color:#fff;font-weight:bold;font-size:22px;text-shadow:2px 2px #0007;text-align:center;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.bin{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:4px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.hint{animation:pu .5s 4}@keyframes pu{50%{transform:scale(1.2)}}
-.slot{min-width:150px;min-height:130px;border:5px dashed #78909c;border-radius:20px;background:#ffffffaa;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:54px;cursor:pointer;padding:6px;line-height:1.1;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.slot.sm{min-width:270px;min-height:88px;flex-direction:row;gap:14px;font-size:50px}
+.msg{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:8px 28px;border-radius:30px;font-size:22px;font-weight:bold;color:#0d5c63;box-shadow:0 5px 0 #0002;z-index:20;pointer-events:none;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.tray{position:absolute;top:62px;left:0;right:0;height:40%;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;padding:0 20px}
+.item{cursor:pointer;transition:.2s;filter:drop-shadow(0 8px 8px rgba(0,0,0,.25));display:flex;align-items:center;justify-content:center;background:#ffffff33;border-radius:20px;padding:6px}
+.item:hover{transform:scale(1.08)}
+.item.sel{transform:scale(1.22) rotate(-6deg);filter:drop-shadow(0 0 20px #ffd700);background:#ffffffaa}
+.baskets{position:absolute;bottom:14px;left:0;right:0;height:44%;display:flex;gap:20px;justify-content:center;padding:0 20px}
+.basket{flex:1;max-width:400px;border-radius:20px 20px 50px 50px;box-shadow:0 8px 0 rgba(0,0,0,.3),0 14px 20px rgba(0,0,0,.2);cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px 12px;overflow:hidden;transition:transform .12s}
+.basket:hover{filter:brightness(1.04);transform:translateY(-2px)}
+.bt{color:#fff;font-weight:bold;font-size:20px;text-shadow:2px 2px rgba(0,0,0,.6);text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-bottom:6px}
+.bin{flex:1;width:100%;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;min-height:55px}
+.bin .item{background:rgba(255,255,255,.8);border-radius:14px;padding:4px}
+.hint{animation:pu .5s 4}@keyframes pu{50%{transform:scale(1.25)}}
+.slot{min-width:145px;min-height:125px;border:5px dashed #78909c;border-radius:20px;background:#ffffffcc;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:8px;line-height:1.1;transition:.2s}
+.slot.sm{min-width:260px;min-height:85px;flex-direction:row;gap:14px}
 .slot.ok{border-style:solid;border-color:#43a047;background:#e8f5e9}.slot.soil.ok{background:#bcaaa4}
-.tl{font-size:22px;font-weight:bold;color:#37474f}
-/* magnet */
-.mi{position:absolute;font-size:58px;line-height:1;filter:drop-shadow(0 6px 4px #0004);pointer-events:none;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.mg{position:absolute;font-size:90px;line-height:1;z-index:10;pointer-events:none;filter:drop-shadow(0 8px 8px #0006);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-/* traffic */
+.tl{font-size:20px;font-weight:bold;color:#37474f;margin-top:4px}
+/* Magnet */
+.mi{position:absolute;line-height:1;filter:drop-shadow(0 6px 4px rgba(0,0,0,.25));pointer-events:none;display:flex;align-items:center;justify-content:center}
+.mg{position:absolute;z-index:10;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));width:90px;height:90px;display:flex;align-items:center;justify-content:center}
+/* Traffic */
 .rd{position:absolute;left:0;right:0;background:#455a64;box-shadow:0 0 0 12px #b0bec5}
 .rd::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:6px dashed #ffeb3b}
 .zb{position:absolute;width:130px;background:repeating-linear-gradient(#fff 0 18px,transparent 18px 36px);opacity:.9}
-.car{position:absolute;font-size:70px;line-height:1;filter:drop-shadow(0 6px 4px #0005);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
-.pole{position:absolute;width:76px;padding:6px;background:#263238;border-radius:16px;z-index:3;box-shadow:0 8px 14px #0005}
+.car{position:absolute;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35));line-height:1}
+.pole{position:absolute;width:76px;padding:8px;background:#263238;border-radius:16px;z-index:3;box-shadow:0 8px 14px rgba(0,0,0,.4)}
 .lt{width:50px;height:50px;border-radius:50%;margin:6px auto;background:#37474f;opacity:.35;transition:.2s}
 #lr{color:#e53935}#ly{color:#fdd835}#lg{color:#43a047}
 .lt.on{opacity:1;background:currentColor;box-shadow:0 0 30px 8px currentColor}
-/* weather */
+/* Weather */
 .wx{position:absolute;inset:0;background:linear-gradient(#8ecbff,#d8f0ff);transition:1s;overflow:hidden}
 .wx.rain{background:linear-gradient(#78909c,#b0bec5)}.wx.sun{background:linear-gradient(#4fc3f7,#fff9c4)}.wx.sun.rain{background:linear-gradient(#90a4ae,#ffe9a8)}
 .wx>div{position:absolute;line-height:1}
-.cl{width:130px;height:85px;transition:1s}.wx.rain .cl{filter:brightness(.65);scale:1.2}
-.sunw{left:10%;top:6%;width:130px;height:130px;opacity:0;scale:.3;transition:1s;filter:drop-shadow(0 0 25px gold)}.wx.sun .sunw{opacity:1;scale:1}
-.rbw{right:12%;top:10%;width:240px;height:130px;opacity:0;transition:1.5s}.wx.sun.rain .rbw{opacity:1}
+.cl{transition:1s}.wx.rain .cl{filter:brightness(.65);transform:scale(1.15)}
+.sunw{left:8%;top:5%;width:130px;height:130px;opacity:0;transform:scale(.3);transition:1s;filter:drop-shadow(0 0 25px #ffd700)}.wx.sun .sunw{opacity:1;transform:scale(1)}
+.rbw{right:10%;top:8%;width:260px;height:140px;opacity:0;transition:1.5s}.wx.sun.rain .rbw{opacity:1}
 .gr{bottom:0;left:0;right:0;height:30%;background:linear-gradient(#7cb342,#558b2f);transition:1s}.wx.rain .gr{filter:saturate(1.4) brightness(.85)}
 .pud{bottom:6%;left:30%;width:0;height:0;border-radius:50%;background:#4fc3f7aa;transition:2s}.wx.rain .pud{width:260px;height:50px}
 .hs{bottom:22%;left:54%;width:130px;height:130px}.tr{left:72%;bottom:20%;width:150px;height:190px;transform-origin:bottom}
 .wx.wind .tr{animation:sway .5s infinite alternate}@keyframes sway{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
-.fl{left:25%;bottom:14%;width:55px;height:65px;transition:2s;transform-origin:bottom}.wx.sun .fl,.wx.rain .fl{scale:1.6}.wx.sun.rain .fl{scale:2.2}
-.kt{left:38%;bottom:28%;width:75px;height:95px;transition:2s}.wx.wind .kt{bottom:62%;rotate:-20deg}
-.lf{width:36px;height:36px;animation:fly 3s linear forwards}@keyframes fly{from{left:-5%}to{left:105%}}
-.rn{top:-10%;width:22px;height:30px;animation:fall 1.1s linear forwards}@keyframes fall{to{top:100%;opacity:.2}}
-/* tank */
+.fl{left:25%;bottom:14%;width:65px;height:75px;transition:2s;transform-origin:bottom}.wx.sun .fl,.wx.rain .fl{transform:scale(1.5)}.wx.sun.rain .fl{transform:scale(2)}
+.kt{left:38%;bottom:28%;width:80px;height:100px;transition:2s}.wx.wind .kt{bottom:62%;transform:rotate(-20deg)}
+.lf{width:40px;height:40px;animation:fly 3s linear forwards}@keyframes fly{from{left:-5%}to{left:105%}}
+.rn{top:-10%;width:24px;height:32px;animation:fall 1.1s linear forwards}@keyframes fall{to{top:100%;opacity:.2}}
+/* Tank */
 .tub{position:absolute;bottom:0;left:14%;right:14%;height:48%;border-radius:0 0 90px 90px;background:linear-gradient(rgba(64,170,255,.55),rgba(0,90,200,.75));border:8px solid #fff;border-top:0;z-index:6;pointer-events:none;box-shadow:inset 0 10px 20px #fff6}
-.drop{position:absolute;z-index:5;line-height:1;transform:translateX(-50%);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.drop{position:absolute;z-index:5;line-height:1;transform:translateX(-50%)}
 .bob{animation:bob 1.6s ease-in-out infinite}@keyframes bob{50%{margin-top:-10px}}
-.dr{position:absolute;z-index:7;animation:spl .8s forwards;pointer-events:none;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.dr{position:absolute;z-index:7;animation:spl .8s forwards;pointer-events:none}
 @keyframes spl{40%{transform:translate(calc(var(--dx)*.6),-110px)}100%{transform:translate(var(--dx),40px);opacity:0}}
-</style></head>
-<body><div id="app">
-<div id="top"><h1>🚀 Prep Fun Lab (Age 5–6)</h1><button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button></div>
-<div id="nav"></div><div id="stage"></div><div id="ctrl"></div>
+.art-box{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.tab-ic{width:22px;height:22px;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="top">
+  <h1><span style="display:inline-flex;width:34px;height:34px"><svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 10 C35 30 25 55 25 75 C35 75 42 70 50 64 C58 70 65 75 75 75 C75 55 65 30 50 10 Z" fill="#e53935"/><polygon points="25,55 12,75 25,75" fill="#f57c00"/><polygon points="75,55 88,75 75,75" fill="#f57c00"/><circle cx="50" cy="40" r="12" fill="#fff"/><circle cx="50" cy="40" r="8" fill="#1e88e5"/><polygon points="44,75 56,75 50,92" fill="#ffd54f"/></svg></span> Prep Fun Lab (Age 5–6)</h1>
+  <button class="b" id="fs" style="--c:#7b1fa2">Full Screen</button>
 </div>
+<div id="nav"></div>
+<div id="stage"></div>
+<div id="ctrl"></div>
+</div>
+
 <script>
-const $=s=>document.querySelector(s),st=$('#stage'),ct=$('#ctrl'),nav=$('#nav');
-const P=['#e53935','#1e88e5','#f9a825','#43a047','#8e24aa','#00acc1','#fb8c00','#d81b60'];
-let T=[],cur=0,ac;
-const M=t=>{const m=$('#msg');if(m)m.textContent=t};
-const say=t=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.8;u.pitch=1.3;u.lang='en-US';speechSynthesis.speak(u)}catch(e){}};
-const tone=(f=600,d=.15,ty='sine')=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}};
-const btn=(l,c,fn,p=ct)=>{const b=document.createElement('button');b.className='b';b.style.setProperty('--c',c);b.textContent=l;b.onclick=fn;p.appendChild(b);return b};
-const el=(h,cls,s,p=st)=>{const d=document.createElement('div');d.className=cls||'';d.innerHTML=h||'';if(s)Object.assign(d.style,s);p.appendChild(d);return d};
-const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
-const clr=()=>st.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));
-const bad=m=>{tone(150,.3,'square');M(m);say('Try again')};
+const $ = s => document.querySelector(s), st = $('#stage'), ct = $('#ctrl'), nav = $('#nav');
+const P = ['#e53935','#1e88e5','#f9a825','#43a047','#8e24aa','#00acc1','#fb8c00','#d81b60'];
+let T = [], cur = 0, ac;
 
-/* pick a picture, then tap its box (many boxes) */
-function sortG(bins,per,sz){
- let sel=null,left,tray=el('','tray'),bk=el('','baskets');
- const drop=(d,n)=>{if(!sel){M('Tap a thing first!');say('Tap a thing first');return}
-  if(sel.k==n){const i=sel;i.onclick=null;i.classList.remove('sel');i.style.fontSize='40px';d.querySelector('.bin').appendChild(i);sel=null;tone(700,.2);say(i.nm+' goes in '+bins[n][0]);M(--left?'Yes! '+i.nm+' goes here!':'Great job! All sorted!')}else bad('Oops! Try another box!')};
- const bn=bins.map((b,n)=>{const d=el('<div class=bt>'+b[0]+'</div><div class=bin></div>','basket',{background:'linear-gradient(rgba(255,255,255,.25),rgba(0,0,0,.15)),'+b[1]},bk);d.onclick=()=>drop(d,n);return d});
- const start=()=>{tray.innerHTML='';bn.forEach(d=>d.querySelector('.bin').innerHTML='');sel=null;M('Tap a picture, then tap its box!');
-  const all=[];bins.forEach((b,k)=>sh(b[2]).slice(0,per).forEach(x=>all.push([x,k])));left=all.length;
-  sh(all).forEach(a=>{const i=el(a[0][0],'item',{fontSize:sz+'px'},tray);i.nm=a[0][1];i.k=a[1];i.onclick=()=>{clr();sel=i;i.classList.add('sel');say(i.nm);tone(400,.1)}})};
- start();bins.forEach((b,n)=>btn('Learn: '+b[4],b[1],()=>{say(b[3]);M(b[3])}));btn('New Set','#8e24aa',start);
-}
-const homes=()=>sortG([['FOREST 🌲','#2e7d32',[['🦌','Deer'],['🐻','Bear'],['🦊','Fox'],['🐿️','Squirrel']],'Deer, bears and foxes live in the forest.','Forest'],['OCEAN 🌊','#1e88e5',[['🐠','Fish'],['🐋','Whale'],['🐙','Octopus'],['🦀','Crab']],'Fish, whales and crabs live in the ocean.','Ocean'],['DESERT 🏜️','#d79a2b',[['🐪','Camel'],['🦂','Scorpion'],['🦎','Lizard'],['🐍','Snake']],'Camels and lizards live in the hot desert.','Desert'],['BIRD NEST 🐦','#8d5524',[['🐦','Sparrow'],['🦉','Owl'],['🦜','Parrot'],['🐥','Chick']],'Birds live in nests high up in trees.','Nest']],2,76);
-const seasons=()=>sortG([['SUMMER ☀️','#f9a825',[['👕','T-shirt'],['🕶️','Sunglasses'],['🧢','Cap'],['👒','Sun hat']],'In summer it is hot. We wear light clothes.','Summer'],['WINTER ❄️','#1e88e5',[['🧥','Coat'],['🧣','Scarf'],['🧤','Gloves'],['🧦','Warm socks']],'In winter it is cold. We wear warm clothes.','Winter'],['RAINY ☔','#546e7a',[['☂️','Umbrella'],['🥾','Rain boots'],['🌂','Closed umbrella'],['👢','Boots']],'In the rainy season we use umbrellas and boots.','Rainy'],['SPRING 🌸','#d81b60',[['👗','Light dress'],['👟','Sneakers'],['🧺','Picnic basket'],['🌸','Flower crown']],'In spring flowers bloom. The weather is nice.','Spring']],2,76);
-const clean=()=>sortG([['DRY BIN 🗑️','#fb8c00',[['🍂','Dry leaves'],['🧦','Old sock'],['🪥','Old toothbrush'],['🎈','Balloon'],['🖍️','Broken crayon']],'Dry waste is dry things we cannot reuse.','Dry'],['WET BIN 🍌','#43a047',[['🍌','Banana peel'],['🍎','Apple core'],['🥚','Egg shell'],['🍞','Old bread'],['🥕','Carrot peels']],'Wet waste is food waste. It makes compost.','Wet'],['RECYCLE ♻️','#1e88e5',[['🥤','Plastic bottle'],['🥫','Tin can'],['📰','Newspaper'],['📦','Paper box'],['🍾','Glass bottle']],'We can recycle paper, plastic, glass and tin.','Recycle']],3,76);
-
-/* pick a picture, then tap the one box it belongs to */
-function placeG(o){
- let sel=null,left;const tg=el('','tray',o.tg),it=el('','tray',o.it);
- const start=()=>{tg.innerHTML=it.innerHTML='';sel=null;left=o.items.length;M(o.msg);
-  o.targets.forEach((t,n)=>{if(o.arrow&&n)el('➡️','',{fontSize:'44px'},tg);
-   const d=el(t[1]+'<div class=tl>'+t[2]+'</div>','slot'+(o.sm?' sm':'')+(t[3]?' '+t[3]:''),null,tg);
-   d.onclick=()=>{if(!sel){M('Tap a picture first!');say('Tap a picture first');return}
-    if(sel.k==t[0]){d.innerHTML=(o.keep?t[1]:'')+sel.h+'<div class=tl>'+t[2]+'</div>';d.classList.add('ok');d.onclick=null;tone(700,.2);say(sel.nm);M(--left?'Yes! '+sel.nm+'!':o.done);if(!left)say(o.done);sel.remove();sel=null}else bad('Oops! Try another box!')}});
-  sh(o.items).forEach(x=>{const i=el(x[1],'item',{fontSize:'70px'},it);i.k=x[0];i.nm=x[2];i.h=x[1];i.onclick=()=>{clr();sel=i;i.classList.add('sel');say(x[2]);tone(400,.1)}})};
- start();o.learn.forEach((l,i)=>btn(l[0],P[i%8],()=>{say(l[1]);M(l[1])}));btn('Shuffle','#8e24aa',start);
-}
-const cloudSvg='<svg viewBox="0 0 100 65" width="100%" height="100%"><defs><linearGradient id="cldG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cfe2ee"/></linearGradient></defs><path d="M22 55h56a16 16 0 005-31 22 22 0 00-40-7 18 18 0 00-24 16 14 14 0 003 22z" fill="url(#cldG)" stroke="#90b4ce" stroke-width="2.5" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.15))"/></svg>';
-const sunSvg='<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="26" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/><g stroke="#ff8f00" stroke-width="4" stroke-linecap="round"><line x1="50" y1="12" x2="50" y2="4"/><line x1="50" y1="88" x2="50" y2="96"/><line x1="12" y1="50" x2="4" y2="50"/><line x1="88" y1="50" x2="96" y2="50"/><line x1="23" y1="23" x2="17" y2="17"/><line x1="77" y1="77" x2="83" y2="83"/><line x1="77" y1="23" x2="83" y2="17"/><line x1="23" y1="77" x2="17" y2="83"/></g><circle cx="42" cy="46" r="3.5" fill="#3e2723"/><circle cx="58" cy="46" r="3.5" fill="#3e2723"/><path d="M42 58q8 8 16 0" fill="none" stroke="#e65100" stroke-width="3" stroke-linecap="round"/></svg>';
-const rainbowSvg='<svg viewBox="0 0 200 110" width="100%" height="100%"><ellipse cx="100" cy="110" rx="90" ry="90" fill="none" stroke="#e53935" stroke-width="8"/><ellipse cx="100" cy="110" rx="82" ry="82" fill="none" stroke="#ff9800" stroke-width="8"/><ellipse cx="100" cy="110" rx="74" ry="74" fill="none" stroke="#ffeb3b" stroke-width="8"/><ellipse cx="100" cy="110" rx="66" ry="66" fill="none" stroke="#43a047" stroke-width="8"/><ellipse cx="100" cy="110" rx="58" ry="58" fill="none" stroke="#00acc1" stroke-width="8"/><ellipse cx="100" cy="110" rx="50" ry="50" fill="none" stroke="#1e88e5" stroke-width="8"/><ellipse cx="100" cy="110" rx="42" ry="42" fill="none" stroke="#8e24aa" stroke-width="8"/></svg>';
-const houseSvg='<svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,15 90,48 10,48" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><rect x="20" y="48" width="60" height="46" rx="2" fill="#fff8e1" stroke="#d7ccc8" stroke-width="3"/><rect x="42" y="62" width="16" height="32" rx="2" fill="#795548" stroke="#4e342e" stroke-width="2"/><circle cx="54" cy="78" r="2" fill="#ffd54f"/><rect x="26" y="56" width="12" height="14" rx="2" fill="#81d4fa" stroke="#4fc3f7" stroke-width="2"/><rect x="62" y="56" width="12" height="14" rx="2" fill="#81d4fa" stroke="#4fc3f7" stroke-width="2"/><rect x="68" y="22" width="8" height="16" fill="#8d6e63"/></svg>';
-const treeSvg='<svg viewBox="0 0 100 120" width="100%" height="100%"><rect x="42" y="68" width="16" height="48" rx="4" fill="#795548" stroke="#4e342e" stroke-width="2.5"/><circle cx="50" cy="46" r="34" fill="#43a047" stroke="#2e7d32" stroke-width="3"/><circle cx="34" cy="40" r="22" fill="#66bb6a"/><circle cx="66" cy="40" r="22" fill="#66bb6a"/><circle cx="50" cy="24" r="22" fill="#81c784"/><circle cx="38" cy="44" r="4.5" fill="#e53935"/><circle cx="62" cy="48" r="4.5" fill="#e53935"/><circle cx="50" cy="34" r="4.5" fill="#e53935"/></svg>';
-const flowerTulipSvg='<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 88V50" stroke="#43a047" stroke-width="6" stroke-linecap="round"/><path d="M50 68q-20 -10 -22 -24q16 2 22 18z" fill="#66bb6a"/><path d="M50 64q20 -10 22 -24q-16 2 -22 18z" fill="#66bb6a"/><path d="M30 46C26 22 46 16 50 32C54 16 74 22 70 46C66 58 34 58 30 46Z" fill="#ff4081" stroke="#c2185b" stroke-width="2.5"/></svg>';
-const kiteSvg='<svg viewBox="0 0 100 120" width="100%" height="100%"><polygon points="50,10 82,46 50,86 18,46" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/><polygon points="50,10 82,46 50,46" fill="#e53935"/><polygon points="18,46 50,46 50,86" fill="#1e88e5"/><polygon points="50,46 82,46 50,86" fill="#43a047"/><path d="M50 86q12 14 6 24" fill="none" stroke="#795548" stroke-width="2"/><polygon points="54,102 60,100 58,106" fill="#ff4081"/><polygon points="56,112 62,110 60,116" fill="#ffeb3b"/></svg>';
-const rainDropSvg='<svg viewBox="0 0 100 140" width="100%" height="100%"><path d="M50 0C50 0 10 70 10 100a40 40 0 0080 0C90 70 50 0 50 0z" fill="#42a5f5"/></svg>';
-const windLeafSvg='<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M15 85 C15 40 45 15 85 15 C85 55 55 85 15 85 Z" fill="#66bb6a" stroke="#2e7d32" stroke-width="3"/></svg>';
-
-const PREP_SVGS = {
-  'Deer': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="55" rx="26" ry="18" fill="#a0522d"/><circle cx="68" cy="40" r="14" fill="#a0522d"/><polygon points="76,32 82,18 78,34" fill="#6d4c41"/><polygon points="80,24 88,22 82,27" fill="#6d4c41"/><polygon points="72,30 74,16 70,32" fill="#6d4c41"/><circle cx="73" cy="38" r="2.5" fill="#111"/><ellipse cx="79" cy="42" rx="4" ry="3" fill="#3e2723"/><rect x="36" y="68" width="6" height="24" rx="2" fill="#8d4024"/><rect x="58" y="68" width="6" height="24" rx="2" fill="#8d4024"/></svg>',
-  'Bear': '<svg viewBox="0 0 100 100" width="72" height="72"><circle cx="50" cy="52" r="32" fill="#795548"/><circle cx="28" cy="28" r="12" fill="#5d4037"/><circle cx="28" cy="28" r="6" fill="#d7ccc8"/><circle cx="72" cy="28" r="12" fill="#5d4037"/><circle cx="72" cy="28" r="6" fill="#d7ccc8"/><ellipse cx="50" cy="58" rx="16" ry="12" fill="#d7ccc8"/><circle cx="42" cy="46" r="3.5" fill="#111"/><circle cx="58" cy="46" r="3.5" fill="#111"/><ellipse cx="50" cy="54" rx="6" ry="4" fill="#212121"/><path d="M46 62q4 3 8 0" fill="none" stroke="#212121" stroke-width="2"/></svg>',
-  'Fox': '<svg viewBox="0 0 100 100" width="72" height="72"><polygon points="30,20 20,45 42,42" fill="#e65100"/><polygon points="70,20 80,45 58,42" fill="#e65100"/><polygon points="50,75 22,42 78,42" fill="#f57c00"/><polygon points="50,75 35,46 65,46" fill="#fff"/><circle cx="38" cy="46" r="3.5" fill="#111"/><circle cx="62" cy="46" r="3.5" fill="#111"/><circle cx="50" cy="72" r="4.5" fill="#111"/></svg>',
-  'Squirrel': '<svg viewBox="0 0 100 100" width="72" height="72"><path d="M30 65c-15-5-22-25-10-38 10-10 25-5 25 10v20" fill="none" stroke="#d84315" stroke-width="14" stroke-linecap="round"/><ellipse cx="58" cy="58" rx="18" ry="22" fill="#e64a19"/><circle cx="62" cy="36" r="14" fill="#e64a19"/><polygon points="68,26 72,16 66,24" fill="#bf360c"/><circle cx="66" cy="34" r="2.5" fill="#111"/><ellipse cx="48" cy="58" rx="6" ry="8" fill="#795548"/></svg>',
-  'Fish': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="46" cy="50" rx="30" ry="20" fill="#ff7043"/><polygon points="76,50 94,32 94,68" fill="#f4511e"/><circle cx="32" cy="44" r="4" fill="#fff"/><circle cx="32" cy="44" r="2" fill="#111"/><path d="M42 38q6 12 0 24" fill="none" stroke="#fff" stroke-width="4"/><path d="M54 38q6 12 0 24" fill="none" stroke="#fff" stroke-width="4"/></svg>',
-  'Whale': '<svg viewBox="0 0 100 100" width="72" height="72"><path d="M15 54c0-18 20-24 45-24 20 0 28 8 36 2 0 12-8 18-4 26-10-2-18-6-24-6-16 0-25 14-45 10" fill="#29b6f6"/><circle cx="32" cy="46" r="3" fill="#111"/><path d="M45 28c-4-8-12-12-14-16M45 28c4-8 12-12 14-16" stroke="#4fc3f7" stroke-width="3" fill="none"/></svg>',
-  'Octopus': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="42" rx="28" ry="26" fill="#ab47bc"/><circle cx="40" cy="40" r="4.5" fill="#fff"/><circle cx="40" cy="40" r="2.5" fill="#111"/><circle cx="60" cy="40" r="4.5" fill="#fff"/><circle cx="60" cy="40" r="2.5" fill="#111"/><path d="M46 52q4 4 8 0" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M26 65q-6 20 6 22q10 2 2-14M40 68q-2 20 8 18q8-2 0-16M60 68q2 20-8 18q-8-2 0-16M74 65q6 20-6 22q-10 2-2-14" stroke="#ab47bc" stroke-width="7" fill="none" stroke-linecap="round"/></svg>',
-  'Crab': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="55" rx="28" ry="20" fill="#e53935"/><circle cx="40" cy="42" r="5" fill="#fff"/><circle cx="40" cy="42" r="2.5" fill="#111"/><circle cx="60" cy="42" r="5" fill="#fff"/><circle cx="60" cy="42" r="2.5" fill="#111"/><path d="M25 50C15 42 10 25 22 24c6 0 10 16 10 18M75 50C85 42 90 25 78 24c-6 0-10 16-10 18" stroke="#d32f2f" stroke-width="5" fill="none"/><path d="M25 65l-12 10M30 72l-10 10M75 65l12 10M70 72l10 10" stroke="#d32f2f" stroke-width="4"/></svg>',
-  'Camel': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="45" cy="56" rx="24" ry="18" fill="#d79a2b"/><ellipse cx="45" cy="40" rx="10" ry="14" fill="#c48822"/><path d="M60 60c8-10 12-25 18-28 6-3 10 2 8 8-2 8-8 18-12 24" fill="#d79a2b"/><circle cx="82" cy="35" r="2" fill="#111"/><rect x="30" y="68" width="5" height="24" fill="#b87f1c"/><rect x="52" y="68" width="5" height="24" fill="#b87f1c"/></svg>',
-  'Scorpion': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="55" rx="16" ry="22" fill="#b26a00"/><path d="M50 75c0 15 18 18 18 6 0-6-6-6-6-2" stroke="#b26a00" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="36" cy="42" r="7" fill="#d79a2b"/><circle cx="64" cy="42" r="7" fill="#d79a2b"/></svg>',
-  'Lizard': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="50" rx="12" ry="24" fill="#43a047"/><circle cx="50" cy="28" r="10" fill="#43a047"/><circle cx="46" cy="26" r="2.5" fill="#111"/><circle cx="54" cy="26" r="2.5" fill="#111"/><path d="M50 72q-8 16 12 20" stroke="#2e7d32" stroke-width="4" fill="none"/><line x1="40" y1="42" x2="24" y2="34" stroke="#2e7d32" stroke-width="4"/><line x1="60" y1="42" x2="76" y2="34" stroke="#2e7d32" stroke-width="4"/><line x1="40" y1="60" x2="24" y2="70" stroke="#2e7d32" stroke-width="4"/><line x1="60" y1="60" x2="76" y2="70" stroke="#2e7d32" stroke-width="4"/></svg>',
-  'Snake': '<svg viewBox="0 0 100 100" width="72" height="72"><path d="M22 75c12 8 24-8 32-6s16 14 26 2c8-10 4-26-8-28s-22 4-26-8c-4-12 6-20 18-20" fill="none" stroke="#7cb342" stroke-width="9" stroke-linecap="round"/><circle cx="64" cy="15" r="7" fill="#7cb342"/><circle cx="66" cy="13" r="2" fill="#111"/><line x1="69" y1="17" x2="77" y2="17" stroke="#e53935" stroke-width="2"/></svg>',
-  'Sparrow': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="48" cy="52" rx="24" ry="18" fill="#8d6e63"/><circle cx="68" cy="40" r="14" fill="#6d4c41"/><polygon points="80,38 92,42 80,46" fill="#f57f17"/><circle cx="72" cy="38" r="2.5" fill="#111"/><ellipse cx="42" cy="54" rx="14" ry="10" fill="#4e342e"/></svg>',
-  'Owl': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="50" cy="54" rx="26" ry="30" fill="#795548"/><polygon points="32,24 40,32 30,36" fill="#5d4037"/><polygon points="68,24 60,32 70,36" fill="#5d4037"/><circle cx="38" cy="44" r="10" fill="#fff"/><circle cx="38" cy="44" r="5" fill="#f57f17"/><circle cx="38" cy="44" r="2.5" fill="#111"/><circle cx="62" cy="44" r="10" fill="#fff"/><circle cx="62" cy="44" r="5" fill="#f57f17"/><circle cx="62" cy="44" r="2.5" fill="#111"/><polygon points="50,46 54,54 46,54" fill="#f57f17"/></svg>',
-  'Parrot': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="45" cy="52" rx="18" ry="26" fill="#43a047"/><circle cx="50" cy="30" r="14" fill="#e53935"/><path d="M58 26c10 2 12 14 4 16" fill="#fbc02d"/><circle cx="48" cy="28" r="3" fill="#fff"/><circle cx="48" cy="28" r="1.5" fill="#111"/><path d="M40 56q-12 28 -20 34" stroke="#1e88e5" stroke-width="6" fill="none"/></svg>',
-  'Chick': '<svg viewBox="0 0 100 100" width="72" height="72"><circle cx="48" cy="62" r="22" fill="#ffeb3b"/><circle cx="60" cy="40" r="16" fill="#ffeb3b"/><polygon points="72,38 84,42 72,46" fill="#f57f17"/><circle cx="64" cy="38" r="3" fill="#111"/><polygon points="38,58 26,62 38,66" fill="#fbc02d"/></svg>',
-  'Apple': '<svg viewBox="0 0 100 100" width="72" height="72"><path d="M50 84C24 84 18 48 30 32c10-12 20-4 20 4 0-8 10-16 20-4 12 16 6 52-20 52z" fill="#e53935" stroke="#b71c1c" stroke-width="2.5"/><path d="M50 32c0-10 8-16 12-18" fill="none" stroke="#795548" stroke-width="4" stroke-linecap="round"/><ellipse cx="58" cy="20" rx="8" ry="4" fill="#43a047" transform="rotate(-30 58 20)"/></svg>',
-  'Wood': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="28" cy="50" rx="12" ry="22" fill="#8d6e63" stroke="#5d4037" stroke-width="2.5"/><path d="M28 28h52c6 0 12 10 12 22s-6 22-12 22H28z" fill="#a1887f" stroke="#5d4037" stroke-width="2.5"/><ellipse cx="80" cy="50" rx="8" ry="16" fill="#8d6e63"/></svg>',
-  'Stone': '<svg viewBox="0 0 100 100" width="72" height="72"><path d="M22 68c-10-14 0-38 18-44s42 4 48 20-6 32-24 34-32-2-42-10z" fill="#78909c" stroke="#455a64" stroke-width="3"/><ellipse cx="44" cy="44" rx="12" ry="4" fill="#90a4ae"/></svg>',
-  'Pencil': '<svg viewBox="0 0 100 100" width="72" height="72"><rect x="25" y="44" width="50" height="14" rx="2" fill="#fdd835" stroke="#f57f17" stroke-width="2" transform="rotate(-35 50 50)"/><polygon points="18,72 26,62 36,70" fill="#ffcc80" stroke="#f57f17" stroke-width="1.5"/><polygon points="18,72 22,68 25,71" fill="#212121"/></svg>',
-  'Coin': '<svg viewBox="0 0 100 100" width="72" height="72"><circle cx="50" cy="50" r="36" fill="#fbc02d" stroke="#f57f17" stroke-width="4"/><circle cx="50" cy="50" r="28" fill="#ffd54f" stroke="#f57f17" stroke-width="2"/><text x="50" y="60" text-anchor="middle" font-size="28" font-weight="900" fill="#f57f17" font-family="Arial">★</text></svg>',
-  'Key': '<svg viewBox="0 0 100 100" width="72" height="72"><circle cx="34" cy="50" r="18" fill="none" stroke="#fbc02d" stroke-width="8"/><rect x="44" y="46" width="38" height="8" rx="2" fill="#fbc02d"/><rect x="70" y="54" width="6" height="12" fill="#fbc02d"/><rect x="60" y="54" width="6" height="8" fill="#fbc02d"/></svg>',
-  'Rubber duck': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="46" cy="62" rx="26" ry="18" fill="#ffeb3b"/><circle cx="64" cy="42" r="16" fill="#ffeb3b"/><polygon points="76,42 90,46 76,50" fill="#ff9800"/><circle cx="68" cy="38" r="3" fill="#111"/><ellipse cx="42" cy="64" rx="14" ry="8" fill="#fdd835"/></svg>',
-  'Spoon': '<svg viewBox="0 0 100 100" width="72" height="72"><ellipse cx="32" cy="40" rx="16" ry="22" fill="#b0bec5" stroke="#78909c" stroke-width="2" transform="rotate(-30 32 40)"/><rect x="42" y="46" width="46" height="6" rx="3" fill="#cfd8dc" stroke="#78909c" stroke-width="1.5" transform="rotate(25 42 46)"/></svg>'
+const M = t => { const m = $('#msg'); if (m) m.textContent = t; };
+const say = t => { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.rate = .85; u.pitch = 1.3; u.lang = 'en-US'; speechSynthesis.speak(u); } catch(e){} };
+const tone = (f = 600, d = .15, ty = 'sine') => {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = ty; o.frequency.value = f; g.gain.value = .15;
+    o.connect(g); g.connect(ac.destination);
+    o.start(); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.stop(ac.currentTime + d);
+  } catch(e){}
 };
-function getPrepItemSvg(name, fallback){
-  return PREP_SVGS[name] || fallback;
+const btn = (l, c, fn, p = ct) => {
+  const b = document.createElement('button');
+  b.className = 'b';
+  b.style.setProperty('--c', c);
+  b.innerHTML = l;
+  b.onclick = fn;
+  p.appendChild(b);
+  return b;
+};
+const el = (h, cls, s, p = st) => {
+  const d = document.createElement('div');
+  d.className = cls || '';
+  d.innerHTML = h || '';
+  if (s) Object.assign(d.style, s);
+  p.appendChild(d);
+  return d;
+};
+const sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
+const clr = () => st.querySelectorAll('.sel').forEach(x => x.classList.remove('sel'));
+const bad = m => { tone(150, .3, 'square'); M(m); say('Try again'); };
+
+/* ---------------- VIVID VECTOR ASSET LIBRARY (100% COLORFUL ON ALL COMPUTERS) ---------------- */
+const SVGS = {
+  // Animals
+  'Deer': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="26" ry="18" fill="#a0522d"/><circle cx="68" cy="40" r="14" fill="#a0522d"/><polygon points="76,32 82,18 78,34" fill="#6d4c41"/><polygon points="80,24 88,22 82,27" fill="#6d4c41"/><polygon points="72,30 74,16 70,32" fill="#6d4c41"/><circle cx="73" cy="38" r="2.5" fill="#111"/><ellipse cx="79" cy="42" rx="4" ry="3" fill="#3e2723"/><rect x="36" y="68" width="6" height="24" rx="2" fill="#8d4024"/><rect x="58" y="68" width="6" height="24" rx="2" fill="#8d4024"/></svg>',
+  'Bear': '<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="32" fill="#795548"/><circle cx="28" cy="28" r="12" fill="#5d4037"/><circle cx="28" cy="28" r="6" fill="#d7ccc8"/><circle cx="72" cy="28" r="12" fill="#5d4037"/><circle cx="72" cy="28" r="6" fill="#d7ccc8"/><ellipse cx="50" cy="58" rx="16" ry="12" fill="#d7ccc8"/><circle cx="42" cy="46" r="3.5" fill="#111"/><circle cx="58" cy="46" r="3.5" fill="#111"/><ellipse cx="50" cy="54" rx="6" ry="4" fill="#212121"/><path d="M46 62q4 3 8 0" fill="none" stroke="#212121" stroke-width="2"/></svg>',
+  'Fox': '<svg viewBox="0 0 100 100"><polygon points="30,20 20,45 42,42" fill="#e65100"/><polygon points="70,20 80,45 58,42" fill="#e65100"/><polygon points="50,75 22,42 78,42" fill="#f57c00"/><polygon points="50,75 35,46 65,46" fill="#fff"/><circle cx="38" cy="46" r="3.5" fill="#111"/><circle cx="62" cy="46" r="3.5" fill="#111"/><circle cx="50" cy="72" r="4.5" fill="#111"/></svg>',
+  'Squirrel': '<svg viewBox="0 0 100 100"><path d="M30 65c-15-5-22-25-10-38 10-10 25-5 25 10v20" fill="none" stroke="#d84315" stroke-width="14" stroke-linecap="round"/><ellipse cx="58" cy="58" rx="18" ry="22" fill="#e64a19"/><circle cx="62" cy="36" r="14" fill="#e64a19"/><polygon points="68,26 72,16 66,24" fill="#bf360c"/><circle cx="66" cy="34" r="2.5" fill="#111"/><ellipse cx="48" cy="58" rx="6" ry="8" fill="#795548"/></svg>',
+  'Fish': '<svg viewBox="0 0 100 100"><ellipse cx="46" cy="50" rx="30" ry="20" fill="#ff7043"/><polygon points="76,50 94,32 94,68" fill="#f4511e"/><circle cx="32" cy="44" r="4" fill="#fff"/><circle cx="32" cy="44" r="2" fill="#111"/><path d="M42 38q6 12 0 24" fill="none" stroke="#fff" stroke-width="4"/><path d="M54 38q6 12 0 24" fill="none" stroke="#fff" stroke-width="4"/></svg>',
+  'Whale': '<svg viewBox="0 0 100 100"><path d="M15 54c0-18 20-24 45-24 20 0 28 8 36 2 0 12-8 18-4 26-10-2-18-6-24-6-16 0-25 14-45 10" fill="#29b6f6"/><circle cx="32" cy="46" r="3" fill="#111"/><path d="M45 28c-4-8-12-12-14-16M45 28c4-8 12-12 14-16" stroke="#4fc3f7" stroke-width="3" fill="none"/></svg>',
+  'Octopus': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="42" rx="28" ry="26" fill="#ab47bc"/><circle cx="40" cy="40" r="4.5" fill="#fff"/><circle cx="40" cy="40" r="2.5" fill="#111"/><circle cx="60" cy="40" r="4.5" fill="#fff"/><circle cx="60" cy="40" r="2.5" fill="#111"/><path d="M46 52q4 4 8 0" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M26 65q-6 20 6 22q10 2 2-14M40 68q-2 20 8 18q8-2 0-16M60 68q2 20-8 18q-8-2 0-16M74 65q6 20-6 22q-10 2-2-14" stroke="#ab47bc" stroke-width="7" fill="none" stroke-linecap="round"/></svg>',
+  'Crab': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="28" ry="20" fill="#e53935"/><circle cx="40" cy="42" r="5" fill="#fff"/><circle cx="40" cy="42" r="2.5" fill="#111"/><circle cx="60" cy="42" r="5" fill="#fff"/><circle cx="60" cy="42" r="2.5" fill="#111"/><path d="M25 50C15 42 10 25 22 24c6 0 10 16 10 18M75 50C85 42 90 25 78 24c-6 0-10 16-10 18" stroke="#d32f2f" stroke-width="5" fill="none"/><path d="M25 65l-12 10M30 72l-10 10M75 65l12 10M70 72l10 10" stroke="#d32f2f" stroke-width="4"/></svg>',
+  'Camel': '<svg viewBox="0 0 100 100"><ellipse cx="45" cy="56" rx="24" ry="18" fill="#d79a2b"/><ellipse cx="45" cy="40" rx="10" ry="14" fill="#c48822"/><path d="M60 60c8-10 12-25 18-28 6-3 10 2 8 8-2 8-8 18-12 24" fill="#d79a2b"/><circle cx="82" cy="35" r="2" fill="#111"/><rect x="30" y="68" width="5" height="24" fill="#b87f1c"/><rect x="52" y="68" width="5" height="24" fill="#b87f1c"/></svg>',
+  'Scorpion': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="16" ry="22" fill="#b26a00"/><path d="M50 75c0 15 18 18 18 6 0-6-6-6-6-2" stroke="#b26a00" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="36" cy="42" r="7" fill="#d79a2b"/><circle cx="64" cy="42" r="7" fill="#d79a2b"/></svg>',
+  'Lizard': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="12" ry="24" fill="#43a047"/><circle cx="50" cy="28" r="10" fill="#43a047"/><circle cx="46" cy="26" r="2.5" fill="#111"/><circle cx="54" cy="26" r="2.5" fill="#111"/><path d="M50 72q-8 16 12 20" stroke="#2e7d32" stroke-width="4" fill="none"/><line x1="40" y1="42" x2="24" y2="34" stroke="#2e7d32" stroke-width="4"/><line x1="60" y1="42" x2="76" y2="34" stroke="#2e7d32" stroke-width="4"/><line x1="40" y1="60" x2="24" y2="70" stroke="#2e7d32" stroke-width="4"/><line x1="60" y1="60" x2="76" y2="70" stroke="#2e7d32" stroke-width="4"/></svg>',
+  'Snake': '<svg viewBox="0 0 100 100"><path d="M22 75c12 8 24-8 32-6s16 14 26 2c8-10 4-26-8-28s-22 4-26-8c-4-12 6-20 18-20" fill="none" stroke="#7cb342" stroke-width="9" stroke-linecap="round"/><circle cx="64" cy="15" r="7" fill="#7cb342"/><circle cx="66" cy="13" r="2" fill="#111"/><line x1="69" y1="17" x2="77" y2="17" stroke="#e53935" stroke-width="2"/></svg>',
+  'Sparrow': '<svg viewBox="0 0 100 100"><ellipse cx="48" cy="52" rx="24" ry="18" fill="#8d6e63"/><circle cx="68" cy="40" r="14" fill="#6d4c41"/><polygon points="80,38 92,42 80,46" fill="#f57f17"/><circle cx="72" cy="38" r="2.5" fill="#111"/><ellipse cx="42" cy="54" rx="14" ry="10" fill="#4e342e"/></svg>',
+  'Owl': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="54" rx="26" ry="30" fill="#795548"/><polygon points="32,24 40,32 30,36" fill="#5d4037"/><polygon points="68,24 60,32 70,36" fill="#5d4037"/><circle cx="38" cy="44" r="10" fill="#fff"/><circle cx="38" cy="44" r="5" fill="#f57f17"/><circle cx="38" cy="44" r="2.5" fill="#111"/><circle cx="62" cy="44" r="10" fill="#fff"/><circle cx="62" cy="44" r="5" fill="#f57f17"/><circle cx="62" cy="44" r="2.5" fill="#111"/><polygon points="50,46 54,54 46,54" fill="#f57f17"/></svg>',
+  'Parrot': '<svg viewBox="0 0 100 100"><ellipse cx="45" cy="52" rx="18" ry="26" fill="#43a047"/><circle cx="50" cy="30" r="14" fill="#e53935"/><path d="M58 26c10 2 12 14 4 16" fill="#fbc02d"/><circle cx="48" cy="28" r="3" fill="#fff"/><circle cx="48" cy="28" r="1.5" fill="#111"/><path d="M40 56q-12 28 -20 34" stroke="#1e88e5" stroke-width="6" fill="none"/></svg>',
+  'Chick': '<svg viewBox="0 0 100 100"><circle cx="48" cy="62" r="22" fill="#ffeb3b"/><circle cx="60" cy="40" r="16" fill="#ffeb3b"/><polygon points="72,38 84,42 72,46" fill="#f57f17"/><circle cx="64" cy="38" r="3" fill="#111"/><polygon points="38,58 26,62 38,66" fill="#fbc02d"/></svg>',
+
+  // Seasons Items
+  'T-shirt': '<svg viewBox="0 0 100 100"><polygon points="30,22 42,32 58,32 70,22 88,38 78,50 72,44 72,85 28,85 28,44 22,50 12,38" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/><path d="M42 32a8 8 0 0 0 16 0" fill="none" stroke="#ff8f00" stroke-width="3"/><circle cx="50" cy="55" r="10" fill="#ff7043"/></svg>',
+  'Sunglasses': '<svg viewBox="0 0 100 100"><rect x="15" y="40" width="30" height="22" rx="6" fill="#212121" stroke="#e91e63" stroke-width="4"/><rect x="55" y="40" width="30" height="22" rx="6" fill="#212121" stroke="#e91e63" stroke-width="4"/><line x1="45" y1="46" x2="55" y2="46" stroke="#e91e63" stroke-width="5"/><path d="M15 44L5 40M85 44L95 40" stroke="#e91e63" stroke-width="4" stroke-linecap="round"/></svg>',
+  'Cap': '<svg viewBox="0 0 100 100"><path d="M22 62C22 36 78 36 78 62Z" fill="#1e88e5" stroke="#0d47a1" stroke-width="3"/><ellipse cx="68" cy="64" rx="28" ry="8" fill="#1565c0"/><circle cx="50" cy="38" r="4" fill="#ffd54f"/></svg>',
+  'Sun hat': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="65" rx="44" ry="14" fill="#ffe082" stroke="#ffa000" stroke-width="3"/><path d="M30 62C30 38 70 38 70 62Z" fill="#ffd54f" stroke="#ffa000" stroke-width="3"/><rect x="30" y="56" width="40" height="6" fill="#e91e63"/></svg>',
+  'Coat': '<svg viewBox="0 0 100 100"><polygon points="30,20 50,30 70,20 88,40 76,50 72,44 72,88 28,88 28,44 24,50 12,40" fill="#0288d1" stroke="#01579b" stroke-width="3"/><line x1="50" y1="30" x2="50" y2="88" stroke="#01579b" stroke-width="3"/><circle cx="45" cy="50" r="3" fill="#fff"/><circle cx="45" cy="65" r="3" fill="#fff"/><rect x="25" y="18" width="50" height="10" rx="5" fill="#e1f5fe"/></svg>',
+  'Scarf': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="40" rx="26" ry="16" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><rect x="52" y="42" width="14" height="42" fill="#e53935" stroke="#b71c1c" stroke-width="2.5"/><line x1="52" y1="55" x2="66" y2="55" stroke="#fff" stroke-width="4"/><line x1="52" y1="70" x2="66" y2="70" stroke="#fff" stroke-width="4"/></svg>',
+  'Gloves': '<svg viewBox="0 0 100 100"><rect x="34" y="65" width="32" height="14" rx="4" fill="#ab47bc" stroke="#6a1b9a" stroke-width="2"/><path d="M36 65V42c0-8 12-8 12 0v23" fill="#ba68c8" stroke="#6a1b9a" stroke-width="2"/><path d="M48 65V35c0-8 12-8 12 0v30" fill="#ba68c8" stroke="#6a1b9a" stroke-width="2"/><path d="M26 55c-6 0-6-10 2-12l8 12z" fill="#ba68c8"/></svg>',
+  'Warm socks': '<svg viewBox="0 0 100 100"><path d="M45 20h22v32l16 16-12 16-30-22V20z" fill="#ff7043" stroke="#d84315" stroke-width="3"/><line x1="45" y1="32" x2="67" y2="32" stroke="#fff" stroke-width="4"/><line x1="45" y1="44" x2="67" y2="44" stroke="#fff" stroke-width="4"/></svg>',
+  'Umbrella': '<svg viewBox="0 0 100 100"><path d="M12 55C12 28 88 28 88 55c-12-6-26-6-38 0-12-6-26-6-38 0z" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><path d="M38 55C38 32 62 32 62 55z" fill="#ffd54f"/><line x1="50" y1="28" x2="50" y2="75" stroke="#455a64" stroke-width="4"/><path d="M50 75a6 6 0 0 1-12 0" fill="none" stroke="#455a64" stroke-width="4"/></svg>',
+  'Rain boots': '<svg viewBox="0 0 100 100"><path d="M35 25h20v38l22 6c4 2 2 12-4 12H30c-5 0-6-8-2-12l7-6V25z" fill="#fdd835" stroke="#f57f17" stroke-width="3"/><rect x="26" y="75" width="54" height="8" rx="2" fill="#e65100"/></svg>',
+  'Closed umbrella': '<svg viewBox="0 0 100 100"><polygon points="35,30 65,30 54,75 46,75" fill="#7e57c2" stroke="#512da8" stroke-width="3"/><line x1="50" y1="18" x2="50" y2="30" stroke="#455a64" stroke-width="4"/><path d="M50 75a6 6 0 0 1-12 0" fill="none" stroke="#455a64" stroke-width="4"/></svg>',
+  'Boots': '<svg viewBox="0 0 100 100"><path d="M38 25h18v36l20 6c4 2 2 14-4 14H32c-5 0-6-8-2-12l8-6V25z" fill="#8d6e63" stroke="#4e342e" stroke-width="3"/><rect x="28" y="75" width="50" height="8" rx="2" fill="#3e2723"/></svg>',
+  'Light dress': '<svg viewBox="0 0 100 100"><polygon points="40,20 60,20 56,40 44,40" fill="#ec407a" stroke="#c2185b" stroke-width="2"/><polygon points="44,40 56,40 78,85 22,85" fill="#f48fb1" stroke="#c2185b" stroke-width="3"/><circle cx="50" cy="55" r="4" fill="#ffd54f"/><circle cx="38" cy="70" r="4" fill="#ffd54f"/><circle cx="62" cy="70" r="4" fill="#ffd54f"/></svg>',
+  'Sneakers': '<svg viewBox="0 0 100 100"><path d="M22 68l16-30h18l6 14 18 2c6 2 6 14-2 14H22z" fill="#26a69a" stroke="#004d40" stroke-width="3"/><rect x="20" y="66" width="60" height="8" rx="2" fill="#fff" stroke="#004d40" stroke-width="2"/><line x1="42" y1="46" x2="52" y2="46" stroke="#fff" stroke-width="3"/></svg>',
+  'Picnic basket': '<svg viewBox="0 0 100 100"><rect x="24" y="45" width="52" height="36" rx="4" fill="#d7ccc8" stroke="#8d6e63" stroke-width="3"/><path d="M20 45h60l-6-14H26z" fill="#ff7043"/><path d="M34 45a16 16 0 0 1 32 0" fill="none" stroke="#6d4c41" stroke-width="4"/></svg>',
+  'Flower crown': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="36" ry="18" fill="none" stroke="#66bb6a" stroke-width="6"/><circle cx="20" cy="55" r="9" fill="#ff4081"/><circle cx="50" cy="40" r="10" fill="#ffd54f"/><circle cx="80" cy="55" r="9" fill="#29b6f6"/><circle cx="34" cy="46" r="8" fill="#ab47bc"/><circle cx="66" cy="46" r="8" fill="#ff7043"/></svg>',
+
+  // Green Earth Bin Items
+  'Dry leaves': '<svg viewBox="0 0 100 100"><path d="M25 80C20 40 50 20 80 20C80 60 50 80 25 80Z" fill="#ff7043" stroke="#d84315" stroke-width="3"/><line x1="25" y1="80" x2="75" y2="25" stroke="#bf360c" stroke-width="3"/></svg>',
+  'Old sock': '<svg viewBox="0 0 100 100"><path d="M42 20h20v30l16 16-10 14-28-20V20z" fill="#78909c" stroke="#37474f" stroke-width="3"/><ellipse cx="64" cy="74" rx="4" ry="4" fill="#37474f"/></svg>',
+  'Old toothbrush': '<svg viewBox="0 0 100 100"><rect x="42" y="20" width="8" height="60" rx="4" fill="#42a5f5" stroke="#1565c0" stroke-width="2" transform="rotate(-30 46 50)"/><rect x="58" y="24" width="16" height="8" rx="2" fill="#fff" stroke="#1565c0" stroke-width="2" transform="rotate(-30 66 28)"/></svg>',
+  'Balloon': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="45" rx="28" ry="34" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><ellipse cx="40" cy="32" rx="6" ry="12" fill="#fff" opacity=".5" transform="rotate(-20 40 32)"/><polygon points="46,80 54,80 50,86" fill="#b71c1c"/><path d="M50 86q-8 6 4 12" fill="none" stroke="#795548" stroke-width="2"/></svg>',
+  'Broken crayon': '<svg viewBox="0 0 100 100"><rect x="20" y="42" width="30" height="16" fill="#ab47bc" stroke="#6a1b9a" stroke-width="2"/><polygon points="20,42 10,50 20,58" fill="#ba68c8"/><rect x="58" y="42" width="26" height="16" fill="#ab47bc" stroke="#6a1b9a" stroke-width="2"/></svg>',
+  'Banana peel': '<svg viewBox="0 0 100 100"><path d="M50 25c-15 20-35 30-35 50 15-5 25-20 35-30 10 10 20 25 35 30 0-20-20-30-35-50z" fill="#fdd835" stroke="#f57f17" stroke-width="3"/><circle cx="50" cy="22" r="3" fill="#5d4037"/></svg>',
+  'Apple core': '<svg viewBox="0 0 100 100"><path d="M35 25h30c-10 16-10 34 0 50H35c10-16 10-34 0-50z" fill="#fff9c4" stroke="#e53935" stroke-width="3"/><line x1="50" y1="25" x2="50" y2="15" stroke="#5d4037" stroke-width="3"/><circle cx="48" cy="44" r="2.5" fill="#3e2723"/><circle cx="52" cy="56" r="2.5" fill="#3e2723"/></svg>',
+  'Egg shell': '<svg viewBox="0 0 100 100"><path d="M22 65C22 45 35 35 48 35l6 8 8-8 10 8c4 10 4 22-4 22H22z" fill="#fff8e1" stroke="#ffb300" stroke-width="3"/><circle cx="50" cy="55" r="10" fill="#ffa726"/></svg>',
+  'Old bread': '<svg viewBox="0 0 100 100"><path d="M25 45c0-15 15-20 25-20s25 5 25 20v30H25V45z" fill="#ffe082" stroke="#8d6e63" stroke-width="3"/><circle cx="40" cy="45" r="2" fill="#8d6e63"/><circle cx="56" cy="52" r="2" fill="#8d6e63"/><circle cx="45" cy="62" r="2" fill="#8d6e63"/></svg>',
+  'Carrot peels': '<svg viewBox="0 0 100 100"><path d="M25 75C40 60 55 45 75 35" stroke="#ff7043" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M35 85C50 70 65 55 85 45" stroke="#ff9800" stroke-width="5" stroke-linecap="round" fill="none"/></svg>',
+  'Plastic bottle': '<svg viewBox="0 0 100 100"><rect x="42" y="16" width="16" height="8" rx="2" fill="#1e88e5"/><rect x="36" y="24" width="28" height="60" rx="6" fill="#b3e5fc" stroke="#0288d1" stroke-width="3"/><rect x="36" y="44" width="28" height="18" fill="#4fc3f7"/></svg>',
+  'Tin can': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="28" rx="22" ry="8" fill="#cfd8dc" stroke="#78909c" stroke-width="2.5"/><rect x="28" y="28" width="44" height="46" fill="#eceff1" stroke="#78909c" stroke-width="2.5"/><ellipse cx="50" cy="74" rx="22" ry="8" fill="#b0bec5" stroke="#78909c" stroke-width="2.5"/><rect x="28" y="40" width="44" height="22" fill="#e53935"/></svg>',
+  'Newspaper': '<svg viewBox="0 0 100 100"><rect x="24" y="24" width="52" height="56" rx="3" fill="#fff" stroke="#78909c" stroke-width="3"/><rect x="30" y="30" width="20" height="16" fill="#90a4ae"/><line x1="54" y1="32" x2="70" y2="32" stroke="#455a64" stroke-width="3"/><line x1="54" y1="40" x2="70" y2="40" stroke="#455a64" stroke-width="3"/><line x1="30" y1="54" x2="70" y2="54" stroke="#455a64" stroke-width="3"/><line x1="30" y1="64" x2="70" y2="64" stroke="#455a64" stroke-width="3"/></svg>',
+  'Paper box': '<svg viewBox="0 0 100 100"><polygon points="50,20 80,35 50,50 20,35" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2.5"/><polygon points="20,35 50,50 50,82 20,67" fill="#bcaaa4" stroke="#8d6e63" stroke-width="2.5"/><polygon points="80,35 50,50 50,82 80,67" fill="#a1887f" stroke="#8d6e63" stroke-width="2.5"/></svg>',
+  'Glass bottle': '<svg viewBox="0 0 100 100"><rect x="44" y="16" width="12" height="12" fill="#c8e6c9" stroke="#388e3c" stroke-width="2"/><path d="M44 28C36 34 34 44 34 52v28a6 6 0 0 0 6 6h20a6 6 0 0 0 6-6V52c0-8-2-18-10-24z" fill="#a5d6a7" stroke="#388e3c" stroke-width="3"/></svg>',
+
+  // Magnet items
+  'Bolt': '<svg viewBox="0 0 100 100"><polygon points="36,25 64,25 70,36 30,36" fill="#78909c" stroke="#37474f" stroke-width="2"/><rect x="42" y="36" width="16" height="46" fill="#b0bec5" stroke="#37474f" stroke-width="2"/><line x1="42" y1="46" x2="58" y2="46" stroke="#37474f" stroke-width="2"/><line x1="42" y1="56" x2="58" y2="56" stroke="#37474f" stroke-width="2"/><line x1="42" y1="66" x2="58" y2="66" stroke="#37474f" stroke-width="2"/></svg>',
+  'Paper clip': '<svg viewBox="0 0 100 100"><path d="M40 70V28a12 12 0 0 1 24 0v42a18 18 0 0 1-36 0V35" fill="none" stroke="#546e7a" stroke-width="6" stroke-linecap="round"/></svg>',
+  'Key': '<svg viewBox="0 0 100 100"><circle cx="34" cy="50" r="16" fill="none" stroke="#fbc02d" stroke-width="7"/><rect x="44" y="46" width="38" height="8" rx="2" fill="#fbc02d"/><rect x="70" y="54" width="6" height="12" fill="#fbc02d"/><rect x="60" y="54" width="6" height="8" fill="#fbc02d"/></svg>',
+  'Wrench': '<svg viewBox="0 0 100 100"><rect x="36" y="42" width="46" height="12" rx="3" fill="#90a4ae" stroke="#37474f" stroke-width="2" transform="rotate(-40 50 50)"/><circle cx="28" cy="32" r="14" fill="#90a4ae" stroke="#37474f" stroke-width="2"/><circle cx="28" cy="32" r="7" fill="#fff"/></svg>',
+  'Hammer': '<svg viewBox="0 0 100 100"><rect x="44" y="36" width="10" height="52" rx="3" fill="#d7ccc8" stroke="#5d4037" stroke-width="2" transform="rotate(-30 50 60)"/><polygon points="32,24 68,14 62,32 30,36" fill="#78909c" stroke="#263238" stroke-width="2.5"/></svg>',
+  'Wood block': '<svg viewBox="0 0 100 100"><rect x="22" y="32" width="56" height="38" rx="4" fill="#bcaaa4" stroke="#5d4037" stroke-width="3"/><ellipse cx="38" cy="51" rx="8" ry="12" fill="none" stroke="#8d6e63" stroke-width="2"/><ellipse cx="58" cy="51" rx="8" ry="12" fill="none" stroke="#8d6e63" stroke-width="2"/></svg>',
+  'Plastic toy': '<svg viewBox="0 0 100 100"><circle cx="50" cy="54" r="24" fill="#ff4081"/><circle cx="32" cy="32" r="10" fill="#ff4081"/><circle cx="68" cy="32" r="10" fill="#ff4081"/><circle cx="50" cy="40" r="16" fill="#ff4081"/><circle cx="45" cy="38" r="2.5" fill="#111"/><circle cx="55" cy="38" r="2.5" fill="#111"/></svg>',
+  'Puzzle piece': '<svg viewBox="0 0 100 100"><path d="M30 30h14a6 6 0 0 1 12 0h14v14a6 6 0 0 1 0 12v14H56a6 6 0 0 0-12 0H30V56a6 6 0 0 1 0-12V30z" fill="#42a5f5" stroke="#1565c0" stroke-width="3"/></svg>',
+  'Apple': '<svg viewBox="0 0 100 100"><path d="M50 84C24 84 18 48 30 32c10-12 20-4 20 4 0-8 10-16 20-4 12 16 6 52-20 52z" fill="#e53935" stroke="#b71c1c" stroke-width="2.5"/><path d="M50 32c0-10 8-16 12-18" fill="none" stroke="#795548" stroke-width="4" stroke-linecap="round"/><ellipse cx="58" cy="20" rx="8" ry="4" fill="#43a047" transform="rotate(-30 58 20)"/></svg>',
+  'Book': '<svg viewBox="0 0 100 100"><rect x="25" y="24" width="48" height="58" rx="4" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><rect x="22" y="24" width="8" height="58" rx="2" fill="#ffd54f"/><line x1="38" y1="40" x2="65" y2="40" stroke="#fff" stroke-width="3"/><line x1="38" y1="52" x2="65" y2="52" stroke="#fff" stroke-width="3"/></svg>',
+  'Magnet': '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M22 25v30c0 16 12 28 28 28s28-12 28-28V25h-16v30c0 7-5 12-12 12s-12-5-12-12V25H22z" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><rect x="22" y="25" width="16" height="12" fill="#1e88e5"/><rect x="62" y="25" width="16" height="12" fill="#1e88e5"/><text x="30" y="34" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">N</text><text x="70" y="34" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">S</text></svg>',
+
+  // Senses organs
+  'Nose': '<svg viewBox="0 0 100 100"><path d="M48 24v38c0 8-10 14-16 10-4-3-2-10 4-10" fill="none" stroke="#e65100" stroke-width="5" stroke-linecap="round"/><path d="M48 62c0 8 10 14 16 10 4-3 2-10-4-10" fill="none" stroke="#e65100" stroke-width="5" stroke-linecap="round"/><ellipse cx="40" cy="65" rx="3" ry="2" fill="#bf360c"/><ellipse cx="60" cy="65" rx="3" ry="2" fill="#bf360c"/></svg>',
+  'Ear': '<svg viewBox="0 0 100 100"><path d="M40 22c22 0 30 18 30 32 0 18-12 28-24 28-10 0-14-8-12-16 2-8 10-10 10-18 0-10-6-14-10-14" fill="none" stroke="#e65100" stroke-width="6" stroke-linecap="round"/></svg>',
+  'Eye': '<svg viewBox="0 0 100 100"><path d="M15 50Q50 20 85 50Q50 80 15 50Z" fill="#fff" stroke="#0288d1" stroke-width="4"/><circle cx="50" cy="50" r="14" fill="#0288d1"/><circle cx="50" cy="50" r="7" fill="#111"/><circle cx="46" cy="46" r="3" fill="#fff"/></svg>',
+  'Tongue': '<svg viewBox="0 0 100 100"><path d="M25 40q25-10 50 0c0 30-15 45-25 45s-25-15-25-45z" fill="#ff4081" stroke="#c2185b" stroke-width="4"/><line x1="50" y1="40" x2="50" y2="70" stroke="#c2185b" stroke-width="3"/></svg>',
+  'Hand': '<svg viewBox="0 0 100 100"><path d="M26 50v-16a4 4 0 0 1 8 0v16M34 42v-22a4 4 0 0 1 8 0v22M42 42v-24a4 4 0 0 1 8 0v24M50 46v-18a4 4 0 0 1 8 0v24" fill="none" stroke="#e65100" stroke-width="5" stroke-linecap="round"/><path d="M26 50c0 24 10 32 26 32s20-10 20-22V52a4 4 0 0 0-8 0v14" fill="#ffe0b2" stroke="#e65100" stroke-width="3"/></svg>',
+  'Music': '<svg viewBox="0 0 100 100"><ellipse cx="35" cy="72" rx="12" ry="8" fill="#e91e63" transform="rotate(-20 35 72)"/><ellipse cx="75" cy="62" rx="12" ry="8" fill="#e91e63" transform="rotate(-20 75 62)"/><rect x="42" y="24" width="6" height="50" fill="#c2185b"/><rect x="82" y="14" width="6" height="50" fill="#c2185b"/><polygon points="42,24 88,14 88,26 42,36" fill="#e91e63"/></svg>',
+
+  // Sink/Float items
+  'Wood': '<svg viewBox="0 0 100 100"><rect x="22" y="32" width="56" height="38" rx="4" fill="#bcaaa4" stroke="#5d4037" stroke-width="3"/><ellipse cx="38" cy="51" rx="8" ry="12" fill="none" stroke="#8d6e63" stroke-width="2"/><ellipse cx="58" cy="51" rx="8" ry="12" fill="none" stroke="#8d6e63" stroke-width="2"/></svg>',
+  'Stone': '<svg viewBox="0 0 100 100"><path d="M22 68c-10-14 0-38 18-44s42 4 48 20-6 32-24 34-32-2-42-10z" fill="#78909c" stroke="#455a64" stroke-width="3"/><ellipse cx="44" cy="44" rx="12" ry="4" fill="#90a4ae"/></svg>',
+  'Pencil': '<svg viewBox="0 0 100 100"><rect x="25" y="44" width="50" height="14" rx="2" fill="#fdd835" stroke="#f57f17" stroke-width="2" transform="rotate(-35 50 50)"/><polygon points="18,72 26,62 36,70" fill="#ffcc80" stroke="#f57f17" stroke-width="1.5"/><polygon points="18,72 22,68 25,71" fill="#212121"/></svg>',
+  'Coin': '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="36" fill="#fbc02d" stroke="#f57f17" stroke-width="4"/><circle cx="50" cy="50" r="28" fill="#ffd54f" stroke="#f57f17" stroke-width="2"/><text x="50" y="60" text-anchor="middle" font-size="28" font-weight="900" fill="#f57f17" font-family="Arial">★</text></svg>',
+  'Rubber duck': '<svg viewBox="0 0 100 100"><ellipse cx="46" cy="62" rx="26" ry="18" fill="#ffeb3b"/><circle cx="64" cy="42" r="16" fill="#ffeb3b"/><polygon points="76,42 90,46 76,50" fill="#ff9800"/><circle cx="68" cy="38" r="3" fill="#111"/><ellipse cx="42" cy="64" rx="14" ry="8" fill="#fdd835"/></svg>',
+  'Spoon': '<svg viewBox="0 0 100 100"><ellipse cx="32" cy="40" rx="16" ry="22" fill="#b0bec5" stroke="#78909c" stroke-width="2" transform="rotate(-30 32 40)"/><rect x="42" y="46" width="46" height="6" rx="3" fill="#cfd8dc" stroke="#78909c" stroke-width="1.5" transform="rotate(25 42 46)"/></svg>',
+
+  // Traffic vehicles
+  'CarRed': '<svg viewBox="0 0 120 70"><path d="M15 45L30 25h45l20 20h15c5 0 8 4 8 8v8H5v-8c0-4 3-8 10-8z" fill="#e53935"/><rect x="35" y="28" width="18" height="14" rx="2" fill="#e0f7fa"/><rect x="58" y="28" width="22" height="14" rx="2" fill="#e0f7fa"/><circle cx="32" cy="58" r="12" fill="#212121"/><circle cx="32" cy="58" r="5" fill="#fff"/><circle cx="88" cy="58" r="12" fill="#212121"/><circle cx="88" cy="58" r="5" fill="#fff"/></svg>',
+  'CarYellow': '<svg viewBox="0 0 120 70"><path d="M15 45L30 25h45l20 20h15c5 0 8 4 8 8v8H5v-8c0-4 3-8 10-8z" fill="#fbc02d"/><rect x="48" y="18" width="16" height="8" rx="2" fill="#212121"/><rect x="35" y="28" width="18" height="14" rx="2" fill="#e0f7fa"/><rect x="58" y="28" width="22" height="14" rx="2" fill="#e0f7fa"/><circle cx="32" cy="58" r="12" fill="#212121"/><circle cx="32" cy="58" r="5" fill="#fff"/><circle cx="88" cy="58" r="12" fill="#212121"/><circle cx="88" cy="58" r="5" fill="#fff"/></svg>',
+  'CarBus': '<svg viewBox="0 0 120 70"><rect x="10" y="15" width="98" height="42" rx="6" fill="#43a047"/><rect x="16" y="22" width="18" height="16" rx="2" fill="#e0f7fa"/><rect x="40" y="22" width="18" height="16" rx="2" fill="#e0f7fa"/><rect x="64" y="22" width="18" height="16" rx="2" fill="#e0f7fa"/><rect x="88" y="22" width="14" height="16" rx="2" fill="#e0f7fa"/><circle cx="30" cy="58" r="11" fill="#212121"/><circle cx="30" cy="58" r="4" fill="#fff"/><circle cx="86" cy="58" r="11" fill="#212121"/><circle cx="86" cy="58" r="4" fill="#fff"/></svg>',
+  'CarBlue': '<svg viewBox="0 0 120 70"><path d="M15 45L30 25h45l20 20h15c5 0 8 4 8 8v8H5v-8c0-4 3-8 10-8z" fill="#1e88e5"/><rect x="35" y="28" width="18" height="14" rx="2" fill="#e0f7fa"/><rect x="58" y="28" width="22" height="14" rx="2" fill="#e0f7fa"/><circle cx="32" cy="58" r="12" fill="#212121"/><circle cx="32" cy="58" r="5" fill="#fff"/><circle cx="88" cy="58" r="12" fill="#212121"/><circle cx="88" cy="58" r="5" fill="#fff"/></svg>',
+  'CarPolice': '<svg viewBox="0 0 120 70"><path d="M15 45L30 25h45l20 20h15c5 0 8 4 8 8v8H5v-8c0-4 3-8 10-8z" fill="#0d47a1"/><rect x="50" y="16" width="12" height="10" rx="3" fill="#e53935"/><circle cx="32" cy="58" r="12" fill="#212121"/><circle cx="32" cy="58" r="5" fill="#fff"/><circle cx="88" cy="58" r="12" fill="#212121"/><circle cx="88" cy="58" r="5" fill="#fff"/></svg>',
+  'Pedestrian': '<svg viewBox="0 0 60 100"><circle cx="30" cy="18" r="10" fill="#ffb74d"/><path d="M20 32h20v26H20z" fill="#1e88e5"/><line x1="24" y1="58" x2="16" y2="92" stroke="#e65100" stroke-width="6" stroke-linecap="round"/><line x1="36" y1="58" x2="44" y2="92" stroke="#e65100" stroke-width="6" stroke-linecap="round"/><line x1="20" y1="36" x2="10" y2="60" stroke="#ffb74d" stroke-width="5" stroke-linecap="round"/><line x1="40" y1="36" x2="52" y2="56" stroke="#ffb74d" stroke-width="5" stroke-linecap="round"/></svg>',
+
+  // Tab & Header icons
+  'PlantTab': '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="18" fill="#ffd54f"/><circle cx="50" cy="24" r="12" fill="#ff4081"/><circle cx="76" cy="42" r="12" fill="#ff4081"/><circle cx="66" cy="74" r="12" fill="#ff4081"/><circle cx="34" cy="74" r="12" fill="#ff4081"/><circle cx="24" cy="42" r="12" fill="#ff4081"/></svg>',
+  'AnimalTab': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="26" ry="18" fill="#a0522d"/><circle cx="68" cy="40" r="14" fill="#a0522d"/><polygon points="76,32 82,18 78,34" fill="#6d4c41"/><circle cx="73" cy="38" r="2.5" fill="#111"/></svg>',
+  'SeasonTab': '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="24" fill="#ffd54f"/><path d="M50 15v10M50 75v10M15 50h10M75 50h10" stroke="#f57c00" stroke-width="6" stroke-linecap="round"/></svg>',
+  'MagnetTab': '<svg viewBox="0 0 100 100"><path d="M26 25v30c0 14 10 24 24 24s24-10 24-24V25h-14v30c0 6-4 10-10 10s-10-4-10-10V25H26z" fill="#e53935"/><rect x="26" y="25" width="14" height="10" fill="#1e88e5"/><rect x="60" y="25" width="14" height="10" fill="#1e88e5"/></svg>',
+  'ButterflyTab': '<svg viewBox="0 0 100 100"><path d="M50 48C30 18 10 30 20 60c10 16 26 8 30-10z" fill="#ec407a"/><path d="M50 48C70 18 90 30 80 60c-10 16-26 8-30-10z" fill="#ab47bc"/><circle cx="50" cy="50" r="4" fill="#212121"/></svg>',
+  'SenseTab': '<svg viewBox="0 0 100 100"><path d="M15 50Q50 20 85 50Q50 80 15 50Z" fill="#fff" stroke="#0288d1" stroke-width="5"/><circle cx="50" cy="50" r="14" fill="#0288d1"/><circle cx="50" cy="50" r="7" fill="#111"/></svg>',
+  'TrafficTab': '<svg viewBox="0 0 100 100"><rect x="35" y="15" width="30" height="70" rx="8" fill="#263238"/><circle cx="50" cy="30" r="8" fill="#e53935"/><circle cx="50" cy="50" r="8" fill="#fdd835"/><circle cx="50" cy="70" r="8" fill="#43a047"/></svg>',
+  'WeatherTab': '<svg viewBox="0 0 100 100"><circle cx="40" cy="40" r="18" fill="#ffd54f"/><path d="M30 65h45a14 14 0 0 0 0-28 18 18 0 0 0-32-4 14 14 0 0 0-13 32z" fill="#e0f7fa" stroke="#4fc3f7" stroke-width="2"/></svg>',
+  'SinkTab': '<svg viewBox="0 0 100 100"><path d="M20 70q30-20 60 0" stroke="#0288d1" stroke-width="8" stroke-linecap="round" fill="none"/><polygon points="50,25 35,50 65,50" fill="#e53935"/></svg>',
+  'BinTab': '<svg viewBox="0 0 100 100"><path d="M50 20L65 35H35z" fill="#43a047"/><path d="M75 55L60 70V40z" fill="#43a047"/><path d="M25 55L40 40v30z" fill="#43a047"/></svg>',
+
+  'ForestIcon': '<svg viewBox="0 0 100 100"><polygon points="50,15 75,55 60,55 80,80 20,80 40,55 25,55" fill="#2e7d32"/></svg>',
+  'OceanIcon': '<svg viewBox="0 0 100 100"><path d="M15 60q18-20 35 0t35 0" stroke="#0288d1" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M15 75q18-20 35 0t35 0" stroke="#4fc3f7" stroke-width="8" stroke-linecap="round" fill="none"/></svg>',
+  'DesertIcon': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="70" rx="35" ry="15" fill="#fbc02d"/><path d="M48 25v45M35 40v15h13M60 48v12H48" stroke="#43a047" stroke-width="6" stroke-linecap="round" fill="none"/></svg>',
+  'NestIcon': '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="65" rx="35" ry="16" fill="#8d6e63"/><ellipse cx="40" cy="58" rx="8" ry="10" fill="#fff9c4"/><ellipse cx="60" cy="58" rx="8" ry="10" fill="#fff9c4"/></svg>',
+  'SummerIcon': '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="24" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/></svg>',
+  'WinterIcon': '<svg viewBox="0 0 100 100"><path d="M50 15v70M15 50h70M25 25l50 50M25 75l50-50" stroke="#0288d1" stroke-width="6" stroke-linecap="round"/></svg>',
+  'RainyIcon': '<svg viewBox="0 0 100 100"><path d="M25 50h50a12 12 0 0 0 0-24 16 16 0 0 0-30-4 12 12 0 0 0-20 28z" fill="#90a4ae"/><line x1="35" y1="65" x2="30" y2="80" stroke="#0288d1" stroke-width="5" stroke-linecap="round"/><line x1="55" y1="65" x2="50" y2="80" stroke="#0288d1" stroke-width="5" stroke-linecap="round"/></svg>',
+  'SpringIcon': '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="14" fill="#ffd54f"/><circle cx="50" cy="26" r="10" fill="#ff4081"/><circle cx="72" cy="40" r="10" fill="#ff4081"/><circle cx="65" cy="70" r="10" fill="#ff4081"/><circle cx="35" cy="70" r="10" fill="#ff4081"/><circle cx="28" cy="40" r="10" fill="#ff4081"/></svg>',
+  'DryBinIcon': '<svg viewBox="0 0 100 100"><rect x="30" y="35" width="40" height="48" rx="4" fill="#e65100"/><rect x="25" y="26" width="50" height="8" rx="2" fill="#bf360c"/><rect x="42" y="20" width="16" height="6" fill="#bf360c"/></svg>',
+  'WetBinIcon': '<svg viewBox="0 0 100 100"><path d="M50 25c-12 16-28 25-28 42 12-4 20-16 28-25 8 9 16 21 28 25 0-17-16-26-28-42z" fill="#fdd835"/><circle cx="50" cy="22" r="3" fill="#5d4037"/></svg>',
+  'RecycleBinIcon': '<svg viewBox="0 0 100 100"><path d="M50 20L65 35H35z" fill="#1e88e5"/><path d="M75 55L60 70V40z" fill="#1e88e5"/><path d="M25 55L40 40v30z" fill="#1e88e5"/></svg>'
+};
+
+// Render function: returns SVG HTML if available, otherwise high-res Noto/Twemoji color image
+function renderArt(name, emoji, sz = 72) {
+  if (name && SVGS[name]) {
+    return `<span class="art-box" style="width:${sz}px;height:${sz}px">${SVGS[name]}</span>`;
+  }
+  if (emoji) {
+    const cp = [...emoji].map(c => c.codePointAt(0).toString(16)).filter(x => x !== 'fe0f');
+    const noto = 'https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/png/512/emoji_u' + cp.join('_') + '.png';
+    const tw = 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/svg/' + cp.join('-') + '.svg';
+    return `<img width="${sz}" height="${sz}" style="display:inline-block;vertical-align:middle;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.2))" alt="${name || emoji}" src="${noto}" onerror="if(this.dataset.f){this.outerHTML='<span style=\\'font-size:${sz}px\\'>${emoji}</span>'}else{this.dataset.f=1;this.src='${tw}'}">`;
+  }
+  return '';
 }
 
-const stem='<div style="width:18px;height:80px;background:linear-gradient(90deg,#2e7d32,#81c784);border-radius:9px"></div>';
-const roots='<svg width="100" height="70" viewBox="0 0 120 80"><path d="M60 0V35M60 35L20 75M60 35V78M60 35L100 75" stroke="#6d4c41" stroke-width="8" fill="none" stroke-linecap="round"/></svg>';
-const chry='<svg width="70" height="90" viewBox="0 0 90 110"><line x1="45" y1="0" x2="45" y2="20" stroke="#6d4c41" stroke-width="5"/><ellipse cx="45" cy="62" rx="24" ry="40" fill="#7cb342" stroke="#33691e" stroke-width="4"/></svg>';
-const flowerSvg='<svg width="76" height="76" viewBox="0 0 100 100"><circle cx="50" cy="24" r="18" fill="#ff4081"/><circle cx="76" cy="42" r="18" fill="#ff4081"/><circle cx="66" cy="74" r="18" fill="#ff4081"/><circle cx="34" cy="74" r="18" fill="#ff4081"/><circle cx="24" cy="42" r="18" fill="#ff4081"/><circle cx="50" cy="50" r="18" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/><circle cx="46" cy="46" r="3" fill="#fff" opacity=".8"/></svg>';
-const leavesSvg='<svg width="76" height="76" viewBox="0 0 100 100"><defs><linearGradient id="pLeaf" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#2e7d32"/><stop offset="100%" stop-color="#76ff03"/></linearGradient></defs><path d="M15 85 C15 40 45 15 85 15 C85 55 55 85 15 85 Z" fill="url(#pLeaf)" stroke="#1b5e20" stroke-width="3"/><path d="M15 85 L85 15 M40 60 L60 55 M55 45 L70 35 M28 72 L45 68" stroke="#a5d6a7" stroke-width="3" stroke-linecap="round" fill="none"/></svg>';
-const eggSvg='<svg width="65" height="80" viewBox="0 0 100 120"><ellipse cx="50" cy="65" rx="34" ry="46" fill="#fff9c4" stroke="#fbc02d" stroke-width="3"/><ellipse cx="42" cy="50" rx="8" ry="16" fill="#fff" opacity=".7" transform="rotate(-20 42 50)"/></svg>';
-const catSvg='<svg width="85" height="60" viewBox="0 0 120 70"><circle cx="24" cy="40" r="14" fill="#76ff03" stroke="#33691e" stroke-width="2.5"/><circle cx="46" cy="36" r="14" fill="#64dd17" stroke="#33691e" stroke-width="2.5"/><circle cx="68" cy="40" r="14" fill="#76ff03" stroke="#33691e" stroke-width="2.5"/><circle cx="90" cy="34" r="16" fill="#76ff03" stroke="#33691e" stroke-width="2.5"/><circle cx="86" cy="30" r="3" fill="#000"/><circle cx="98" cy="30" r="3" fill="#000"/><line x1="94" y1="20" x2="102" y2="10" stroke="#33691e" stroke-width="3"/><circle cx="102" cy="10" r="3" fill="#f50057"/></svg>';
-const flySvg='<svg width="85" height="75" viewBox="0 0 100 90"><path d="M50 45 C35 15 10 15 12 40 C14 55 35 55 50 48 Z" fill="#ff4081" stroke="#880e4f" stroke-width="2"/><path d="M50 45 C65 15 90 15 88 40 C86 55 65 55 50 48 Z" fill="#ff4081" stroke="#880e4f" stroke-width="2"/><path d="M50 48 C38 52 24 64 30 78 C36 86 46 72 50 52 Z" fill="#40c4ff" stroke="#01579b" stroke-width="2"/><path d="M50 48 C62 52 76 64 70 78 C64 86 54 72 50 52 Z" fill="#40c4ff" stroke="#01579b" stroke-width="2"/><ellipse cx="50" cy="48" rx="4" ry="24" fill="#262626"/></svg>';
-const roseSvg='<svg width="70" height="70" viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#e91e63" stroke="#880e4f" stroke-width="3"/><path d="M38 42 C44 32 56 32 62 42 C56 50 44 50 38 42 Z" fill="#f48fb1"/><circle cx="50" cy="50" r="16" fill="#d81b60"/><circle cx="50" cy="50" r="8" fill="#ad1457"/></svg>';
-const lemonSvg='<svg width="70" height="70" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="38" ry="26" fill="#ffeb3b" stroke="#fbc02d" stroke-width="3" transform="rotate(-30 50 50)"/><circle cx="18" cy="32" r="4" fill="#fbc02d"/><circle cx="82" cy="68" r="4" fill="#fbc02d"/></svg>';
-const cactusSvg='<svg width="70" height="70" viewBox="0 0 100 100"><path d="M42 90 L42 28 C42 18 58 18 58 28 L58 90 Z" fill="#43a047" stroke="#1b5e20" stroke-width="3"/><path d="M30 46 L42 46 M30 46 L30 36 C30 30 38 30 38 36" stroke="#1b5e20" stroke-width="4" fill="none"/><path d="M70 56 L58 56 M70 56 L70 44 C70 38 62 38 62 44" stroke="#1b5e20" stroke-width="4" fill="none"/></svg>';
-const parts=()=>placeG({msg:'Build the plant! Pick a part, then tap its box.',done:'You built a complete plant!',sm:1,
- tg:{left:'34%',right:'auto',width:'32%',height:'auto',bottom:'12px',flexDirection:'column',flexWrap:'nowrap',gap:'6px'},it:{left:'3%',right:'auto',width:'26%',height:'auto',bottom:'12px'},
- targets:[['flower','❓','Flower'],['leaves','❓','Leaves'],['stem','❓','Stem'],['roots','❓','Roots','soil']],
- items:[['flower',flowerSvg,'Flower'],['leaves',leavesSvg,'Leaves'],['stem',stem,'Stem'],['roots',roots,'Roots']],
- learn:[['Roots','Roots drink water from the soil.'],['Stem','The stem holds the plant up.'],['Leaves','Leaves make food from sunlight.'],['Flower','Flowers make seeds.']]});
-const butterfly=()=>placeG({msg:'Put the life cycle in order: 1, 2, 3, 4!',done:'Egg, caterpillar, pupa, butterfly!',arrow:1,
- targets:[['egg','❓','Step 1'],['cat','❓','Step 2'],['pupa','❓','Step 3'],['fly','❓','Step 4']],
- items:[['egg',eggSvg,'Egg'],['cat',catSvg,'Caterpillar'],['pupa',chry,'Pupa'],['fly',flySvg,'Butterfly']],
- learn:[['Play Story','First an egg. Then a caterpillar. Then a pupa. Then a beautiful butterfly!']]});
-const senses=()=>placeG({msg:'Which sense do we use? Match each picture!',done:'You know all five senses!',keep:1,
- targets:[['smell','👃','Nose'],['hear','👂','Ear'],['see','👁️','Eye'],['taste','👅','Tongue'],['touch','✋','Hand']],
- items:[['smell',roseSvg,'Rose'],['hear','🎵','Music'],['see','🌈','Rainbow'],['taste',lemonSvg,'Lemon'],['touch',cactusSvg,'Cactus']],
- learn:[['Smell','We smell with our nose.'],['Hear','We hear with our ears.'],['See','We see with our eyes.'],['Taste','We taste with our tongue.'],['Touch','We feel with our skin.']]});
+/* ---------------- GAME 1: SORTING INTO BASKETS ---------------- */
+function sortG(bins, per, sz) {
+  let sel = null, left, tray = el('', 'tray'), bk = el('', 'baskets');
+  const drop = (d, n) => {
+    if (!sel) { M('Tap a picture first!'); say('Tap a picture first'); return; }
+    if (sel.k == n) {
+      const i = sel;
+      i.onclick = null;
+      i.classList.remove('sel');
+      i.style.width = '52px';
+      i.style.height = '52px';
+      i.innerHTML = renderArt(i.nm, null, 48);
+      d.querySelector('.bin').appendChild(i);
+      sel = null;
+      tone(700, .2);
+      const binName = bins[n][4] || bins[n][0];
+      say(i.nm + ' goes in ' + binName);
+      M(--left ? 'Yes! ' + i.nm + ' goes here!' : 'Great job! All sorted!');
+    } else {
+      bad('Oops! Try another box!');
+    }
+  };
 
-function magnet(){
- const W=st.clientWidth,H=st.clientHeight;let mx=W/2,my=H/2,on=1,ln=0,I=[];
- const D=[['🔩','Bolt',1],['📎','Paper clip',1],['🔑','Key',1],['🔧','Wrench',1],['🔨','Hammer',1],['🪵','Wood block',0],['🧸','Plastic toy',0],['🧩','Puzzle piece',0],['🍎','Apple',0],['📕','Book',0]];
- M('Move the magnet with your mouse!');const mg=el('🧲','mg');
- D.forEach(d=>I.push({e:d[0],name:d[1],m:d[2],x:60+Math.random()*(W-200),y:100+Math.random()*(H-240),el:el(d[0],'mi')}));
- st.onpointermove=e=>{const r=st.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top};
- T.push(setInterval(()=>{mg.style.left=mx-45+'px';mg.style.top=my-45+'px';let n=0;
-  I.forEach(o=>{const dx=mx-(o.x+29),dy=my-(o.y+29),d=Math.hypot(dx,dy)||1;
-   if(o.s){if(!on)o.s=0;else{o.x=mx+o.ox-29;o.y=my+o.oy-29;n++}}
-   else if(on&&o.m&&d<230){const v=Math.max(3,(230-d)/12);o.x+=dx/d*v;o.y+=dy/d*v;if(d<60){o.s=1;o.ox=Math.random()*70-35;o.oy=Math.random()*60-10;tone(900,.08)}}
-   else if(on&&!o.m&&d<75&&!o.w){o.w=1;o.el.classList.add('hint');M(o.name+' is NOT magnetic!');say(o.name+' is not magnetic');setTimeout(()=>{o.w=0;o.el.classList.remove('hint')},1500)}
-   o.el.style.left=o.x+'px';o.el.style.top=o.y+'px'});
-  if(n!=ln){ln=n;if(n)M('The magnet picked up '+n+' iron thing'+(n>1?'s':'')+'!')}},30));
- const b=btn('Magnet: ON','#43a047',()=>{on=!on;b.textContent='Magnet: '+(on?'ON':'OFF');b.style.setProperty('--c',on?'#43a047':'#e53935');M(on?'Magnet is ON!':'Magnet is OFF. Things drop!')});
- const show=m=>{I.forEach(o=>{o.el.classList.remove('hint');if(o.m==m){void o.el.offsetWidth;o.el.classList.add('hint')}})};
- btn('Show Iron Things','#1e88e5',()=>{show(1);say('Iron things stick to a magnet')});btn('Show Non-Magnetic','#fb8c00',()=>{show(0);say('Wood, plastic and paper do not stick')});
- btn('Shake Table','#8e24aa',()=>I.forEach(o=>{o.s=0;o.x=60+Math.random()*(W-200);o.y=100+Math.random()*(H-240)}));btn('Reset','#546e7a',()=>load(cur));
+  const bn = bins.map((b, n) => {
+    const iconHtml = b[5] && SVGS[b[5]] ? `<span style="width:26px;height:26px;display:inline-flex">${SVGS[b[5]]}</span>` : '';
+    const d = el('<div class=bt>' + iconHtml + ' ' + b[0] + '</div><div class=bin></div>', 'basket', {
+      background: 'linear-gradient(rgba(255,255,255,.25),rgba(0,0,0,.15)),' + b[1]
+    }, bk);
+    d.onclick = () => drop(d, n);
+    return d;
+  });
+
+  const start = () => {
+    tray.innerHTML = '';
+    bn.forEach(d => d.querySelector('.bin').innerHTML = '');
+    sel = null;
+    M('Tap a picture, then tap its box!');
+    const all = [];
+    bins.forEach((b, k) => sh(b[2]).slice(0, per).forEach(x => all.push([x, k])));
+    left = all.length;
+    sh(all).forEach(a => {
+      const visual = renderArt(a[0][1], a[0][0], sz);
+      const i = el(visual, 'item', { width: sz + 'px', height: sz + 'px' }, tray);
+      i.nm = a[0][1];
+      i.k = a[1];
+      i.onclick = () => {
+        clr();
+        sel = i;
+        i.classList.add('sel');
+        say(i.nm);
+        tone(400, .1);
+      };
+    });
+  };
+
+  start();
+  bins.forEach((b, n) => btn('Learn: ' + b[4], b[1], () => { say(b[3]); M(b[3]); }));
+  btn('New Set', '#8e24aa', start);
 }
 
-function traffic(){
- const W=st.clientWidth,H=st.clientHeight,rt=H*.46,rh=150,zx=W*.45,stop=zx+150,py0=rt-80,py1=rt+rh+5;
- el('','rd',{top:rt+'px',height:rh+'px'});el('','zb',{left:zx+'px',top:rt+'px',height:rh+'px'});
- el('<div class=lt id=lr></div><div class=lt id=ly></div><div class=lt id=lg></div>','pole',{left:zx+175+'px',top:rt-215+'px'});
- let ls='red',tm=0,auto=0,py=py0,ped={w:0,d:1,done:0},cars=[];
- const ped_=el('🚶','car',{left:zx+35+'px',top:py+'px'});
- const E=['🚗','🚕','🚌','🚙','🚓'];
- const addCar=()=>{if(cars.length>5)return;cars.push({x:Math.max(W,...cars.map(c=>c.x+130)),el:el(E[cars.length%5],'car',{top:rt+45+'px'})})};
- const set=l=>{ls=l;tm=0;ped.done=0;$('#lr').classList.toggle('on',l=='red');$('#ly').classList.toggle('on',l=='yellow');$('#lg').classList.toggle('on',l=='green');
-  const m={red:'RED = STOP! Cars wait. People can cross.',yellow:'YELLOW = GET READY!',green:'GREEN = GO! Cars can go.'}[l];M(m);say(m.split('!')[0].replace('=','means'))};
- addCar();addCar();for(let i=0;i<2;i++)cars[i].x=W-150+i*0;cars[0].x=W-200;cars[1].x=W+60;set('red');
- T.push(setInterval(()=>{tm++;if(auto&&tm>({red:200,green:200,yellow:70}[ls]))set(ls=='red'?'green':ls=='green'?'yellow':'red');
-  if(!ped.w&&!ped.done&&ls=='red'&&tm>40){ped.w=1;ped.done=1}
-  if(ped.w){py+=ped.d*2.5;if((ped.d>0&&py>=py1)||(ped.d<0&&py<=py0)){py=ped.d>0?py1:py0;ped.d*=-1;ped.w=0}}
-  ped_.style.top=py+'px';
-  cars.sort((a,b)=>a.x-b.x);
-  cars.forEach((c,i)=>{const v=ls=='yellow'?4:7,nx=c.x-v,ah=cars[i-1];
-   const stopNow=ls=='red'||ped.w||(ls=='yellow'&&c.x-stop>90);
-   let x=c.x-v;if(stopNow&&c.x>=stop&&nx<stop)x=c.x;
-   if(ah&&x<ah.x+110)x=c.x;
-   c.x=x;if(c.x<-120)c.x=Math.max(W+20,...cars.map(a=>a.x+130));c.el.style.left=c.x+'px'})},30));
- btn('RED = Stop 🛑','#e53935',()=>set('red'));btn('YELLOW = Get Ready ⚠️','#f9a825',()=>set('yellow'));btn('GREEN = Go ✅','#43a047',()=>set('green'));
- const a=btn('Auto Lights: OFF','#1e88e5',()=>{auto=!auto;a.textContent='Auto Lights: '+(auto?'ON':'OFF')});
- btn('Add Car 🚗','#8e24aa',addCar);btn('Remove Car','#546e7a',()=>{const c=cars.pop();if(c)c.el.remove()});
+const homes = () => sortG([
+  ['FOREST', '#2e7d32', [['🦌','Deer'],['🐻','Bear'],['🦊','Fox'],['🐿️','Squirrel']], 'Deer, bears and foxes live in the forest.', 'Forest', 'ForestIcon'],
+  ['OCEAN', '#1e88e5', [['🐠','Fish'],['🐋','Whale'],['🐙','Octopus'],['🦀','Crab']], 'Fish, whales and crabs live in the ocean.', 'Ocean', 'OceanIcon'],
+  ['DESERT', '#d79a2b', [['🐪','Camel'],['🦂','Scorpion'],['🦎','Lizard'],['🐍','Snake']], 'Camels and lizards live in the hot desert.', 'Desert', 'DesertIcon'],
+  ['BIRD NEST', '#8d5524', [['🐦','Sparrow'],['🦉','Owl'],['🦜','Parrot'],['🐥','Chick']], 'Birds live in nests high up in trees.', 'Nest', 'NestIcon']
+], 2, 72);
+
+const seasons = () => sortG([
+  ['SUMMER', '#f9a825', [['👕','T-shirt'],['🕶️','Sunglasses'],['🧢','Cap'],['👒','Sun hat']], 'In summer it is hot. We wear light clothes.', 'Summer', 'SummerIcon'],
+  ['WINTER', '#1e88e5', [['🧥','Coat'],['🧣','Scarf'],['🧤','Gloves'],['🧦','Warm socks']], 'In winter it is cold. We wear warm clothes.', 'Winter', 'WinterIcon'],
+  ['RAINY', '#546e7a', [['☂️','Umbrella'],['🥾','Rain boots'],['🌂','Closed umbrella'],['👢','Boots']], 'In the rainy season we use umbrellas and boots.', 'Rainy', 'RainyIcon'],
+  ['SPRING', '#d81b60', [['👗','Light dress'],['👟','Sneakers'],['🧺','Picnic basket'],['🌸','Flower crown']], 'In spring flowers bloom. The weather is nice.', 'Spring', 'SpringIcon']
+], 2, 72);
+
+const clean = () => sortG([
+  ['DRY BIN', '#fb8c00', [['🍂','Dry leaves'],['🧦','Old sock'],['🪥','Old toothbrush'],['🎈','Balloon'],['🖍️','Broken crayon']], 'Dry waste is dry things we cannot reuse.', 'Dry', 'DryBinIcon'],
+  ['WET BIN', '#43a047', [['🍌','Banana peel'],['🍎','Apple core'],['🥚','Egg shell'],['🍞','Old bread'],['🥕','Carrot peels']], 'Wet waste is food waste. It makes compost.', 'Wet', 'WetBinIcon'],
+  ['RECYCLE', '#1e88e5', [['🥤','Plastic bottle'],['🥫','Tin can'],['📰','Newspaper'],['📦','Paper box'],['🍾','Glass bottle']], 'We can recycle paper, plastic, glass and tin.', 'Recycle', 'RecycleBinIcon']
+], 3, 72);
+
+/* ---------------- GAME 2: PLACE INTO TARGET BOXES ---------------- */
+function placeG(o) {
+  let sel = null, left;
+  const tg = el('', 'tray', o.tg), it = el('', 'tray', o.it);
+  const qMark = '<span style="display:inline-flex;width:44px;height:44px"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#cfd8dc" stroke="#90a4ae" stroke-width="4"/><text x="50" y="68" font-size="52" font-weight="900" fill="#546e7a" text-anchor="middle">?</text></svg></span>';
+  const arrowSvg = '<span style="display:inline-flex;width:38px;height:38px"><svg viewBox="0 0 100 100"><path d="M20 50h50M50 30l20 20-20 20" fill="none" stroke="#e53935" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+
+  const start = () => {
+    tg.innerHTML = it.innerHTML = '';
+    sel = null;
+    left = o.items.length;
+    M(o.msg);
+    o.targets.forEach((t, n) => {
+      if (o.arrow && n) el(arrowSvg, '', { display: 'flex', alignItems: 'center' }, tg);
+      const targetIcon = t[1] === '❓' ? qMark : (SVGS[t[1]] ? `<span style="display:inline-flex;width:52px;height:52px">${SVGS[t[1]]}</span>` : renderArt(t[1], t[1], 52));
+      const d = el(targetIcon + '<div class=tl>' + t[2] + '</div>', 'slot' + (o.sm ? ' sm' : '') + (t[3] ? ' ' + t[3] : ''), null, tg);
+      d.onclick = () => {
+        if (!sel) { M('Tap a picture first!'); say('Tap a picture first'); return; }
+        if (sel.k == t[0]) {
+          const placedContent = (o.keep ? targetIcon : '') + sel.h;
+          d.innerHTML = placedContent + '<div class=tl>' + t[2] + '</div>';
+          d.classList.add('ok');
+          d.onclick = null;
+          tone(700, .2);
+          say(sel.nm);
+          M(--left ? 'Yes! ' + sel.nm + '!' : o.done);
+          if (!left) say(o.done);
+          sel.remove();
+          sel = null;
+        } else {
+          bad('Oops! Try another box!');
+        }
+      };
+    });
+
+    sh(o.items).forEach(x => {
+      const i = el(x[1], 'item', { width: '76px', height: '76px' }, it);
+      i.k = x[0];
+      i.nm = x[2];
+      i.h = x[1];
+      i.onclick = () => {
+        clr();
+        sel = i;
+        i.classList.add('sel');
+        say(x[2]);
+        tone(400, .1);
+      };
+    });
+  };
+
+  start();
+  o.learn.forEach((l, i) => btn(l[0], P[i % 8], () => { say(l[1]); M(l[1]); }));
+  btn('Shuffle', '#8e24aa', start);
 }
 
-function weather(){
- const wx=el('<div class=cl style="left:8%;top:12%">☁️</div><div class=cl style="left:45%;top:5%;font-size:150px">☁️</div><div class=cl style="left:72%;top:16%">☁️</div><div class=sunw>☀️</div><div class=rbw>🌈</div><div class=gr></div><div class=pud></div><div class=hs>🏠</div><div class=tr>🌳</div><div class=fl>🌷</div><div class=kt>🪁</div>','wx');
- const f={sun:0,rain:0,wind:0};const txt=()=>{const s=f.sun,r=f.rain,w=f.wind;return s&&r?'Sun and rain make a rainbow!':r?'Rain fills the puddles and helps flowers grow!':s?'The sun is warm. Flowers love sunshine!':w?'The wind blows the kite and the tree!':'A calm, cloudy day.'};
- M(txt());
- T.push(setInterval(()=>{if(f.rain){const d=el('💧','rn',{left:Math.random()*100+'%'},wx);setTimeout(()=>d.remove(),1200)}},70),
-  setInterval(()=>{if(f.wind){const d=el('🍃','lf',{top:20+Math.random()*55+'%'},wx);setTimeout(()=>d.remove(),3100)}},350));
- const tg=(k,l,c)=>{const b=btn(l+': OFF',c,()=>{f[k]=!f[k];b.textContent=l+': '+(f[k]?'ON':'OFF');wx.classList.toggle(k,!!f[k]);M(txt());say(txt());tone(300+(f[k]?200:0),.2)})};
- tg('sun','Sunshine ☀️','#f9a825');tg('rain','Rain Cloud 🌧️','#1e88e5');tg('wind','Strong Wind 🌬️','#00acc1');
- btn('Clear Sky','#546e7a',()=>load(cur));
+const flowerSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="24" r="18" fill="#ff4081"/><circle cx="76" cy="42" r="18" fill="#ff4081"/><circle cx="66" cy="74" r="18" fill="#ff4081"/><circle cx="34" cy="74" r="18" fill="#ff4081"/><circle cx="24" cy="42" r="18" fill="#ff4081"/><circle cx="50" cy="50" r="18" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/><circle cx="46" cy="46" r="3" fill="#fff" opacity=".8"/></svg>';
+const leavesSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><defs><linearGradient id="pLeaf" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#2e7d32"/><stop offset="100%" stop-color="#76ff03"/></linearGradient></defs><path d="M15 85 C15 40 45 15 85 15 C85 55 55 85 15 85 Z" fill="url(#pLeaf)" stroke="#1b5e20" stroke-width="3"/><path d="M15 85 L85 15 M40 60 L60 55 M55 45 L70 35 M28 72 L45 68" stroke="#a5d6a7" stroke-width="3" stroke-linecap="round" fill="none"/></svg>';
+const stemSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><rect x="42" y="10" width="16" height="80" rx="8" fill="#43a047" stroke="#2e7d32" stroke-width="2"/><ellipse cx="36" cy="45" rx="10" ry="5" fill="#66bb6a" transform="rotate(-30 36 45)"/></svg>';
+const rootsSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 10v35M50 45L20 85M50 45v45M50 45L80 85M35 65l-15 20M65 65l15 20" stroke="#6d4c41" stroke-width="6" fill="none" stroke-linecap="round"/></svg>';
+
+const eggSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M20 75C20 45 50 35 80 40C80 75 50 85 20 75Z" fill="#66bb6a"/><ellipse cx="50" cy="55" rx="14" ry="20" fill="#fff9c4" stroke="#fbc02d" stroke-width="2.5"/><ellipse cx="46" cy="48" rx="3" ry="7" fill="#fff" opacity=".8"/></svg>';
+const catSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="20" cy="55" r="12" fill="#76ff03" stroke="#33691e" stroke-width="2"/><circle cx="38" cy="50" r="12" fill="#64dd17" stroke="#33691e" stroke-width="2"/><circle cx="56" cy="55" r="12" fill="#76ff03" stroke="#33691e" stroke-width="2"/><circle cx="76" cy="48" r="14" fill="#76ff03" stroke="#33691e" stroke-width="2"/><circle cx="72" cy="44" r="2.5" fill="#000"/><circle cx="82" cy="44" r="2.5" fill="#000"/><line x1="80" y1="36" x2="86" y2="26" stroke="#33691e" stroke-width="2.5"/><circle cx="86" cy="26" r="2.5" fill="#f50057"/></svg>';
+const chrySvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><line x1="50" y1="10" x2="50" y2="28" stroke="#5d4037" stroke-width="4"/><ellipse cx="50" cy="58" rx="20" ry="32" fill="#7cb342" stroke="#33691e" stroke-width="3"/><ellipse cx="44" cy="52" rx="4" ry="12" fill="#aed581"/></svg>';
+const flySvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 48C35 18 10 18 12 42C14 58 35 58 50 50Z" fill="#ff4081" stroke="#880e4f" stroke-width="2"/><path d="M50 48C65 18 90 18 88 42C86 58 65 58 50 50Z" fill="#ff4081" stroke="#880e4f" stroke-width="2"/><path d="M50 50C38 55 24 66 30 80C36 88 46 74 50 54Z" fill="#40c4ff" stroke="#01579b" stroke-width="2"/><path d="M50 50C62 55 76 66 70 80C64 88 54 74 50 54Z" fill="#40c4ff" stroke="#01579b" stroke-width="2"/><ellipse cx="50" cy="50" rx="4" ry="22" fill="#262626"/></svg>';
+
+const roseSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="32" fill="#e91e63" stroke="#880e4f" stroke-width="3"/><path d="M38 42 C44 32 56 32 62 42 C56 50 44 50 38 42 Z" fill="#f48fb1"/><circle cx="50" cy="50" r="15" fill="#d81b60"/><circle cx="50" cy="50" r="8" fill="#ad1457"/></svg>';
+const lemonSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><ellipse cx="50" cy="50" rx="36" ry="24" fill="#ffeb3b" stroke="#fbc02d" stroke-width="3" transform="rotate(-30 50 50)"/><circle cx="20" cy="34" r="3.5" fill="#fbc02d"/><circle cx="80" cy="66" r="3.5" fill="#fbc02d"/></svg>';
+const cactusSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M42 90 L42 28 C42 18 58 18 58 28 L58 90 Z" fill="#43a047" stroke="#1b5e20" stroke-width="3"/><path d="M30 46 L42 46 M30 46 L30 36 C30 30 38 30 38 36" stroke="#1b5e20" stroke-width="4" fill="none"/><path d="M70 56 L58 56 M70 56 L70 44 C70 38 62 38 62 44" stroke="#1b5e20" stroke-width="4" fill="none"/></svg>';
+const rainbowItemSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><ellipse cx="50" cy="80" rx="42" ry="42" fill="none" stroke="#e53935" stroke-width="6"/><ellipse cx="50" cy="80" rx="36" ry="36" fill="none" stroke="#ff9800" stroke-width="6"/><ellipse cx="50" cy="80" rx="30" ry="30" fill="none" stroke="#ffeb3b" stroke-width="6"/><ellipse cx="50" cy="80" rx="24" ry="24" fill="none" stroke="#43a047" stroke-width="6"/><ellipse cx="50" cy="80" rx="18" ry="18" fill="none" stroke="#1e88e5" stroke-width="6"/><ellipse cx="50" cy="80" rx="12" ry="12" fill="none" stroke="#8e24aa" stroke-width="6"/></svg>';
+
+const parts = () => placeG({
+  msg: 'Build the plant! Pick a part, then tap its box.',
+  done: 'You built a complete plant!',
+  sm: 1,
+  tg: { left: '34%', right: 'auto', width: '32%', height: 'auto', bottom: '12px', flexDirection: 'column', flexWrap: 'nowrap', gap: '6px' },
+  it: { left: '3%', right: 'auto', width: '26%', height: 'auto', bottom: '12px' },
+  targets: [['flower','❓','Flower'],['leaves','❓','Leaves'],['stem','❓','Stem'],['roots','❓','Roots','soil']],
+  items: [['flower',flowerSvg,'Flower'],['leaves',leavesSvg,'Leaves'],['stem',stemSvg,'Stem'],['roots',rootsSvg,'Roots']],
+  learn: [['Roots','Roots drink water from the soil.'],['Stem','The stem holds the plant up.'],['Leaves','Leaves make food from sunlight.'],['Flower','Flowers make seeds.']]
+});
+
+const butterfly = () => placeG({
+  msg: 'Put the life cycle in order: 1, 2, 3, 4!',
+  done: 'Egg, caterpillar, pupa, butterfly!',
+  arrow: 1,
+  targets: [['egg','❓','Step 1'],['cat','❓','Step 2'],['pupa','❓','Step 3'],['fly','❓','Step 4']],
+  items: [['egg',eggSvg,'Egg'],['cat',catSvg,'Caterpillar'],['pupa',chrySvg,'Pupa'],['fly',flySvg,'Butterfly']],
+  learn: [['Play Story','First an egg. Then a caterpillar. Then a pupa. Then a beautiful butterfly!']]
+});
+
+const senses = () => placeG({
+  msg: 'Which sense do we use? Match each picture!',
+  done: 'You know all five senses!',
+  keep: 1,
+  targets: [['smell','Nose','Nose'],['hear','Ear','Ear'],['see','Eye','Eye'],['taste','Tongue','Tongue'],['touch','Hand','Hand']],
+  items: [['smell',roseSvg,'Rose'],['hear',SVGS['Music'],'Music'],['see',rainbowItemSvg,'Rainbow'],['taste',lemonSvg,'Lemon'],['touch',cactusSvg,'Cactus']],
+  learn: [['Smell','We smell with our nose.'],['Hear','We hear with our ears.'],['See','We see with our eyes.'],['Taste','We taste with our tongue.'],['Touch','We feel with our skin.']]
+});
+
+/* ---------------- GAME 3: MAGNET WAND ---------------- */
+function magnet() {
+  const W = st.clientWidth, H = st.clientHeight;
+  let mx = W / 2, my = H / 2, on = 1, ln = 0, I = [];
+  const D = [
+    ['Bolt', 1], ['Paper clip', 1], ['Key', 1], ['Wrench', 1], ['Hammer', 1],
+    ['Wood block', 0], ['Plastic toy', 0], ['Puzzle piece', 0], ['Apple', 0], ['Book', 0]
+  ];
+  M('Move the magnet with your mouse!');
+  const mg = el(SVGS['Magnet'], 'mg');
+
+  D.forEach(d => {
+    const itemSvg = renderArt(d[0], null, 54);
+    I.push({
+      name: d[0],
+      m: d[1],
+      x: 60 + Math.random() * (W - 200),
+      y: 100 + Math.random() * (H - 240),
+      el: el(itemSvg, 'mi')
+    });
+  });
+
+  st.onpointermove = e => {
+    const r = st.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  };
+
+  T.push(setInterval(() => {
+    mg.style.left = (mx - 45) + 'px';
+    mg.style.top = (my - 45) + 'px';
+    let n = 0;
+    I.forEach(o => {
+      const dx = mx - (o.x + 27), dy = my - (o.y + 27), d = Math.hypot(dx, dy) || 1;
+      if (o.s) {
+        if (!on) o.s = 0;
+        else { o.x = mx + o.ox - 27; o.y = my + o.oy - 27; n++; }
+      } else if (on && o.m && d < 230) {
+        const v = Math.max(3, (230 - d) / 12);
+        o.x += dx / d * v; o.y += dy / d * v;
+        if (d < 60) {
+          o.s = 1;
+          o.ox = Math.random() * 60 - 30;
+          o.oy = Math.random() * 50 - 5;
+          tone(900, .08);
+        }
+      } else if (on && !o.m && d < 75 && !o.w) {
+        o.w = 1;
+        o.el.classList.add('hint');
+        M(o.name + ' is NOT magnetic!');
+        say(o.name + ' is not magnetic');
+        setTimeout(() => { o.w = 0; o.el.classList.remove('hint'); }, 1500);
+      }
+      o.el.style.left = o.x + 'px';
+      o.el.style.top = o.y + 'px';
+    });
+    if (n != ln) {
+      ln = n;
+      if (n) M('The magnet picked up ' + n + ' iron object' + (n > 1 ? 's' : '') + '!');
+    }
+  }, 30));
+
+  const b = btn('Magnet: ON', '#43a047', () => {
+    on = !on;
+    b.textContent = 'Magnet: ' + (on ? 'ON' : 'OFF');
+    b.style.setProperty('--c', on ? '#43a047' : '#e53935');
+    M(on ? 'Magnet is ON!' : 'Magnet is OFF. Things drop!');
+  });
+  const show = m => {
+    I.forEach(o => {
+      o.el.classList.remove('hint');
+      if (o.m == m) { void o.el.offsetWidth; o.el.classList.add('hint'); }
+    });
+  };
+  btn('Show Iron Objects', '#1e88e5', () => { show(1); say('Iron objects stick to a magnet'); });
+  btn('Show Non-Magnetic', '#fb8c00', () => { show(0); say('Wood, plastic and paper do not stick'); });
+  btn('Shake Table', '#8e24aa', () => I.forEach(o => { o.s = 0; o.x = 60 + Math.random() * (W - 200); o.y = 100 + Math.random() * (H - 240); }));
+  btn('Reset', '#546e7a', () => load(cur));
 }
 
-function sinkfloat(){
- M('Pick an item, then guess!');el('','tub');let pend=null,sc=0,tot=0;
- const I=[['🪵','Wood',1],['🪨','Stone',0],['✏️','Pencil',1],['🪙','Coin',0],['🍎','Apple',1],['🔑','Key',0],['🦆','Rubber duck',1],['🥄','Spoon',0]];
- const go=g=>{if(!pend){M('Pick an item first!');say('Pick an item first');return}const it=pend;pend=null;tot++;
-  const H=st.clientHeight,W=st.clientWidth,sf=H*.52,x=W*.25+Math.random()*W*.5;const old=st.querySelectorAll('.drop');if(old.length>9)old[0].remove();
-  const i=el(it[0],'drop',{left:x+'px',top:'-100px',fontSize:'64px'});void i.offsetWidth;i.style.transition='top .7s cubic-bezier(.5,0,1,.6)';i.style.top=(sf-60)+'px';tone(400,.1);
-  setTimeout(()=>{tone(200,.3,'triangle');for(let k=0;k<10;k++)el('💧','dr',{left:x+'px',top:sf+'px',fontSize:'24px','--dx':(Math.random()*180-90)+'px'}).addEventListener('animationend',e=>e.target.remove());
-   if(it[2]){i.style.transition='top .6s ease-out';i.style.top=(sf-45)+'px';i.classList.add('bob')}else{i.style.transition='top 1.6s ease-in';i.style.top=(H-95)+'px'}
-   const ok=g==it[2];if(ok)sc++;const m=(ok?'You are right! ':'Not this time. ')+it[1]+(it[2]?' floats!':' sinks!')+'  Score: '+sc+'/'+tot;M(m);say(m)},700)};
- I.forEach((it,k)=>btn(it[0]+' '+it[1],P[k],()=>{pend=it;M('Will the '+it[1]+' sink or float?');say('Will the '+it[1]+' sink or float?')}));
- btn('I think: FLOAT ⬆️','#00897b',()=>go(1));btn('I think: SINK ⬇️','#c62828',()=>go(0));
- btn('Empty Tank','#546e7a',()=>{st.querySelectorAll('.drop').forEach(d=>d.remove());M('The tank is empty. Pick an item!')});
+/* ---------------- GAME 4: TRAFFIC LIGHTS ---------------- */
+function traffic() {
+  const W = st.clientWidth, H = st.clientHeight, rt = H * .46, rh = 150, zx = W * .45, stop = zx + 150, py0 = rt - 80, py1 = rt + rh + 5;
+  el('', 'rd', { top: rt + 'px', height: rh + 'px' });
+  el('', 'zb', { left: zx + 'px', top: rt + 'px', height: rh + 'px' });
+  el('<div class=lt id=lr></div><div class=lt id=ly></div><div class=lt id=lg></div>', 'pole', { left: (zx + 175) + 'px', top: (rt - 215) + 'px' });
+
+  let ls = 'red', tm = 0, auto = 0, py = py0, ped = { w: 0, d: 1, done: 0 }, cars = [];
+  const ped_ = el(SVGS['Pedestrian'], 'car', { left: (zx + 35) + 'px', top: py + 'px', width: '50px', height: '80px' });
+  const E = [SVGS['CarRed'], SVGS['CarYellow'], SVGS['CarBus'], SVGS['CarBlue'], SVGS['CarPolice']];
+
+  const addCar = () => {
+    if (cars.length > 5) return;
+    const cEl = el(E[cars.length % 5], 'car', { top: (rt + 45) + 'px', width: '100px', height: '60px' });
+    cars.push({ x: Math.max(W, ...cars.map(c => c.x + 130)), el: cEl });
+  };
+
+  const set = l => {
+    ls = l; tm = 0; ped.done = 0;
+    $('#lr').classList.toggle('on', l == 'red');
+    $('#ly').classList.toggle('on', l == 'yellow');
+    $('#lg').classList.toggle('on', l == 'green');
+    const m = {
+      red: 'RED = STOP! Cars wait. People can cross.',
+      yellow: 'YELLOW = GET READY!',
+      green: 'GREEN = GO! Cars can go.'
+    }[l];
+    M(m);
+    say(m.split('!')[0].replace('=', 'means'));
+  };
+
+  addCar(); addCar();
+  cars[0].x = W - 200; cars[1].x = W + 60;
+  set('red');
+
+  T.push(setInterval(() => {
+    tm++;
+    if (auto && tm > ({ red: 200, green: 200, yellow: 70 }[ls])) {
+      set(ls == 'red' ? 'green' : ls == 'green' ? 'yellow' : 'red');
+    }
+    if (!ped.w && !ped.done && ls == 'red' && tm > 40) { ped.w = 1; ped.done = 1; }
+    if (ped.w) {
+      py += ped.d * 2.5;
+      if ((ped.d > 0 && py >= py1) || (ped.d < 0 && py <= py0)) {
+        py = ped.d > 0 ? py1 : py0; ped.d *= -1; ped.w = 0;
+      }
+    }
+    ped_.style.top = py + 'px';
+    cars.sort((a, b) => a.x - b.x);
+    cars.forEach((c, i) => {
+      const v = ls == 'yellow' ? 4 : 7, nx = c.x - v, ah = cars[i - 1];
+      const stopNow = ls == 'red' || ped.w || (ls == 'yellow' && c.x - stop > 90);
+      let x = c.x - v;
+      if (stopNow && c.x >= stop && nx < stop) x = c.x;
+      if (ah && x < ah.x + 120) x = c.x;
+      c.x = x;
+      if (c.x < -130) c.x = Math.max(W + 20, ...cars.map(a => a.x + 130));
+      c.el.style.left = c.x + 'px';
+    });
+  }, 30));
+
+  btn('RED = Stop', '#e53935', () => set('red'));
+  btn('YELLOW = Get Ready', '#f9a825', () => set('yellow'));
+  btn('GREEN = Go', '#43a047', () => set('green'));
+  const a = btn('Auto Lights: OFF', '#1e88e5', () => {
+    auto = !auto;
+    a.textContent = 'Auto Lights: ' + (auto ? 'ON' : 'OFF');
+  });
+  btn('Add Car', '#8e24aa', addCar);
+  btn('Remove Car', '#546e7a', () => { const c = cars.pop(); if (c) c.el.remove(); });
 }
 
-const S=[parts,homes,seasons,magnet,butterfly,senses,traffic,weather,sinkfloat,clean];
-const N=['🌻 Plant Parts','🦌 Animal Homes','🧥 Four Seasons','🧲 Magnet Wand','🦋 Butterfly Cycle','👃 Five Senses','🚦 Traffic Lights','⛅ Weather Maker','🌊 Sink or Float','♻️ Green Earth Bin'];
-const tabs=N.map((n,i)=>btn(n,P[i%8],()=>load(i),nav));
-function load(i){T.forEach(x=>{clearTimeout(x);clearInterval(x)});T=[];st.onpointermove=null;try{speechSynthesis.cancel()}catch(e){}cur=i;
- st.innerHTML='<div class="msg" id="msg"></div>';ct.innerHTML='';tabs.forEach((t,k)=>t.classList.toggle('on',k==i));S[i]()}
-$('#fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
-document.onfullscreenchange=()=>{$('#fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen';setTimeout(()=>load(cur),250)};
+/* ---------------- GAME 5: WEATHER MAKER ---------------- */
+const cloudSvg = '<svg viewBox="0 0 100 65" width="100%" height="100%"><defs><linearGradient id="cldG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cfe2ee"/></linearGradient></defs><path d="M22 55h56a16 16 0 005-31 22 22 0 00-40-7 18 18 0 00-24 16 14 14 0 003 22z" fill="url(#cldG)" stroke="#90b4ce" stroke-width="2.5" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.15))"/></svg>';
+const sunSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="26" fill="#ffd54f" stroke="#ff8f00" stroke-width="3"/><g stroke="#ff8f00" stroke-width="4" stroke-linecap="round"><line x1="50" y1="12" x2="50" y2="4"/><line x1="50" y1="88" x2="50" y2="96"/><line x1="12" y1="50" x2="4" y2="50"/><line x1="88" y1="50" x2="96" y2="50"/><line x1="23" y1="23" x2="17" y2="17"/><line x1="77" y1="77" x2="83" y2="83"/><line x1="77" y1="23" x2="83" y2="17"/><line x1="23" y1="77" x2="17" y2="83"/></g><circle cx="42" cy="46" r="3.5" fill="#3e2723"/><circle cx="58" cy="46" r="3.5" fill="#3e2723"/><path d="M42 58q8 8 16 0" fill="none" stroke="#e65100" stroke-width="3" stroke-linecap="round"/></svg>';
+const rainbowSvg = '<svg viewBox="0 0 200 110" width="100%" height="100%"><ellipse cx="100" cy="110" rx="90" ry="90" fill="none" stroke="#e53935" stroke-width="8"/><ellipse cx="100" cy="110" rx="82" ry="82" fill="none" stroke="#ff9800" stroke-width="8"/><ellipse cx="100" cy="110" rx="74" ry="74" fill="none" stroke="#ffeb3b" stroke-width="8"/><ellipse cx="100" cy="110" rx="66" ry="66" fill="none" stroke="#43a047" stroke-width="8"/><ellipse cx="100" cy="110" rx="58" ry="58" fill="none" stroke="#00acc1" stroke-width="8"/><ellipse cx="100" cy="110" rx="50" ry="50" fill="none" stroke="#1e88e5" stroke-width="8"/><ellipse cx="100" cy="110" rx="42" ry="42" fill="none" stroke="#8e24aa" stroke-width="8"/></svg>';
+const houseSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,15 90,48 10,48" fill="#e53935" stroke="#b71c1c" stroke-width="3"/><rect x="20" y="48" width="60" height="46" rx="2" fill="#fff8e1" stroke="#d7ccc8" stroke-width="3"/><rect x="42" y="62" width="16" height="32" rx="2" fill="#795548" stroke="#4e342e" stroke-width="2"/><circle cx="54" cy="78" r="2" fill="#ffd54f"/><rect x="26" y="56" width="12" height="14" rx="2" fill="#81d4fa" stroke="#4fc3f7" stroke-width="2"/><rect x="62" y="56" width="12" height="14" rx="2" fill="#81d4fa" stroke="#4fc3f7" stroke-width="2"/><rect x="68" y="22" width="8" height="16" fill="#8d6e63"/></svg>';
+const treeSvg = '<svg viewBox="0 0 100 120" width="100%" height="100%"><rect x="42" y="68" width="16" height="48" rx="4" fill="#795548" stroke="#4e342e" stroke-width="2.5"/><circle cx="50" cy="46" r="34" fill="#43a047" stroke="#2e7d32" stroke-width="3"/><circle cx="34" cy="40" r="22" fill="#66bb6a"/><circle cx="66" cy="40" r="22" fill="#66bb6a"/><circle cx="50" cy="24" r="22" fill="#81c784"/><circle cx="38" cy="44" r="4.5" fill="#e53935"/><circle cx="62" cy="48" r="4.5" fill="#e53935"/><circle cx="50" cy="34" r="4.5" fill="#e53935"/></svg>';
+const flowerTulipSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 88V50" stroke="#43a047" stroke-width="6" stroke-linecap="round"/><path d="M50 68q-20 -10 -22 -24q16 2 22 18z" fill="#66bb6a"/><path d="M50 64q20 -10 22 -24q-16 2 -22 18z" fill="#66bb6a"/><path d="M30 46C26 22 46 16 50 32C54 16 74 22 70 46C66 58 34 58 30 46Z" fill="#ff4081" stroke="#c2185b" stroke-width="2.5"/></svg>';
+const kiteSvg = '<svg viewBox="0 0 100 120" width="100%" height="100%"><polygon points="50,10 82,46 50,86 18,46" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/><polygon points="50,10 82,46 50,46" fill="#e53935"/><polygon points="18,46 50,46 50,86" fill="#1e88e5"/><polygon points="50,46 82,46 50,86" fill="#43a047"/><path d="M50 86q12 14 6 24" fill="none" stroke="#795548" stroke-width="2"/><polygon points="54,102 60,100 58,106" fill="#ff4081"/><polygon points="56,112 62,110 60,116" fill="#ffeb3b"/></svg>';
+const rainDropSvg = '<svg viewBox="0 0 100 140" width="100%" height="100%"><path d="M50 0C50 0 10 70 10 100a40 40 0 0080 0C90 70 50 0 50 0z" fill="#42a5f5"/></svg>';
+const windLeafSvg = '<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M15 85 C15 40 45 15 85 15 C85 55 55 85 15 85 Z" fill="#66bb6a" stroke="#2e7d32" stroke-width="3"/></svg>';
+
+function weather() {
+  const wx = el(`
+    <div class="cl" style="left:8%;top:12%;width:130px;height:85px">${cloudSvg}</div>
+    <div class="cl" style="left:45%;top:5%;width:180px;height:115px">${cloudSvg}</div>
+    <div class="cl" style="left:72%;top:16%;width:140px;height:90px">${cloudSvg}</div>
+    <div class="sunw">${sunSvg}</div>
+    <div class="rbw">${rainbowSvg}</div>
+    <div class="gr"></div>
+    <div class="pud"></div>
+    <div class="hs">${houseSvg}</div>
+    <div class="tr">${treeSvg}</div>
+    <div class="fl">${flowerTulipSvg}</div>
+    <div class="kt">${kiteSvg}</div>
+  `, 'wx');
+
+  const f = { sun: 0, rain: 0, wind: 0 };
+  const txt = () => {
+    const s = f.sun, r = f.rain, w = f.wind;
+    return s && r ? 'Sun and rain make a rainbow!' :
+           r ? 'Rain fills the puddles and helps flowers grow!' :
+           s ? 'The sun is warm. Flowers love sunshine!' :
+           w ? 'The wind blows the kite and the tree!' :
+           'A calm, cloudy day.';
+  };
+  M(txt());
+
+  T.push(
+    setInterval(() => {
+      if (f.rain) {
+        const d = el(rainDropSvg, 'rn', { left: Math.random() * 100 + '%' }, wx);
+        setTimeout(() => d.remove(), 1200);
+      }
+    }, 70),
+    setInterval(() => {
+      if (f.wind) {
+        const d = el(windLeafSvg, 'lf', { top: 20 + Math.random() * 55 + '%' }, wx);
+        setTimeout(() => d.remove(), 3100);
+      }
+    }, 350)
+  );
+
+  const tg = (k, l, c) => {
+    const b = btn(l + ': OFF', c, () => {
+      f[k] = !f[k];
+      b.textContent = l + ': ' + (f[k] ? 'ON' : 'OFF');
+      wx.classList.toggle(k, !!f[k]);
+      M(txt());
+      say(txt());
+      tone(300 + (f[k] ? 200 : 0), .2);
+    });
+  };
+
+  tg('sun', 'Sunshine', '#f9a825');
+  tg('rain', 'Rain Cloud', '#1e88e5');
+  tg('wind', 'Strong Wind', '#00acc1');
+  btn('Clear Sky', '#546e7a', () => load(cur));
+}
+
+/* ---------------- GAME 6: SINK OR FLOAT ---------------- */
+function sinkfloat() {
+  M('Pick an item, then guess!');
+  el('', 'tub');
+  let pend = null, sc = 0, tot = 0;
+  const I = [
+    ['Wood', 1], ['Stone', 0], ['Pencil', 1], ['Coin', 0],
+    ['Apple', 1], ['Key', 0], ['Rubber duck', 1], ['Spoon', 0]
+  ];
+
+  const go = g => {
+    if (!pend) { M('Pick an item first!'); say('Pick an item first'); return; }
+    const it = pend; pend = null; tot++;
+    const H = st.clientHeight, W = st.clientWidth, sf = H * .52, x = W * .25 + Math.random() * W * .5;
+    const old = st.querySelectorAll('.drop');
+    if (old.length > 9) old[0].remove();
+
+    const i = el(renderArt(it[0], null, 64), 'drop', { left: x + 'px', top: '-100px' });
+    void i.offsetWidth;
+    i.style.transition = 'top .7s cubic-bezier(.5,0,1,.6)';
+    i.style.top = (sf - 60) + 'px';
+    tone(400, .1);
+
+    setTimeout(() => {
+      tone(200, .3, 'triangle');
+      for (let k = 0; k < 10; k++) {
+        el(rainDropSvg, 'dr', {
+          left: x + 'px',
+          top: sf + 'px',
+          width: '24px',
+          height: '24px',
+          '--dx': (Math.random() * 180 - 90) + 'px'
+        }).addEventListener('animationend', e => e.target.remove());
+      }
+      if (it[1]) {
+        i.style.transition = 'top .6s ease-out';
+        i.style.top = (sf - 45) + 'px';
+        i.classList.add('bob');
+      } else {
+        i.style.transition = 'top 1.6s ease-in';
+        i.style.top = (H - 95) + 'px';
+      }
+      const ok = g == it[1];
+      if (ok) sc++;
+      const m = (ok ? 'You are right! ' : 'Not this time. ') + it[0] + (it[1] ? ' floats!' : ' sinks!') + '  Score: ' + sc + '/' + tot;
+      M(m);
+      say(m);
+    }, 700);
+  };
+
+  I.forEach((it, k) => {
+    const itemBtnIcon = `<span style="width:20px;height:20px;display:inline-flex">${SVGS[it[0]] || ''}</span>`;
+    btn(itemBtnIcon + ' ' + it[0], P[k], () => {
+      pend = it;
+      M('Will the ' + it[0] + ' sink or float?');
+      say('Will the ' + it[0] + ' sink or float?');
+    });
+  });
+
+  btn('I think: FLOAT ⬆', '#00897b', () => go(1));
+  btn('I think: SINK ⬇', '#c62828', () => go(0));
+  btn('Empty Tank', '#546e7a', () => {
+    st.querySelectorAll('.drop').forEach(d => d.remove());
+    M('The tank is empty. Pick an item!');
+  });
+}
+
+/* ---------------- TABS AND INITIALIZATION ---------------- */
+const S = [parts, homes, seasons, magnet, butterfly, senses, traffic, weather, sinkfloat, clean];
+const TABS_CONFIG = [
+  { name: 'Plant Parts', icon: 'PlantTab' },
+  { name: 'Animal Homes', icon: 'AnimalTab' },
+  { name: 'Four Seasons', icon: 'SeasonTab' },
+  { name: 'Magnet Wand', icon: 'MagnetTab' },
+  { name: 'Butterfly Cycle', icon: 'ButterflyTab' },
+  { name: 'Five Senses', icon: 'SenseTab' },
+  { name: 'Traffic Lights', icon: 'TrafficTab' },
+  { name: 'Weather Maker', icon: 'WeatherTab' },
+  { name: 'Sink or Float', icon: 'SinkTab' },
+  { name: 'Green Earth Bin', icon: 'BinTab' }
+];
+
+const tabs = TABS_CONFIG.map((tab, i) => {
+  const iconHtml = `<span class="tab-ic">${SVGS[tab.icon] || ''}</span>`;
+  return btn(iconHtml + ' ' + tab.name, P[i % 8], () => load(i), nav);
+});
+
+function load(i) {
+  T.forEach(x => { clearTimeout(x); clearInterval(x); });
+  T = [];
+  st.onpointermove = null;
+  try { speechSynthesis.cancel(); } catch(e){}
+  cur = i;
+  st.innerHTML = '<div class="msg" id="msg"></div>';
+  ct.innerHTML = '';
+  tabs.forEach((t, k) => t.classList.toggle('on', k == i));
+  S[i]();
+}
+
+$('#fs').onclick = () => {
+  document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+};
+document.onfullscreenchange = () => {
+  $('#fs').textContent = document.fullscreenElement ? 'Exit Full Screen' : 'Full Screen';
+  setTimeout(() => load(cur), 250);
+};
+
 load(0);
-</script></body></html>
+</script>
+</body>
+</html>
