@@ -26,7 +26,7 @@ html, body, canvas, svg {
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; overflow-x:hidden; }
 body {
-  font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Roboto,sans-serif;
+  font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji','Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Roboto,sans-serif;
   background:radial-gradient(circle at 50% 10%, #1e1b4b 0%, #0f172a 45%, #030712 100%);
   color:#f8fafc; min-height:100vh;
   display:flex; flex-direction:column;
@@ -1314,8 +1314,8 @@ function drawAlphaCanvas() {
   ctx.arc(cardX + cardW/2, cardY + 125, 90, 0, Math.PI * 2);
   ctx.fill();
 
-  // Emoji object
-  ctx.font = '120px "Segoe UI", sans-serif';
+  // Emoji object in vibrant full color on laptops & computers
+  ctx.font = '120px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
@@ -1600,7 +1600,7 @@ function drawNumCanvas() {
     for (let i = 0; i < currNum; i++) iconStr += toyFruits[i % toyFruits.length] + '  ';
 
     ctx.save();
-    ctx.font = '40px "Segoe UI", sans-serif';
+    ctx.font = '40px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,0.5)';
@@ -1633,7 +1633,7 @@ function drawNumCanvas() {
     ctx.font = '900 70px "Segoe UI", sans-serif';
     ctx.fillStyle = '#38bdf8';
     ctx.fillText(`${compareLeft}`, 270, 170);
-    ctx.font = '34px "Segoe UI", sans-serif';
+    ctx.font = '34px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
     let leftIcons = ''; for (let i = 0; i < compareLeft; i++) leftIcons += '🍎';
     ctx.fillText(leftIcons, 270, 250);
 
@@ -1652,7 +1652,7 @@ function drawNumCanvas() {
     ctx.font = '900 70px "Segoe UI", sans-serif';
     ctx.fillStyle = '#f472b6';
     ctx.fillText(`${compareRight}`, 690, 170);
-    ctx.font = '34px "Segoe UI", sans-serif';
+    ctx.font = '34px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
     let rightIcons = ''; for (let i = 0; i < compareRight; i++) rightIcons += '⭐';
     ctx.fillText(rightIcons, 690, 250);
 
@@ -1984,8 +1984,8 @@ function drawAnimalCanvas() {
   ctx.arc(pedX, pedY, 130, 0, Math.PI * 2);
   ctx.fill();
 
-  // Huge animated emoji
-  ctx.font = '160px "Segoe UI", sans-serif';
+  // Huge animated animal object in full color
+  ctx.font = '160px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.shadowColor = 'rgba(0,0,0,0.6)';
@@ -2158,9 +2158,9 @@ function drawHabitsCanvas() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // Big Soap Bubble Visualizer
+  // Big Soap Bubble Visualizer in full color
   ctx.save();
-  ctx.font = '100px "Segoe UI", sans-serif';
+  ctx.font = '100px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
@@ -2322,11 +2322,11 @@ function drawQuizCanvas() {
   ctx.fillText(qData.q, W / 2, qBoxY + 85);
   ctx.restore();
 
-  // Stars display
+  // Stars display in vibrant full color
   let stars = '';
   for (let i = 0; i < quizScore; i++) stars += '⭐ ';
   ctx.save();
-  ctx.font = '40px "Segoe UI", sans-serif';
+  ctx.font = '40px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(stars.trim() || 'Tap the right colorful option below!', W / 2, 270);
   ctx.restore();

@@ -4,7 +4,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#12306b;font-family:'Fredoka','Baloo 2','Trebuchet MS','Comic Sans MS','Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif}
+html,body{height:100%;overflow:hidden;background:#12306b;font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji','Fredoka','Baloo 2','Trebuchet MS','Comic Sans MS',sans-serif}
 #stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;overflow:hidden;border-radius:14px;background:var(--bg);background-size:200% 200%;animation:bgm 14s ease-in-out infinite;transition:background .4s}
 @keyframes bgm{50%{background-position:100% 100%}}
 .r{--c:#ff4d6d;--d:#a3153a;--l:#ff9aae}.o{--c:#ff9f1c;--d:#ad6200;--l:#ffd08a}.y{--c:#ffd60a;--d:#a88700;--l:#fff27a}.g{--c:#2ecc71;--d:#12793d;--l:#8df0b4}.t{--c:#14b8a6;--d:#0a766b;--l:#6ef0dd}.b{--c:#3b82f6;--d:#1a46b5;--l:#9cc6ff}.p{--c:#a855f7;--d:#661f9e;--l:#dcb8ff}.k{--c:#ec4899;--d:#99174f;--l:#ffb0d6}
@@ -101,7 +101,7 @@ const today=new Date().getDay(),thisMonth=new Date().getMonth();
 /* ---------------- emoji images (same look on every laptop) ---------------- */
 function em(ch,s){const cp=[...ch].map(c=>c.codePointAt(0).toString(16)),pl=cp.filter(x=>x!=="fe0f"),B="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/png/512/emoji_u",u=[B+cp.join("_")+".png"];if(pl.length!==cp.length)u.push(B+pl.join("_")+".png");u.push("https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/svg/"+pl.join("-")+".svg");
 return `<img class="ei" width="${s}" height="${s}" alt="${ch}" src="${u[0]}" data-u='${JSON.stringify(u)}' data-i="0" onerror="ef(this)">`}
-function ef(im){const u=JSON.parse(im.dataset.u),i=+im.dataset.i+1;if(i<u.length){im.dataset.i=i;im.src=u[i]}else{const p=document.createElement("span");p.textContent=im.alt;p.style.fontSize=Math.round(im.width*.85)+"px";p.style.lineHeight="1.1";im.replaceWith(p)}}
+function ef(im){const u=JSON.parse(im.dataset.u),i=+im.dataset.i+1;if(i<u.length){im.dataset.i=i;im.src=u[i]}else{const p=document.createElement("span");p.textContent=im.alt;p.style.fontFamily="'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif";p.style.fontSize=Math.round(im.width*.85)+"px";p.style.lineHeight="1.1";im.replaceWith(p)}}
 /* ---------------- modules ---------------- */
 const MODS={
 abc:{t:"ABC • Capital Letters",g:"ABC",nm:"Capital Letters",em:"🍎",cls:"r",bg:"linear-gradient(135deg,#ff6b6b,#feca57,#ff9ff3,#ff6b6b)",n:26,rows:13,lab:i=>AB[i],
