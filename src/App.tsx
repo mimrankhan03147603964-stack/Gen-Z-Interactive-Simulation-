@@ -10,6 +10,7 @@ import { StandaloneLabPlayer } from './components/StandaloneLabPlayer';
 import { Footer } from './components/Footer';
 import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
+import { ExternalSimulationsHub } from './components/ExternalSimulationsHub';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
@@ -36,7 +37,7 @@ function resolveSimulationFromUrl(): SimulationItem | null {
     const rawHash = window.location.hash || '';
     if (rawHash) {
       const cleanHash = rawHash.replace(/^#\/?/, '').trim().toLowerCase();
-      const pageSectionAnchors = ['developer', 'catalog', 'stage', 'features', 'top', 'menu', 'contact'];
+      const pageSectionAnchors = ['developer', 'catalog', 'stage', 'features', 'top', 'menu', 'contact', 'external-simulations', 'simulation-hub'];
       if (pageSectionAnchors.includes(cleanHash)) {
         return null;
       }
@@ -234,6 +235,18 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleScrollToExternal = () => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+    }
+    setTimeout(() => {
+      const el = document.getElementById('external-simulations');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 120);
+  };
+
   // Ensure initial load starts at top hero section without accidental jumping
   useEffect(() => {
     if (window.location.hash === '#developer') {
@@ -267,6 +280,7 @@ export default function App() {
           isDarkMode={isDarkMode}
           onToggleTheme={() => setIsDarkMode((prev) => !prev)}
           onBackToCatalog={handleBackToCatalog}
+          onNavigateToExternal={handleScrollToExternal}
           onSelectCategory={(cat) => {
             setSelectedSubject(cat);
             setCurrentView('catalog');
@@ -375,7 +389,10 @@ export default function App() {
                 onOpenCatalog={handleOpenCatalog}
               />
 
-              {/* 4. Educational Standards & Digital Laboratory Architecture */}
+              {/* 4. Curated External Interactive Simulations Hub (8 Global Platforms) */}
+              <ExternalSimulationsHub isDarkMode={isDarkMode} />
+
+              {/* 5. Educational Standards & Digital Laboratory Architecture */}
               <WebsiteFeatures isDarkMode={isDarkMode} />
             </>
           ) : (
@@ -396,6 +413,9 @@ export default function App() {
                 isHomeView={false}
                 onBackToHome={handleBackToCatalog}
               />
+
+              {/* Curated External Interactive Simulations Hub */}
+              <ExternalSimulationsHub isDarkMode={isDarkMode} />
             </>
           )}
 

@@ -5,7 +5,8 @@ import {
   Home, 
   Layers, 
   BookOpen, 
-  UserCheck
+  UserCheck,
+  Globe
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -20,12 +21,14 @@ interface TopNavbarProps {
   onToggleTheme?: () => void;
   onBackToCatalog?: () => void;
   onSelectCategory?: (category: string) => void;
+  onNavigateToExternal?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   totalSimulations = SIMULATIONS_LIST.length,
   onBackToCatalog,
-  onSelectCategory
+  onSelectCategory,
+  onNavigateToExternal
 }) => {
   const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | null>(null);
   const [isPinned, setIsPinned] = useState(false);
@@ -108,12 +111,20 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       return;
     }
 
+    // Handle External Simulations Hub navigation
+    if (href === '#external-simulations') {
+      if (onNavigateToExternal) {
+        onNavigateToExternal();
+        return;
+      }
+    }
+
     // 4. Smooth scroll to target section with sticky/fixed navbar offset consideration
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [onBackToCatalog, onSelectCategory]);
+  }, [onBackToCatalog, onSelectCategory, onNavigateToExternal]);
 
   const getCategoryCount = (key: string) => {
     if (key === 'All Simulations') return SIMULATIONS_LIST.length;
@@ -397,6 +408,18 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               </div>
             )}
           </div>
+
+          {/* Link: External Simulations / Simulation Hub */}
+          <button
+            type="button"
+            onClick={() => handleItemClick('#external-simulations')}
+            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100 hover:text-indigo-900 border border-indigo-200/80 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
+            title="Jump to External Simulations & Global Science Platforms"
+          >
+            <Globe className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+            <span className="hidden md:inline">External Simulations</span>
+            <span className="md:hidden">Sim Hub</span>
+          </button>
 
           {/* Link 4: Developer & Contact */}
           <button

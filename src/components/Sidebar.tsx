@@ -441,6 +441,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
+        {/* Quick Link to External Simulations Hub */}
+        <div className="p-3 bg-indigo-50 border-t-2 border-indigo-200 shrink-0">
+          <a
+            href="#external-simulations"
+            onClick={() => {
+              onToggle();
+              const el = document.getElementById('external-simulations');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="w-full py-2 px-3 rounded-xl text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <Globe className="w-4 h-4 text-white" />
+            <span>Open External Simulation Hub (8 Labs)</span>
+          </a>
+        </div>
+
         {/* Drawer Footer with High Contrast Details */}
         <div className="p-3.5 border-t-2 border-slate-200 bg-slate-50 text-center shrink-0">
           <p className="text-xs font-black text-slate-800">
