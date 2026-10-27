@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
+import { getThemeForIndex } from '../data/sequentialPalette';
 
 interface WebsiteFeaturesProps {
   isDarkMode?: boolean;
@@ -221,23 +222,22 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       id="features" 
       className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all border shadow-lg text-white"
       style={{
-        background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
-        backgroundColor: '#001D39',
-        borderColor: '#4E8EA2',
-        boxShadow: '0 8px 30px rgba(0, 29, 57, 0.7)'
+        backgroundColor: '#0F172A',
+        borderColor: '#334155',
+        boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
       }}
     >
       <div 
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4"
-        style={{ borderColor: '#0A4174' }}
+        style={{ borderColor: '#334155' }}
       >
         <div>
           <span 
             className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 border font-mono"
             style={{
-              backgroundColor: '#0A4174',
-              color: '#7BBDE8',
-              borderColor: '#4E8EA2'
+              backgroundColor: '#2563EB',
+              color: '#FFFFFF',
+              borderColor: '#60A5FA'
             }}
           >
             Digital Laboratory Architecture
@@ -251,27 +251,28 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         <div 
           className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 border shadow-2xs"
           style={{
-            backgroundColor: '#001224',
-            color: '#7BBDE8',
-            borderColor: '#4E8EA2'
+            backgroundColor: '#1E293B',
+            color: '#CBD5E1',
+            borderColor: '#334155'
           }}
         >
-          <ShieldCheck className="w-4 h-4 text-[#7BBDE8]" />
+          <ShieldCheck className="w-4 h-4 text-[#60A5FA]" />
           <span>Verified Digital Laboratory Standard</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {features.map((feat, idx) => {
+          const theme = getThemeForIndex(idx);
+
           return (
             <div 
               key={idx}
-              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 text-white cursor-default select-none border"
+              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 cursor-default select-none border"
               style={{
-                background: 'linear-gradient(145deg, #0A4174 0%, #001D39 55%, #001224 100%)',
-                backgroundColor: '#001D39',
-                borderColor: '#4E8EA2',
-                boxShadow: '0 8px 25px rgba(0, 29, 57, 0.65)'
+                backgroundColor: theme.bg,
+                borderColor: theme.borderColor,
+                boxShadow: theme.boxShadow
               }}
             >
               <div className="relative z-10">
@@ -280,18 +281,18 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                   <div 
                     className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
                     style={{
-                      backgroundColor: '#001D39',
-                      borderColor: '#4E8EA2'
+                      backgroundColor: theme.pedestalBg,
+                      borderColor: theme.pedestalBorder
                     }}
                   >
                     {feat.renderIcon()}
                   </div>
                   <span 
-                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border"
+                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
                     style={{
-                      backgroundColor: '#4E8EA2',
-                      color: '#FFFFFF',
-                      borderColor: '#7BBDE8'
+                      backgroundColor: theme.badgeBg,
+                      color: theme.badgeText,
+                      borderColor: theme.badgeBorder
                     }}
                   >
                     {feat.badge}
@@ -299,13 +300,14 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                 </div>
 
                 <h3 
-                  className="text-base font-bold tracking-tight mb-2 leading-snug text-white font-heading"
+                  className="text-base font-bold tracking-tight mb-2 leading-snug font-heading"
+                  style={{ color: theme.titleColor }}
                 >
                   {feat.title}
                 </h3>
                 <p 
                   className="text-xs font-normal leading-relaxed"
-                  style={{ color: '#BDD8E9' }}
+                  style={{ color: theme.textColor }}
                 >
                   {feat.description}
                 </p>
