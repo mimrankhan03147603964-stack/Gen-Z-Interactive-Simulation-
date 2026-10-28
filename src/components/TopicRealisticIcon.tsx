@@ -2377,7 +2377,7 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // 80: Cambridge Scholar: Solar & Lunar Eclipse Interactive Lab
+    // 80: Solar & Lunar Eclipse Interactive Lab
     case 80:
       return (
         <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
