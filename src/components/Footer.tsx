@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, Phone, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface FooterProps {
@@ -8,6 +8,68 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
   const displaySimCount = totalSimulations >= 109 ? totalSimulations : 109;
+
+  // Typewriter effect state for "Need a Custom Simulation?" and its description
+  const customSimTitle = "Need a Custom Simulation?";
+  const customSimDesc = "If any specific topic, chapter, or grade-level concept is missing from any textbook or curriculum, you can get custom-tailored interactive simulations developed specifically for your educational standards and classroom requirements. Reach out to the developer directly to request and integrate new simulations into this portal.";
+
+  const [displayedTitle, setDisplayedTitle] = useState('');
+  const [displayedDesc, setDisplayedDesc] = useState('');
+  const [typewriterPhase, setTypewriterPhase] = useState<'idle' | 'typing-title' | 'typing-desc' | 'completed'>('idle');
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) {
+      setTypewriterPhase('typing-title');
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setTypewriterPhase((prev) => (prev === 'idle' ? 'typing-title' : prev));
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (typewriterPhase === 'typing-title') {
+      if (displayedTitle.length < customSimTitle.length) {
+        timer = setTimeout(() => {
+          setDisplayedTitle(customSimTitle.slice(0, displayedTitle.length + 1));
+        }, 40);
+      } else {
+        timer = setTimeout(() => {
+          setTypewriterPhase('typing-desc');
+        }, 200);
+      }
+    } else if (typewriterPhase === 'typing-desc') {
+      if (displayedDesc.length < customSimDesc.length) {
+        timer = setTimeout(() => {
+          setDisplayedDesc(customSimDesc.slice(0, displayedDesc.length + 1));
+        }, 14);
+      } else {
+        setTypewriterPhase('completed');
+      }
+    } else if (typewriterPhase === 'completed' && !isCardHovered) {
+      timer = setTimeout(() => {
+        setDisplayedTitle('');
+        setDisplayedDesc('');
+        setTypewriterPhase('typing-title');
+      }, 7000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [typewriterPhase, displayedTitle, displayedDesc, isCardHovered]);
 
   return (
     <footer 
@@ -117,6 +179,9 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
 
         {/* 4. Elegant Developer Message Box: Custom Simulation Request Card */}
         <div 
+          ref={cardRef}
+          onMouseEnter={() => setIsCardHovered(true)}
+          onMouseLeave={() => setIsCardHovered(false)}
           className="w-full max-w-4xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-lg transition-all border"
           style={{
             backgroundColor: '#1546A8',
@@ -140,9 +205,20 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
                 <span className="text-[10px] sm:text-[11px] font-mono font-black uppercase tracking-wider block" style={{ color: '#F5A623' }}>
                   DEVELOPER DIRECT INQUIRY &amp; CUSTOM LABS
                 </span>
-                <h3 className="text-lg sm:text-xl font-black font-heading text-white">
-                  Need a Custom Simulation?
-                </h3>
+                <div className="grid">
+                  <h3 className="col-start-1 row-start-1 text-lg sm:text-xl font-black font-heading invisible select-none pointer-events-none" aria-hidden="true">
+                    {customSimTitle}
+                  </h3>
+                  <h3 className="col-start-1 row-start-1 text-lg sm:text-xl font-black font-heading text-white flex items-center">
+                    <span>{displayedTitle}</span>
+                    {(typewriterPhase === 'idle' || typewriterPhase === 'typing-title') && (
+                      <span 
+                        className="inline-block w-[2.5px] h-[1.1em] ml-1 bg-[#F5A623] animate-pulse"
+                        style={{ verticalAlign: '-0.1em' }}
+                      />
+                    )}
+                  </h3>
+                </div>
               </div>
             </div>
 
@@ -159,9 +235,20 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </span>
           </div>
 
-          <p className="text-xs sm:text-sm font-medium leading-relaxed mb-4" style={{ color: '#DBE4F7' }}>
-            If any specific topic, chapter, or grade-level concept is missing from any textbook or curriculum, you can get custom-tailored interactive simulations developed specifically for your educational standards and classroom requirements. Reach out to the developer directly to request and integrate new simulations into this portal.
-          </p>
+          <div className="grid mb-4">
+            <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed invisible select-none pointer-events-none" aria-hidden="true">
+              {customSimDesc}
+            </p>
+            <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed" style={{ color: '#DBE4F7' }}>
+              {displayedDesc}
+              {(typewriterPhase === 'typing-desc' || typewriterPhase === 'completed') && (
+                <span 
+                  className="inline-block w-[2px] h-[1.15em] ml-0.5 bg-[#F5A623] animate-pulse"
+                  style={{ verticalAlign: '-0.15em' }}
+                />
+              )}
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center gap-2.5 pt-1">
             <a
