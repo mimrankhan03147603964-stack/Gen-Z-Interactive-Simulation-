@@ -1,44 +1,67 @@
 @import "tailwindcss";
 
+:root {
+  /* New Palette Variables for Website Shell */
+  --navy: #1B2A5C;
+  --blue: #1E88E5;
+  --blue-light: #42A5F5;
+  --dark-blue: #1546A8;
+  --dark-blue-light: #2D62D1;
+  --red: #E53935;
+  --red-light: #EF5350;
+  --gold: #F5A623;
+  --gold-dark: #E58E0A;
+  --page-bg: #EEF3F9;
+  --white: #FFFFFF;
+  --text: #1B2A5C;
+  --text-soft: #3B4A73;
+  --nav-text: #DBE4F7;
+  --title-blue: #1565C0;
+  --line: #DDE5F3;
+  --ok: #2E9E5B;
+  --no: #B8C2D9;
+  --input-border: #C9D3E6;
+  --table-alt: #F5F8FC;
+  --tab-hover: #DBE7FB;
+  --disabled-bg: #C9D3E6;
+  --disabled-text: #8A97B8;
+
+  --bg: #EEF3F9;
+  --bg2: #FFFFFF;
+  --surf: #ffffff;
+  --surf-frosted: #ffffff;
+  --tx: #1B2A5C;
+  --tx-heading: #1B2A5C;
+  --mut: #3B4A73;
+  --blue: #00a2ff;
+  --royal: #3b82f6;
+  --vio: #7c3aed;
+  --cyan: #06b6d4;
+  --mint: #10b981;
+  --amber: #f59e0b;
+
+  /* Futuristic Geometric Tech Sans-Serif for Headings */
+  --font-heading: 'Orbitron', 'Rajdhani', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-subheading: 'Rajdhani', 'Plus Jakarta Sans', sans-serif;
+  /* Clean Legible Sans-Serif for Body */
+  --font-body: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Monospace for Badges, Tags & Labels */
+  --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+  --font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
+
+  /* Discipline colors (exact user design system mapping) */
+  --color-physics: #0284c7;
+  --color-chemistry: #9333ea;
+  --color-biology: #16a34a;
+  --color-earth: #0d9488;
+  --color-math: #ea580c;
+  --color-cs: #0284c7;
+  --color-english: #4f46e5;
+  --color-ecce: #db2777;
+  --color-urdu: #e11d48;
+}
+
 @layer base {
-  :root {
-    --bg: #f8fafc;
-    --bg2: #f1f5f9;
-    --surf: #ffffff;
-    --surf-frosted: #ffffff;
-    --line: #cbd5e1;
-    --line-subtle: #e2e8f0;
-    --tx: #0f172a;
-    --tx-heading: #091e42;
-    --mut: #64748b;
-    --blue: #00a2ff;
-    --royal: #3b82f6;
-    --vio: #7c3aed;
-    --cyan: #06b6d4;
-    --mint: #10b981;
-    --amber: #f59e0b;
-
-    /* Futuristic Geometric Tech Sans-Serif for Headings */
-    --font-heading: 'Orbitron', 'Rajdhani', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-subheading: 'Rajdhani', 'Plus Jakarta Sans', sans-serif;
-    /* Clean Legible Sans-Serif for Body */
-    --font-body: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Monospace for Badges, Tags & Labels */
-    --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
-    --font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
-
-    /* Discipline colors (exact user design system mapping) */
-    --color-physics: #0284c7;
-    --color-chemistry: #9333ea;
-    --color-biology: #16a34a;
-    --color-earth: #0d9488;
-    --color-math: #ea580c;
-    --color-cs: #0284c7;
-    --color-english: #4f46e5;
-    --color-ecce: #db2777;
-    --color-urdu: #e11d48;
-  }
-
   *, *::before, *::after {
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased !important;
@@ -74,17 +97,9 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-body);
-    color: var(--tx);
+    color: var(--text);
     line-height: 1.6;
-    background-color: #F4F7FB;
-    /* Clean white/light base featuring soft ambient pastel radial gradients (subtle cyan/sky blue, soft lavender, and light mint glows) */
-    background-image: 
-      radial-gradient(circle at 12% 15%, rgba(224, 242, 254, 0.75) 0%, transparent 42%),
-      radial-gradient(circle at 88% 12%, rgba(243, 232, 255, 0.7) 0%, transparent 45%),
-      radial-gradient(circle at 50% 48%, rgba(209, 250, 229, 0.45) 0%, transparent 50%),
-      radial-gradient(circle at 82% 82%, rgba(224, 231, 255, 0.6) 0%, transparent 45%),
-      radial-gradient(circle at 18% 78%, rgba(224, 242, 254, 0.55) 0%, transparent 42%);
-    background-attachment: fixed;
+    background-color: var(--page-bg);
     min-height: 100vh;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -108,14 +123,14 @@
   }
 
   ::selection {
-    background: #bae6fd;
-    color: #0c4a6e;
+    background: var(--gold);
+    color: var(--navy);
   }
 }
 
 /* Accessibility Focus Ring */
 :focus-visible {
-  outline: 3px solid #00a2ff !important;
+  outline: 3px solid var(--gold) !important;
   outline-offset: 3px !important;
 }
 

@@ -220,30 +220,30 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
   return (
     <section 
       id="features" 
-      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all border shadow-lg text-white"
+      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all border shadow-lg"
       style={{
-        backgroundColor: '#0F172A',
-        borderColor: '#334155',
-        boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+        backgroundColor: '#FFFFFF',
+        borderColor: '#DDE5F3',
+        boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
       }}
     >
       <div 
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4"
-        style={{ borderColor: '#334155' }}
+        style={{ borderColor: '#DDE5F3' }}
       >
         <div>
           <span 
             className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 border font-mono"
             style={{
-              backgroundColor: '#2563EB',
+              backgroundColor: '#1546A8',
               color: '#FFFFFF',
-              borderColor: '#60A5FA'
+              borderColor: '#2D62D1'
             }}
           >
             Digital Laboratory Architecture
           </span>
           <h2 
-            className="text-xl sm:text-2xl font-black tracking-tight text-white font-heading"
+            className="text-xl sm:text-2xl font-black tracking-tight text-[#1B2A5C] font-heading"
           >
             Professional STEM Educational Website Capabilities
           </h2>
@@ -251,12 +251,12 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         <div 
           className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 border shadow-2xs"
           style={{
-            backgroundColor: '#1E293B',
-            color: '#CBD5E1',
-            borderColor: '#334155'
+            backgroundColor: '#EEF3F9',
+            color: '#1B2A5C',
+            borderColor: '#DDE5F3'
           }}
         >
-          <ShieldCheck className="w-4 h-4 text-[#60A5FA]" />
+          <ShieldCheck className="w-4 h-4 text-[#1E88E5]" />
           <span>Verified Digital Laboratory Standard</span>
         </div>
       </div>

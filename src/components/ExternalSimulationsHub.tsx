@@ -207,9 +207,9 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       <div 
         className="border shadow-lg rounded-2xl p-5 sm:p-7 text-white transition-all"
         style={{
-          backgroundColor: '#0F172A',
-          borderColor: '#334155',
-          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+          backgroundColor: '#1B2A5C',
+          borderColor: '#F5A623',
+          boxShadow: '0 8px 30px rgba(27, 42, 92, 0.25)'
         }}
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -218,30 +218,30 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               <span 
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider px-3.5 py-1 rounded-md border"
                 style={{
-                  backgroundColor: '#2563EB',
-                  color: '#FFFFFF',
-                  borderColor: '#60A5FA'
+                  backgroundColor: '#F5A623',
+                  color: '#1B2A5C',
+                  borderColor: '#E58E0A'
                 }}
               >
-                <Globe className="w-3.5 h-3.5 text-white" />
+                <Globe className="w-3.5 h-3.5 text-[#1B2A5C]" />
                 SIMULATION HUB
               </span>
               <span 
                 className="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 font-mono"
                 style={{
-                  backgroundColor: '#1E293B',
-                  color: '#CBD5E1',
-                  borderColor: '#334155'
+                  backgroundColor: '#1546A8',
+                  color: '#DBE4F7',
+                  borderColor: '#2D62D1'
                 }}
               >
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#60A5FA] shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
                 8 Curated Global STEM Repositories
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading">
               External Interactive Simulation Platforms
             </h2>
-            <p className="text-xs sm:text-sm font-normal max-w-3xl leading-relaxed" style={{ color: '#CBD5E1' }}>
+            <p className="text-xs sm:text-sm font-normal max-w-3xl leading-relaxed" style={{ color: '#DBE4F7' }}>
               Explore leading research-grade physics, chemistry, engineering, and mathematics interactive simulation engines worldwide with instant direct access.
             </p>
           </div>
@@ -250,12 +250,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
             <div 
               className="px-4 py-2 rounded-xl border flex items-center gap-2 text-xs font-bold"
               style={{
-                backgroundColor: '#1E293B',
-                borderColor: '#334155',
-                color: '#60A5FA'
+                backgroundColor: '#1546A8',
+                borderColor: '#2D62D1',
+                color: '#DBE4F7'
               }}
             >
-              <Sparkles className="w-4 h-4 text-[#60A5FA] shrink-0" />
+              <Sparkles className="w-4 h-4 text-[#F5A623] shrink-0" />
               <span>Direct External Access</span>
             </div>
           </div>

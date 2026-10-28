@@ -264,17 +264,17 @@ export default function App() {
     return <StandaloneLabPlayer sim={standaloneLab} />;
   }
 
-  // MAIN CATALOG PORTAL & DASHBOARD: Full Solid Pure White Background with No Glass or Transparency
+  // MAIN CATALOG PORTAL & DASHBOARD: Recolored to New Shell Palette
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased relative bg-[#FFFFFF]"
+      className="min-h-screen flex flex-col font-sans select-none antialiased relative bg-[#EEF3F9]"
       style={{ 
-        background: '#FFFFFF',
-        backgroundColor: '#FFFFFF'
+        background: '#EEF3F9',
+        backgroundColor: '#EEF3F9'
       }}
     >
       {/* Website Content Container with position: relative, z-index: 10, offset by fixed navbar height */}
-      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14 bg-[#FFFFFF]">
+      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14 bg-[#EEF3F9]">
         {/* Top Website Header Navbar (Desktop-Optimized, Sticky at Top) */}
         <TopNavbar
           totalSimulations={allSimulations.length}

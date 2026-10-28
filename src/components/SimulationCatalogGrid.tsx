@@ -657,24 +657,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const getGradeTierStyle = (_tierKey: string, isSelected: boolean) => {
     return {
       btn: isSelected
-        ? 'bg-[#2563EB] text-white border-2 border-[#60A5FA] shadow-md font-black scale-[1.02]'
-        : 'bg-[#1E293B] hover:bg-[#0F172A] text-[#E2E8F0] hover:text-white border border-[#334155] shadow-sm font-bold',
+        ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md font-black scale-[1.02]'
+        : 'bg-[#FFFFFF] hover:bg-[#DBE7FB] text-[#1B2A5C] hover:text-[#1B2A5C] border border-[#1B2A5C] shadow-sm font-bold',
       badge: isSelected
-        ? 'bg-[#0F172A] text-[#60A5FA] font-mono font-bold border border-[#60A5FA]'
-        : 'bg-[#0F172A] text-[#CBD5E1] font-mono font-bold border border-[#334155]',
-      iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#60A5FA]'
+        ? 'bg-[#1546A8] text-white font-mono font-bold border border-[#42A5F5]'
+        : 'bg-[#EEF3F9] text-[#1B2A5C] font-mono font-bold border border-[#C9D3E6]',
+      iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#1B2A5C]'
     };
   };
 
   const getSubjectStyle = (_key: string, isSelected: boolean) => {
     return {
       btn: isSelected
-        ? 'bg-[#4F46E5] text-white border-2 border-[#818CF8] shadow-md font-black scale-[1.02]'
-        : 'bg-[#1E293B] hover:bg-[#0F172A] text-[#E2E8F0] hover:text-white border border-[#334155] shadow-sm font-bold',
+        ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md font-black scale-[1.02]'
+        : 'bg-[#FFFFFF] hover:bg-[#DBE7FB] text-[#1B2A5C] hover:text-[#1B2A5C] border border-[#1B2A5C] shadow-sm font-bold',
       badge: isSelected
-        ? 'bg-[#0F172A] text-[#818CF8] font-mono font-bold border border-[#818CF8]'
-        : 'bg-[#0F172A] text-[#CBD5E1] font-mono font-bold border border-[#334155]',
-      iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#818CF8]'
+        ? 'bg-[#1546A8] text-white font-mono font-bold border border-[#42A5F5]'
+        : 'bg-[#EEF3F9] text-[#1B2A5C] font-mono font-bold border border-[#C9D3E6]',
+      iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#1B2A5C]'
     };
   };
 
@@ -689,7 +689,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <button
             type="button"
             onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-bold text-white bg-[#4E8EA2] hover:bg-[#6EA2B3] border border-[#7BBDE8] shadow-md transition-all cursor-pointer shrink-0 active:scale-95"
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-bold text-white bg-[#1B2A5C] hover:bg-[#1546A8] border border-[#F5A623] shadow-md transition-all cursor-pointer shrink-0 active:scale-95"
             title="Return to Main Home Screen"
           >
             <Home className="w-4 h-4 text-white pointer-events-none shrink-0" />
@@ -701,17 +701,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <div 
             className="rounded-xl p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3 flex-wrap shadow-md border"
             style={{
-              backgroundColor: '#001D39',
-              borderColor: '#4E8EA2'
+              backgroundColor: '#FFFFFF',
+              borderColor: '#DDE5F3'
             }}
           >
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#0A4174] text-[#BDD8E9] border border-[#4E8EA2]">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3]">
               Discipline: {isAllCategory ? 'All Disciplines' : activeSubjectConfig.fullTitle}
             </span>
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#0A4174] text-[#BDD8E9] border border-[#4E8EA2]">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3]">
               Grade: {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'All Grades'}
             </span>
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-black bg-[#4E8EA2] text-white border border-[#7BBDE8]">
+            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-black bg-[#1B2A5C] text-white border border-[#1546A8]">
               {displayedSims.length} Labs Available
             </span>
           </div>
@@ -720,29 +720,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
       <div 
-        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 text-white transition-all border"
+        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
         style={{
-          backgroundColor: '#0F172A',
-          borderColor: '#334155',
-          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+          backgroundColor: '#FFFFFF',
+          borderColor: '#DDE5F3',
+          boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
         }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#2563EB] border border-[#60A5FA] shrink-0">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
               GRADE FILTER
             </span>
-            <span className="text-sm sm:text-base font-bold text-white font-heading">
+            <span className="text-sm sm:text-base font-bold text-[#1B2A5C] font-heading">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#CBD5E1]">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#3B4A73]">
             <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
                 onClick={() => handleGradeTierChange('all')}
-                className="text-[#60A5FA] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
+                className="text-[#1E88E5] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
                 title="Reset grade filter to show all simulations"
               >
                 Reset to All {activeSimulations.length} Labs
@@ -786,29 +786,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* Subject Filter Section: Category Buttons */}
       <div 
-        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 text-white transition-all border"
+        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
         style={{
-          backgroundColor: '#0F172A',
-          borderColor: '#334155',
-          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+          backgroundColor: '#FFFFFF',
+          borderColor: '#DDE5F3',
+          boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
         }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#4F46E5] border border-[#818CF8] shrink-0">
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1546A8] border border-[#2D62D1] shrink-0">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-sm sm:text-base font-bold text-white font-heading">
+            <span className="text-sm sm:text-base font-bold text-[#1B2A5C] font-heading">
               Select Discipline &amp; Learning Track
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#CBD5E1]">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#3B4A73]">
             <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
             {!isAllCategory && (
               <button 
                 type="button"
                 onClick={() => handleCategoryChange('All Simulations')}
-                className="text-[#818CF8] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
+                className="text-[#1E88E5] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
                 title="Reset subject filter to show all simulations"
               >
                 Reset to All Subjects
@@ -854,36 +854,36 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         <div 
           className="relative z-10 p-6 sm:p-7 rounded-2xl shadow-lg border text-white flex flex-col lg:flex-row items-center justify-between gap-6 select-none"
           style={{
-            backgroundColor: '#0F172A',
-            borderColor: '#334155',
-            boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+            backgroundColor: '#1B2A5C',
+            borderColor: '#F5A623',
+            boxShadow: '0 8px 30px rgba(27, 42, 92, 0.25)'
           }}
         >
           <div className="space-y-2 text-center lg:text-left flex-1 min-w-0">
             <div className="flex items-center gap-2 justify-center lg:justify-start">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-white px-3.5 py-1 rounded-md bg-[#2563EB] border border-[#60A5FA]">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-[#1B2A5C] px-3.5 py-1 rounded-md bg-[#F5A623] border border-[#E58E0A]">
+                <Sparkles className="w-3.5 h-3.5 text-[#1B2A5C]" />
                 LABORATORY WORKSPACE
               </span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight leading-snug">
               Click Any Grade or Subject Above to Open Interactive Labs
             </h3>
-            <p className="text-xs sm:text-sm text-[#CBD5E1] font-normal leading-relaxed max-w-2xl">
+            <p className="text-xs sm:text-sm text-[#DBE4F7] font-normal leading-relaxed max-w-2xl">
               Select any curriculum grade tier or STEM discipline above to view dedicated simulation laboratories in a high-contrast, distraction-free environment.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-white bg-[#2563EB] hover:bg-[#1D4ED8] border border-[#60A5FA] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3 active:scale-95"
+            className="relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3 active:scale-95"
             title="Open Complete STEM Simulations Catalog"
           >
-            <BookOpen className="w-5 h-5 text-white pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-white">
+            <BookOpen className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C]">
               OPEN ALL {activeSimulations.length} LABS CATALOG
             </span>
-            <ArrowRight className="w-5 h-5 text-white pointer-events-none shrink-0" />
+            <ArrowRight className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
           </button>
         </div>
       ) : (
@@ -892,47 +892,47 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         
         {/* Top Breadcrumb & Quick Search Filter Bar */}
         <div 
-          className="shadow-lg rounded-2xl p-5 sm:p-6 transition-all text-white border"
+          className="shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
           style={{
-            backgroundColor: '#0F172A',
-            borderColor: '#334155',
-            boxShadow: '0 8px 30px rgba(15, 23, 42, 0.45)'
+            backgroundColor: '#FFFFFF',
+            borderColor: '#DDE5F3',
+            boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
           }}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             
             {/* Breadcrumb & Subject Header */}
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-[#CBD5E1] flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-[#3B4A73] flex-wrap">
                 <span 
                   onClick={() => handleCategoryChange('All Simulations')}
-                  className="cursor-pointer hover:underline text-[#60A5FA] font-bold"
+                  className="cursor-pointer hover:underline text-[#1E88E5] font-bold"
                 >
                   Interactive Catalog
                 </span>
                 <span>&gt;</span>
-                <span className="text-white font-bold">
+                <span className="text-[#1B2A5C] font-bold">
                   {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#1B2A5C] font-heading">
                   {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
                 </h2>
                 {!isAllCategory && (
                   <button
                     type="button"
                     onClick={() => handleCategoryChange('All Simulations')}
-                    className="px-3 py-1 rounded-lg text-xs font-bold bg-[#1E293B] text-[#60A5FA] border border-[#334155] flex items-center gap-1.5 cursor-pointer hover:bg-[#0F172A] transition-colors shadow-xs"
+                    className="px-3 py-1 rounded-lg text-xs font-bold bg-[#EEF3F9] text-[#1E88E5] border border-[#DDE5F3] flex items-center gap-1.5 cursor-pointer hover:bg-[#DBE7FB] transition-colors shadow-xs"
                     title="Reset discipline filter to show all simulations"
                   >
                     <span>Filter: {activeSubjectConfig.fullTitle}</span>
                     <span className="font-bold text-sm">&times;</span>
                   </button>
                 )}
-                <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#1E293B] text-[#CBD5E1] border border-[#334155] font-mono">
-                  <CheckCircle2 className="w-4 h-4 text-[#60A5FA] shrink-0" />
+                <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3] font-mono">
+                  <CheckCircle2 className="w-4 h-4 text-[#1E88E5] shrink-0" />
                   {displayedSims.length === activeSimulations.length
                     ? `Showing All ${activeSimulations.length} Verified Labs`
                     : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
@@ -943,20 +943,20 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             {/* Quick Search Bar to Filter Labs Instantly */}
             <div className="w-full md:w-80 shrink-0">
               <div 
-                className="relative flex items-center rounded-xl border border-[#334155] bg-[#1E293B] shadow-inner focus-within:ring-2 focus-within:ring-[#60A5FA]"
+                className="relative flex items-center rounded-xl border border-[#C9D3E6] bg-[#FFFFFF] shadow-inner focus-within:ring-2 focus-within:ring-[#1E88E5]"
               >
-                <Search className="w-4 h-4 ml-3.5 shrink-0 text-[#60A5FA]" />
+                <Search className="w-4 h-4 ml-3.5 shrink-0 text-[#1E88E5]" />
                 <input
                   type="text"
                   placeholder="Search labs across disciplines..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-white placeholder-[#94A3B8] font-sans"
+                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-[#1B2A5C] placeholder-[#8A97B8] font-sans"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="mr-2 text-xs font-bold px-1.5 py-0.5 rounded-full cursor-pointer bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
+                    className="mr-2 text-xs font-bold px-1.5 py-0.5 rounded-full cursor-pointer bg-[#1E88E5] text-white hover:bg-[#1546A8]"
                     title="Clear search"
                   >
                     &times;
@@ -979,22 +979,22 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <div 
               className="rounded-2xl p-8 sm:p-12 text-center text-white border shadow-lg transition-all"
               style={{
-                background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
-                backgroundColor: '#001D39',
-                borderColor: '#4E8EA2',
-                boxShadow: '0 8px 30px rgba(0, 29, 57, 0.65)'
+                background: 'linear-gradient(135deg, #1546A8 0%, #1B2A5C 100%)',
+                backgroundColor: '#1B2A5C',
+                borderColor: '#F5A623',
+                boxShadow: '0 8px 30px rgba(27, 42, 92, 0.45)'
               }}
             >
-              <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#0A4174] text-[#7BBDE8] mb-4 border border-[#4E8EA2]">
-                <Sparkles className="w-8 h-8 text-[#7BBDE8]" />
+              <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#1546A8] text-[#F5A623] mb-4 border border-[#F5A623]">
+                <Sparkles className="w-8 h-8 text-[#F5A623]" />
               </div>
-              <span className="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-white bg-[#4E8EA2] border border-[#7BBDE8] inline-block mb-2 font-mono">
+              <span className="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-[#1B2A5C] bg-[#F5A623] border border-[#E58E0A] inline-block mb-2 font-mono">
                 No Pre-Built Simulation Found
               </span>
               <h3 className="text-xl sm:text-2xl font-bold text-white">
                 {searchTerm ? `Synthesize Simulation for "${searchTerm}"` : `No Labs Found`}
               </h3>
-              <p className="text-xs sm:text-sm font-normal mt-2 max-w-xl mx-auto leading-relaxed text-[#BDD8E9]">
+              <p className="text-xs sm:text-sm font-normal mt-2 max-w-xl mx-auto leading-relaxed text-[#DBE4F7]">
                 Use the generator below to synthesize an interactive simulation canvas and controls on the fly.
               </p>
 
@@ -1003,16 +1003,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <button
                     disabled={isGeneratingAi}
                     onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
-                    className="px-6 py-3 rounded-xl text-sm font-black text-white bg-[#4E8EA2] hover:bg-[#6EA2B3] border border-[#7BBDE8] cursor-pointer transition-all active:scale-95 flex items-center gap-2 shadow-md disabled:opacity-50"
+                    className="px-6 py-3 rounded-xl text-sm font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] cursor-pointer transition-all active:scale-95 flex items-center gap-2 shadow-md disabled:opacity-50"
                   >
                     {isGeneratingAi ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin text-white" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#1B2A5C]" />
                         <span>Synthesizing Simulation...</span>
                       </>
                     ) : (
                       <>
-                        <Wand2 className="w-4 h-4 text-white" />
+                        <Wand2 className="w-4 h-4 text-[#1B2A5C]" />
                         <span>Synthesize &ldquo;{searchTerm}&rdquo; Lab</span>
                       </>
                     )}
@@ -1024,7 +1024,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     handleCategoryChange('All Simulations');
                     setSearchTerm('');
                   }}
-                  className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#0A4174] hover:bg-[#001D39] text-[#7BBDE8] border border-[#4E8EA2]"
+                  className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#1546A8] hover:bg-[#1B2A5C] text-[#DBE4F7] border border-[#2D62D1]"
                 >
                   View All Simulations
                 </button>

@@ -1,5 +1,8 @@
 export interface CardPaletteTheme {
   hex: string;
+  headerGradient: string;
+  headerColor: string;
+  headerColorLight: string;
   bg: string;
   borderColor: string;
   titleColor: string;
@@ -25,201 +28,158 @@ export interface CardPaletteTheme {
 }
 
 /**
- * Sequential 7-Color Palette extracted exactly from user's image:
- * WhatsApp Image 2026-10-27 at 12.39.38 PM.jpeg
- * 1. #1B1C2E - Deep Midnight Charcoal (Writing: White)
- * 2. #3A1F5D - Royal Deep Violet (Writing: White)
- * 3. #8B1E5F - Rich Magenta Berry (Writing: White)
- * 4. #E63946 - Vibrant Crimson Coral Red (Writing: White)
- * 5. #F4A261 - Warm Honey Amber Peach (Writing: Dark #1B1C2E as in image)
- * 6. #2A9D8F - Teal Sea Green (Writing: Dark #1B1C2E as in image)
- * 7. #E0F2F1 - Pale Mint Ice Cyan (Writing: Dark #1B1C2E as in image)
+ * Shell Card Palette Mappings based on Role Guide:
+ * - Card body: white (#FFFFFF)
+ * - Shadow: rgba(27,42,92,0.16)
+ * - Card title: --title-blue (#1565C0)
+ * - Description / body text: --text-soft (#3B4A73)
+ * - Category / group cycles:
+ *   0: Student / Science: --blue (#1E88E5) to --blue-light (#42A5F5)
+ *   1: Teacher / Maths & CS: --dark-blue (#1546A8) to --dark-blue-light (#2D62D1)
+ *   2: School / ECCE & Language: --red (#E53935) to --red-light (#EF5350)
+ *   3: Educator / General: --gold-dark (#E58E0A) to --gold (#F5A623)
  */
 export const SEQUENTIAL_PALETTE: CardPaletteTheme[] = [
-  // 1. #1B1C2E (Deep Midnight Charcoal) - Writing: White
+  // 0. Science / Student (Blue: #1E88E5 to #42A5F5)
   {
-    hex: '#1B1C2E',
-    bg: '#1B1C2E',
-    borderColor: '#3A1F5D',
-    titleColor: '#FFFFFF',
-    textColor: '#E0F2F1',
-    accentColor: '#F4A261',
-    badgeBg: '#E63946',
+    hex: '#1E88E5',
+    headerGradient: 'linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%)',
+    headerColor: '#1E88E5',
+    headerColorLight: '#42A5F5',
+    bg: '#FFFFFF',
+    borderColor: '#DDE5F3',
+    titleColor: '#1565C0',
+    textColor: '#3B4A73',
+    accentColor: '#1E88E5',
+    badgeBg: '#1E88E5',
     badgeText: '#FFFFFF',
-    badgeBorder: '#F4A261',
-    btnBg: '#E63946',
+    badgeBorder: '#42A5F5',
+    btnBg: '#1E88E5',
     btnText: '#FFFFFF',
-    btnBorder: '#FFA5A5',
-    btnHoverBg: '#D62839',
-    pedestalBg: '#3A1F5D',
-    pedestalBorder: '#8B1E5F',
-    tagBg: '#3A1F5D',
-    tagText: '#FFFFFF',
-    tagBorder: '#8B1E5F',
-    actionIconBg: '#3A1F5D',
-    actionIconText: '#FFFFFF',
-    actionIconBorder: '#8B1E5F',
-    isDark: true,
-    boxShadow: '0 8px 24px rgba(27, 28, 46, 0.45)'
-  },
-  // 2. #3A1F5D (Royal Deep Violet) - Writing: White
-  {
-    hex: '#3A1F5D',
-    bg: '#3A1F5D',
-    borderColor: '#8B1E5F',
-    titleColor: '#FFFFFF',
-    textColor: '#E0F2F1',
-    accentColor: '#F4A261',
-    badgeBg: '#8B1E5F',
-    badgeText: '#FFFFFF',
-    badgeBorder: '#E63946',
-    btnBg: '#8B1E5F',
-    btnText: '#FFFFFF',
-    btnBorder: '#E63946',
-    btnHoverBg: '#70144B',
-    pedestalBg: '#1B1C2E',
-    pedestalBorder: '#8B1E5F',
-    tagBg: '#1B1C2E',
-    tagText: '#FFFFFF',
-    tagBorder: '#8B1E5F',
-    actionIconBg: '#1B1C2E',
-    actionIconText: '#FFFFFF',
-    actionIconBorder: '#8B1E5F',
-    isDark: true,
-    boxShadow: '0 8px 24px rgba(58, 31, 93, 0.45)'
-  },
-  // 3. #8B1E5F (Rich Magenta Berry) - Writing: White
-  {
-    hex: '#8B1E5F',
-    bg: '#8B1E5F',
-    borderColor: '#E63946',
-    titleColor: '#FFFFFF',
-    textColor: '#FDE8E9',
-    accentColor: '#F4A261',
-    badgeBg: '#1B1C2E',
-    badgeText: '#FFFFFF',
-    badgeBorder: '#F4A261',
-    btnBg: '#1B1C2E',
-    btnText: '#FFFFFF',
-    btnBorder: '#F4A261',
-    btnHoverBg: '#2A1A3D',
-    pedestalBg: '#3A1F5D',
-    pedestalBorder: '#F4A261',
-    tagBg: '#3A1F5D',
-    tagText: '#FFFFFF',
-    tagBorder: '#E63946',
-    actionIconBg: '#1B1C2E',
-    actionIconText: '#FFFFFF',
-    actionIconBorder: '#F4A261',
-    isDark: true,
-    boxShadow: '0 8px 24px rgba(139, 30, 95, 0.45)'
-  },
-  // 4. #E63946 (Vivid Crimson Coral Red) - Writing: White
-  {
-    hex: '#E63946',
-    bg: '#E63946',
-    borderColor: '#F4A261',
-    titleColor: '#FFFFFF',
-    textColor: '#FFFFFF',
-    accentColor: '#E0F2F1',
-    badgeBg: '#1B1C2E',
-    badgeText: '#FFFFFF',
-    badgeBorder: '#3A1F5D',
-    btnBg: '#1B1C2E',
-    btnText: '#FFFFFF',
-    btnBorder: '#3A1F5D',
-    btnHoverBg: '#3A1F5D',
-    pedestalBg: '#1B1C2E',
-    pedestalBorder: '#F4A261',
-    tagBg: '#1B1C2E',
-    tagText: '#FFFFFF',
-    tagBorder: '#F4A261',
-    actionIconBg: '#1B1C2E',
-    actionIconText: '#FFFFFF',
-    actionIconBorder: '#F4A261',
-    isDark: true,
-    boxShadow: '0 8px 24px rgba(230, 57, 70, 0.45)'
-  },
-  // 5. #F4A261 (Warm Honey Amber Peach) - Writing: Dark #1B1C2E
-  {
-    hex: '#F4A261',
-    bg: '#F4A261',
-    borderColor: '#E76F51',
-    titleColor: '#1B1C2E',
-    textColor: '#1B1C2E',
-    accentColor: '#8B1E5F',
-    badgeBg: '#1B1C2E',
-    badgeText: '#FFFFFF',
-    badgeBorder: '#3A1F5D',
-    btnBg: '#1B1C2E',
-    btnText: '#FFFFFF',
-    btnBorder: '#3A1F5D',
-    btnHoverBg: '#3A1F5D',
-    pedestalBg: '#FFFFFF',
-    pedestalBorder: '#E76F51',
-    tagBg: '#FFFFFF',
-    tagText: '#1B1C2E',
-    tagBorder: '#E76F51',
-    actionIconBg: '#FFFFFF',
-    actionIconText: '#1B1C2E',
-    actionIconBorder: '#E76F51',
+    btnBorder: '#1546A8',
+    btnHoverBg: '#1546A8',
+    pedestalBg: '#EEF3F9',
+    pedestalBorder: '#DDE5F3',
+    tagBg: '#EEF3F9',
+    tagText: '#1B2A5C',
+    tagBorder: '#DDE5F3',
+    actionIconBg: '#EEF3F9',
+    actionIconText: '#1B2A5C',
+    actionIconBorder: '#DDE5F3',
     isDark: false,
-    boxShadow: '0 8px 24px rgba(244, 162, 97, 0.45)'
+    boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
   },
-  // 6. #2A9D8F (Teal Sea Green) - Writing: Dark #1B1C2E
+  // 1. Maths & CS / Teacher (Dark Blue: #1546A8 to #2D62D1)
   {
-    hex: '#2A9D8F',
-    bg: '#2A9D8F',
-    borderColor: '#21867A',
-    titleColor: '#1B1C2E',
-    textColor: '#1B1C2E',
-    accentColor: '#1B1C2E',
-    badgeBg: '#1B1C2E',
+    hex: '#1546A8',
+    headerGradient: 'linear-gradient(135deg, #1546A8 0%, #2D62D1 100%)',
+    headerColor: '#1546A8',
+    headerColorLight: '#2D62D1',
+    bg: '#FFFFFF',
+    borderColor: '#DDE5F3',
+    titleColor: '#1565C0',
+    textColor: '#3B4A73',
+    accentColor: '#1546A8',
+    badgeBg: '#1546A8',
     badgeText: '#FFFFFF',
-    badgeBorder: '#3A1F5D',
-    btnBg: '#1B1C2E',
+    badgeBorder: '#2D62D1',
+    btnBg: '#1546A8',
     btnText: '#FFFFFF',
-    btnBorder: '#3A1F5D',
-    btnHoverBg: '#3A1F5D',
-    pedestalBg: '#E0F2F1',
-    pedestalBorder: '#21867A',
-    tagBg: '#E0F2F1',
-    tagText: '#1B1C2E',
-    tagBorder: '#21867A',
-    actionIconBg: '#E0F2F1',
-    actionIconText: '#1B1C2E',
-    actionIconBorder: '#21867A',
+    btnBorder: '#1B2A5C',
+    btnHoverBg: '#1E88E5',
+    pedestalBg: '#EEF3F9',
+    pedestalBorder: '#DDE5F3',
+    tagBg: '#EEF3F9',
+    tagText: '#1B2A5C',
+    tagBorder: '#DDE5F3',
+    actionIconBg: '#EEF3F9',
+    actionIconText: '#1B2A5C',
+    actionIconBorder: '#DDE5F3',
     isDark: false,
-    boxShadow: '0 8px 24px rgba(42, 157, 143, 0.45)'
+    boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
   },
-  // 7. #E0F2F1 (Pale Mint Ice Cyan) - Writing: Dark #1B1C2E
+  // 2. School / Early Childhood & Language (Red: #E53935 to #EF5350)
   {
-    hex: '#E0F2F1',
-    bg: '#E0F2F1',
-    borderColor: '#B2DFDB',
-    titleColor: '#1B1C2E',
-    textColor: '#264653',
-    accentColor: '#2A9D8F',
-    badgeBg: '#2A9D8F',
+    hex: '#E53935',
+    headerGradient: 'linear-gradient(135deg, #E53935 0%, #EF5350 100%)',
+    headerColor: '#E53935',
+    headerColorLight: '#EF5350',
+    bg: '#FFFFFF',
+    borderColor: '#DDE5F3',
+    titleColor: '#1565C0',
+    textColor: '#3B4A73',
+    accentColor: '#E53935',
+    badgeBg: '#E53935',
     badgeText: '#FFFFFF',
-    badgeBorder: '#21867A',
-    btnBg: '#2A9D8F',
+    badgeBorder: '#EF5350',
+    btnBg: '#E53935',
     btnText: '#FFFFFF',
-    btnBorder: '#21867A',
-    btnHoverBg: '#21867A',
-    pedestalBg: '#FFFFFF',
-    pedestalBorder: '#B2DFDB',
-    tagBg: '#FFFFFF',
-    tagText: '#1B1C2E',
-    tagBorder: '#B2DFDB',
-    actionIconBg: '#FFFFFF',
-    actionIconText: '#1B1C2E',
-    actionIconBorder: '#B2DFDB',
+    btnBorder: '#B71C1C',
+    btnHoverBg: '#EF5350',
+    pedestalBg: '#EEF3F9',
+    pedestalBorder: '#DDE5F3',
+    tagBg: '#EEF3F9',
+    tagText: '#1B2A5C',
+    tagBorder: '#DDE5F3',
+    actionIconBg: '#EEF3F9',
+    actionIconText: '#1B2A5C',
+    actionIconBorder: '#DDE5F3',
     isDark: false,
-    boxShadow: '0 8px 24px rgba(42, 157, 143, 0.25)'
+    boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
+  },
+  // 3. Educator / General / Main-page (Gold: #E58E0A to #F5A623)
+  {
+    hex: '#F5A623',
+    headerGradient: 'linear-gradient(135deg, #E58E0A 0%, #F5A623 100%)',
+    headerColor: '#E58E0A',
+    headerColorLight: '#F5A623',
+    bg: '#FFFFFF',
+    borderColor: '#DDE5F3',
+    titleColor: '#1565C0',
+    textColor: '#3B4A73',
+    accentColor: '#E58E0A',
+    badgeBg: '#F5A623',
+    badgeText: '#1B2A5C',
+    badgeBorder: '#E58E0A',
+    btnBg: '#F5A623',
+    btnText: '#1B2A5C',
+    btnBorder: '#E58E0A',
+    btnHoverBg: '#E58E0A',
+    pedestalBg: '#EEF3F9',
+    pedestalBorder: '#DDE5F3',
+    tagBg: '#EEF3F9',
+    tagText: '#1B2A5C',
+    tagBorder: '#DDE5F3',
+    actionIconBg: '#EEF3F9',
+    actionIconText: '#1B2A5C',
+    actionIconBorder: '#DDE5F3',
+    isDark: false,
+    boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
   }
 ];
 
-export const getThemeForIndex = (index: number): CardPaletteTheme => {
+export const getThemeForCategory = (category: string): CardPaletteTheme => {
+  switch (category) {
+    case 'Physics & Motion':
+    case 'Chemistry & Matter':
+    case 'Biology & Life':
+    case 'Earth & Space':
+      return SEQUENTIAL_PALETTE[0]; // Science: Blue
+    case 'Mathematics & Logic':
+    case 'Computer Science & IT':
+      return SEQUENTIAL_PALETTE[1]; // Maths & CS: Dark Blue
+    case 'English & Grammar':
+    case 'Early Childhood (ECCE)':
+    case 'Urdu & Linguistics':
+      return SEQUENTIAL_PALETTE[2]; // School / Language / ECCE: Red
+    default:
+      return SEQUENTIAL_PALETTE[3]; // Educator / General: Gold
+  }
+};
+
+export const getThemeForIndex = (index: number, category?: string): CardPaletteTheme => {
+  if (category) {
+    return getThemeForCategory(category);
+  }
   return SEQUENTIAL_PALETTE[Math.abs(index) % SEQUENTIAL_PALETTE.length];
 };
