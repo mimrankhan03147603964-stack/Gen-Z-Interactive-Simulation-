@@ -31,6 +31,7 @@ import {
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex } from '../data/sequentialPalette';
+import { ScrollReveal } from './ScrollReveal';
 
 import { 
   MultiStemAllIcon, 
@@ -445,23 +446,31 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
 
     return (
-      <div
+      <ScrollReveal
         key={sim.id}
-        onClick={(e) => {
-          if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
-          handleCardClick(sim);
-        }}
-        className={`rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-200 border ${
-          isActive 
-            ? 'ring-3 ring-[#2563EB] shadow-xl scale-[1.01]' 
-            : 'hover:-translate-y-1 hover:shadow-2xl'
-        }`}
-        style={{
-          backgroundColor: theme.bg,
-          borderColor: theme.borderColor,
-          boxShadow: theme.boxShadow
-        }}
+        direction="up"
+        distance={20}
+        duration={450}
+        delay={(cardIndex % 4) * 60}
+        resetOnLeave={true}
+        className="h-full flex flex-col"
       >
+        <div
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
+            handleCardClick(sim);
+          }}
+          className={`rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-200 border h-full flex-1 ${
+            isActive 
+              ? 'ring-3 ring-[#2563EB] shadow-xl scale-[1.01]' 
+              : 'hover:-translate-y-1 hover:shadow-2xl'
+          }`}
+          style={{
+            backgroundColor: theme.bg,
+            borderColor: theme.borderColor,
+            boxShadow: theme.boxShadow
+          }}
+        >
         {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
         <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
           {/* Realistic Visual Emblem Pedestal (Icons 100% Untouched) */}
@@ -669,6 +678,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </button>
         </div>
       </div>
+    </ScrollReveal>
     );
   };
 

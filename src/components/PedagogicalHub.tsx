@@ -20,6 +20,7 @@ import {
   MultiAllGradesIcon,
   MultiMiddleIcon
 } from './ModernStemIcons';
+import { ScrollReveal } from './ScrollReveal';
 
 interface PedagogicalHubProps {
   totalSimulations?: number;
@@ -150,15 +151,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
       >
         
         {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
-        <div 
-          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C]"
-          style={{ 
-            width: '100%',
-            backgroundColor: '#FFFFFF',
-            borderColor: '#DDE5F3',
-            boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
-          }}
-        >
+        <ScrollReveal direction="up" distance={22} duration={500} delay={0} resetOnLeave={true} className="w-full h-full flex flex-col">
+          <div 
+            className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
+            style={{ 
+              width: '100%',
+              backgroundColor: '#FFFFFF',
+              borderColor: '#DDE5F3',
+              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
+            }}
+          >
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -287,17 +289,19 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             </button>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
-        <div 
-          className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C]"
-          style={{ 
-            width: '100%',
-            backgroundColor: '#FFFFFF',
-            borderColor: '#DDE5F3',
-            boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
-          }}
-        >
+        <ScrollReveal direction="up" distance={22} duration={500} delay={90} resetOnLeave={true} className="w-full h-full flex flex-col">
+          <div 
+            className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
+            style={{ 
+              width: '100%',
+              backgroundColor: '#FFFFFF',
+              borderColor: '#DDE5F3',
+              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
+            }}
+          >
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -426,6 +430,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             </button>
           </div>
         </div>
+        </ScrollReveal>
 
       </div>
     </section>

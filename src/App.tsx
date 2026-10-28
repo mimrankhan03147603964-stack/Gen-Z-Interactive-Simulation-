@@ -409,30 +409,34 @@ export default function App() {
           ) : (
             /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW (With Back to Home Button) */
             <>
-              <SimulationCatalogGrid
-                simulations={allSimulations}
-                selectedCategory={selectedSubject}
-                onSelectCategory={(cat) => setSelectedSubject(cat)}
-                selectedGradeTier={selectedGradeTier}
-                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
-                onSelectSim={handleSelectSim}
-                onLaunchOnStage={handleLaunchOnStage}
-                onTriggerAiGeneration={handleTriggerAiGeneration}
-                isGeneratingAi={isGeneratingAi}
-                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                isDarkMode={isDarkMode}
-                isHomeView={false}
-                onBackToHome={handleBackToCatalog}
-              />
+              <ScrollReveal direction="up" distance={16} duration={450} resetOnLeave={true}>
+                <SimulationCatalogGrid
+                  simulations={allSimulations}
+                  selectedCategory={selectedSubject}
+                  onSelectCategory={(cat) => setSelectedSubject(cat)}
+                  selectedGradeTier={selectedGradeTier}
+                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                  onSelectSim={handleSelectSim}
+                  onLaunchOnStage={handleLaunchOnStage}
+                  onTriggerAiGeneration={handleTriggerAiGeneration}
+                  isGeneratingAi={isGeneratingAi}
+                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                  isDarkMode={isDarkMode}
+                  isHomeView={false}
+                  onBackToHome={handleBackToCatalog}
+                />
+              </ScrollReveal>
 
               {/* Curated External Interactive Simulations Hub */}
-              <ExternalSimulationsHub isDarkMode={isDarkMode} />
+              <ScrollReveal direction="up" distance={20} duration={500} delay={60} resetOnLeave={true}>
+                <ExternalSimulationsHub isDarkMode={isDarkMode} />
+              </ScrollReveal>
             </>
           )}
 
         </main>
 
-        {/* Fullscreen Immersion Viewport Modal (available directly from cards) */}
+        {/* Fullscreen Immersion Viewport Modal (available directly from cards - STRICTLY EXCLUDED FROM SCROLL ANIMATIONS) */}
         {fullscreenModalSim && (
           <SimulationViewerModal
             sim={fullscreenModalSim}
@@ -441,7 +445,9 @@ export default function App() {
         )}
 
         {/* Developer Website Footer strictly pinned to bottom under all conditions */}
-        <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
+        <ScrollReveal direction="up" distance={16} duration={450} resetOnLeave={true}>
+          <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
+        </ScrollReveal>
 
       </div>
     </div>
