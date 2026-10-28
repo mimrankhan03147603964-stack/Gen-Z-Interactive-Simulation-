@@ -273,8 +273,11 @@ export default function App() {
         backgroundColor: '#EEF3F9'
       }}
     >
+      {/* Dynamic Moving Colorful Balloons Background Effect */}
+      <ThreeStemBackground />
+
       {/* Website Content Container with position: relative, z-index: 10, offset by fixed navbar height */}
-      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14 bg-[#EEF3F9]">
+      <div className="relative z-10 flex flex-col flex-1 w-full min-h-screen pt-14 bg-transparent">
         {/* Top Website Header Navbar (Desktop-Optimized, Sticky at Top) */}
         <TopNavbar
           totalSimulations={allSimulations.length}
