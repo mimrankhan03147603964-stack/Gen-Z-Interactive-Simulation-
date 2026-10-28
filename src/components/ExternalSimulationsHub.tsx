@@ -310,22 +310,70 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   </span>
                 </a>
 
-                {/* Resource Badge */}
+                {/* Resource Badge (Special Prominent Animated Attention Badges for Ad & Paid Version) */}
                 {item.isAd && item.adLabels && item.adLabels.length > 0 ? (
-                  <div className="flex items-center gap-1.5 flex-wrap justify-end">
-                    {item.adLabels.map((lbl, li) => (
-                      <span 
-                        key={li}
-                        className="font-mono text-xs font-bold px-2.5 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
-                        style={{
-                          backgroundColor: theme.badgeBg,
-                          color: theme.badgeText,
-                          borderColor: theme.badgeBorder
-                        }}
-                      >
-                        {lbl}
-                      </span>
-                    ))}
+                  <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end relative z-20">
+                    <style>{`
+                      @keyframes fx-ad-pulse {
+                        0%, 100% {
+                          transform: scale(1);
+                          box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+                          filter: brightness(1);
+                        }
+                        50% {
+                          transform: scale(1.07);
+                          box-shadow: 0 0 16px 4px rgba(239, 68, 68, 0.6);
+                          filter: brightness(1.22);
+                        }
+                      }
+                      @keyframes fx-paid-pulse {
+                        0%, 100% {
+                          transform: scale(1);
+                          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+                          filter: brightness(1);
+                        }
+                        50% {
+                          transform: scale(1.07);
+                          box-shadow: 0 0 16px 4px rgba(245, 158, 11, 0.6);
+                          filter: brightness(1.22);
+                        }
+                      }
+                      .fx-ad-badge {
+                        animation: fx-ad-pulse 1.8s ease-in-out infinite;
+                      }
+                      .fx-paid-badge {
+                        animation: fx-paid-pulse 1.8s ease-in-out infinite 0.25s;
+                      }
+                      @media (prefers-reduced-motion: reduce) {
+                        .fx-ad-badge, .fx-paid-badge {
+                          animation: none !important;
+                        }
+                      }
+                    `}</style>
+                    {item.adLabels.map((lbl, li) => {
+                      const isAdPill = lbl.toLowerCase() === 'ad';
+                      return (
+                        <span 
+                          key={li}
+                          className={`${isAdPill ? 'fx-ad-badge' : 'fx-paid-badge'} inline-flex items-center justify-center font-heading font-black text-xs sm:text-sm px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl border-2 shrink-0 tracking-wider transition-transform duration-200 uppercase select-none`}
+                          style={isAdPill ? {
+                            backgroundColor: '#DC2626',
+                            color: '#FFFFFF',
+                            borderColor: '#FECACA',
+                            boxShadow: '0 4px 14px rgba(220, 38, 38, 0.45)',
+                            textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
+                          } : {
+                            backgroundColor: '#F59E0B',
+                            color: '#0F172A',
+                            borderColor: '#FEF3C7',
+                            boxShadow: '0 4px 14px rgba(245, 158, 11, 0.5)',
+                            textShadow: '0 1px 1px rgba(255, 255, 255, 0.4)'
+                          }}
+                        >
+                          {lbl}
+                        </span>
+                      );
+                    })}
                   </div>
                 ) : (
                   <span 
