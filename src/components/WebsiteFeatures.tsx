@@ -270,10 +270,9 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
             <ScrollReveal
               key={idx}
               direction="up"
-              distance={20}
-              duration={480}
-              delay={(idx % 4) * 75}
-              resetOnLeave={true}
+              distance={24}
+              duration={500}
+              delay={(idx % 4) * 80}
               className="h-full flex flex-col"
             >
               <div 

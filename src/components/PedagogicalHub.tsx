@@ -151,7 +151,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
       >
         
         {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
-        <ScrollReveal direction="up" distance={22} duration={500} delay={0} resetOnLeave={true} className="w-full h-full flex flex-col">
+        <ScrollReveal direction="up" distance={24} duration={500} delay={0} className="w-full h-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
             style={{ 
@@ -292,7 +292,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
         </ScrollReveal>
 
         {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
-        <ScrollReveal direction="up" distance={22} duration={500} delay={90} resetOnLeave={true} className="w-full h-full flex flex-col">
+        <ScrollReveal direction="up" distance={24} duration={500} delay={100} className="w-full h-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
             style={{ 

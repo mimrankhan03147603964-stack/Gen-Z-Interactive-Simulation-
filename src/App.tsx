@@ -409,26 +409,24 @@ export default function App() {
           ) : (
             /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW (With Back to Home Button) */
             <>
-              <ScrollReveal direction="up" distance={16} duration={450} resetOnLeave={true}>
-                <SimulationCatalogGrid
-                  simulations={allSimulations}
-                  selectedCategory={selectedSubject}
-                  onSelectCategory={(cat) => setSelectedSubject(cat)}
-                  selectedGradeTier={selectedGradeTier}
-                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
-                  onSelectSim={handleSelectSim}
-                  onLaunchOnStage={handleLaunchOnStage}
-                  onTriggerAiGeneration={handleTriggerAiGeneration}
-                  isGeneratingAi={isGeneratingAi}
-                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                  isDarkMode={isDarkMode}
-                  isHomeView={false}
-                  onBackToHome={handleBackToCatalog}
-                />
-              </ScrollReveal>
+              <SimulationCatalogGrid
+                simulations={allSimulations}
+                selectedCategory={selectedSubject}
+                onSelectCategory={(cat) => setSelectedSubject(cat)}
+                selectedGradeTier={selectedGradeTier}
+                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                onSelectSim={handleSelectSim}
+                onLaunchOnStage={handleLaunchOnStage}
+                onTriggerAiGeneration={handleTriggerAiGeneration}
+                isGeneratingAi={isGeneratingAi}
+                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                isDarkMode={isDarkMode}
+                isHomeView={false}
+                onBackToHome={handleBackToCatalog}
+              />
 
               {/* Curated External Interactive Simulations Hub */}
-              <ScrollReveal direction="up" distance={20} duration={500} delay={60} resetOnLeave={true}>
+              <ScrollReveal direction="up" distance={20} duration={480} delay={40}>
                 <ExternalSimulationsHub isDarkMode={isDarkMode} />
               </ScrollReveal>
             </>

@@ -286,10 +286,9 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
             <ScrollReveal
               key={item.id}
               direction="up"
-              distance={22}
-              duration={480}
-              delay={(index % 4) * 75}
-              resetOnLeave={true}
+              distance={24}
+              duration={500}
+              delay={(index % 4) * 80}
               className="h-full flex flex-col"
             >
               <div
