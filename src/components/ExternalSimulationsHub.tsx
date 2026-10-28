@@ -16,6 +16,7 @@ import {
   FileText
 } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
+import { ScrollReveal } from './ScrollReveal';
 
 import {
   MultiPhetIcon,
@@ -282,15 +283,23 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
           const IconComponent = item.icon;
 
           return (
-            <div
+            <ScrollReveal
               key={item.id}
-              className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border hover:-translate-y-1 hover:shadow-2xl"
-              style={{
-                backgroundColor: theme.bg,
-                borderColor: theme.borderColor,
-                boxShadow: theme.boxShadow
-              }}
+              direction="up"
+              distance={22}
+              duration={480}
+              delay={(index % 4) * 75}
+              resetOnLeave={true}
+              className="h-full flex flex-col"
             >
+              <div
+                className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border hover:-translate-y-1 hover:shadow-2xl h-full flex-1"
+                style={{
+                  backgroundColor: theme.bg,
+                  borderColor: theme.borderColor,
+                  boxShadow: theme.boxShadow
+                }}
+              >
               {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
               <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
                 {/* Visual Emblem Pedestal (Icon 100% untouched) */}
@@ -509,8 +518,9 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </a>
               </div>
             </div>
-          );
-        })}
+          </ScrollReveal>
+        );
+      })}
       </div>
     </section>
   );

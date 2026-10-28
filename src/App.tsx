@@ -11,6 +11,7 @@ import { Footer } from './components/Footer';
 import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ExternalSimulationsHub } from './components/ExternalSimulationsHub';
+import { ScrollReveal } from './components/ScrollReveal';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
@@ -359,41 +360,51 @@ export default function App() {
             /* VIEW 1: CLEAN ZERO-RUSH HOME VIEW (Without 86 Cards) */
             <>
               {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs */}
-              <HeroBanner 
-                isDarkMode={isDarkMode}
-                onSelectSim={handleSelectSim}
-                onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
-              />
+              <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
+                <HeroBanner 
+                  isDarkMode={isDarkMode}
+                  onSelectSim={handleSelectSim}
+                  onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
 
               {/* 2. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
-              <PedagogicalHub 
-                totalSimulations={allSimulations.length} 
-                onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
-              />
+              <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
+                <PedagogicalHub 
+                  totalSimulations={allSimulations.length} 
+                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
 
               {/* 3. Grade & Subject Selection Area (No Simulation Cards Rendered Here!) */}
-              <SimulationCatalogGrid
-                simulations={allSimulations}
-                selectedCategory={selectedSubject}
-                onSelectCategory={(cat) => setSelectedSubject(cat)}
-                selectedGradeTier={selectedGradeTier}
-                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
-                onSelectSim={handleSelectSim}
-                onLaunchOnStage={handleLaunchOnStage}
-                onTriggerAiGeneration={handleTriggerAiGeneration}
-                isGeneratingAi={isGeneratingAi}
-                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                isDarkMode={isDarkMode}
-                isHomeView={true}
-                onOpenCatalog={handleOpenCatalog}
-              />
+              <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
+                <SimulationCatalogGrid
+                  simulations={allSimulations}
+                  selectedCategory={selectedSubject}
+                  onSelectCategory={(cat) => setSelectedSubject(cat)}
+                  selectedGradeTier={selectedGradeTier}
+                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                  onSelectSim={handleSelectSim}
+                  onLaunchOnStage={handleLaunchOnStage}
+                  onTriggerAiGeneration={handleTriggerAiGeneration}
+                  isGeneratingAi={isGeneratingAi}
+                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                  isDarkMode={isDarkMode}
+                  isHomeView={true}
+                  onOpenCatalog={handleOpenCatalog}
+                />
+              </ScrollReveal>
 
               {/* 4. Curated External Interactive Simulations Hub (8 Global Platforms) */}
-              <ExternalSimulationsHub isDarkMode={isDarkMode} />
+              <ScrollReveal direction="up" distance={24} duration={520} delay={50} resetOnLeave={true}>
+                <ExternalSimulationsHub isDarkMode={isDarkMode} />
+              </ScrollReveal>
 
               {/* 5. Educational Standards & Digital Laboratory Architecture */}
-              <WebsiteFeatures isDarkMode={isDarkMode} />
+              <ScrollReveal direction="up" distance={24} duration={520} delay={50} resetOnLeave={true}>
+                <WebsiteFeatures isDarkMode={isDarkMode} />
+              </ScrollReveal>
             </>
           ) : (
             /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW (With Back to Home Button) */

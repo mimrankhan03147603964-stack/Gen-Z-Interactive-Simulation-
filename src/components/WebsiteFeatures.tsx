@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
+import { ScrollReveal } from './ScrollReveal';
 
 interface WebsiteFeaturesProps {
   isDarkMode?: boolean;
@@ -266,53 +267,62 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
           const theme = getThemeForIndex(idx);
 
           return (
-            <div 
+            <ScrollReveal
               key={idx}
-              className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 cursor-default select-none border"
-              style={{
-                backgroundColor: theme.bg,
-                borderColor: theme.borderColor,
-                boxShadow: theme.boxShadow
-              }}
+              direction="up"
+              distance={20}
+              duration={480}
+              delay={(idx % 4) * 75}
+              resetOnLeave={true}
+              className="h-full flex flex-col"
             >
-              <div className="relative z-10">
-                {/* Header with 3D Icon & Feature Badge - Icon SVG untouched */}
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div 
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
-                    style={{
-                      backgroundColor: theme.pedestalBg,
-                      borderColor: theme.pedestalBorder
-                    }}
-                  >
-                    {feat.renderIcon()}
+              <div 
+                className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 cursor-default select-none border h-full flex-1"
+                style={{
+                  backgroundColor: theme.bg,
+                  borderColor: theme.borderColor,
+                  boxShadow: theme.boxShadow
+                }}
+              >
+                <div className="relative z-10">
+                  {/* Header with 3D Icon & Feature Badge - Icon SVG untouched */}
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
+                      style={{
+                        backgroundColor: theme.pedestalBg,
+                        borderColor: theme.pedestalBorder
+                      }}
+                    >
+                      {feat.renderIcon()}
+                    </div>
+                    <span 
+                      className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
+                      style={{
+                        backgroundColor: theme.badgeBg,
+                        color: theme.badgeText,
+                        borderColor: theme.badgeBorder
+                      }}
+                    >
+                      {feat.badge}
+                    </span>
                   </div>
-                  <span 
-                    className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
-                    style={{
-                      backgroundColor: theme.badgeBg,
-                      color: theme.badgeText,
-                      borderColor: theme.badgeBorder
-                    }}
-                  >
-                    {feat.badge}
-                  </span>
-                </div>
 
-                <h3 
-                  className="text-base font-bold tracking-tight mb-2 leading-snug font-heading"
-                  style={{ color: theme.titleColor }}
-                >
-                  {feat.title}
-                </h3>
-                <p 
-                  className="text-xs font-normal leading-relaxed"
-                  style={{ color: theme.textColor }}
-                >
-                  {feat.description}
-                </p>
+                  <h3 
+                    className="text-base font-bold tracking-tight mb-2 leading-snug font-heading"
+                    style={{ color: theme.titleColor }}
+                  >
+                    {feat.title}
+                  </h3>
+                  <p 
+                    className="text-xs font-normal leading-relaxed"
+                    style={{ color: theme.textColor }}
+                  >
+                    {feat.description}
+                  </p>
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
           );
         })}
       </div>
