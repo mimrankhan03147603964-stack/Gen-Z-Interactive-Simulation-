@@ -1,6 +1,12 @@
 import React from 'react';
-import { Layers, BookOpen, Atom, Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { SimulationItem } from '../types';
+import { 
+  MultiStemAllIcon, 
+  MultiEnglishIcon, 
+  MultiPhysicsIcon, 
+  MultiPrimaryIcon 
+} from './ModernStemIcons';
 
 interface QuickStatsProps {
   activeSim?: SimulationItem | null;
@@ -42,10 +48,9 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
         </div>
         <div 
-          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1546A8]"
-          style={{ background: 'linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%)' }}
+          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1546A8] bg-white p-2"
         >
-          <Layers className="w-6 h-6 text-white drop-shadow-sm" />
+          <MultiStemAllIcon className="w-7 h-7 drop-shadow-sm" />
         </div>
       </div>
 
@@ -74,10 +79,9 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
         </div>
         <div 
-          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1B2A5C]"
-          style={{ background: 'linear-gradient(135deg, #1546A8 0%, #2D62D1 100%)' }}
+          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1B2A5C] bg-white p-2"
         >
-          <BookOpen className="w-6 h-6 text-white drop-shadow-sm" />
+          <MultiEnglishIcon className="w-7 h-7 drop-shadow-sm" />
         </div>
       </div>
 
@@ -106,10 +110,9 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
         </div>
         <div 
-          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#B71C1C]"
-          style={{ background: 'linear-gradient(135deg, #E53935 0%, #EF5350 100%)' }}
+          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#B71C1C] bg-white p-2"
         >
-          <Atom className="w-6 h-6 text-white drop-shadow-sm" />
+          <MultiPhysicsIcon className="w-7 h-7 drop-shadow-sm" />
         </div>
       </div>
 
@@ -139,10 +142,9 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
         </div>
         <div 
-          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#E58E0A]"
-          style={{ background: 'linear-gradient(135deg, #E58E0A 0%, #F5A623 100%)' }}
+          className="w-12 h-12 rounded-xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#E58E0A] bg-white p-2"
         >
-          <Sparkles className="w-6 h-6 text-white drop-shadow-sm" />
+          <MultiPrimaryIcon className="w-7 h-7 drop-shadow-sm" />
         </div>
       </div>
 

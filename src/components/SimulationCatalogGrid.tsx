@@ -32,6 +32,24 @@ import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/nav
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex } from '../data/sequentialPalette';
 
+import { 
+  MultiStemAllIcon, 
+  MultiPhysicsIcon, 
+  MultiChemistryIcon, 
+  MultiBiologyIcon, 
+  MultiEarthSpaceIcon, 
+  MultiMathIcon, 
+  MultiCompSciIcon, 
+  MultiEnglishIcon, 
+  MultiEcceIcon, 
+  MultiUrduIcon,
+  MultiAllGradesIcon,
+  MultiPrimaryIcon,
+  MultiMiddleIcon,
+  MultiSecondaryIcon,
+  MultiHigherIcon
+} from './ModernStemIcons';
+
 interface SimulationCatalogGridProps {
   simulations: SimulationItem[];
   activeSim?: SimulationItem | null;
@@ -71,7 +89,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#0ea5e9',
     activeBorder: '#38bdf8',
     glowColor: 'rgba(14, 165, 233, 0.45)',
-    renderIcon: ({ className }) => <Layers className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiStemAllIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Physics & Motion',
@@ -81,7 +99,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#3b82f6',
     activeBorder: '#60a5fa',
     glowColor: 'rgba(37, 99, 235, 0.45)',
-    renderIcon: ({ className }) => <Atom className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiPhysicsIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Chemistry & Matter',
@@ -91,7 +109,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#a855f7',
     activeBorder: '#d8b4fe',
     glowColor: 'rgba(147, 51, 234, 0.45)',
-    renderIcon: ({ className }) => <FlaskConical className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiChemistryIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Biology & Life',
@@ -101,7 +119,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#22c55e',
     activeBorder: '#86efac',
     glowColor: 'rgba(22, 163, 74, 0.45)',
-    renderIcon: ({ className }) => <Dna className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiBiologyIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Earth & Space',
@@ -111,7 +129,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#0284c7',
     activeBorder: '#7dd3fc',
     glowColor: 'rgba(2, 132, 199, 0.45)',
-    renderIcon: ({ className }) => <Globe className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiEarthSpaceIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Mathematics & Logic',
@@ -121,7 +139,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#f59e0b',
     activeBorder: '#fdba74',
     glowColor: 'rgba(234, 88, 12, 0.45)',
-    renderIcon: ({ className }) => <Calculator className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiMathIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Computer Science & IT',
@@ -131,7 +149,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#14b8a6',
     activeBorder: '#5eead4',
     glowColor: 'rgba(13, 148, 136, 0.45)',
-    renderIcon: ({ className }) => <Laptop className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiCompSciIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'English & Grammar',
@@ -141,7 +159,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#8b5cf6',
     activeBorder: '#c4b5fd',
     glowColor: 'rgba(99, 102, 241, 0.45)',
-    renderIcon: ({ className }) => <BookOpen className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiEnglishIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Early Childhood (ECCE)',
@@ -151,7 +169,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#f43f5e',
     activeBorder: '#fecdd3',
     glowColor: 'rgba(244, 63, 94, 0.45)',
-    renderIcon: ({ className }) => <Sparkles className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiEcceIcon className={className || "w-4 h-4"} />
   },
   {
     key: 'Urdu & Linguistics',
@@ -161,7 +179,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
     iconBorder: '#10b981',
     activeBorder: '#6ee7b7',
     glowColor: 'rgba(16, 185, 129, 0.45)',
-    renderIcon: ({ className }) => <Languages className={className || "w-4 h-4"} />
+    renderIcon: ({ className }) => <MultiUrduIcon className={className || "w-4 h-4"} />
   }
 ];
 
@@ -198,11 +216,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
   const gradeTiers = [
-    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12', icon: GraduationCap },
-    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE', icon: Sparkles },
-    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics', icon: Compass },
-    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS', icon: FlaskConical },
-    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus', icon: BrainCircuit },
+    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12', icon: MultiAllGradesIcon },
+    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE', icon: MultiPrimaryIcon },
+    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics', icon: MultiMiddleIcon },
+    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS', icon: MultiSecondaryIcon },
+    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus', icon: MultiHigherIcon },
   ];
 
   const handleGradeTierChange = (tierKey: string) => {

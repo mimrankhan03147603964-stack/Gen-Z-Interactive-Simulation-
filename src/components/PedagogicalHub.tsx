@@ -12,6 +12,14 @@ import {
   SlidersHorizontal,
   ChevronDown
 } from 'lucide-react';
+import {
+  MultiZeroCostIcon,
+  MultiFpsEngineIcon,
+  MultiSafeLabIcon,
+  MultiCurriculumIcon,
+  MultiAllGradesIcon,
+  MultiMiddleIcon
+} from './ModernStemIcons';
 
 interface PedagogicalHubProps {
   totalSimulations?: number;
@@ -54,11 +62,10 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
-              borderColor: '#DDE5F3',
-              color: '#1E88E5'
+              borderColor: '#DDE5F3'
             }}
           >
-            <Zap className="w-5 h-5 pointer-events-none" style={{ color: '#1E88E5' }} />
+            <MultiZeroCostIcon className="w-5 h-5 pointer-events-none" />
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-tight font-heading text-[#1B2A5C]">Zero Lab Cost</div>
@@ -78,11 +85,10 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
-              borderColor: '#DDE5F3',
-              color: '#1546A8'
+              borderColor: '#DDE5F3'
             }}
           >
-            <Cpu className="w-5 h-5 pointer-events-none" style={{ color: '#1546A8' }} />
+            <MultiFpsEngineIcon className="w-5 h-5 pointer-events-none" />
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-tight font-heading text-[#1B2A5C]">Real-Time 60 FPS Engines</div>
@@ -102,11 +108,10 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
-              borderColor: '#DDE5F3',
-              color: '#E53935'
+              borderColor: '#DDE5F3'
             }}
           >
-            <FlaskConical className="w-5 h-5 pointer-events-none" style={{ color: '#E53935' }} />
+            <MultiSafeLabIcon className="w-5 h-5 pointer-events-none" />
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-tight font-heading text-[#1B2A5C]">Safe Chemical Labs</div>
@@ -126,11 +131,10 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
-              borderColor: '#DDE5F3',
-              color: '#F5A623'
+              borderColor: '#DDE5F3'
             }}
           >
-            <ShieldCheck className="w-5 h-5 pointer-events-none" style={{ color: '#F5A623' }} />
+            <MultiCurriculumIcon className="w-5 h-5 pointer-events-none" />
           </div>
           <div>
             <div className="text-xs sm:text-sm font-black tracking-tight font-heading text-[#1B2A5C]">100% Curriculum Aligned</div>
@@ -166,7 +170,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                     borderColor: '#DDE5F3'
                   }}
                 >
-                  <GraduationCap className="w-6 h-6 pointer-events-none" style={{ color: '#1546A8' }} />
+                  <MultiAllGradesIcon className="w-6 h-6 pointer-events-none" />
                 </div>
                 <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1565C0]">
                   For Teachers &amp; Educators
@@ -305,7 +309,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                     borderColor: '#DDE5F3'
                   }}
                 >
-                  <Compass className="w-6 h-6 pointer-events-none" style={{ color: '#1E88E5' }} />
+                  <MultiMiddleIcon className="w-6 h-6 pointer-events-none" />
                 </div>
                 <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1565C0]">
                   For Students &amp; Young Scientists

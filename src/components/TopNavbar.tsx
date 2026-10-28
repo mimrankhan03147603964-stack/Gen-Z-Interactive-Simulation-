@@ -1,12 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
-  Sparkles, 
-  ChevronDown, 
-  Home, 
-  Layers, 
-  BookOpen, 
-  UserCheck,
-  Globe
+  ChevronDown 
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -222,7 +216,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Navigation Items (Single horizontal line, flex-nowrap, no horizontal overflow) */}
         <nav 
-          className="flex flex-row items-center justify-end gap-1 sm:gap-1.5 md:gap-2 shrink-0 flex-nowrap whitespace-nowrap"
+          className="flex flex-row items-center justify-end gap-1 sm:gap-2 md:gap-3 shrink-0 flex-nowrap whitespace-nowrap"
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -236,15 +230,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#top')}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
-            style={{
-              backgroundColor: '#F5A623',
-              color: '#1B2A5C',
-              border: '1px solid #E58E0A'
-            }}
+            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
             title="Return to Home Portal"
           >
-            <Home className="w-3.5 h-3.5 text-[#1B2A5C] shrink-0" />
             <span>Home</span>
           </button>
 
@@ -260,18 +248,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 e.stopPropagation();
                 toggleDropdown('catalog');
               }}
-              className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer border ${
-                openDropdown === 'catalog' 
-                  ? 'text-white bg-[#1546A8] border-[#F5A623] ring-1 ring-[#F5A623]/60' 
-                  : 'text-[#DBE4F7] bg-[#1546A8] border-[#DDE5F3]/30 hover:text-white hover:bg-[rgba(255,255,255,0.14)]'
-              }`}
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'catalog'}
               aria-haspopup="true"
               title="Browse Full STEM Catalog by Discipline"
             >
-              <Layers className="w-3.5 h-3.5 text-[#42A5F5] shrink-0" />
               <span>STEM Catalog ({totalSimulations})</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180 text-white' : 'text-[#DBE4F7]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'catalog' ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Panel in Solid Blue Styling */}
@@ -344,19 +327,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 e.stopPropagation();
                 toggleDropdown('hub');
               }}
-              className={`inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer border ${
-                openDropdown === 'hub' 
-                  ? 'text-white bg-[#1546A8] border-[#F5A623] ring-1 ring-[#F5A623]/60' 
-                  : 'text-[#DBE4F7] bg-[#1546A8] border-[#DDE5F3]/30 hover:text-white hover:bg-[rgba(255,255,255,0.14)]'
-              }`}
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'hub'}
               aria-haspopup="true"
               title="Pedagogical Audience & Standards"
             >
-              <BookOpen className="w-3.5 h-3.5 text-[#42A5F5] shrink-0" />
               <span className="hidden sm:inline">Educators &amp; Students Hub</span>
               <span className="sm:hidden">Hub</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180 text-white' : 'text-[#DBE4F7]'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'hub' ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Panel in Solid Blue Styling */}
@@ -419,15 +397,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#external-simulations')}
-            className="inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-xs border"
-            style={{
-              backgroundColor: '#1546A8',
-              borderColor: 'rgba(221, 229, 243, 0.3)',
-              color: '#DBE4F7'
-            }}
+            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
             title="Jump to External Simulations & Global Science Platforms"
           >
-            <Globe className="w-3.5 h-3.5 text-[#42A5F5] shrink-0" />
             <span className="hidden md:inline">External Simulations</span>
             <span className="md:hidden">Sim Hub</span>
           </button>
@@ -436,15 +408,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center gap-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-xs border"
-            style={{
-              backgroundColor: '#1546A8',
-              borderColor: 'rgba(221, 229, 243, 0.3)',
-              color: '#DBE4F7'
-            }}
+            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
             title="Go to Developer & Contact Section"
           >
-            <UserCheck className="w-3.5 h-3.5 text-[#42A5F5] shrink-0" />
             <span className="hidden md:inline">Developer &amp; Contact</span>
             <span className="md:hidden">Contact</span>
           </button>
@@ -453,18 +419,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#catalog', 'All Simulations')}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-black transition-all whitespace-nowrap shrink-0 shadow-md cursor-pointer active:scale-95"
-            style={{
-              backgroundColor: '#F5A623',
-              color: '#1B2A5C',
-              border: '1px solid #E58E0A'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
+            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none active:scale-95"
             title="Explore Full STEM Labs Catalog Grid"
           >
-            <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#1B2A5C]" />
-            <span className="text-[#1B2A5C]">Explore All Labs</span>
+            <span>Explore All Labs</span>
           </button>
         </nav>
 

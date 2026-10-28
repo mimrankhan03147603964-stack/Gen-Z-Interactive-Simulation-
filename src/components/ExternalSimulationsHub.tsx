@@ -17,6 +17,19 @@ import {
 } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
 
+import {
+  MultiPhetIcon,
+  MultiGeoGebraIcon,
+  MultiOphysicsIcon,
+  MultiWalterFendtIcon,
+  MultiFalstadIcon,
+  MultiMolecularIcon,
+  MultiMyPhysicsLabIcon,
+  MultiTinkercadIcon,
+  MultiMozaikIcon,
+  MultiPaperMakerIcon
+} from './ModernStemIcons';
+
 export interface ExternalSimulationResource {
   id: string;
   title: string;
@@ -50,7 +63,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(14, 165, 233, 0.45)',
     accentColor: '#38bdf8',
     topics: ['Physics', 'Chemistry', 'Biology', 'Earth Science', 'Math'],
-    icon: Atom
+    icon: MultiPhetIcon
   },
   {
     id: 'geogebra',
@@ -65,7 +78,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(234, 88, 12, 0.45)',
     accentColor: '#fdba74',
     topics: ['Geometry', 'Algebra', 'Calculus', '3D Tools'],
-    icon: Calculator
+    icon: MultiGeoGebraIcon
   },
   {
     id: 'ophysics',
@@ -80,7 +93,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(37, 99, 235, 0.45)',
     accentColor: '#93c5fd',
     topics: ['Kinematics', 'Optics', 'Waves', 'Mechanics'],
-    icon: Compass
+    icon: MultiOphysicsIcon
   },
   {
     id: 'walter-fendt',
@@ -95,7 +108,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(5, 150, 105, 0.45)',
     accentColor: '#6ee7b7',
     topics: ['HTML5 Physics', 'Astronomy', 'Mechanics', 'Optics'],
-    icon: Globe
+    icon: MultiWalterFendtIcon
   },
   {
     id: 'falstad',
@@ -110,7 +123,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(124, 58, 237, 0.45)',
     accentColor: '#c4b5fd',
     topics: ['Circuit Simulator', 'Acoustics', 'Physics Applets'],
-    icon: Cpu
+    icon: MultiFalstadIcon
   },
   {
     id: 'molecular-workbench',
@@ -125,7 +138,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(225, 29, 72, 0.45)',
     accentColor: '#fecdd3',
     topics: ['Molecular Dynamics', 'Thermodynamics', 'Chemistry'],
-    icon: FlaskConical
+    icon: MultiMolecularIcon
   },
   {
     id: 'myphysicslab',
@@ -140,7 +153,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(8, 145, 178, 0.45)',
     accentColor: '#67e8f9',
     topics: ['2D Physics Engine', 'Pendulums', 'Springs', 'Collisions'],
-    icon: Activity
+    icon: MultiMyPhysicsLabIcon
   },
   {
     id: 'tinkercad-circuits',
@@ -155,7 +168,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(217, 119, 6, 0.45)',
     accentColor: '#fde68a',
     topics: ['Virtual Breadboard', 'Circuit Simulation', 'Arduino', 'Microcontrollers'],
-    icon: Wrench
+    icon: MultiTinkercadIcon
   },
   {
     id: 'mozaik-3d',
@@ -170,7 +183,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(14, 165, 233, 0.45)',
     accentColor: '#38bdf8',
     topics: ['3D Scenes', 'Science', 'History', 'Geography'],
-    icon: Layers,
+    icon: MultiMozaikIcon,
     buttonText: 'Open Mozaik 3D'
   },
   {
@@ -186,7 +199,7 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     glowColor: 'rgba(234, 88, 12, 0.45)',
     accentColor: '#fdba74',
     topics: ['Exam Papers', 'Worksheets', 'Paid Software'],
-    icon: FileText,
+    icon: MultiPaperMakerIcon,
     buttonText: 'Visit Paper Maker',
     isAd: true,
     adLabels: ['Ad', 'Paid Version']
