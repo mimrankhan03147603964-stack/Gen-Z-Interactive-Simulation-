@@ -12,7 +12,8 @@ import {
   Activity, 
   CheckCircle2,
   Layers,
-  Wrench
+  Wrench,
+  FileText
 } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
 
@@ -30,6 +31,9 @@ export interface ExternalSimulationResource {
   accentColor: string;
   topics: string[];
   icon: React.ComponentType<{ className?: string }>;
+  buttonText?: string;
+  isAd?: boolean;
+  adLabels?: string[];
 }
 
 export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
@@ -152,6 +156,40 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     accentColor: '#fde68a',
     topics: ['Virtual Breadboard', 'Circuit Simulation', 'Arduino', 'Microcontrollers'],
     icon: Wrench
+  },
+  {
+    id: 'mozaik-3d',
+    title: 'Mozaik 3D',
+    description: 'Interactive educational 3D scenes for science, history, geography and more.',
+    url: 'https://www.mozaweb.com',
+    category: 'Interactive 3D Education',
+    gradeTier: 'Primary • Middle • Secondary',
+    badge: 'MOZAIK 3D',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    borderColor: '#38bdf8',
+    glowColor: 'rgba(14, 165, 233, 0.45)',
+    accentColor: '#38bdf8',
+    topics: ['3D Scenes', 'Science', 'History', 'Geography'],
+    icon: Layers,
+    buttonText: 'Open Mozaik 3D'
+  },
+  {
+    id: 'paper-maker',
+    title: 'Paper Maker',
+    description: 'Create exam papers and worksheets quickly with our own Paper Maker software. This is a paid version and is not free.',
+    url: 'https://gen-z-papermaker-1.vercel.app/',
+    category: 'Assessment & Worksheets',
+    gradeTier: 'Teachers • Schools • Educators',
+    badge: 'PAPER MAKER',
+    bgGradient: 'linear-gradient(135deg, #ea580c 0%, #9a3412 100%)',
+    borderColor: '#fb923c',
+    glowColor: 'rgba(234, 88, 12, 0.45)',
+    accentColor: '#fdba74',
+    topics: ['Exam Papers', 'Worksheets', 'Paid Software'],
+    icon: FileText,
+    buttonText: 'Visit Paper Maker',
+    isAd: true,
+    adLabels: ['Ad', 'Paid Version']
   }
 ];
 
@@ -260,16 +298,34 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </a>
 
                 {/* Resource Badge */}
-                <span 
-                  className="font-mono text-xs font-bold px-3 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
-                  style={{
-                    backgroundColor: theme.badgeBg,
-                    color: theme.badgeText,
-                    borderColor: theme.badgeBorder
-                  }}
-                >
-                  {item.badge}
-                </span>
+                {item.isAd && item.adLabels && item.adLabels.length > 0 ? (
+                  <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                    {item.adLabels.map((lbl, li) => (
+                      <span 
+                        key={li}
+                        className="font-mono text-xs font-bold px-2.5 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
+                        style={{
+                          backgroundColor: theme.badgeBg,
+                          color: theme.badgeText,
+                          borderColor: theme.badgeBorder
+                        }}
+                      >
+                        {lbl}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span 
+                    className="font-mono text-xs font-bold px-3 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
+                    style={{
+                      backgroundColor: theme.badgeBg,
+                      color: theme.badgeText,
+                      borderColor: theme.badgeBorder
+                    }}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </div>
 
               {/* Dedicated Grade / Class Level Area */}
@@ -315,7 +371,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 {/* Concept Description */}
                 <div className="mt-2 flex-1">
                   <p 
-                    className="text-xs sm:text-[13px] font-normal leading-relaxed line-clamp-3"
+                    className={`text-xs sm:text-[13px] font-normal leading-relaxed ${item.isAd ? '' : 'line-clamp-3'}`}
                     style={{ color: theme.textColor }}
                   >
                     {item.description}
@@ -369,10 +425,10 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     color: theme.btnText,
                     borderColor: theme.btnBorder
                   }}
-                  title={`Launch ${item.title} in new tab`}
+                  title={`Open ${item.title} in new tab`}
                 >
                   <ExternalLink className="w-3.5 h-3.5 pointer-events-none shrink-0" style={{ color: theme.btnText }} />
-                  <span className="font-black" style={{ color: theme.btnText }}>Launch Lab</span>
+                  <span className="font-black" style={{ color: theme.btnText }}>{item.buttonText || 'Launch Lab'}</span>
                 </a>
 
                 {/* Direct External Link Icon Button */}
