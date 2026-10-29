@@ -979,12 +979,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Grade Filter Buttons */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full">
+        {/* Grade Filter Cards Grid - Strictly styled identical to Top Metric Cards from screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4.5 w-full">
           {gradeTiers.map((tier) => {
             const isSelectedTier = selectedGradeTier === tier.key;
             const count = getGradeTierCount(tier.key);
-            const style = getGradeTierStyle(tier.key, isSelectedTier);
             const TierIcon = tier.icon;
 
             return (
@@ -994,23 +993,63 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleGradeTierChange(tier.key)}
                 data-grade={tier.key}
                 data-filter={tier.key}
-                className={`inline-flex items-center gap-3 sm:gap-3.5 rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-xs sm:text-sm font-sans transition-all duration-200 cursor-pointer select-none hover:-translate-y-0.5 active:translate-y-0 shrink-0 max-w-full min-h-[56px] sm:min-h-[60px] ${style.btn}`}
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none ${
+                  isSelectedTier
+                    ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-lg ring-2 ring-[#42A5F5]/40 scale-[1.02]'
+                    : 'bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-1 hover:shadow-lg hover:border-[#CBD5E1]'
+                }`}
                 title={`${tier.label}: ${tier.desc}`}
               >
-                <div className={`shrink-0 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl p-2 transition-transform ${style.iconBox}`}>
-                  <TierIcon className="w-5 h-5 sm:w-5.5 sm:h-5.5 pointer-events-none shrink-0" />
+                <div className="flex-1 min-w-0 pr-1">
+                  {/* Dot + Tag */}
+                  <div className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${
+                    isSelectedTier ? 'text-[#F5A623]' : 'text-[#1E88E5]'
+                  }`}>
+                    <span className={`w-2.5 h-2.5 rounded-full shadow-xs ${
+                      isSelectedTier ? 'bg-[#F5A623]' : 'bg-[#1E88E5]'
+                    }`} />
+                    <span className="truncate">{tier.short || tier.label}</span>
+                  </div>
+
+                  {/* Large Prominent Counter Number */}
+                  <div className="flex flex-col mt-1">
+                    <span 
+                      className={`text-3xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight leading-none ${
+                        isSelectedTier ? 'text-white' : 'text-[#1565C0]'
+                      }`}
+                    >
+                      <AnimatedBadgeCounter 
+                        target={count} 
+                        isVisible={isGradeSectionVisible} 
+                        duration={1800} 
+                      />
+                    </span>
+                    <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
+                      isSelectedTier ? 'text-[#DBE4F7]' : 'text-[#1565C0]'
+                    }`}>
+                      {tier.label}
+                    </span>
+                  </div>
+
+                  {/* Bottom Status / Description */}
+                  <div className={`text-[11px] font-bold mt-1.5 flex items-center gap-1 truncate ${
+                    isSelectedTier ? 'text-[#DBE4F7]' : 'text-[#3B4A73]'
+                  }`}>
+                    <span className="truncate">{tier.desc}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 font-black shrink-0 ${
+                      isSelectedTier ? 'text-[#F5A623]' : 'text-[#1E88E5]'
+                    }`} />
+                  </div>
                 </div>
-                <span className="font-heading font-black tracking-tight whitespace-nowrap text-xs sm:text-sm md:text-base">{tier.label}</span>
-                {/* Enlarged Prominent Animated Counter Badge for Grades */}
-                <span
-                  className={`text-base sm:text-lg lg:text-xl font-black font-heading px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-xl shrink-0 min-w-[2.75rem] sm:min-w-[3.25rem] text-center leading-none tracking-tight ${style.badge}`}
-                >
-                  <AnimatedBadgeCounter 
-                    target={count} 
-                    isVisible={isGradeSectionVisible} 
-                    duration={1800} 
-                  />
-                </span>
+
+                {/* Right Icon Pedestal matching the screenshot */}
+                <div className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 ${
+                  isSelectedTier 
+                    ? 'bg-white/15 border-white/30 text-white' 
+                    : 'bg-white border-[#1546A8] text-[#1B2A5C]'
+                }`}>
+                  <TierIcon className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-sm pointer-events-none" />
+                </div>
               </button>
             );
           })}
@@ -1051,12 +1090,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Subject Category Buttons */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full">
+        {/* Subject Category Cards Grid - Strictly styled identical to Top Metric Cards from screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4.5 w-full">
           {subjectCategories.map((cat) => {
             const isSelected = selectedCategory === cat.key;
             const count = getCategoryCount(cat.key);
-            const style = getSubjectStyle(cat.key, isSelected);
 
             return (
               <button
@@ -1065,23 +1103,69 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleCategoryChange(cat.key)}
                 data-subject={cat.key}
                 data-filter={cat.key}
-                className={`inline-flex items-center gap-3 sm:gap-3.5 rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-xs sm:text-sm font-sans transition-all duration-200 cursor-pointer select-none hover:-translate-y-0.5 active:translate-y-0 shrink-0 max-w-full min-h-[56px] sm:min-h-[60px] ${style.btn}`}
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none ${
+                  isSelected
+                    ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-lg ring-2 ring-[#42A5F5]/40 scale-[1.02]'
+                    : 'bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-1 hover:shadow-lg hover:border-[#CBD5E1]'
+                }`}
                 title={`Filter simulations by ${cat.fullTitle} (${count} available)`}
               >
-                <div className={`shrink-0 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl p-2 transition-transform ${style.iconBox}`}>
-                  {cat.renderIcon({ isSelected, className: 'w-5 h-5 sm:w-5.5 sm:h-5.5 pointer-events-none' })}
+                <div className="flex-1 min-w-0 pr-1">
+                  {/* Dot + Tag */}
+                  <div className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${
+                    isSelected ? 'text-[#F5A623]' : 'text-[#1E88E5]'
+                  }`}>
+                    <span 
+                      className="w-2.5 h-2.5 rounded-full shadow-xs shrink-0" 
+                      style={{ backgroundColor: isSelected ? '#F5A623' : (cat.iconBorder || '#1E88E5') }}
+                    />
+                    <span className="truncate">{cat.shortLabel}</span>
+                  </div>
+
+                  {/* Large Prominent Counter Number */}
+                  <div className="flex flex-col mt-1">
+                    <span 
+                      className={`text-3xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight leading-none ${
+                        isSelected ? 'text-white' : 'text-[#1565C0]'
+                      }`}
+                    >
+                      <AnimatedBadgeCounter 
+                        target={count} 
+                        isVisible={isSubjectSectionVisible} 
+                        duration={1800} 
+                      />
+                    </span>
+                    <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
+                      isSelected ? 'text-[#DBE4F7]' : 'text-[#1565C0]'
+                    }`}>
+                      {cat.shortLabel}
+                    </span>
+                  </div>
+
+                  {/* Bottom Status */}
+                  <div className={`text-[11px] font-bold mt-1.5 flex items-center gap-1 truncate ${
+                    isSelected ? 'text-[#DBE4F7]' : 'text-[#3B4A73]'
+                  }`}>
+                    <span className="truncate">{count} Active Labs</span>
+                    <ArrowRight className={`w-3.5 h-3.5 font-black shrink-0 ${
+                      isSelected ? 'text-[#F5A623]' : 'text-[#1E88E5]'
+                    }`} />
+                  </div>
                 </div>
-                <span className="font-heading font-black tracking-tight whitespace-nowrap text-xs sm:text-sm md:text-base">{cat.shortLabel}</span>
-                {/* Enlarged Prominent Animated Counter Badge for Subjects */}
-                <span 
-                  className={`text-base sm:text-lg lg:text-xl font-black font-heading px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-xl shrink-0 min-w-[2.75rem] sm:min-w-[3.25rem] text-center leading-none tracking-tight ${style.badge}`}
+
+                {/* Right Icon Pedestal matching the screenshot */}
+                <div 
+                  className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 ${
+                    isSelected 
+                      ? 'bg-white/15 border-white/30 text-white' 
+                      : 'bg-white text-[#1B2A5C]'
+                  }`}
+                  style={{
+                    borderColor: isSelected ? undefined : (cat.iconBorder || '#1546A8')
+                  }}
                 >
-                  <AnimatedBadgeCounter 
-                    target={count} 
-                    isVisible={isSubjectSectionVisible} 
-                    duration={1800} 
-                  />
-                </span>
+                  {cat.renderIcon({ isSelected, className: 'w-7 h-7 sm:w-8 sm:h-8 drop-shadow-sm pointer-events-none' })}
+                </div>
               </button>
             );
           })}
