@@ -226,19 +226,19 @@ const renderGradePill = (grade: string) => {
   const parts = grade.split(/[•·]/).map(p => p.trim()).filter(Boolean);
   if (parts.length >= 2) {
     return (
-      <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0]">
-        <span className="px-3.5 py-1 bg-[#FEE2E2] text-[#991B1B]">
+      <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0] max-w-full">
+        <span className="px-3 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
           {parts[0]}
         </span>
-        <span className="px-3.5 py-1 bg-[#E0F2FE] text-[#0369A1]">
+        <span className="px-3 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
           {parts.slice(1).join(' • ')}
         </span>
       </div>
     );
   }
   return (
-    <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE]">
-      <span className="px-3.5 py-1 bg-[#EFF6FF] text-[#1E40AF]">
+    <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE] max-w-full">
+      <span className="px-3 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
         {grade}
       </span>
     </div>
@@ -325,16 +325,16 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               className="h-full flex flex-col"
             >
               <div
-                className="rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1.5 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
+                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
               >
                 {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
-                <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
+                <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
                   {/* Visual Emblem Pedestal */}
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
+                    className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
                     title={`Open ${item.title} in new tab`}
                   >
                     <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
@@ -382,7 +382,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     </div>
                   ) : (
                     <span 
-                      className="font-mono text-xs font-black px-4 py-1.5 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
+                      className="font-mono text-xs font-black px-3.5 py-1 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
                     >
                       {item.badge}
                     </span>
@@ -395,9 +395,9 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </div>
 
                 {/* Content: Title, Subject, Description, Topics */}
-                <div className="relative z-10 flex-1 flex flex-col">
-                  {/* Title */}
-                  <h4 className="text-xl sm:text-2xl font-black tracking-tight font-heading leading-snug text-[#0F172A] group-hover:text-[#0284C7] transition-colors">
+                <div className="relative z-10 flex flex-col flex-1">
+                  {/* Title - Full Topic Name ALWAYS Displayed Completely */}
+                  <h4 className="text-base sm:text-lg font-black tracking-tight font-heading leading-snug text-[#0F172A] group-hover:text-[#0284C7] transition-colors break-words">
                     <a
                       href={item.url}
                       target="_blank"
@@ -415,19 +415,19 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{item.category}</span>
                   </div>
 
-                  {/* Concept Description */}
-                  <div className="mt-2.5 flex-1">
-                    <p className="text-xs sm:text-[13px] font-normal leading-relaxed text-[#334155] line-clamp-3 min-h-[3.75rem]">
+                  {/* Concise Description - Compact without large empty gaps */}
+                  {item.description && (
+                    <p className="text-xs font-normal leading-relaxed text-[#475569] line-clamp-2 mt-2" title={item.description}>
                       {item.description}
                     </p>
-                  </div>
+                  )}
 
                   {/* Topic Tags (Pastel pills from screenshot) */}
-                  <div className="flex flex-wrap gap-1.5 mt-3.5">
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
                     {item.topics.slice(0, 3).map((topic, i) => (
                       <span
                         key={i}
-                        className={`text-xs font-bold px-3 py-1 rounded-full border shadow-2xs ${getPastelTagStyle(i)}`}
+                        className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs whitespace-nowrap ${getPastelTagStyle(i)}`}
                         title={topic}
                       >
                         {topic}
@@ -435,7 +435,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     ))}
                     {item.topics.length > 3 && (
                       <span 
-                        className="text-xs font-bold px-3 py-1 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]"
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] whitespace-nowrap"
                       >
                         +{item.topics.length - 3}
                       </span>
@@ -444,12 +444,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </div>
 
                 {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
-                <div className="relative z-10 pt-5 mt-auto border-t border-slate-200/80 flex items-center justify-between gap-3">
+                <div className="relative z-10 pt-4 mt-3.5 border-t border-slate-200/80 flex items-center justify-between gap-2.5">
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
+                    className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
                     style={{
                       background: 'linear-gradient(135deg, #00897B 0%, #0284C7 100%)',
                       boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
@@ -457,14 +457,14 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     title={`Open ${item.title} in new tab`}
                   >
                     <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-                    <span className="font-black text-white">{item.buttonText || 'Launch Lab'}</span>
+                    <span className="font-black text-white truncate">{item.buttonText || 'Launch Lab'}</span>
                   </a>
 
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
                     title={`Explore ${item.title} Now`}
                   >
                     <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />

@@ -428,55 +428,37 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return activeSimulations.filter(s => matchesGradeTier(s, tierKey)).length;
   };
 
-  const cleanCardTitle = (title: string, category?: string): string => {
-    let clean = title
+  const cleanCardTitle = (title: string): string => {
+    return title
       .replace(/\.html$/i, '')
       .replace(/_/g, ' ')
-      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+      .replace(/\s{2,}/g, ' ')
       .trim();
-    if (category !== 'Urdu & Linguistics') {
-      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
-    }
-    return clean;
   };
 
-  const cleanCardTopic = (topic: string, category?: string): string => {
-    let clean = topic
+  const cleanCardTopic = (topic: string): string => {
+    return topic
       .replace(/\.html$/i, '')
       .replace(/_/g, ' ')
-      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+      .replace(/\s{2,}/g, ' ')
       .trim();
-    if (category !== 'Urdu & Linguistics') {
-      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
-    }
-    return clean;
   };
 
   const cleanGradeBadge = (grade: string): string => {
-    return grade
-      .replace(/Cambridge\s+Scholar\s*/gi, '')
-      .trim();
+    return grade.trim();
   };
 
-  const cleanCardSubject = (subject: string, category?: string): string => {
-    let clean = subject
-      .replace(/Cambridge\s+Scholar\s*[-–—]?\s*/gi, '')
+  const cleanCardSubject = (subject: string): string => {
+    return subject
       .replace(/\|\s*GEN\s+Z\s+(?:EDTECH\s+)?INTERACTIVE(?:\s+SIMULATIONS?)?/gi, '')
+      .replace(/\s{2,}/g, ' ')
       .trim();
-    if (category !== 'Urdu & Linguistics') {
-      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
-    }
-    return clean;
   };
 
-  const cleanCardDescription = (desc: string, category?: string): string => {
-    let clean = desc
-      .replace(/Cambridge\s+Scholar\s*/gi, '')
+  const cleanCardDescription = (desc: string): string => {
+    return desc
+      .replace(/\s{2,}/g, ' ')
       .trim();
-    if (category !== 'Urdu & Linguistics') {
-      clean = clean.replace(/[\u0600-\u06FF]+/g, '').replace(/\(\s*\)/g, '').trim();
-    }
-    return clean;
   };
 
   const matchesSearch = (sim: SimulationItem) => {
@@ -537,19 +519,19 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
     if (parts.length >= 2) {
       return (
-        <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0]">
-          <span className="px-3.5 py-1 bg-[#FEE2E2] text-[#991B1B]">
+        <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0] max-w-full">
+          <span className="px-3 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
             {parts[0]}
           </span>
-          <span className="px-3.5 py-1 bg-[#E0F2FE] text-[#0369A1]">
+          <span className="px-3 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
             {parts.slice(1).join(' • ')}
           </span>
         </div>
       );
     }
     return (
-      <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE]">
-        <span className="px-3.5 py-1 bg-[#EFF6FF] text-[#1E40AF]">
+      <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE] max-w-full">
+        <span className="px-3 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
           {grade}
         </span>
       </div>
@@ -560,10 +542,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const renderCard = (sim: SimulationItem, _cardIndex: number) => {
     const isActive = activeSim ? activeSim.id === sim.id : false;
     const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
-    const displayTitle = cleanCardTitle(sim.title, sim.category);
+    const displayTitle = cleanCardTitle(sim.title);
     const displayGrade = cleanGradeBadge(sim.gradeLevel);
-    const displaySubject = cleanCardSubject(sim.subject, sim.category);
-    const displayDesc = cleanCardDescription(sim.description, sim.category);
+    const displaySubject = cleanCardSubject(sim.subject);
+    const displayDesc = cleanCardDescription(sim.description);
 
     const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
 
@@ -574,12 +556,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           handleCardClick(sim);
         }}
-        className={`rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1.5 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1 ${
+        className={`rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full ${
           isActive ? 'ring-3 ring-[#0284C7] shadow-xl scale-[1.01]' : ''
         }`}
       >
         {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
-        <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
+        <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
           {/* Realistic Visual Emblem Pedestal */}
           <a
             href={getSimulationStandaloneUrl(sim)}
@@ -588,7 +570,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
+            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
             title={`Open ${displayTitle} in new tab`}
           >
             <TopicRealisticIcon 
@@ -600,7 +582,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
           {/* Lab / Concept Badge (Deep Indigo Pill from Screenshot) */}
           <span 
-            className="font-mono text-xs font-black px-4 py-1.5 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
+            className="font-mono text-xs font-black px-3.5 py-1 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
           >
             {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
           </span>
@@ -612,12 +594,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Content: Title, Subject, Description, Topics */}
-        <div className="relative z-10 flex-1 flex flex-col">
-          {/* Simulation Topic Title */}
+        <div className="relative z-10 flex flex-col flex-1">
+          {/* Simulation Topic Title - Full Topic Name ALWAYS Displayed Completely */}
           <h4 
-            className={`text-xl sm:text-2xl font-black tracking-tight ${
-              isUrdu ? 'font-urdu leading-[2.2]' : 'font-heading leading-snug line-clamp-2'
-            } text-[#0F172A] group-hover:text-[#0284C7] transition-colors`}
+            className={`text-base sm:text-lg font-black tracking-tight ${
+              isUrdu ? 'font-urdu leading-[1.8]' : 'font-heading leading-snug'
+            } text-[#0F172A] group-hover:text-[#0284C7] transition-colors break-words`}
             dir={isUrdu ? 'rtl' : 'ltr'}
           >
             <a
@@ -640,50 +622,29 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{displaySubject}</span>
           </div>
 
-          {/* Concept Description */}
-          <div className="mt-2.5 flex-1">
+          {/* Concise Description - Compact without large empty gaps */}
+          {displayDesc && (
             <p 
-              className={`text-xs sm:text-[13px] font-normal leading-relaxed text-[#334155] ${
-                expandedDescIds[sim.id] ? '' : 'line-clamp-3 min-h-[3.75rem]'
-              } ${isUrdu ? 'font-urdu leading-[2.2]' : ''}`}
+              className={`text-xs font-normal leading-relaxed text-[#475569] line-clamp-2 mt-2 ${
+                isUrdu ? 'font-urdu leading-[1.8]' : ''
+              }`}
               dir={isUrdu ? 'rtl' : 'ltr'}
+              title={displayDesc}
             >
               {displayDesc}
             </p>
-            {displayDesc && displayDesc.length > 80 && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setExpandedDescIds(prev => ({ ...prev, [sim.id]: !prev[sim.id] }));
-                }}
-                className="mt-1 text-[11px] font-bold text-[#0284C7] hover:underline cursor-pointer inline-flex items-center gap-1 transition-colors"
-              >
-                {expandedDescIds[sim.id] ? (
-                  <>
-                    <ChevronUp className="w-3 h-3 pointer-events-none" />
-                    <span>Hide Details</span>
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="w-3 h-3 pointer-events-none" />
-                    <span>Read Details</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
+          )}
 
           {/* Topic Tags (Pastel pills from screenshot) */}
-          <div className="flex flex-wrap gap-1.5 mt-3.5">
+          <div className="flex flex-wrap gap-1.5 mt-2.5">
             {sim.topics.slice(0, 3).map((topic, i) => {
-              const cleanT = cleanCardTopic(topic, sim.category);
+              const cleanT = cleanCardTopic(topic);
               const isTopicUrdu = /[\u0600-\u06FF]/.test(cleanT);
               return (
                 <span
                   key={i}
-                  className={`text-xs font-bold px-3 py-1 rounded-full border shadow-2xs ${getPastelTagStyle(i)} ${
-                    isTopicUrdu ? 'font-urdu leading-[2]' : ''
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs whitespace-nowrap ${getPastelTagStyle(i)} ${
+                    isTopicUrdu ? 'font-urdu leading-[1.8]' : ''
                   }`}
                   dir={isTopicUrdu ? 'rtl' : 'ltr'}
                   title={cleanT}
@@ -694,7 +655,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             })}
             {sim.topics.length > 3 && (
               <span 
-                className="text-xs font-bold px-3 py-1 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]"
+                className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] whitespace-nowrap"
               >
                 +{sim.topics.length - 3}
               </span>
@@ -703,7 +664,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
-        <div className="relative z-10 pt-5 mt-auto border-t border-slate-200/80 flex items-center justify-between gap-3">
+        <div className="relative z-10 pt-4 mt-3.5 border-t border-slate-200/80 flex items-center justify-between gap-2.5">
           {/* Main Action Button */}
           <a
             href={getSimulationStandaloneUrl(sim)}
@@ -712,7 +673,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
+            className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
             style={{
               background: 'linear-gradient(135deg, #00897B 0%, #0284C7 100%)',
               boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
@@ -720,7 +681,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
             <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-            <span className="font-black text-white">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+            <span className="font-black text-white truncate">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
           </a>
 
           {/* Direct Fullscreen Modal Button */}
@@ -730,7 +691,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               e.stopPropagation();
               onLaunchFullscreenModal(sim);
             }}
-            className="w-12 h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
             title="Launch in Fullscreen View"
           >
             <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
