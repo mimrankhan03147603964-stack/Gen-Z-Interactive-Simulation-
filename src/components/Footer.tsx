@@ -161,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
               href="https://wa.me/923147603964" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border"
+              className="fx-pulse-whatsapp inline-flex items-center gap-1.5 px-3.5 py-1 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border"
               style={{
                 backgroundColor: '#2E9E5B',
                 color: '#FFFFFF',
@@ -255,7 +255,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
               href="https://wa.me/923147603964?text=Hello%20Muhammad%20Imran%20Khan,%20I%20would%20like%20to%20request%20a%20custom%20interactive%20simulation%20for%20our%20curriculum:"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-102 active:scale-95 cursor-pointer border"
+              className="fx-pulse-gold inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-102 active:scale-95 cursor-pointer border"
               style={{
                 backgroundColor: '#F5A623',
                 color: '#1B2A5C',
