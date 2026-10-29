@@ -99,7 +99,7 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
       >
-        <div className="min-w-0">
+        <div className="flex-1 min-w-0 pr-1">
           <div 
             className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1E88E5]"
           >
@@ -109,28 +109,28 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
             <span>TOTAL SIMULATIONS</span>
           </div>
           
-          {/* Large Prominent Counter Number (3rem - 4rem / text-5xl to text-6xl) */}
-          <div className="flex items-baseline gap-2 mt-1.5">
+          {/* Large Prominent Counter Number */}
+          <div className="flex flex-col mt-1">
             <span 
               className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1565C0] leading-none"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
             >
               {countSimulations}
             </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1565C0]">
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1565C0] mt-1 whitespace-nowrap">
               STEM Labs
             </span>
           </div>
 
           <div 
-            className="text-[11px] font-bold mt-2 flex items-center gap-1 text-[#3B4A73]"
+            className="text-[11px] font-bold mt-1.5 flex items-center gap-1 text-[#3B4A73]"
           >
             <span>All {totalSimulations} active &amp; ready</span>
             <ArrowRight className="w-3.5 h-3.5 font-black text-[#1E88E5]" />
           </div>
         </div>
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1546A8] bg-white p-2.5"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1546A8] bg-white p-2.5 relative z-10"
         >
           <MultiStemAllIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
         </div>
@@ -140,7 +140,7 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
       >
-        <div className="min-w-0">
+        <div className="flex-1 min-w-0 pr-1">
           <div 
             className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1546A8]"
           >
@@ -151,26 +151,26 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
 
           {/* Large Prominent Counter Number */}
-          <div className="flex items-baseline gap-2 mt-1.5">
+          <div className="flex flex-col mt-1">
             <span 
               className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1546A8] leading-none"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
             >
               {countDisciplines}
             </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1546A8]">
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1546A8] mt-1 whitespace-nowrap">
               Subjects
             </span>
           </div>
 
           <div 
-            className="text-[11px] font-bold mt-2 truncate max-w-[170px] text-[#3B4A73]"
+            className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
           >
             {activeSim ? activeSim.subject : 'Curriculum Aligned'}
           </div>
         </div>
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#1B2A5C] bg-white p-2.5"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1B2A5C] bg-white p-2.5 relative z-10"
         >
           <MultiEnglishIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
         </div>
@@ -180,7 +180,7 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
       >
-        <div className="min-w-0">
+        <div className="flex-1 min-w-0 pr-1">
           <div 
             className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E53935]"
           >
@@ -190,28 +190,30 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
             <span>INTERACTIVE STANDARD</span>
           </div>
 
-          {/* Large Prominent Counter Number */}
-          <div className="flex items-baseline gap-1 mt-1.5">
-            <span 
-              className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E53935] leading-none"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
-            >
-              {countCoverage}
-            </span>
-            <span className="text-2xl sm:text-3xl font-black text-[#E53935] leading-none">%</span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E53935] ml-1">
-              Active
+          {/* Large Prominent Counter Number - Stacked to guarantee ZERO overlap with icon */}
+          <div className="flex flex-col mt-1">
+            <div className="flex items-baseline leading-none">
+              <span 
+                className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E53935] leading-none"
+                style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+              >
+                {countCoverage}
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-[#E53935] leading-none ml-0.5">%</span>
+            </div>
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E53935] mt-1 whitespace-nowrap">
+              ACTIVE
             </span>
           </div>
 
           <div 
-            className="text-[11px] font-bold mt-2 truncate max-w-[170px] text-[#3B4A73]"
+            className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
           >
             {activeSim ? activeSim.gradeLevel : '100% Free & Hazard-Free'}
           </div>
         </div>
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#B71C1C] bg-white p-2.5"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#B71C1C] bg-white p-2.5 relative z-10"
         >
           <MultiPhysicsIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
         </div>
@@ -221,7 +223,7 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       <div 
         className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
       >
-        <div className="min-w-0">
+        <div className="flex-1 min-w-0 pr-1">
           <div 
             className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E58E0A]"
           >
@@ -232,27 +234,27 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
           </div>
 
           {/* Large Prominent Counter Number */}
-          <div className="flex items-baseline gap-2 mt-1.5">
+          <div className="flex flex-col mt-1">
             <span 
               className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E58E0A] leading-none"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
             >
               {countFps}
             </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E58E0A] flex items-center gap-1">
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E58E0A] mt-1 flex items-center gap-1 whitespace-nowrap">
               <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#F5A623]" />
               FPS / 4K
             </span>
           </div>
 
           <div 
-            className="text-[11px] font-bold mt-2 text-[#3B4A73]"
+            className="text-[11px] font-bold mt-1.5 text-[#3B4A73]"
           >
             Live HTML5 / Canvas 60 FPS
           </div>
         </div>
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform border border-[#E58E0A] bg-white p-2.5"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#E58E0A] bg-white p-2.5 relative z-10"
         >
           <MultiPrimaryIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
         </div>

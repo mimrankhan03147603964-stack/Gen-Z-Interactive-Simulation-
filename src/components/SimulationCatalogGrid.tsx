@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SimulationItem } from '../types';
 import { getSimTheme, getDisciplineColor } from '../data/simTheme';
 import { 
@@ -68,6 +68,43 @@ interface SimulationCatalogGridProps {
   onOpenCatalog?: (category?: string, grade?: string) => void;
   onBackToHome?: () => void;
 }
+
+// Reusable smooth count-up animation for grade & subject badges
+const AnimatedBadgeCounter: React.FC<{
+  target: number;
+  isVisible: boolean;
+  duration?: number;
+}> = ({ target, isVisible, duration = 1800 }) => {
+  const [displayValue, setDisplayValue] = useState<number>(0);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let startTime: number | null = null;
+    let animationFrameId: number;
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Smooth cubic ease-out curve matching QuickStats
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setDisplayValue(Math.round(target * easeOut));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(step);
+      } else {
+        setDisplayValue(target);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [target, isVisible, duration]);
+
+  return <>{isVisible ? displayValue : 0}</>;
+};
 
 // Subject configuration matching "All Simulations" default + all 8 STEM disciplines
 interface SubjectCategoryConfig {
@@ -215,6 +252,49 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+
+  // Intersection Observer triggers for smooth count-up on scroll
+  const gradeSectionRef = useRef<HTMLDivElement>(null);
+  const [isGradeSectionVisible, setIsGradeSectionVisible] = useState<boolean>(false);
+
+  const subjectSectionRef = useRef<HTMLDivElement>(null);
+  const [isSubjectSectionVisible, setIsSubjectSectionVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    const el = gradeSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsGradeSectionVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = subjectSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsSubjectSectionVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const gradeTiers = [
     { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12', icon: MultiAllGradesIcon },
@@ -679,8 +759,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md font-black scale-[1.02]'
         : 'bg-[#FFFFFF] hover:bg-[#DBE7FB] text-[#1B2A5C] hover:text-[#1B2A5C] border border-[#1B2A5C] shadow-sm font-bold',
       badge: isSelected
-        ? 'bg-[#1546A8] text-white font-mono font-bold border border-[#42A5F5]'
-        : 'bg-[#EEF3F9] text-[#1B2A5C] font-mono font-bold border border-[#C9D3E6]',
+        ? 'bg-[#1546A8] text-white border border-[#42A5F5] shadow-xs'
+        : 'bg-[#EEF3F9] text-[#1546A8] border border-[#C9D3E6] shadow-2xs',
       iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#1B2A5C]'
     };
   };
@@ -691,8 +771,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md font-black scale-[1.02]'
         : 'bg-[#FFFFFF] hover:bg-[#DBE7FB] text-[#1B2A5C] hover:text-[#1B2A5C] border border-[#1B2A5C] shadow-sm font-bold',
       badge: isSelected
-        ? 'bg-[#1546A8] text-white font-mono font-bold border border-[#42A5F5]'
-        : 'bg-[#EEF3F9] text-[#1B2A5C] font-mono font-bold border border-[#C9D3E6]',
+        ? 'bg-[#1546A8] text-white border border-[#42A5F5] shadow-xs'
+        : 'bg-[#EEF3F9] text-[#1546A8] border border-[#C9D3E6] shadow-2xs',
       iconBox: isSelected ? 'bg-white/20 text-white' : 'bg-transparent text-[#1B2A5C]'
     };
   };
@@ -739,6 +819,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
       <div 
+        ref={gradeSectionRef}
         className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
         style={{
           backgroundColor: '#FFFFFF',
@@ -792,10 +873,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   <TierIcon className="w-4 h-4 pointer-events-none shrink-0" />
                 </div>
                 <span className="font-heading font-bold tracking-normal whitespace-nowrap">{tier.label}</span>
+                {/* Enlarged Prominent Animated Counter Badge for Grades */}
                 <span
-                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full shrink-0 ${style.badge}`}
+                  className={`text-sm sm:text-base font-black font-heading px-3 py-1 rounded-xl shrink-0 min-w-[2.25rem] text-center leading-none ${style.badge}`}
                 >
-                  {count}
+                  <AnimatedBadgeCounter 
+                    target={count} 
+                    isVisible={isGradeSectionVisible} 
+                    duration={1800} 
+                  />
                 </span>
               </button>
             );
@@ -805,6 +891,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* Subject Filter Section: Category Buttons */}
       <div 
+        ref={subjectSectionRef}
         className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
         style={{
           backgroundColor: '#FFFFFF',
@@ -857,10 +944,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   {cat.renderIcon({ isSelected, className: 'w-4 h-4 pointer-events-none' })}
                 </div>
                 <span className="font-heading font-bold tracking-normal whitespace-nowrap">{cat.shortLabel}</span>
+                {/* Enlarged Prominent Animated Counter Badge for Subjects */}
                 <span 
-                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full shrink-0 ${style.badge}`}
+                  className={`text-sm sm:text-base font-black font-heading px-3 py-1 rounded-xl shrink-0 min-w-[2.25rem] text-center leading-none ${style.badge}`}
                 >
-                  {count}
+                  <AnimatedBadgeCounter 
+                    target={count} 
+                    isVisible={isSubjectSectionVisible} 
+                    duration={1800} 
+                  />
                 </span>
               </button>
             );
@@ -899,8 +991,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             title="Open Complete STEM Simulations Catalog"
           >
             <BookOpen className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C]">
-              OPEN ALL {activeSimulations.length} LABS CATALOG
+            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C] flex items-center gap-1.5">
+              <span>OPEN ALL</span>
+              <span className="text-base sm:text-lg font-black font-heading px-2.5 py-0.5 rounded-lg bg-[#1B2A5C] text-[#F5A623] border border-[#1546A8] shadow-xs">
+                <AnimatedBadgeCounter 
+                  target={activeSimulations.length} 
+                  isVisible={isSubjectSectionVisible} 
+                  duration={1800} 
+                />
+              </span>
+              <span>LABS CATALOG</span>
             </span>
             <ArrowRight className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
           </button>
