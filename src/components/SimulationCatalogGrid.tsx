@@ -513,9 +513,51 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return true;
   });
 
-  // Render a simulation card with sequential 7-color palette from the user swatch image
-  const renderCard = (sim: SimulationItem, cardIndex: number) => {
-    const theme = getThemeForIndex(cardIndex);
+  // Helper functions matching uploaded card screenshot aesthetic
+  const getPastelTagStyle = (index: number) => {
+    const styles = [
+      'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]',
+      'bg-[#FFEDD5] text-[#9A3412] border-[#FED7AA]',
+      'bg-[#F3E8FF] text-[#6B21A8] border-[#E9D5FF]',
+      'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
+    ];
+    return styles[index % styles.length];
+  };
+
+  const renderGradePill = (grade: string) => {
+    let parts: string[] = [];
+    if (grade.includes('•') || grade.includes('·')) {
+      parts = grade.split(/[•·]/).map(p => p.trim()).filter(Boolean);
+    } else if (grade.includes('(') && grade.includes(')')) {
+      const m = grade.match(/^(.*?)\s*\((.*?)\)$/);
+      if (m && m[1] && m[2]) {
+        parts = [m[1].trim(), m[2].trim()];
+      }
+    }
+
+    if (parts.length >= 2) {
+      return (
+        <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0]">
+          <span className="px-3.5 py-1 bg-[#FEE2E2] text-[#991B1B]">
+            {parts[0]}
+          </span>
+          <span className="px-3.5 py-1 bg-[#E0F2FE] text-[#0369A1]">
+            {parts.slice(1).join(' • ')}
+          </span>
+        </div>
+      );
+    }
+    return (
+      <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE]">
+        <span className="px-3.5 py-1 bg-[#EFF6FF] text-[#1E40AF]">
+          {grade}
+        </span>
+      </div>
+    );
+  };
+
+  // Render a simulation card matching the screenshot layout & high-definition button aesthetics
+  const renderCard = (sim: SimulationItem, _cardIndex: number) => {
     const isActive = activeSim ? activeSim.id === sim.id : false;
     const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
     const displayTitle = cleanCardTitle(sim.title, sim.category);
@@ -532,20 +574,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           handleCardClick(sim);
         }}
-        className={`rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group cursor-pointer select-none transition-all duration-200 border ${
-          isActive 
-            ? 'ring-3 ring-[#2563EB] shadow-xl scale-[1.01]' 
-            : 'hover:-translate-y-1 hover:shadow-2xl'
+        className={`rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1.5 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1 ${
+          isActive ? 'ring-3 ring-[#0284C7] shadow-xl scale-[1.01]' : ''
         }`}
-        style={{
-          backgroundColor: theme.bg,
-          borderColor: theme.borderColor,
-          boxShadow: theme.boxShadow
-        }}
       >
         {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
         <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
-          {/* Realistic Visual Emblem Pedestal (Icons 100% Untouched) */}
+          {/* Realistic Visual Emblem Pedestal */}
           <a
             href={getSimulationStandaloneUrl(sim)}
             target="_blank"
@@ -553,56 +588,36 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border shadow-sm"
-            style={{
-              backgroundColor: theme.pedestalBg,
-              borderColor: theme.pedestalBorder
-            }}
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
             title={`Open ${displayTitle} in new tab`}
           >
             <TopicRealisticIcon 
               indexNumber={sim.indexNumber} 
               simId={sim.id} 
-              className="w-9 h-9 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
+              className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
             />
           </a>
 
-          {/* Lab / Concept Badge */}
+          {/* Lab / Concept Badge (Deep Indigo Pill from Screenshot) */}
           <span 
-            className="font-mono text-xs font-black px-3 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
-            style={{
-              backgroundColor: theme.badgeBg,
-              color: theme.badgeText,
-              borderColor: theme.badgeBorder
-            }}
+            className="font-mono text-xs font-black px-4 py-1.5 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
           >
             {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
           </span>
         </div>
 
-        {/* Dedicated Grade / Class Level Area */}
-        <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
-          <span 
-            className="text-[11px] font-bold px-3 py-1 rounded-full font-mono border leading-normal inline-block max-w-full break-words text-left shadow-2xs"
-            style={{
-              backgroundColor: theme.tagBg,
-              color: theme.tagText,
-              borderColor: theme.tagBorder
-            }}
-            title={displayGrade}
-          >
-            {displayGrade}
-          </span>
+        {/* Dedicated Grade / Class Level Area (Dual color pill matching screenshot) */}
+        <div className="relative z-10 flex items-center">
+          {renderGradePill(displayGrade)}
         </div>
 
         {/* Content: Title, Subject, Description, Topics */}
         <div className="relative z-10 flex-1 flex flex-col">
           {/* Simulation Topic Title */}
           <h4 
-            className={`text-base sm:text-lg font-bold tracking-tight ${
+            className={`text-xl sm:text-2xl font-black tracking-tight ${
               isUrdu ? 'font-urdu leading-[2.2]' : 'font-heading leading-snug line-clamp-2'
-            }`}
-            style={{ color: theme.titleColor }}
+            } text-[#0F172A] group-hover:text-[#0284C7] transition-colors`}
             dir={isUrdu ? 'rtl' : 'ltr'}
           >
             <a
@@ -612,8 +627,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="hover:underline transition-colors"
-              style={{ color: theme.titleColor }}
+              className="hover:underline transition-colors text-[#0F172A] group-hover:text-[#0284C7]"
               title={`Open ${displayTitle} in new tab`}
             >
               {displayTitle}
@@ -621,24 +635,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </h4>
 
           {/* Subject & Sub-discipline */}
-          <p 
-            className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5"
-            style={{ color: theme.accentColor }}
-          >
-            <span 
-              className="w-2 h-2 rounded-full inline-block shrink-0" 
-              style={{ backgroundColor: theme.accentColor }}
-            />
-            <span className="font-bold">{displaySubject}</span>
-          </p>
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] shrink-0" />
+            <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{displaySubject}</span>
+          </div>
 
           {/* Concept Description */}
-          <div className="mt-2">
+          <div className="mt-2.5 flex-1">
             <p 
-              className={`text-xs sm:text-[13px] font-normal leading-relaxed ${
-                expandedDescIds[sim.id] ? '' : 'line-clamp-2'
+              className={`text-xs sm:text-[13px] font-normal leading-relaxed text-[#334155] ${
+                expandedDescIds[sim.id] ? '' : 'line-clamp-3 min-h-[3.75rem]'
               } ${isUrdu ? 'font-urdu leading-[2.2]' : ''}`}
-              style={{ color: theme.textColor }}
               dir={isUrdu ? 'rtl' : 'ltr'}
             >
               {displayDesc}
@@ -650,8 +657,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   e.stopPropagation();
                   setExpandedDescIds(prev => ({ ...prev, [sim.id]: !prev[sim.id] }));
                 }}
-                className="mt-1 text-[11px] font-bold hover:underline cursor-pointer inline-flex items-center gap-1 transition-colors"
-                style={{ color: theme.accentColor }}
+                className="mt-1 text-[11px] font-bold text-[#0284C7] hover:underline cursor-pointer inline-flex items-center gap-1 transition-colors"
               >
                 {expandedDescIds[sim.id] ? (
                   <>
@@ -668,22 +674,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             )}
           </div>
 
-          {/* Topic Tags */}
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {sim.topics.slice(0, 2).map((topic, i) => {
+          {/* Topic Tags (Pastel pills from screenshot) */}
+          <div className="flex flex-wrap gap-1.5 mt-3.5">
+            {sim.topics.slice(0, 3).map((topic, i) => {
               const cleanT = cleanCardTopic(topic, sim.category);
               const isTopicUrdu = /[\u0600-\u06FF]/.test(cleanT);
               return (
                 <span
                   key={i}
-                  className={`text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] border font-mono ${
+                  className={`text-xs font-bold px-3 py-1 rounded-full border shadow-2xs ${getPastelTagStyle(i)} ${
                     isTopicUrdu ? 'font-urdu leading-[2]' : ''
                   }`}
-                  style={{
-                    backgroundColor: theme.tagBg,
-                    color: theme.tagText,
-                    borderColor: theme.tagBorder
-                  }}
                   dir={isTopicUrdu ? 'rtl' : 'ltr'}
                   title={cleanT}
                 >
@@ -691,26 +692,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 </span>
               );
             })}
-            {sim.topics.length > 2 && (
+            {sim.topics.length > 3 && (
               <span 
-                className="text-[11px] font-medium px-2 py-0.5 rounded-md border font-mono"
-                style={{
-                  backgroundColor: theme.tagBg,
-                  color: theme.tagText,
-                  borderColor: theme.tagBorder
-                }}
+                className="text-xs font-bold px-3 py-1 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]"
               >
-                +{sim.topics.length - 2}
+                +{sim.topics.length - 3}
               </span>
             )}
           </div>
         </div>
 
-        {/* Card Action Bar */}
-        <div 
-          className="relative z-10 pt-4 mt-auto border-t flex items-center justify-between gap-2"
-          style={{ borderColor: theme.borderColor }}
-        >
+        {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
+        <div className="relative z-10 pt-5 mt-auto border-t border-slate-200/80 flex items-center justify-between gap-3">
           {/* Main Action Button */}
           <a
             href={getSimulationStandaloneUrl(sim)}
@@ -719,16 +712,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-md border transition-all transform active:scale-95"
+            className="flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
             style={{
-              backgroundColor: theme.btnBg,
-              color: theme.btnText,
-              borderColor: theme.btnBorder
+              background: 'linear-gradient(135deg, #00897B 0%, #0284C7 100%)',
+              boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
             }}
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
-            <ExternalLink className="w-3.5 h-3.5 pointer-events-none shrink-0" style={{ color: theme.btnText }} />
-            <span className="font-black" style={{ color: theme.btnText }}>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+            <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
+            <span className="font-black text-white">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
           </a>
 
           {/* Direct Fullscreen Modal Button */}
@@ -738,15 +730,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               e.stopPropagation();
               onLaunchFullscreenModal(sim);
             }}
-            className="w-10 h-10 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95"
-            style={{
-              backgroundColor: theme.actionIconBg,
-              color: theme.actionIconText,
-              borderColor: theme.actionIconBorder
-            }}
+            className="w-12 h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
             title="Launch in Fullscreen View"
           >
-            <Maximize2 className="w-4 h-4 pointer-events-none shrink-0" style={{ color: theme.actionIconText }} />
+            <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
           </button>
         </div>
       </div>

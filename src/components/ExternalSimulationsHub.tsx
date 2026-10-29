@@ -211,6 +211,40 @@ interface ExternalSimulationsHubProps {
   isDarkMode?: boolean;
 }
 
+// Helper functions matching uploaded card screenshot aesthetic
+const getPastelTagStyle = (index: number) => {
+  const styles = [
+    'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]',
+    'bg-[#FFEDD5] text-[#9A3412] border-[#FED7AA]',
+    'bg-[#F3E8FF] text-[#6B21A8] border-[#E9D5FF]',
+    'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
+  ];
+  return styles[index % styles.length];
+};
+
+const renderGradePill = (grade: string) => {
+  const parts = grade.split(/[•·]/).map(p => p.trim()).filter(Boolean);
+  if (parts.length >= 2) {
+    return (
+      <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0]">
+        <span className="px-3.5 py-1 bg-[#FEE2E2] text-[#991B1B]">
+          {parts[0]}
+        </span>
+        <span className="px-3.5 py-1 bg-[#E0F2FE] text-[#0369A1]">
+          {parts.slice(1).join(' • ')}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div className="mt-3.5 mb-2.5 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE]">
+      <span className="px-3.5 py-1 bg-[#EFF6FF] text-[#1E40AF]">
+        {grade}
+      </span>
+    </div>
+  );
+};
+
 export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () => {
   return (
     <section 
@@ -276,10 +310,9 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
         </div>
       </div>
 
-      {/* 8 External Simulation Cards Grid - Sequential 7-Color Palette */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 w-full">
+      {/* 8 External Simulation Cards Grid - Optimized for PC & Laptops */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
         {EXTERNAL_SIMULATION_RESOURCES.map((item, index) => {
-          const theme = getThemeForIndex(index);
           const IconComponent = item.icon;
 
           return (
@@ -292,212 +325,155 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               className="h-full flex flex-col"
             >
               <div
-                className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border hover:-translate-y-1 hover:shadow-2xl h-full flex-1"
-                style={{
-                  backgroundColor: theme.bg,
-                  borderColor: theme.borderColor,
-                  boxShadow: theme.boxShadow
-                }}
+                className="rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1.5 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
               >
-              {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
-              <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
-                {/* Visual Emblem Pedestal (Icon 100% untouched) */}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border shadow-xs"
-                  style={{
-                    backgroundColor: theme.pedestalBg,
-                    borderColor: theme.pedestalBorder
-                  }}
-                  title={`Open ${item.title} in new tab`}
-                >
-                  <span style={{ color: theme.isDark ? '#60A5FA' : '#2563EB' }} className="flex items-center justify-center">
-                    <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
-                  </span>
-                </a>
-
-                {/* Resource Badge (Special Prominent Animated Attention Badge for Paid Version) */}
-                {item.isAd && item.adLabels && item.adLabels.length > 0 ? (
-                  <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end relative z-20">
-                    <style>{`
-                      @keyframes fx-paid-pulse {
-                        0%, 100% {
-                          transform: scale(1);
-                          box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
-                          filter: brightness(1);
-                        }
-                        50% {
-                          transform: scale(1.07);
-                          box-shadow: 0 0 16px 4px rgba(34, 197, 94, 0.65);
-                          filter: brightness(1.22);
-                        }
-                      }
-                      .fx-paid-badge {
-                        animation: fx-paid-pulse 1.8s ease-in-out infinite;
-                      }
-                      @media (prefers-reduced-motion: reduce) {
-                        .fx-paid-badge {
-                          animation: none !important;
-                        }
-                      }
-                    `}</style>
-                    {item.adLabels.map((lbl, li) => {
-                      return (
-                        <span 
-                          key={li}
-                          className="fx-paid-badge inline-flex items-center justify-center font-heading font-black text-xs sm:text-sm px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl border-2 shrink-0 tracking-wider transition-transform duration-200 uppercase select-none"
-                          style={{
-                            backgroundColor: '#16a34a',
-                            color: '#FFFFFF',
-                            borderColor: '#86efac',
-                            boxShadow: '0 4px 14px rgba(22, 163, 74, 0.5)',
-                            textShadow: '0 1px 2px rgba(0, 0, 0, 0.4)'
-                          }}
-                        >
-                          {lbl}
-                        </span>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <span 
-                    className="font-mono text-xs font-bold px-3 py-1 rounded-full border shrink-0 tracking-wide shadow-xs"
-                    style={{
-                      backgroundColor: theme.badgeBg,
-                      color: theme.badgeText,
-                      borderColor: theme.badgeBorder
-                    }}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-
-              {/* Dedicated Grade / Class Level Area */}
-              <div className="relative z-10 mt-2.5 mb-2.5 flex items-center">
-                <span 
-                  className="text-[11px] font-bold px-3 py-1 rounded-full font-mono border leading-normal inline-block max-w-full break-words text-left shadow-2xs"
-                  style={{
-                    backgroundColor: theme.tagBg,
-                    color: theme.tagText,
-                    borderColor: theme.tagBorder
-                  }}
-                  title={item.gradeTier}
-                >
-                  {item.gradeTier}
-                </span>
-              </div>
-
-              {/* Content: Title, Subject, Description, Topics */}
-              <div className="relative z-10 flex-1 flex flex-col">
-                {/* Title */}
-                <h4 
-                  className="text-base sm:text-lg font-bold tracking-tight font-heading leading-snug line-clamp-2"
-                  style={{ color: theme.titleColor }}
-                >
+                {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
+                <div className="flex items-center justify-between gap-3 relative z-10 pt-1">
+                  {/* Visual Emblem Pedestal */}
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline transition-colors"
-                    style={{ color: theme.titleColor }}
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
                     title={`Open ${item.title} in new tab`}
                   >
-                    {item.title}
+                    <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
                   </a>
-                </h4>
 
-                {/* Subject & Sub-discipline */}
-                <p className="text-xs font-bold mt-1.5 line-clamp-1 flex items-center gap-1.5" style={{ color: theme.accentColor }}>
-                  <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: theme.accentColor }} />
-                  <span className="font-bold">{item.category}</span>
-                </p>
-
-                {/* Concept Description */}
-                <div className="mt-2 flex-1">
-                  <p 
-                    className={`text-xs sm:text-[13px] font-normal leading-relaxed ${item.isAd ? '' : 'line-clamp-3'}`}
-                    style={{ color: theme.textColor }}
-                  >
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Topic Tags */}
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {item.topics.slice(0, 3).map((topic, i) => (
-                    <span
-                      key={i}
-                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-md truncate max-w-[150px] border font-mono"
-                      style={{
-                        backgroundColor: theme.tagBg,
-                        color: theme.tagText,
-                        borderColor: theme.tagBorder
-                      }}
-                      title={topic}
-                    >
-                      {topic}
-                    </span>
-                  ))}
-                  {item.topics.length > 3 && (
+                  {/* Resource Badge */}
+                  {item.isAd && item.adLabels && item.adLabels.length > 0 ? (
+                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end relative z-20">
+                      <style>{`
+                        @keyframes fx-paid-pulse {
+                          0%, 100% {
+                            transform: scale(1);
+                            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+                            filter: brightness(1);
+                          }
+                          50% {
+                            transform: scale(1.07);
+                            box-shadow: 0 0 16px 4px rgba(34, 197, 94, 0.65);
+                            filter: brightness(1.22);
+                          }
+                        }
+                        .fx-paid-badge {
+                          animation: fx-paid-pulse 1.8s ease-in-out infinite;
+                        }
+                        @media (prefers-reduced-motion: reduce) {
+                          .fx-paid-badge {
+                            animation: none !important;
+                          }
+                        }
+                      `}</style>
+                      {item.adLabels.map((lbl, li) => (
+                        <span 
+                          key={li}
+                          className="fx-paid-badge inline-flex items-center justify-center font-heading font-black text-xs sm:text-sm px-3.5 sm:px-4 py-1.5 rounded-xl border-2 shrink-0 tracking-wider uppercase select-none"
+                          style={{
+                            backgroundColor: '#16a34a',
+                            color: '#FFFFFF',
+                            borderColor: '#86efac',
+                            boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)'
+                          }}
+                        >
+                          {lbl}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
                     <span 
-                      className="text-[11px] font-medium px-2 py-0.5 rounded-md border font-mono"
-                      style={{
-                        backgroundColor: theme.tagBg,
-                        color: theme.tagText,
-                        borderColor: theme.tagBorder
-                      }}
+                      className="font-mono text-xs font-black px-4 py-1.5 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
                     >
-                      +{item.topics.length - 3}
+                      {item.badge}
                     </span>
                   )}
                 </div>
-              </div>
 
-              {/* Card Action Bar */}
-              <div 
-                className="relative z-10 pt-4 mt-4 border-t flex items-center justify-between gap-2"
-                style={{ borderColor: theme.borderColor }}
-              >
-                {/* Action Button */}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 cursor-pointer shadow-md border transition-all transform active:scale-95"
-                  style={{
-                    backgroundColor: theme.btnBg,
-                    color: theme.btnText,
-                    borderColor: theme.btnBorder
-                  }}
-                  title={`Open ${item.title} in new tab`}
-                >
-                  <ExternalLink className="w-3.5 h-3.5 pointer-events-none shrink-0" style={{ color: theme.btnText }} />
-                  <span className="font-black" style={{ color: theme.btnText }}>{item.buttonText || 'Launch Lab'}</span>
-                </a>
+                {/* Dedicated Grade / Class Level Area (Dual color pill matching screenshot) */}
+                <div className="relative z-10 flex items-center">
+                  {renderGradePill(item.gradeTier)}
+                </div>
 
-                {/* Direct External Link Icon Button */}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs active:scale-95 shrink-0"
-                  style={{
-                    backgroundColor: theme.actionIconBg,
-                    borderColor: theme.actionIconBorder,
-                    color: theme.actionIconText
-                  }}
-                  title={`Explore ${item.title} Now`}
-                >
-                  <Maximize2 className="w-4 h-4 pointer-events-none shrink-0" style={{ color: theme.actionIconText }} />
-                </a>
+                {/* Content: Title, Subject, Description, Topics */}
+                <div className="relative z-10 flex-1 flex flex-col">
+                  {/* Title */}
+                  <h4 className="text-xl sm:text-2xl font-black tracking-tight font-heading leading-snug text-[#0F172A] group-hover:text-[#0284C7] transition-colors">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline transition-colors text-[#0F172A] group-hover:text-[#0284C7]"
+                      title={`Open ${item.title} in new tab`}
+                    >
+                      {item.title}
+                    </a>
+                  </h4>
+
+                  {/* Subject & Sub-discipline */}
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] shrink-0" />
+                    <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{item.category}</span>
+                  </div>
+
+                  {/* Concept Description */}
+                  <div className="mt-2.5 flex-1">
+                    <p className="text-xs sm:text-[13px] font-normal leading-relaxed text-[#334155] line-clamp-3 min-h-[3.75rem]">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Topic Tags (Pastel pills from screenshot) */}
+                  <div className="flex flex-wrap gap-1.5 mt-3.5">
+                    {item.topics.slice(0, 3).map((topic, i) => (
+                      <span
+                        key={i}
+                        className={`text-xs font-bold px-3 py-1 rounded-full border shadow-2xs ${getPastelTagStyle(i)}`}
+                        title={topic}
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                    {item.topics.length > 3 && (
+                      <span 
+                        className="text-xs font-bold px-3 py-1 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]"
+                      >
+                        +{item.topics.length - 3}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
+                <div className="relative z-10 pt-5 mt-auto border-t border-slate-200/80 flex items-center justify-between gap-3">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
+                    style={{
+                      background: 'linear-gradient(135deg, #00897B 0%, #0284C7 100%)',
+                      boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
+                    }}
+                    title={`Open ${item.title} in new tab`}
+                  >
+                    <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
+                    <span className="font-black text-white">{item.buttonText || 'Launch Lab'}</span>
+                  </a>
+
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+                    title={`Explore ${item.title} Now`}
+                  >
+                    <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
+                  </a>
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
-        );
-      })}
+            </ScrollReveal>
+          );
+        })}
       </div>
     </section>
   );
