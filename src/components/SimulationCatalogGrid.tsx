@@ -109,6 +109,7 @@ const AnimatedBadgeCounter: React.FC<{
 // Subject configuration matching "All Simulations" default + all 8 STEM disciplines
 interface SubjectCategoryConfig {
   key: string;
+  tagLabel: string;
   shortLabel: string;
   fullTitle: string;
   iconBg: string;
@@ -121,6 +122,7 @@ interface SubjectCategoryConfig {
 const getSubjectCategories = (): SubjectCategoryConfig[] => [
   {
     key: 'All Simulations',
+    tagLabel: 'ALL DISCIPLINES',
     shortLabel: 'All Simulations',
     fullTitle: 'All Simulations',
     iconBg: 'rgba(56, 189, 248, 0.16)',
@@ -131,6 +133,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Physics & Motion',
+    tagLabel: 'PHYSICS',
     shortLabel: 'Physics & Motion',
     fullTitle: 'Physics & Classical Mechanics',
     iconBg: 'rgba(37, 99, 235, 0.16)',
@@ -141,6 +144,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Chemistry & Matter',
+    tagLabel: 'CHEMISTRY',
     shortLabel: 'Chemistry & Matter',
     fullTitle: 'Chemistry & Molecular Science',
     iconBg: 'rgba(168, 85, 247, 0.16)',
@@ -151,6 +155,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Biology & Life',
+    tagLabel: 'BIOLOGY',
     shortLabel: 'Biology & Life',
     fullTitle: 'Biology & Living Systems',
     iconBg: 'rgba(34, 197, 94, 0.16)',
@@ -161,6 +166,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Earth & Space',
+    tagLabel: 'EARTH & SPACE',
     shortLabel: 'Earth & Space',
     fullTitle: 'Earth & Space Exploration',
     iconBg: 'rgba(2, 132, 199, 0.16)',
@@ -171,6 +177,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Mathematics & Logic',
+    tagLabel: 'MATHEMATICS',
     shortLabel: 'Mathematics & Logic',
     fullTitle: 'Mathematics & Geometry',
     iconBg: 'rgba(245, 158, 11, 0.16)',
@@ -181,6 +188,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Computer Science & IT',
+    tagLabel: 'COMP SCIENCE',
     shortLabel: 'Computer Science & IT',
     fullTitle: 'Computer Science & Hardware',
     iconBg: 'rgba(20, 184, 166, 0.16)',
@@ -191,6 +199,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'English & Grammar',
+    tagLabel: 'ENGLISH',
     shortLabel: 'English & Grammar',
     fullTitle: 'English & Spatial Linguistics',
     iconBg: 'rgba(139, 92, 246, 0.16)',
@@ -201,6 +210,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Early Childhood (ECCE)',
+    tagLabel: 'EARLY CHILDHOOD',
     shortLabel: 'Early Childhood (ECCE)',
     fullTitle: 'Early Childhood Care & Education',
     iconBg: 'rgba(244, 63, 94, 0.16)',
@@ -211,6 +221,7 @@ const getSubjectCategories = (): SubjectCategoryConfig[] => [
   },
   {
     key: 'Urdu & Linguistics',
+    tagLabel: 'URDU LANG',
     shortLabel: 'Urdu & Linguistics',
     fullTitle: 'Urdu Language & Linguistics',
     iconBg: 'rgba(16, 185, 129, 0.16)',
@@ -297,11 +308,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   }, []);
 
   const gradeTiers = [
-    { key: 'all', label: 'All Grades', short: 'All', desc: 'Pre-K to Grade 12', icon: MultiAllGradesIcon },
-    { key: 'primary', label: 'Primary (Grades 1–5)', short: 'Grades 1–5', desc: 'Foundational STEM & ECCE', icon: MultiPrimaryIcon },
-    { key: 'middle', label: 'Middle School (Grades 6–8)', short: 'Grades 6–8', desc: 'General Sciences & Physics', icon: MultiMiddleIcon },
-    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', short: 'Matric (9–10)', desc: 'Physics, Chemistry, Bio, CS', icon: MultiSecondaryIcon },
-    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', short: 'F.Sc (11–12)', desc: 'Advanced Mechanics & Calculus', icon: MultiHigherIcon },
+    { key: 'all', label: 'All Grades', shortTag: 'ALL GRADES', desc: 'Pre-K to Grade 12', icon: MultiAllGradesIcon },
+    { key: 'primary', label: 'Primary (Grades 1–5)', shortTag: 'GRADES 1–5', desc: 'Foundational STEM & ECCE', icon: MultiPrimaryIcon },
+    { key: 'middle', label: 'Middle School (Grades 6–8)', shortTag: 'GRADES 6–8', desc: 'General Sciences & Physics', icon: MultiMiddleIcon },
+    { key: 'secondary', label: 'Secondary / Matric (Grades 9–10)', shortTag: 'MATRIC (9–10)', desc: 'Physics, Chemistry, Bio, CS', icon: MultiSecondaryIcon },
+    { key: 'higher', label: 'Higher Secondary / F.Sc (Grades 11–12)', shortTag: 'F.SC (11–12)', desc: 'Advanced Mechanics & Calculus', icon: MultiHigherIcon },
   ];
 
   const handleGradeTierChange = (tierKey: string) => {
@@ -958,26 +969,26 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleGradeTierChange(tier.key)}
                 data-grade={tier.key}
                 data-filter={tier.key}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none min-h-[160px] ${
                   isSelectedTier
                     ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-lg ring-2 ring-[#42A5F5]/40 scale-[1.02]'
                     : 'bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-1 hover:shadow-lg hover:border-[#CBD5E1]'
                 }`}
                 title={`${tier.label}: ${tier.desc}`}
               >
-                <div className="flex-1 min-w-0 pr-1">
+                <div className="flex-1 min-w-0 pr-1 flex flex-col justify-between self-stretch py-0.5">
                   {/* Dot + Tag */}
                   <div className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${
                     isSelectedTier ? 'text-[#F5A623]' : 'text-[#1E88E5]'
                   }`}>
-                    <span className={`w-2.5 h-2.5 rounded-full shadow-xs ${
+                    <span className={`w-2.5 h-2.5 rounded-full shadow-xs shrink-0 ${
                       isSelectedTier ? 'bg-[#F5A623]' : 'bg-[#1E88E5]'
                     }`} />
-                    <span className="truncate">{tier.short || tier.label}</span>
+                    <span className="whitespace-nowrap">{tier.shortTag}</span>
                   </div>
 
-                  {/* Large Prominent Counter Number */}
-                  <div className="flex flex-col mt-1">
+                  {/* Large Prominent Counter Number + Complete Grade Title */}
+                  <div className="flex flex-col my-1">
                     <span 
                       className={`text-3xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight leading-none ${
                         isSelectedTier ? 'text-white' : 'text-[#1565C0]'
@@ -989,18 +1000,18 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         duration={3000} 
                       />
                     </span>
-                    <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
+                    <span className={`text-xs sm:text-[13px] font-black uppercase tracking-tight mt-1 leading-snug whitespace-normal break-words block ${
                       isSelectedTier ? 'text-[#DBE4F7]' : 'text-[#1565C0]'
                     }`}>
                       {tier.label}
                     </span>
                   </div>
 
-                  {/* Bottom Status / Description */}
-                  <div className={`text-[11px] font-bold mt-1.5 flex items-center gap-1 truncate ${
+                  {/* Bottom Status */}
+                  <div className={`text-[11px] font-bold flex items-center gap-1 ${
                     isSelectedTier ? 'text-[#DBE4F7]' : 'text-[#3B4A73]'
                   }`}>
-                    <span className="truncate">{tier.desc}</span>
+                    <span className="whitespace-nowrap">{count} Labs Available</span>
                     <ArrowRight className={`w-3.5 h-3.5 font-black shrink-0 ${
                       isSelectedTier ? 'text-[#F5A623]' : 'text-[#1E88E5]'
                     }`} />
@@ -1008,7 +1019,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 </div>
 
                 {/* Right Icon Pedestal matching the screenshot */}
-                <div className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 ${
+                <div className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 self-center ${
                   isSelectedTier 
                     ? 'bg-white/15 border-white/30 text-white' 
                     : 'bg-white border-[#1546A8] text-[#1B2A5C]'
@@ -1068,14 +1079,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 onClick={() => handleCategoryChange(cat.key)}
                 data-subject={cat.key}
                 data-filter={cat.key}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 text-left w-full group cursor-pointer select-none min-h-[160px] ${
                   isSelected
                     ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-lg ring-2 ring-[#42A5F5]/40 scale-[1.02]'
                     : 'bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-1 hover:shadow-lg hover:border-[#CBD5E1]'
                 }`}
                 title={`Filter simulations by ${cat.fullTitle} (${count} available)`}
               >
-                <div className="flex-1 min-w-0 pr-1">
+                <div className="flex-1 min-w-0 pr-1 flex flex-col justify-between self-stretch py-0.5">
                   {/* Dot + Tag */}
                   <div className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${
                     isSelected ? 'text-[#F5A623]' : 'text-[#1E88E5]'
@@ -1084,11 +1095,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       className="w-2.5 h-2.5 rounded-full shadow-xs shrink-0" 
                       style={{ backgroundColor: isSelected ? '#F5A623' : (cat.iconBorder || '#1E88E5') }}
                     />
-                    <span className="truncate">{cat.shortLabel}</span>
+                    <span className="whitespace-nowrap">{cat.tagLabel}</span>
                   </div>
 
-                  {/* Large Prominent Counter Number */}
-                  <div className="flex flex-col mt-1">
+                  {/* Large Prominent Counter Number + Complete Subject Name */}
+                  <div className="flex flex-col my-1">
                     <span 
                       className={`text-3xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight leading-none ${
                         isSelected ? 'text-white' : 'text-[#1565C0]'
@@ -1100,7 +1111,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         duration={3000} 
                       />
                     </span>
-                    <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
+                    <span className={`text-xs sm:text-[13px] font-black uppercase tracking-tight mt-1 leading-snug whitespace-normal break-words block ${
                       isSelected ? 'text-[#DBE4F7]' : 'text-[#1565C0]'
                     }`}>
                       {cat.shortLabel}
@@ -1108,10 +1119,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   </div>
 
                   {/* Bottom Status */}
-                  <div className={`text-[11px] font-bold mt-1.5 flex items-center gap-1 truncate ${
+                  <div className={`text-[11px] font-bold flex items-center gap-1 ${
                     isSelected ? 'text-[#DBE4F7]' : 'text-[#3B4A73]'
                   }`}>
-                    <span className="truncate">{count} Active Labs</span>
+                    <span className="whitespace-nowrap">{count} Active Labs</span>
                     <ArrowRight className={`w-3.5 h-3.5 font-black shrink-0 ${
                       isSelected ? 'text-[#F5A623]' : 'text-[#1E88E5]'
                     }`} />
@@ -1120,7 +1131,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
                 {/* Right Icon Pedestal matching the screenshot */}
                 <div 
-                  className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 ${
+                  className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 self-center ${
                     isSelected 
                       ? 'bg-white/15 border-white/30 text-white' 
                       : 'bg-white text-[#1B2A5C]'
