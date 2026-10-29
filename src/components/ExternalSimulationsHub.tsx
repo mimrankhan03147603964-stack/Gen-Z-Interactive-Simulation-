@@ -13,7 +13,8 @@ import {
   CheckCircle2,
   Layers,
   Wrench,
-  FileText
+  FileText,
+  Target
 } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
@@ -245,6 +246,70 @@ const renderGradePill = (grade: string) => {
   );
 };
 
+const renderExternalObjectivesTooltip = (item: ExternalSimulationResource) => {
+  const actionVerbs = ['Investigate', 'Analyze', 'Explore', 'Simulate', 'Experiment with'];
+  const objectives = item.topics.slice(0, 3).map((topic, idx) => {
+    return `${actionVerbs[idx % actionVerbs.length]} ${topic}`;
+  });
+
+  return (
+    <div className="relative group/tip z-30">
+      <div
+        tabIndex={0}
+        role="button"
+        aria-label={`View learning objectives for ${item.title}`}
+        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-[#FCD34D] shadow-2xs transition-all cursor-help group-hover/tip:border-[#F59E0B] group-hover/tip:shadow-xs"
+      >
+        <Target className="w-3 h-3 text-[#D97706] shrink-0" />
+        <span className="font-heading">Objectives</span>
+      </div>
+
+      <div
+        role="tooltip"
+        className="absolute bottom-[calc(100%+8px)] right-0 w-72 sm:w-80 p-3.5 rounded-2xl bg-[#0F172A] text-white border border-[#334155] shadow-2xl pointer-events-none opacity-0 invisible translate-y-1 group-hover/tip:opacity-100 group-hover/tip:visible group-hover/tip:translate-y-0 transition-all duration-200 z-50 text-left"
+        style={{
+          boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <div className="absolute -bottom-1.5 right-5 w-3 h-3 bg-[#0F172A] border-r border-b border-[#334155] rotate-45" />
+
+        <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-700/80">
+          <div className="flex items-center gap-1.5">
+            <Target className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 font-mono">
+              Learning Objectives
+            </span>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+            {item.category.split('&')[0].trim()}
+          </span>
+        </div>
+
+        <p className="text-xs font-black text-white line-clamp-1 mb-2 font-heading">
+          {item.title}
+        </p>
+
+        <div className="space-y-1.5 mb-2.5">
+          {objectives.map((obj, i) => (
+            <div key={i} className="flex items-start gap-1.5 text-xs leading-snug text-slate-200">
+              <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
+              <span>{obj}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400 font-medium">
+          <span className="flex items-center gap-1 text-emerald-400 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-ping" />
+            Verified Platform
+          </span>
+          <span className="text-amber-300 font-mono font-bold">Launch Lab ↗</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () => {
   return (
     <section 
@@ -325,7 +390,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               className="h-full flex flex-col"
             >
               <div
-                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
+                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-visible group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
               >
                 {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
                 <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
@@ -373,7 +438,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                             backgroundColor: '#16a34a',
                             color: '#FFFFFF',
                             borderColor: '#86efac',
-                            boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)'
+                            boxShadow: '0 4px 14px rgba(2, 163, 74, 0.4)'
                           }}
                         >
                           {lbl}
@@ -389,9 +454,10 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   )}
                 </div>
 
-                {/* Dedicated Grade / Class Level Area (Dual color pill matching screenshot) */}
-                <div className="relative z-10 flex items-center">
+                {/* Dedicated Grade / Class Level Area & Objectives Tooltip */}
+                <div className="relative z-10 flex items-center justify-between gap-2 flex-wrap">
                   {renderGradePill(item.gradeTier)}
+                  {renderExternalObjectivesTooltip(item)}
                 </div>
 
                 {/* Content: Title, Subject, Description, Topics */}
