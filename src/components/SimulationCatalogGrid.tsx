@@ -1175,20 +1175,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="fx-pulse-gold relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-3 active:scale-95"
+            className="fx-pulse-gold relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5 active:scale-95"
             title="Open Complete STEM Simulations Catalog"
           >
             <BookOpen className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C] flex items-center gap-1.5">
-              <span>OPEN ALL</span>
-              <span className="text-base sm:text-lg font-black font-heading px-2.5 py-0.5 rounded-lg bg-[#1B2A5C] text-[#F5A623] border border-[#1546A8] shadow-xs">
-                <AnimatedBadgeCounter 
-                  target={activeSimulations.length} 
-                  isVisible={isSubjectSectionVisible} 
-                  duration={3000} 
-                />
-              </span>
-              <span>LABS CATALOG</span>
+            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C]">
+              OPEN NOW
             </span>
             <ArrowRight className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
           </button>
