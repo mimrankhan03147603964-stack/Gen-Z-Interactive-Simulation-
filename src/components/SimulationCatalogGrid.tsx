@@ -14,7 +14,6 @@ import {
   ChevronUp,
   ArrowLeft,
   ArrowRight,
-  Home,
   Atom,
   FlaskConical,
   Dna,
@@ -75,7 +74,7 @@ const AnimatedBadgeCounter: React.FC<{
   target: number;
   isVisible: boolean;
   duration?: number;
-}> = ({ target, isVisible, duration = 1800 }) => {
+}> = ({ target, isVisible, duration = 3000 }) => {
   const [displayValue, setDisplayValue] = useState<number>(0);
 
   useEffect(() => {
@@ -910,40 +909,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       id="catalog" 
       className="w-full space-y-6 pt-2 scroll-mt-28 opacity-100"
     >
-      {/* If Dedicated Catalog View: Show Top Back Navigation Header */}
-      {!isHomeView && (
-        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-bold text-white bg-[#1B2A5C] hover:bg-[#1546A8] border border-[#F5A623] shadow-md transition-all cursor-pointer shrink-0 active:scale-95"
-            title="Return to Main Home Screen"
-          >
-            <Home className="w-4 h-4 text-white pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wide uppercase font-bold text-white">
-              BACK TO HOME
-            </span>
-          </button>
-          
-          <div 
-            className="rounded-xl p-2.5 sm:p-3 flex items-center gap-2.5 sm:gap-3 flex-wrap shadow-md border"
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderColor: '#DDE5F3'
-            }}
-          >
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3]">
-              Discipline: {isAllCategory ? 'All Disciplines' : activeSubjectConfig.fullTitle}
-            </span>
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3]">
-              Grade: {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'All Grades'}
-            </span>
-            <span className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-black bg-[#1B2A5C] text-white border border-[#1546A8]">
-              {displayedSims.length} Labs Available
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
       <div 
@@ -1021,7 +986,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       <AnimatedBadgeCounter 
                         target={count} 
                         isVisible={isGradeSectionVisible} 
-                        duration={1800} 
+                        duration={3000} 
                       />
                     </span>
                     <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
@@ -1132,7 +1097,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       <AnimatedBadgeCounter 
                         target={count} 
                         isVisible={isSubjectSectionVisible} 
-                        duration={1800} 
+                        duration={3000} 
                       />
                     </span>
                     <span className={`text-xs sm:text-sm font-black uppercase tracking-wider mt-1 truncate ${
@@ -1209,7 +1174,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 <AnimatedBadgeCounter 
                   target={activeSimulations.length} 
                   isVisible={isSubjectSectionVisible} 
-                  duration={1800} 
+                  duration={3000} 
                 />
               </span>
               <span>LABS CATALOG</span>

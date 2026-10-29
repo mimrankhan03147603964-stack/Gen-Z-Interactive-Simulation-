@@ -18,7 +18,7 @@ interface QuickStatsProps {
 function useCountUpOnScroll(
   target: number,
   isVisible: boolean,
-  duration: number = 1800
+  duration: number = 3000
 ): number {
   const [count, setCount] = useState<number>(0);
 
@@ -82,11 +82,11 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Smooth count-up values for all 4 key metrics
-  const countSimulations = useCountUpOnScroll(totalSimulations, hasEnteredViewport, 1800);
-  const countDisciplines = useCountUpOnScroll(9, hasEnteredViewport, 1800);
-  const countCoverage = useCountUpOnScroll(100, hasEnteredViewport, 1800);
-  const countFps = useCountUpOnScroll(60, hasEnteredViewport, 1800);
+  // Smooth count-up values for all 4 key metrics (moderately slower speed)
+  const countSimulations = useCountUpOnScroll(totalSimulations, hasEnteredViewport, 3000);
+  const countDisciplines = useCountUpOnScroll(9, hasEnteredViewport, 3000);
+  const countCoverage = useCountUpOnScroll(100, hasEnteredViewport, 3000);
+  const countFps = useCountUpOnScroll(60, hasEnteredViewport, 3000);
 
   return (
     <div 
