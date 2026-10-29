@@ -507,36 +507,99 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return styles[index % styles.length];
   };
 
-  const renderGradePill = (grade: string) => {
-    let parts: string[] = [];
-    if (grade.includes('•') || grade.includes('·')) {
-      parts = grade.split(/[•·]/).map(p => p.trim()).filter(Boolean);
-    } else if (grade.includes('(') && grade.includes(')')) {
-      const m = grade.match(/^(.*?)\s*\((.*?)\)$/);
-      if (m && m[1] && m[2]) {
-        parts = [m[1].trim(), m[2].trim()];
-      }
+  const formatShortGrade = (grade: string): { primary: string; secondary?: string } => {
+    let clean = grade
+      .replace(/Cambridge\s+Scholar\s*/gi, '')
+      .trim();
+
+    if (/Secondary School SSC-I|SSC-I|Grade 9\b/i.test(clean)) {
+      return { primary: 'Grade 9', secondary: 'SSC-I' };
+    }
+    if (/Secondary School SSC-II|SSC-II|Grade 10\b/i.test(clean)) {
+      return { primary: 'Grade 10', secondary: 'SSC-II' };
+    }
+    if (/HSSC-I|Grade 11\b/i.test(clean)) {
+      return { primary: 'Grade 11', secondary: 'HSSC-I' };
+    }
+    if (/HSSC-II|Grade 12\b/i.test(clean)) {
+      return { primary: 'Grade 12', secondary: 'HSSC-II' };
+    }
+    if (/Middle/i.test(clean) && /Secondary/i.test(clean)) {
+      return { primary: 'Middle', secondary: 'Secondary' };
+    }
+    if (/Secondary/i.test(clean) && /Higher/i.test(clean)) {
+      return { primary: 'Secondary', secondary: 'Higher Sec' };
+    }
+    if (/Primary/i.test(clean)) {
+      return { primary: 'Primary', secondary: 'Grades 1-5' };
+    }
+    if (/Middle/i.test(clean)) {
+      return { primary: 'Middle', secondary: 'Grades 6-8' };
+    }
+    if (/Secondary/i.test(clean)) {
+      return { primary: 'Secondary', secondary: 'Grades 9-10' };
+    }
+    if (/Higher/i.test(clean)) {
+      return { primary: 'Higher Sec', secondary: 'Grades 11-12' };
+    }
+    if (/ECCE|Early/i.test(clean)) {
+      return { primary: 'ECCE', secondary: 'Early Years' };
     }
 
+    const parts = clean.split(/[•·/]/).map(p => p.trim()).filter(Boolean);
     if (parts.length >= 2) {
+      return { 
+        primary: parts[0].slice(0, 10), 
+        secondary: parts[1].slice(0, 12) 
+      };
+    }
+    return { primary: clean.slice(0, 16) };
+  };
+
+  const renderGradePill = (grade: string) => {
+    const g = formatShortGrade(grade);
+    if (g.secondary) {
       return (
-        <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0] max-w-full">
-          <span className="px-3 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
-            {parts[0]}
+        <div className="inline-flex items-center rounded-full overflow-hidden text-[11px] font-bold font-sans shadow-2xs border border-[#E2E8F0] shrink-0 max-w-[190px]">
+          <span className="px-2.5 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
+            {g.primary}
           </span>
-          <span className="px-3 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
-            {parts.slice(1).join(' • ')}
+          <span className="px-2.5 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
+            {g.secondary}
           </span>
         </div>
       );
     }
     return (
-      <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE] max-w-full">
-        <span className="px-3 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
-          {grade}
+      <div className="inline-flex items-center rounded-full overflow-hidden text-[11px] font-bold font-sans shadow-2xs border border-[#BFDBFE] shrink-0 max-w-[190px]">
+        <span className="px-2.5 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
+          {g.primary}
         </span>
       </div>
     );
+  };
+
+  const formatShortTopic = (topic: string): string => {
+    let t = topic
+      .replace(/\.html$/i, '')
+      .replace(/_/g, ' ')
+      .replace(/\(.*?\)/g, '')
+      .replace(/Experiment|Investigation|Demonstration|Simulation|Laboratory|Theory|Classical|Maxwell|Defects\s+in/gi, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+    if (/[\u0600-\u06FF]/.test(t)) {
+      return t.length > 16 ? t.substring(0, 14) + '…' : t;
+    }
+
+    const words = t.split(/\s+/).filter(Boolean);
+    if (words.length > 2) {
+      t = words.slice(0, 2).join(' ');
+    }
+    if (t.length > 16) {
+      t = t.substring(0, 14) + '…';
+    }
+    return t || 'Topic';
   };
 
   // Generate concise, high-impact learning objectives from curriculum topics
@@ -640,6 +703,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     const displayGrade = cleanGradeBadge(sim.gradeLevel);
     const displaySubject = cleanCardSubject(sim.subject);
     const displayDesc = cleanCardDescription(sim.description);
+    const objectives = getLearningObjectives(sim);
 
     const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
 
@@ -650,7 +714,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           handleCardClick(sim);
         }}
-        className={`rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-visible group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full ${
+        className={`rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group/card select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full ${
           isActive ? 'ring-3 ring-[#0284C7] shadow-xl scale-[1.01]' : ''
         }`}
       >
@@ -682,10 +746,20 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </span>
         </div>
 
-        {/* Dedicated Grade / Class Level Area & Objectives Tooltip */}
-        <div className="relative z-10 flex items-center justify-between gap-2 flex-wrap">
+        {/* Dedicated Grade / Class Level Area & Objectives Trigger */}
+        <div className="relative z-10 flex items-center justify-between gap-1.5 mt-2.5 mb-1.5">
           {renderGradePill(displayGrade)}
-          {renderObjectivesTooltip(sim)}
+          
+          <div className="group/obj relative">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-[#FCD34D] shadow-2xs transition-all cursor-help shrink-0"
+              title="Hover to view Learning Objectives"
+            >
+              <Target className="w-3 h-3 text-[#D97706] shrink-0" />
+              <span className="font-heading">Objectives</span>
+            </button>
+          </div>
         </div>
 
         {/* Content: Title, Subject, Description, Topics */}
@@ -730,27 +804,27 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </p>
           )}
 
-          {/* Topic Tags (Pastel pills from screenshot) */}
+          {/* Topic Tags (Pastel pills - Shortened & Truncated so they never overflow) */}
           <div className="flex flex-wrap gap-1.5 mt-2.5">
             {sim.topics.slice(0, 3).map((topic, i) => {
-              const cleanT = cleanCardTopic(topic);
-              const isTopicUrdu = /[\u0600-\u06FF]/.test(cleanT);
+              const shortT = formatShortTopic(topic);
+              const isTopicUrdu = /[\u0600-\u06FF]/.test(shortT);
               return (
                 <span
                   key={i}
-                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs whitespace-nowrap ${getPastelTagStyle(i)} ${
+                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs max-w-[110px] truncate ${getPastelTagStyle(i)} ${
                     isTopicUrdu ? 'font-urdu leading-[1.8]' : ''
                   }`}
                   dir={isTopicUrdu ? 'rtl' : 'ltr'}
-                  title={cleanT}
+                  title={topic}
                 >
-                  {cleanT}
+                  {shortT}
                 </span>
               );
             })}
             {sim.topics.length > 3 && (
               <span 
-                className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] whitespace-nowrap"
+                className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] shrink-0"
               >
                 +{sim.topics.length - 3}
               </span>
@@ -792,6 +866,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
           </button>
         </div>
+
+        {/* Learning Objectives Inset Drawer / Full Overview on Card Hover */}
+        <div className="absolute inset-0 z-30 p-5 rounded-3xl bg-[#0F172A] text-white opacity-0 invisible pointer-events-none group-hover/card:opacity-0 hover:!opacity-100 transition-all duration-200 flex flex-col justify-between" id={`obj-panel-${sim.id}`} />
       </div>
     );
   };

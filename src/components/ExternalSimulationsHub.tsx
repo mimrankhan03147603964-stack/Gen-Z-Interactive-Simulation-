@@ -390,7 +390,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               className="h-full flex flex-col"
             >
               <div
-                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-visible group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
+                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
               >
                 {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
                 <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
@@ -455,7 +455,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 </div>
 
                 {/* Dedicated Grade / Class Level Area & Objectives Tooltip */}
-                <div className="relative z-10 flex items-center justify-between gap-2 flex-wrap">
+                <div className="relative z-10 flex items-center justify-between gap-1.5 mt-2.5 mb-1.5">
                   {renderGradePill(item.gradeTier)}
                   {renderExternalObjectivesTooltip(item)}
                 </div>
@@ -488,12 +488,12 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     </p>
                   )}
 
-                  {/* Topic Tags (Pastel pills from screenshot) */}
+                  {/* Topic Tags (Pastel pills - Shortened & Truncated) */}
                   <div className="flex flex-wrap gap-1.5 mt-2.5">
                     {item.topics.slice(0, 3).map((topic, i) => (
                       <span
                         key={i}
-                        className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs whitespace-nowrap ${getPastelTagStyle(i)}`}
+                        className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs max-w-[120px] truncate ${getPastelTagStyle(i)}`}
                         title={topic}
                       >
                         {topic}
@@ -501,7 +501,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                     ))}
                     {item.topics.length > 3 && (
                       <span 
-                        className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] whitespace-nowrap"
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] shrink-0"
                       >
                         +{item.topics.length - 3}
                       </span>
