@@ -1165,7 +1165,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 LABORATORY WORKSPACE
               </span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight leading-snug">
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-black text-white font-heading tracking-tight whitespace-nowrap">
               Click Any Grade or Subject Above to Open Interactive Labs
             </h3>
             <p className="text-xs sm:text-sm text-[#DBE4F7] font-normal leading-relaxed max-w-2xl">
@@ -1175,14 +1175,14 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <button
             type="button"
             onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="fx-pulse-gold relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5 active:scale-95"
+            className="fx-pulse-whatsapp relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-white bg-[#16A34A] hover:bg-[#15803D] border border-[#22C55E] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5 active:scale-95"
             title="Open Complete STEM Simulations Catalog"
           >
-            <BookOpen className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-[#1B2A5C]">
+            <BookOpen className="w-5 h-5 text-white pointer-events-none shrink-0" />
+            <span className="font-heading tracking-wider uppercase font-black text-white">
               OPEN NOW
             </span>
-            <ArrowRight className="w-5 h-5 text-[#1B2A5C] pointer-events-none shrink-0" />
+            <ArrowRight className="w-5 h-5 text-white pointer-events-none shrink-0" />
           </button>
         </div>
       ) : (
