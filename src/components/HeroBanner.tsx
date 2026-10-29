@@ -41,6 +41,136 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   // 100% of available simulation topics currently in the system library (86 verified labs)
   const allSimulationTopics = SIMULATIONS_LIST;
 
+  // Typewriter rotation subjects showcasing the rich multidisciplinary STEM breadth (rush of subjects)
+  const stemRotations = React.useMemo(() => [
+    {
+      subject: 'STEM Disciplines',
+      color: '#F5A623',
+      description: `Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, computer science, linguistics, and early childhood care & education (ECCE). Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Physics & Motion Mechanics',
+      color: '#38BDF8',
+      description: `Explore authentic interactive STEM laboratories across Newton's laws of motion, kinematics, DC motor commutators, wave optics, Hooke's law, and momentum. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Chemistry & Molecular Reactions',
+      color: '#34D399',
+      description: `Explore authentic interactive STEM laboratories across chemical bonding, periodic table trends, acids, bases & pH titration, Charles's gas laws, and atomic models. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Biology & Cellular Life Sciences',
+      color: '#4ADE80',
+      description: `Explore authentic interactive STEM laboratories across DNA genetics, human heart circulation, pulmonary breathing mechanisms, kidney nephrons, and photosynthesis. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Mathematics & Geometric Logic',
+      color: '#F43F5E',
+      description: `Explore authentic interactive STEM laboratories across algebra equation balancing, interactive geometry, unit circle trigonometry, and Pythagorean proofs. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Computer Science & Logic Circuits',
+      color: '#818CF8',
+      description: `Explore authentic interactive STEM laboratories across logic gates, binary circuits, sorting algorithm visualizers, computer hardware architectures, and digital systems. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Earth, Astronomy & Space Mechanics',
+      color: '#FBBF24',
+      description: `Explore authentic interactive STEM laboratories across solar system planetary orbits, Kepler's laws, lunar & solar eclipses, plate tectonics, and moon phases. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'English & Grammar Syntax Labs',
+      color: '#60A5FA',
+      description: `Explore authentic interactive STEM laboratories across Cambridge scholar parts of speech, syntax tree grammar, active-passive voice, and 3D prepositions. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Urdu & Linguistics (اجزائے کلام)',
+      color: '#2DD4BF',
+      description: `Explore authentic interactive STEM laboratories across Haroof-e-Tahajji sound lab, Ajza-e-Kalam, Sifat ki Aqsam, and comprehensive Urdu grammar modules. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Early Childhood Care & Education (ECCE)',
+      color: '#FB7185',
+      description: `Explore authentic interactive STEM laboratories across ECCE curriculum learning areas, ABC real 3D objects, phonics soundboards, and playful shape builders. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Electricity, Magnetism & DC Motors',
+      color: '#FCD34D',
+      description: `Explore authentic interactive STEM laboratories across Ohm's law, DC motor commutators, AC generators, electromagnetic induction, and interactive circuits. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Nuclear Physics & Quantum Models',
+      color: '#C084FC',
+      description: `Explore authentic interactive STEM laboratories across nuclear fission and fusion, half-life radioactive decay, and Rutherford-Bohr atomic models. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Thermal Physics & States of Matter',
+      color: '#FB923C',
+      description: `Explore authentic interactive STEM laboratories across ice to water to steam phase transitions, conduction, convection, and ideal gas laws. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    },
+    {
+      subject: 'Genetics, DNA & Molecular Biotechnology',
+      color: '#38BDF8',
+      description: `Explore authentic interactive STEM laboratories across DNA double helix structures, Punnett square inheritance, cell division, and microscopic organisms. Switch seamlessly across all ${allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.`
+    }
+  ], [allSimulationTopics.length]);
+
+  // Typewriter state for "Professional Multidisciplinary [Subject] Learning Portal" and paragraph description below it
+  const [slideIndex, setSlideIndex] = useState<number>(0);
+  const [typedSubject, setTypedSubject] = useState<string>('');
+  const [typedDesc, setTypedDesc] = useState<string>('');
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+
+  useEffect(() => {
+    const currentSlide = stemRotations[slideIndex];
+    const fullSubject = currentSlide.subject;
+    const fullDesc = currentSlide.description;
+
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (isPaused) {
+      timeout = setTimeout(() => {
+        setIsPaused(false);
+        setIsDeleting(true);
+      }, 3500);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting) {
+      if (typedSubject.length > 0 || typedDesc.length > 0) {
+        timeout = setTimeout(() => {
+          setTypedDesc((prev) => prev.slice(0, Math.max(0, prev.length - 4)));
+          setTypedSubject((prev) => prev.slice(0, Math.max(0, prev.length - 1)));
+        }, 12);
+      } else {
+        setIsDeleting(false);
+        setSlideIndex((prev) => (prev + 1) % stemRotations.length);
+      }
+      return () => clearTimeout(timeout);
+    }
+
+    // Typing phase
+    const subjectDone = typedSubject.length >= fullSubject.length;
+    const descDone = typedDesc.length >= fullDesc.length;
+
+    if (subjectDone && descDone) {
+      setIsPaused(true);
+      return;
+    }
+
+    timeout = setTimeout(() => {
+      if (!subjectDone) {
+        setTypedSubject(fullSubject.slice(0, typedSubject.length + 1));
+      }
+      if (!descDone) {
+        setTypedDesc(fullDesc.slice(0, Math.min(fullDesc.length, typedDesc.length + 2)));
+      }
+    }, 18);
+
+    return () => clearTimeout(timeout);
+  }, [slideIndex, typedSubject, typedDesc, isDeleting, isPaused, stemRotations]);
+
   // Digital clock widget
   useEffect(() => {
     const updateTime = () => {
@@ -505,12 +635,41 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             >
               Gen Z Interactive Simulations Portal
             </h1>
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2" style={{ color: '#F5A623' }}>
+            {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
+            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623' }}>
               <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
-              <span>Professional Multidisciplinary STEM Learning Portal</span>
+              <span className="inline-flex items-center flex-wrap gap-1.5">
+                <span>Professional Multidisciplinary</span>
+                <span 
+                  className="inline-flex items-center px-2 py-0.5 rounded-md font-black tracking-wide border shadow-xs transition-colors duration-200 min-h-[1.5rem]"
+                  style={{
+                    backgroundColor: `${stemRotations[slideIndex].color}26`,
+                    borderColor: stemRotations[slideIndex].color,
+                    color: '#FFFFFF'
+                  }}
+                >
+                  <span>{typedSubject}</span>
+                  <span 
+                    className="inline-block w-[2px] h-4 ml-1 animate-pulse" 
+                    style={{ backgroundColor: stemRotations[slideIndex].color }} 
+                  />
+                </span>
+                <span>Learning Portal</span>
+              </span>
             </p>
-            <p className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-normal" style={{ color: '#EEF3F9' }}>
-              Explore authentic interactive STEM laboratories across physics mechanics, electricity, chemistry reactions, cellular biology, celestial mechanics, mathematics, computer science, linguistics, and early childhood care &amp; education (ECCE). Switch seamlessly across all {allSimulationTopics.length} modules with single-click direct execution in 4K high fidelity.
+
+            {/* Typewriter Dynamic Educational Description matching Subject */}
+            <p 
+              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-normal min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
+              style={{ color: '#EEF3F9' }}
+            >
+              <span>
+                {typedDesc}
+                <span 
+                  className="inline-block w-[2px] h-4 ml-1 align-middle animate-pulse" 
+                  style={{ backgroundColor: stemRotations[slideIndex].color }} 
+                />
+              </span>
             </p>
 
             {/* High-Contrast Action Buttons */}
