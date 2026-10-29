@@ -3,6 +3,7 @@ import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
 import { PedagogicalHub } from './components/PedagogicalHub';
+import { QuickStats } from './components/QuickStats';
 import { SimulationCatalogGrid } from './components/SimulationCatalogGrid';
 import { WebsiteFeatures } from './components/WebsiteFeatures';
 import { SimulationViewerModal } from './components/SimulationViewerModal';
@@ -368,7 +369,15 @@ export default function App() {
                 />
               </ScrollReveal>
 
-              {/* 2. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
+              {/* 2. Interactive Prominent Numbers & Statistics Section with Counter Animation */}
+              <ScrollReveal direction="up" distance={20} duration={500} delay={30} resetOnLeave={true}>
+                <QuickStats 
+                  totalSimulations={allSimulations.length}
+                  isDarkMode={isDarkMode}
+                />
+              </ScrollReveal>
+
+              {/* 3. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
               <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
                 <PedagogicalHub 
                   totalSimulations={allSimulations.length} 
