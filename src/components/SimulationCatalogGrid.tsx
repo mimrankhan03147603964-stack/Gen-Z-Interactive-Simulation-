@@ -31,7 +31,7 @@ import {
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
 import { TopicRealisticIcon } from './TopicRealisticIcon';
-import { getThemeForIndex } from '../data/sequentialPalette';
+import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
 
 import { 
@@ -706,6 +706,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     const objectives = getLearningObjectives(sim);
 
     const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+    const parsedNum = parseInt(sim.indexNumber, 10);
+    const colorIdx = !isNaN(parsedNum) && parsedNum > 0 ? (parsedNum - 1) : _cardIndex;
+    const cardLaunchBtnStyle = getLaunchBtnStyle(colorIdx);
 
     return (
       <div
@@ -842,15 +845,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer select-none"
+            className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg hover:brightness-110 transition-all transform active:scale-98 cursor-pointer select-none"
             style={{
-              background: 'linear-gradient(135deg, #00897B 0%, #0284C7 100%)',
-              boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
+              background: cardLaunchBtnStyle.bg,
+              boxShadow: cardLaunchBtnStyle.shadow,
+              color: '#FFFFFF'
             }}
             title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
           >
             <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-            <span className="font-black text-white truncate">{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
+            <span className="font-black text-white truncate" style={{ color: '#FFFFFF' }}>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
           </a>
 
           {/* Direct Fullscreen Modal Button */}

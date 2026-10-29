@@ -183,3 +183,37 @@ export const getThemeForIndex = (index: number, category?: string): CardPaletteT
   }
   return SEQUENTIAL_PALETTE[Math.abs(index) % SEQUENTIAL_PALETTE.length];
 };
+
+/**
+ * 16 Deep, High-Contrast Distinct Gradients for "Launch Lab" Card Action Buttons
+ * Guaranteed high contrast against crisp pure white (#FFFFFF) text.
+ * No light, white, or pastel tones so text never matches or washes out.
+ */
+export interface LaunchBtnStyle {
+  bg: string;
+  shadow: string;
+}
+
+export const CARD_LAUNCH_BTN_PALETTES: LaunchBtnStyle[] = [
+  { bg: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)', shadow: '0 4px 14px rgba(2, 132, 199, 0.38)' }, // Royal Azure
+  { bg: 'linear-gradient(135deg, #059669 0%, #047857 100%)', shadow: '0 4px 14px rgba(5, 150, 105, 0.38)' }, // Emerald
+  { bg: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)', shadow: '0 4px 14px rgba(124, 58, 237, 0.38)' }, // Deep Violet
+  { bg: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)', shadow: '0 4px 14px rgba(220, 38, 38, 0.38)' }, // Crimson
+  { bg: 'linear-gradient(135deg, #0D9488 0%, #0F766E 100%)', shadow: '0 4px 14px rgba(13, 148, 136, 0.38)' }, // Deep Teal
+  { bg: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)', shadow: '0 4px 14px rgba(234, 88, 12, 0.38)' }, // Burnt Orange
+  { bg: 'linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)', shadow: '0 4px 14px rgba(79, 70, 229, 0.38)' }, // Indigo Blue
+  { bg: 'linear-gradient(135deg, #C026D3 0%, #A21CAF 100%)', shadow: '0 4px 14px rgba(192, 38, 211, 0.38)' }, // Vivid Magenta
+  { bg: 'linear-gradient(135deg, #0891B2 0%, #0E7490 100%)', shadow: '0 4px 14px rgba(8, 145, 178, 0.38)' }, // Deep Cyan
+  { bg: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)', shadow: '0 4px 14px rgba(22, 163, 74, 0.38)' }, // Forest Green
+  { bg: 'linear-gradient(135deg, #E11D48 0%, #BE123C 100%)', shadow: '0 4px 14px rgba(225, 29, 72, 0.38)' }, // Carmine Ruby
+  { bg: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', shadow: '0 4px 14px rgba(37, 99, 235, 0.38)' }, // Cobalt Sapphire
+  { bg: 'linear-gradient(135deg, #9333EA 0%, #7E22CE 100%)', shadow: '0 4px 14px rgba(147, 51, 234, 0.38)' }, // Dark Plum
+  { bg: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)', shadow: '0 4px 14px rgba(217, 119, 6, 0.38)' }, // Dark Amber Bronze
+  { bg: 'linear-gradient(135deg, #1E40AF 0%, #1E3A8A 100%)', shadow: '0 4px 14px rgba(30, 64, 175, 0.38)' }, // Midnight Navy
+  { bg: 'linear-gradient(135deg, #047857 0%, #065F46 100%)', shadow: '0 4px 14px rgba(4, 120, 87, 0.38)' }, // Deep Jade
+];
+
+export const getLaunchBtnStyle = (index: number): LaunchBtnStyle => {
+  return CARD_LAUNCH_BTN_PALETTES[Math.abs(index) % CARD_LAUNCH_BTN_PALETTES.length];
+};
+
