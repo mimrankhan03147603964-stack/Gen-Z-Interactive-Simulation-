@@ -6,6 +6,7 @@ import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/nav
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getDisciplineColor } from '../data/simTheme';
 import { getThemeForIndex } from '../data/sequentialPalette';
+import heroBannerBg from '../assets/hero-banner-bg.jpg';
 
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
@@ -335,16 +336,33 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   return (
     <div className="relative group w-full space-y-4">
       
-      {/* Main Modern Educational Hero Card with Rich Midnight Navy Solid Card Background & Slate Ocean Border */}
+      {/* Main Modern Educational Hero Card with Full Photographic Background & Dark Blue Readability Overlay */}
       <div 
         className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl text-white shadow-xl"
         style={{
-          background: 'linear-gradient(135deg, #1B2A5C 0%, #1546A8 100%)',
-          backgroundColor: '#1B2A5C',
+          backgroundImage: `url(${heroBannerBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: '#0E1F42',
           border: '1.5px solid #F5A623',
           boxShadow: '0 12px 36px rgba(27, 42, 92, 0.45)'
         }}
       >
+        {/* Dark Blue Overlay on the left so the text stays perfectly readable while preserving the scene on the right */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, rgba(10, 22, 53, 0.96) 0%, rgba(12, 26, 64, 0.92) 36%, rgba(15, 34, 82, 0.82) 56%, rgba(11, 25, 60, 0.45) 78%, rgba(10, 22, 53, 0.22) 100%)',
+          }}
+        />
+        {/* Subtle vertical gradient for mobile viewports and seamless contrast */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(9, 20, 48, 0.45) 0%, rgba(9, 20, 48, 0.1) 35%, rgba(9, 20, 48, 0.3) 72%, rgba(9, 20, 48, 0.82) 100%)',
+          }}
+        />
 
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
