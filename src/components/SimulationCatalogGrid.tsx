@@ -924,14 +924,22 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       {/* Tier 1 Curriculum Filter Flow: Grade Level Tabs */}
       <div 
         ref={gradeSectionRef}
-        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
+        className="relative z-10 shadow-lg rounded-2xl p-5 sm:p-6 transition-all border overflow-hidden"
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundImage: `url('/assets/aistudio/WhatsApp_Image_2026-10-30_at_12.56.40_PM_6a76a1bb.jpeg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           borderColor: '#DDE5F3',
           boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
         }}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+        {/* White overlay at 60% opacity for optimal contrast and readability */}
+        <div 
+          className="absolute inset-0 bg-white/60 pointer-events-none z-0" 
+          aria-hidden="true" 
+        />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4 relative z-10">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
               GRADE FILTER
@@ -956,7 +964,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
 
         {/* Grade Filter Cards Grid - Strictly styled identical to Top Metric Cards from screenshot */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4.5 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-4.5 w-full relative z-10">
           {gradeTiers.map((tier) => {
             const isSelectedTier = selectedGradeTier === tier.key;
             const count = getGradeTierCount(tier.key);
