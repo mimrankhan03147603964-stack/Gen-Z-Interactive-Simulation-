@@ -156,11 +156,19 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
             style={{ 
               width: '100%',
-              backgroundColor: '#FFFFFF',
+              backgroundImage: 'url(/assets/aistudio/WhatsApp_Image_2026-10-30_at_1.11.12_PM_6d9d576b.jpeg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
               borderColor: '#DDE5F3',
               boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
             }}
           >
+            {/* White overlay at 60% opacity */}
+            <div 
+              className="absolute inset-0 pointer-events-none z-0" 
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.6)' }}
+              aria-hidden="true"
+            />
           <div className="space-y-4 relative z-10">
             {/* Header: Icon, Title & Right Pill Badge */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
