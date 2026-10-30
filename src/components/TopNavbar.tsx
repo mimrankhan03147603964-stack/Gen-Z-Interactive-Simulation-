@@ -143,6 +143,11 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { label: 'For Students & Learners', href: '#pedagogical-hub' },
     { label: 'Curriculum Standards & Demonstration Guide', href: '#pedagogical-hub' },
     { label: 'Academic Research & Pedagogy', href: '#pedagogical-hub' },
+    { 
+      label: 'NNCP-2026', 
+      href: 'https://ncc.gov.pk/Detail/NGE4MWMwY2UtY2FlMS00YWY5LTkzYWMtNDBhN2MyYzVjNDUy',
+      isExternal: true 
+    },
   ];
 
   return (
@@ -360,7 +365,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase"
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
                     style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
                   >
                     PEDAGOGICAL AUDIENCE &amp; FRAMEWORK
@@ -370,6 +375,26 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   <div className="flex flex-col">
                     {hubDropdownItems.map((item, idx) => {
                       const isLast = idx === hubDropdownItems.length - 1;
+                      if (item.isExternal) {
+                        return (
+                          <a
+                            key={idx}
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => {
+                              setOpenDropdown(null);
+                              setIsPinned(false);
+                            }}
+                            className="w-full text-center px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center no-underline"
+                            style={{
+                              borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
+                            }}
+                          >
+                            <span>{item.label}</span>
+                          </a>
+                        );
+                      }
                       return (
                         <button
                           key={idx}
@@ -378,12 +403,12 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick(item.href);
                           }}
-                          className="w-full text-left px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer"
+                          className="w-full text-center px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
                           style={{
                             borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
                           }}
                         >
-                          {item.label}
+                          <span>{item.label}</span>
                         </button>
                       );
                     })}
