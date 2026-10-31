@@ -6,7 +6,16 @@ import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/nav
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getDisciplineColor } from '../data/simTheme';
 import { getThemeForIndex } from '../data/sequentialPalette';
-import heroBannerBg from '../assets/hero-banner-bg.jpg';
+import sliderImg1 from '../assets/hero-slider-1.jpg';
+import sliderImg2 from '../assets/hero-slider-2.jpg';
+import sliderImg3 from '../assets/hero-slider-3.jpg';
+
+const HERO_SLIDER_IMAGES = [
+  sliderImg1,
+  sliderImg2,
+  sliderImg3,
+  sliderImg1 // Copy of picture 1 for seamless infinite loop
+];
 
 interface HeroBannerProps {
   activeSim?: SimulationItem | null;
@@ -31,6 +40,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [time, setTime] = useState<string>('');
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
+
+  // Hero Background Continuous 3-Picture Slider State
+  const [bgSlideIndex, setBgSlideIndex] = useState<number>(0);
+  const [isBgTransitioning, setIsBgTransitioning] = useState<boolean>(true);
 
   // 2-Second Interval Timer & Fluid Right-to-Left Slide Rotator State
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -171,6 +184,36 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
     return () => clearTimeout(timeout);
   }, [slideIndex, typedSubject, typedDesc, isDeleting, isPaused, stemRotations]);
+
+  // Preload all 3 slider pictures so there is zero flicker
+  useEffect(() => {
+    HERO_SLIDER_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Continuous 2-second slider: move left by one picture with smooth 0.6s transition
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsBgTransitioning(true);
+      setBgSlideIndex((prev) => prev + 1);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // When copy of picture 1 (index 3) is reached, jump back to real picture 1 with no animation (no visible jump)
+  useEffect(() => {
+    if (bgSlideIndex === 3) {
+      const timeout = setTimeout(() => {
+        setIsBgTransitioning(false);
+        setBgSlideIndex(0);
+      }, 610); // after 0.6s transition finishes
+
+      return () => clearTimeout(timeout);
+    }
+  }, [bgSlideIndex]);
 
   // Digital clock widget
   useEffect(() => {
@@ -336,33 +379,45 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   return (
     <div className="relative group w-full space-y-4">
       
-      {/* Main Modern Educational Hero Card with Full Photographic Background & Dark Blue Readability Overlay */}
+      {/* Main Modern Educational Hero Card with Continuous Photographic Background Slider */}
       <div 
         className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl text-white shadow-xl"
         style={{
-          backgroundImage: `url(${heroBannerBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: '#0E1F42',
           border: '1.5px solid #F5A623',
-          boxShadow: '0 12px 36px rgba(27, 42, 92, 0.45)'
+          boxShadow: '0 12px 36px rgba(27, 42, 92, 0.45)',
+          backgroundColor: '#0E1F42'
         }}
       >
-        {/* Dark Blue Overlay on the left so the text stays perfectly readable while preserving the scene on the right */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, rgba(10, 22, 53, 0.96) 0%, rgba(12, 26, 64, 0.92) 36%, rgba(15, 34, 82, 0.82) 56%, rgba(11, 25, 60, 0.45) 78%, rgba(10, 22, 53, 0.22) 100%)',
-          }}
-        />
-        {/* Subtle vertical gradient for mobile viewports and seamless contrast */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(180deg, rgba(9, 20, 48, 0.45) 0%, rgba(9, 20, 48, 0.1) 35%, rgba(9, 20, 48, 0.3) 72%, rgba(9, 20, 48, 0.82) 100%)',
-          }}
-        />
+        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 0.6s transition, 100% sharp, opacity 1, zero overlays or filters */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
+          <div 
+            className="flex h-full"
+            style={{
+              width: '400%',
+              transform: `translateX(-${bgSlideIndex * 25}%)`,
+              transition: isBgTransitioning ? 'transform 600ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              willChange: 'transform'
+            }}
+          >
+            {HERO_SLIDER_IMAGES.map((src, idx) => (
+              <div key={`hero-bg-slide-${idx}`} className="w-1/4 h-full relative shrink-0">
+                <img 
+                  src={src} 
+                  alt={`Gen Z Interactive STEM Lab Background ${idx + 1}`}
+                  className="w-full h-full object-cover select-none pointer-events-none"
+                  style={{
+                    objectFit: 'cover',
+                    opacity: 1,
+                    filter: 'none'
+                  }}
+                  loading="eager"
+                  decoding="sync"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
@@ -647,14 +702,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
-          <div className="flex-1 min-w-0">
+          <div 
+            className="flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl max-w-3xl"
+            style={{
+              backgroundColor: 'rgba(11, 30, 59, 0.78)',
+              borderColor: 'rgba(255, 255, 255, 0.22)',
+              backdropFilter: 'blur(3px)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.55)'
+            }}
+          >
             <h1 
               className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight break-words text-white"
+              style={{
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 24px rgba(11, 30, 59, 0.95)'
+              }}
             >
               Gen Z Interactive Simulations Portal
             </h1>
             {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623' }}>
+            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 2px 4px rgba(0, 0, 0, 0.9)' }}>
               <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
               <span className="inline-flex items-center flex-wrap gap-1.5">
                 <span>Professional Multidisciplinary</span>
@@ -678,8 +744,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
             {/* Typewriter Dynamic Educational Description matching Subject */}
             <p 
-              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-normal min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
-              style={{ color: '#EEF3F9' }}
+              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-semibold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
+              style={{ 
+                color: '#FFFFFF',
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85)'
+              }}
             >
               <span>
                 {typedDesc}
@@ -742,8 +811,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Monogram Logo" 
-              className="block select-none pointer-events-none transition-transform duration-300 hover:scale-105 max-h-[75px] sm:max-h-[90px] md:max-h-[105px] w-auto object-contain"
-              style={{ display: 'block', background: 'transparent' }}
+              className="block select-none pointer-events-none transition-transform duration-300 hover:scale-105 max-h-[85px] sm:max-h-[100px] md:max-h-[115px] w-auto object-contain"
+              style={{ 
+                display: 'block', 
+                background: 'transparent',
+                filter: 'drop-shadow(0 4px 14px rgba(0, 0, 0, 0.75))'
+              }}
             />
           </div>
         </div>
