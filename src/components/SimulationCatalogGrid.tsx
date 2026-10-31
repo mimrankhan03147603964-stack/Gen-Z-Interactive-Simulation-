@@ -852,68 +852,45 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
       {/* Subject Panels Layout: Replaces the old large simulation cards */}
       <div className="w-full space-y-4">
-        {/* Scoped Styles for Subject Panels */}
+        {/* Scoped Styles for Horizontal Subject Panels & Horizontal Topic Cards */}
         <style>{`
-          .subject-panels-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 20px;
-            padding: 24px 4vw;
-            width: 100%;
-            box-sizing: border-box;
-          }
-          @media (max-width: 1000px) {
-            .subject-panels-grid {
-              grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            }
-          }
-          @media (max-width: 600px) {
-            .subject-panels-grid {
-              grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-              padding: 16px 8px !important;
-            }
-          }
-          .subject-panel {
+          .subject-panel-horizontal {
             background-color: #ffffff;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+            width: 100%;
+            transition: box-shadow 0.2s ease;
           }
-          .subject-panel:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px var(--subject-shadow-color);
+          .subject-panel-horizontal:hover {
+            box-shadow: 0 8px 26px var(--subject-shadow-color);
           }
-          .subject-topics-list {
-            height: auto;
-            overflow: visible;
-          }
-          .topic-row {
+          .horizontal-topic-card {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            color: #1E293B;
-            font-size: 15px;
-            font-weight: 500;
+            gap: 12px;
+            padding: 12px 14px;
+            background-color: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
             text-decoration: none;
             cursor: pointer;
-            transform: translateX(0);
-            transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease, font-weight 0.18s ease;
+            min-height: 64px;
+            box-sizing: border-box;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
           }
-          .topic-row:hover {
+          .horizontal-topic-card:hover {
+            transform: translateY(-2px);
             background-color: var(--subject-tint);
-            color: var(--subject-color) !important;
-            font-weight: 700 !important;
-            transform: translateX(4px);
+            border-color: var(--subject-color);
+            box-shadow: 0 6px 18px var(--subject-shadow-color);
           }
           @media (prefers-reduced-motion: reduce) {
-            .subject-panel, .subject-panel:hover,
-            .topic-row, .topic-row:hover {
+            .subject-panel-horizontal, .subject-panel-horizontal:hover,
+            .horizontal-topic-card, .horizontal-topic-card:hover {
               transition: none !important;
               transform: none !important;
             }
@@ -975,9 +952,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* 4-Column Subject Panels Grid */}
+        {/* Horizontal Subject Panels with Horizontal Topic Cards Grid */}
         {displayedSims.length > 0 ? (
-          <div className="subject-panels-grid">
+          <div className="space-y-6 w-full">
             {SUBJECT_PANELS_CONFIG
               .filter((panel) => {
                 if (!isAllCategory) {
@@ -1001,74 +978,94 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 return (
                   <div
                     key={panel.key}
-                    className="subject-panel"
+                    className="subject-panel-horizontal"
                     style={{
                       '--subject-color': panel.color,
                       '--subject-tint': panel.tint,
                       '--subject-shadow-color': panel.shadow
                     } as React.CSSProperties}
                   >
-                    {/* Header Bar in Subject's Color */}
+                    {/* Header Bar Across the Top in Subject's Color */}
                     <div
-                      className="p-4 flex items-center gap-3.5 text-white select-none shrink-0"
+                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap"
                       style={{ backgroundColor: panel.color }}
                     >
-                      <div className="w-[34px] h-[34px] flex items-center justify-center shrink-0">
-                        <PanelIcon className="w-[34px] h-[34px] text-white pointer-events-none drop-shadow-sm" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-[19px] font-bold leading-tight truncate text-white m-0 font-heading">
-                          {panel.name}
-                        </h3>
-                        <div className="text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
-                          {panelSims.length} simulations
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
+                          <PanelIcon className="w-[36px] h-[36px] text-white pointer-events-none drop-shadow-sm" />
                         </div>
+                        <div className="min-w-0">
+                          <h3 className="text-[18px] sm:text-[19px] font-bold leading-tight text-white m-0 font-heading">
+                            {panel.name}
+                          </h3>
+                          <p className="text-[12px] sm:text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
+                            Curriculum Interactive Simulations
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
+                          {panelSims.length} simulations
+                        </span>
                       </div>
                     </div>
 
-                    {/* Complete Vertical List of Topics (Fully Displayed, No Scroll) */}
-                    <div className="subject-topics-list p-2.5 flex flex-col gap-1 flex-1">
+                    {/* Horizontal Multi-Column Grid of Topic Cards (Spanning Across Laptop & Desktop) */}
+                    <div className="p-4 sm:p-5 bg-slate-50/70">
                       {panelSims.length > 0 ? (
-                        panelSims.map((sim) => {
-                          const displayTitle = cleanCardTitle(sim.title);
-                          const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
+                          {panelSims.map((sim) => {
+                            const displayTitle = cleanCardTitle(sim.title);
+                            const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
 
-                          return (
-                            <a
-                              key={sim.id}
-                              href={getSimulationStandaloneUrl(sim)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleCardClick(sim);
-                                if (onSelectSim) onSelectSim(sim);
-                              }}
-                              className="topic-row group"
-                              title={`Open ${displayTitle} in new tab`}
-                            >
-                              {/* Realistic & Colorful Simulation Topic Emblem */}
-                              <div
-                                className="w-[24px] h-[24px] flex items-center justify-center shrink-0 rounded-md bg-white shadow-2xs border border-slate-200/90 p-[2px] overflow-hidden group-hover:scale-110 group-hover:border-slate-300 transition-transform duration-150"
-                                aria-hidden="true"
+                            return (
+                              <a
+                                key={sim.id}
+                                href={getSimulationStandaloneUrl(sim)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleCardClick(sim);
+                                  if (onSelectSim) onSelectSim(sim);
+                                }}
+                                className="horizontal-topic-card group"
+                                title={`Open ${displayTitle} in new tab`}
                               >
-                                <TopicRealisticIcon
-                                  indexNumber={sim.indexNumber}
-                                  simId={sim.id}
-                                  className="w-full h-full pointer-events-none drop-shadow-2xs"
-                                />
-                              </div>
+                                {/* Left: Realistic & Colorful Vector Emblem Tile */}
+                                <div
+                                  className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
+                                  aria-hidden="true"
+                                >
+                                  <TopicRealisticIcon
+                                    indexNumber={sim.indexNumber}
+                                    simId={sim.id}
+                                    className="w-full h-full pointer-events-none drop-shadow-2xs"
+                                  />
+                                </div>
 
-                              {/* 15px Topic Name */}
-                              <span
-                                className={`text-[15px] leading-snug truncate ${isUrdu ? 'font-urdu' : ''}`}
-                                dir={isUrdu ? 'rtl' : 'ltr'}
-                              >
-                                {displayTitle}
-                              </span>
-                            </a>
-                          );
-                        })
+                                {/* Center: Full Topic Title - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
+                                <div className="flex-1 min-w-0 pr-1">
+                                  <span
+                                    className={`text-[14px] sm:text-[15px] font-semibold text-slate-800 group-hover:text-[var(--subject-color)] transition-colors leading-snug block break-words ${isUrdu ? 'font-urdu' : ''}`}
+                                    dir={isUrdu ? 'rtl' : 'ltr'}
+                                  >
+                                    {displayTitle}
+                                  </span>
+                                </div>
+
+                                {/* Right: Subtle Arrow Indicator */}
+                                <div 
+                                  className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-slate-400 group-hover:text-[var(--subject-color)] group-hover:bg-[var(--subject-tint)] group-hover:translate-x-0.5 transition-all"
+                                  aria-hidden="true"
+                                >
+                                  <ArrowRight className="w-4 h-4 shrink-0 font-bold" />
+                                </div>
+                              </a>
+                            );
+                          })}
+                        </div>
                       ) : (
                         <div className="py-8 text-center text-xs text-slate-400 font-medium">
                           No simulations match filter
