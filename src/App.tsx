@@ -95,7 +95,30 @@ export default function App() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Clean Soft Claymorphism & Neumorphic Light Theme
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('genz_sim_theme');
+      if (saved === 'dark') return true;
+      if (saved === 'light') return false;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch {
+      return false;
+    }
+  });
+
+  // Sync theme to localStorage and HTML root element
+  useEffect(() => {
+    try {
+      localStorage.setItem('genz_sim_theme', isDarkMode ? 'dark' : 'light');
+    } catch {
+      // storage unavailable
+    }
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   // Security & Code Asset Protection: Disable right-click & inspect shortcuts
   useEffect(() => {
@@ -269,10 +292,12 @@ export default function App() {
   // MAIN CATALOG PORTAL & DASHBOARD: Recolored to New Shell Palette
   return (
     <div 
-      className="min-h-screen flex flex-col font-sans select-none antialiased relative bg-[#EEF3F9]"
+      className={`min-h-screen flex flex-col font-sans select-none antialiased relative transition-colors duration-300 ${
+        isDarkMode ? 'bg-[#0B132B] text-slate-100' : 'bg-[#EEF3F9] text-slate-900'
+      }`}
       style={{ 
-        background: '#EEF3F9',
-        backgroundColor: '#EEF3F9'
+        background: isDarkMode ? '#0B132B' : '#EEF3F9',
+        backgroundColor: isDarkMode ? '#0B132B' : '#EEF3F9'
       }}
     >
       {/* Dynamic Moving Colorful Balloons Background Effect */}
