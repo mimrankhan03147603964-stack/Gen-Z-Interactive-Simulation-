@@ -714,10 +714,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           <div 
             className="flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl w-full max-w-none"
             style={{
-              backgroundColor: 'rgba(11, 30, 59, 0.78)',
-              borderColor: 'rgba(255, 255, 255, 0.22)',
-              backdropFilter: 'blur(3px)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.55)'
+              backgroundColor: 'rgba(10, 30, 80, 0.30)',
+              border: '1px solid rgba(255, 255, 255, 0.35)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)'
             }}
           >
             <h1 
@@ -725,13 +726,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               style={{
                 fontSize: 'clamp(0.85rem, 2.5vw, 2.65rem)',
                 whiteSpace: 'nowrap',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 24px rgba(11, 30, 59, 0.95)'
+                textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
               }}
             >
               Gen Z Interactive Simulations Portal
             </h1>
             {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 2px 4px rgba(0, 0, 0, 0.9)' }}>
+            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)' }}>
               <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
               <span className="inline-flex items-center flex-wrap gap-1.5">
                 <span>Professional Multidisciplinary</span>
@@ -755,10 +756,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
             {/* Typewriter Dynamic Educational Description matching Subject */}
             <p 
-              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-semibold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
+              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
               style={{ 
                 color: '#FFFFFF',
-                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85)'
+                textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
               }}
             >
               <span>
@@ -800,7 +801,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                 style={{
                   backgroundColor: 'transparent',
                   color: '#FFFFFF',
-                  border: '1px solid #42A5F5'
+                  border: '1px solid #42A5F5',
+                  textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#42A5F5';
