@@ -2565,12 +2565,32 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
         </svg>
       );
 
-    // Default Fallback
+    // Default Fallback: Colorful Realistic STEM Lab Flask & Orbiting Energy Emblem
     default:
       return (
         <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="32" cy="32" r="24" fill="#3b82f6" fillOpacity="0.2" stroke="#3b82f6" strokeWidth="2" />
-          <circle cx="32" cy="32" r="8" fill="#3b82f6" />
+          <defs>
+            <linearGradient id="realisticDefaultFlask" x1="20" y1="36" x2="44" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#2563eb" />
+            </linearGradient>
+            <linearGradient id="realisticDefaultGlow" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#ef4444" />
+            </linearGradient>
+          </defs>
+          {/* Atomic Orbit */}
+          <ellipse cx="32" cy="32" rx="26" ry="12" stroke="#60a5fa" strokeWidth="1.5" strokeDasharray="3 2" transform="rotate(-30 32 32)" />
+          {/* Flask Body */}
+          <path d="M28 12 H36 V24 L48 48 C49.5 51 47.5 54 44 54 H20 C16.5 54 14.5 51 16 48 L28 24 Z" fill="#ffffff" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+          {/* Solution Liquid */}
+          <path d="M18.5 44 L22 37 C26 39 38 35 42 37 L45.5 44 C46.5 46.5 45 52 42 52 H22 C19 52 17.5 46.5 18.5 44 Z" fill="url(#realisticDefaultFlask)" />
+          {/* Bubbles */}
+          <circle cx="28" cy="45" r="2.5" fill="#e0f2fe" opacity="0.9" />
+          <circle cx="36" cy="41" r="1.8" fill="#e0f2fe" opacity="0.9" />
+          <circle cx="32" cy="47" r="1.2" fill="#ffffff" />
+          {/* Orbiting Quantum Spark */}
+          <circle cx="50" cy="22" r="3.5" fill="url(#realisticDefaultGlow)" stroke="#ffffff" strokeWidth="1" />
         </svg>
       );
   }

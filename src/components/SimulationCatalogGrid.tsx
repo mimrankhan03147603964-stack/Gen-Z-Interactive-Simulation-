@@ -506,386 +506,80 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return true;
   });
 
-  // Helper functions matching uploaded card screenshot aesthetic
-  const getPastelTagStyle = (index: number) => {
-    const styles = [
-      'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]',
-      'bg-[#FFEDD5] text-[#9A3412] border-[#FED7AA]',
-      'bg-[#F3E8FF] text-[#6B21A8] border-[#E9D5FF]',
-      'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
-    ];
-    return styles[index % styles.length];
-  };
-
-  const formatShortGrade = (grade: string): { primary: string; secondary?: string } => {
-    let clean = grade
-      .replace(/Cambridge\s+Scholar\s*/gi, '')
-      .trim();
-
-    if (/Secondary School SSC-I|SSC-I|Grade 9\b/i.test(clean)) {
-      return { primary: 'Grade 9', secondary: 'SSC-I' };
+  const SUBJECT_PANELS_CONFIG = [
+    {
+      key: 'Physics & Motion',
+      name: 'Physics & Motion',
+      color: '#2563EB',
+      tint: 'rgba(37, 99, 235, 0.08)',
+      shadow: 'rgba(37, 99, 235, 0.35)',
+      icon: MultiPhysicsIcon
+    },
+    {
+      key: 'Chemistry & Matter',
+      name: 'Chemistry & Matter',
+      color: '#9333EA',
+      tint: 'rgba(147, 51, 234, 0.08)',
+      shadow: 'rgba(147, 51, 234, 0.35)',
+      icon: MultiChemistryIcon
+    },
+    {
+      key: 'Biology & Life',
+      name: 'Biology & Life',
+      color: '#16A34A',
+      tint: 'rgba(22, 163, 74, 0.08)',
+      shadow: 'rgba(22, 163, 74, 0.35)',
+      icon: MultiBiologyIcon
+    },
+    {
+      key: 'Earth & Space',
+      name: 'Earth & Space',
+      color: '#0284C7',
+      tint: 'rgba(2, 132, 199, 0.08)',
+      shadow: 'rgba(2, 132, 199, 0.35)',
+      icon: MultiEarthSpaceIcon
+    },
+    {
+      key: 'Mathematics & Logic',
+      name: 'Mathematics & Logic',
+      color: '#EA580C',
+      tint: 'rgba(234, 88, 12, 0.08)',
+      shadow: 'rgba(234, 88, 12, 0.35)',
+      icon: MultiMathIcon
+    },
+    {
+      key: 'Computer Science & IT',
+      name: 'Computer Science & IT',
+      color: '#0D9488',
+      tint: 'rgba(13, 148, 136, 0.08)',
+      shadow: 'rgba(13, 148, 136, 0.35)',
+      icon: MultiCompSciIcon
+    },
+    {
+      key: 'English & Grammar',
+      name: 'English & Grammar',
+      color: '#4F46E5',
+      tint: 'rgba(79, 70, 229, 0.08)',
+      shadow: 'rgba(79, 70, 229, 0.35)',
+      icon: MultiEnglishIcon
+    },
+    {
+      key: 'Early Childhood (ECCE)',
+      name: 'Early Childhood (ECCE)',
+      color: '#E11D48',
+      tint: 'rgba(225, 29, 72, 0.08)',
+      shadow: 'rgba(225, 29, 72, 0.35)',
+      icon: MultiEcceIcon
+    },
+    {
+      key: 'Urdu & Linguistics',
+      name: 'Urdu & Linguistics',
+      color: '#059669',
+      tint: 'rgba(5, 150, 105, 0.08)',
+      shadow: 'rgba(5, 150, 105, 0.35)',
+      icon: MultiUrduIcon
     }
-    if (/Secondary School SSC-II|SSC-II|Grade 10\b/i.test(clean)) {
-      return { primary: 'Grade 10', secondary: 'SSC-II' };
-    }
-    if (/HSSC-I|Grade 11\b/i.test(clean)) {
-      return { primary: 'Grade 11', secondary: 'HSSC-I' };
-    }
-    if (/HSSC-II|Grade 12\b/i.test(clean)) {
-      return { primary: 'Grade 12', secondary: 'HSSC-II' };
-    }
-    if (/Middle/i.test(clean) && /Secondary/i.test(clean)) {
-      return { primary: 'Middle', secondary: 'Secondary' };
-    }
-    if (/Secondary/i.test(clean) && /Higher/i.test(clean)) {
-      return { primary: 'Secondary', secondary: 'Higher Sec' };
-    }
-    if (/Primary/i.test(clean)) {
-      return { primary: 'Primary', secondary: 'Grades 1-5' };
-    }
-    if (/Middle/i.test(clean)) {
-      return { primary: 'Middle', secondary: 'Grades 6-8' };
-    }
-    if (/Secondary/i.test(clean)) {
-      return { primary: 'Secondary', secondary: 'Grades 9-10' };
-    }
-    if (/Higher/i.test(clean)) {
-      return { primary: 'Higher Sec', secondary: 'Grades 11-12' };
-    }
-    if (/ECCE|Early/i.test(clean)) {
-      return { primary: 'ECCE', secondary: 'Early Years' };
-    }
-
-    const parts = clean.split(/[•·/]/).map(p => p.trim()).filter(Boolean);
-    if (parts.length >= 2) {
-      return { 
-        primary: parts[0].slice(0, 10), 
-        secondary: parts[1].slice(0, 12) 
-      };
-    }
-    return { primary: clean.slice(0, 16) };
-  };
-
-  const renderGradePill = (grade: string) => {
-    const g = formatShortGrade(grade);
-    if (g.secondary) {
-      return (
-        <div className="inline-flex items-center rounded-full overflow-hidden text-[11px] font-bold font-sans shadow-2xs border border-[#E2E8F0] shrink-0 max-w-[190px]">
-          <span className="px-2.5 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
-            {g.primary}
-          </span>
-          <span className="px-2.5 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
-            {g.secondary}
-          </span>
-        </div>
-      );
-    }
-    return (
-      <div className="inline-flex items-center rounded-full overflow-hidden text-[11px] font-bold font-sans shadow-2xs border border-[#BFDBFE] shrink-0 max-w-[190px]">
-        <span className="px-2.5 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
-          {g.primary}
-        </span>
-      </div>
-    );
-  };
-
-  const formatShortTopic = (topic: string): string => {
-    let t = topic
-      .replace(/\.html$/i, '')
-      .replace(/_/g, ' ')
-      .replace(/\(.*?\)/g, '')
-      .replace(/Experiment|Investigation|Demonstration|Simulation|Laboratory|Theory|Classical|Maxwell|Defects\s+in/gi, '')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-
-    if (/[\u0600-\u06FF]/.test(t)) {
-      return t.length > 16 ? t.substring(0, 14) + '…' : t;
-    }
-
-    const words = t.split(/\s+/).filter(Boolean);
-    if (words.length > 2) {
-      t = words.slice(0, 2).join(' ');
-    }
-    if (t.length > 16) {
-      t = t.substring(0, 14) + '…';
-    }
-    return t || 'Topic';
-  };
-
-  // Generate concise, high-impact learning objectives from curriculum topics
-  const getLearningObjectives = (sim: SimulationItem): string[] => {
-    if (sim.topics && sim.topics.length > 0) {
-      const actionVerbs = ['Understand', 'Analyze', 'Investigate', 'Explore', 'Examine', 'Master'];
-      return sim.topics.slice(0, 3).map((topic, idx) => {
-        const cleanT = cleanCardTopic(topic);
-        if (/[\u0600-\u06FF]/.test(cleanT)) {
-          return cleanT;
-        }
-        if (/^(understand|explore|investigate|analyze|calculate|observe|learn|study|master|identify)/i.test(cleanT)) {
-          return cleanT;
-        }
-        const verb = actionVerbs[idx % actionVerbs.length];
-        return `${verb} ${cleanT}`;
-      });
-    }
-    return [
-      `Master core principles of ${cleanCardSubject(sim.subject)}`,
-      'Investigate variables and real-time interactive parameters',
-      'Observe cause-and-effect scientific outcomes'
-    ];
-  };
-
-  const renderObjectivesTooltip = (sim: SimulationItem) => {
-    const objectives = getLearningObjectives(sim);
-    const displayTitle = cleanCardTitle(sim.title);
-    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
-
-    return (
-      <div className="relative group/tip z-30">
-        {/* Objectives Badge / Trigger */}
-        <div
-          tabIndex={0}
-          role="button"
-          aria-label={`View learning objectives for ${displayTitle}`}
-          className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-[#FCD34D] shadow-2xs transition-all cursor-help group-hover/tip:border-[#F59E0B] group-hover/tip:shadow-xs"
-        >
-          <Target className="w-3 h-3 text-[#D97706] shrink-0" />
-          <span className="font-heading">Objectives</span>
-        </div>
-
-        {/* Hover-Triggered Floating Tooltip */}
-        <div
-          role="tooltip"
-          className="absolute bottom-[calc(100%+8px)] right-0 w-72 sm:w-80 p-3.5 rounded-2xl bg-[#0F172A] text-white border border-[#334155] shadow-2xl pointer-events-none opacity-0 invisible translate-y-1 group-hover/tip:opacity-100 group-hover/tip:visible group-hover/tip:translate-y-0 transition-all duration-200 z-50 text-left"
-          style={{
-            boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)'
-          }}
-        >
-          {/* Arrow Notch */}
-          <div className="absolute -bottom-1.5 right-5 w-3 h-3 bg-[#0F172A] border-r border-b border-[#334155] rotate-45" />
-
-          {/* Tooltip Header */}
-          <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-700/80">
-            <div className="flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 font-mono">
-                Learning Objectives
-              </span>
-            </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-              {sim.category.split('&')[0].trim()}
-            </span>
-          </div>
-
-          {/* Simulation Title in Tooltip */}
-          <p className="text-xs font-black text-white line-clamp-1 mb-2 font-heading">
-            {displayTitle}
-          </p>
-
-          {/* Bulleted Learning Outcomes */}
-          <div className="space-y-1.5 mb-2.5">
-            {objectives.map((obj, i) => (
-              <div key={i} className="flex items-start gap-1.5 text-xs leading-snug text-slate-200">
-                <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
-                <span className={isUrdu && /[\u0600-\u06FF]/.test(obj) ? 'font-urdu' : ''}>{obj}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Footer Highlights */}
-          <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400 font-medium">
-            <span className="flex items-center gap-1 text-emerald-400 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-ping" />
-              Verified STEM Concepts
-            </span>
-            <span className="text-amber-300 font-mono font-bold">Launch Lab ↗</span>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Render a simulation card matching the screenshot layout & high-definition button aesthetics
-  const renderCard = (sim: SimulationItem, _cardIndex: number) => {
-    const isActive = activeSim ? activeSim.id === sim.id : false;
-    const isConceptGuide = sim.id === 'sim-ecce-curriculum-learning-areas';
-    const displayTitle = cleanCardTitle(sim.title);
-    const displayGrade = cleanGradeBadge(sim.gradeLevel);
-    const displaySubject = cleanCardSubject(sim.subject);
-    const displayDesc = cleanCardDescription(sim.description);
-    const objectives = getLearningObjectives(sim);
-
-    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
-    const parsedNum = parseInt(sim.indexNumber, 10);
-    const colorIdx = !isNaN(parsedNum) && parsedNum > 0 ? (parsedNum - 1) : _cardIndex;
-    const cardLaunchBtnStyle = getLaunchBtnStyle(colorIdx);
-
-    return (
-      <div
-        key={sim.id}
-        onClick={(e) => {
-          if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
-          handleCardClick(sim);
-        }}
-        className={`rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group/card select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full ${
-          isActive ? 'ring-3 ring-[#0284C7] shadow-xl scale-[1.01]' : ''
-        }`}
-      >
-        {/* Top Header: Visual Emblem Pedestal & LAB Badge Row */}
-        <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
-          {/* Realistic Visual Emblem Pedestal */}
-          <a
-            href={getSimulationStandaloneUrl(sim)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
-            title={`Open ${displayTitle} in new tab`}
-          >
-            <TopicRealisticIcon 
-              indexNumber={sim.indexNumber} 
-              simId={sim.id} 
-              className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" 
-            />
-          </a>
-
-          {/* Lab / Concept Badge (Deep Indigo Pill from Screenshot) */}
-          <span 
-            className="font-mono text-xs font-black px-3.5 py-1 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
-          >
-            {isConceptGuide ? 'CONCEPT GUIDE' : `LAB ${sim.indexNumber}`}
-          </span>
-        </div>
-
-        {/* Dedicated Grade / Class Level Area & Objectives Trigger */}
-        <div className="relative z-10 flex items-center justify-between gap-1.5 mt-2.5 mb-1.5">
-          {renderGradePill(displayGrade)}
-          
-          <div className="group/obj relative">
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-[#FCD34D] shadow-2xs transition-all cursor-help shrink-0"
-              title="Hover to view Learning Objectives"
-            >
-              <Target className="w-3 h-3 text-[#D97706] shrink-0" />
-              <span className="font-heading">Objectives</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Content: Title, Subject, Description, Topics */}
-        <div className="relative z-10 flex flex-col flex-1">
-          {/* Simulation Topic Title - Full Topic Name ALWAYS Displayed Completely */}
-          <h4 
-            className={`text-base sm:text-lg font-black tracking-tight ${
-              isUrdu ? 'font-urdu leading-[1.8]' : 'font-heading leading-snug'
-            } text-[#0F172A] group-hover:text-[#0284C7] transition-colors break-words`}
-            dir={isUrdu ? 'rtl' : 'ltr'}
-          >
-            <a
-              href={getSimulationStandaloneUrl(sim)}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className="hover:underline transition-colors text-[#0F172A] group-hover:text-[#0284C7]"
-              title={`Open ${displayTitle} in new tab`}
-            >
-              {displayTitle}
-            </a>
-          </h4>
-
-          {/* Subject & Sub-discipline */}
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] shrink-0" />
-            <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{displaySubject}</span>
-          </div>
-
-          {/* Concise Description - Compact without large empty gaps */}
-          {displayDesc && (
-            <p 
-              className={`text-xs font-normal leading-relaxed text-[#475569] line-clamp-2 mt-2 ${
-                isUrdu ? 'font-urdu leading-[1.8]' : ''
-              }`}
-              dir={isUrdu ? 'rtl' : 'ltr'}
-              title={displayDesc}
-            >
-              {displayDesc}
-            </p>
-          )}
-
-          {/* Topic Tags (Pastel pills - Shortened & Truncated so they never overflow) */}
-          <div className="flex flex-wrap gap-1.5 mt-2.5">
-            {sim.topics.slice(0, 3).map((topic, i) => {
-              const shortT = formatShortTopic(topic);
-              const isTopicUrdu = /[\u0600-\u06FF]/.test(shortT);
-              return (
-                <span
-                  key={i}
-                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs max-w-[110px] truncate ${getPastelTagStyle(i)} ${
-                    isTopicUrdu ? 'font-urdu leading-[1.8]' : ''
-                  }`}
-                  dir={isTopicUrdu ? 'rtl' : 'ltr'}
-                  title={topic}
-                >
-                  {shortT}
-                </span>
-              );
-            })}
-            {sim.topics.length > 3 && (
-              <span 
-                className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] shrink-0"
-              >
-                +{sim.topics.length - 3}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
-        <div className="relative z-10 pt-4 mt-3.5 border-t border-slate-200/80 flex items-center justify-between gap-2.5">
-          {/* Main Action Button */}
-          <a
-            href={getSimulationStandaloneUrl(sim)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg hover:brightness-110 transition-all transform active:scale-98 cursor-pointer select-none"
-            style={{
-              background: cardLaunchBtnStyle.bg,
-              boxShadow: cardLaunchBtnStyle.shadow,
-              color: '#FFFFFF'
-            }}
-            title={isConceptGuide ? "Explore Detailed Pedagogical Concept Guide in New Tab" : "Launch Detailed Simulation Lab in New Tab"}
-          >
-            <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-            <span className="font-black text-white truncate" style={{ color: '#FFFFFF' }}>{isConceptGuide ? 'Explore Concept' : 'Launch Lab'}</span>
-          </a>
-
-          {/* Direct Fullscreen Modal Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onLaunchFullscreenModal(sim);
-            }}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
-            title="Launch in Fullscreen View"
-          >
-            <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
-          </button>
-        </div>
-
-        {/* Learning Objectives Inset Drawer / Full Overview on Card Hover */}
-        <div className="absolute inset-0 z-30 p-5 rounded-3xl bg-[#0F172A] text-white opacity-0 invisible pointer-events-none group-hover/card:opacity-0 hover:!opacity-100 transition-all duration-200 flex flex-col justify-between" id={`obj-panel-${sim.id}`} />
-      </div>
-    );
-  };
+  ];
 
   const getGradeTierStyle = (_tierKey: string, isSelected: boolean) => {
     return {
@@ -1156,109 +850,116 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         </div>
       </div>
 
-      {/* IF HOME VIEW: Render Clean Navigation Callout */}
-      {isHomeView ? (
+      {/* Subject Panels Layout: Replaces the old large simulation cards */}
+      <div className="w-full space-y-4">
+        {/* Scoped Styles for Subject Panels */}
+        <style>{`
+          .subject-panels-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            padding: 24px 4vw;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          @media (max-width: 1000px) {
+            .subject-panels-grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+          }
+          @media (max-width: 600px) {
+            .subject-panels-grid {
+              grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+              padding: 16px 8px !important;
+            }
+          }
+          .subject-panel {
+            background-color: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+          .subject-panel:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px var(--subject-shadow-color);
+          }
+          .subject-topics-list {
+            height: auto;
+            overflow: visible;
+          }
+          .topic-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #1E293B;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transform: translateX(0);
+            transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease, font-weight 0.18s ease;
+          }
+          .topic-row:hover {
+            background-color: var(--subject-tint);
+            color: var(--subject-color) !important;
+            font-weight: 700 !important;
+            transform: translateX(4px);
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .subject-panel, .subject-panel:hover,
+            .topic-row, .topic-row:hover {
+              transition: none !important;
+              transform: none !important;
+            }
+          }
+        `}</style>
+
+        {/* Top Search Bar & Counter */}
         <div 
-          className="relative z-10 p-6 sm:p-7 rounded-2xl shadow-lg border text-white flex flex-col lg:flex-row items-center justify-between gap-6 select-none"
-          style={{
-            backgroundColor: '#1B2A5C',
-            borderColor: '#F5A623',
-            boxShadow: '0 8px 30px rgba(27, 42, 92, 0.25)'
-          }}
-        >
-          <div className="space-y-2 text-center lg:text-left flex-1 min-w-0">
-            <div className="flex items-center gap-2 justify-center lg:justify-start">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-wider text-[#1B2A5C] px-3.5 py-1 rounded-md bg-[#F5A623] border border-[#E58E0A]">
-                <Sparkles className="w-3.5 h-3.5 text-[#1B2A5C]" />
-                LABORATORY WORKSPACE
-              </span>
-            </div>
-            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-[25px] font-black text-white font-heading tracking-tight whitespace-nowrap">
-              Click Any Grade or Subject Above to Open Interactive Labs
-            </h3>
-            <p className="text-xs sm:text-sm text-[#DBE4F7] font-normal leading-relaxed max-w-2xl">
-              Select any curriculum grade tier or STEM discipline above to view dedicated simulation laboratories in a high-contrast, distraction-free environment.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => onOpenCatalog && onOpenCatalog('All Simulations', 'all')}
-            className="fx-pulse-whatsapp relative z-20 px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base font-sans font-black text-white bg-[#16A34A] hover:bg-[#15803D] border border-[#22C55E] shadow-md transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-2.5 active:scale-95"
-            title="Open Complete STEM Simulations Catalog"
-          >
-            <BookOpen className="w-5 h-5 text-white pointer-events-none shrink-0" />
-            <span className="font-heading tracking-wider uppercase font-black text-white">
-              OPEN NOW
-            </span>
-            <ArrowRight className="w-5 h-5 text-white pointer-events-none shrink-0" />
-          </button>
-        </div>
-      ) : (
-        /* Dedicated Full-Width Simulation Catalog Main Content (Only shown in Catalog View) */
-        <div className="w-full space-y-6">
-        
-        {/* Top Breadcrumb & Quick Search Filter Bar */}
-        <div 
-          className="shadow-lg rounded-2xl p-5 sm:p-6 transition-all border"
+          className="shadow-lg rounded-2xl p-4 sm:p-5 transition-all border"
           style={{
             backgroundColor: '#FFFFFF',
             borderColor: '#DDE5F3',
             boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
           }}
         >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            
-            {/* Breadcrumb & Subject Header */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-[#3B4A73] flex-wrap">
-                <span 
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-base sm:text-lg font-black tracking-tight text-[#1B2A5C] font-heading">
+                {isAllCategory ? 'All STEM Disciplines' : activeSubjectConfig.fullTitle}
+              </span>
+              <span className="px-3 py-1 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3] font-mono">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1E88E5] shrink-0" />
+                {displayedSims.length} Active Simulations
+              </span>
+              {!isAllCategory && (
+                <button
+                  type="button"
                   onClick={() => handleCategoryChange('All Simulations')}
-                  className="cursor-pointer hover:underline text-[#1E88E5] font-bold"
+                  className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#EEF3F9] text-[#1E88E5] border border-[#DDE5F3] hover:bg-[#DBE7FB] transition-colors cursor-pointer"
+                  title="Show all subjects"
                 >
-                  Interactive Catalog
-                </span>
-                <span>&gt;</span>
-                <span className="text-[#1B2A5C] font-bold">
-                  {isAllCategory ? 'All Simulations' : activeSubjectConfig.fullTitle}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#1B2A5C] font-heading">
-                  {isAllCategory ? 'All STEM Simulations' : activeSubjectConfig.fullTitle}
-                </h2>
-                {!isAllCategory && (
-                  <button
-                    type="button"
-                    onClick={() => handleCategoryChange('All Simulations')}
-                    className="px-3 py-1 rounded-lg text-xs font-bold bg-[#EEF3F9] text-[#1E88E5] border border-[#DDE5F3] flex items-center gap-1.5 cursor-pointer hover:bg-[#DBE7FB] transition-colors shadow-xs"
-                    title="Reset discipline filter to show all simulations"
-                  >
-                    <span>Filter: {activeSubjectConfig.fullTitle}</span>
-                    <span className="font-bold text-sm">&times;</span>
-                  </button>
-                )}
-                <span className="px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3] font-mono">
-                  <CheckCircle2 className="w-4 h-4 text-[#1E88E5] shrink-0" />
-                  {displayedSims.length === activeSimulations.length
-                    ? `Showing All ${activeSimulations.length} Verified Labs`
-                    : `Showing ${displayedSims.length} of ${activeSimulations.length} Total Labs`}
-                </span>
-              </div>
+                  Show All Subjects &times;
+                </button>
+              )}
             </div>
 
-            {/* Quick Search Bar to Filter Labs Instantly */}
-            <div className="w-full md:w-80 shrink-0">
-              <div 
-                className="relative flex items-center rounded-xl border border-[#C9D3E6] bg-[#FFFFFF] shadow-inner focus-within:ring-2 focus-within:ring-[#1E88E5]"
-              >
+            {/* Quick Search */}
+            <div className="w-full sm:w-72 shrink-0">
+              <div className="relative flex items-center rounded-xl border border-[#C9D3E6] bg-[#FFFFFF] shadow-inner focus-within:ring-2 focus-within:ring-[#1E88E5]">
                 <Search className="w-4 h-4 ml-3.5 shrink-0 text-[#1E88E5]" />
                 <input
                   type="text"
-                  placeholder="Search labs across disciplines..."
+                  placeholder="Filter topics by keyword..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-2.5 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-[#1B2A5C] placeholder-[#8A97B8] font-sans"
+                  className="w-full py-2 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-[#1B2A5C] placeholder-[#8A97B8] font-sans"
                 />
                 {searchTerm && (
                   <button
@@ -1271,75 +972,170 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 )}
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* Full-Width Simulation Cards Grid: 4 Columns on Large/Widescreen Displays */}
+        {/* 4-Column Subject Panels Grid */}
         {displayedSims.length > 0 ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 w-full">
-              {displayedSims.map((sim, index) => renderCard(sim, index))}
-            </div>
+          <div className="subject-panels-grid">
+            {SUBJECT_PANELS_CONFIG
+              .filter((panel) => {
+                if (!isAllCategory) {
+                  return panel.key === selectedCategory;
+                }
+                return true;
+              })
+              .map((panel) => {
+                const panelSims = activeSimulations.filter((sim) => {
+                  if (sim.category !== panel.key) return false;
+                  if (!matchesGradeTier(sim, selectedGradeTier)) return false;
+                  if (!matchesSearch(sim)) return false;
+                  return true;
+                });
+
+                // If a search is active and this panel has 0 matching sims, omit it
+                if (searchTerm && panelSims.length === 0) return null;
+
+                const PanelIcon = panel.icon;
+
+                return (
+                  <div
+                    key={panel.key}
+                    className="subject-panel"
+                    style={{
+                      '--subject-color': panel.color,
+                      '--subject-tint': panel.tint,
+                      '--subject-shadow-color': panel.shadow
+                    } as React.CSSProperties}
+                  >
+                    {/* Header Bar in Subject's Color */}
+                    <div
+                      className="p-4 flex items-center gap-3.5 text-white select-none shrink-0"
+                      style={{ backgroundColor: panel.color }}
+                    >
+                      <div className="w-[34px] h-[34px] flex items-center justify-center shrink-0">
+                        <PanelIcon className="w-[34px] h-[34px] text-white pointer-events-none drop-shadow-sm" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-[19px] font-bold leading-tight truncate text-white m-0 font-heading">
+                          {panel.name}
+                        </h3>
+                        <div className="text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
+                          {panelSims.length} simulations
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Complete Vertical List of Topics (Fully Displayed, No Scroll) */}
+                    <div className="subject-topics-list p-2.5 flex flex-col gap-1 flex-1">
+                      {panelSims.length > 0 ? (
+                        panelSims.map((sim) => {
+                          const displayTitle = cleanCardTitle(sim.title);
+                          const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+
+                          return (
+                            <a
+                              key={sim.id}
+                              href={getSimulationStandaloneUrl(sim)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleCardClick(sim);
+                                if (onSelectSim) onSelectSim(sim);
+                              }}
+                              className="topic-row group"
+                              title={`Open ${displayTitle} in new tab`}
+                            >
+                              {/* Realistic & Colorful Simulation Topic Emblem */}
+                              <div
+                                className="w-[24px] h-[24px] flex items-center justify-center shrink-0 rounded-md bg-white shadow-2xs border border-slate-200/90 p-[2px] overflow-hidden group-hover:scale-110 group-hover:border-slate-300 transition-transform duration-150"
+                                aria-hidden="true"
+                              >
+                                <TopicRealisticIcon
+                                  indexNumber={sim.indexNumber}
+                                  simId={sim.id}
+                                  className="w-full h-full pointer-events-none drop-shadow-2xs"
+                                />
+                              </div>
+
+                              {/* 15px Topic Name */}
+                              <span
+                                className={`text-[15px] leading-snug truncate ${isUrdu ? 'font-urdu' : ''}`}
+                                dir={isUrdu ? 'rtl' : 'ltr'}
+                              >
+                                {displayTitle}
+                              </span>
+                            </a>
+                          );
+                        })
+                      ) : (
+                        <div className="py-8 text-center text-xs text-slate-400 font-medium">
+                          No simulations match filter
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         ) : (
-            <div 
-              className="rounded-2xl p-8 sm:p-12 text-center text-white border shadow-lg transition-all"
-              style={{
-                background: 'linear-gradient(135deg, #1546A8 0%, #1B2A5C 100%)',
-                backgroundColor: '#1B2A5C',
-                borderColor: '#F5A623',
-                boxShadow: '0 8px 30px rgba(27, 42, 92, 0.45)'
-              }}
-            >
-              <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#1546A8] text-[#F5A623] mb-4 border border-[#F5A623]">
-                <Sparkles className="w-8 h-8 text-[#F5A623]" />
-              </div>
-              <span className="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-[#1B2A5C] bg-[#F5A623] border border-[#E58E0A] inline-block mb-2 font-mono">
-                No Pre-Built Simulation Found
-              </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-white">
-                {searchTerm ? `Synthesize Simulation for "${searchTerm}"` : `No Labs Found`}
-              </h3>
-              <p className="text-xs sm:text-sm font-normal mt-2 max-w-xl mx-auto leading-relaxed text-[#DBE4F7]">
-                Use the generator below to synthesize an interactive simulation canvas and controls on the fly.
-              </p>
-
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                {searchTerm && (
-                  <button
-                    disabled={isGeneratingAi}
-                    onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
-                    className="px-6 py-3 rounded-xl text-sm font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] cursor-pointer transition-all active:scale-95 flex items-center gap-2 shadow-md disabled:opacity-50"
-                  >
-                    {isGeneratingAi ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin text-[#1B2A5C]" />
-                        <span>Synthesizing Simulation...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="w-4 h-4 text-[#1B2A5C]" />
-                        <span>Synthesize &ldquo;{searchTerm}&rdquo; Lab</span>
-                      </>
-                    )}
-                  </button>
-                )}
-
-                <button
-                  onClick={() => {
-                    handleCategoryChange('All Simulations');
-                    setSearchTerm('');
-                  }}
-                  className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#1546A8] hover:bg-[#1B2A5C] text-[#DBE4F7] border border-[#2D62D1]"
-                >
-                  View All Simulations
-                </button>
-              </div>
+          <div 
+            className="rounded-2xl p-8 sm:p-12 text-center text-white border shadow-lg transition-all"
+            style={{
+              background: 'linear-gradient(135deg, #1546A8 0%, #1B2A5C 100%)',
+              backgroundColor: '#1B2A5C',
+              borderColor: '#F5A623',
+              boxShadow: '0 8px 30px rgba(27, 42, 92, 0.45)'
+            }}
+          >
+            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#1546A8] text-[#F5A623] mb-4 border border-[#F5A623]">
+              <Sparkles className="w-8 h-8 text-[#F5A623]" />
             </div>
-          )}
-        </div>
-      )}
+            <span className="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-[#1B2A5C] bg-[#F5A623] border border-[#E58E0A] inline-block mb-2 font-mono">
+              No Pre-Built Simulation Found
+            </span>
+            <h3 className="text-xl sm:text-2xl font-bold text-white">
+              {searchTerm ? `Synthesize Simulation for "${searchTerm}"` : `No Labs Found`}
+            </h3>
+            <p className="text-xs sm:text-sm font-normal mt-2 max-w-xl mx-auto leading-relaxed text-[#DBE4F7]">
+              Use the generator below to synthesize an interactive simulation canvas and controls on the fly.
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              {searchTerm && (
+                <button
+                  disabled={isGeneratingAi}
+                  onClick={() => onTriggerAiGeneration && onTriggerAiGeneration(searchTerm.trim())}
+                  className="px-6 py-3 rounded-xl text-sm font-black text-[#1B2A5C] bg-[#F5A623] hover:bg-[#E58E0A] border border-[#E58E0A] cursor-pointer transition-all active:scale-95 flex items-center gap-2 shadow-md disabled:opacity-50"
+                >
+                  {isGeneratingAi ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-[#1B2A5C]" />
+                      <span>Synthesizing Simulation...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="w-4 h-4 text-[#1B2A5C]" />
+                      <span>Synthesize &ldquo;{searchTerm}&rdquo; Lab</span>
+                    </>
+                  )}
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  handleCategoryChange('All Simulations');
+                  setSearchTerm('');
+                }}
+                className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#1546A8] hover:bg-[#1B2A5C] text-[#DBE4F7] border border-[#2D62D1]"
+              >
+                View All Simulations
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 };

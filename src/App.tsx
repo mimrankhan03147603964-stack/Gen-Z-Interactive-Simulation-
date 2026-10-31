@@ -386,7 +386,7 @@ export default function App() {
                 />
               </ScrollReveal>
 
-              {/* 3. Grade & Subject Selection Area (No Simulation Cards Rendered Here!) */}
+              {/* 3. STEM Subject Panels Grid Layout */}
               <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
                 <SimulationCatalogGrid
                   simulations={allSimulations}
