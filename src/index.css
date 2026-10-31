@@ -166,68 +166,6 @@
   box-shadow: 0 12px 28px -5px rgba(0, 80, 180, 0.1), 0 6px 12px -4px rgba(0, 0, 0, 0.06);
 }
 
-/* Dark Theme Overrides for Smooth Dark Mode Switch */
-html.dark {
-  background-color: #0B132B !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark body {
-  background-color: #0B132B !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark #root {
-  background-color: #0B132B !important;
-}
-
-html.dark .clay-card, 
-html.dark .glass {
-  background: #1C2541 !important;
-  border-color: #334155 !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark .clay-card-frosted {
-  background: #1C2541 !important;
-  border-color: #334155 !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark .subject-panel-horizontal {
-  background-color: #131E3A !important;
-  border-color: #2D3748 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
-}
-
-html.dark .horizontal-topic-card {
-  background-color: #1C2541 !important;
-  border-color: #2D3748 !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark .horizontal-topic-card:hover {
-  background-color: #243056 !important;
-}
-
-html.dark .horizontal-topic-card span {
-  color: #F1F5F9 !important;
-}
-
-html.dark .external-sim-row {
-  background-color: #1C2541 !important;
-  border-color: #2D3748 !important;
-  color: #F1F5F9 !important;
-}
-
-html.dark .external-sim-row h3 {
-  color: #FFFFFF !important;
-}
-
-html.dark .external-sim-row p {
-  color: #94A3B8 !important;
-}
-
 /* Primary / Active State Button: Vibrant Gradient with soft top glow */
 .clay-btn-primary {
   background: linear-gradient(135deg, #00a2ff 0%, #3b82f6 50%, #6366f1 100%);

@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
-  ChevronDown,
-  Sun,
-  Moon
+  ChevronDown 
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -524,32 +522,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             title="Explore Full STEM Labs Catalog Grid"
           >
             <span>Explore All Labs</span>
-          </button>
-
-          {/* Sleek Dark / Light Mode Toggle Button */}
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold border transition-all duration-200 cursor-pointer shadow-xs select-none ml-1 active:scale-95 shrink-0"
-            style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#1546A8',
-              borderColor: isDarkMode ? '#F5A623' : '#42A5F5',
-              color: isDarkMode ? '#F5A623' : '#FFFFFF'
-            }}
-            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            aria-label={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {isDarkMode ? (
-              <>
-                <Sun className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
-                <span className="hidden sm:inline font-mono font-bold tracking-tight text-[#F5A623]">Light</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5 text-[#FCD34D] shrink-0" />
-                <span className="hidden sm:inline font-mono font-bold tracking-tight text-white">Dark</span>
-              </>
-            )}
           </button>
         </nav>
 
