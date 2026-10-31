@@ -193,12 +193,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
     });
   }, []);
 
-  // Continuous 2-second slider: move left by one picture with smooth 0.6s transition
+  // Continuous 6-second slider: move left by one picture with smooth 0.8s transition
   useEffect(() => {
     const interval = setInterval(() => {
       setIsBgTransitioning(true);
       setBgSlideIndex((prev) => prev + 1);
-    }, 2000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, []);
@@ -209,7 +209,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
       const timeout = setTimeout(() => {
         setIsBgTransitioning(false);
         setBgSlideIndex(0);
-      }, 610); // after 0.6s transition finishes
+      }, 815); // after 0.8s transition finishes
 
       return () => clearTimeout(timeout);
     }
@@ -388,14 +388,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           backgroundColor: '#0E1F42'
         }}
       >
-        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 0.6s transition, 100% sharp, opacity 1, zero overlays or filters */}
+        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 0.8s transition, 80% visibility */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
           <div 
             className="flex h-full"
             style={{
               width: '400%',
               transform: `translateX(-${bgSlideIndex * 25}%)`,
-              transition: isBgTransitioning ? 'transform 600ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              transition: isBgTransitioning ? 'transform 800ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
               willChange: 'transform'
             }}
           >
@@ -407,7 +407,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   className="w-full h-full object-cover select-none pointer-events-none"
                   style={{
                     objectFit: 'cover',
-                    opacity: 1,
+                    opacity: 0.8,
                     filter: 'none'
                   }}
                   loading="eager"
@@ -417,6 +417,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
             ))}
           </div>
+
+          {/* Subtle Dark Overlay (20% opacity) so foreground text stands out sharply and cleanly */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}
+          />
         </div>
 
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
