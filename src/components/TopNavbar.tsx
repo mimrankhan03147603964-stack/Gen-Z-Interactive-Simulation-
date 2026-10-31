@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
-  ChevronDown,
-  ExternalLink
+  ChevronDown 
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -442,20 +441,21 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'external' ? 'rotate-180' : ''}`} />
             </button>
 
-            {/* Dropdown Panel in Solid Blue & Gold Styling */}
+            {/* Dropdown Panel in Solid Blue Styling matching STEM Catalog */}
             {openDropdown === 'external' && (
               <div 
-                className="absolute right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 top-full pt-1.5 z-[99999]"
+                className="absolute right-0 top-full pt-1.5 z-[99999]"
                 style={{
                   position: 'absolute',
                   top: '100%',
+                  right: 0,
                   zIndex: 99999
                 }}
                 onMouseEnter={() => handleMouseEnter('external')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[310px] sm:w-[370px] rounded-xl overflow-hidden select-none border shadow-2xl"
+                  className="w-[295px] sm:w-[330px] rounded-xl overflow-hidden select-none border shadow-2xl"
                   style={{
                     backgroundColor: '#1B2A5C',
                     border: '1.5px solid #F5A623',
@@ -466,20 +466,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase flex items-center justify-between"
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase"
                     style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
                   >
-                    <span>EXTERNAL SIMULATION WEBSITES</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1B2A5C] text-[#F5A623] border border-[#F5A623]/40">
-                      {EXTERNAL_SIMULATION_RESOURCES.length} PLATFORMS
-                    </span>
+                    EXTERNAL SIMULATIONS &amp; LABS
                   </div>
 
-                  {/* Vertical List of External Simulation Platforms */}
+                  {/* Vertical List of External Simulation Websites */}
                   <div className="flex flex-col">
                     {EXTERNAL_SIMULATION_RESOURCES.map((item, idx) => {
                       const isLast = idx === EXTERNAL_SIMULATION_RESOURCES.length - 1;
-                      const IconComponent = item.icon;
                       return (
                         <a
                           key={item.id}
@@ -490,47 +486,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             setOpenDropdown(null);
                             setIsPinned(false);
                           }}
-                          className="w-full px-3.5 py-2.5 text-left text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white transition-colors cursor-pointer flex items-center justify-between gap-2.5 no-underline group"
+                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer no-underline block"
                           style={{
-                            borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.15)' : 'none'
+                            borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
                           }}
-                          title={`Open ${item.title} in new tab`}
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 p-1 bg-white/10 group-hover:bg-white/20 border border-white/10 transition-colors">
-                              <IconComponent className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform pointer-events-none" />
-                            </div>
-                            <div className="min-w-0">
-                              <div className="text-[13px] font-bold text-white group-hover:text-[#F5A623] transition-colors truncate">
-                                {item.title}
-                              </div>
-                              <div className="text-[11px] font-medium text-[#DBE4F7]/70 truncate">
-                                {item.category}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-[#1B2A5C] text-[#F5A623] border border-[#F5A623]/30">
-                              {item.badge}
-                            </span>
-                            <ExternalLink className="w-3.5 h-3.5 text-[#DBE4F7]/60 group-hover:text-[#F5A623] shrink-0" />
-                          </div>
+                          {item.title}
                         </a>
                       );
                     })}
                   </div>
-
-                  {/* Quick Section Anchor Link */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleItemClick('#external-simulations');
-                    }}
-                    className="w-full px-4 py-2 text-center text-xs font-bold text-[#F5A623] hover:text-white bg-[#1546A8]/70 hover:bg-[#1546A8] transition-colors cursor-pointer border-t border-[#F5A623]/40 flex items-center justify-center gap-1.5"
-                  >
-                    <span>Jump to Simulation Hub Section ↓</span>
-                  </button>
                 </div>
               </div>
             )}
