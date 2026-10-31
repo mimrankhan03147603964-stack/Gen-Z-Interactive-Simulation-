@@ -379,16 +379,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   return (
     <div className="relative group w-full space-y-4">
       
-      {/* Main Modern Educational Hero Card with Continuous Photographic Background Slider */}
+      {/* Main Modern Educational Hero Card with Continuous Photographic Background Slider (Full Screen Width Edge-to-Edge) */}
       <div 
-        className="relative w-full overflow-hidden p-6 sm:p-8 md:p-10 rounded-3xl text-white shadow-xl"
+        className="relative w-full overflow-hidden px-4 sm:px-8 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 rounded-none text-white shadow-xl"
         style={{
-          border: '1.5px solid #F5A623',
+          borderTop: '1.5px solid #F5A623',
+          borderBottom: '1.5px solid #F5A623',
           boxShadow: '0 12px 36px rgba(27, 42, 92, 0.45)',
           backgroundColor: '#0E1F42'
         }}
       >
-        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 0.8s transition, 80% visibility */}
+        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 100% sharp visibility */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
           <div 
             className="flex h-full"
@@ -407,7 +408,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   className="w-full h-full object-cover select-none pointer-events-none"
                   style={{
                     objectFit: 'cover',
-                    opacity: 0.8,
+                    opacity: 1,
                     filter: 'none'
                   }}
                   loading="eager"
@@ -711,7 +712,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div 
-            className="flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl max-w-3xl"
+            className="flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl w-full max-w-none"
             style={{
               backgroundColor: 'rgba(11, 30, 59, 0.78)',
               borderColor: 'rgba(255, 255, 255, 0.22)',
@@ -720,8 +721,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             }}
           >
             <h1 
-              className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight leading-tight break-words text-white"
+              className="font-heading font-black tracking-tight leading-tight text-white whitespace-nowrap"
               style={{
+                fontSize: 'clamp(0.85rem, 2.5vw, 2.65rem)',
+                whiteSpace: 'nowrap',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 24px rgba(11, 30, 59, 0.95)'
               }}
             >
@@ -950,41 +953,43 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
       {/* 2-Second Rotating Showcase Item at Bottom with Solid Educational Card Styling */}
       {currentSim && (
-        <div 
-          className="w-full h-18 sm:h-20 rounded-2xl overflow-hidden shadow-lg relative select-none"
-          style={{
-            backgroundColor: '#FFFFFF',
-            border: '1.5px solid #DDE5F3',
-            boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
-          }}
-          onMouseEnter={() => setIsShowcaseHovered(true)}
-          onMouseLeave={() => setIsShowcaseHovered(false)}
-        >
-          {/* Active Current Topic */}
-          <div
-            className="absolute inset-0 w-full h-full flex items-center"
+        <div className="px-3 sm:px-6 lg:px-8 xl:px-12">
+          <div 
+            className="w-full h-18 sm:h-20 rounded-2xl overflow-hidden shadow-lg relative select-none"
             style={{
-              transform: isSliding ? 'translateX(-100%)' : 'translateX(0%)',
-              transition: isSliding ? 'transform 450ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-              willChange: 'transform'
+              backgroundColor: '#FFFFFF',
+              border: '1.5px solid #DDE5F3',
+              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
             }}
+            onMouseEnter={() => setIsShowcaseHovered(true)}
+            onMouseLeave={() => setIsShowcaseHovered(false)}
           >
-            {renderTopicItem(currentSim)}
-          </div>
-
-          {/* Next Incoming Topic */}
-          {nextSim && (
+            {/* Active Current Topic */}
             <div
               className="absolute inset-0 w-full h-full flex items-center"
               style={{
-                transform: isSliding ? 'translateX(0%)' : 'translateX(100%)',
+                transform: isSliding ? 'translateX(-100%)' : 'translateX(0%)',
                 transition: isSliding ? 'transform 450ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
                 willChange: 'transform'
               }}
             >
-              {renderTopicItem(nextSim)}
+              {renderTopicItem(currentSim)}
             </div>
-          )}
+
+            {/* Next Incoming Topic */}
+            {nextSim && (
+              <div
+                className="absolute inset-0 w-full h-full flex items-center"
+                style={{
+                  transform: isSliding ? 'translateX(0%)' : 'translateX(100%)',
+                  transition: isSliding ? 'transform 450ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+                  willChange: 'transform'
+                }}
+              >
+                {renderTopicItem(nextSim)}
+              </div>
+            )}
+          </div>
         </div>
       )}
 

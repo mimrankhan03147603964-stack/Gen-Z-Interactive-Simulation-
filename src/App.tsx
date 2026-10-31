@@ -367,14 +367,16 @@ export default function App() {
           {currentView === 'home' ? (
             /* VIEW 1: CLEAN ZERO-RUSH HOME VIEW (Without 86 Cards) */
             <>
-              {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs */}
-              <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
-                <HeroBanner 
-                  isDarkMode={isDarkMode}
-                  onSelectSim={handleSelectSim}
-                  onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
-                />
-              </ScrollReveal>
+              {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs (Full Width Edge-to-Edge) */}
+              <div className="-mx-3 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-auto">
+                <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
+                  <HeroBanner 
+                    isDarkMode={isDarkMode}
+                    onSelectSim={handleSelectSim}
+                    onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
+                  />
+                </ScrollReveal>
+              </div>
 
               {/* 2. Interactive Prominent Numbers & Statistics Section with Counter Animation */}
               <ScrollReveal direction="up" distance={20} duration={500} delay={30} resetOnLeave={true}>
