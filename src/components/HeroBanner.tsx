@@ -469,14 +469,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             </span>
           </div>
 
-          {/* Right Area: Digital Futuristic Split-Flip Clock & Date Display */}
-          <div className="fx-clock-root flex flex-col items-end gap-1.5 ml-auto sm:ml-0 shrink-0 select-none">
+          {/* Right Area: Digital Futuristic Split-Flip Clock & Date Display (Standard Sleek Size) */}
+          <div className="fx-clock-root flex flex-col items-end gap-1 ml-auto sm:ml-0 shrink-0 select-none">
             {/* Scoped Keyframes for Digit Tick & Colon Blink */}
             <style>{`
               @keyframes fx-digit-tick {
                 0% {
-                  transform: translateY(-5px);
-                  filter: brightness(1.75);
+                  transform: translateY(-2px);
+                  filter: brightness(1.4);
                 }
                 100% {
                   transform: translateY(0);
@@ -486,7 +486,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               @keyframes fx-colon-blink {
                 0%, 100% {
                   opacity: 1;
-                  box-shadow: 0 0 8px #38bdf8;
+                  box-shadow: 0 0 6px #38bdf8;
                 }
                 50% {
                   opacity: 0.2;
@@ -511,17 +511,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             `}</style>
 
             {/* Digits Row: [H][H] : [M][M] : [S][S] [AM/PM] */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               {/* Hours Group */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {[time.split(':')[0]?.[0] || '1', time.split(':')[0]?.[1] || '2'].map((digit, idx) => (
                   <div
                     key={`h-${idx}`}
-                    className="relative flex items-center justify-center w-[40px] h-[56px] rounded-lg overflow-hidden border shadow-sm"
+                    className="relative flex items-center justify-center w-[22px] sm:w-[24px] h-[30px] sm:h-[34px] rounded-md overflow-hidden border shadow-xs"
                     style={{
                       background: 'linear-gradient(180deg, #0b1e3b 0%, #051022 100%)',
                       borderColor: 'rgba(56, 189, 248, 0.45)',
-                      boxShadow: '0 0 10px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 0 6px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
                     }}
                   >
                     {/* Horizontal Split Line */}
@@ -543,11 +543,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     {/* Digit with Orbitron Font, Cyan Glow & Tick Animation */}
                     <span
                       key={digit}
-                      className="fx-tick-anim relative z-0 font-bold text-[26px] leading-none"
+                      className="fx-tick-anim relative z-0 font-bold text-[15px] sm:text-[17px] leading-none"
                       style={{
                         fontFamily: "'Orbitron', monospace",
                         color: '#FFFFFF',
-                        textShadow: '0 0 10px rgba(56, 189, 248, 0.85), 0 0 20px rgba(56, 189, 248, 0.45)',
+                        textShadow: '0 0 8px rgba(56, 189, 248, 0.85)',
                       }}
                     >
                       {digit}
@@ -557,21 +557,21 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
 
               {/* Colon 1 */}
-              <div className="flex flex-col items-center justify-center gap-1.5 px-0.5">
-                <span className="fx-colon-dot w-1.5 h-1.5 rounded-[1px] bg-[#38BDF8]" />
-                <span className="fx-colon-dot w-1.5 h-1.5 rounded-[1px] bg-[#38BDF8]" />
+              <div className="flex flex-col items-center justify-center gap-1 px-0.5">
+                <span className="fx-colon-dot w-1 h-1 rounded-[1px] bg-[#38BDF8]" />
+                <span className="fx-colon-dot w-1 h-1 rounded-[1px] bg-[#38BDF8]" />
               </div>
 
               {/* Minutes Group */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {[time.split(':')[1]?.[0] || '0', time.split(':')[1]?.[1] || '0'].map((digit, idx) => (
                   <div
                     key={`m-${idx}`}
-                    className="relative flex items-center justify-center w-[40px] h-[56px] rounded-lg overflow-hidden border shadow-sm"
+                    className="relative flex items-center justify-center w-[22px] sm:w-[24px] h-[30px] sm:h-[34px] rounded-md overflow-hidden border shadow-xs"
                     style={{
                       background: 'linear-gradient(180deg, #0b1e3b 0%, #051022 100%)',
                       borderColor: 'rgba(56, 189, 248, 0.45)',
-                      boxShadow: '0 0 10px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 0 6px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
                     }}
                   >
                     {/* Horizontal Split Line */}
@@ -593,11 +593,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     {/* Digit with Orbitron Font, Cyan Glow & Tick Animation */}
                     <span
                       key={digit}
-                      className="fx-tick-anim relative z-0 font-bold text-[26px] leading-none"
+                      className="fx-tick-anim relative z-0 font-bold text-[15px] sm:text-[17px] leading-none"
                       style={{
                         fontFamily: "'Orbitron', monospace",
                         color: '#FFFFFF',
-                        textShadow: '0 0 10px rgba(56, 189, 248, 0.85), 0 0 20px rgba(56, 189, 248, 0.45)',
+                        textShadow: '0 0 8px rgba(56, 189, 248, 0.85)',
                       }}
                     >
                       {digit}
@@ -607,21 +607,21 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
 
               {/* Colon 2 */}
-              <div className="flex flex-col items-center justify-center gap-1.5 px-0.5">
-                <span className="fx-colon-dot w-1.5 h-1.5 rounded-[1px] bg-[#38BDF8]" />
-                <span className="fx-colon-dot w-1.5 h-1.5 rounded-[1px] bg-[#38BDF8]" />
+              <div className="flex flex-col items-center justify-center gap-1 px-0.5">
+                <span className="fx-colon-dot w-1 h-1 rounded-[1px] bg-[#38BDF8]" />
+                <span className="fx-colon-dot w-1 h-1 rounded-[1px] bg-[#38BDF8]" />
               </div>
 
-              {/* Seconds Group (Clearly LARGER boxes, heavier digits, Amber glow & border) */}
-              <div className="flex items-center gap-1">
+              {/* Seconds Group - Proportional Standard Size */}
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {[time.split(':')[2]?.[0] || '0', time.split(':')[2]?.[1] || '0'].map((digit, idx) => (
                   <div
                     key={`s-${idx}`}
-                    className="relative flex items-center justify-center w-[50px] h-[68px] rounded-lg overflow-hidden border shadow-md"
+                    className="relative flex items-center justify-center w-[22px] sm:w-[24px] h-[30px] sm:h-[34px] rounded-md overflow-hidden border shadow-xs"
                     style={{
                       background: 'linear-gradient(180deg, #162644 0%, #061124 100%)',
                       borderColor: '#F5A623',
-                      boxShadow: '0 0 16px rgba(245, 166, 35, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25)',
+                      boxShadow: '0 0 8px rgba(245, 166, 35, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
                     }}
                   >
                     {/* Horizontal Split Line */}
@@ -643,11 +643,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     {/* Digit with Orbitron Font, Amber Glow & Tick Animation */}
                     <span
                       key={digit}
-                      className="fx-tick-anim relative z-0 font-black text-[34px] leading-none"
+                      className="fx-tick-anim relative z-0 font-bold text-[15px] sm:text-[17px] leading-none"
                       style={{
                         fontFamily: "'Orbitron', monospace",
                         color: '#FFFBEB',
-                        textShadow: '0 0 12px rgba(245, 166, 35, 0.95), 0 0 24px rgba(245, 166, 35, 0.55)',
+                        textShadow: '0 0 8px rgba(245, 166, 35, 0.95)',
                       }}
                     >
                       {digit}
@@ -657,27 +657,27 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
 
               {/* Stacked AM/PM Badges */}
-              <div className="flex flex-col gap-1 pl-1">
+              <div className="flex flex-col gap-0.5 pl-0.5">
                 <span
-                  className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider transition-all"
+                  className="px-1.5 py-0.2 rounded text-[9px] font-bold tracking-wider transition-all leading-tight"
                   style={{
                     fontFamily: "'Orbitron', monospace",
                     backgroundColor: period === 'AM' ? '#F5A623' : 'rgba(11, 30, 59, 0.6)',
                     color: period === 'AM' ? '#0F172A' : 'rgba(186, 230, 253, 0.35)',
                     border: period === 'AM' ? '1px solid #E58E0A' : '1px solid rgba(56, 189, 248, 0.2)',
-                    boxShadow: period === 'AM' ? '0 0 10px rgba(245, 166, 35, 0.6)' : 'none',
+                    boxShadow: period === 'AM' ? '0 0 6px rgba(245, 166, 35, 0.5)' : 'none',
                   }}
                 >
                   AM
                 </span>
                 <span
-                  className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider transition-all"
+                  className="px-1.5 py-0.2 rounded text-[9px] font-bold tracking-wider transition-all leading-tight"
                   style={{
                     fontFamily: "'Orbitron', monospace",
                     backgroundColor: period === 'PM' ? '#F5A623' : 'rgba(11, 30, 59, 0.6)',
                     color: period === 'PM' ? '#0F172A' : 'rgba(186, 230, 253, 0.35)',
                     border: period === 'PM' ? '1px solid #E58E0A' : '1px solid rgba(56, 189, 248, 0.2)',
-                    boxShadow: period === 'PM' ? '0 0 10px rgba(245, 166, 35, 0.6)' : 'none',
+                    boxShadow: period === 'PM' ? '0 0 6px rgba(245, 166, 35, 0.5)' : 'none',
                   }}
                 >
                   PM
@@ -687,19 +687,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
             {/* Date Display Box Below Digits */}
             <div
-              className="flex items-center justify-center w-full px-3 py-1 rounded-md border"
+              className="flex items-center justify-center w-full px-2 py-0.5 rounded-md border"
               style={{
                 background: 'linear-gradient(180deg, rgba(11, 30, 59, 0.75) 0%, rgba(5, 16, 34, 0.85) 100%)',
                 borderColor: 'rgba(56, 189, 248, 0.3)',
-                boxShadow: '0 0 8px rgba(56, 189, 248, 0.15)',
+                boxShadow: '0 0 6px rgba(56, 189, 248, 0.15)',
               }}
             >
               <span
-                className="font-semibold text-xs sm:text-[13px] tracking-wider"
+                className="font-semibold text-[11px] sm:text-xs tracking-wider"
                 style={{
                   fontFamily: "'Rajdhani', sans-serif",
                   color: '#BAE6FD',
-                  letterSpacing: '0.06em',
+                  letterSpacing: '0.05em',
                 }}
               >
                 {dateStr || 'Loading date...'}
