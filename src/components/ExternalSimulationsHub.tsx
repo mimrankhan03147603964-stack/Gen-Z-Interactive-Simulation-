@@ -1,23 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ExternalLink, 
-  Maximize2, 
   Globe, 
-  Compass, 
   Sparkles, 
-  Atom, 
-  Calculator, 
-  Cpu, 
-  FlaskConical, 
-  Activity, 
   CheckCircle2,
+  X,
+  Search,
+  GraduationCap,
   Layers,
-  Wrench,
-  FileText,
   Target
 } from 'lucide-react';
-import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
-import { ScrollReveal } from './ScrollReveal';
 
 import {
   MultiPhetIcon,
@@ -62,8 +54,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'PHET LAB',
     bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
     borderColor: '#38bdf8',
-    glowColor: 'rgba(14, 165, 233, 0.45)',
-    accentColor: '#38bdf8',
+    glowColor: 'rgba(14, 165, 233, 0.35)',
+    accentColor: '#0284c7',
     topics: ['Physics', 'Chemistry', 'Biology', 'Earth Science', 'Math'],
     icon: MultiPhetIcon
   },
@@ -77,8 +69,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'GEOGEBRA 3D',
     bgGradient: 'linear-gradient(135deg, #ea580c 0%, #9a3412 100%)',
     borderColor: '#fb923c',
-    glowColor: 'rgba(234, 88, 12, 0.45)',
-    accentColor: '#fdba74',
+    glowColor: 'rgba(234, 88, 12, 0.35)',
+    accentColor: '#ea580c',
     topics: ['Geometry', 'Algebra', 'Calculus', '3D Tools'],
     icon: MultiGeoGebraIcon
   },
@@ -92,8 +84,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'OPHYSICS LAB',
     bgGradient: 'linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%)',
     borderColor: '#60a5fa',
-    glowColor: 'rgba(37, 99, 235, 0.45)',
-    accentColor: '#93c5fd',
+    glowColor: 'rgba(37, 99, 235, 0.35)',
+    accentColor: '#2563eb',
     topics: ['Kinematics', 'Optics', 'Waves', 'Mechanics'],
     icon: MultiOphysicsIcon
   },
@@ -107,8 +99,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'HTML5 PHYSICS',
     bgGradient: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
     borderColor: '#34d399',
-    glowColor: 'rgba(5, 150, 105, 0.45)',
-    accentColor: '#6ee7b7',
+    glowColor: 'rgba(5, 150, 105, 0.35)',
+    accentColor: '#059669',
     topics: ['HTML5 Physics', 'Astronomy', 'Mechanics', 'Optics'],
     icon: MultiWalterFendtIcon
   },
@@ -122,8 +114,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'CIRCUITS & WAVES',
     bgGradient: 'linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)',
     borderColor: '#a78bfa',
-    glowColor: 'rgba(124, 58, 237, 0.45)',
-    accentColor: '#c4b5fd',
+    glowColor: 'rgba(124, 58, 237, 0.35)',
+    accentColor: '#7c3aed',
     topics: ['Circuit Simulator', 'Acoustics', 'Physics Applets'],
     icon: MultiFalstadIcon
   },
@@ -137,8 +129,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'MOLECULAR LAB',
     bgGradient: 'linear-gradient(135deg, #e11d48 0%, #881337 100%)',
     borderColor: '#fb7185',
-    glowColor: 'rgba(225, 29, 72, 0.45)',
-    accentColor: '#fecdd3',
+    glowColor: 'rgba(225, 29, 72, 0.35)',
+    accentColor: '#e11d48',
     topics: ['Molecular Dynamics', 'Thermodynamics', 'Chemistry'],
     icon: MultiMolecularIcon
   },
@@ -152,8 +144,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: '2D ENGINE',
     bgGradient: 'linear-gradient(135deg, #0891b2 0%, #164e63 100%)',
     borderColor: '#22d3ee',
-    glowColor: 'rgba(8, 145, 178, 0.45)',
-    accentColor: '#67e8f9',
+    glowColor: 'rgba(8, 145, 178, 0.35)',
+    accentColor: '#0891b2',
     topics: ['2D Physics Engine', 'Pendulums', 'Springs', 'Collisions'],
     icon: MultiMyPhysicsLabIcon
   },
@@ -167,8 +159,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'VIRTUAL BREADBOARD',
     bgGradient: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
     borderColor: '#fbbf24',
-    glowColor: 'rgba(217, 119, 6, 0.45)',
-    accentColor: '#fde68a',
+    glowColor: 'rgba(217, 119, 6, 0.35)',
+    accentColor: '#d97706',
     topics: ['Virtual Breadboard', 'Circuit Simulation', 'Arduino', 'Microcontrollers'],
     icon: MultiTinkercadIcon
   },
@@ -182,8 +174,8 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     badge: 'MOZAIK 3D',
     bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
     borderColor: '#38bdf8',
-    glowColor: 'rgba(14, 165, 233, 0.45)',
-    accentColor: '#38bdf8',
+    glowColor: 'rgba(14, 165, 233, 0.35)',
+    accentColor: '#0284c7',
     topics: ['3D Scenes', 'Science', 'History', 'Geography'],
     icon: MultiMozaikIcon,
     buttonText: 'Open Mozaik 3D'
@@ -196,10 +188,10 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
     category: 'Assessment & Worksheets',
     gradeTier: 'Teachers • Schools • Educators',
     badge: 'PAPER MAKER',
-    bgGradient: 'linear-gradient(135deg, #ea580c 0%, #9a3412 100%)',
-    borderColor: '#fb923c',
-    glowColor: 'rgba(234, 88, 12, 0.45)',
-    accentColor: '#fdba74',
+    bgGradient: 'linear-gradient(135deg, #16a34a 0%, #14532d 100%)',
+    borderColor: '#4ade80',
+    glowColor: 'rgba(22, 163, 74, 0.35)',
+    accentColor: '#16a34a',
     topics: ['Exam Papers', 'Worksheets', 'Paid Software'],
     icon: MultiPaperMakerIcon,
     buttonText: 'Visit Paper Maker',
@@ -208,114 +200,187 @@ export const EXTERNAL_SIMULATION_RESOURCES: ExternalSimulationResource[] = [
   }
 ];
 
+// Sensible categorization for filtering
+const LAB_CATEGORIES_MAP: Record<string, string[]> = {
+  phet: ['Physics', 'Maths', 'Chemistry'],
+  geogebra: ['Maths', 'Tools'],
+  ophysics: ['Physics'],
+  'walter-fendt': ['Physics'],
+  falstad: ['Electronics', 'Physics'],
+  'molecular-workbench': ['Chemistry'],
+  myphysicslab: ['Physics'],
+  'tinkercad-circuits': ['Electronics', 'Tools'],
+  'mozaik-3d': ['Tools'],
+  'paper-maker': ['Tools']
+};
+
+const CATEGORY_TABS = ['All', 'Physics', 'Maths', 'Chemistry', 'Electronics', 'Tools'] as const;
+type CategoryTab = typeof CATEGORY_TABS[number];
+
+const getLabObjectives = (item: ExternalSimulationResource): string[] => {
+  const specificObjectives: Record<string, string[]> = {
+    phet: [
+      'Investigate fundamental STEM principles through interactive discovery-based inquiry',
+      'Analyze dynamic relationships between physical and chemical variables in real time',
+      'Bridge mathematical formulas with visual, hands-on scientific models'
+    ],
+    geogebra: [
+      'Construct interactive 2D geometric proofs and manipulate 3D spatial solids',
+      'Visualize functions, derivatives, integrals, and algebraic equation transformations',
+      'Analyze real-time coordinate geometry with precision graphing tools'
+    ],
+    ophysics: [
+      'Simulate kinematics, free-body forces, projectile trajectories, and friction',
+      'Investigate wave optics, double-slit interference, reflection, and refraction',
+      'Explore circuit currents, capacitor discharge, and electromagnetic fields'
+    ],
+    'walter-fendt': [
+      'Simulate classical mechanics, pendulums, pulleys, and Keplerian planetary orbits',
+      'Analyze wave propagation, Doppler shifts, interference, and acoustic resonance',
+      'Experiment with geometric ray optics, thin lenses, and atomic energy levels'
+    ],
+    falstad: [
+      'Build and simulate analog AC/DC circuits with live electron flow animations',
+      'Analyze frequency response, active operational amplifiers, filters, and logic gates',
+      'Visualize acoustic standing waves, 2D electrostatics, and quantum wavefunctions'
+    ],
+    'molecular-workbench': [
+      'Model atomic lattice dynamics, kinetic energy, and temperature phase changes',
+      'Simulate chemical bonding, reaction kinetics, and exothermic/endothermic states',
+      'Observe gas laws and Brownian motion at microscopic molecular scale'
+    ],
+    myphysicslab: [
+      'Simulate continuous rigid body mechanics using numerical physics differential equations',
+      'Experiment with chaotic double pendulums, coupled springs, and roller coasters',
+      'Analyze energy conservation, momentum transfer, and collision dynamics'
+    ],
+    'tinkercad-circuits': [
+      'Assemble interactive electronic circuits on a virtual prototyping breadboard',
+      'Program virtual Arduino microcontrollers and simulate sensor/motor interactions',
+      'Safely test wiring diagrams, power supplies, and multi-meter measurements'
+    ],
+    'mozaik-3d': [
+      'Explore immersive interactive 3D digital scenes of biology, anatomy, and physics',
+      'Dissect complex anatomical structures and examine spatial mechanisms layer by layer',
+      'Reinforce conceptual understanding through narrated visual 3D demonstrations'
+    ],
+    'paper-maker': [
+      'Quickly create customized STEM assessment exam papers and test worksheets',
+      'Format questions, formulas, diagrams, and marking keys for classroom printing',
+      'Save preparation time with pre-built academic question templates'
+    ]
+  };
+
+  if (specificObjectives[item.id]) {
+    return specificObjectives[item.id];
+  }
+
+  const actionVerbs = ['Investigate', 'Analyze', 'Explore', 'Simulate', 'Experiment with'];
+  return item.topics.map((t, i) => `${actionVerbs[i % actionVerbs.length]} ${t}`);
+};
+
 interface ExternalSimulationsHubProps {
   isDarkMode?: boolean;
 }
 
-// Helper functions matching uploaded card screenshot aesthetic
-const getPastelTagStyle = (index: number) => {
-  const styles = [
-    'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]',
-    'bg-[#FFEDD5] text-[#9A3412] border-[#FED7AA]',
-    'bg-[#F3E8FF] text-[#6B21A8] border-[#E9D5FF]',
-    'bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD]',
-  ];
-  return styles[index % styles.length];
-};
+export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () => {
+  const [selectedCategory, setSelectedCategory] = useState<CategoryTab>('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLab, setSelectedLab] = useState<ExternalSimulationResource | null>(null);
 
-const renderGradePill = (grade: string) => {
-  const parts = grade.split(/[•·]/).map(p => p.trim()).filter(Boolean);
-  if (parts.length >= 2) {
-    return (
-      <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#E2E8F0] max-w-full">
-        <span className="px-3 py-0.5 bg-[#FEE2E2] text-[#991B1B] truncate">
-          {parts[0]}
-        </span>
-        <span className="px-3 py-0.5 bg-[#E0F2FE] text-[#0369A1] truncate">
-          {parts.slice(1).join(' • ')}
-        </span>
-      </div>
-    );
-  }
-  return (
-    <div className="mt-2.5 mb-2 inline-flex items-center rounded-full overflow-hidden text-xs font-bold font-sans shadow-2xs border border-[#BFDBFE] max-w-full">
-      <span className="px-3 py-0.5 bg-[#EFF6FF] text-[#1E40AF] truncate">
-        {grade}
-      </span>
-    </div>
-  );
-};
+  // Close panel on Esc key press and handle body scroll lock
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedLab(null);
+      }
+    };
+    if (selectedLab) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [selectedLab]);
 
-const renderExternalObjectivesTooltip = (item: ExternalSimulationResource) => {
-  const actionVerbs = ['Investigate', 'Analyze', 'Explore', 'Simulate', 'Experiment with'];
-  const objectives = item.topics.slice(0, 3).map((topic, idx) => {
-    return `${actionVerbs[idx % actionVerbs.length]} ${topic}`;
+  // Filter resources by category and search keyword
+  const filteredResources = EXTERNAL_SIMULATION_RESOURCES.filter((lab) => {
+    if (selectedCategory !== 'All') {
+      const cats = LAB_CATEGORIES_MAP[lab.id] || [];
+      if (!cats.includes(selectedCategory)) {
+        return false;
+      }
+    }
+
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      const matchTitle = lab.title.toLowerCase().includes(term);
+      const matchCategory = lab.category.toLowerCase().includes(term);
+      const matchDesc = lab.description.toLowerCase().includes(term);
+      const matchTopics = lab.topics.some((t) => t.toLowerCase().includes(term));
+      const matchBadge = lab.badge.toLowerCase().includes(term);
+      if (!matchTitle && !matchCategory && !matchDesc && !matchTopics && !matchBadge) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   return (
-    <div className="relative group/tip z-30">
-      <div
-        tabIndex={0}
-        role="button"
-        aria-label={`View learning objectives for ${item.title}`}
-        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-[#FCD34D] shadow-2xs transition-all cursor-help group-hover/tip:border-[#F59E0B] group-hover/tip:shadow-xs"
-      >
-        <Target className="w-3 h-3 text-[#D97706] shrink-0" />
-        <span className="font-heading">Objectives</span>
-      </div>
-
-      <div
-        role="tooltip"
-        className="absolute bottom-[calc(100%+8px)] right-0 w-72 sm:w-80 p-3.5 rounded-2xl bg-[#0F172A] text-white border border-[#334155] shadow-2xl pointer-events-none opacity-0 invisible translate-y-1 group-hover/tip:opacity-100 group-hover/tip:visible group-hover/tip:translate-y-0 transition-all duration-200 z-50 text-left"
-        style={{
-          boxShadow: '0 20px 30px -10px rgba(15, 23, 42, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)'
-        }}
-      >
-        <div className="absolute -bottom-1.5 right-5 w-3 h-3 bg-[#0F172A] border-r border-b border-[#334155] rotate-45" />
-
-        <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-700/80">
-          <div className="flex items-center gap-1.5">
-            <Target className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 font-mono">
-              Learning Objectives
-            </span>
-          </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-            {item.category.split('&')[0].trim()}
-          </span>
-        </div>
-
-        <p className="text-xs font-black text-white line-clamp-1 mb-2 font-heading">
-          {item.title}
-        </p>
-
-        <div className="space-y-1.5 mb-2.5">
-          {objectives.map((obj, i) => (
-            <div key={i} className="flex items-start gap-1.5 text-xs leading-snug text-slate-200">
-              <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
-              <span>{obj}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400 font-medium">
-          <span className="flex items-center gap-1 text-emerald-400 font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-ping" />
-            Verified Platform
-          </span>
-          <span className="text-amber-300 font-mono font-bold">Launch Lab ↗</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () => {
-  return (
     <section 
       id="external-simulations" 
-      className="w-full relative z-10 space-y-6 scroll-mt-24 select-none"
+      className="w-full relative z-10 space-y-5 scroll-mt-24 select-none"
     >
+      <style>{`
+        .external-sims-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+          .external-sims-grid {
+            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+          }
+        }
+        .external-sim-row {
+          background-color: #ffffff;
+          border-radius: 16px;
+          border: 1px solid #E2E8F0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          display: flex;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+          padding: 12px 14px;
+          gap: 12px;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .external-sim-row:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 24px var(--lab-glow);
+          border-color: #CBD5E1;
+        }
+        .lab-launch-btn {
+          transition: transform 0.18s ease, filter 0.18s ease;
+        }
+        .lab-launch-btn:hover {
+          filter: brightness(1.1);
+          transform: scale(1.04);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .external-sim-row, .external-sim-row:hover,
+          .lab-launch-btn, .lab-launch-btn:hover {
+            transition: none !important;
+            transform: none !important;
+          }
+        }
+      `}</style>
+
       {/* Top Banner / Section Header: Sequential Palette Fill */}
       <div 
         className="border shadow-lg rounded-2xl p-5 sm:p-7 text-white transition-all"
@@ -348,7 +413,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
-                8 Curated Global STEM Repositories
+                {EXTERNAL_SIMULATION_RESOURCES.length} Curated Global STEM Repositories
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading">
@@ -375,173 +440,304 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
         </div>
       </div>
 
-      {/* 8 External Simulation Cards Grid - Optimized for PC & Laptops */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-        {EXTERNAL_SIMULATION_RESOURCES.map((item, index) => {
-          const IconComponent = item.icon;
-
-          return (
-            <ScrollReveal
-              key={item.id}
-              direction="up"
-              distance={24}
-              duration={500}
-              delay={(index % 4) * 80}
-              className="h-full flex flex-col"
-            >
-              <div
-                className="rounded-3xl p-5 sm:p-5.5 flex flex-col justify-between relative overflow-hidden group select-none transition-all duration-200 border bg-[#F8FAFC] border-[#E2E8F0] shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-[#CBD5E1] h-full flex-1"
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs">
+        {/* Category Filter Tabs */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+          {CATEGORY_TABS.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#1B2A5C] text-white shadow-xs scale-[1.02]'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200/70'
+                }`}
               >
-                {/* Top Header: Visual Emblem Pedestal & Resource Badge */}
-                <div className="flex items-center justify-between gap-2.5 relative z-10 pt-0.5">
-                  {/* Visual Emblem Pedestal */}
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform block border border-[#E2E8F0] bg-[#EEF5F8] shadow-2xs"
-                    title={`Open ${item.title} in new tab`}
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Search Box */}
+        <div className="relative w-full sm:w-64 shrink-0">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search external labs..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-7 py-1.5 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1E88E5] text-slate-900 placeholder-slate-400 font-sans"
+          />
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => setSearchTerm('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 cursor-pointer font-bold px-1"
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 2-Column Slim Rows Grid (1 Column under 900px) */}
+      {filteredResources.length > 0 ? (
+        <div className="external-sims-grid">
+          {filteredResources.map((item) => {
+            const IconComponent = item.icon;
+            const badgeLabel = item.isAd && item.adLabels?.[0] ? item.adLabels[0] : item.badge;
+
+            return (
+              <div
+                key={item.id}
+                className="external-sim-row"
+                style={{
+                  '--lab-glow': item.glowColor
+                } as React.CSSProperties}
+              >
+                {/* Thin Colored Left Edge Bar */}
+                <div 
+                  className="w-1.5 self-stretch rounded-full shrink-0" 
+                  style={{ backgroundColor: item.accentColor }} 
+                  aria-hidden="true"
+                />
+
+                {/* 52x52px Colorful Icon Tile */}
+                <div
+                  className="w-[52px] h-[52px] rounded-xl flex items-center justify-center shrink-0 p-1.5 border"
+                  style={{
+                    backgroundColor: `${item.accentColor}15`,
+                    borderColor: `${item.accentColor}35`
+                  }}
+                >
+                  <IconComponent className="w-8 h-8 pointer-events-none shrink-0" />
+                </div>
+
+                {/* Lab Information (Name, Subject, Badge) */}
+                <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
+                  <h3 
+                    className="text-[16px] font-bold text-slate-900 truncate leading-snug font-heading" 
+                    title={item.title}
                   >
-                    <IconComponent className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-110 transition-transform duration-200 pointer-events-none shrink-0" />
-                  </a>
-
-                  {/* Resource Badge */}
-                  {item.isAd && item.adLabels && item.adLabels.length > 0 ? (
-                    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end relative z-20">
-                      <style>{`
-                        @keyframes fx-paid-pulse {
-                          0%, 100% {
-                            transform: scale(1);
-                            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
-                            filter: brightness(1);
-                          }
-                          50% {
-                            transform: scale(1.07);
-                            box-shadow: 0 0 16px 4px rgba(34, 197, 94, 0.65);
-                            filter: brightness(1.22);
-                          }
-                        }
-                        .fx-paid-badge {
-                          animation: fx-paid-pulse 1.8s ease-in-out infinite;
-                        }
-                        @media (prefers-reduced-motion: reduce) {
-                          .fx-paid-badge {
-                            animation: none !important;
-                          }
-                        }
-                      `}</style>
-                      {item.adLabels.map((lbl, li) => (
-                        <span 
-                          key={li}
-                          className="fx-paid-badge inline-flex items-center justify-center font-heading font-black text-xs sm:text-sm px-3.5 sm:px-4 py-1.5 rounded-xl border-2 shrink-0 tracking-wider uppercase select-none"
-                          style={{
-                            backgroundColor: '#16a34a',
-                            color: '#FFFFFF',
-                            borderColor: '#86efac',
-                            boxShadow: '0 4px 14px rgba(2, 163, 74, 0.4)'
-                          }}
-                        >
-                          {lbl}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <span 
-                      className="font-mono text-xs font-black px-3.5 py-1 rounded-full border border-indigo-900/30 text-white bg-[#312E81] shrink-0 tracking-wider uppercase shadow-xs"
+                    {item.title}
+                  </h3>
+                  <p 
+                    className="text-[13px] text-slate-500 truncate leading-tight font-sans" 
+                    title={item.category}
+                  >
+                    {item.category}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span
+                      className="text-[11px] font-bold px-2 py-0.5 rounded-md border shrink-0 tracking-wide uppercase font-mono"
+                      style={{
+                        backgroundColor: `${item.accentColor}18`,
+                        color: item.accentColor,
+                        borderColor: `${item.accentColor}40`
+                      }}
                     >
-                      {item.badge}
+                      {badgeLabel}
                     </span>
-                  )}
-                </div>
-
-                {/* Dedicated Grade / Class Level Area & Objectives Tooltip */}
-                <div className="relative z-10 flex items-center justify-between gap-1.5 mt-2.5 mb-1.5">
-                  {renderGradePill(item.gradeTier)}
-                  {renderExternalObjectivesTooltip(item)}
-                </div>
-
-                {/* Content: Title, Subject, Description, Topics */}
-                <div className="relative z-10 flex flex-col flex-1">
-                  {/* Title - Full Topic Name ALWAYS Displayed Completely */}
-                  <h4 className="text-base sm:text-lg font-black tracking-tight font-heading leading-snug text-[#0F172A] group-hover:text-[#0284C7] transition-colors break-words">
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline transition-colors text-[#0F172A] group-hover:text-[#0284C7]"
-                      title={`Open ${item.title} in new tab`}
-                    >
-                      {item.title}
-                    </a>
-                  </h4>
-
-                  {/* Subject & Sub-discipline */}
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] shrink-0" />
-                    <span className="text-xs sm:text-sm font-bold text-[#1E293B] truncate">{item.category}</span>
-                  </div>
-
-                  {/* Concise Description - Compact without large empty gaps */}
-                  {item.description && (
-                    <p className="text-xs font-normal leading-relaxed text-[#475569] line-clamp-2 mt-2" title={item.description}>
-                      {item.description}
-                    </p>
-                  )}
-
-                  {/* Topic Tags (Pastel pills - Shortened & Truncated) */}
-                  <div className="flex flex-wrap gap-1.5 mt-2.5">
-                    {item.topics.slice(0, 3).map((topic, i) => (
-                      <span
-                        key={i}
-                        className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs max-w-[120px] truncate ${getPastelTagStyle(i)}`}
-                        title={topic}
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                    {item.topics.length > 3 && (
-                      <span 
-                        className="text-[11px] font-bold px-2 py-0.5 rounded-full border shadow-2xs bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] shrink-0"
-                      >
-                        +{item.topics.length - 3}
-                      </span>
-                    )}
                   </div>
                 </div>
 
-                {/* Card Action Bar (Teal-to-Cyan Gradient Button + Maximize Button) */}
-                <div className="relative z-10 pt-4 mt-3.5 border-t border-slate-200/80 flex items-center justify-between gap-2.5">
+                {/* Right Side: Colored Launch Button + Round Details Button */}
+                <div className="shrink-0 flex items-center gap-2">
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 min-w-0 h-11 sm:h-12 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-black text-white shadow-md hover:shadow-lg hover:brightness-110 transition-all transform active:scale-98 cursor-pointer select-none"
+                    className="lab-launch-btn h-9 px-3.5 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-xs cursor-pointer select-none"
                     style={{
-                      background: getLaunchBtnStyle(index).bg,
-                      boxShadow: getLaunchBtnStyle(index).shadow,
-                      color: '#FFFFFF'
+                      backgroundColor: item.accentColor,
+                      boxShadow: `0 2px 8px ${item.glowColor}`
                     }}
                     title={`Open ${item.title} in new tab`}
                   >
-                    <ExternalLink className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-                    <span className="font-black text-white truncate" style={{ color: '#FFFFFF' }}>{item.buttonText || 'Launch Lab'}</span>
+                    <span>Launch</span>
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                   </a>
 
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-sm transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
-                    title={`Explore ${item.title} Now`}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedLab(item)}
+                    className="w-8 h-8 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center font-bold text-sm cursor-pointer shadow-2xs hover:border-slate-300 transition-colors"
+                    title={`View details for ${item.title}`}
+                    aria-label={`View details for ${item.title}`}
                   >
-                    <Maximize2 className="w-4 h-4 pointer-events-none shrink-0 text-slate-700" />
-                  </a>
+                    ⓘ
+                  </button>
                 </div>
               </div>
-            </ScrollReveal>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-xs">
+          <p className="text-sm font-semibold text-slate-600">
+            No external simulation platforms match your current filter.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory('All');
+              setSearchTerm('');
+            }}
+            className="mt-3 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#1B2A5C] text-white hover:bg-[#1546A8] transition-colors cursor-pointer"
+          >
+            Reset Filters
+          </button>
+        </div>
+      )}
+
+      {/* Details Side Panel Modal (About 380px wide with Dark Backdrop) */}
+      {selectedLab && (
+        <div 
+          className="fixed inset-0 z-50 flex justify-end"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedLab.title} details`}
+        >
+          {/* Dark Shade Backdrop */}
+          <div
+            onClick={() => setSelectedLab(null)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity cursor-pointer"
+            aria-hidden="true"
+          />
+
+          {/* Right Drawer Panel */}
+          <div 
+            className="relative z-10 w-full max-w-[380px] h-full bg-white shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
+            style={{
+              borderLeft: `4px solid ${selectedLab.accentColor}`
+            }}
+          >
+            {/* Top Bar with Close Button */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/90">
+              <span 
+                className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md"
+                style={{
+                  backgroundColor: `${selectedLab.accentColor}18`,
+                  color: selectedLab.accentColor
+                }}
+              >
+                {selectedLab.isAd && selectedLab.adLabels?.[0] ? selectedLab.adLabels[0] : selectedLab.badge}
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedLab(null)}
+                className="w-8 h-8 rounded-full bg-white hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center font-bold text-base cursor-pointer shadow-2xs border border-slate-200 transition-colors"
+                title="Close details (Esc)"
+                aria-label="Close details"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Scrollable Content Body */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {/* Large Icon + Name + Subject */}
+              <div className="flex items-start gap-3.5">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 p-2 shadow-2xs border"
+                  style={{
+                    backgroundColor: `${selectedLab.accentColor}15`,
+                    borderColor: `${selectedLab.accentColor}35`
+                  }}
+                >
+                  {React.createElement(selectedLab.icon, { className: 'w-10 h-10 pointer-events-none' })}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg font-bold text-slate-900 leading-snug break-words font-heading">
+                    {selectedLab.title}
+                  </h3>
+                  <p className="text-xs font-semibold mt-1" style={{ color: selectedLab.accentColor }}>
+                    {selectedLab.category}
+                  </p>
+                </div>
+              </div>
+
+              {/* About (Full description, not cut off) */}
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  About Platform
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
+                  {selectedLab.description}
+                </p>
+              </div>
+
+              {/* Level (Full text, not cut off) */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Academic Level</span>
+                </h4>
+                <div className="p-2.5 rounded-xl bg-blue-50/60 border border-blue-100 text-xs font-bold text-[#1546A8] leading-relaxed">
+                  {selectedLab.gradeTier}
+                </div>
+              </div>
+
+              {/* Topics (All topic tags, nothing hidden as +1) */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Topics Covered</span>
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedLab.topics.map((t, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200/80"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Objective (Text from old objectives button) */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Learning Objectives</span>
+                </h4>
+                <div className="space-y-2 bg-amber-50/50 p-3.5 rounded-xl border border-amber-200/70">
+                  {getLabObjectives(selectedLab).map((obj, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs leading-relaxed text-slate-800">
+                      <span className="text-emerald-600 font-bold shrink-0 mt-0.5">✓</span>
+                      <span>{obj}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Pinned Bottom Big Launch Lab Button */}
+            <div className="p-4 border-t border-slate-100 bg-white">
+              <a
+                href={selectedLab.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-12 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-white shadow-md hover:brightness-110 active:scale-98 transition-all select-none"
+                style={{
+                  backgroundColor: selectedLab.accentColor,
+                  boxShadow: `0 4px 14px ${selectedLab.glowColor}`
+                }}
+              >
+                <span>Launch Lab</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
