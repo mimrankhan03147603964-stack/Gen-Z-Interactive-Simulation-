@@ -726,13 +726,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               style={{
                 fontSize: 'clamp(0.85rem, 2.5vw, 2.65rem)',
                 whiteSpace: 'nowrap',
-                textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
+                textRendering: 'geometricPrecision'
               }}
             >
               Gen Z Interactive Simulations Portal
             </h1>
             {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)' }}>
+            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)', textRendering: 'geometricPrecision' }}>
               <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
               <span className="inline-flex items-center flex-wrap gap-1.5">
                 <span>Professional Multidisciplinary</span>
@@ -759,7 +760,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
               style={{ 
                 color: '#FFFFFF',
-                textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
+                textRendering: 'geometricPrecision'
               }}
             >
               <span>
@@ -783,11 +785,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all transform active:scale-95"
+                className="font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
                 style={{
                   backgroundColor: '#F5A623',
                   color: '#1B2A5C',
-                  border: '1px solid #E58E0A'
+                  border: '1.5px solid #E58E0A',
+                  textRendering: 'geometricPrecision'
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
@@ -797,24 +800,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </button>
               <a
                 href="#stage"
-                className="fx-pulse-blue px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-sm transition-all transform active:scale-95"
+                className="fx-pulse-blue px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
                 style={{
-                  backgroundColor: 'transparent',
+                  backgroundColor: '#1546A8',
                   color: '#FFFFFF',
-                  border: '1px solid #42A5F5',
-                  textShadow: '0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9)'
+                  border: '1.5px solid #42A5F5',
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
+                  textRendering: 'geometricPrecision'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#42A5F5';
-                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = '#1E88E5';
+                  e.currentTarget.style.borderColor = '#90CAF9';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = '#1546A8';
+                  e.currentTarget.style.borderColor = '#42A5F5';
                 }}
               >
-                <Play className="w-4 h-4 pointer-events-none text-white fill-white" />
-                <span>Interactive Stage &amp; Dedicated Tabs</span>
+                <Play className="w-4 h-4 pointer-events-none text-white fill-white shrink-0" />
+                <span className="text-white font-bold">Interactive Stage &amp; Dedicated Tabs</span>
               </a>
             </div>
           </div>

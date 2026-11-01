@@ -22,11 +22,18 @@
         -ms-high-contrast-adjust: none !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
+        text-rendering: geometricPrecision !important;
         color-rendering: optimizeQuality !important;
         image-rendering: -webkit-optimize-contrast !important;
+      }
+      /* Razor-sharp typography and button text on laptops & PCs */
+      body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, label {
+        text-rendering: geometricPrecision !important;
+      }
+      /* Prevent blur on button controls and vector graphics */
+      button, a.btn, .btn {
+        -webkit-font-smoothing: antialiased;
+        backface-visibility: hidden;
       }
       /* 4K Vector Sharpness: Geometric precision for all SVG icons and paths */
       svg, svg * {

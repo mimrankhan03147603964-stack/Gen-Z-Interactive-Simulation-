@@ -874,12 +874,15 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             padding: 12px 14px;
             background-color: #ffffff;
             border-radius: 14px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            border: 1.5px solid #CBD5E1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             text-decoration: none;
             cursor: pointer;
             min-height: 64px;
             box-sizing: border-box;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            backface-visibility: hidden;
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
           }
           .horizontal-topic-card:hover {
@@ -1049,9 +1052,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                     {/* Center: Full Topic Title - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
                                     <div className="flex-1 min-w-0 pr-1">
                                       <span
-                                        className={`font-semibold text-slate-800 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
+                                        className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
                                         dir={isUrdu ? 'rtl' : 'ltr'}
-                                        style={isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : undefined}
+                                        style={{
+                                          textRendering: 'geometricPrecision',
+                                          ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
+                                        }}
                                       >
                                         {displayTitle}
                                       </span>

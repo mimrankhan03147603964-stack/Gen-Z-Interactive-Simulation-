@@ -225,10 +225,8 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
           onMouseLeave={() => setIsCardHovered(false)}
           className="w-full max-w-4xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border"
           style={{
-            backgroundColor: 'rgba(30, 90, 200, 0.50)',
+            backgroundColor: 'rgba(21, 70, 168, 0.92)',
             borderColor: '#F5A623',
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)',
             boxShadow: '0 12px 36px rgba(15, 23, 42, 0.35)'
           }}
         >
