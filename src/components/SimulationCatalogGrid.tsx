@@ -262,13 +262,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // Track expanded descriptions per card (collapsed by default for progressive disclosure)
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
 
-  // Collapsible Accordion: tracks active open subject (null by default = all closed)
-  const [openSubjectKey, setOpenSubjectKey] = useState<string | null>(null);
-
-  const handleToggleSubject = (panelKey: string) => {
-    setOpenSubjectKey(prev => (prev === panelKey ? null : panelKey));
-  };
-
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
   // Intersection Observer triggers for smooth count-up on scroll
@@ -874,22 +867,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           .subject-panel-horizontal:hover {
             box-shadow: 0 8px 26px var(--subject-shadow-color);
           }
-          .subject-accordion-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            opacity: 0;
-            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
-            pointer-events: none;
-          }
-          .subject-accordion-content.is-open {
-            grid-template-rows: 1fr;
-            opacity: 1;
-            pointer-events: auto;
-          }
-          .subject-accordion-inner {
-            overflow: hidden;
-            min-height: 0;
-          }
           .horizontal-topic-card {
             display: flex;
             align-items: center;
@@ -913,8 +890,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           }
           @media (prefers-reduced-motion: reduce) {
             .subject-panel-horizontal, .subject-panel-horizontal:hover,
-            .horizontal-topic-card, .horizontal-topic-card:hover,
-            .subject-accordion-content {
+            .horizontal-topic-card, .horizontal-topic-card:hover {
               transition: none !important;
               transform: none !important;
             }
@@ -959,21 +935,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   type="text"
                   placeholder="Filter topics by keyword..."
                   value={searchTerm}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setSearchTerm(val);
-                    if (!val.trim()) {
-                      setOpenSubjectKey(null);
-                    }
-                  }}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full py-2 px-3 text-xs sm:text-sm font-medium bg-transparent outline-none text-[#1B2A5C] placeholder-[#8A97B8] font-sans"
                 />
                 {searchTerm && (
                   <button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setOpenSubjectKey(null);
-                    }}
+                    onClick={() => setSearchTerm('')}
                     className="mr-2 text-xs font-bold px-1.5 py-0.5 rounded-full cursor-pointer bg-[#1E88E5] text-white hover:bg-[#1546A8]"
                     title="Clear search"
                   >
@@ -1007,10 +974,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 if (searchTerm && panelSims.length === 0) return null;
 
                 const PanelIcon = panel.icon;
-                const isSearching = searchTerm.trim().length > 0;
-                const isOpen = isSearching
-                  ? (openSubjectKey !== null ? openSubjectKey === panel.key : panelSims.length > 0)
-                  : openSubjectKey === panel.key;
 
                 return (
                   <div
@@ -1022,22 +985,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       '--subject-shadow-color': panel.shadow
                     } as React.CSSProperties}
                   >
-                    {/* Collapsible Header Bar Across the Top in Subject's Color */}
+                    {/* Header Bar Across the Top in Subject's Color */}
                     <div
-                      role="button"
-                      tabIndex={0}
-                      aria-expanded={isOpen}
-                      aria-controls={`subject-accordion-content-${panel.key}`}
-                      onClick={() => handleToggleSubject(panel.key)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleToggleSubject(panel.key);
-                        }
-                      }}
-                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer transition-all hover:brightness-105 active:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset"
+                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap"
                       style={{ backgroundColor: panel.color }}
-                      title={`${isOpen ? 'Collapse' : 'Expand'} ${panel.name} topics`}
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
                         <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
@@ -1053,27 +1004,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2.5">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
-                          {panelSims.length} simulations
-                        </span>
-                        <ChevronDown 
-                          className={`w-5 h-5 text-white transition-transform duration-400 ease-in-out shrink-0 ${
-                            isOpen ? 'rotate-180' : 'rotate-0'
-                          }`}
-                          aria-hidden="true"
-                        />
-                      </div>
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
+                        {panelSims.length} simulations
+                      </span>
                     </div>
 
-                    {/* Smooth Collapsible Accordion Container */}
-                    <div
-                      id={`subject-accordion-content-${panel.key}`}
-                      className={`subject-accordion-content ${isOpen ? 'is-open' : ''}`}
-                    >
-                      <div className="subject-accordion-inner">
-                        {/* Horizontal Multi-Column Grid of Topic Cards (Spanning Across Laptop & Desktop) */}
-                        <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5">
+                    {/* Horizontal Multi-Column Grid of Topic Cards (Spanning Across Laptop & Desktop) */}
+                    <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5">
                           {panelSims.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
                               {panelSims.map((sim) => {
@@ -1134,9 +1071,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           )}
                         </div>
                       </div>
-                    </div>
-                  </div>
-                );
+                    );
               })}
           </div>
         ) : (
