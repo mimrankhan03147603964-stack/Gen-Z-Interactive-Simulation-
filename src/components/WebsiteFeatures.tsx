@@ -12,7 +12,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       title: 'Optimized for Laptops & PCs',
       badge: 'DUAL 4K READY',
       badgeColor: '#0284c7',
-      description: 'Native responsive execution on computer monitors, Chromebooks, interactive classroom smart boards, and widescreen projectors.',
+      description: 'Our labs run smoothly on laptops, desktop computers, Chromebooks, interactive classroom smart boards and widescreen projectors. The layout adjusts automatically to your screen size, so students get a clear, full view of every simulation without any extra software or installation.',
       // Vibrant 3D dual-screen setup (sleek modern laptop + desktop display) with an illuminated electric blue & cyan glassmorphism glow
       renderIcon: () => (
         <svg viewBox="0 0 64 64" className="w-full h-full" fill="none">
@@ -67,7 +67,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       title: 'Real-Time Physics & Math Engines',
       badge: '60 FPS LIVE',
       badgeColor: '#f59e0b',
-      description: 'Continuous ray tracing, dynamic particle kinetics, harmonic Keplerian orbits, and circuit Ohm\'s law calculators running live at 60 FPS.',
+      description: 'Experience live simulations powered by real-time engines running at 60 FPS. Watch continuous ray tracing, moving particles, harmonic Keplerian planet orbits and Ohm\'s law circuit calculators respond instantly as you change the values, so difficult ideas become easy to see and understand.',
       // Rich 3D gold-plated microchip processor surrounded by glowing orange/amber circuit board traces & live logic paths
       renderIcon: () => (
         <svg viewBox="0 0 64 64" className="w-full h-full" fill="none">
@@ -124,7 +124,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       title: 'True 4K Fullscreen Projection',
       badge: 'CINEMA 4K UHD',
       badgeColor: '#a855f7',
-      description: 'Single-click theater mode eliminates browser distractions and fills the display for high-impact classroom lectures and science demonstrations.',
+      description: 'Open any lab in single-click theater mode to remove browser distractions and fill the whole display in sharp 4K quality. It is perfect for high-impact classroom lectures, science demonstrations and group learning on large screens.',
       // Bold, colorful 3D Ultra HD 4K cinema projection emblem with deep purple and magenta gradient beams
       renderIcon: () => (
         <svg viewBox="0 0 64 64" className="w-full h-full" fill="none">
@@ -170,7 +170,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       title: 'Multidisciplinary Curriculum & English Arts',
       badge: 'STEM + ARTS',
       badgeColor: '#10b981',
-      description: 'Aligned with elementary, secondary, and higher competencies across Physics, Chemistry, Biology, Earth & Space, Math, Computer Science, and English Language Arts.',
+      description: 'Our labs are aligned with elementary, secondary and higher-level competencies across Physics, Chemistry, Biology, Earth & Space, Math, Computer Science and English Language Arts. One portal covers many subjects and helps teachers and students learn step by step with the curriculum.',
       // Rich, colorful 3D open hardbound academic encyclopedia with layered colored bookmarks, glowing educational symbols (A, Ω, π), & emerald ribbon
       renderIcon: () => (
         <svg viewBox="0 0 64 64" className="w-full h-full" fill="none">
@@ -243,11 +243,6 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     }
   };
 
-  const goToSlide = (idx: number) => {
-    setIsTransitioning(true);
-    setCurrentIndex(idx);
-  };
-
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -270,7 +265,6 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
 
   // 4 items + 1 clone of first card for seamless endless loop
   const displayItems = [...features, features[0]];
-  const activeDot = currentIndex % features.length;
 
   return (
     <section 
@@ -316,9 +310,9 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         </div>
       </div>
 
-      {/* One-card-at-a-time sliding carousel */}
+      {/* One-card-at-a-time sliding carousel - Full width of section */}
       <div 
-        className="w-full max-w-[620px] mx-auto overflow-hidden rounded-2xl relative"
+        className="w-full mx-auto overflow-hidden rounded-2xl relative"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
@@ -343,7 +337,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                 className="w-full shrink-0"
               >
                 <div 
-                  className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-0.5 cursor-default select-none border"
+                  className="p-6 sm:p-8 md:p-10 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-0.5 cursor-default select-none border"
                   style={{
                     backgroundColor: theme.bg,
                     borderColor: theme.borderColor,
@@ -352,9 +346,9 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                 >
                   <div className="relative z-10">
                     {/* Header with 3D Icon & Feature Badge */}
-                    <div className="flex items-start justify-between gap-3 mb-3.5">
+                    <div className="flex items-start justify-between gap-3 mb-4 sm:mb-5">
                       <div 
-                        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0 p-2.5 sm:p-3 group-hover:scale-105 transition-transform border shadow-xs"
                         style={{
                           backgroundColor: theme.pedestalBg,
                           borderColor: theme.pedestalBorder
@@ -363,7 +357,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                         {feat.renderIcon()}
                       </div>
                       <span 
-                        className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
+                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-mono font-bold tracking-wide uppercase border shadow-2xs"
                         style={{
                           backgroundColor: theme.badgeBg,
                           color: theme.badgeText,
@@ -375,13 +369,13 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                     </div>
 
                     <h3 
-                      className="text-base sm:text-lg font-bold tracking-tight mb-2 leading-snug font-heading"
+                      className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight mb-3 leading-snug font-heading"
                       style={{ color: theme.titleColor }}
                     >
                       {feat.title}
                     </h3>
                     <p 
-                      className="text-xs sm:text-sm font-normal leading-relaxed"
+                      className="text-sm sm:text-base md:text-lg font-normal leading-relaxed"
                       style={{ color: theme.textColor }}
                     >
                       {feat.description}
@@ -392,28 +386,6 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
             );
           })}
         </div>
-      </div>
-
-      {/* Navigation dots */}
-      <div className="flex items-center justify-center gap-2 pt-0.5 pb-1">
-        {features.map((feat, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => goToSlide(i)}
-            title={`Capability: ${feat.title}`}
-            aria-label={`Go to slide ${i + 1} - ${feat.title}`}
-            className="p-1 rounded-full cursor-pointer focus:outline-none transition-transform active:scale-90"
-          >
-            <span
-              className={`block rounded-full transition-all duration-300 ${
-                activeDot === i
-                  ? 'w-6 h-2.5 bg-[#1546A8] shadow-xs'
-                  : 'w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400'
-              }`}
-            />
-          </button>
-        ))}
       </div>
     </section>
   );
