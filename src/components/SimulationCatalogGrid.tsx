@@ -573,7 +573,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     },
     {
       key: 'Urdu & Linguistics',
-      name: 'Urdu & Linguistics',
+      name: 'اردو اور لسانیات',
       color: '#059669',
       tint: 'rgba(5, 150, 105, 0.08)',
       shadow: 'rgba(5, 150, 105, 0.35)',
@@ -995,7 +995,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                           <PanelIcon className="w-[36px] h-[36px] text-white pointer-events-none drop-shadow-sm" />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-[18px] sm:text-[19px] font-bold leading-tight text-white m-0 font-heading">
+                          <h3
+                            className={`font-bold leading-normal text-white m-0 ${panel.key === 'Urdu & Linguistics' ? 'font-urdu text-[20px] sm:text-[22px]' : 'text-[18px] sm:text-[19px] font-heading leading-tight'}`}
+                            dir={panel.key === 'Urdu & Linguistics' ? 'rtl' : undefined}
+                          >
                             {panel.name}
                           </h3>
                           <p className="text-[12px] sm:text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
@@ -1046,8 +1049,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                     {/* Center: Full Topic Title - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
                                     <div className="flex-1 min-w-0 pr-1">
                                       <span
-                                        className={`text-[14px] sm:text-[15px] font-semibold text-slate-800 group-hover:text-[var(--subject-color)] transition-colors leading-snug block break-words ${isUrdu ? 'font-urdu' : ''}`}
+                                        className={`font-semibold text-slate-800 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
                                         dir={isUrdu ? 'rtl' : 'ltr'}
+                                        style={isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : undefined}
                                       >
                                         {displayTitle}
                                       </span>
