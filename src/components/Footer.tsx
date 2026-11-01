@@ -139,73 +139,81 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
               </p>
             </div>
 
-            {/* Contacts & Links strictly unchanged */}
-            <div className="text-xs sm:text-sm font-bold flex items-center justify-center md:justify-start flex-wrap gap-x-3 gap-y-2 pt-1">
-              <span 
-                className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
-                style={{
-                  backgroundColor: '#1546A8',
-                  color: '#FFFFFF',
-                  borderColor: '#2D62D1'
-                }}
-              >
-                Contacts:
-              </span>
-              <a 
-                href="tel:03007603964" 
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: '#CBD5E1',
-                  color: '#0F172A'
-                }}
-                title="Call 03007603964"
-              >
-                <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
-                <span>03007603964</span>
-              </a>
-              <span style={{ color: '#64748B' }} className="font-black">/</span>
-              <a 
-                href="tel:03147603964" 
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderColor: '#CBD5E1',
-                  color: '#0F172A'
-                }}
-                title="Call 03147603964"
-              >
-                <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
-                <span>03147603964</span>
-              </a>
-              <span style={{ color: '#64748B' }} className="font-black">|</span>
-              <a 
-                href="https://wa.me/923147603964" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="fx-pulse-whatsapp inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border text-white"
-                style={{
-                  backgroundColor: '#25D366',
-                  borderColor: '#1EBE5D'
-                }}
-                title="Chat on WhatsApp: 03147603964"
-              >
-                <MessageCircle className="w-4 h-4 text-white shrink-0" />
-                <span>WhatsApp: 03147603964</span>
-              </a>
+            {/* Contacts & Links - Cleanly organized on the LEFT side so WhatsApp button never overlaps developer's face */}
+            <div className="text-xs sm:text-sm font-bold flex flex-col items-center md:items-start gap-2 pt-1 max-w-fit">
+              {/* Phone numbers row */}
+              <div className="flex items-center justify-center md:justify-start flex-wrap gap-x-2.5 gap-y-2">
+                <span 
+                  className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
+                  style={{
+                    backgroundColor: '#1546A8',
+                    color: '#FFFFFF',
+                    borderColor: '#2D62D1'
+                  }}
+                >
+                  Contacts:
+                </span>
+                <a 
+                  href="tel:03007603964" 
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#CBD5E1',
+                    color: '#0F172A'
+                  }}
+                  title="Call 03007603964"
+                >
+                  <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
+                  <span>03007603964</span>
+                </a>
+                <span style={{ color: '#64748B' }} className="font-black">/</span>
+                <a 
+                  href="tel:03147603964" 
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#CBD5E1',
+                    color: '#0F172A'
+                  }}
+                  title="Call 03147603964"
+                >
+                  <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
+                  <span>03147603964</span>
+                </a>
+              </div>
+
+              {/* WhatsApp button wrapped cleanly on second row below phone numbers, kept strictly on LEFT */}
+              <div className="flex items-center justify-center md:justify-start">
+                <a 
+                  href="https://wa.me/923147603964" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="fx-pulse-whatsapp inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border text-white"
+                  style={{
+                    backgroundColor: '#25D366',
+                    borderColor: '#1EBE5D'
+                  }}
+                  title="Chat on WhatsApp: 03147603964"
+                >
+                  <MessageCircle className="w-4 h-4 text-white shrink-0" />
+                  <span>WhatsApp: 03147603964</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 4. Elegant Developer Message Box: Custom Simulation Request Card */}
+        {/* 4. Elegant Developer Message Box: Custom Simulation Request Card (Semi-transparent with backdrop blur) */}
         <div 
           ref={cardRef}
           onMouseEnter={() => setIsCardHovered(true)}
           onMouseLeave={() => setIsCardHovered(false)}
-          className="w-full max-w-4xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border backdrop-blur-md"
+          className="w-full max-w-4xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border"
           style={{
-            backgroundColor: 'rgba(21, 70, 168, 0.92)',
+            backgroundColor: 'rgba(30, 90, 200, 0.50)',
             borderColor: '#F5A623',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)',
             boxShadow: '0 12px 36px rgba(15, 23, 42, 0.35)'
           }}
         >
@@ -229,7 +237,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
                   <h3 className="col-start-1 row-start-1 text-lg sm:text-xl font-black font-heading invisible select-none pointer-events-none" aria-hidden="true">
                     {customSimTitle}
                   </h3>
-                  <h3 className="col-start-1 row-start-1 text-lg sm:text-xl font-black font-heading text-white flex items-center">
+                  <h3 className="col-start-1 row-start-1 text-lg sm:text-xl font-black font-heading text-white flex items-center" style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.75)' }}>
                     <span>{displayedTitle}</span>
                     {(typewriterPhase === 'idle' || typewriterPhase === 'typing-title') && (
                       <span 
@@ -259,7 +267,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed invisible select-none pointer-events-none" aria-hidden="true">
               {customSimDesc}
             </p>
-            <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed" style={{ color: '#DBE4F7' }}>
+            <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed text-white" style={{ color: '#FFFFFF', textShadow: '0 1px 3px rgba(0, 0, 0, 0.75)' }}>
               {displayedDesc}
               {(typewriterPhase === 'typing-desc' || typewriterPhase === 'completed') && (
                 <span 
