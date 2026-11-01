@@ -104,10 +104,10 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
       <div className="w-full max-w-6xl mx-auto flex flex-col space-y-8 relative z-10">
         
         {/* Top Developer Showcase: Left-aligned over the light white overlay */}
-        <div className="w-full md:max-w-xl lg:max-w-2xl text-center md:text-left space-y-4">
+        <div className="w-full md:max-w-xl lg:max-w-2xl text-left space-y-4">
           
           {/* 1. Monogram / Logo */}
-          <div className="flex items-center justify-center md:justify-start bg-transparent p-0 m-0 border-0 shadow-none">
+          <div className="flex items-center justify-start bg-transparent p-0 m-0 border-0 shadow-none">
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Logo" 
@@ -127,22 +127,37 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
           </div>
 
           {/* 3. Developer Profile & Contacts */}
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="space-y-1">
               <h3 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-slate-950 tracking-tight drop-shadow-2xs">
                 Muhammad Imran Khan
               </h3>
-              <p className="text-sm sm:text-base md:text-lg font-bold text-slate-700 flex flex-wrap items-center justify-center md:justify-start gap-x-2 gap-y-1">
-                <span className="font-semibold text-slate-800">MSc Computer Science</span>
+              <p className="text-sm sm:text-base md:text-lg font-bold text-slate-800 flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
+                <span className="font-semibold text-slate-900">MSc Computer Science</span>
                 <span className="text-slate-400 font-bold">&bull;</span>
-                <span className="font-semibold text-slate-800">Software &amp; Web Page Developer</span>
+                <span className="font-semibold text-slate-900">Software Developer &amp; Website Developer</span>
+                <span className="text-slate-400 font-bold">&bull;</span>
+                <span className="font-semibold text-slate-900">Founder of Gen Z Interactive Simulations</span>
+              </p>
+            </div>
+
+            {/* Developer Detailed Profile Bio - 3 Paragraphs */}
+            <div className="space-y-3 text-xs sm:text-sm md:text-[14px] font-normal leading-relaxed text-slate-800 text-left pt-1">
+              <p>
+                Muhammad Imran Khan is a highly skilled Software Developer and Website Developer with a Master&apos;s degree in Computer Science (MSc). He is the founder, creator, designer and lead developer of the Gen Z Interactive Simulations portal, a professional digital laboratory platform offering 109 verified interactive simulations for students, teachers, schools and academies.
+              </p>
+              <p>
+                He has strong expertise in modern web development, interactive 3D visualization, real-time physics and math engines, animation, responsive design and educational technology. Every simulation he builds is fast, colorful, visually rich and simple to use, turning difficult textbook concepts into clear, hands-on experiences that students enjoy and remember. His labs run smoothly on laptops, desktops, Chromebooks, smart boards and projectors, with true 4K fullscreen projection for classroom use.
+              </p>
+              <p>
+                His work is aligned with the National Curriculum of Pakistan (Session 2026-27) and covers all levels, from Play Group, Nursery and Prep up to higher classes, across Mathematics, Physics, Chemistry, Biology, Earth &amp; Space, Computer Science and English Language Arts. He also develops custom simulations, educational websites and interactive learning software for any grade or curriculum, with a strong focus on quality, accuracy, simple English and student-friendly design.
               </p>
             </div>
 
             {/* Contacts & Links - Cleanly organized on the LEFT side so WhatsApp button never overlaps developer's face */}
-            <div className="text-xs sm:text-sm font-bold flex flex-col items-center md:items-start gap-2 pt-1 max-w-fit">
+            <div className="text-xs sm:text-sm font-bold flex flex-col items-start gap-2 pt-1 max-w-fit">
               {/* Phone numbers row */}
-              <div className="flex items-center justify-center md:justify-start flex-wrap gap-x-2.5 gap-y-2">
+              <div className="flex items-center justify-start flex-wrap gap-x-2.5 gap-y-2">
                 <span 
                   className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
                   style={{
@@ -183,7 +198,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
               </div>
 
               {/* WhatsApp button wrapped cleanly on second row below phone numbers, kept strictly on LEFT */}
-              <div className="flex items-center justify-center md:justify-start">
+              <div className="flex items-center justify-start">
                 <a 
                   href="https://wa.me/923147603964" 
                   target="_blank" 
