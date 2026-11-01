@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { getThemeForIndex } from '../data/sequentialPalette';
-import { ScrollReveal } from './ScrollReveal';
 
 interface WebsiteFeaturesProps {
   isDarkMode?: boolean;
@@ -218,10 +217,65 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
     }
   ];
 
+  // Carousel state for one-card-at-a-time sliding carousel
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+
+  // Auto-slide every 3.5 seconds (3 to 4 seconds) when not hovered
+  useEffect(() => {
+    if (isHovered) return;
+
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setCurrentIndex((prev) => prev + 1);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isHovered, features.length]);
+
+  // Seamless endless loop: when reaching cloned card 0 (index 4), silently reset to 0
+  const handleTransitionEnd = () => {
+    if (currentIndex >= features.length) {
+      setIsTransitioning(false);
+      setCurrentIndex(0);
+    }
+  };
+
+  const goToSlide = (idx: number) => {
+    setIsTransitioning(true);
+    setCurrentIndex(idx);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    touchStartX.current = null;
+    if (Math.abs(diff) > 40) {
+      setIsTransitioning(true);
+      if (diff > 0) {
+        // Swiped left -> next
+        setCurrentIndex((prev) => prev + 1);
+      } else {
+        // Swiped right -> prev
+        setCurrentIndex((prev) => (prev <= 0 ? features.length - 1 : prev - 1));
+      }
+    }
+  };
+
+  // 4 items + 1 clone of first card for seamless endless loop
+  const displayItems = [...features, features[0]];
+  const activeDot = currentIndex % features.length;
+
   return (
     <section 
       id="features" 
-      className="w-full rounded-2xl p-6 sm:p-8 space-y-6 transition-all border shadow-lg"
+      className="w-full rounded-2xl p-4 sm:p-6 space-y-4 transition-all border shadow-lg"
       style={{
         backgroundColor: '#FFFFFF',
         borderColor: '#DDE5F3',
@@ -229,7 +283,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
       }}
     >
       <div 
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3.5"
         style={{ borderColor: '#DDE5F3' }}
       >
         <div>
@@ -262,68 +316,104 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {features.map((feat, idx) => {
-          const theme = getThemeForIndex(idx);
+      {/* One-card-at-a-time sliding carousel */}
+      <div 
+        className="w-full max-w-[620px] mx-auto overflow-hidden rounded-2xl relative"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div 
+          className="flex w-full"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+            transition: isTransitioning ? 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+            willChange: 'transform'
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {displayItems.map((feat, idx) => {
+            const actualIdx = idx % features.length;
+            const theme = getThemeForIndex(actualIdx);
 
-          return (
-            <ScrollReveal
-              key={idx}
-              direction="up"
-              distance={24}
-              duration={500}
-              delay={(idx % 4) * 80}
-              className="h-full flex flex-col"
-            >
+            return (
               <div 
-                className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-1 cursor-default select-none border h-full flex-1"
-                style={{
-                  backgroundColor: theme.bg,
-                  borderColor: theme.borderColor,
-                  boxShadow: theme.boxShadow
-                }}
+                key={idx}
+                className="w-full shrink-0"
               >
-                <div className="relative z-10">
-                  {/* Header with 3D Icon & Feature Badge - Icon SVG untouched */}
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
-                      style={{
-                        backgroundColor: theme.pedestalBg,
-                        borderColor: theme.pedestalBorder
-                      }}
-                    >
-                      {feat.renderIcon()}
+                <div 
+                  className="p-5 sm:p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between group transition-all duration-200 hover:-translate-y-0.5 cursor-default select-none border"
+                  style={{
+                    backgroundColor: theme.bg,
+                    borderColor: theme.borderColor,
+                    boxShadow: theme.boxShadow
+                  }}
+                >
+                  <div className="relative z-10">
+                    {/* Header with 3D Icon & Feature Badge */}
+                    <div className="flex items-start justify-between gap-3 mb-3.5">
+                      <div 
+                        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 p-2 group-hover:scale-105 transition-transform border shadow-xs"
+                        style={{
+                          backgroundColor: theme.pedestalBg,
+                          borderColor: theme.pedestalBorder
+                        }}
+                      >
+                        {feat.renderIcon()}
+                      </div>
+                      <span 
+                        className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
+                        style={{
+                          backgroundColor: theme.badgeBg,
+                          color: theme.badgeText,
+                          borderColor: theme.badgeBorder
+                        }}
+                      >
+                        {feat.badge}
+                      </span>
                     </div>
-                    <span 
-                      className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wide uppercase border shadow-2xs"
-                      style={{
-                        backgroundColor: theme.badgeBg,
-                        color: theme.badgeText,
-                        borderColor: theme.badgeBorder
-                      }}
-                    >
-                      {feat.badge}
-                    </span>
-                  </div>
 
-                  <h3 
-                    className="text-base font-bold tracking-tight mb-2 leading-snug font-heading"
-                    style={{ color: theme.titleColor }}
-                  >
-                    {feat.title}
-                  </h3>
-                  <p 
-                    className="text-xs font-normal leading-relaxed"
-                    style={{ color: theme.textColor }}
-                  >
-                    {feat.description}
-                  </p>
+                    <h3 
+                      className="text-base sm:text-lg font-bold tracking-tight mb-2 leading-snug font-heading"
+                      style={{ color: theme.titleColor }}
+                    >
+                      {feat.title}
+                    </h3>
+                    <p 
+                      className="text-xs sm:text-sm font-normal leading-relaxed"
+                      style={{ color: theme.textColor }}
+                    >
+                      {feat.description}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </ScrollReveal>
-          );
-        })}
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Navigation dots */}
+      <div className="flex items-center justify-center gap-2 pt-0.5 pb-1">
+        {features.map((feat, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goToSlide(i)}
+            title={`Capability: ${feat.title}`}
+            aria-label={`Go to slide ${i + 1} - ${feat.title}`}
+            className="p-1 rounded-full cursor-pointer focus:outline-none transition-transform active:scale-90"
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                activeDot === i
+                  ? 'w-6 h-2.5 bg-[#1546A8] shadow-xs'
+                  : 'w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400'
+              }`}
+            />
+          </button>
+        ))}
       </div>
     </section>
   );
