@@ -269,7 +269,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
   return (
     <section 
       id="features" 
-      className="w-full rounded-2xl p-4 sm:p-6 space-y-4 transition-all border shadow-lg"
+      className="reveal-up w-full rounded-2xl p-4 sm:p-6 space-y-4 transition-all border shadow-lg"
       style={{
         backgroundColor: '#FFFFFF',
         borderColor: '#DDE5F3',
@@ -280,7 +280,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3.5"
         style={{ borderColor: '#DDE5F3' }}
       >
-        <div>
+        <div className="reveal-left">
           <span 
             className="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block mb-1.5 border font-mono"
             style={{
@@ -298,7 +298,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
           </h2>
         </div>
         <div 
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 border shadow-2xs"
+          className="reveal-right flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 border shadow-2xs"
           style={{
             backgroundColor: '#EEF3F9',
             color: '#1B2A5C',
@@ -348,7 +348,7 @@ export const WebsiteFeatures: React.FC<WebsiteFeaturesProps> = ({ isDarkMode = f
                     {/* Header with 3D Icon & Feature Badge */}
                     <div className="flex items-start justify-between gap-3 mb-4 sm:mb-5">
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0 p-2.5 sm:p-3 group-hover:scale-105 transition-transform border shadow-xs"
+                        className="reveal-zoom w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0 p-2.5 sm:p-3 group-hover:scale-105 transition-transform border shadow-xs"
                         style={{
                           backgroundColor: theme.pedestalBg,
                           borderColor: theme.pedestalBorder

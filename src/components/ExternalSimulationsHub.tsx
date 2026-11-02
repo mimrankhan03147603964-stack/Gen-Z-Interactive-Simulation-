@@ -383,7 +383,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
 
       {/* Top Banner / Section Header: Sequential Palette Fill */}
       <div 
-        className="border shadow-lg rounded-2xl p-5 sm:p-7 text-white transition-all"
+        className="reveal-up border shadow-lg rounded-2xl p-5 sm:p-7 text-white transition-all"
         style={{
           backgroundColor: '#1B2A5C',
           borderColor: '#F5A623',
@@ -441,7 +441,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="reveal-up flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs">
         {/* Category Filter Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {CATEGORY_TABS.map((cat) => {
@@ -489,90 +489,92 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       {/* 2-Column Slim Rows Grid (1 Column under 900px) */}
       {filteredResources.length > 0 ? (
         <div className="external-sims-grid">
-          {filteredResources.map((item) => {
+          {filteredResources.map((item, idx) => {
             const IconComponent = item.icon;
             const badgeLabel = item.isAd && item.adLabels?.[0] ? item.adLabels[0] : item.badge;
+            const revealClass = idx % 2 === 0 ? 'reveal-left' : 'reveal-right reveal-delay-1';
 
             return (
-              <div
-                key={item.id}
-                className="external-sim-row"
-                style={{
-                  '--lab-glow': item.glowColor
-                } as React.CSSProperties}
-              >
-                {/* Thin Colored Left Edge Bar */}
-                <div 
-                  className="w-1.5 self-stretch rounded-full shrink-0" 
-                  style={{ backgroundColor: item.accentColor }} 
-                  aria-hidden="true"
-                />
-
-                {/* 52x52px Colorful Icon Tile */}
+              <div key={item.id} className={revealClass}>
                 <div
-                  className="w-[52px] h-[52px] rounded-xl flex items-center justify-center shrink-0 p-1.5 border"
+                  className="external-sim-row"
                   style={{
-                    backgroundColor: `${item.accentColor}15`,
-                    borderColor: `${item.accentColor}35`
-                  }}
+                    '--lab-glow': item.glowColor
+                  } as React.CSSProperties}
                 >
-                  <IconComponent className="w-8 h-8 pointer-events-none shrink-0" />
-                </div>
+                  {/* Thin Colored Left Edge Bar */}
+                  <div 
+                    className="w-1.5 self-stretch rounded-full shrink-0" 
+                    style={{ backgroundColor: item.accentColor }} 
+                    aria-hidden="true"
+                  />
 
-                {/* Lab Information (Name, Subject, Badge) */}
-                <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
-                  <h3 
-                    className="text-[16px] font-bold text-slate-900 truncate leading-snug font-heading" 
-                    title={item.title}
-                  >
-                    {item.title}
-                  </h3>
-                  <p 
-                    className="text-[13px] text-slate-500 truncate leading-tight font-sans" 
-                    title={item.category}
-                  >
-                    {item.category}
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span
-                      className="text-[11px] font-bold px-2 py-0.5 rounded-md border shrink-0 tracking-wide uppercase font-mono"
-                      style={{
-                        backgroundColor: `${item.accentColor}18`,
-                        color: item.accentColor,
-                        borderColor: `${item.accentColor}40`
-                      }}
-                    >
-                      {badgeLabel}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Right Side: Colored Launch Button + Round Details Button */}
-                <div className="shrink-0 flex items-center gap-2">
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="lab-launch-btn h-9 px-3.5 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-xs cursor-pointer select-none"
+                  {/* 52x52px Colorful Icon Tile */}
+                  <div
+                    className="reveal-zoom w-[52px] h-[52px] rounded-xl flex items-center justify-center shrink-0 p-1.5 border"
                     style={{
-                      backgroundColor: item.accentColor,
-                      boxShadow: `0 2px 8px ${item.glowColor}`
+                      backgroundColor: `${item.accentColor}15`,
+                      borderColor: `${item.accentColor}35`
                     }}
-                    title={`Open ${item.title} in new tab`}
                   >
-                    <span>Launch</span>
-                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-                  </a>
+                    <IconComponent className="w-8 h-8 pointer-events-none shrink-0" />
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setSelectedLab(item)}
-                    className="w-8 h-8 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center font-bold text-sm cursor-pointer shadow-2xs hover:border-slate-300 transition-colors"
-                    title={`View details for ${item.title}`}
-                    aria-label={`View details for ${item.title}`}
-                  >
-                    ⓘ
-                  </button>
+                  {/* Lab Information (Name, Subject, Badge) */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
+                    <h3 
+                      className="text-[16px] font-bold text-slate-900 truncate leading-snug font-heading" 
+                      title={item.title}
+                    >
+                      {item.title}
+                    </h3>
+                    <p 
+                      className="text-[13px] text-slate-500 truncate leading-tight font-sans" 
+                      title={item.category}
+                    >
+                      {item.category}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-md border shrink-0 tracking-wide uppercase font-mono"
+                        style={{
+                          backgroundColor: `${item.accentColor}18`,
+                          color: item.accentColor,
+                          borderColor: `${item.accentColor}40`
+                        }}
+                      >
+                        {badgeLabel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Side: Colored Launch Button + Round Details Button */}
+                  <div className="shrink-0 flex items-center gap-2">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="lab-launch-btn h-9 px-3.5 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-xs cursor-pointer select-none"
+                      style={{
+                        backgroundColor: item.accentColor,
+                        boxShadow: `0 2px 8px ${item.glowColor}`
+                      }}
+                      title={`Open ${item.title} in new tab`}
+                    >
+                      <span>Launch</span>
+                      <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedLab(item)}
+                      className="w-8 h-8 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center font-bold text-sm cursor-pointer shadow-2xs hover:border-slate-300 transition-colors"
+                      title={`View details for ${item.title}`}
+                      aria-label={`View details for ${item.title}`}
+                    >
+                      ⓘ
+                    </button>
+                  </div>
                 </div>
               </div>
             );

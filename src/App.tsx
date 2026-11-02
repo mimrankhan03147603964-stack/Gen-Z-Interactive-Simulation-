@@ -13,6 +13,7 @@ import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ExternalSimulationsHub } from './components/ExternalSimulationsHub';
 import { ScrollReveal } from './components/ScrollReveal';
+import { scrollRevealEngine } from './utils/scrollRevealManager';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
@@ -96,6 +97,36 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Top colorful scroll progress bar percentage (0% to 100%)
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+
+  // Initialize global scroll reveal engine and track scroll progress
+  useEffect(() => {
+    scrollRevealEngine.init();
+
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // When switching views or closing modals, rescan unrevealed elements so nothing stays empty
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollRevealEngine.scanAndObserve();
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [currentView, selectedSubject, selectedGradeTier, fullscreenModalSim, standaloneLab]);
 
   useEffect(() => {
     try {
@@ -282,6 +313,18 @@ export default function App() {
         backgroundColor: '#EEF3F9'
       }}
     >
+      {/* Thin colorful scroll progress bar at the very top of the page */}
+      <div 
+        id="scroll-progress-bar"
+        className="fixed top-0 left-0 h-[3.5px] z-[100000] pointer-events-none transition-[width] duration-100 ease-out"
+        style={{
+          width: `${scrollProgress}%`,
+          background: 'linear-gradient(90deg, #1E88E5 0%, #00a2ff 25%, #7c3aed 50%, #F5A623 75%, #E53935 100%)',
+          boxShadow: '0 0 10px rgba(0, 162, 255, 0.75)'
+        }}
+        aria-hidden="true"
+      />
+
       {/* Dynamic Moving Colorful Balloons Background Effect */}
       <ThreeStemBackground />
 

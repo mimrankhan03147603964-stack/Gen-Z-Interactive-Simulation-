@@ -51,16 +51,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
           boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
         }}
       >
-        {/* Box 1: Zero Lab Cost (--blue) */}
+        {/* Box 1: Zero Lab Cost (--blue) - From Left */}
         <div 
-          className="flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
+          className="reveal-left flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
           style={{
             backgroundColor: '#EEF3F9',
             borderColor: '#DDE5F3'
           }}
         >
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
+            className="reveal-zoom w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
               borderColor: '#DDE5F3'
@@ -74,16 +74,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
           </div>
         </div>
 
-        {/* Box 2: Real-Time 60 FPS Engines (--dark-blue) */}
+        {/* Box 2: Real-Time 60 FPS Engines (--dark-blue) - From Bottom Stagger 1 */}
         <div 
-          className="flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
+          className="reveal-up reveal-delay-1 flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
           style={{
             backgroundColor: '#EEF3F9',
             borderColor: '#DDE5F3'
           }}
         >
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
+            className="reveal-zoom w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
               borderColor: '#DDE5F3'
@@ -97,16 +97,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
           </div>
         </div>
 
-        {/* Box 3: Safe Chemical Labs (--red) */}
+        {/* Box 3: Safe Chemical Labs (--red) - From Bottom Stagger 2 */}
         <div 
-          className="flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
+          className="reveal-up reveal-delay-2 flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
           style={{
             backgroundColor: '#EEF3F9',
             borderColor: '#DDE5F3'
           }}
         >
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
+            className="reveal-zoom w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
               borderColor: '#DDE5F3'
@@ -120,16 +120,16 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
           </div>
         </div>
 
-        {/* Box 4: 100% Curriculum Aligned (--gold) */}
+        {/* Box 4: 100% Curriculum Aligned (--gold) - From Right Stagger 3 */}
         <div 
-          className="flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
+          className="reveal-right reveal-delay-3 flex items-center gap-3.5 p-3.5 rounded-2xl shadow-sm border transition-all hover:scale-101"
           style={{
             backgroundColor: '#EEF3F9',
             borderColor: '#DDE5F3'
           }}
         >
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
+            className="reveal-zoom w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
             style={{
               backgroundColor: '#FFFFFF',
               borderColor: '#DDE5F3'
@@ -150,8 +150,8 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
         style={{ width: '100%' }}
       >
         
-        {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
-        <ScrollReveal direction="up" distance={24} duration={500} delay={0} className="w-full h-full flex flex-col">
+        {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) - From Left */}
+        <ScrollReveal direction="left" className="w-full h-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
             style={{ 
@@ -299,8 +299,8 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
         </div>
         </ScrollReveal>
 
-        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
-        <ScrollReveal direction="up" distance={24} duration={500} delay={100} className="w-full h-full flex flex-col">
+        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) - From Right */}
+        <ScrollReveal direction="right" delay={1} className="w-full h-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-6 sm:p-7 md:p-8 flex flex-col justify-between border shadow-xl group transition-all text-[#1B2A5C] h-full flex-1"
             style={{ 

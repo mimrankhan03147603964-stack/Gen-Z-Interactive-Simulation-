@@ -104,10 +104,10 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
       <div className="w-full max-w-6xl mx-auto flex flex-col space-y-8 relative z-10">
         
         {/* Top Developer Showcase: Left-aligned over the light white overlay */}
-        <div className="w-full md:max-w-xl lg:max-w-2xl text-left space-y-4">
+        <div className="reveal-left w-full md:max-w-xl lg:max-w-2xl text-left space-y-4">
           
           {/* 1. Monogram / Logo */}
-          <div className="flex items-center justify-start bg-transparent p-0 m-0 border-0 shadow-none">
+          <div className="reveal-zoom flex items-center justify-start bg-transparent p-0 m-0 border-0 shadow-none">
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Logo" 
@@ -219,17 +219,18 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
         </div>
 
         {/* 4. Elegant Developer Message Box: Custom Simulation Request Card (Semi-transparent with backdrop blur) */}
-        <div 
-          ref={cardRef}
-          onMouseEnter={() => setIsCardHovered(true)}
-          onMouseLeave={() => setIsCardHovered(false)}
-          className="w-full max-w-4xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border"
-          style={{
-            backgroundColor: 'rgba(21, 70, 168, 0.92)',
-            borderColor: '#F5A623',
-            boxShadow: '0 12px 36px rgba(15, 23, 42, 0.35)'
-          }}
-        >
+        <div className="reveal-right w-full max-w-4xl">
+          <div 
+            ref={cardRef}
+            onMouseEnter={() => setIsCardHovered(true)}
+            onMouseLeave={() => setIsCardHovered(false)}
+            className="w-full rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border"
+            style={{
+              backgroundColor: 'rgba(21, 70, 168, 0.92)',
+              borderColor: '#F5A623',
+              boxShadow: '0 12px 36px rgba(15, 23, 42, 0.35)'
+            }}
+          >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b" style={{ borderColor: '#2D62D1' }}>
             <div className="flex items-center gap-2.5">
               <div 
@@ -327,9 +328,10 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </a>
           </div>
         </div>
+      </div>
 
         {/* 5. Footer Bottom Copyright & Curriculum Alignment */}
-        <div className="w-full max-w-4xl pt-2">
+        <div className="reveal-up w-full max-w-4xl pt-2">
           <div className="w-full h-px mb-4 bg-slate-400/40" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-800">
             <p className="text-center sm:text-left drop-shadow-2xs">

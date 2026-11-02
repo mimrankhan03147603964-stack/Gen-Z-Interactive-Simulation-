@@ -64,23 +64,27 @@
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
-    text-rendering: geometricPrecision !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     forced-color-adjust: none !important;
     -ms-high-contrast-adjust: none !important;
   }
 
   html {
-    text-rendering: geometricPrecision !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     color-rendering: optimizeQuality !important;
     image-rendering: -webkit-optimize-contrast !important;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   /* Universal 4K Vector Sharpness: Eliminate blur from all SVG icons, paths, and strokes */
   svg, svg * {
     shape-rendering: geometricPrecision !important;
-    text-rendering: geometricPrecision !important;
   }
 
   /* Universal Image Crispness: Eliminate blur from downscaled/upscaled logos and assets */
@@ -101,7 +105,10 @@
     min-height: 100vh;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    text-rendering: geometricPrecision !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
   .font-urdu, [lang="ur"] {
@@ -456,23 +463,12 @@
   border: 2px solid #cbd5e1;
   box-shadow: 0 10px 25px -5px rgba(0, 80, 180, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
-  animation: up 0.5s both;
   color: #0f172a;
 }
 .card:hover {
   transform: translateY(-5px);
   border-color: #0284c7;
   box-shadow: 0 16px 32px -6px rgba(0, 80, 180, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
-}
-@keyframes up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .ic {
@@ -644,7 +640,6 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
 /* 3D Visual Effects & Card Dynamics */
 .card-colored-3d {
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform, box-shadow;
 }
 .card-colored-3d:hover {
   transform: translateY(-8px) scale(1.02);
@@ -766,5 +761,93 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
     animation: none !important;
     transition: none !important;
   }
+  .reveal-left,
+  .reveal-right,
+  .reveal-up,
+  .reveal-zoom,
+  .reveal-show,
+  .reveal-settled {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
 }
+
+/* ==========================================================================
+   SCROLL REVEAL ANIMATIONS (Desktop & Laptop Sharpness Architecture)
+   - Left: translateX(-120px)
+   - Right: translateX(120px)
+   - Up: translateY(90px)
+   - Zoom: scale(0.6 to 1) for small items only (icons/images)
+   - Transitions: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)
+   - Stagger delays: 0.15s, 0.3s, 0.45s, 0.6s
+   - Settled state: transform: none, will-change: auto (crystal clear subpixel text)
+   ========================================================================== */
+
+.reveal-left,
+.reveal-right,
+.reveal-up,
+.reveal-zoom {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal-left {
+  transform: translateX(-120px);
+}
+
+.reveal-right {
+  transform: translateX(120px);
+}
+
+.reveal-up {
+  transform: translateY(90px);
+}
+
+.reveal-zoom {
+  transform: scale(0.6);
+  transform-origin: center center;
+}
+
+/* Stagger Delays */
+.reveal-delay-1 {
+  transition-delay: 0.15s !important;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.3s !important;
+}
+
+.reveal-delay-3 {
+  transition-delay: 0.45s !important;
+}
+
+.reveal-delay-4 {
+  transition-delay: 0.6s !important;
+}
+
+/* While animating: will-change active temporarily */
+.reveal-animating {
+  will-change: opacity, transform;
+}
+
+/* Revealed active state: opacity 1, transform: none */
+.reveal-show {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Settled state: strictly transform: none and will-change: auto */
+.reveal-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Ensure horizontal overflow never occurs due to slide translations */
+body, #root, main {
+  overflow-x: hidden;
+}
+
 

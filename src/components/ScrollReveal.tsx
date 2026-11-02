@@ -1,94 +1,81 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { scrollRevealEngine } from '../utils/scrollRevealManager';
 
-interface ScrollRevealProps {
+export interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
-  delay?: number; // Milliseconds delay (for staggered cards)
-  duration?: number; // Milliseconds duration (around 450ms - 550ms)
-  distance?: number; // Pixels slide distance (around 20px - 26px)
-  direction?: 'up' | 'down' | 'none';
+  direction?: 'left' | 'right' | 'up' | 'zoom' | 'none';
+  delay?: 0 | 1 | 2 | 3 | 4 | number; // 1 = 0.15s, 2 = 0.3s, 3 = 0.45s, 4 = 0.6s, or milliseconds
+  as?: React.ElementType;
+  style?: React.CSSProperties;
+  distance?: number;
+  duration?: number;
   resetOnLeave?: boolean;
 }
 
+/**
+ * Reusable ScrollReveal wrapper component
+ * - Applies hidden direction classes (.reveal-left, .reveal-right, .reveal-up, .reveal-zoom)
+ * - Managed globally by scrollRevealEngine for smooth entrance, bottom exit replay, and zero blur
+ * - Protects inner elements (e.g. hover transforms) by applying the reveal to this outer wrapper
+ */
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   className = '',
-  delay = 0,
-  duration = 500,
-  distance = 24,
   direction = 'up',
+  delay = 0,
+  as: Component = 'div',
+  style = {},
+  duration,
 }) => {
-  const domRef = useRef<HTMLDivElement | null>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const domRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const el = domRef.current;
     if (!el) return;
 
-    // Respect reduced-motion preferences: immediately visible with no animation
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      setIsRevealed(true);
-      return;
-    }
-
-    // Check if the element is currently visible in the initial viewport
-    const rect = el.getBoundingClientRect();
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-
-    // If already in the visible viewport on load, reveal immediately
-    if (rect.top < windowHeight * 0.95 && rect.bottom > 0) {
-      setIsRevealed(true);
-      return;
-    }
-
-    // For elements below the viewport, observe for scroll entrance
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsRevealed(true);
-            // Once revealed, keep it permanently visible to guarantee NO cards or elements are ever missed!
-            observer.unobserve(entry.target);
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        threshold: 0.05,
-        rootMargin: '0px 0px -30px 0px', // Triggers naturally right as user scrolls toward the element
-      }
-    );
-
-    observer.observe(el);
-
-    return () => {
-      observer.disconnect();
-    };
+    scrollRevealEngine.register(el as HTMLElement);
   }, []);
 
-  const getTransform = () => {
-    if (isRevealed || direction === 'none') {
-      return 'translateY(0px)';
-    }
-    return direction === 'up' ? `translateY(${distance}px)` : `translateY(-${distance}px)`;
-  };
+  if (direction === 'none') {
+    return (
+      <Component className={className} style={style}>
+        {children}
+      </Component>
+    );
+  }
+
+  // Determine direction class
+  let dirClass = 'reveal-up';
+  if (direction === 'left') dirClass = 'reveal-left';
+  else if (direction === 'right') dirClass = 'reveal-right';
+  else if (direction === 'zoom') dirClass = 'reveal-zoom';
+
+  // Determine delay class or inline delay
+  let delayClass = '';
+  let inlineAnimStyle: React.CSSProperties = {};
+
+  if (delay === 1) delayClass = 'reveal-delay-1';
+  else if (delay === 2) delayClass = 'reveal-delay-2';
+  else if (delay === 3) delayClass = 'reveal-delay-3';
+  else if (delay === 4) delayClass = 'reveal-delay-4';
+  else if (typeof delay === 'number' && delay > 0) {
+    inlineAnimStyle.transitionDelay = `${delay}ms`;
+  }
+  if (typeof duration === 'number' && duration > 0) {
+    inlineAnimStyle.transitionDuration = `${duration}ms`;
+  }
 
   return (
-    <div
+    <Component
       ref={domRef}
-      className={`scroll-reveal-container ${className}`}
+      className={`${dirClass} ${delayClass} ${className}`}
       style={{
-        opacity: isRevealed ? 1 : 0,
-        transform: getTransform(),
-        transitionProperty: 'opacity, transform',
-        transitionDuration: `${duration}ms`,
-        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        transitionDelay: `${delay}ms`,
-        willChange: isRevealed ? 'auto' : 'opacity, transform',
+        ...style,
+        ...inlineAnimStyle,
       }}
     >
       {children}
-    </div>
+    </Component>
   );
 };

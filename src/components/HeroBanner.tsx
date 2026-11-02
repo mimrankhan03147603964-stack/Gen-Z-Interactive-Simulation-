@@ -432,7 +432,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
           
           {/* Left Pill Chip with Curriculum Alignment Tag */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="reveal-left flex items-center gap-2 flex-wrap">
             <div 
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-sm"
               style={{
@@ -470,7 +470,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           </div>
 
           {/* Right Area: Digital Futuristic Split-Flip Clock & Date Display (Standard Sleek Size) */}
-          <div className="fx-clock-root flex flex-col items-end gap-1 ml-auto sm:ml-0 shrink-0 select-none">
+          <div className="reveal-right fx-clock-root flex flex-col items-end gap-1 ml-auto sm:ml-0 shrink-0 select-none">
             {/* Scoped Keyframes for Digit Tick & Colon Blink */}
             <style>{`
               @keyframes fx-digit-tick {
@@ -712,12 +712,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div 
-            className="flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl w-full max-w-none"
+            className="reveal-left flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl w-full max-w-none"
             style={{
-              backgroundColor: 'rgba(10, 30, 80, 0.30)',
+              backgroundColor: 'rgba(10, 30, 80, 0.45)',
               border: '1px solid rgba(255, 255, 255, 0.35)',
-              backdropFilter: 'blur(2px)',
-              WebkitBackdropFilter: 'blur(2px)',
               boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)'
             }}
           >
@@ -726,14 +724,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               style={{
                 fontSize: 'clamp(0.85rem, 2.5vw, 2.65rem)',
                 whiteSpace: 'nowrap',
-                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
-                textRendering: 'geometricPrecision'
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
               }}
             >
               Gen Z Interactive Simulations Portal
             </h1>
             {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)', textRendering: 'geometricPrecision' }}>
+            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)' }}>
               <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
               <span className="inline-flex items-center flex-wrap gap-1.5">
                 <span>Professional Multidisciplinary</span>
@@ -760,8 +757,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
               style={{ 
                 color: '#FFFFFF',
-                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
-                textRendering: 'geometricPrecision'
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
               }}
             >
               <span>
@@ -774,7 +770,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             </p>
 
             {/* High-Contrast Action Buttons */}
-            <div className="relative z-10 mt-6 flex items-center gap-4 flex-wrap">
+            <div className="reveal-up relative z-10 mt-6 flex items-center gap-4 flex-wrap">
               <button
                 type="button"
                 onClick={() => {
@@ -789,8 +785,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                 style={{
                   backgroundColor: '#F5A623',
                   color: '#1B2A5C',
-                  border: '1.5px solid #E58E0A',
-                  textRendering: 'geometricPrecision'
+                  border: '1.5px solid #E58E0A'
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
@@ -805,8 +800,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   backgroundColor: '#1546A8',
                   color: '#FFFFFF',
                   border: '1.5px solid #42A5F5',
-                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)',
-                  textRendering: 'geometricPrecision'
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#1E88E5';
@@ -824,7 +818,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           </div>
 
           {/* Official GZ Monogram Emblem - Transparent directly on Hero Background */}
-          <div className="shrink-0 flex items-center justify-center my-2 md:my-0 self-center bg-transparent p-0 m-0 border-0 shadow-none">
+          <div className="reveal-zoom shrink-0 flex items-center justify-center my-2 md:my-0 self-center bg-transparent p-0 m-0 border-0 shadow-none">
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Monogram Logo" 
@@ -840,7 +834,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
         {/* Continuous Right-to-Left Live Bulletin Ticker */}
         <div 
-          className={`group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border shadow-lg ${isTickerPaused ? 'is-ticker-paused' : ''}`}
+          className={`reveal-up group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border shadow-lg ${isTickerPaused ? 'is-ticker-paused' : ''}`}
           style={{
             backgroundColor: '#1546A8',
             borderColor: '#F5A623'

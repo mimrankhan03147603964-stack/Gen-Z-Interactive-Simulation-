@@ -95,168 +95,176 @@ export const QuickStats: React.FC<QuickStatsProps> = ({
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full opacity-100 select-none"
     >
       
-      {/* Stat Card 1: Total Simulations (Blue Theme) */}
-      <div 
-        className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
-      >
-        <div className="flex-1 min-w-0 pr-1">
-          <div 
-            className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1E88E5]"
-          >
-            <span 
-              className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#1E88E5]" 
-            />
-            <span>TOTAL SIMULATIONS</span>
-          </div>
-          
-          {/* Large Prominent Counter Number */}
-          <div className="flex flex-col mt-1">
-            <span 
-              className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1565C0] leading-none"
-              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
-            >
-              {countSimulations}
-            </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1565C0] mt-1 whitespace-nowrap">
-              STEM Labs
-            </span>
-          </div>
-
-          <div 
-            className="text-[11px] font-bold mt-1.5 flex items-center gap-1 text-[#3B4A73]"
-          >
-            <span>All {totalSimulations} active &amp; ready</span>
-            <ArrowRight className="w-3.5 h-3.5 font-black text-[#1E88E5]" />
-          </div>
-        </div>
+      {/* Stat Card 1: Total Simulations (Blue Theme) - From Left */}
+      <div className="reveal-left w-full h-full">
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1546A8] bg-white p-2.5 relative z-10"
+          className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5 h-full"
         >
-          <MultiStemAllIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
-        </div>
-      </div>
-
-      {/* Stat Card 2: Core Disciplines (Dark Blue Theme) */}
-      <div 
-        className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
-      >
-        <div className="flex-1 min-w-0 pr-1">
-          <div 
-            className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1546A8]"
-          >
-            <span 
-              className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#1546A8]" 
-            />
-            <span>CORE DISCIPLINES</span>
-          </div>
-
-          {/* Large Prominent Counter Number */}
-          <div className="flex flex-col mt-1">
-            <span 
-              className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1546A8] leading-none"
-              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+          <div className="flex-1 min-w-0 pr-1">
+            <div 
+              className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1E88E5]"
             >
-              {countDisciplines}
-            </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1546A8] mt-1 whitespace-nowrap">
-              Subjects
-            </span>
-          </div>
-
-          <div 
-            className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
-          >
-            {activeSim ? activeSim.subject : 'Curriculum Aligned'}
-          </div>
-        </div>
-        <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1B2A5C] bg-white p-2.5 relative z-10"
-        >
-          <MultiEnglishIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
-        </div>
-      </div>
-
-      {/* Stat Card 3: Interactive Standard (Red Theme) */}
-      <div 
-        className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
-      >
-        <div className="flex-1 min-w-0 pr-1">
-          <div 
-            className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E53935]"
-          >
-            <span 
-              className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#E53935]" 
-            />
-            <span>INTERACTIVE STANDARD</span>
-          </div>
-
-          {/* Large Prominent Counter Number - Stacked to guarantee ZERO overlap with icon */}
-          <div className="flex flex-col mt-1">
-            <div className="flex items-baseline leading-none">
               <span 
-                className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E53935] leading-none"
+                className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#1E88E5]" 
+              />
+              <span>TOTAL SIMULATIONS</span>
+            </div>
+            
+            {/* Large Prominent Counter Number */}
+            <div className="flex flex-col mt-1">
+              <span 
+                className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1565C0] leading-none"
                 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
               >
-                {countCoverage}
+                {countSimulations}
               </span>
-              <span className="text-2xl sm:text-3xl font-black text-[#E53935] leading-none ml-0.5">%</span>
+              <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1565C0] mt-1 whitespace-nowrap">
+                STEM Labs
+              </span>
             </div>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E53935] mt-1 whitespace-nowrap">
-              ACTIVE
-            </span>
-          </div>
 
-          <div 
-            className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
-          >
-            {activeSim ? activeSim.gradeLevel : '100% Free & Hazard-Free'}
+            <div 
+              className="text-[11px] font-bold mt-1.5 flex items-center gap-1 text-[#3B4A73]"
+            >
+              <span>All {totalSimulations} active &amp; ready</span>
+              <ArrowRight className="w-3.5 h-3.5 font-black text-[#1E88E5]" />
+            </div>
           </div>
-        </div>
-        <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#B71C1C] bg-white p-2.5 relative z-10"
-        >
-          <MultiPhysicsIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          <div 
+            className="reveal-zoom w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1546A8] bg-white p-2.5 relative z-10"
+          >
+            <MultiStemAllIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          </div>
         </div>
       </div>
 
-      {/* Stat Card 4: 3D Visual Engine & Status (Gold Theme) */}
-      <div 
-        className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5"
-      >
-        <div className="flex-1 min-w-0 pr-1">
-          <div 
-            className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E58E0A]"
-          >
-            <span 
-              className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#F5A623]" 
-            />
-            <span>VISUAL ENGINE SPEED</span>
-          </div>
-
-          {/* Large Prominent Counter Number */}
-          <div className="flex flex-col mt-1">
-            <span 
-              className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E58E0A] leading-none"
-              style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+      {/* Stat Card 2: Core Disciplines (Dark Blue Theme) - From Bottom with Stagger 1 */}
+      <div className="reveal-up reveal-delay-1 w-full h-full">
+        <div 
+          className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5 h-full"
+        >
+          <div className="flex-1 min-w-0 pr-1">
+            <div 
+              className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#1546A8]"
             >
-              {countFps}
-            </span>
-            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E58E0A] mt-1 flex items-center gap-1 whitespace-nowrap">
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#F5A623]" />
-              FPS / 4K
-            </span>
-          </div>
+              <span 
+                className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#1546A8]" 
+              />
+              <span>CORE DISCIPLINES</span>
+            </div>
 
+            {/* Large Prominent Counter Number */}
+            <div className="flex flex-col mt-1">
+              <span 
+                className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#1546A8] leading-none"
+                style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+              >
+                {countDisciplines}
+              </span>
+              <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1546A8] mt-1 whitespace-nowrap">
+                Subjects
+              </span>
+            </div>
+
+            <div 
+              className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
+            >
+              {activeSim ? activeSim.subject : 'Curriculum Aligned'}
+            </div>
+          </div>
           <div 
-            className="text-[11px] font-bold mt-1.5 text-[#3B4A73]"
+            className="reveal-zoom w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#1B2A5C] bg-white p-2.5 relative z-10"
           >
-            Live HTML5 / Canvas 60 FPS
+            <MultiEnglishIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
           </div>
         </div>
+      </div>
+
+      {/* Stat Card 3: Interactive Standard (Red Theme) - From Bottom with Stagger 2 */}
+      <div className="reveal-up reveal-delay-2 w-full h-full">
         <div 
-          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#E58E0A] bg-white p-2.5 relative z-10"
+          className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5 h-full"
         >
-          <MultiPrimaryIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          <div className="flex-1 min-w-0 pr-1">
+            <div 
+              className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E53935]"
+            >
+              <span 
+                className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#E53935]" 
+              />
+              <span>INTERACTIVE STANDARD</span>
+            </div>
+
+            {/* Large Prominent Counter Number - Stacked to guarantee ZERO overlap with icon */}
+            <div className="flex flex-col mt-1">
+              <div className="flex items-baseline leading-none">
+                <span 
+                  className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E53935] leading-none"
+                  style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+                >
+                  {countCoverage}
+                </span>
+                <span className="text-2xl sm:text-3xl font-black text-[#E53935] leading-none ml-0.5">%</span>
+              </div>
+              <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E53935] mt-1 whitespace-nowrap">
+                ACTIVE
+              </span>
+            </div>
+
+            <div 
+              className="text-[11px] font-bold mt-1.5 truncate max-w-[170px] text-[#3B4A73]"
+            >
+              {activeSim ? activeSim.gradeLevel : '100% Free & Hazard-Free'}
+            </div>
+          </div>
+          <div 
+            className="reveal-zoom w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#B71C1C] bg-white p-2.5 relative z-10"
+          >
+            <MultiPhysicsIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          </div>
+        </div>
+      </div>
+
+      {/* Stat Card 4: 3D Visual Engine & Status (Gold Theme) - From Right with Stagger 3 */}
+      <div className="reveal-right reveal-delay-3 w-full h-full">
+        <div 
+          className="p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 group opacity-100 bg-[#FFFFFF] border-[#DDE5F3] shadow-md hover:-translate-y-0.5 h-full"
+        >
+          <div className="flex-1 min-w-0 pr-1">
+            <div 
+              className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 text-[#E58E0A]"
+            >
+              <span 
+                className="w-2.5 h-2.5 rounded-full shadow-xs bg-[#F5A623]" 
+              />
+              <span>VISUAL ENGINE SPEED</span>
+            </div>
+
+            {/* Large Prominent Counter Number */}
+            <div className="flex flex-col mt-1">
+              <span 
+                className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-[#E58E0A] leading-none"
+                style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+              >
+                {countFps}
+              </span>
+              <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#E58E0A] mt-1 flex items-center gap-1 whitespace-nowrap">
+                <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#F5A623]" />
+                FPS / 4K
+              </span>
+            </div>
+
+            <div 
+              className="text-[11px] font-bold mt-1.5 text-[#3B4A73]"
+            >
+              Live HTML5 / Canvas 60 FPS
+            </div>
+          </div>
+          <div 
+            className="reveal-zoom w-14 h-14 sm:w-16 sm:h-16 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0 ml-2 group-hover:scale-105 transition-transform border border-[#E58E0A] bg-white p-2.5 relative z-10"
+          >
+            <MultiPrimaryIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          </div>
         </div>
       </div>
 
