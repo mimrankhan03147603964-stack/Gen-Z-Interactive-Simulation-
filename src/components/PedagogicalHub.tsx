@@ -26,11 +26,17 @@ interface PedagogicalHubProps {
   totalSimulations?: number;
   onBrowseTeacher?: () => void;
   onLaunchStudent?: () => void;
+  viewMode?: 'all' | 'highlights' | 'teachers' | 'students';
 }
 
 export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({ 
-  totalSimulations = 86
+  totalSimulations = 86,
+  viewMode = 'all'
 }) => {
+  const showRibbon = viewMode === 'all' || viewMode === 'highlights';
+  const showTeachers = viewMode === 'all' || viewMode === 'teachers';
+  const showStudents = viewMode === 'all' || viewMode === 'students';
+
   return (
     <section 
       id="pedagogical-hub"
@@ -38,6 +44,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
       style={{ width: '100%', maxWidth: '100%' }}
     >
       {/* 4 Pillars Ambient Ribbon Banner */}
+      {showRibbon && (
       <div 
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-3xl border shadow-lg w-full max-w-none text-[#1B2A5C]"
         style={{
@@ -138,15 +145,21 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
           </div>
         </div>
       </div>
+      )}
 
-      {/* Two Prominent Audience Cards in Sequential Palette */}
-      <div 
-        className="w-full max-w-none grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-start"
-        style={{ width: '100%' }}
-      >
-        
-        {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
-        <ScrollReveal direction="left" className="w-full flex flex-col">
+      {/* Audience Cards */}
+      {(showTeachers || showStudents) && (
+        <div 
+          className={`w-full max-w-none gap-5 sm:gap-6 items-start ${
+            showTeachers && showStudents 
+              ? 'grid grid-cols-1 md:grid-cols-2' 
+              : 'flex flex-col max-w-5xl mx-auto'
+          }`}
+          style={{ width: '100%' }}
+        >
+          {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
+          {showTeachers && (
+            <ScrollReveal direction="left" className="w-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-4 sm:p-5 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
             style={{ 
@@ -458,9 +471,11 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             </div>
           </div>
         </ScrollReveal>
+          )}
 
-        {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
-        <ScrollReveal direction="right" delay={1} className="w-full flex flex-col">
+          {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
+          {showStudents && (
+            <ScrollReveal direction="right" delay={1} className="w-full flex flex-col">
           <div 
             className="w-full relative overflow-hidden rounded-3xl p-4 sm:p-5 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
             style={{ 
@@ -746,8 +761,10 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
             </div>
           </div>
         </ScrollReveal>
+          )}
 
-      </div>
+        </div>
+      )}
     </section>
   );
 };

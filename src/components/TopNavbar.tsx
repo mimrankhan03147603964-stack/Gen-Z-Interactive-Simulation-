@@ -17,6 +17,7 @@ interface TopNavbarProps {
   onBackToCatalog?: () => void;
   onSelectCategory?: (category: string) => void;
   onNavigateToExternal?: () => void;
+  onNavigateToView?: (view: string) => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
@@ -25,9 +26,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onToggleTheme,
   onBackToCatalog,
   onSelectCategory,
-  onNavigateToExternal
+  onNavigateToExternal,
+  onNavigateToView
 }) => {
-  const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | 'external' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'catalog' | 'hub' | 'portalInfo' | 'external' | null>(null);
   const [isPinned, setIsPinned] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -57,7 +59,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     };
   }, []);
 
-  const handleMouseEnter = useCallback((menu: 'catalog' | 'hub' | 'external') => {
+  const handleMouseEnter = useCallback((menu: 'catalog' | 'hub' | 'portalInfo' | 'external') => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -75,7 +77,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     }, 280);
   }, [isPinned]);
 
-  const toggleDropdown = useCallback((menu: 'catalog' | 'hub' | 'external') => {
+  const toggleDropdown = useCallback((menu: 'catalog' | 'hub' | 'portalInfo' | 'external') => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -91,6 +93,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     });
   }, []);
 
+  const handleViewNavigation = useCallback((viewKey: string) => {
+    setOpenDropdown(null);
+    setIsPinned(false);
+    if (onNavigateToView) {
+      onNavigateToView(viewKey);
+    } else if (viewKey === 'home' && onBackToCatalog) {
+      onBackToCatalog();
+    } else if (viewKey === 'catalog' && onSelectCategory) {
+      onSelectCategory('All Simulations');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [onNavigateToView, onBackToCatalog, onSelectCategory]);
+
   const handleItemClick = useCallback((href: string, categoryKey?: string) => {
     // 1. Close dropdown immediately & unpin
     setOpenDropdown(null);
@@ -99,19 +114,56 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     // 2. Filter category if specified
     if (categoryKey && onSelectCategory) {
       onSelectCategory(categoryKey);
+      if (onNavigateToView) {
+        onNavigateToView('catalog');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
     }
 
     // 3. Handle Top / Home navigation
     if (href === '#' || href === '#top') {
-      if (onBackToCatalog) onBackToCatalog();
+      if (onNavigateToView) {
+        onNavigateToView('home');
+      } else if (onBackToCatalog) {
+        onBackToCatalog();
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Handle Developer & Contact navigation
+    if (href === '#developer') {
+      if (onNavigateToView) {
+        onNavigateToView('home');
+      }
+      setTimeout(() => {
+        const el = document.getElementById('developer');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
       return;
     }
 
     // Handle External Simulations Hub navigation
     if (href === '#external-simulations') {
+      if (onNavigateToView) {
+        onNavigateToView('external-sims');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       if (onNavigateToExternal) {
         onNavigateToExternal();
+        return;
+      }
+    }
+
+    // Handle catalog navigation
+    if (href === '#catalog') {
+      if (onNavigateToView) {
+        onNavigateToView('catalog');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
     }
@@ -121,7 +173,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [onBackToCatalog, onSelectCategory, onNavigateToExternal]);
+  }, [onBackToCatalog, onSelectCategory, onNavigateToExternal, onNavigateToView]);
 
   const getCategoryCount = (key: string) => {
     if (key === 'All Simulations') return SIMULATIONS_LIST.length;
@@ -142,15 +194,24 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   ];
 
   const hubDropdownItems = [
-    { label: 'For Teachers & Educators', href: '#pedagogical-hub' },
-    { label: 'For Students & Learners', href: '#pedagogical-hub' },
-    { label: 'Curriculum Standards & Demonstration Guide', href: '#pedagogical-hub' },
-    { label: 'Academic Research & Pedagogy', href: '#pedagogical-hub' },
+    { label: 'For Teachers & Educators', viewKey: 'teachers' },
+    { label: 'For Students & Young Scientists', viewKey: 'students' },
+    { label: 'Curriculum Standards & Demonstration Guide', viewKey: 'portal-highlights' },
+    { label: 'Academic Research & Pedagogy', viewKey: 'pedagogical-hub' },
     { 
       label: 'NNCP-2026', 
       href: 'https://ncc.gov.pk/Detail/NGE4MWMwY2UtY2FlMS00YWY5LTkzYWMtNDBhN2MyYzVjNDUy',
       isExternal: true 
     },
+  ];
+
+  const portalInfoItems = [
+    { label: 'Portal Highlights (4 Pillars)', viewKey: 'portal-highlights' },
+    { label: 'For Teachers & Educators', viewKey: 'teachers' },
+    { label: 'For Students & Young Scientists', viewKey: 'students' },
+    { label: 'STEM Educational Website Capabilities', viewKey: 'capabilities' },
+    { label: 'Portal Statistics & Metrics', viewKey: 'stats' },
+    { label: 'External Simulations Hub', viewKey: 'external-sims' },
   ];
 
   return (
@@ -169,7 +230,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       }}
     >
       <div 
-        className="w-full max-w-[1720px] 2xl:max-w-[1820px] mx-auto px-2 sm:px-4 lg:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4 flex-nowrap"
+        className="w-full max-w-[1720px] 2xl:max-w-[1820px] mx-auto px-2 sm:px-3 lg:px-4 h-14 flex items-center justify-between gap-1 sm:gap-2 lg:gap-3 flex-nowrap"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -224,7 +285,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Navigation Items (Single horizontal line, flex-nowrap, no horizontal overflow) */}
         <nav 
-          className="flex flex-row items-center justify-end gap-1 sm:gap-2 md:gap-3 shrink-0 flex-nowrap whitespace-nowrap"
+          className="flex flex-row items-center justify-end gap-1 sm:gap-1.5 lg:gap-2 shrink-0 flex-nowrap whitespace-nowrap"
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -238,7 +299,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             type="button"
             onClick={() => handleItemClick('#top')}
-            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+            className="inline-flex items-center px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
             title="Return to Home Portal"
           >
             <span>Home</span>
@@ -256,7 +317,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 e.stopPropagation();
                 toggleDropdown('catalog');
               }}
-              className="inline-flex items-center gap-1 px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'catalog'}
               aria-haspopup="true"
               title="Browse Full STEM Catalog by Discipline"
@@ -290,7 +351,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase"
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
                     style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
                   >
                     STEM DISCIPLINES &amp; LABORATORIES
@@ -308,7 +369,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleItemClick('#catalog', item.categoryKey);
                           }}
-                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer"
+                          className="w-full text-center px-4 py-3 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
                           style={{
                             borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
                           }}
@@ -335,7 +396,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 e.stopPropagation();
                 toggleDropdown('hub');
               }}
-              className="inline-flex items-center gap-1 px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'hub'}
               aria-haspopup="true"
               title="Pedagogical Audience & Standards"
@@ -404,7 +465,88 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleItemClick(item.href);
+                            if (item.viewKey) {
+                              handleViewNavigation(item.viewKey);
+                            }
+                          }}
+                          className="w-full text-center px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
+                          style={{
+                            borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
+                          }}
+                        >
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Link: Portal Info Dropdown (NEW - Right after Educators & Students Hub) */}
+          <div 
+            className="relative shrink-0"
+            onMouseEnter={() => handleMouseEnter('portalInfo')}
+            onMouseLeave={handleMouseLeave}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleDropdown('portalInfo');
+              }}
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+              aria-expanded={openDropdown === 'portalInfo'}
+              aria-haspopup="true"
+              title="Browse All Portal Sections"
+            >
+              <span>Portal Info</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'portalInfo' ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Panel in Solid Blue Styling matching STEM Catalog */}
+            {openDropdown === 'portalInfo' && (
+              <div 
+                className="absolute left-0 top-full pt-1.5 z-[99999]"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  zIndex: 99999
+                }}
+                onMouseEnter={() => handleMouseEnter('portalInfo')}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div 
+                  className="w-[310px] sm:w-[350px] rounded-xl overflow-hidden select-none border shadow-2xl"
+                  style={{
+                    backgroundColor: '#1B2A5C',
+                    border: '1.5px solid #F5A623',
+                    boxShadow: '0 20px 45px rgba(27, 42, 92, 0.7)',
+                    maxHeight: 'calc(100vh - 75px)',
+                    overflowY: 'auto'
+                  }}
+                >
+                  {/* Dropdown Header */}
+                  <div 
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
+                    style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
+                  >
+                    PORTAL INFORMATION &amp; SECTIONS
+                  </div>
+
+                  {/* Vertical List of Portal Info Items */}
+                  <div className="flex flex-col">
+                    {portalInfoItems.map((item, idx) => {
+                      const isLast = idx === portalInfoItems.length - 1;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewNavigation(item.viewKey);
                           }}
                           className="w-full text-center px-4 py-3 sm:py-3.5 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
                           style={{
@@ -433,7 +575,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 e.stopPropagation();
                 toggleDropdown('external');
               }}
-              className="inline-flex items-center gap-1 px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'external'}
               aria-haspopup="true"
               title="External Simulations & Global Science Platforms"
@@ -468,7 +610,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 >
                   {/* Dropdown Header */}
                   <div 
-                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase"
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
                     style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
                   >
                     EXTERNAL SIMULATIONS &amp; LABS
@@ -476,6 +618,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
                   {/* Vertical List of External Simulation Websites */}
                   <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewNavigation('external-sims');
+                      }}
+                      className="w-full text-center px-4 py-3 text-[14px] font-bold text-[#F5A623] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
+                    >
+                      <span>Simulation Hub Overview</span>
+                    </button>
                     {EXTERNAL_SIMULATION_RESOURCES.map((item, idx) => {
                       const isLast = idx === EXTERNAL_SIMULATION_RESOURCES.length - 1;
                       return (
@@ -488,7 +640,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             setOpenDropdown(null);
                             setIsPinned(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer no-underline block"
+                          className="w-full text-center px-4 py-3 text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer no-underline block"
                           style={{
                             borderBottom: !isLast ? '1px solid rgba(221, 229, 243, 0.2)' : 'none'
                           }}
@@ -503,22 +655,22 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             )}
           </div>
 
-          {/* Link 4: Developer & Contact */}
+          {/* Link 4: Developer & Contact (plain button, no dropdown, hover red/orange, tooltip) */}
           <button
             type="button"
             onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+            className="inline-flex items-center px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
             title="Go to Developer & Contact Section"
           >
             <span className="hidden md:inline">Developer &amp; Contact</span>
             <span className="md:hidden">Contact</span>
           </button>
 
-          {/* Link 5: Explore All Labs Grid */}
+          {/* Link 5: Explore All Labs Grid (plain button, no dropdown) */}
           <button
             type="button"
             onClick={() => handleItemClick('#catalog', 'All Simulations')}
-            className="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none active:scale-95"
+            className="inline-flex items-center px-1.5 sm:px-2 py-1 text-xs lg:text-[13px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none active:scale-95"
             title="Explore Full STEM Labs Catalog Grid"
           >
             <span>Explore All Labs</span>

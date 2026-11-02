@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
@@ -77,6 +78,62 @@ function resolveSimulationFromUrl(): SimulationItem | null {
   return null;
 }
 
+export type AppView = 
+  | 'home' 
+  | 'catalog' 
+  | 'portal-highlights' 
+  | 'teachers' 
+  | 'students' 
+  | 'pedagogical-hub' 
+  | 'capabilities' 
+  | 'stats' 
+  | 'external-sims';
+
+interface SectionViewHeaderProps {
+  title: string;
+  badge: string;
+  subtitle: string;
+  onBack: () => void;
+}
+
+function SectionViewHeader({ title, badge, subtitle, onBack }: SectionViewHeaderProps) {
+  return (
+    <div 
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:px-6 sm:py-3.5 rounded-2xl border shadow-md mb-6 relative z-20"
+      style={{
+        backgroundColor: '#FFFFFF',
+        borderColor: '#DDE5F3',
+        boxShadow: '0 4px 18px rgba(27, 42, 92, 0.08)'
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black text-white bg-[#1546A8] hover:bg-[#1B2A5C] border border-[#2D62D1] shadow-sm hover:shadow-md cursor-pointer transition-all hover:-translate-x-0.5 active:translate-x-0"
+          title="Return to Home View"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>← Back to Home</span>
+        </button>
+        <span className="hidden sm:inline-block h-6 w-[1.5px] bg-[#DDE5F3]" />
+        <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-2.5 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
+          {badge}
+        </span>
+      </div>
+
+      <div className="text-left sm:text-right min-w-0">
+        <h2 className="text-sm sm:text-base font-black text-[#1B2A5C] font-heading leading-tight truncate">
+          {title}
+        </h2>
+        <p className="text-[11px] sm:text-xs font-medium text-[#5A6E85] leading-normal truncate">
+          {subtitle}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   // Check if launched as dedicated standalone simulation workspace via /simulation/:id or ?lab=01
   const [standaloneLab, setStandaloneLab] = useState<SimulationItem | null>(() => resolveSimulationFromUrl());
@@ -85,8 +142,8 @@ export default function App() {
   const [selectedSubject, setSelectedSubject] = useState<string>('All Simulations');
   const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
   
-  // Clean View Navigation State: 'home' (zero-rush dashboard without 86 cards) or 'catalog' (dedicated lab catalog view)
-  const [currentView, setCurrentView] = useState<'home' | 'catalog'>('home');
+  // Clean View Navigation State: 'home' (zero-rush dashboard without extra sections) or dedicated section views
+  const [currentView, setCurrentView] = useState<AppView>('home');
   
   // Active stage simulation (auto-opened from search, catalog card, or AI generation)
   const [activeStageSim, setActiveStageSim] = useState<SimulationItem | null>(null);
@@ -256,7 +313,7 @@ export default function App() {
     }
   };
 
-  const handleBackToCatalog = () => {
+  const handleBackToHome = () => {
     setStandaloneLab(null);
     setActiveStageSim(null);
     setCurrentView('home');
@@ -275,16 +332,18 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleScrollToExternal = () => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
+  const handleNavigateToView = (viewKey: string) => {
+    setActiveStageSim(null);
+    if (viewKey === 'home') {
+      handleBackToHome();
+      return;
     }
-    setTimeout(() => {
-      const el = document.getElementById('external-simulations');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 120);
+    setCurrentView(viewKey as AppView);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleScrollToExternal = () => {
+    handleNavigateToView('external-sims');
   };
 
   // Ensure initial load starts at top hero section without accidental jumping
@@ -335,8 +394,9 @@ export default function App() {
           totalSimulations={allSimulations.length}
           isDarkMode={isDarkMode}
           onToggleTheme={() => setIsDarkMode((prev) => !prev)}
-          onBackToCatalog={handleBackToCatalog}
+          onBackToCatalog={handleBackToHome}
           onNavigateToExternal={handleScrollToExternal}
+          onNavigateToView={handleNavigateToView}
           onSelectCategory={(cat) => {
             setSelectedSubject(cat);
             setCurrentView('catalog');
@@ -407,69 +467,29 @@ export default function App() {
             </div>
           )}
 
-          {currentView === 'home' ? (
-            /* VIEW 1: CLEAN ZERO-RUSH HOME VIEW (Without 86 Cards) */
-            <>
-              {/* 1. Hero Header Banner with Live Digital Clock & Portal CTAs (Full Width Edge-to-Edge) */}
-              <div className="-mx-3 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-auto">
-                <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
-                  <HeroBanner 
-                    isDarkMode={isDarkMode}
-                    onSelectSim={handleSelectSim}
-                    onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
-                  />
-                </ScrollReveal>
-              </div>
-
-              {/* 2. Interactive Prominent Numbers & Statistics Section with Counter Animation */}
-              <ScrollReveal direction="up" distance={20} duration={500} delay={30} resetOnLeave={true}>
-                <QuickStats 
-                  totalSimulations={allSimulations.length}
+          {/* Sectional Views Navigation Router */}
+          {currentView === 'home' && (
+            /* VIEW 1: CLEAN HOME VIEW (Only Hero Banner + Live Clock + Slideshow Background) */
+            <div className="-mx-3 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-auto">
+              <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
+                <HeroBanner 
                   isDarkMode={isDarkMode}
-                />
-              </ScrollReveal>
-
-              {/* 3. Dedicated High-Impact Pedagogical Hub (For Teachers & Students) */}
-              <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
-                <PedagogicalHub 
-                  totalSimulations={allSimulations.length} 
-                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
-                />
-              </ScrollReveal>
-
-              {/* 3. STEM Subject Panels Grid Layout */}
-              <ScrollReveal direction="up" distance={20} duration={500} delay={40} resetOnLeave={true}>
-                <SimulationCatalogGrid
-                  simulations={allSimulations}
-                  selectedCategory={selectedSubject}
-                  onSelectCategory={(cat) => setSelectedSubject(cat)}
-                  selectedGradeTier={selectedGradeTier}
-                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
                   onSelectSim={handleSelectSim}
-                  onLaunchOnStage={handleLaunchOnStage}
-                  onTriggerAiGeneration={handleTriggerAiGeneration}
-                  isGeneratingAi={isGeneratingAi}
-                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                  isDarkMode={isDarkMode}
-                  isHomeView={true}
-                  onOpenCatalog={handleOpenCatalog}
+                  onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
                 />
               </ScrollReveal>
+            </div>
+          )}
 
-              {/* 4. Curated External Interactive Simulations Hub (8 Global Platforms) */}
-              <ScrollReveal direction="up" distance={24} duration={520} delay={50} resetOnLeave={true}>
-                <ExternalSimulationsHub isDarkMode={isDarkMode} />
-              </ScrollReveal>
-
-              {/* 5. Educational Standards & Digital Laboratory Architecture */}
-              <ScrollReveal direction="up" distance={24} duration={520} delay={50} resetOnLeave={true}>
-                <WebsiteFeatures isDarkMode={isDarkMode} />
-              </ScrollReveal>
-            </>
-          ) : (
-            /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW (With Back to Home Button) */
-            <>
+          {currentView === 'catalog' && (
+            /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="STEM REPOSITORY"
+                title="Interactive Simulation Labs Catalog (109 Modules)"
+                subtitle="Curriculum-aligned interactive digital experiments across 10 disciplines"
+                onBack={handleBackToHome}
+              />
               <SimulationCatalogGrid
                 simulations={allSimulations}
                 selectedCategory={selectedSubject}
@@ -483,14 +503,137 @@ export default function App() {
                 onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
                 isDarkMode={isDarkMode}
                 isHomeView={false}
-                onBackToHome={handleBackToCatalog}
+                onBackToHome={handleBackToHome}
               />
+            </div>
+          )}
 
-              {/* Curated External Interactive Simulations Hub */}
-              <ScrollReveal direction="up" distance={20} duration={480} delay={40}>
+          {currentView === 'portal-highlights' && (
+            /* VIEW 3: PORTAL HIGHLIGHTS (4 PILLARS) */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="PORTAL ARCHITECTURE"
+                title="Portal Highlights & Core Pillars"
+                subtitle="National Curriculum alignment, dynamic math engines, hands-on inquiry, and performance architecture"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={20} duration={500} resetOnLeave={true}>
+                <PedagogicalHub 
+                  totalSimulations={allSimulations.length} 
+                  viewMode="highlights"
+                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'teachers' && (
+            /* VIEW 4: FOR TEACHERS & EDUCATORS */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="CLASSROOM INTEGRATION"
+                title="For Teachers & Educators — Instructional Methodology"
+                subtitle="Pedagogical sequencing, step-by-step classroom delivery, and conceptual mastery toolkits"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={20} duration={500} resetOnLeave={true}>
+                <PedagogicalHub 
+                  totalSimulations={allSimulations.length} 
+                  viewMode="teachers"
+                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'students' && (
+            /* VIEW 5: FOR STUDENTS & YOUNG SCIENTISTS */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="HANDS-ON PRACTICE"
+                title="For Students & Young Scientists — Independent Discovery"
+                subtitle="Self-guided inquiry, dynamic variable manipulation, and real-time scientific exploration"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={20} duration={500} resetOnLeave={true}>
+                <PedagogicalHub 
+                  totalSimulations={allSimulations.length} 
+                  viewMode="students"
+                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'pedagogical-hub' && (
+            /* VIEW 6: COMPLETE PEDAGOGICAL HUB */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="ACADEMIC PEDAGOGY"
+                title="Educators & Students Pedagogical Hub"
+                subtitle="Comprehensive academic frameworks, curriculum alignment guides, and instructional toolkits"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={20} duration={500} resetOnLeave={true}>
+                <PedagogicalHub 
+                  totalSimulations={allSimulations.length} 
+                  viewMode="all"
+                  onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
+                  onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'capabilities' && (
+            /* VIEW 7: STEM EDUCATIONAL WEBSITE CAPABILITIES */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="DIGITAL ARCHITECTURE"
+                title="Professional STEM Educational Website Capabilities"
+                subtitle="Verified digital laboratory standards, continuous rotating capabilities, and high-fidelity engines"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={24} duration={520} resetOnLeave={true}>
+                <WebsiteFeatures isDarkMode={isDarkMode} />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'stats' && (
+            /* VIEW 8: PORTAL STATISTICS & METRICS */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="METRICS & ANALYTICS"
+                title="Portal Statistics & Key Performance Indicators"
+                subtitle="Real-time curriculum coverage, grade distribution, and simulation performance metrics"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={20} duration={500} resetOnLeave={true}>
+                <QuickStats 
+                  totalSimulations={allSimulations.length}
+                  isDarkMode={isDarkMode}
+                />
+              </ScrollReveal>
+            </div>
+          )}
+
+          {currentView === 'external-sims' && (
+            /* VIEW 9: EXTERNAL INTERACTIVE SIMULATION PLATFORMS */
+            <div className="space-y-6">
+              <SectionViewHeader 
+                badge="GLOBAL STEM NETWORK"
+                title="External Interactive Simulation Platforms — Simulation Hub"
+                subtitle="Curated global repositories including PhET, GeoGebra, ChemCollective, Falstad, and Desmos"
+                onBack={handleBackToHome}
+              />
+              <ScrollReveal direction="up" distance={24} duration={520} resetOnLeave={true}>
                 <ExternalSimulationsHub isDarkMode={isDarkMode} />
               </ScrollReveal>
-            </>
+            </div>
           )}
 
         </main>
