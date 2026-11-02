@@ -163,139 +163,149 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
             }}
           >
-            {/* White overlay at 60% opacity */}
+            {/* Clean Semi-Transparent Text Panel for Optimal Contrast & Clarity */}
             <div 
-              className="absolute inset-0 pointer-events-none z-0" 
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.6)' }}
-              aria-hidden="true"
-            />
-          <div className="space-y-4 relative z-10">
-            {/* Header: Icon, Title & Right Pill Badge */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div 
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center border shrink-0 shadow-xs"
+              className="rounded-2xl p-5 sm:p-6 space-y-3.5 relative z-10 border shadow-md"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                borderColor: '#DDE5F3',
+                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.10)'
+              }}
+            >
+              {/* Header: Icon, Title & Right Pill Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div 
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center border shrink-0 shadow-xs"
+                    style={{
+                      backgroundColor: '#EEF3F9',
+                      borderColor: '#DDE5F3'
+                    }}
+                  >
+                    <MultiAllGradesIcon className="w-6 h-6 pointer-events-none" />
+                  </div>
+                  <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1546A8]">
+                    For Teachers &amp; Educators
+                  </h3>
+                </div>
+
+                <span 
+                  className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full border shrink-0 shadow-xs"
                   style={{
-                    backgroundColor: '#EEF3F9',
-                    borderColor: '#DDE5F3'
+                    backgroundColor: '#1546A8',
+                    color: '#FFFFFF',
+                    borderColor: '#2D62D1'
                   }}
                 >
-                  <MultiAllGradesIcon className="w-6 h-6 pointer-events-none" />
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1565C0]">
-                  For Teachers &amp; Educators
-                </h3>
+                  <span>START CLASSROOM</span>
+                </span>
               </div>
 
-              <span 
-                className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full border shrink-0 shadow-xs"
-                style={{
-                  backgroundColor: '#1546A8',
-                  color: '#FFFFFF',
-                  borderColor: '#2D62D1'
-                }}
-              >
-                <span>START CLASSROOM</span>
-              </span>
+              {/* Description Text */}
+              <p className="text-xs sm:text-sm font-semibold leading-relaxed tracking-normal text-[#1B2A5C]">
+                Empower lecture hall and science classrooms, with time-tested demonstrations mapped directly to Student Learning Outcomes (SLOs). Convert abstract concepts into interactive play in seconds.
+              </p>
+
+              {/* Progressive Disclosure Toggle for Key Features */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowTeacherDetails(!showTeacherDetails)}
+                  className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95"
+                  style={{
+                    backgroundColor: '#EEF3F9',
+                    border: '1px solid #DDE5F3',
+                    color: '#1546A8'
+                  }}
+                >
+                  <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} style={{ color: '#1546A8' }} />
+                </button>
+
+                {showTeacherDetails && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">4K Smartboard:</strong> High visual fidelity</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">SLO Curriculum:</strong> National Curriculum 2026-27</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Theory-to-Practice:</strong> Live variable tweaking</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Parameter Reset:</strong> Instant test repetition</span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Description Text */}
-            <p className="text-xs sm:text-sm font-medium leading-relaxed tracking-normal text-[#3B4A73]">
-              Empower lecture hall and science classrooms, with time-tested demonstrations mapped directly to Student Learning Outcomes (SLOs). Convert abstract concepts into interactive play in seconds.
-            </p>
-
-            {/* Progressive Disclosure Toggle for Key Features */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowTeacherDetails(!showTeacherDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95"
+            {/* Action Row with Clean Protection Panel */}
+            <div className="mt-5 pt-2 relative z-10 flex items-center justify-start">
+              <div 
+                className="p-1 rounded-2xl border shadow-sm"
                 style={{
-                  backgroundColor: '#EEF3F9',
-                  border: '1px solid #DDE5F3',
-                  color: '#1546A8'
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                  borderColor: '#DDE5F3'
                 }}
               >
-                <span>{showTeacherDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showTeacherDetails ? 'rotate-180' : ''}`} style={{ color: '#1546A8' }} />
-              </button>
-
-              {showTeacherDetails && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">4K Smartboard:</strong> High visual fidelity</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">SLO Curriculum:</strong> National Curriculum 2026-27</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Theory-to-Practice:</strong> Live variable tweaking</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1546A8' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Parameter Reset:</strong> Instant test repetition</span>
-                  </div>
-                </div>
-              )}
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (onBrowseTeacher) {
+                      onBrowseTeacher();
+                    } else {
+                      const el = document.getElementById('catalog');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-black shadow-md border transition-all cursor-pointer active:scale-95"
+                  style={{
+                    backgroundColor: '#1546A8',
+                    color: '#FFFFFF',
+                    borderColor: '#1B2A5C'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1E88E5')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1546A8')}
+                >
+                  <SlidersHorizontal className="w-4 h-4 text-white pointer-events-none shrink-0" />
+                  <span>Browse Teacher Catalog</span>
+                </button>
+              </div>
             </div>
-          </div>
-
-          {/* Action Row */}
-          <div className="mt-6 pt-4 border-t relative z-10" style={{ borderColor: '#DDE5F3' }}>
-            <button 
-              type="button"
-              onClick={() => {
-                if (onBrowseTeacher) {
-                  onBrowseTeacher();
-                } else {
-                  const el = document.getElementById('catalog');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black shadow-md border transition-all cursor-pointer active:scale-95"
-              style={{
-                backgroundColor: '#1546A8',
-                color: '#FFFFFF',
-                borderColor: '#1B2A5C'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1E88E5')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1546A8')}
-            >
-              <SlidersHorizontal className="w-4 h-4 text-white pointer-events-none shrink-0" />
-              <span>Browse Teacher Catalog</span>
-            </button>
-          </div>
         </div>
         </ScrollReveal>
 
@@ -312,139 +322,149 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
               boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
             }}
           >
-            {/* White overlay at 60% opacity */}
+            {/* Clean Semi-Transparent Text Panel for Optimal Contrast & Clarity */}
             <div 
-              className="absolute inset-0 pointer-events-none z-0" 
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.6)' }}
-              aria-hidden="true"
-            />
-          <div className="space-y-4 relative z-10">
-            {/* Header: Icon, Title & Right Pill Badge */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div 
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center border shrink-0 shadow-xs"
+              className="rounded-2xl p-5 sm:p-6 space-y-3.5 relative z-10 border shadow-md"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                borderColor: '#DDE5F3',
+                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.10)'
+              }}
+            >
+              {/* Header: Icon, Title & Right Pill Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div 
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center border shrink-0 shadow-xs"
+                    style={{
+                      backgroundColor: '#EEF3F9',
+                      borderColor: '#DDE5F3'
+                    }}
+                  >
+                    <MultiMiddleIcon className="w-6 h-6 pointer-events-none" />
+                  </div>
+                  <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1546A8]">
+                    For Students &amp; Young Scientists
+                  </h3>
+                </div>
+
+                <span 
+                  className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full border shrink-0 shadow-xs"
                   style={{
-                    backgroundColor: '#EEF3F9',
-                    borderColor: '#DDE5F3'
+                    backgroundColor: '#1E88E5',
+                    color: '#FFFFFF',
+                    borderColor: '#42A5F5'
                   }}
                 >
-                  <MultiMiddleIcon className="w-6 h-6 pointer-events-none" />
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-black tracking-normal leading-snug text-[#1565C0]">
-                  For Students &amp; Young Scientists
-                </h3>
+                  <span>HANDS-ON PRACTICE</span>
+                </span>
               </div>
 
-              <span 
-                className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 sm:px-4 sm:py-1 rounded-full border shrink-0 shadow-xs"
-                style={{
-                  backgroundColor: '#1E88E5',
-                  color: '#FFFFFF',
-                  borderColor: '#42A5F5'
-                }}
-              >
-                <span>HANDS-ON PRACTICE</span>
-              </span>
+              {/* Description Text */}
+              <p className="text-xs sm:text-sm font-semibold leading-relaxed tracking-normal text-[#1B2A5C]">
+                Step into an open sandbox where curiosity leads investigation. Conduct experiments, test real-world physical laws, manipulate molecular atoms, and deepen intuition through play and observation.
+              </p>
+
+              {/* Progressive Disclosure Toggle for Key Features */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowStudentDetails(!showStudentDetails)}
+                  className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95"
+                  style={{
+                    backgroundColor: '#EEF3F9',
+                    border: '1px solid #DDE5F3',
+                    color: '#1E88E5'
+                  }}
+                >
+                  <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} style={{ color: '#1E88E5' }} />
+                </button>
+
+                {showStudentDetails && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Zero-Risk Sandbox:</strong> No chemical hazards</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Infinite Repetitions:</strong> Free circuit wiring</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Parameter Control:</strong> Adjust gravity &amp; optics</span>
+                    </div>
+                    <div 
+                      className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
+                      style={{
+                        backgroundColor: '#F5F8FC',
+                        borderColor: '#DDE5F3',
+                        color: '#1B2A5C'
+                      }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
+                      <span><strong className="font-black text-[#1B2A5C]">Dynamic Feedback:</strong> Live trajectory plots</span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Description Text */}
-            <p className="text-xs sm:text-sm font-medium leading-relaxed tracking-normal text-[#3B4A73]">
-              Step into an open sandbox where curiosity leads investigation. Conduct experiments, test real-world physical laws, manipulate molecular atoms, and deepen intuition through play and observation.
-            </p>
-
-            {/* Progressive Disclosure Toggle for Key Features */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowStudentDetails(!showStudentDetails)}
-                className="inline-flex items-center gap-2 text-xs font-sans font-bold px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95"
+            {/* Action Row with Clean Protection Panel */}
+            <div className="mt-5 pt-2 relative z-10 flex items-center justify-start">
+              <div 
+                className="p-1 rounded-2xl border shadow-sm"
                 style={{
-                  backgroundColor: '#EEF3F9',
-                  border: '1px solid #DDE5F3',
-                  color: '#1E88E5'
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                  borderColor: '#DDE5F3'
                 }}
               >
-                <span>{showStudentDetails ? 'Hide Key Features' : 'View Key Features (4)'}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showStudentDetails ? 'rotate-180' : ''}`} style={{ color: '#1E88E5' }} />
-              </button>
-
-              {showStudentDetails && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3">
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Zero-Risk Sandbox:</strong> No chemical hazards</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Infinite Repetitions:</strong> Free circuit wiring</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Parameter Control:</strong> Adjust gravity &amp; optics</span>
-                  </div>
-                  <div 
-                    className="flex items-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold leading-normal shadow-2xs"
-                    style={{
-                      backgroundColor: '#F5F8FC',
-                      borderColor: '#DDE5F3',
-                      color: '#3B4A73'
-                    }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 pointer-events-none" style={{ color: '#1E88E5' }} />
-                    <span><strong className="font-black text-[#1B2A5C]">Dynamic Feedback:</strong> Live trajectory plots</span>
-                  </div>
-                </div>
-              )}
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (onLaunchStudent) {
+                      onLaunchStudent();
+                    } else {
+                      const el = document.getElementById('catalog');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl text-xs sm:text-sm font-sans font-black shadow-md border transition-all cursor-pointer active:scale-95"
+                  style={{
+                    backgroundColor: '#1E88E5',
+                    color: '#FFFFFF',
+                    borderColor: '#1546A8'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1546A8')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1E88E5')}
+                >
+                  <FlaskConical className="w-4 h-4 pointer-events-none shrink-0 text-white" />
+                  <span className="text-white">Launch Experiment Labs</span>
+                </button>
+              </div>
             </div>
-          </div>
-
-          {/* Action Row */}
-          <div className="mt-6 pt-4 border-t relative z-10" style={{ borderColor: '#DDE5F3' }}>
-            <button 
-              type="button"
-              onClick={() => {
-                if (onLaunchStudent) {
-                  onLaunchStudent();
-                } else {
-                  const el = document.getElementById('catalog');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-2xl text-xs sm:text-sm font-sans font-black shadow-md border transition-all cursor-pointer active:scale-95"
-              style={{
-                backgroundColor: '#1E88E5',
-                color: '#FFFFFF',
-                borderColor: '#1546A8'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1546A8')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1E88E5')}
-            >
-              <FlaskConical className="w-4 h-4 pointer-events-none shrink-0 text-white" />
-              <span className="text-white">Launch Experiment Labs</span>
-            </button>
-          </div>
         </div>
         </ScrollReveal>
 

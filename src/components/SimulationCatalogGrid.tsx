@@ -627,28 +627,30 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
         }}
       >
-        {/* White overlay at 60% opacity for optimal contrast and readability */}
+        {/* Clean Readable Panel for Heading Row */}
         <div 
-          className="absolute inset-0 bg-white/60 pointer-events-none z-0" 
-          aria-hidden="true" 
-        />
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4 relative z-10">
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 p-3.5 sm:px-5 sm:py-3 rounded-2xl border shadow-sm relative z-10"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            borderColor: '#DDE5F3',
+            boxShadow: '0 2px 10px rgba(27, 42, 92, 0.08)'
+          }}
+        >
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
               GRADE FILTER
             </span>
-            <span className="text-sm sm:text-base font-bold text-[#1B2A5C] font-heading">
+            <span className="text-sm sm:text-base font-black text-[#1B2A5C] font-heading">
               Curriculum Grade &amp; Academic Stage
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#3B4A73]">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-[#1B2A5C]">
             <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             {selectedGradeTier !== 'all' && (
               <button 
                 type="button"
                 onClick={() => handleGradeTierChange('all')}
-                className="text-[#1E88E5] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
+                className="text-[#1546A8] hover:underline cursor-pointer text-xs font-black ml-1 transition-colors"
                 title="Reset grade filter to show all simulations"
               >
                 Reset to All {activeSimulations.length} Labs
@@ -746,22 +748,30 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
         }}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+        {/* Clean Readable Panel for Heading Row */}
+        <div 
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 p-3.5 sm:px-5 sm:py-3 rounded-2xl border shadow-sm"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            borderColor: '#DDE5F3',
+            boxShadow: '0 2px 10px rgba(27, 42, 92, 0.08)'
+          }}
+        >
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1546A8] border border-[#2D62D1] shrink-0">
               STEM SUBJECT FILTER
             </span>
-            <span className="text-sm sm:text-base font-bold text-[#1B2A5C] font-heading">
+            <span className="text-sm sm:text-base font-black text-[#1B2A5C] font-heading">
               Select Discipline &amp; Learning Track
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-xs font-normal text-[#3B4A73]">
+          <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-[#1B2A5C]">
             <span>Filtered for {gradeTiers.find(g => g.key === selectedGradeTier)?.label || 'Selected Grade'}</span>
             {!isAllCategory && (
               <button 
                 type="button"
                 onClick={() => handleCategoryChange('All Simulations')}
-                className="text-[#1E88E5] hover:underline cursor-pointer text-xs font-bold ml-1 transition-colors"
+                className="text-[#1546A8] hover:underline cursor-pointer text-xs font-black ml-1 transition-colors"
                 title="Reset subject filter to show all simulations"
               >
                 Reset to All Subjects
