@@ -148,23 +148,21 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
         {/* CARD 1: FOR TEACHERS & EDUCATORS (--dark-blue) */}
         <ScrollReveal direction="left" className="w-full flex flex-col">
           <div 
-            className="w-full relative overflow-hidden rounded-3xl p-5 sm:p-6 md:p-7 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
+            className="w-full relative overflow-hidden rounded-3xl p-4 sm:p-5 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
             style={{ 
               width: '100%',
-              backgroundImage: 'url(/assets/aistudio/WhatsApp_Image_2026-10-30_at_1.11.12_PM_6d9d576b.jpeg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundColor: '#EEF3F9',
               borderColor: '#DDE5F3',
-              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
+              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.10)'
             }}
           >
-            {/* Clean Semi-Transparent Text Panel for Optimal Contrast & Clarity */}
+            {/* Clean Light Panel for Optimal Contrast & Clarity */}
             <div 
-              className="rounded-2xl p-5 sm:p-6 md:p-7 space-y-5 relative z-10 border shadow-md"
+              className="rounded-2xl p-5 sm:p-6 md:p-7 space-y-5 relative z-10 border shadow-xs"
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                backgroundColor: '#FFFFFF',
                 borderColor: '#DDE5F3',
-                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.10)'
+                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.06)'
               }}
             >
               {/* Header: Icon, Title & Right Pill Badge */}
@@ -464,23 +462,21 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
         {/* CARD 2: FOR STUDENTS & YOUNG SCIENTISTS (--blue) */}
         <ScrollReveal direction="right" delay={1} className="w-full flex flex-col">
           <div 
-            className="w-full relative overflow-hidden rounded-3xl p-5 sm:p-6 md:p-7 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
+            className="w-full relative overflow-hidden rounded-3xl p-4 sm:p-5 flex flex-col border shadow-xl group transition-all text-[#1B2A5C]"
             style={{ 
               width: '100%',
-              backgroundImage: 'url(/assets/aistudio/WhatsApp_Image_2026-10-30_at_12.56.40_PM_6a76a1bb.jpeg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundColor: '#EEF3F9',
               borderColor: '#DDE5F3',
-              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.16)'
+              boxShadow: '0 8px 24px rgba(27, 42, 92, 0.10)'
             }}
           >
-            {/* Clean Semi-Transparent Text Panel for Optimal Contrast & Clarity */}
+            {/* Clean Light Panel for Optimal Contrast & Clarity */}
             <div 
-              className="rounded-2xl p-5 sm:p-6 md:p-7 space-y-5 relative z-10 border shadow-md"
+              className="rounded-2xl p-5 sm:p-6 md:p-7 space-y-5 relative z-10 border shadow-xs"
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                backgroundColor: '#FFFFFF',
                 borderColor: '#DDE5F3',
-                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.10)'
+                boxShadow: '0 4px 18px rgba(27, 42, 92, 0.06)'
               }}
             >
               {/* Header: Icon, Title & Right Pill Badge */}
