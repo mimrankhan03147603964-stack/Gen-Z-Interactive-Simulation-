@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { TypingText } from './TypingText';
 import { 
   ExternalLink, 
   Globe, 
@@ -288,6 +289,69 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLab, setSelectedLab] = useState<ExternalSimulationResource | null>(null);
 
+  // Scroll-Triggered Typing Effect Engine
+  const sectionRef = useRef<HTMLElement>(null);
+  const [sectionCycle, setSectionCycle] = useState<number>(0);
+  const [cardCycle, setCardCycle] = useState<number>(0);
+  const [isSectionTypingInitial, setIsSectionTypingInitial] = useState<boolean>(true);
+  const [forceComplete, setForceComplete] = useState<boolean>(false);
+  const wasIntersectingRef = useRef<boolean>(false);
+
+  // IntersectionObserver: Starts typing when section comes into view, resets when leaving view
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    let initialTimer: number | undefined;
+    let fallbackTimer: number | undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
+          if (!wasIntersectingRef.current) {
+            wasIntersectingRef.current = true;
+            setSectionCycle((prev) => prev + 1);
+            setCardCycle((prev) => prev + 1);
+            setIsSectionTypingInitial(true);
+            setForceComplete(false);
+
+            // After ~5.6s, full section has finished initial typing; subsequent tab clicks use fast card typing
+            clearTimeout(initialTimer);
+            initialTimer = window.setTimeout(() => {
+              setIsSectionTypingInitial(false);
+            }, 5600);
+
+            // 8-second safety fallback: ensures 100% normal plain text under all edge conditions
+            clearTimeout(fallbackTimer);
+            fallbackTimer = window.setTimeout(() => {
+              setForceComplete(true);
+            }, 8000);
+          }
+        } else if (!entry.isIntersecting || entry.intersectionRatio === 0) {
+          // Section has left screen; re-arm so it plays once each time it enters again
+          wasIntersectingRef.current = false;
+        }
+      },
+      {
+        threshold: [0, 0.1]
+      }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      clearTimeout(initialTimer);
+      clearTimeout(fallbackTimer);
+    };
+  }, []);
+
+  // When switching a filter tab, fast-type the new cards (finishes in ~0.8s, well within 1.5s)
+  const handleSelectCategory = (cat: CategoryTab) => {
+    setSelectedCategory(cat);
+    setCardCycle((prev) => prev + 1);
+  };
+
   // Close panel on Esc key press and handle body scroll lock
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -331,6 +395,7 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
 
   return (
     <section 
+      ref={sectionRef}
       id="external-simulations" 
       className="w-full relative z-10 space-y-5 scroll-mt-24 select-none"
     >
@@ -372,11 +437,35 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
           filter: brightness(1.1);
           transform: scale(1.04);
         }
+        @keyframes hubCursorBlink {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
+          }
+        }
+        .hub-typing-cursor {
+          display: inline-block;
+          width: 0;
+          overflow: visible;
+          line-height: 1;
+          font-weight: 300;
+          vertical-align: baseline;
+          position: relative;
+          left: 1px;
+          animation: hubCursorBlink 0.65s infinite ease-in-out;
+          pointer-events: none;
+          user-select: none;
+        }
         @media (prefers-reduced-motion: reduce) {
           .external-sim-row, .external-sim-row:hover,
           .lab-launch-btn, .lab-launch-btn:hover {
             transition: none !important;
             transform: none !important;
+          }
+          .hub-typing-cursor {
+            display: none !important;
           }
         }
       `}</style>
@@ -401,8 +490,15 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                   borderColor: '#E58E0A'
                 }}
               >
-                <Globe className="w-3.5 h-3.5 text-[#1B2A5C]" />
-                SIMULATION HUB
+                <Globe className="w-3.5 h-3.5 text-[#1B2A5C] shrink-0" />
+                <TypingText
+                  text="SIMULATION HUB"
+                  startDelay={150}
+                  speed={30}
+                  cycle={sectionCycle}
+                  forceComplete={forceComplete}
+                  cursorColor="#1B2A5C"
+                />
               </span>
               <span 
                 className="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 font-mono"
@@ -413,15 +509,37 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                 }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#F5A623] shrink-0" />
-                {EXTERNAL_SIMULATION_RESOURCES.length} Curated Global STEM Repositories
+                <TypingText
+                  text={`${EXTERNAL_SIMULATION_RESOURCES.length} Curated Global STEM Repositories`}
+                  startDelay={580}
+                  speed={20}
+                  cycle={sectionCycle}
+                  forceComplete={forceComplete}
+                  cursorColor="#F5A623"
+                />
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading">
-              External Interactive Simulation Platforms
-            </h2>
-            <p className="text-xs sm:text-sm font-normal max-w-3xl leading-relaxed" style={{ color: '#DBE4F7' }}>
-              Explore leading research-grade physics, chemistry, engineering, and mathematics interactive simulation engines worldwide with instant direct access.
-            </p>
+            <TypingText
+              as="h2"
+              text="External Interactive Simulation Platforms"
+              startDelay={1300}
+              speed={26}
+              cycle={sectionCycle}
+              forceComplete={forceComplete}
+              cursorColor="#ffffff"
+              className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-heading"
+            />
+            <TypingText
+              as="p"
+              text="Explore leading research-grade physics, chemistry, engineering, and mathematics interactive simulation engines worldwide with instant direct access."
+              startDelay={2380}
+              speed={11}
+              cycle={sectionCycle}
+              forceComplete={forceComplete}
+              cursorColor="#DBE4F7"
+              className="text-xs sm:text-sm font-normal max-w-3xl leading-relaxed"
+              style={{ color: '#DBE4F7' }}
+            />
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
@@ -434,7 +552,14 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
               }}
             >
               <Sparkles className="w-4 h-4 text-[#F5A623] shrink-0" />
-              <span>Direct External Access</span>
+              <TypingText
+                text="Direct External Access"
+                startDelay={650}
+                speed={25}
+                cycle={sectionCycle}
+                forceComplete={forceComplete}
+                cursorColor="#F5A623"
+              />
             </div>
           </div>
         </div>
@@ -444,20 +569,27 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       <div className="reveal-up flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs">
         {/* Category Filter Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-          {CATEGORY_TABS.map((cat) => {
+          {CATEGORY_TABS.map((cat, tabIdx) => {
             const isSelected = selectedCategory === cat;
             return (
               <button
                 key={cat}
                 type="button"
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => handleSelectCategory(cat)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   isSelected
                     ? 'bg-[#1B2A5C] text-white shadow-xs scale-[1.02]'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200/70'
                 }`}
               >
-                {cat}
+                <TypingText
+                  text={cat}
+                  startDelay={3600 + tabIdx * 120}
+                  speed={22}
+                  cycle={sectionCycle}
+                  forceComplete={forceComplete}
+                  cursorColor={isSelected ? '#ffffff' : '#334155'}
+                />
               </button>
             );
           })}
@@ -494,6 +626,19 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
             const badgeLabel = item.isAd && item.adLabels?.[0] ? item.adLabels[0] : item.badge;
             const revealClass = idx % 2 === 0 ? 'reveal-left' : 'reveal-right reveal-delay-1';
 
+            const rowIndex = Math.floor(idx / 2);
+            const titleDelay = isSectionTypingInitial ? 4100 + rowIndex * 250 : 20 + rowIndex * 70;
+            const titleSpeed = isSectionTypingInitial ? 12 : 8;
+
+            const catDelay = isSectionTypingInitial ? 4200 + rowIndex * 250 : 70 + rowIndex * 70;
+            const catSpeed = isSectionTypingInitial ? 12 : 8;
+
+            const badgeDelay = isSectionTypingInitial ? 4300 + rowIndex * 250 : 110 + rowIndex * 70;
+            const badgeSpeed = isSectionTypingInitial ? 15 : 10;
+
+            const btnDelay = isSectionTypingInitial ? 4350 + rowIndex * 250 : 140 + rowIndex * 70;
+            const btnSpeed = isSectionTypingInitial ? 20 : 12;
+
             return (
               <div key={item.id} className={revealClass}>
                 <div
@@ -522,18 +667,28 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
 
                   {/* Lab Information (Name, Subject, Badge) */}
                   <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
-                    <h3 
-                      className="text-[16px] font-bold text-slate-900 truncate leading-snug font-heading" 
+                    <TypingText
+                      as="h3"
+                      text={item.title}
+                      startDelay={titleDelay}
+                      speed={titleSpeed}
+                      cycle={cardCycle}
+                      forceComplete={forceComplete}
+                      cursorColor="#0f172a"
+                      className="text-[16px] font-bold text-slate-900 truncate leading-snug font-heading"
                       title={item.title}
-                    >
-                      {item.title}
-                    </h3>
-                    <p 
-                      className="text-[13px] text-slate-500 truncate leading-tight font-sans" 
+                    />
+                    <TypingText
+                      as="p"
+                      text={item.category}
+                      startDelay={catDelay}
+                      speed={catSpeed}
+                      cycle={cardCycle}
+                      forceComplete={forceComplete}
+                      cursorColor="#64748b"
+                      className="text-[13px] text-slate-500 truncate leading-tight font-sans"
                       title={item.category}
-                    >
-                      {item.category}
-                    </p>
+                    />
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span
                         className="text-[11px] font-bold px-2 py-0.5 rounded-md border shrink-0 tracking-wide uppercase font-mono"
@@ -543,7 +698,14 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                           borderColor: `${item.accentColor}40`
                         }}
                       >
-                        {badgeLabel}
+                        <TypingText
+                          text={badgeLabel}
+                          startDelay={badgeDelay}
+                          speed={badgeSpeed}
+                          cycle={cardCycle}
+                          forceComplete={forceComplete}
+                          cursorColor={item.accentColor}
+                        />
                       </span>
                     </div>
                   </div>
@@ -561,7 +723,14 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
                       }}
                       title={`Open ${item.title} in new tab`}
                     >
-                      <span>Launch</span>
+                      <TypingText
+                        text="Launch"
+                        startDelay={btnDelay}
+                        speed={btnSpeed}
+                        cycle={cardCycle}
+                        forceComplete={forceComplete}
+                        cursorColor="#ffffff"
+                      />
                       <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     </a>
 
@@ -583,17 +752,29 @@ export const ExternalSimulationsHub: React.FC<ExternalSimulationsHubProps> = () 
       ) : (
         <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-xs">
           <p className="text-sm font-semibold text-slate-600">
-            No external simulation platforms match your current filter.
+            <TypingText
+              text="No external simulation platforms match your current filter."
+              speed={12}
+              cycle={cardCycle}
+              forceComplete={forceComplete}
+            />
           </p>
           <button
             type="button"
             onClick={() => {
               setSelectedCategory('All');
               setSearchTerm('');
+              setCardCycle((prev) => prev + 1);
             }}
             className="mt-3 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#1B2A5C] text-white hover:bg-[#1546A8] transition-colors cursor-pointer"
           >
-            Reset Filters
+            <TypingText
+              text="Reset Filters"
+              startDelay={100}
+              speed={15}
+              cycle={cardCycle}
+              forceComplete={forceComplete}
+            />
           </button>
         </div>
       )}
