@@ -52,7 +52,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
-  const [isTickerPaused, setIsTickerPaused] = useState<boolean>(false);
 
   // 100% of available simulation topics currently in the system library
   const allSimulationTopics = SIMULATIONS_LIST;
@@ -836,53 +835,41 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
         {/* Continuous Right-to-Left Live Bulletin Ticker */}
         <div 
-          className={`reveal-up group/ticker relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border shadow-lg ${isTickerPaused ? 'is-ticker-paused' : ''}`}
+          className="relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border shadow-lg"
           style={{
             backgroundColor: '#1546A8',
-            borderColor: '#F5A623'
+            borderColor: '#F5A623',
+            boxShadow: '0 8px 24px rgba(21, 70, 168, 0.25)'
           }}
-          title="Live STEM Bulletin — Hover to pause scrolling, click any lab to open"
+          title="Live STEM Bulletin — Continuous Real-Time Updates"
         >
-          {/* Fixed Left Badge: Live STEM Bulletin with Pause/Play toggle */}
+          {/* Fixed Left Badge: Live STEM Bulletin */}
           <div 
-            onClick={() => setIsTickerPaused(!isTickerPaused)}
-            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] text-[#1B2A5C] shadow-xs cursor-pointer select-none transition-all hover:brightness-110 active:scale-98"
+            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] text-[#1B2A5C] shadow-xs select-none"
             style={{
               backgroundColor: '#F5A623'
             }}
-            title={isTickerPaused ? 'Click to resume scrolling' : 'Click to pause scrolling'}
           >
             <Radio className="w-4 h-4 animate-pulse pointer-events-none text-[#1B2A5C]" />
             <span className="whitespace-nowrap font-heading text-[#1B2A5C]">LIVE STEM BULLETIN</span>
-            <button 
-              type="button" 
-              className="ml-1 px-1.5 py-0.5 rounded-md text-[9px] font-mono flex items-center gap-1"
+            <span 
+              className="ml-1 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold flex items-center gap-1"
               style={{
                 backgroundColor: 'rgba(27, 42, 92, 0.2)',
                 color: '#1B2A5C',
                 border: '1px solid rgba(27, 42, 92, 0.4)'
               }}
             >
-              {isTickerPaused ? (
-                <>
-                  <Play className="w-2.5 h-2.5 fill-current text-[#1B2A5C]" />
-                  <span>PAUSED</span>
-                </>
-              ) : (
-                <>
-                  <Pause className="w-2.5 h-2.5 fill-current text-[#1B2A5C]" />
-                  <span className="hidden sm:inline">SLOW</span>
-                </>
-              )}
-            </button>
+              LIVE
+            </span>
           </div>
 
           {/* Endless Seamless Marquee Viewport with Calm Readability */}
-          <div className="flex-1 overflow-hidden relative py-3 cursor-pointer" style={{ backgroundColor: '#1546A8' }}>
+          <div className="flex-1 overflow-hidden relative py-3" style={{ backgroundColor: '#1546A8' }}>
             <div 
               className="animate-marquee-infinite flex items-center"
               style={{
-                animationPlayState: isTickerPaused ? 'paused' : undefined
+                willChange: 'transform'
               }}
             >
               
