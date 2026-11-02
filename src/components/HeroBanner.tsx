@@ -9,11 +9,13 @@ import { getThemeForIndex } from '../data/sequentialPalette';
 import sliderImg1 from '../assets/hero-slider-1.jpg';
 import sliderImg2 from '../assets/hero-slider-2.jpg';
 import sliderImg3 from '../assets/hero-slider-3.jpg';
+import sliderImg4 from '../assets/hero-slider-4.jpg';
 
 const HERO_SLIDER_IMAGES = [
   sliderImg1,
   sliderImg2,
   sliderImg3,
+  sliderImg4,
   sliderImg1 // Copy of picture 1 for seamless infinite loop
 ];
 
@@ -203,9 +205,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
     return () => clearInterval(interval);
   }, []);
 
-  // When copy of picture 1 (index 3) is reached, jump back to real picture 1 with no animation (no visible jump)
+  // When copy of picture 1 (index 4) is reached, jump back to real picture 1 with no animation (no visible jump)
   useEffect(() => {
-    if (bgSlideIndex === 3) {
+    if (bgSlideIndex === 4) {
       const timeout = setTimeout(() => {
         setIsBgTransitioning(false);
         setBgSlideIndex(0);
@@ -389,19 +391,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           backgroundColor: '#0E1F42'
         }}
       >
-        {/* Continuous 3-Picture Background Slider: Side-by-side row, translateX, 100% sharp visibility */}
+        {/* Continuous 4-Picture Background Slider: Side-by-side row, translateX, 100% sharp visibility */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
           <div 
             className="flex h-full"
             style={{
-              width: '400%',
-              transform: `translateX(-${bgSlideIndex * 25}%)`,
+              width: '500%',
+              transform: `translateX(-${bgSlideIndex * 20}%)`,
               transition: isBgTransitioning ? 'transform 800ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
               willChange: 'transform'
             }}
           >
             {HERO_SLIDER_IMAGES.map((src, idx) => (
-              <div key={`hero-bg-slide-${idx}`} className="w-1/4 h-full relative shrink-0">
+              <div key={`hero-bg-slide-${idx}`} className="w-1/5 h-full relative shrink-0">
                 <img 
                   src={src} 
                   alt={`Gen Z Interactive STEM Lab Background ${idx + 1}`}
