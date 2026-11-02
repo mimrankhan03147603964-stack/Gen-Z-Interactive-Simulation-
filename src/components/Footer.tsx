@@ -226,9 +226,9 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             onMouseLeave={() => setIsCardHovered(false)}
             className="w-full rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-7 text-left shadow-xl transition-all border"
             style={{
-              backgroundColor: 'rgba(21, 70, 168, 0.92)',
+              backgroundColor: 'rgba(30, 100, 220, 0.60)',
               borderColor: '#F5A623',
-              boxShadow: '0 12px 36px rgba(15, 23, 42, 0.35)'
+              boxShadow: '0 8px 24px rgba(30, 100, 220, 0.25)'
             }}
           >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b" style={{ borderColor: '#2D62D1' }}>
