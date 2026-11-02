@@ -486,8 +486,8 @@ export default function App() {
             <div className="space-y-6">
               <SectionViewHeader 
                 badge="STEM REPOSITORY"
-                title="Interactive Simulation Labs Catalog (109 Modules)"
-                subtitle="Curriculum-aligned interactive digital experiments across 10 disciplines"
+                title="Simulations"
+                subtitle="Curriculum-aligned interactive digital experiments across 10 disciplines (109 Modules)"
                 onBack={handleBackToHome}
               />
               <SimulationCatalogGrid
