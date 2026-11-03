@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Phone, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MessageCircle, Phone, Sparkles, CheckCircle2, Mail } from 'lucide-react';
+import { RequestSimulationModal } from './RequestSimulationModal';
 
 interface FooterProps {
   isDarkMode?: boolean;
@@ -17,7 +18,10 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
   const [displayedDesc, setDisplayedDesc] = useState('');
   const [typewriterPhase, setTypewriterPhase] = useState<'idle' | 'typing-title' | 'typing-desc' | 'completed'>('idle');
   const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const developerGmailLink = "https://mail.google.com/mail/?view=cm&fs=1&to=mimrankhan3964@gmail.com&su=Inquiry%20from%20GEN%20Z%20Interactive%20Simulations%20Portal";
 
   useEffect(() => {
     const el = cardRef.current;
@@ -155,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </div>
 
             {/* Contacts & Links - Cleanly organized on the LEFT side so WhatsApp button never overlaps developer's face */}
-            <div className="text-xs sm:text-sm font-bold flex flex-col items-start gap-2 pt-1 max-w-fit">
+            <div className="text-xs sm:text-sm font-bold flex flex-col items-start gap-2.5 pt-1 max-w-fit">
               {/* Phone numbers row */}
               <div className="flex items-center justify-start flex-wrap gap-x-2.5 gap-y-2">
                 <span 
@@ -197,8 +201,37 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
                 </a>
               </div>
 
-              {/* WhatsApp button wrapped cleanly on second row below phone numbers, kept strictly on LEFT */}
-              <div className="flex items-center justify-start">
+              {/* Developer's Gmail row with Email label and readable address link */}
+              <div className="flex items-center justify-start flex-wrap gap-x-2.5 gap-y-2">
+                <span 
+                  className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
+                  style={{
+                    backgroundColor: '#1546A8',
+                    color: '#FFFFFF',
+                    borderColor: '#2D62D1'
+                  }}
+                >
+                  Email:
+                </span>
+                <a 
+                  href={developerGmailLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-bold transition-all hover:scale-105 active:scale-95 border"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#CBD5E1',
+                    color: '#0F172A'
+                  }}
+                  title="Send Email to mimrankhan3964@gmail.com"
+                >
+                  <Mail className="w-3.5 h-3.5 shrink-0" style={{ color: '#E53935' }} />
+                  <span>mimrankhan3964@gmail.com</span>
+                </a>
+              </div>
+
+              {/* WhatsApp and Send Email action buttons wrapped cleanly */}
+              <div className="flex items-center justify-start flex-wrap gap-2.5 pt-0.5">
                 <a 
                   href="https://wa.me/923147603964" 
                   target="_blank" 
@@ -212,6 +245,21 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
                 >
                   <MessageCircle className="w-4 h-4 text-white shrink-0" />
                   <span>WhatsApp: 03147603964</span>
+                </a>
+
+                <a 
+                  href={developerGmailLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fx-pulse-blue inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border text-white"
+                  style={{
+                    backgroundColor: '#1E88E5',
+                    borderColor: '#1565C0'
+                  }}
+                  title="Open Gmail Compose: mimrankhan3964@gmail.com"
+                >
+                  <Mail className="w-4 h-4 text-white shrink-0" />
+                  <span>Send Email</span>
                 </a>
               </div>
             </div>
@@ -277,7 +325,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </span>
           </div>
 
-          <div className="grid mb-4">
+          <div className="grid mb-3">
             <p className="col-start-1 row-start-1 text-xs sm:text-sm font-medium leading-relaxed invisible select-none pointer-events-none" aria-hidden="true">
               {customSimDesc}
             </p>
@@ -292,11 +340,19 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             </p>
           </div>
 
+          {/* New Point: Need a simulation on a topic that is not already on this website? */}
+          <div className="mb-4 p-3 rounded-xl border flex items-start gap-2.5 text-xs sm:text-sm text-white font-medium shadow-xs" style={{ backgroundColor: 'rgba(27, 42, 92, 0.45)', borderColor: '#F5A623' }}>
+            <CheckCircle2 className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
+            <span>
+              Need a simulation on a topic that is not already on this website? Click &apos;Request a Simulation&apos;, fill in the form, and we will build it and add it to the website.
+            </span>
+          </div>
+
           <div className="flex flex-wrap items-center gap-2.5 pt-1">
-            <a
-              href="https://wa.me/923147603964?text=Hello%20Muhammad%20Imran%20Khan,%20I%20would%20like%20to%20request%20a%20custom%20interactive%20simulation%20for%20our%20curriculum:"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* New Button: Request a Simulation */}
+            <button
+              type="button"
+              onClick={() => setIsRequestModalOpen(true)}
               className="fx-pulse-gold inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-102 active:scale-95 cursor-pointer border"
               style={{
                 backgroundColor: '#F5A623',
@@ -305,10 +361,40 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
+              title="Open Request a Simulation Form"
+            >
+              <Sparkles className="w-4 h-4 text-[#1B2A5C] shrink-0" />
+              <span className="text-[#1B2A5C]">Request a Simulation</span>
+            </button>
+
+            <a
+              href="https://wa.me/923147603964?text=Hello%20Muhammad%20Imran%20Khan,%20I%20would%20like%20to%20request%20a%20custom%20interactive%20simulation%20for%20our%20curriculum:"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-102 active:scale-95 cursor-pointer border text-white"
+              style={{
+                backgroundColor: '#25D366',
+                borderColor: '#1EBE5D'
+              }}
               title="Send custom simulation request on WhatsApp"
             >
-              <MessageCircle className="w-4 h-4 text-[#1B2A5C] shrink-0" />
-              <span className="text-[#1B2A5C]">Request Custom Simulation on WhatsApp</span>
+              <MessageCircle className="w-4 h-4 text-white shrink-0" />
+              <span>Request Custom Simulation on WhatsApp</span>
+            </a>
+
+            <a
+              href={developerGmailLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all hover:scale-102 active:scale-95 cursor-pointer border text-white"
+              style={{
+                backgroundColor: '#1E88E5',
+                borderColor: '#1565C0'
+              }}
+              title="Send custom simulation inquiry via Gmail Compose"
+            >
+              <Mail className="w-4 h-4 text-white shrink-0" />
+              <span>Send Email</span>
             </a>
 
             <a
@@ -346,6 +432,12 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
         </div>
 
       </div>
+
+      {/* Modal Dialog for Request a Simulation */}
+      <RequestSimulationModal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+      />
     </footer>
   );
 };

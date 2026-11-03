@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, Sparkles, Layers, Play, Pause, Radio, Star, Rocket } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -52,6 +52,21 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
+
+  // Bulletin Strip Marquee calculation: speed ~18-22 pixels per second (duration = width / 20)
+  const tickerGroupRef = useRef<HTMLDivElement>(null);
+  const [tickerDuration, setTickerDuration] = useState<number>(2500);
+
+  useEffect(() => {
+    if (tickerGroupRef.current) {
+      const width = tickerGroupRef.current.offsetWidth || tickerGroupRef.current.scrollWidth;
+      if (width > 0) {
+        // Calculate animation duration from real content width (duration = width / 20)
+        const durationSec = Math.round(width / 20);
+        setTickerDuration(durationSec);
+      }
+    }
+  }, []);
 
   // 100% of available simulation topics currently in the system library
   const allSimulationTopics = SIMULATIONS_LIST;
@@ -869,11 +884,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             <div 
               className="animate-marquee-infinite flex items-center"
               style={{
-                willChange: 'transform'
+                willChange: 'transform',
+                animationDuration: `${tickerDuration}s`
               }}
             >
               
-              <div className="flex items-center shrink-0">
+              <div ref={tickerGroupRef} className="flex items-center shrink-0">
                 {allSimulationTopics.map((sim) => (
                   <a 
                     key={`sim-ticker-1-${sim.id}`} 
