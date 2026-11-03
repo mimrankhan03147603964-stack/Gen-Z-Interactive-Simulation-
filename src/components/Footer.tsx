@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Phone, Sparkles, CheckCircle2, Mail } from 'lucide-react';
+import { MessageCircle, Sparkles, CheckCircle2, Mail } from 'lucide-react';
 import { RequestSimulationModal } from './RequestSimulationModal';
 
 interface FooterProps {
@@ -157,112 +157,6 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
                 His work is aligned with the National Curriculum of Pakistan (Session 2026-27) and covers all levels, from Play Group, Nursery and Prep up to higher classes, across Mathematics, Physics, Chemistry, Biology, Earth &amp; Space, Computer Science and English Language Arts. He also develops custom simulations, educational websites and interactive learning software for any grade or curriculum, with a strong focus on quality, accuracy, simple English and student-friendly design.
               </p>
             </div>
-
-            {/* Contacts & Links - Cleanly organized on the LEFT side so WhatsApp button never overlaps developer's face */}
-            <div className="text-xs sm:text-sm font-bold flex flex-col items-start gap-2.5 pt-1 max-w-fit">
-              {/* Phone numbers row */}
-              <div className="flex items-center justify-start flex-wrap gap-x-2.5 gap-y-2">
-                <span 
-                  className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
-                  style={{
-                    backgroundColor: '#1546A8',
-                    color: '#FFFFFF',
-                    borderColor: '#2D62D1'
-                  }}
-                >
-                  Contacts:
-                </span>
-                <a 
-                  href="tel:03007603964" 
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#CBD5E1',
-                    color: '#0F172A'
-                  }}
-                  title="Call 03007603964"
-                >
-                  <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
-                  <span>03007603964</span>
-                </a>
-                <span style={{ color: '#64748B' }} className="font-black">/</span>
-                <a 
-                  href="tel:03147603964" 
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-black transition-all hover:scale-105 active:scale-95 border"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#CBD5E1',
-                    color: '#0F172A'
-                  }}
-                  title="Call 03147603964"
-                >
-                  <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#D97706' }} />
-                  <span>03147603964</span>
-                </a>
-              </div>
-
-              {/* Developer's Gmail row with Email label and readable address link */}
-              <div className="flex items-center justify-start flex-wrap gap-x-2.5 gap-y-2">
-                <span 
-                  className="font-black uppercase tracking-wider text-xs px-2.5 py-1 rounded-md border shadow-xs"
-                  style={{
-                    backgroundColor: '#1546A8',
-                    color: '#FFFFFF',
-                    borderColor: '#2D62D1'
-                  }}
-                >
-                  Email:
-                </span>
-                <a 
-                  href={developerGmailLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl shadow-xs font-mono font-bold transition-all hover:scale-105 active:scale-95 border"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#CBD5E1',
-                    color: '#0F172A'
-                  }}
-                  title="Send Email to mimrankhan3964@gmail.com"
-                >
-                  <Mail className="w-3.5 h-3.5 shrink-0" style={{ color: '#E53935' }} />
-                  <span>mimrankhan3964@gmail.com</span>
-                </a>
-              </div>
-
-              {/* WhatsApp and Send Email action buttons wrapped cleanly */}
-              <div className="flex items-center justify-start flex-wrap gap-2.5 pt-0.5">
-                <a 
-                  href="https://wa.me/923147603964" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="fx-pulse-whatsapp inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border text-white"
-                  style={{
-                    backgroundColor: '#25D366',
-                    borderColor: '#1EBE5D'
-                  }}
-                  title="Chat on WhatsApp: 03147603964"
-                >
-                  <MessageCircle className="w-4 h-4 text-white shrink-0" />
-                  <span>WhatsApp: 03147603964</span>
-                </a>
-
-                <a 
-                  href={developerGmailLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fx-pulse-blue inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black transition-all shadow-md hover:scale-105 active:scale-95 border text-white"
-                  style={{
-                    backgroundColor: '#1E88E5',
-                    borderColor: '#1565C0'
-                  }}
-                  title="Open Gmail Compose: mimrankhan3964@gmail.com"
-                >
-                  <Mail className="w-4 h-4 text-white shrink-0" />
-                  <span>Send Email</span>
-                </a>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -395,22 +289,6 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 109 }) => {
             >
               <Mail className="w-4 h-4 text-white shrink-0" />
               <span>Send Email</span>
-            </a>
-
-            <a
-              href="tel:03007603964"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm shadow-2xs transition-all hover:scale-102 active:scale-95 cursor-pointer border"
-              style={{
-                backgroundColor: '#1B2A5C',
-                color: '#F5A623',
-                borderColor: '#F5A623'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1546A8')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1B2A5C')}
-              title="Call Developer Directly: 03007603964"
-            >
-              <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: '#F5A623' }} />
-              <span className="font-black" style={{ color: '#F5A623' }}>Direct Call: 03007603964</span>
             </a>
           </div>
         </div>
