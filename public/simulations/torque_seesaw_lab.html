@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seesaw Lab: Torque and the Principle of Moments</title>
+<style>
+:root{--bg:#0d2540;--panel:#153a5f;--ink:#eef5ff;--mut:#a5c0dc}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
+#app{height:100vh;min-height:680px;display:flex;flex-direction:column;background:var(--bg)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:linear-gradient(90deg,#0a1c31,#15385c)}
+h1{font-size:22px;margin:0;letter-spacing:.3px}
+.sub{font-size:13px;color:var(--mut)}
+main{flex:1;min-height:0;display:flex;gap:10px;padding:8px 10px 4px}
+#stage{flex:1;min-width:0;border-radius:14px;overflow:hidden;box-shadow:0 6px 22px #0009;position:relative}
+svg{width:100%;height:100%;display:block;cursor:crosshair}
+#toast{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:#0b1d33e6;color:#fff;padding:9px 18px;border-radius:22px;font-size:15px;font-weight:700;max-width:90%;text-align:center;opacity:0;transition:opacity .25s;pointer-events:none;border:2px solid #ffd166}
+aside{width:320px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.card{background:var(--panel);border-radius:12px;padding:10px 14px}
+.card h2{font-size:15px;margin:0 0 6px;color:#ffd166}
+.row{display:flex;justify-content:space-between;padding:3px 0;font-size:15px}
+.row b{font-variant-numeric:tabular-nums}
+#status{margin-top:6px;padding:8px;border-radius:10px;text-align:center;font-weight:800;font-size:16px;background:#8a5a00}
+#status.ok{background:#15803d}
+#status.idle{background:#334e68}
+#fx{font-size:13px;line-height:1.55;color:var(--mut)}
+#fx i{color:#fff;font-style:normal}
+footer{padding:4px 10px 10px;display:flex;flex-direction:column;gap:7px}
+#tray{display:flex;gap:7px;align-items:stretch}
+.obj{flex:1;background:#1c4a78;border:3px solid transparent;border-radius:12px;padding:3px 4px;text-align:center;cursor:pointer;color:var(--ink);font:inherit;font-size:12px;line-height:1.2;transition:.12s}
+.obj span{display:block;font-size:30px;line-height:1.15}
+.obj:hover{background:#25609b}
+.obj.sel{border-color:#ffd166;background:#2d6cab}
+#btns{display:flex;flex-wrap:wrap;gap:8px}
+.grp{display:flex;gap:6px;align-items:center;background:#0a1c3166;padding:5px 7px;border-radius:12px}
+.grp small{font-size:11px;color:var(--mut);writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700}
+.btn{border:0;border-radius:10px;padding:9px 12px;color:#fff;font:700 13px "Trebuchet MS",Arial,sans-serif;background:var(--c);cursor:pointer;box-shadow:0 3px 0 #0007,inset 0 1px 0 #fff5;transition:.12s;white-space:nowrap}
+.btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn.on{outline:3px solid #fff}
+.btn:focus-visible,.obj:focus-visible{outline:3px solid #fff}
+.cloud{animation:drift 70s linear infinite}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(1150px)}}
+@media (prefers-reduced-motion:reduce){.cloud{animation:none}}
+</style></head>
+<body>
+<div id="app">
+<header>
+<div><h1>Seesaw Lab: Torque and the Principle of Moments</h1><div class="sub">Pick an object, then click the seesaw to place it. Click an object on the plank to pick it up again.</div></div>
+<div class="sub" id="score">Challenges solved: 0</div>
+</header>
+<main>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b8fd9"/><stop offset=".75" stop-color="#b9e2fb"/><stop offset="1" stop-color="#e8f6ff"/></linearGradient>
+<radialGradient id="sun"><stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffe27a00"/></radialGradient>
+<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2b06a"/><stop offset=".5" stop-color="#c58a45"/><stop offset="1" stop-color="#8f5d28"/></linearGradient>
+<linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b7785"/><stop offset=".45" stop-color="#e3e9ef"/><stop offset="1" stop-color="#5a6572"/></linearGradient>
+<linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fc24a"/><stop offset="1" stop-color="#2f7d2f"/></linearGradient>
+<linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fae6a"/><stop offset="1" stop-color="#3f8f4f"/></linearGradient>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="1" dy="3" stdDeviation="2" flood-opacity=".4"/></filter>
+</defs>
+<rect width="1000" height="480" fill="url(#sky)"/>
+<circle cx="880" cy="70" r="90" fill="url(#sun)"/><circle cx="880" cy="70" r="30" fill="#fff3b0"/>
+<g class="cloud" fill="#fff" opacity=".9"><ellipse cx="0" cy="60" rx="50" ry="17"/><ellipse cx="30" cy="48" rx="34" ry="18"/><ellipse cx="-30" cy="52" rx="28" ry="14"/></g>
+<g class="cloud" fill="#fff" opacity=".75" style="animation-delay:-35s"><ellipse cx="0" cy="130" rx="44" ry="14"/><ellipse cx="24" cy="120" rx="28" ry="14"/></g>
+<path d="M0 360Q150 300 300 350T600 345T1000 340V420H0Z" fill="url(#hill)"/>
+<rect y="398" width="1000" height="82" fill="url(#grass)"/>
+<ellipse cx="500" cy="402" rx="80" ry="8" fill="#0005"/>
+<polygon points="455,400 545,400 505,300 495,300" fill="url(#steel)" stroke="#47525e" stroke-width="2"/>
+<rect x="440" y="394" width="120" height="12" rx="4" fill="#59636f"/>
+<path d="M470 395L530 395" stroke="#fff6" stroke-width="2"/>
+<text x="500" y="436" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">FULCRUM (pivot point)</text>
+<text x="14" y="26" font-size="15" font-weight="700" fill="#0b3a6b">LEFT side: anticlockwise turn</text>
+<text x="986" y="26" font-size="15" font-weight="700" fill="#0b3a6b" text-anchor="end">RIGHT side: clockwise turn</text>
+<g id="pl" filter="url(#sh)"></g>
+<g id="gh" opacity="0"><path id="ghl" d="M0 160V285" stroke="#fff" stroke-width="3" stroke-dasharray="6 5"/><text id="ght" y="152" font-size="14" font-weight="800" fill="#fff" stroke="#0b3a6b" stroke-width=".8" text-anchor="middle"></text></g>
+</svg>
+<div id="toast"></div>
+</div>
+<aside>
+<div class="card"><h2>Live Readings</h2>
+<div class="row"><span>Left torque (anticlockwise)</span><b id="L">0</b></div>
+<div class="row"><span>Right torque (clockwise)</span><b id="R">0</b></div>
+<div class="row"><span>Net torque</span><b id="N">0</b></div>
+<div class="row"><span>Tilt angle</span><b id="A">0°</b></div>
+<div class="row"><span>Gravity (g)</span><b id="GG">9.8 m/s²</b></div>
+<div class="row"><span>Pivot position</span><b id="FP">centre</b></div>
+<div id="status" class="idle">Place objects to begin</div></div>
+<div class="card" id="fc"><h2>Principle of Moments</h2>
+<div style="font-size:13px;line-height:1.5;margin-bottom:6px">Torque = force × distance from the pivot. The seesaw is balanced when the clockwise torque equals the anticlockwise torque.</div>
+<div id="fx"></div></div>
+</aside>
+</main>
+<footer><div id="tray"></div><div id="btns"></div></footer>
+</div>
+<script>
+const S=80,CX=500,PY=290,GR={Earth:9.8,Moon:1.6,Mars:3.7,Jupiter:24.8};
+const OBJ=[["🍎","Apple",1],["🏀","Basketball",2],["🧱","Brick",3],["🐈","Cat",4],["🎒","Backpack",5],["🍉","Watermelon",6],["🐕","Dog",8],["🧒","Child",10]];
+let items=[],uid=0,sel=0,f=0,ang=0,vel=0,target=0,raf=0,ruler=true,arrows=false,formula=true,gname="Earth",score=0,chal=false,dt=[];
+const $=id=>document.getElementById(id),svg=$("svg");
+const r1=x=>Math.round(x*10)/10;
+
+function toast(m,ms=3800){const t=$("toast");t.textContent=m;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.opacity=0,ms)}
+function tq(){let L=0,R=0;items.forEach(i=>{const t=OBJ[i.k][2]*(i.p-f);t<0?L-=t:R+=t});return{L,R,net:R-L}}
+
+function render(){
+  const x0=CX+(-5.5-f)*S,w=11*S;
+  let h=`<rect x="${x0}" y="${PY-11}" width="${w}" height="22" rx="7" fill="url(#wood)" stroke="#5a3a1a" stroke-width="1.5"/>`;
+  for(let i=0;i<5;i++)h+=`<path d="M${x0+12} ${PY-7+i*3.6}H${x0+w-12}" stroke="#6b4018" stroke-opacity=".25"/>`;
+  const tot={},cnt={};
+  items.forEach(i=>tot[i.p]=(tot[i.p]||0)+OBJ[i.k][2]);
+  if(ruler)for(let m=-5;m<=5;m+=.5){const x=CX+(m-f)*S,b=m%1==0;h+=`<path d="M${x} ${PY+11}v${b?9:5}" stroke="#0b2a4a" stroke-width="2"/>`;if(b)h+=`<text x="${x}" y="${PY+33}" font-size="12" font-weight="700" fill="#0b2a4a" text-anchor="middle">${Math.abs(m-f)}</text>`}
+  if(ruler)h+=`<text x="${CX+(5.5-f)*S}" y="${PY+48}" font-size="11" fill="#0b2a4a" text-anchor="end">metres from pivot</text>`;
+  items.forEach(i=>{const o=OBJ[i.k],n=cnt[i.p]||0,x=CX+(i.p-f)*S,sz=34+o[2]*2.4,y=PY-12-n*(sz+4);cnt[i.p]=n+1;
+    h+=`<g data-id="${i.id}" style="cursor:grab"><text x="${x}" y="${y}" font-size="${sz}" text-anchor="middle" filter="url(#sh)">${o[0]}</text></g>`});
+  Object.keys(tot).forEach(k=>{const p=+k,x=CX+(p-f)*S,c=p<f?"#9fd0ff":p>f?"#ffcf8a":"#fff";
+    h+=`<text x="${x}" y="${PY+4}" font-size="11.5" font-weight="800" fill="${c}" text-anchor="middle" pointer-events="none">${tot[k]} kg</text>`;
+    if(arrows){const y0=PY+(ruler?52:14),len=14+tot[k]*5,col=p<f?"#2563eb":p>f?"#ea580c":"#475569";
+      h+=`<g transform="rotate(${-ang} ${x} ${y0})" pointer-events="none"><path d="M${x} ${y0}v${len}" stroke="${col}" stroke-width="4"/><path d="M${x-7} ${y0+len-2}L${x} ${y0+len+11}L${x+7} ${y0+len-2}Z" fill="${col}"/><text x="${x+10}" y="${y0+len/2+4}" font-size="11" font-weight="800" fill="#0b2a4a">${r1(tot[k]*GR[gname])} N</text></g>`}});
+  h+=`<circle cx="${CX}" cy="${PY}" r="7" fill="url(#steel)" stroke="#333" stroke-width="1.5"/>`;
+  const g=$("pl");g.innerHTML=h;g.setAttribute("transform",`rotate(${ang} ${CX} ${PY})`);
+}
+
+function loop(){
+  const k=.012*Math.sqrt(GR[gname]/9.8);
+  vel=vel*.9+(target-ang)*k;ang+=vel;
+  if(Math.abs(vel)<.003&&Math.abs(target-ang)<.03){ang=target;vel=0;raf=0}else raf=requestAnimationFrame(loop);
+  render();$("A").textContent=r1(ang)+"°";
+}
+function kick(){if(!raf)raf=requestAnimationFrame(loop)}
+
+function update(){
+  const t=tq(),g=GR[gname],bal=items.length>0&&Math.abs(t.net)<.01;
+  target=Math.abs(t.net)<.01?0:Math.max(-14,Math.min(14,t.net*1.6));
+  $("L").textContent=r1(t.L*g)+" N·m";$("R").textContent=r1(t.R*g)+" N·m";$("N").textContent=r1(t.net*g)+" N·m";
+  $("GG").textContent=g+" m/s² ("+gname+")";
+  $("FP").textContent=f==0?"centre":Math.abs(f)+" m "+(f<0?"left":"right")+" of centre";
+  const s=$("status");
+  if(!items.length){s.className="idle";s.textContent="Place objects to begin"}
+  else if(bal){s.className="ok";s.textContent="⚖ BALANCED! Left torque = Right torque"}
+  else{s.className="";s.textContent=(t.net>0?"Right":"Left")+" side goes DOWN: it has more torque"}
+  const ex=side=>{const a=items.filter(i=>side<0?i.p<f:i.p>f).map(i=>OBJ[i.k][2]+"×"+r1(Math.abs(i.p-f)));return a.length?a.join(" + "):"0"};
+  $("fx").innerHTML=formula?`<i>Left:</i> ${ex(-1)} = ${r1(t.L)} kg·m<br><i>Right:</i> ${ex(1)} = ${r1(t.R)} kg·m<br>Multiply by g (${g}) to get N·m. Objects exactly on the pivot add no torque.`:"Formula hidden. Press the Formula button to show it again.";
+  document.querySelectorAll(".btn.on,.btn[data-t]").forEach(b=>b.classList.toggle("on",{ruler,arrows,formula}[b.dataset.t]));
+  render();kick();
+}
+
+function freePos(side){for(const d of [1,2,3,4,5,1.5,2.5,3.5,4.5,.5]){const p=f+side*d;if(Math.abs(p)<=5&&!items.some(i=>i.p===p))return p}return null}
+function add(side){const p=freePos(side);if(p===null)return toast("That side is full. Remove something first.");items.push({id:++uid,k:sel,p});update()}
+function place(p){items.push({id:++uid,k:sel,p});update()}
+function clearAll(){items=[];chal=false;update()}
+function moveF(d){if(Math.abs(f+d)>3)return toast("The pivot can move up to 3 m from the centre.");f+=d;update();toast("Pivot moved. Distances are now measured from the new pivot.")}
+function toggle(n){if(n=="ruler")ruler=!ruler;if(n=="arrows")arrows=!arrows;if(n=="formula")formula=!formula;update()}
+function gravity(){const k=Object.keys(GR);gname=k[(k.indexOf(gname)+1)%k.length];$("gbtn").textContent="🌍 Gravity: "+gname;update();toast("On "+gname+" every torque changes, but balance does not: both sides change by the same factor.",5200)}
+
+function autoBalance(){
+  if(!items.length)return toast("Place an object first.");
+  const it=items[items.length-1],m=OBJ[it.k][2],t=tq(),rest=t.net-m*(it.p-f),d=-rest/m,p=f+d;
+  if(Math.abs(d)<.05||Math.abs(p)>5)return toast("The last object cannot balance this alone. Try a heavier object or move the pivot.");
+  it.p=Math.round(p*10)/10;update();toast("Moved the last object to "+r1(Math.abs(it.p-f))+" m "+(it.p<f?"left":"right")+" of the pivot.")}
+
+function hint(){
+  const t=tq();if(!items.length)return toast("Place something on the seesaw first.");
+  if(Math.abs(t.net)<.01)return toast("Already balanced. Try moving the pivot to see what happens!");
+  const need=Math.abs(t.net),side=t.net<0?1:-1;
+  for(let d=.5;d<=5;d+=.5)for(const o of OBJ)if(Math.abs(o[2]*d-need)<.001&&Math.abs(f+side*d)<=5)return toast(`Hint: put the ${o[1]} (${o[2]} kg) ${d} m on the ${side>0?"right":"left"}.`,5500);
+  toast(`Hint: you need ${r1(need)} kg·m more on the ${side>0?"right":"left"}. Combine objects or change distances.`,5500)}
+
+function newChallenge(){
+  clearAll();const n=1+Math.floor(Math.random()*2);
+  for(let i=0;i<n;i++)items.push({id:++uid,k:Math.floor(Math.random()*8),p:f-(1+Math.floor(Math.random()*5))+(Math.random()<0?0:0)});
+  items=items.filter(i=>Math.abs(i.p)<=5);chal=true;update();
+  toast("Challenge: balance the left side by adding objects to the right. Then press Check Answer.",5500)}
+function check(){
+  if(!chal)return toast("Press New Challenge to start one.");
+  const t=tq();
+  if(Math.abs(t.net)<.01&&t.R>0){score++;chal=false;$("score").textContent="Challenges solved: "+score;toast("Correct! Both torques are equal. Great work!")}
+  else toast("Not yet balanced. Net torque is "+r1(t.net*GR[gname])+" N·m. Try Hint.")}
+
+function stopDemo(){dt.forEach(clearTimeout);dt=[]}
+function demo(){
+  stopDemo();items=[];f=0;chal=false;sel=5;sync();update();
+  const st=[
+    [()=>{},"Step 1: Nothing is on the seesaw, so it sits level on the fulcrum."],
+    [()=>items.push({id:++uid,k:5,p:-2}),"Step 2: A 6 kg watermelon sits 2 m left. Torque = 6 × 2 = 12 kg·m. The left side drops."],
+    [()=>items.push({id:++uid,k:0,p:3}),"Step 3: A 1 kg apple sits 3 m right. Torque = 1 × 3 = 3 kg·m. Not enough yet."],
+    [()=>items.push({id:++uid,k:1,p:4.5}),"Step 4: A 2 kg ball at 4.5 m adds 9 kg·m. Now 3 + 9 = 12, so right torque = left torque."],
+    [()=>{},"Balanced! A light object far from the pivot can balance a heavy object close to it."]];
+  st.forEach((s,i)=>dt.push(setTimeout(()=>{s[0]();update();toast(s[1],4600)},i*4800)))}
+
+function reset(){stopDemo();items=[];f=0;chal=false;ang=0;vel=0;gname="Earth";$("gbtn").textContent="🌍 Gravity: Earth";update();toast("Seesaw reset.")}
+function fs(){const e=$("app");if(!document.fullscreenElement&&!document.webkitFullscreenElement)(e.requestFullscreen||e.webkitRequestFullscreen).call(e);else(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>$("fsb").textContent=(document.fullscreenElement||document.webkitFullscreenElement)?"✖ Exit Full Screen":"⛶ Full Screen"));
+
+function sync(){document.querySelectorAll(".obj").forEach((b,i)=>b.classList.toggle("sel",i==sel))}
+$("tray").innerHTML=OBJ.map((o,i)=>`<button class="obj" data-i="${i}"><span>${o[0]}</span>${o[1]}<br><b>${o[2]} kg</b></button>`).join("");
+$("tray").onclick=e=>{const b=e.target.closest(".obj");if(b){sel=+b.dataset.i;sync();toast("Selected: "+OBJ[sel][1]+" ("+OBJ[sel][2]+" kg). Click the seesaw to place it.",2500)}};
+
+const G=[
+ ["Place",[["➕ Add to Left","#2563eb",()=>add(-1)],["➕ Add to Right","#ea580c",()=>add(1)],["↩ Undo","#7c3aed",()=>{items.pop();update()}],["🗑 Clear All","#dc2626",clearAll]]],
+ ["Pivot",[["◀ Pivot Left","#0d9488",()=>moveF(-.5)],["Pivot Right ▶","#0891b2",()=>moveF(.5)],["◎ Centre Pivot","#4f46e5",()=>{f=0;update()}]]],
+ ["View",[["📏 Ruler","#16a34a",()=>toggle("ruler"),"ruler"],["⬇ Force Arrows","#d97706",()=>toggle("arrows"),"arrows"],["🧮 Formula","#be185d",()=>toggle("formula"),"formula"],["🌍 Gravity: Earth","#0284c7",gravity,null,"gbtn"]]],
+ ["Play",[["⚖ Auto-Balance","#059669",autoBalance],["🎯 New Challenge","#c026d3",newChallenge],["✅ Check Answer","#65a30d",check],["💡 Hint","#ca8a04",hint],["▶ Auto Demo","#e11d48",demo,null,null,1]]],
+ ["App",[["🔄 Reset","#64748b",reset],["⛶ Full Screen","#1e40af",fs,null,"fsb"]]]];
+$("btns").innerHTML=G.map(g=>`<div class="grp"><small>${g[0]}</small></div>`).join("");
+G.forEach((g,gi)=>g[1].forEach(b=>{const e=document.createElement("button");e.className="btn";e.style.setProperty("--c",b[1]);e.textContent=b[0];if(b[3])e.dataset.t=b[3];if(b[4])e.id=b[4];
+  e.onclick=()=>{if(!b[5])stopDemo();b[2]()};$("btns").children[gi].appendChild(e)}));
+
+function svgX(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());return Math.max(-5,Math.min(5,Math.round(((q.x-CX)/S+f)*2)/2))}
+svg.addEventListener("pointermove",e=>{const p=svgX(e),x=CX+(p-f)*S;$("gh").setAttribute("opacity",1);$("ghl").setAttribute("transform",`translate(${x} 0)`);const t=$("ght");t.setAttribute("x",x);t.textContent=r1(Math.abs(p-f))+" m "+(p<f?"left":p>f?"right":"(on pivot)")});
+svg.addEventListener("pointerleave",()=>$("gh").setAttribute("opacity",0));
+svg.addEventListener("pointerdown",e=>{stopDemo();const g=e.target.closest("[data-id]");
+  if(g){const i=items.findIndex(x=>x.id==g.dataset.id);if(i>-1){sel=items[i].k;items.splice(i,1);sync();update();toast("Picked up. Click the seesaw to drop it somewhere new.",2800)}return}
+  place(svgX(e))});
+
+sync();update();toast("Welcome! Pick an object below, then click the seesaw. Try the Auto Demo button.",5000);
+</script>
+</body></html>

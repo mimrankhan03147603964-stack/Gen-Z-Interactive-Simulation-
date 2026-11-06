@@ -1898,6 +1898,345 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Dynamic Photon Particle Emission with Real-Time Spectral Wavelength and Color Display'
     ],
     gradeLevel: 'Class 9 (Secondary School SSC-I / Grades 9–10)'
+  },
+  {
+    id: 'sim-atwood-machine-simulation',
+    slug: 'atwood-machine-simulation',
+    indexNumber: '110',
+    title: 'Atwood Machine Lab (Forces, Tension & Acceleration)',
+    subject: 'Newtonian Mechanics & Dynamics (طبیعیات کلاس 9 - ایٹ ووڈ مشین اور نیوٹن کا دوسرا قانون)',
+    category: 'Physics & Motion',
+    iconName: 'Activity',
+    accentColor: '#0284c7',
+    description: 'Interactive classical mechanics experiment investigating Newton\'s Second Law of Motion (F=ma) using an ideal frictionless pulley and two connected hanging masses (m₁ and m₂). Calculate acceleration a = (m₁ - m₂)g / (m₁ + m₂) and string tension T = (2m₁m₂g) / (m₁ + m₂). Adjust mass sliders, switch gravity between Earth (9.8 m/s²), Moon (1.6 m/s²), Mars (3.7 m/s²), and Jupiter (24.8 m/s²), toggle air resistance, and record real-time position-time velocity telemetry with motion replay.',
+    fileUrl: '/simulations/atwood-machine-simulation.html',
+    topics: [
+      'Newton\'s Second Law of Motion (F_net = ma)',
+      'Tension in a Light Inextensible String Passing Over a Frictionless Pulley',
+      'Gravitational Acceleration on Celestial Bodies (Earth, Moon, Mars, Jupiter)',
+      'Free Body Diagrams and Opposing Weight Vectors (m₁g vs. m₂g)',
+      'Kinematic Velocity and Displacement Telemetry'
+    ],
+    features: [
+      'Interactive Mass Sliders for m₁ and m₂ with Dynamic Force Balancing',
+      'Celestial Gravity Presets (Earth, Moon, Mars, Jupiter)',
+      'Real-Time Canvas Pulley Animation with Animated String Tracking',
+      'Instant Numerical Telemetry: System Acceleration (m/s²), Tension (N), and Transit Time (s)'
+    ],
+    gradeLevel: 'Class 9 & 11 (Secondary & Higher Secondary / SSC & HSSC)'
+  },
+  {
+    id: 'sim-black-hole-explorer',
+    slug: 'black-hole-explorer',
+    indexNumber: '111',
+    title: 'Black Hole Explorer: Gravity, Event Horizon & Lensing',
+    subject: 'Astrophysics & General Relativity (فلکی طبیعیات - بلیک ہول، گریویٹیشنل لینزنگ اور ایونٹ ہورائزن)',
+    category: 'Earth & Space',
+    iconName: 'Orbit',
+    accentColor: '#7c3aed',
+    description: 'Deep-space interactive astrophysics exploration of stellar and supermassive black holes. Explore the Schwarzschild Radius (Event Horizon Rs = 2GM/c²), the Accretion Disk of swirling relativistic matter, Gravitational Lensing warping background starlight, and Einstein Rings. Launch probe trajectories to test orbital capture, photon sphere orbit (1.5 Rs), stable orbits, and tidal gravitational spaghettification with adjustable mass controls from Stellar (10 M☉) to Sagittarius A* (4M M☉).',
+    fileUrl: '/simulations/black-hole-explorer.html',
+    topics: [
+      'Schwarzschild Radius & Event Horizon (Rs = 2GM/c²)',
+      'General Theory of Relativity & Spacetime Curvature',
+      'Gravitational Lensing & Background Star Field Deflection',
+      'Photon Sphere (r = 1.5 Rs) and Last Stable Circular Orbit (ISCO)',
+      'Tidal Forces, Gravitational Redshift, and Relativistic Doppler Beaming'
+    ],
+    features: [
+      'Interactive Mass Dial from 5 M☉ to Supermassive Sagittarius A*',
+      'Interactive Probe Launcher with Orbital Physics & Event Horizon Crossing',
+      'Real-Time Gravitational Ray Tracing & Photonic Warping Canvas',
+      'Educational Fact Sheet with Live Relativistic Telemetry Readouts'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (Secondary & Higher Secondary / SSC & HSSC)'
+  },
+  {
+    id: 'sim-blood-group-picture-simulation',
+    slug: 'blood-group-picture-simulation',
+    indexNumber: '112',
+    title: 'ABO Blood Group System & Rh Factor Compatibility (Visual Lab)',
+    subject: 'Human Physiology & Genetics (حیاتیات کلاس 9 و 10 - بلڈ گروپ سسٹم اور آر ایچ فیکٹر)',
+    category: 'Biology & Life',
+    iconName: 'Dna',
+    accentColor: '#e11d48',
+    description: 'Comprehensive visual picture laboratory for the human ABO and Rh (Rhesus) blood group systems. Features microscopic erythrocyte surface antigen diagrams (Antigen A, Antigen B, Rh D-antigen), plasma antibodies (Anti-A, Anti-B, Anti-Rh), full cross-matching compatibility matrix for red blood cell donations (Universal Donor O⁻, Universal Recipient AB⁺), agglutination reactions, and erythroblastosis fetalis maternal-fetal Rh incompatibility case studies.',
+    fileUrl: '/simulations/blood-group-picture-simulation.html',
+    topics: [
+      'ABO Blood Group Antigens (A, B, AB, O) on Red Blood Cell Membranes',
+      'Serum Antibodies (Isohemagglutinins: Anti-A and Anti-B IgM)',
+      'Rhesus Factor (Rh⁺ with D-antigen vs. Rh⁻ without D-antigen)',
+      'Blood Transfusion Compatibility Rules: Agglutination Clumping Risks',
+      'Universal Donor (O-Negative) and Universal Recipient (AB-Positive)'
+    ],
+    features: [
+      'High-Fidelity Visual Picture Diagrams of Erythrocytes and Antibodies',
+      'Interactive Transfusion Matrix Grid with Instant Safe/Lethal Feedback',
+      'Slide Agglutination Test Simulator with Anti-A, Anti-B, and Anti-D Serums',
+      'Clinical Scenario Quiz: Emergency Blood Typing and Donor Selection'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (Secondary & Higher Secondary SSC/HSSC)'
+  },
+  {
+    id: 'sim-blood-group-simulation',
+    slug: 'blood-group-simulation',
+    indexNumber: '113',
+    title: 'ABO Blood Group System: Clinical Slide Test & Transfusion',
+    subject: 'Hematology & Clinical Immunology (بیالوجی اور میڈیکل سائنس - بلڈ گروپ کی شناخت اور خون کا عطیہ)',
+    category: 'Biology & Life',
+    iconName: 'HeartPulse',
+    accentColor: '#be123c',
+    description: 'Hands-on clinical hematology laboratory for testing and identifying human blood types. Dispense blood samples onto test slides, add Anti-A, Anti-B, and Anti-D (Rh) monoclonal antibodies, observe microscopic agglutination (clumping) under live animation, and determine the exact blood group (A⁺, A⁻, B⁺, B⁻, AB⁺, AB⁻, O⁺, O⁻). Run recipient-donor cross-matching to simulate safe blood transfusions and prevent hemolytic transfusion reactions.',
+    fileUrl: '/simulations/blood-group-simulation.html',
+    topics: [
+      'Slide Hemagglutination Reaction (Antigen-Antibody Binding)',
+      'Anti-A, Anti-B, and Anti-D (Rh) Monoclonal Reagent Serums',
+      'Phenotype and Genotype Determination of Blood Groups',
+      'Safe Blood Transfusion Guidelines and Cross-Match Protocols',
+      'Hemolytic Reactions and Intravascular Agglutination Hazards'
+    ],
+    features: [
+      'Interactive 3-Well Glass Slide Pipette Dispenser with Real-Time Clumping',
+      'Donor vs. Recipient Compatibility Checker with Interactive Patient Bed',
+      'Step-by-Step Diagnostic Audio-Visual Guidance for Medical Students',
+      'Instant Agglutination Truth Table and Clinical Outcome Indicator'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (Secondary SSC & Pre-Medical HSSC)'
+  },
+  {
+    id: 'sim-electrochemistry-lab',
+    slug: 'electrochemistry-lab',
+    indexNumber: '114',
+    title: 'Electrochemistry Lab: Redox, Galvanic & Electrolytic Cells',
+    subject: 'Electrochemistry (کیمسٹری کلاس 9 یونٹ 7 - الیکٹرو کیمسٹری، ڈینیل سیل اور زنگ لگنا)',
+    category: 'Chemistry & Matter',
+    iconName: 'Zap',
+    accentColor: '#0d9488',
+    description: 'Complete Class 9 Unit 7 chemistry laboratory covering oxidation-reduction (redox) reactions, electrochemical cells, and corrosion prevention. Explore the Daniell Galvanic Cell (Zn/Cu Voltaic Cell with Salt Bridge and Voltmeter), Electrolytic Cell (Downs Cell / Nelson\'s Cell water electrolysis or molten NaCl), Electroplating of Metals (silver/copper coating on spoons), and Iron Rusting/Corrosion with cathodic protection sacrificial anodes.',
+    fileUrl: '/simulations/electrochemistry-lab.html',
+    topics: [
+      'Oxidation (Loss of Electrons / Increase in Oxidation State) & Reduction (Gain of Electrons)',
+      'Galvanic/Voltaic Cells: Zn(s) | Zn²⁺(aq) || Cu²⁺(aq) | Cu(s) Daniell Cell EMF (~1.10V)',
+      'Salt Bridge Function: Maintaining Electrical Neutrality via Ion Diffusion (KCl / KNO₃)',
+      'Electrolytic Cells: Non-Spontaneous Reactions Driven by External DC Power',
+      'Industrial Electroplating and Galvanizing for Corrosion / Rust Prevention'
+    ],
+    features: [
+      'Multi-Module Tabs: Galvanic Cell, Electrolytic Cell, Electroplating, and Rusting Mechanism',
+      'Live Electron Flow Animation with Wire Particle Currents and Salt Bridge Ion Drifts',
+      'Interactive Voltmeter and Ammeter Readouts with Adjustable Electrolyte Concentrations',
+      'Real-Time Half-Reactions at Anode (Oxidation) and Cathode (Reduction)'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 7)'
+  },
+  {
+    id: 'sim-greenhouse-effect-lab',
+    slug: 'greenhouse-effect-lab',
+    indexNumber: '115',
+    title: 'Greenhouse Effect Lab: Solar Absorption & Infrared Emission',
+    subject: 'Environmental Physics & Climate Science (ماحولیاتی سائنس - گرین ہاؤس اثر اور گلوبل وارمنگ)',
+    category: 'Earth & Space',
+    iconName: 'Sun',
+    accentColor: '#ea580c',
+    description: 'Radiative balance and atmospheric physics laboratory modeling Earth\'s energy budget. Examine incoming high-energy shortwave solar radiation (visible/UV), planetary surface absorption, thermal re-emission as longwave infrared (heat), and absorption by atmospheric greenhouse gases (CO₂, CH₄, H₂O, N₂O). Adjust greenhouse gas concentrations from Pre-Industrial (280 ppm) to Modern and High-Emission levels, toggle glass greenhouse enclosures, and observe surface temperature equilibrium.',
+    fileUrl: '/simulations/greenhouse-effect-lab.html',
+    topics: [
+      'Solar Radiation vs. Terrestrial Infrared Thermal Emission (Planck\'s Law)',
+      'Atmospheric Greenhouse Gases (Carbon Dioxide, Methane, Water Vapor, Nitrous Oxide)',
+      'Radiative Equilibrium: Earth\'s Energy Budget & Stefan-Boltzmann Law (E = σT⁴)',
+      'Global Warming Potential and Planetary Surface Temperature Escalation',
+      'Albedo Effect: Polar Ice Reflectivity vs. Ocean/Land Absorption'
+    ],
+    features: [
+      'Dynamic Photon Stream Animator: Yellow Shortwave Solar vs. Red Longwave Infrared Rays',
+      'Greenhouse Gas Concentration Slider (PPM) with Live Thermometer Response',
+      'Toggleable Atmospheric Layers, Glass Greenhouse Dome, and Cloud Reflections',
+      'Real-Time Earth Surface Energy Flux Readouts (Watts per Square Meter)'
+    ],
+    gradeLevel: 'Class 8, 9, 10 (Middle & Secondary School SSC)'
+  },
+  {
+    id: 'sim-kinematics-simulation',
+    slug: 'kinematics-simulation',
+    indexNumber: '116',
+    title: 'Kinematics Lab: Motion, Vectors & Graphs (Unit 2)',
+    subject: 'Kinematics & Motion Graphs (طبیعیات کلاس 9 یونٹ 2 - حرکیات، رفتار اور اسراع)',
+    category: 'Physics & Motion',
+    iconName: 'Gauge',
+    accentColor: '#2563eb',
+    description: 'Class 9 Unit 2 physics laboratory covering translational motion, distance, displacement, speed, velocity, uniform acceleration, and equations of motion (v_f = v_i + at, S = v_i t + ½at², 2aS = v_f² - v_i²). Drive an interactive test vehicle with throttle, brakes, and reverse gears while watching synchronized real-time Distance-Time (s-t) and Velocity-Time (v-t) graphs, calculating slope as velocity/acceleration, and area under the graph as total distance covered.',
+    fileUrl: '/simulations/kinematics-simulation.html',
+    topics: [
+      'Rest vs. Motion & Types of Motion (Translatory, Rotatory, Vibratory)',
+      'Scalar vs. Vector Quantities (Distance vs. Displacement, Speed vs. Velocity)',
+      'Uniform & Non-Uniform Acceleration (a = Δv / Δt)',
+      'Distance-Time (s-t) and Velocity-Time (v-t) Graph Slopes & Area Under Curve',
+      'Three Newton-Euler Equations of Motion for Linear Uniform Acceleration'
+    ],
+    features: [
+      'Interactive Vehicle Test Track with Realistic Physics (Gas, Brake, Reverse, Friction)',
+      'Dual Synchronized Oscilloscope Graphs: Real-Time Plotting of s-t and v-t Curves',
+      'Live Slope Tangent Visualizer Showing Instantaneous Velocity and Acceleration',
+      'Preset Scenarios: Constant Velocity, Uniform Acceleration, Sudden Braking, Free Fall'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 2)'
+  },
+  {
+    id: 'sim-parts-of-a-plant-3d-simulation',
+    slug: 'parts-of-a-plant-3d-simulation',
+    indexNumber: '117',
+    title: 'Parts of a Plant & Their Functions: 3D Botanical Lab',
+    subject: 'Botany & Plant Physiology (بیالوجی - پودے کے حصے اور ان کے بنیادی افعال)',
+    category: 'Biology & Life',
+    iconName: 'Leaf',
+    accentColor: '#16a34a',
+    description: 'Interactive botanical laboratory showcasing the anatomy and physiology of vascular flowering plants. Explore the complete plant organism: Roots (Taproot, Fibrous roots, Root hairs for water and mineral absorption, anchoring), Stem (Xylem vessels for water transport, Phloem for sap translocation), Leaves (Petiole, Blade, Veins, Stomata, Photosynthesis, Transpiration), Flowers (Sepals, Petals, Stamen: Anther/Filament, Pistil/Carpel: Stigma/Style/Ovary), and Fruits/Seeds. Click plant organs for interactive zoom, labeled cross-sections, and animated water/nutrient circulation.',
+    fileUrl: '/simulations/parts-of-a-plant-3d-simulation.html',
+    topics: [
+      'Plant Organ Systems: Root System (Underground) vs. Shoot System (Aboveground)',
+      'Root Functions: Water and Mineral Absorption via Osmosis, Soil Anchorage, Storage',
+      'Stem Anatomy: Vascular Bundles (Xylem Sap Ascent & Phloem Translocation)',
+      'Leaf Anatomy: Mesophyll Layers, Chloroplasts, Stomatal Gas Exchange & Transpiration',
+      'Flower Reproductive Anatomy: Pollination, Male Androecium, Female Gynoecium, Seed Development'
+    ],
+    features: [
+      'Interactive Botanical Anatomical Hotspots with High-Definition Cross-Sections',
+      'Animated Vascular Transpiration Stream: Water Molecules Moving from Roots to Leaves',
+      'Microscopic Cutaway Views of Leaf Stomata, Root Hairs, and Flower Petals',
+      'Interactive Botanical Quiz Mode Testing Organ Identification and Function Mastery'
+    ],
+    gradeLevel: 'Class 6, 7, 8, 9 & 10 (Elementary, Middle & Secondary School)'
+  },
+  {
+    id: 'sim-pascals-principle-hydraulic-lift',
+    slug: 'pascals-principle-hydraulic-lift',
+    indexNumber: '118',
+    title: 'Pascal\'s Principle: Hydraulic Lift & Fluid Pressure Lab',
+    subject: 'Fluid Mechanics & Pressure (طبیعیات کلاس 9 - پاسکل کا قانون اور ہائیڈرولک لفٹ)',
+    category: 'Physics & Motion',
+    iconName: 'Layers',
+    accentColor: '#0284c7',
+    description: 'Interactive fluid mechanics experiment demonstrating Pascal\'s Principle: pressure applied to an enclosed incompressible fluid is transmitted undiminished throughout all portions of the fluid (P₁ = P₂). Operate a dual-piston hydraulic lift system with an effort piston (Area A₁) and a load piston (Area A₂). Lift heavy cars and elephants using a fraction of the input force by exploiting mechanical advantage (F₂/F₁ = A₂/A₁), verifying that conservation of energy holds as work input equals work output (F₁·d₁ = F₂·d₂).',
+    fileUrl: '/simulations/pascals-principle-hydraulic-lift.html',
+    topics: [
+      'Pascal\'s Law for Enclosed Incompressible Liquids (ΔP = F₁/A₁ = F₂/A₂)',
+      'Hydraulic Force Multiplication and Mechanical Advantage (MA = A₂/A₁)',
+      'Conservation of Energy in Hydraulics: Force vs. Displacement Trade-off (F₁d₁ = F₂d₂)',
+      'Hydraulic Systems in Everyday Life: Car Brakes, Hydraulic Jacks, Heavy Machinery Lifts',
+      'Liquid Pressure with Depth and Incompressibility Properties'
+    ],
+    features: [
+      'Interactive Effort Piston with Force Input Slider and Click-to-Pump Handle',
+      'Selectable Load Objects: Motorbike, Family Sedan, Heavy Truck, and African Elephant',
+      'Animated Liquid Particle Mesh Demonstrating Omnidirectional Pressure Transmission',
+      'Real-Time Numerical Readout: Force, Area, Pressure (kPa), and Piston Travel Displacements'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 7 Properties of Matter)'
+  },
+  {
+    id: 'sim-simple-pendulum-simulation',
+    slug: 'simple-pendulum-simulation',
+    indexNumber: '119',
+    title: 'Simple Pendulum & Simple Harmonic Motion (SHM) Lab',
+    subject: 'Oscillations & Waves (طبیعیات کلاس 10 - سادہ پینڈولم اور سمپل ہارمونک موشن)',
+    category: 'Physics & Motion',
+    iconName: 'Compass',
+    accentColor: '#6366f1',
+    description: 'Precision interactive physics laboratory exploring Simple Harmonic Motion (SHM) with a mathematical simple pendulum. Investigate the fundamental time period formula T = 2π√(L/g). Adjust string length (L), bob mass (m), and initial displacement angle (θ). Compare oscillations on Earth (9.8 m/s²), the Moon (1.6 m/s²), Mars (3.7 m/s²), and Jupiter (24.8 m/s²). Observe kinetic vs. potential energy conservation graphs, restoring force vectors (F = -mg sin θ), and verify that mass and small angles do not affect period.',
+    fileUrl: '/simulations/simple-pendulum-simulation.html',
+    topics: [
+      'Simple Harmonic Motion (SHM) Postulates (Acceleration Directly Proportional to Displacement: a ∝ -x)',
+      'Time Period Formula of a Simple Pendulum: T = 2π√(L/g)',
+      'Energy Conservation in SHM: Potential Energy (mgh) ↔ Kinetic Energy (½mv²)',
+      'Restoring Force (F = -mg sin θ) and Equilibrium Position Dynamics',
+      'Effect of String Length vs. Independence of Mass and Small Angle Amplitude'
+    ],
+    features: [
+      'Interactive Draggable Bob with Free Real-Time Physics Canvas Oscillation',
+      'Live Oscilloscope Graph: Tracing Displacement, Velocity, and Acceleration Sine Waves',
+      'Dynamic Bar Charts for Kinetic Energy, Potential Energy, and Total Mechanical Energy',
+      'Stopwatch Timer and Period Counter with Variable Gravitational Environments'
+    ],
+    gradeLevel: 'Class 10 (Secondary School SSC-II / Unit 10 Simple Harmonic Motion)'
+  },
+  {
+    id: 'sim-special-relativity-lab',
+    slug: 'special-relativity-lab',
+    indexNumber: '120',
+    title: 'Einstein\'s Special Relativity Lab: Time Dilation & Length Contraction',
+    subject: 'Modern Physics & Special Relativity (جدید طبیعیات - آئنسٹائن کا نظریہ اضافیت اور ٹائم ڈائلیشن)',
+    category: 'Physics & Motion',
+    iconName: 'Sparkles',
+    accentColor: '#f59e0b',
+    description: 'Fascinating interactive laboratory visualizing Albert Einstein\'s 1905 Special Theory of Relativity. Observe the two fundamental postulates: the laws of physics are invariant in all inertial reference frames, and the speed of light in vacuum (c = 3×10⁸ m/s) is constant for all observers. Accelerate a relativistic spaceship up to 0.99c, observe light clock tick rates showing time dilation (t\' = t / √(1 - v²/c²)), length contraction of the spaceship along the direction of motion (L\' = L √(1 - v²/c²)), and relativistic mass/momentum escalation governed by the Lorentz factor γ (gamma).',
+    fileUrl: '/simulations/special-relativity-lab.html',
+    topics: [
+      'Postulates of Special Relativity: Constancy of the Speed of Light (c)',
+      'Inertial Reference Frames and Simultaneity Relativity',
+      'Time Dilation: Moving Clocks Run Slow (Δt\' = γ Δt)',
+      'Length Contraction: Moving Objects Contract in Direction of Motion (L\' = L / γ)',
+      'The Lorentz Factor: γ = 1 / √(1 - v²/c²) and Relativistic Limits'
+    ],
+    features: [
+      'Interactive Velocity Slider from 0.00c to 0.999c with Dynamic Lorentz Gamma Gauge',
+      'Side-by-Side Dual Light Clocks: Stationary Earth Observer vs. Moving Spaceship Observer',
+      'Animated Diagonal Light Ray Path Demonstrating the Geometric Origin of Time Dilation',
+      'Live Relativistic Relational Telemetry: Proper Time, Dilated Time, Contracted Length'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (Secondary SSC & Higher Secondary HSSC)'
+  },
+  {
+    id: 'sim-torque-seesaw-lab',
+    slug: 'torque-seesaw-lab',
+    indexNumber: '121',
+    title: 'Seesaw Lab: Torque & Principle of Moments',
+    subject: 'Rotational Mechanics & Statics (طبیعیات کلاس 9 - ٹارک اور پرنسپل آف مومنٹس)',
+    category: 'Physics & Motion',
+    iconName: 'Scale',
+    accentColor: '#059669',
+    description: 'Hands-on equilibrium laboratory demonstrating rotational forces, torque (τ = F × d), and the Principle of Moments for Class 9 Physics. Position weights, buckets, and characters (kids, adults, mystery parcels) onto graduated pegs along a balanced seesaw pivot. Calculate clockwise torque (τ_cw) versus anticlockwise torque (τ_acw) to achieve rotational equilibrium (Στ = 0). Lock/unlock supports to test balance predictions and solve mystery mass challenges.',
+    fileUrl: '/simulations/torque-seesaw-lab.html',
+    topics: [
+      'Moment of Force / Torque: τ = Force (F) × Moment Arm (d)',
+      'Clockwise vs. Anticlockwise Moments and Sign Conventions',
+      'Principle of Moments: Total Clockwise Torque = Total Anticlockwise Torque',
+      'Conditions of Equilibrium: First Condition (ΣF = 0) and Second Condition (Στ = 0)',
+      'Pivot Fulcrum Reactions and Center of Gravity Stability'
+    ],
+    features: [
+      'Interactive Pegged Seesaw with Drag-and-Drop Calibrated Weights (5kg, 10kg, 15kg, 20kg)',
+      'Toggleable Fulcrum Support Pillars for Safe Setup Before Testing Balance Physics',
+      'Dynamic Torque Vector Arcs with Real-Time Newton-Meter (N·m) Digital Telemetry',
+      'Mystery Weight Challenge Game: Deduce Unknown Masses Using the Principle of Moments'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 4 Turning Effect of Forces)'
+  },
+  {
+    id: 'sim-vernier-micrometer-simulation',
+    slug: 'vernier-micrometer-simulation',
+    indexNumber: '122',
+    title: 'Vernier Calliper & Micrometer Screw Gauge Lab',
+    subject: 'Experimental Physics & Measurement (طبیعیات کلاس 9 - ورنیئر کیلیپرز اور مائیکرو میٹر سکرو گیج)',
+    category: 'Physics & Motion',
+    iconName: 'Ruler',
+    accentColor: '#3b82f6',
+    description: 'Master essential scientific measurement instruments from Class 9 Physics Unit 1: Vernier Callipers (measuring internal diameter, external diameter, and depth of cylinders) and the Micrometer Screw Gauge (measuring wire diameter and thin sheet thickness). Learn Least Count calculations (0.1 mm / 0.01 cm for Vernier Callipers; 0.01 mm for Screw Gauge), zero error detection (positive zero error and negative zero error), zero correction, and alignment of main scale with rotating thimble / sliding vernier division lines.',
+    fileUrl: '/simulations/vernier-micrometer-simulation.html',
+    topics: [
+      'Least Count (LC): Smallest Value Measurable by an Instrument',
+      'Vernier Calliper Construction: Main Scale, Vernier Scale, Jaws, and Depth Rod',
+      'Micrometer Screw Gauge: Pitch, Circular Head/Thimble Scale, Ratchet, and Anvil',
+      'Zero Error (Positive & Negative) and Zero Correction Application: Total Reading = MSR + (VSR × LC) - Zero Error',
+      'Precision Measurement: Cylinders, Spheres, Glass Plates, and Fine Wire Diameters'
+    ],
+    features: [
+      'Dual Instrument Switcher: Full High-Precision Vernier Calliper & Micrometer Screw Gauge',
+      'Smooth Interactive Drag Sliders & Fine-Tuning Stepper Knobs for Exact Alignment',
+      'Interactive Test Objects (Steel Sphere, Brass Cylinder, Copper Wire, Glass Slide)',
+      'Magnified Zoom Lens for Main Scale and Vernier/Thimble Scale Reading Coincidence',
+      'Built-in Practice Mode: Submit Reading with Instant Step-by-Step Mathematical Verification'
+    ],
+    gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 1 Physical Quantities & Measurement)'
   }
 ];
 

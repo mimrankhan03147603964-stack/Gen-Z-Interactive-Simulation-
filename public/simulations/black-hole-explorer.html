@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Black Hole Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#05071a;font-family:"Segoe UI","Trebuchet MS",system-ui,sans-serif;color:#e9ecff}
+#app{height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#05071a,#0c1030)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;gap:12px;border-bottom:3px solid #ff7a18}
+h1{margin:0;font-size:22px}h1 small{display:block;font-size:12px;font-weight:400;color:#a4acff}
+main{flex:1;min-height:0;display:flex;gap:10px;padding:10px 12px 4px}
+#stage{flex:1;position:relative;border-radius:14px;overflow:hidden;border:3px solid #2b2f6b;min-width:0;cursor:grab;touch-action:none}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#hint{position:absolute;left:12px;bottom:8px;font-size:12px;color:#aab2ff;background:rgba(5,7,26,.6);padding:3px 8px;border-radius:6px;pointer-events:none}
+aside{width:275px;flex:none;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.card{background:#12163f;border:2px solid #2b2f6b;border-radius:12px;padding:10px 12px}
+.card h3{margin:0 0 6px;font-size:14px;color:#ffb347}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;padding:2px 0}.row b{color:#fff;text-align:right}
+.big{font-size:24px;font-weight:700;color:#ff9e4a}.note{font-size:12.5px;line-height:1.45;color:#cdd3ff}
+footer{padding:6px 12px 10px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#12163f;border-radius:12px;padding:5px 8px;border:2px solid #2b2f6b}
+.grp>span{font-size:12px;color:#a4acff;margin-right:2px}.hid{display:none}
+.btn{border:0;border-radius:9px;padding:7px 11px;font-weight:600;font-size:13px;font-family:inherit;color:#fff;background:var(--c);text-shadow:0 1px 1px rgba(0,0,0,.35);box-shadow:0 4px 0 rgba(0,0,0,.45);cursor:pointer;transition:transform .08s,filter .15s}
+.btn.dk{color:#1b1b1b;text-shadow:none}.btn:hover{filter:brightness(1.15)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.45)}
+.btn.off{filter:saturate(.2) brightness(.65)}.btn.on{outline:3px solid #fff}.btn:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px}
+input[type=range]{width:170px;accent-color:#ff7a18}
+</style></head><body>
+<div id="app">
+<header><h1>Black Hole Explorer<small>Drag to rotate · scroll to zoom · explore gravity, light and spacetime</small></h1>
+<button class="btn dk" id="fsb" style="--c:#ffb703;font-size:15px;padding:9px 16px">⛶ Full screen</button></header>
+<main><div id="stage"><canvas id="cv"></canvas><div id="hint"></div></div>
+<aside>
+<div class="card"><h3>Your black hole</h3><div class="big" id="im">10 Suns</div>
+<div class="row"><span>Event horizon radius</span><b id="irs"></b></div><div class="row"><span>Photon ring at</span><b id="iph"></b></div><div class="row"><span>Shadow seen at</span><b id="ish"></b></div><div class="note" id="icmp"></div></div>
+<div class="card"><h3 id="mt">Lensing view</h3><div id="mi"></div></div>
+<div class="card"><h3>Did you know?</h3><div class="note" id="fact"></div></div>
+</aside></main>
+<footer id="ctl"></footer></div>
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d'),PI=Math.PI;
+let W=0,H=0;
+function resize(){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(resize).observe(cv.parentElement);
+let mode='lens',yaw=.5,elev=.45,zoom=1,me=1,auto=true,rate=1,playing=true,t=0,fall=false,d=12,tau=0,farT=0,fi=0,pit=1.0,yaw2=.4,sm=1,fric=false,marbles=[];
+const show={disk:true,stars:true,lens:true,ring:true,hor:true,earth:true,labels:true};
+let sd=12345;const rnd=()=>(sd=sd*16807%2147483647)/2147483647;
+const cols=['#ffffff','#cfe3ff','#fff1c9','#ffd2b0','#b9d0ff'];
+const stars=Array.from({length:750},()=>({az:rnd()*2*PI,el:Math.asin(rnd()*2-1),r:.5+rnd()*1.3,c:cols[Math.floor(rnd()*5)],ph:rnd()*6}));
+const parts=Array.from({length:650},()=>({rr:3+Math.pow(rnd(),1.3)*6,th:rnd()*2*PI,s:.8+rnd()*1.6}));
+const facts=["A black hole is a place where gravity is so strong that even light cannot escape.","The event horizon is the point of no return. It is not a surface, just a boundary in space.","Gravity bends light. That is why stars near a black hole look stretched and shifted.","Imagine squeezing the whole Sun into a ball about 6 km wide. That would make a black hole of 1 Sun’s mass.","Clocks run slower in strong gravity. Near a black hole, time for a far-away watcher seems to almost stop.","The glowing disk is hot gas swirling around the hole. It shines before it falls in.","Einstein described gravity as the bending of spacetime. A heavy object makes a dip, like a bowling ball on a trampoline.","In 2019 scientists took the first picture of a black hole shadow, in a galaxy called M87.","Falling into a small black hole would stretch you like spaghetti. A huge one would feel gentle at the horizon."];
+/* ---------- controls ---------- */
+const ctl=$('#ctl'),tog=[];
+function grp(name,modes,items,extra){const g=document.createElement('div');g.className='grp';g.dataset.m=modes;g.innerHTML='<span>'+name+'</span>'+(extra||'');items.forEach(([l,c,fn,k,dk])=>{const b=document.createElement('button');b.className='btn'+(dk?' dk':'');b.style.setProperty('--c',c);b.textContent=l;b.onclick=()=>{fn();sync()};if(k){b.dataset.k=k;tog.push(b)}g.appendChild(b)});ctl.appendChild(g);return g}
+function sync(){tog.forEach(b=>b.classList.toggle('off',!show[b.dataset.k]));document.querySelectorAll('.grp').forEach(g=>g.classList.toggle('hid',!g.dataset.m.includes(mode)))}
+const T=k=>()=>{show[k]=!show[k]};
+const setM=x=>{mode=x;if(x=='fall'){d=12;tau=0;farT=0;fall=false}$('#hint').textContent=x=='sheet'?'Drag to turn the sheet · pick a mass · launch marbles':'Drag to rotate the view · scroll to zoom'};
+const setMe=x=>{me=Math.max(.5,Math.min(10,x));$('#ms').value=me};
+const MASS=['Tiny star hole','Star hole','Sgr A*','M87*'];
+grp('Explore','lens sheet fall',[['🌌 Lensing view','#7b2ff7',()=>setM('lens')],['🧶 Spacetime sheet','#00b4d8',()=>setM('sheet')],['🚀 Fall in','#ef233c',()=>setM('fall')]]);
+grp('Mass','lens fall',[['3 Suns','#ff9f1c',()=>setMe(.5),0,1],['10 Suns','#ffd60a',()=>setMe(1),0,1],['Sagittarius A*','#2dc653',()=>setMe(6.63)],['M87*','#ff006e',()=>setMe(9.81)]],'<input id="ms" type="range" min=".5" max="10" step=".01" value="1" aria-label="Black hole mass">');
+grp('Camera','lens fall',[['Face-on','#4361ee',()=>elev=1.45],['45° view','#06d6a0',()=>elev=.8,0,1],['Edge-on','#f72585',()=>elev=.1],['Zoom +','#3a86ff',()=>zoom=Math.min(3,zoom*1.25)],['Zoom −','#fb5607',()=>zoom=Math.max(.4,zoom/1.25)],['Auto-spin','#8338ec',()=>auto=!auto,'auto']]);
+grp('Camera','sheet',[['Top view','#4361ee',()=>pit=1.5],['Angled','#06d6a0',()=>pit=1,0,1],['Side view','#f72585',()=>pit=.3],['Auto-spin','#8338ec',()=>auto=!auto,'auto']]);
+grp('Show','lens fall',[['Accretion disk','#fb8500','disk'],['Stars','#4cc9f0','stars'],['Light bending','#9d4edd','lens'],['Photon ring','#ffb703','ring',1],['Horizon marker','#e63946','hor'],['Earth','#2a9d8f','earth']].map(([l,c,k,dk])=>[l,c,T(k),k,dk]));
+grp('Rubber sheet','sheet',[['Tennis ball','#c6d900',()=>sm=0,0,1],['Bowling ball','#3a86ff',()=>sm=1],['Neutron star','#00f5d4',()=>sm=2,0,1],['Black hole','#6a00f4',()=>sm=3]]);
+grp('Marbles','sheet',[['Drop marble','#ff006e',()=>addM(0)],['Launch orbiter','#ffbe0b',()=>addM(1),0,1],['Launch 5','#fb5607',()=>{for(let i=0;i<5;i++)addM(1)}],['Friction','#8ac926',()=>fric=!fric,'fric',1],['Clear','#e63946',()=>marbles=[]]]);
+grp('Fall in','fall',[['▶ Start fall','#2dc653',()=>fall=true],['⏸ Pause fall','#ff9f1c',()=>fall=false],['Jump closer','#f72585',()=>d=Math.max(1.03,d-1)],['Back off','#3a86ff',()=>d=Math.min(12,d+1)],['↺ Restart','#ef233c',()=>{d=12;tau=0;farT=0;fall=false}]]);
+grp('Time','lens sheet fall',[['⏯ Play / pause','#2dc653',()=>playing=!playing],['🐢 Slow','#ff9f1c',()=>rate=.3,0,1],['Normal','#4361ee',()=>rate=1],['🚀 Fast','#9d4edd',()=>rate=3]]);
+grp('Extras','lens sheet fall',[['Labels','#e76f51',T('labels'),'labels'],['💡 Fun fact','#ffd60a',()=>fi=(fi+1)%facts.length,0,1],['Reset view','#ef233c',()=>{yaw=.5;elev=.45;zoom=1;pit=1;yaw2=.4}]]);
+$('#ms').oninput=e=>{me=+e.target.value};
+function fs(){const a=$('#app');if(!document.fullscreenElement)(a.requestFullscreen||a.webkitRequestFullscreen).call(a);else document.exitFullscreen()}
+$('#fsb').onclick=fs;document.addEventListener('fullscreenchange',()=>{$('#fsb').textContent=document.fullscreenElement?'✕ Exit full screen':'⛶ Full screen'});
+document.addEventListener('keydown',e=>{if(e.code=='Space'){e.preventDefault();playing=!playing}if(e.key=='f'||e.key=='F')fs();if(e.key=='ArrowLeft'){yaw-=.1;yaw2-=.1}if(e.key=='ArrowRight'){yaw+=.1;yaw2+=.1}});
+let dr=null;const st=$('#stage');
+st.onpointerdown=e=>{dr=[e.clientX,e.clientY];st.setPointerCapture(e.pointerId);st.style.cursor='grabbing'};
+st.onpointerup=()=>{dr=null;st.style.cursor='grab'};
+st.onpointermove=e=>{if(!dr)return;const dx=e.clientX-dr[0],dy=e.clientY-dr[1];dr=[e.clientX,e.clientY];yaw-=dx*.005;yaw2+=dx*.005;elev=Math.max(.05,Math.min(1.5,elev+dy*.005));pit=Math.max(.2,Math.min(1.5,pit+dy*.004))};
+st.onwheel=e=>{e.preventDefault();zoom=Math.max(.4,Math.min(3,zoom*(e.deltaY<0?1.1:.9)))};
+/* ---------- helpers ---------- */
+const lerpC=(rr,a)=>{const f=(rr-3)/6;return`rgba(255,${Math.round(235-150*f)},${Math.round(190-170*f)},${a})`};
+function dot(x,y,r,c,a){ctx.globalAlpha=Math.max(0,Math.min(1,a));ctx.fillStyle=c;if(r<1.3)ctx.fillRect(x-r,y-r,2*r,2*r);else{ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}ctx.globalAlpha=1}
+function label(txt,x,y,col){if(!show.labels)return;ctx.font='bold 13px "Segoe UI",sans-serif';const w=ctx.measureText(txt).width+14;ctx.fillStyle=col||'rgba(0,0,0,.6)';ctx.beginPath();ctx.roundRect(x-w/2,y-12,w,22,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x,y)}
+function earth(x,y,r){ctx.save();ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.clip();let g=ctx.createRadialGradient(x-r*.4,y-r*.4,r*.1,x,y,r);g.addColorStop(0,'#8fd3ff');g.addColorStop(.6,'#2073d6');g.addColorStop(1,'#09306d');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,2*r,2*r);
+ ctx.fillStyle='#3fae5a';[[-.5,-.2,.35],[.3,.25,.3],[.1,-.5,.22],[-.3,.5,.2],[.7,-.1,.25]].forEach(([a,b,s])=>{const px=((a+t*.05+1.6)%3.2-1.6);ctx.beginPath();ctx.ellipse(x+px*r,y+b*r,s*r,s*r*.7,a*3,0,7);ctx.fill()});
+ ctx.fillStyle='rgba(255,255,255,.55)';[[-.2,-.35],[.4,.45],[-.5,.3]].forEach(([a,b],i)=>{const px=((a+t*.08+1.6)%3.2-1.6);ctx.beginPath();ctx.ellipse(x+px*r,y+b*r,r*.4,r*.1,i,0,7);ctx.fill()});
+ g=ctx.createRadialGradient(x-r*.5,y-r*.5,r*.2,x+r*.2,y+r*.2,r*1.3);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,12,.7)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,2*r,2*r);ctx.restore();
+ ctx.strokeStyle='rgba(140,200,255,.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke()}
+function ship(x,y,s,ang,str){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.scale(str,1);
+ ctx.fillStyle='rgba(255,160,40,.9)';ctx.beginPath();ctx.moveTo(-s*1.1,0);ctx.lineTo(-s*1.9,-s*.25);ctx.lineTo(-s*1.9,s*.25);ctx.fill();
+ ctx.fillStyle='#d62839';ctx.beginPath();ctx.moveTo(-s*.9,-s*.5);ctx.lineTo(-s*1.4,-s*.95);ctx.lineTo(-s*.3,-s*.45);ctx.fill();ctx.beginPath();ctx.moveTo(-s*.9,s*.5);ctx.lineTo(-s*1.4,s*.95);ctx.lineTo(-s*.3,s*.45);ctx.fill();
+ let g=ctx.createLinearGradient(0,-s*.5,0,s*.5);g.addColorStop(0,'#fff');g.addColorStop(1,'#a7b2c9');ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(-s*.2,0,s*1.1,s*.5,0,0,7);ctx.fill();
+ ctx.fillStyle='#d62839';ctx.beginPath();ctx.moveTo(s*.6,-s*.35);ctx.quadraticCurveTo(s*1.4,0,s*.6,s*.35);ctx.fill();
+ ctx.fillStyle='#4cc9f0';ctx.beginPath();ctx.arc(-s*.1,0,s*.22,0,7);ctx.fill();ctx.strokeStyle='#3a4a6b';ctx.lineWidth=2;ctx.stroke();ctx.restore()}
+/* ---------- lensing view ---------- */
+function lens(zm,dt){const cx=W/2,cy=H/2,u=Math.min(W,H),rh=u*(.03+.012*me)*zm,sh=2.6*rh,k=Math.sin(elev),E=sh*1.5;
+ let g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.7);g.addColorStop(0,'#0e1238');g.addColorStop(1,'#01020a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ [[.2,.25,'rgba(120,60,200,.12)'],[.8,.7,'rgba(40,120,220,.1)']].forEach(([a,b,c])=>{const q=ctx.createRadialGradient(W*a,H*b,0,W*a,H*b,u*.5);q.addColorStop(0,c);q.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=q;ctx.fillRect(0,0,W,H)});
+ if(show.stars){const R=Math.max(W,H)*.75;for(const s of stars){const a=s.az-yaw,ce=Math.cos(s.el),x=ce*Math.sin(a),z=ce*Math.cos(a);if(z<=0)continue;const bx=x*R,by=-Math.sin(s.el)*R,tw=.75+.25*Math.sin(t*2+s.ph);
+  if(!show.lens){dot(cx+bx,cy+by,s.r,s.c,tw);continue}
+  const b=Math.hypot(bx,by)+1e-3,sq=Math.sqrt(b*b+4*E*E),t1=(b+sq)/2,t2=(b-sq)/2,ux=bx/b,uy=by/b,m=1+1.5*E*E/(b*b+E*E);
+  dot(cx+ux*t1,cy+uy*t1,s.r*Math.sqrt(m),s.c,tw*m*.8);if(Math.abs(t2)>sh)dot(cx+ux*t2,cy+uy*t2,s.r*.8,s.c,tw*.6)}}
+ const oR=12*rh,ph=t*.35,er=u*.022*Math.sqrt(zm),ex=cx+oR*Math.cos(ph),ey=cy+oR*Math.sin(ph)*k;
+ ctx.globalCompositeOperation='lighter';
+ if(show.disk){ctx.lineWidth=rh*.45;for(let rr=3;rr<=9;rr+=.4){ctx.strokeStyle=lerpC(rr,.1);ctx.beginPath();ctx.ellipse(cx,cy,rr*rh,rr*rh*k,0,PI,2*PI);ctx.stroke()}
+  parts.forEach(p=>{const y=Math.sin(p.th);if(y<0){const dop=1+.7*-Math.cos(p.th);dot(cx+p.rr*rh*Math.cos(p.th),cy+p.rr*rh*y*k,p.s*Math.max(.6,rh/30),lerpC(p.rr,1),.55*dop)}})}
+ ctx.globalCompositeOperation='source-over';
+ if(show.earth&&Math.sin(ph)<0){earth(ex,ey,er);if(show.labels)label('Earth',ex,ey-er-16)}
+ ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx,cy,sh,0,7);ctx.fill();
+ ctx.globalCompositeOperation='lighter';
+ if(show.disk&&show.lens){const am=.04+.1*(1-k);ctx.lineWidth=rh*.3;for(let rr=3;rr<=9;rr+=.5){const rl=sh*(1.04+(rr-3)*.09);ctx.strokeStyle=lerpC(rr,am);ctx.beginPath();ctx.arc(cx,cy,rl,0,2*PI);ctx.stroke()}}
+ if(show.ring){ctx.shadowColor='#ff9d3b';ctx.shadowBlur=22;ctx.strokeStyle='rgba(255,220,170,.9)';ctx.lineWidth=Math.max(2,sh*.04);ctx.beginPath();ctx.arc(cx,cy,sh*1.03,0,7);ctx.stroke();ctx.shadowBlur=0}
+ if(show.disk){ctx.lineWidth=rh*.45;for(let rr=3;rr<=9;rr+=.4){ctx.strokeStyle=lerpC(rr,.14);ctx.beginPath();ctx.ellipse(cx,cy,rr*rh,rr*rh*k,0,0,PI);ctx.stroke()}
+  parts.forEach(p=>{const y=Math.sin(p.th);if(y>=0){const dop=1+.7*-Math.cos(p.th);dot(cx+p.rr*rh*Math.cos(p.th),cy+p.rr*rh*y*k,p.s*Math.max(.6,rh/30),lerpC(p.rr,1),.7*dop)}})}
+ ctx.globalCompositeOperation='source-over';
+ if(show.hor){ctx.setLineDash([6,5]);ctx.strokeStyle='#ff4d6d';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,rh,0,7);ctx.stroke();ctx.setLineDash([]);label('Event horizon',cx,cy,'rgba(214,40,57,.85)')}
+ if(show.earth&&Math.sin(ph)>=0){earth(ex,ey,er);if(show.labels)label('Earth',ex,ey-er-16)}
+ if(show.labels){label('Black hole shadow',cx,cy-sh-18);if(show.disk)label('Glowing accretion disk',cx+(5.5*rh),cy+7*rh*k+22,'rgba(251,133,0,.85)');if(show.ring)label('Photon ring',cx-sh*1.1,cy+sh*1.05+8,'rgba(255,183,3,.8)')}
+ return{rh,u}}
+/* ---------- rubber sheet ---------- */
+const SM=[{n:'Tennis ball',A:.012,e:.1,r:.035},{n:'Bowling ball',A:.035,e:.1,r:.075},{n:'Neutron star',A:.06,e:.09,r:.04},{n:'Black hole',A:.09,e:.07,r:.05}];
+const zf=(x,y,m)=>-m.A/Math.sqrt(x*x+y*y+m.e*m.e);
+function proj(x,y,z){const c=Math.cos(yaw2),s=Math.sin(yaw2),X=x*c-y*s,Y=x*s+y*c,cp=Math.cos(pit),sp=Math.sin(pit),dist=3+Y*cp-z*sp,f=Math.min(W,H)*1.4/dist;return[W/2+X*f,H*.55-(Y*sp+z*cp)*f,dist,f]}
+function addM(o){if(marbles.length>40)marbles.shift();const m=SM[sm],a=rnd()*2*PI;if(o){const r=.5+rnd()*.7,v=Math.sqrt(r*r*30*m.A/Math.pow(r*r+m.e*m.e,1.5))*(.9+rnd()*.2);marbles.push({x:r*Math.cos(a),y:r*Math.sin(a),vx:-v*Math.sin(a),vy:v*Math.cos(a),h:Math.floor(rnd()*360)})}else{const r=1+rnd()*.4;marbles.push({x:r*Math.cos(a),y:r*Math.sin(a),vx:-.15*Math.sin(a),vy:.15*Math.cos(a),h:Math.floor(rnd()*360)})}}
+function stepSheet(dt){const m=SM[sm];for(let n=0;n<4;n++){const h=dt/4;for(const q of marbles){const k=30*m.A/Math.pow(q.x*q.x+q.y*q.y+m.e*m.e,1.5);q.vx-=k*q.x*h;q.vy-=k*q.y*h;if(fric){q.vx*=1-.15*h;q.vy*=1-.15*h}q.x+=q.vx*h;q.y+=q.vy*h}}
+ marbles=marbles.filter(q=>Math.hypot(q.x,q.y)>m.r*.9&&Math.abs(q.x)<2&&Math.abs(q.y)<2)}
+function ball(x,y,r,c1,c2){const g=ctx.createRadialGradient(x-r*.35,y-r*.4,r*.1,x,y,r);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.ellipse(x-r*.35,y-r*.4,r*.2,r*.12,-.6,0,7);ctx.fill()}
+function sheet(){const m=SM[sm];let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0a0f33');g.addColorStop(1,'#1a1250');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.lineWidth=1.3;for(let i=-12;i<=12;i++)for(let dr2=0;dr2<2;dr2++){ctx.strokeStyle=`hsla(${185+i*6},90%,62%,.8)`;ctx.beginPath();for(let j=-24;j<=24;j++){const a=i*.125,b=j*.0625,x=dr2?b:a,y=dr2?a:b,p=proj(x,y,zf(x,y,m));j==-24?ctx.moveTo(p[0],p[1]):ctx.lineTo(p[0],p[1])}ctx.stroke()}
+ const items=[];const pc=proj(0,0,zf(0,0,m)+m.r*.8);items.push({d:pc[2],f:()=>{const r=m.r*pc[3];
+  if(sm==0){ball(pc[0],pc[1],r,'#f0ff5a','#8aa400');ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(pc[0]-r*1.1,pc[1],r*.8,-.9,.9);ctx.stroke();ctx.beginPath();ctx.arc(pc[0]+r*1.1,pc[1],r*.8,PI-.9,PI+.9);ctx.stroke()}
+  if(sm==1){ball(pc[0],pc[1],r,'#5a6bff','#0a0f3a');ctx.fillStyle='#02030c';[[-.25,-.35],[.1,-.45],[.0,-.15]].forEach(([a,b])=>{ctx.beginPath();ctx.arc(pc[0]+a*r,pc[1]+b*r,r*.1,0,7);ctx.fill()})}
+  if(sm==2){ctx.shadowColor='#00f5d4';ctx.shadowBlur=24;ball(pc[0],pc[1],r,'#ffffff','#00c2c7');ctx.shadowBlur=0}
+  if(sm==3){ctx.shadowColor='#ff8c1a';ctx.shadowBlur=26;ctx.fillStyle='#000';ctx.beginPath();ctx.arc(pc[0],pc[1],r*1.1,0,7);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#ffa94d';ctx.lineWidth=2;ctx.stroke()}
+  if(show.labels)label(m.n+' (heavy object)',pc[0],pc[1]-r-18)}});
+ marbles.forEach(q=>{const p=proj(q.x,q.y,zf(q.x,q.y,m)+.028);items.push({d:p[2],f:()=>ball(p[0],p[1],.028*p[3],`hsl(${q.h},95%,78%)`,`hsl(${q.h},85%,35%)`)})});
+ items.sort((a,b)=>b.d-a.d).forEach(o=>o.f())}
+/* ---------- fall in ---------- */
+function fallOverlay(r){const cx=W/2,cy=H/2,u=r.u,sq=Math.sqrt(Math.max(0,1-1/d)),z=1/Math.max(.001,sq)-1,al=Math.min(.55,z*.12);
+ ctx.fillStyle=`rgba(150,0,0,${al})`;ctx.fillRect(0,0,W,H);
+ const f=1-Math.min(1,Math.max(0,(1.25-d)/.22));const px=W*.14+(cx-W*.14)*(1-d/12)*.5,py=H*.8-(H*.8-cy)*(1-d/12)*.5,tide=Math.pow(1/d,3)*Math.pow(10,-2*(me-1)),str=1+2.5*Math.pow(Math.min(1,tide),.7);
+ ship(px,py,u*.03,Math.atan2(cy-py,cx-px),str);if(show.labels)label('Astronaut’s ship',px,py-u*.07);
+ if(d<=1.03){ctx.fillStyle='rgba(0,0,0,.9)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='bold 26px "Segoe UI",sans-serif';ctx.textAlign='center';ctx.fillText('You crossed the event horizon.',cx,cy-10);ctx.font='16px "Segoe UI",sans-serif';ctx.fillStyle='#ffb347';ctx.fillText('No light or signal can ever come back out.',cx,cy+22)}
+ return{z,tide}}
+/* ---------- info ---------- */
+const nf=n=>n>=1e9?(n/1e9).toFixed(1)+' billion':n>=1e6?(n/1e6).toFixed(1)+' million':n>=1e3?Math.round(n).toLocaleString():n.toFixed(n<10?1:0);
+function cmp(km){return km<100?'About as wide as a small city.':km<5e4?'Something like '+(km/12742).toFixed(1)+' Earths across.':km<5e8?'About '+(km/1.39e6).toFixed(0)+' Suns side by side.':'Wider than '+(km/1.5e8/30).toFixed(1)+' times the path of Neptune around the Sun.'}
+function info(fo){const M=Math.pow(10,me),rs=2.95*M;$('#im').textContent=nf(M)+(M<2?' Sun':' Suns');$('#irs').textContent=nf(rs)+' km';$('#iph').textContent=nf(rs*1.5)+' km';$('#ish').textContent=nf(rs*2.6)+' km';$('#icmp').textContent=cmp(rs*2);
+ let h='';const R=(a,b)=>h+='<div class="row"><span>'+a+'</span><b>'+b+'</b></div>';
+ if(mode=='lens'){$('#mt').textContent='Lensing view';R('View angle',Math.round(elev*180/PI)+'°');R('Zoom','×'+zoom.toFixed(1));h+='<div class="note">Gravity bends light, so the stars behind the black hole look stretched into arcs. Drag to look from other angles.</div>'}
+ else if(mode=='sheet'){$('#mt').textContent='Spacetime sheet';R('Heavy object',SM[sm].n);R('Marbles on sheet',marbles.length);h+='<div class="note">Heavy things make a dip in spacetime. Marbles roll toward the dip, which is how we feel gravity. A black hole makes the deepest dip of all.</div>'}
+ else{$('#mt').textContent='Fall in';const sq=Math.sqrt(Math.max(.0001,1-1/d));R('Distance',d<=1.03?'at horizon':d.toFixed(2)+' × horizon');R('Astronaut clock',tau.toFixed(1)+' s');R('Far-away clock',farT.toFixed(1)+' s');R('1 s for you =',d<=1.03?'forever':(1/sq).toFixed(2)+' s out there');R('Light redshift','z = '+((1/sq)-1).toFixed(2));R('Stretching',fo.tide>.3?'Extreme!':fo.tide>.05?'Strong':fo.tide>.005?'Noticeable':'Gentle');h+='<div class="note">Press Start fall. Watch the far-away clock tick faster than yours as you get closer.</div>'}
+ $('#mi').innerHTML=h;$('#fact').textContent=facts[fi]}
+/* ---------- loop ---------- */
+let last=performance.now();
+function frame(ts){const dt=Math.min(.05,(ts-last)/1000)*rate;last=ts;
+ if(playing){t+=dt;if(auto){yaw+=dt*.03;yaw2+=dt*.15}if(mode=='sheet')stepSheet(dt);if(mode=='fall'&&fall){d=Math.max(1,d-dt*.6*(.25+.1*d));const sq=Math.sqrt(Math.max(.0001,1-1/d));tau+=dt;farT+=dt/sq;if(d<=1.03)fall=false}}
+ let fo={tide:0};
+ if(mode=='sheet')sheet();else{const zm=mode=='fall'?zoom*Math.pow(12/d,.9)*.6:zoom,r=lens(zm);if(mode=='fall')fo=fallOverlay(r)}
+ info(fo);requestAnimationFrame(frame)}
+setM('lens');sync();requestAnimationFrame(frame);
+</script></body></html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Atwood Machine Lab - GEN Z EDTECH INTERACTIVE SIMULATIONS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Segoe UI',Verdana,sans-serif;background:#0b1d3a}
+#app{min-height:100vh;background:linear-gradient(160deg,#0b1d3a,#12335f 60%,#0e4a5e);color:#eaf2ff;padding:10px 16px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:23px}.brand{font-size:12px;color:#7fd6ff}
+#ctrl{display:flex;gap:8px;flex-wrap:wrap}
+.main{display:grid;grid-template-columns:1.5fr 1fr;gap:10px}
+canvas{width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 6px 18px #0006}
+.panel{background:#ffffff14;border:1px solid #ffffff2a;border-radius:12px;padding:10px 12px}
+button{border:0;border-radius:10px;padding:9px 14px;font-weight:700;color:#fff;cursor:pointer;font-size:14px;box-shadow:0 4px 0 #0006;transition:transform .1s}
+button:hover{filter:brightness(1.15);transform:translateY(-1px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+#ctrl2{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.sl{display:flex;flex-direction:column;font-size:13px;min-width:210px}.sl input{width:100%}
+.ro{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.ro div{background:#0b1d3a;border-radius:10px;padding:6px;text-align:center;font-size:12px;color:#9fd8ff}
+.ro b{display:block;font-size:19px;color:#fff;font-family:Consolas,monospace}
+#eqb{font-family:Consolas,monospace;font-size:13px;line-height:1.6;color:#ffe9a8;margin-bottom:6px}
+#info{font-size:14px;line-height:1.5}#info b{color:#ffd166}
+footer{text-align:center;font-size:12px;color:#8fb3d9}
+</style></head><body>
+<div id="app">
+<header><div><div class="brand">GEN Z EDTECH INTERACTIVE SIMULATIONS</div><h1>Atwood Machine: Motion of Bodies Connected by a String</h1></div>
+<button id="fsb" style="background:#7b2ff7" onclick="fs()">⛶ Full Screen</button></header>
+<div class="main">
+<div><canvas id="sc" width="900" height="430"></canvas></div>
+<div><canvas id="gr" width="520" height="430"></canvas></div>
+<div class="panel"><div id="ctrl2"></div><div id="ctrl"></div></div>
+<div class="panel"><div class="ro"><div>Time<b id="rt"></b></div><div>Displacement<b id="rs"></b></div><div>Speed<b id="rv"></b></div><div>Acceleration<b id="ra"></b></div></div><div id="eqb"></div>
+<div id="info"><b>Atwood machine:</b> two masses hang from a string over a pulley. The heavier mass moves down and the lighter one moves up, with the same acceleration a = (m2 − m1)g / (m1 + m2). The string tension is T = 2m1m2g / (m1 + m2). Press <b>Show Forces</b> to see weight (W) and tension (T). The pulley and string are treated as having no mass and no friction.</div></div>
+</div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science | GEN Z EDTECH INTERACTIVE SIMULATIONS</footer>
+</div>
+<script>
+const $=i=>document.getElementById(i),S=$('sc').getContext('2d'),G=$('gr').getContext('2d');
+const PL={Earth:9.8,Moon:1.6,Mars:3.7,Jupiter:24.8},L=1.2,PX=90,Y0=250,CX=450,PR=34;
+const par={m1:3,m2:2,pl:'Earth'};
+let t=0,Tm=1,run=false,mul=1,gm='vt',tool=false,forces=false,last=0,tb,fb,msg='';
+function ph(){const{m1,m2}=par,g=PL[par.pl],a=(m2-m1)*g/(m1+m2);return{a,A:Math.abs(a),T:2*m1*m2*g/(m1+m2),g,d:a>=0?1:-1}}
+function at(x){const p=ph(),q=Math.min(x,Tm);return{s:.5*p.A*q*q,v:p.A*q}}
+function build(){const p=ph();Tm=p.A<.001?5:Math.sqrt(2*L/p.A);t=0;run=false;msg=''}
+function B(x,c,f){const b=document.createElement('button');b.textContent=x;b.style.background=c;b.onclick=f;$('ctrl').appendChild(b);return b}
+function SL(l,k){const w=document.createElement('label'),o=document.createElement('b'),i=document.createElement('input');w.className='sl';i.type='range';i.min=.5;i.max=5;i.step=.5;i.value=par[k];const f=()=>o.textContent=l+': '+par[k].toFixed(1)+' kg';i.oninput=()=>{par[k]=+i.value;f();build()};f();w.append(o,i);$('ctrl2').appendChild(w)}
+function ui(){$('ctrl').innerHTML=$('ctrl2').innerHTML='';SL('Left mass m1','m1');SL('Right mass m2','m2');
+ const P=(a,b)=>()=>{par.m1=a;par.m2=b;ui();build();run=true};
+ B('Equal Masses','#00acc1',P(3,3));B('Left Heavy','#e53935',P(4,2));B('Right Heavy','#fb8c00',P(2,4));B('Big Difference','#d81b60',P(5,1));B('Small Difference','#43a047',P(3,2.5));
+ B('Swap Masses','#5e35b1',()=>{[par.m1,par.m2]=[par.m2,par.m1];ui();build();run=true});
+ Object.keys(PL).forEach((p,i)=>B(p+' g='+PL[p],['#1e88e5','#757575','#d84315','#ef6c00'][i],()=>{par.pl=p;build()}));
+ B('▶ Release','#2e7d32',()=>{if(t>=Tm)build();run=true});B('❚❚ Pause','#f57c00',()=>run=false);B('↺ Reset','#c62828',build);
+ B('Step +0.2 s','#1565c0',()=>{t=Math.min(Tm,t+.2);run=false});
+ B('Slow 0.25×','#6a1b9a',()=>mul=.25);B('Normal 1×','#00897b',()=>mul=1);B('Fast 2×','#ad1457',()=>mul=2);
+ fb=B('Show Forces','#00796b',()=>forces=!forces);B('Switch Graph','#3949ab',()=>gm=gm=='st'?'vt':'st');tb=B('Show Slope / Area','#f9a825',()=>tool=!tool)}
+function fs(){document.fullscreenElement?document.exitFullscreen():$('app').requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen';
+function rr(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r)}
+function arrow(x,y1,y2,c,l){if(Math.abs(y2-y1)<4)return;S.strokeStyle=S.fillStyle=c;S.lineWidth=4;S.beginPath();S.moveTo(x,y1);S.lineTo(x,y2);S.stroke();const d=y2>y1?1:-1;S.beginPath();S.moveTo(x-7,y2-9*d);S.lineTo(x+7,y2-9*d);S.lineTo(x,y2);S.fill();S.font='bold 14px Segoe UI';S.textAlign='center';S.fillText(l,x,y2+(d>0?16:-8))}
+function mass(x,yc,m,c1,c2,n){const w=30+6*m,h=34+8*m,top=yc-h/2;
+ const g=S.createLinearGradient(x-w/2,0,x+w/2,0);g.addColorStop(0,c1);g.addColorStop(.35,c2);g.addColorStop(1,c1);
+ S.fillStyle='#0004';S.beginPath();S.ellipse(x+4,yc+h/2+2,w/2,4,0,0,7);S.fill();
+ S.fillStyle=g;rr(S,x-w/2,top,w,h,6);S.fill();S.fillStyle='#fff5';S.fillRect(x-w/2+6,top+4,5,h-8);
+ S.fillStyle='#1118';S.fillRect(x-w/2,top+h*.2,w,2);S.fillRect(x-w/2,top+h*.8,w,2);
+ S.strokeStyle='#9aa4ad';S.lineWidth=3;S.beginPath();S.arc(x,top-6,6,0,7);S.stroke();
+ S.fillStyle='#fff';rr(S,x-w/2+4,yc-10,w-8,20,4);S.fill();S.fillStyle='#223';S.font='bold 11px Segoe UI';S.textAlign='center';S.fillText(n+' = '+m.toFixed(1)+' kg',x,yc+4);return{top:top-12,w,h}}
+function dsc(){const W=900,H=430,p=ph(),c=at(t);let g=S.createLinearGradient(0,0,0,H);g.addColorStop(0,'#eaf3ff');g.addColorStop(1,'#cfe2f5');S.fillStyle=g;S.fillRect(0,0,W,H);
+ S.fillStyle='#fff8';for(let x=0;x<W;x+=60)S.fillRect(x,0,1,400);
+ g=S.createLinearGradient(0,400,0,430);g.addColorStop(0,'#c58b4e');g.addColorStop(1,'#8a5a2b');S.fillStyle=g;S.fillRect(0,400,W,30);
+ g=S.createLinearGradient(290,0,310,0);g.addColorStop(0,'#6c7783');g.addColorStop(.4,'#d5dde4');g.addColorStop(1,'#6c7783');S.fillStyle=g;S.fillRect(290,24,16,376);
+ S.fillStyle='#37424d';rr(S,230,390,150,12,4);S.fill();S.fillStyle=g;S.fillRect(290,24,190,12);
+ S.strokeStyle='#37424d';S.lineWidth=5;S.beginPath();S.moveTo(CX,36);S.lineTo(CX,62);S.stroke();
+ const pa=p.d*c.s*PX/PR;S.fillStyle='#37424d';S.beginPath();S.arc(CX,62,PR+4,0,7);S.fill();
+ g=S.createRadialGradient(CX,62,8,CX,62,PR);g.addColorStop(0,'#eef2f5');g.addColorStop(1,'#8e9aa6');S.fillStyle=g;S.beginPath();S.arc(CX,62,PR,0,7);S.fill();
+ S.save();S.translate(CX,62);S.rotate(pa);S.strokeStyle='#4a5560';S.lineWidth=4;for(let i=0;i<6;i++){S.rotate(1.0472);S.beginPath();S.moveTo(0,0);S.lineTo(PR-6,0);S.stroke()}S.fillStyle='#c0392b';S.beginPath();S.arc(PR-10,0,4,0,7);S.fill();S.restore();
+ S.fillStyle='#37424d';S.beginPath();S.arc(CX,62,7,0,7);S.fill();
+ const y1=Y0-p.d*c.s*PX,y2=Y0+p.d*c.s*PX,x1=CX-PR,x2=CX+PR;
+ const a=mass(x1,y1,par.m1,'#2b4f9e','#8fb4ff','m1'),b=mass(x2,y2,par.m2,'#a8741a','#ffd870','m2');
+ S.strokeStyle='#7a5230';S.lineWidth=2.5;S.beginPath();S.moveTo(x1,a.top);S.lineTo(x1,62);S.arc(CX,62,PR,Math.PI,0);S.lineTo(x2,b.top);S.stroke();
+ const rx=640;S.fillStyle='#ffd54f';rr(S,rx,Y0-L*PX-12,34,2*L*PX+24,4);S.fill();S.strokeStyle='#5d4a00';S.fillStyle='#223';S.font='11px Segoe UI';S.textAlign='left';S.lineWidth=1.5;
+ for(let i=-12;i<=12;i++){const y=Y0+i*PX/10;S.beginPath();S.moveTo(rx,y);S.lineTo(rx+(i%5?10:20),y);S.stroke();if(i%5==0&&i>=0)S.fillText(i/10+' m',rx+38,y+4)}
+ S.fillStyle='#e53935';S.beginPath();S.moveTo(rx-4,y2);S.lineTo(rx-16,y2-7);S.lineTo(rx-16,y2+7);S.fill();S.font='bold 12px Segoe UI';S.fillText('m2',rx-38,y2+4);
+ if(forces){const mf=Math.max(par.m1*p.g,par.m2*p.g),k=40/mf;
+  [[x1-a.w/2-14,y1,par.m1],[x2+b.w/2+14,y2,par.m2]].forEach(([x,y,m])=>{arrow(x,y,y+m*p.g*k,'#e53935','W');arrow(x,y,y-p.T*k,'#00a152','T')})}
+ S.fillStyle='#10233f';rr(S,690,14,180,46,10);S.fill();S.fillStyle='#7dff9b';S.font='bold 26px Consolas';S.textAlign='center';S.fillText('t = '+t.toFixed(2)+' s',780,46);
+ S.fillStyle='#fff';rr(S,14,14,270,28,6);S.fill();S.fillStyle='#223';S.font='bold 14px Segoe UI';S.textAlign='left';S.fillText(par.pl+':  g = '+p.g+' m/s²',22,33);
+ S.fillStyle='#10233f';rr(S,14,52,270,28,6);S.fill();S.fillStyle='#ffe082';S.fillText(p.A<.001?'Balanced: both masses stay still':(p.d>0?'m2':'m1')+' is heavier and moves down',22,71);
+ if(msg){S.fillStyle='#c62828';rr(S,320,380,260,0,0);S.font='bold 15px Segoe UI';S.textAlign='center';S.fillText(msg,520,372)}}
+function dg(){const W=520,H=430,k=gm=='st'?'s':'v',Tp=36,Bt=50,L0=62,R=16,N=100;let hi=0;for(let i=0;i<=N;i++)hi=Math.max(hi,at(Tm*i/N)[k]);if(hi<.001)hi=1;hi*=1.08;
+ G.fillStyle='#fff';G.fillRect(0,0,W,H);const X=x=>L0+x/Tm*(W-L0-R),Y=y=>H-Bt-y/hi*(H-Bt-Tp);
+ G.font='12px Segoe UI';G.fillStyle='#345';G.strokeStyle='#dbe4ee';G.lineWidth=1;G.textAlign='right';
+ for(let i=0;i<=5;i++){const y=hi*i/5;G.beginPath();G.moveTo(L0,Y(y));G.lineTo(W-R,Y(y));G.stroke();G.fillText(y.toFixed(2),L0-6,Y(y)+4)}
+ G.textAlign='center';for(let i=0;i<=5;i++){const x=Tm*i/5;G.beginPath();G.moveTo(X(x),Tp);G.lineTo(X(x),H-Bt);G.stroke();G.fillText(x.toFixed(1),X(x),H-Bt+16)}
+ G.strokeStyle='#223';G.lineWidth=2;G.beginPath();G.moveTo(L0,Tp);G.lineTo(L0,H-Bt);G.lineTo(W-R,H-Bt);G.stroke();
+ G.font='bold 14px Segoe UI';G.fillStyle='#223';G.fillText(k=='s'?'Displacement–Time Graph':'Speed–Time Graph',W/2,22);G.fillText('Time t (s)',W/2,H-10);
+ G.save();G.translate(16,H/2);G.rotate(-Math.PI/2);G.fillText(k=='s'?'Displacement s (m)':'Speed v (m/s)',0,0);G.restore();
+ G.save();G.beginPath();G.rect(L0,Tp,W-L0-R,H-Bt-Tp);G.clip();
+ G.strokeStyle='#c5d0dc';G.lineWidth=3;G.setLineDash([6,5]);G.beginPath();for(let i=0;i<=N;i++){const x=Tm*i/N;i?G.lineTo(X(x),Y(at(x)[k])):G.moveTo(X(x),Y(at(x)[k]))}G.stroke();G.setLineDash([]);
+ const n=Math.max(2,Math.ceil(t/Tm*N)),cur=at(t);
+ if(tool&&k=='v'){G.fillStyle='rgba(255,193,7,.45)';G.beginPath();G.moveTo(X(0),Y(0));for(let i=0;i<=n;i++)G.lineTo(X(t*i/n),Y(at(t*i/n).v));G.lineTo(X(t),Y(0));G.fill()}
+ G.strokeStyle=k=='s'?'#e53935':'#1e88e5';G.lineWidth=4;G.beginPath();for(let i=0;i<=n;i++){const x=t*i/n;i?G.lineTo(X(x),Y(at(x)[k])):G.moveTo(X(0),Y(at(x)[k]))}G.stroke();
+ if(tool&&k=='s'){const d=Tm*.25;G.strokeStyle='#00a152';G.lineWidth=2.5;G.beginPath();G.moveTo(X(t-d),Y(cur.s-cur.v*d));G.lineTo(X(t+d),Y(cur.s+cur.v*d));G.stroke()}
+ G.fillStyle='#111';G.beginPath();G.arc(X(t),Y(cur[k]),6,0,7);G.fill();G.restore();
+ G.textAlign='left';G.font='bold 13px Segoe UI';G.fillStyle='#00796b';
+ if(tool)G.fillText(k=='s'?'Slope = speed = '+cur.v.toFixed(2)+' m/s':'Area = displacement = '+cur.s.toFixed(2)+' m  |  Slope = a = '+ph().A.toFixed(2),L0+8,Tp+16)}
+function ro(){const p=ph(),c=at(t),{m1,m2}=par,g=p.g;$('rt').textContent=t.toFixed(2)+' s';$('rs').textContent=c.s.toFixed(2)+' m';$('rv').textContent=c.v.toFixed(2)+' m/s';$('ra').textContent=p.A.toFixed(2)+' m/s²';
+ $('eqb').innerHTML=`a = (m2 − m1)g/(m1 + m2) = (${m2} − ${m1})(${g})/(${m1} + ${m2}) = ${p.a.toFixed(2)} m/s²<br>T = 2m1m2g/(m1 + m2) = ${p.T.toFixed(2)} N<br>W1 = m1g = ${(m1*g).toFixed(1)} N &nbsp; W2 = m2g = ${(m2*g).toFixed(1)} N`}
+function loop(ts){const d=Math.min((ts-last)/1000,.05);last=ts;if(run){t+=d*mul;if(t>=Tm){t=Tm;run=false;if(ph().A>=.001)msg='The heavier mass has reached the table'}}
+ dsc();dg();ro();tb.style.outline=tool?'3px solid #fff':'none';fb.style.outline=forces?'3px solid #fff':'none';requestAnimationFrame(loop)}
+ui();build();requestAnimationFrame(loop);
+</script></body></html>

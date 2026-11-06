@@ -487,7 +487,7 @@ export default function App() {
               <SectionViewHeader 
                 badge="STEM REPOSITORY"
                 title="Simulations"
-                subtitle="Curriculum-aligned interactive digital experiments across 10 disciplines (109 Modules)"
+                subtitle={`Curriculum-aligned interactive digital experiments across 10 disciplines (${allSimulations.length} Modules)`}
                 onBack={handleBackToHome}
               />
               <SimulationCatalogGrid

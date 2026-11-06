@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vernier Calliper and Micrometer Screw Gauge Lab</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0f172a;color:#fff}
+#app{min-height:100vh;display:flex;flex-direction:column;gap:8px;padding:10px 16px;background:linear-gradient(135deg,#0f172a,#312e81)}
+#app:fullscreen{overflow:auto}
+header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{margin:0 auto 0 0;font-size:24px;background:linear-gradient(90deg,#fde047,#f472b6,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+h3{margin:0 0 6px;font-size:13px;color:#fde68a}
+canvas{width:100%;height:auto;max-height:calc(100vh - 340px);object-fit:contain;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.5);background:#e0f2fe}
+#ctl{display:flex;flex-wrap:wrap;gap:10px}
+.g{background:rgba(255,255,255,.08);border-radius:14px;padding:8px 10px}
+.g>div{display:flex;flex-wrap:wrap;gap:6px}
+button{--c:#2563eb;background:var(--c);color:#fff;border:0;border-radius:10px;padding:8px 12px;font:bold 14px "Segoe UI",Arial,sans-serif;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000);transition:transform .08s}
+button:hover{filter:brightness(1.12)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 55%,#000)}
+button.on{outline:3px solid #fde047}
+#sl{width:min(560px,90%);accent-color:#f472b6;margin-top:4px}
+input[type=number]{width:110px;padding:8px;border-radius:10px;border:0;font:bold 15px "Segoe UI"}
+#msg{background:#fef9c3;color:#1e293b;border-radius:12px;padding:8px 14px;font-weight:600}
+#info{background:#ecfeff;color:#0f172a;border-radius:12px;padding:10px 14px;line-height:1.7;display:none}
+</style></head><body>
+<div id="app">
+<header><h1>Measurement Lab: Vernier Calliper and Micrometer Screw Gauge</h1><div id="tabs" style="display:flex;gap:8px"></div></header>
+<canvas id="cv" width="1200" height="580"></canvas>
+<div id="msg"></div><div id="info"></div>
+<div id="ctl"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),cv=$('cv'),x=cv.getContext('2d');
+const MD={
+ v:{t:'Vernier Calliper',res:.1,max:900,zes:[.3,-.2,.4,-.1,.2],lc:'0.1 mm (0.01 cm)',
+  objs:[['Marble',15.6,'#3b82f6','c'],['Coin',18.4,'#d4a017','c'],['Pencil',7.2,'#f5c542','h'],['AA Battery',14.5,'#16a34a','c'],['Steel Ball',11.3,'#9ca3af','c']]},
+ m:{t:'Micrometer Screw Gauge',res:.01,max:1500,zes:[.03,-.02,.04,-.01,.02],lc:'0.01 mm',
+  objs:[['Steel Ball',6.35,'#9ca3af','c'],['Copper Wire',1.38,'#c2410c','c'],['Coin (thickness)',2.15,'#d4a017','r'],['Glass Slide',1.12,'#7dd3fc','r'],['Pen Refill',3.41,'#2563eb','c']]}};
+const S={v:{ze:0,o:-1,cur:0,tgt:0},m:{ze:0,o:-1,cur:0,tgt:0}};
+let K='v',labels=true,steps=false,snd=true,msg='',lastInfo='';
+const dp=()=>K=='v'?1:2, zu=()=>Math.round(S[K].ze/MD[K].res),
+ sz=()=>S[K].o<0?0:Math.round(MD[K].objs[S[K].o][1]/MD[K].res), minU=()=>zu()+sz(),
+ setT=t=>{S[K].tgt=Math.max(minU(),Math.min(MD[K].max,t))};
+const f2=(v,d)=>(v<0?'−':'')+Math.abs(v).toFixed(d), sg=(v,d)=>(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(d);
+/* sound */
+let AC;function beep(fr=600,d=.06){if(!snd)return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=fr;g.gain.value=.07;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+/* readings */
+function rd(){const s=S[K],m=MD[K],U=Math.round(s.cur),q=K=='v'?10:50,a=Math.floor(U/q),b=U-a*q,R=v=>Math.round(v*1000)/1000;return{U,a,b,ze:s.ze,obs:R(U*m.res),cor:R(U*m.res-s.ze)}}
+function info(r){const d=dp();let h=K=='v'?
+ `<b>Least count</b> = 1 MSD − 1 VSD = 1 − 0.9 = 0.1 mm<br>① Main scale reading (MSR) = <b>${r.a} mm</b><br>② Matching vernier line = <b>${r.b}</b>, so VSR = ${r.b} × 0.1 = <b>${(r.b*.1).toFixed(1)} mm</b><br>`:
+ `<b>Least count</b> = pitch ÷ divisions = 0.5 ÷ 50 = 0.01 mm<br>① Sleeve reading = <b>${(r.a*.5).toFixed(1)} mm</b><br>② Thimble division on the datum line = <b>${r.b}</b>, so ${r.b} × 0.01 = <b>${(r.b*.01).toFixed(2)} mm</b><br>`;
+ h+=`③ Observed reading = <b>${f2(r.obs,d)} mm</b><br>④ Zero error = <b>${sg(r.ze,d)} mm</b><br>⑤ Corrected reading = observed − zero error = ${f2(r.obs,d)} − (${sg(r.ze,d)}) = <b>${f2(r.cor,d)} mm</b>`;
+ return h+(K=='v'?` = <b>${(r.cor/10).toFixed(2)} cm</b>`:'')}
+/* drawing helpers */
+function lg(a,b,c,d,st){const g=x.createLinearGradient(a,b,c,d);st.forEach((v,i)=>g.addColorStop(i/(st.length-1),v));return g}
+const SC=['#f8fafc','#9ca3af','#e5e7eb','#6b7280'], st=(h,a,b)=>h?lg(a,0,b,0,SC):lg(0,a,0,b,SC);
+function rr(a,b,w,h,r,fl){x.beginPath();x.roundRect(a,b,w,h,r);x.fillStyle=fl;x.fill();x.lineWidth=1;x.strokeStyle='rgba(0,0,0,.4)';x.stroke()}
+function T(s,a,b,c='#1e293b',f='bold 14px Segoe UI',al='center'){x.font=f;x.fillStyle=c;x.textAlign=al;x.fillText(s,a,b)}
+function L(a,b,c,d,col,w=1){x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.strokeStyle=col;x.lineWidth=w;x.stroke()}
+function lab(s,tx,ty,px,py){if(!labels)return;tx=Math.min(1140,Math.max(55,tx));L(tx,ty,px,py,'#334155',1.5);x.beginPath();x.arc(px,py,4,0,7);x.fillStyle='#ef4444';x.fill();x.font='bold 14px Segoe UI';const w=x.measureText(s).width+18;rr(tx-w/2,ty-24,w,24,8,'#fef08a');T(s,tx,ty-7)}
+function obj(o,cx,cy,w,h){x.save();x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=14;x.shadowOffsetY=6;x.fillStyle=o[2];x.beginPath();
+ if(o[3]=='c')x.ellipse(cx,cy,w/2,h/2,0,0,7);
+ else if(o[3]=='h'){const R=w/2/Math.cos(Math.PI/6);for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;x.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a))}x.closePath()}
+ else x.rect(cx-w/2,cy-h/2,w,h);
+ x.fill();x.shadowColor='transparent';const g=x.createRadialGradient(cx-w/4,cy-h/4,2,cx,cy,Math.max(w,h)/1.3);
+ g.addColorStop(0,'rgba(255,255,255,.65)');g.addColorStop(.5,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(0,0,0,.4)');x.fillStyle=g;x.fill();
+ x.lineWidth=1.5;x.strokeStyle='rgba(0,0,0,.35)';x.stroke();x.restore()}
+/* vernier calliper */
+function dv(r){const s=S.v,X0=130,P=10,vz=X0+s.cur,xm=vz-s.ze*P,ob=s.o>=0?MD.v.objs[s.o]:null;
+ if(ob){const d=ob[1]*P;obj(ob,X0+d/2,450,d,d);lab(ob[0],X0+d/2,574,X0+d/2,450+d/2)}
+ rr(90,140,1100,75,8,st(0,140,215));
+ for(let m=0;m<=105;m++){const px=X0+m*P,l=m%10==0?30:m%5==0?20:12;L(px,215,px,215-l,'#111',m%10?1:1.8);if(m%10==0&&m<=100)T(m/10,px,184,'#111','bold 15px Segoe UI')}
+ T('cm',1160,184,'#475569');
+ rr(X0-30,140,30,400,6,st(1,X0-30,X0));rr(X0-30,98,30,42,6,st(1,X0-30,X0));
+ rr(xm,215,30,325,6,st(1,xm,xm+30));rr(xm,98,26,42,6,st(1,xm,xm+26));rr(xm,122,160,18,6,st(0,122,140));
+ rr(xm+40,100,64,20,8,'#ef4444');x.beginPath();x.arc(xm+130,110,10,0,7);x.fillStyle='#f59e0b';x.fill();x.stroke();
+ rr(vz-12,215,134,74,6,lg(0,215,0,289,['#bbf7d0','#6ee7b7']));
+ for(let i=0;i<=10;i++){const px=vz+9*i,l=i%5==0?26:16,hit=i==r.b;L(px,215,px,215+l,hit?'#16a34a':'#111',hit?3.5:1);if(i%5==0)T(i,px,215+l+16,'#111','bold 13px Segoe UI')}
+ T('Vernier scale (10 divisions)',vz+60,280,'#065f46','12px Segoe UI');
+ const mx=X0+r.a*P,hx=vz+9*r.b;
+ x.setLineDash([6,4]);L(hx,150,hx,265,'#16a34a',2);L(mx,150,mx,215,'#2563eb',2);x.setLineDash([]);
+ x.beginPath();x.moveTo(vz,300);x.lineTo(vz-7,314);x.lineTo(vz+7,314);x.fillStyle='#dc2626';x.fill();T('Vernier zero',vz,330,'#dc2626','bold 13px Segoe UI');
+ T('MSR '+r.a+' mm',mx,136,'#2563eb','bold 13px Segoe UI');T('Match '+r.b,hx,160,'#16a34a','bold 13px Segoe UI');
+ lab('Fixed jaw',50,330,X0-15,320);lab('Movable jaw',xm+100,520,xm+15,505);lab('Main scale (mm)',600,92,600,190);lab('Lock screw',xm+150,70,xm+130,108);lab('Thumb grip',xm+72,70,xm+72,100)}
+/* micrometer */
+function dm(r){const s=S.m,A=70,P=26,SX=520,cy=280,ob=s.o>=0?MD.m.objs[s.o]:null,t=s.cur*.01,e=SX+t*P,fx=A+(t-s.ze)*P;
+ if(ob){const w=ob[1]*P,h=ob[3]=='r'?(ob[0]=='Glass Slide'?130:110):w;obj(ob,A+w/2,cy,w,h);lab(ob[0],Math.max(A+w/2,110),430,A+w/2,cy+h/2)}
+ rr(fx,270,e-fx,20,3,st(0,270,290));
+ rr(20,150,500,45,10,st(0,150,195));rr(20,150,45,230,10,st(1,20,65));rr(460,150,60,250,10,st(1,460,520));rr(45,262,A-45,36,4,st(0,262,298));
+ rr(520,235,420,80,0,st(0,235,315));L(520,cy,940,cy,'#111',2);
+ for(let k=0;k<=15;k++){const px=SX+k*P;L(px,cy,px,cy-16,'#111',1.5);T(k,px,256,'#111','bold 12px Segoe UI');if(k<15)L(px+P/2,cy,px+P/2,cy+12,'#111',1.2)}
+ const sx=SX+r.a*.5*P;x.beginPath();x.moveTo(sx,230);x.lineTo(sx-7,214);x.lineTo(sx+7,214);x.fillStyle='#2563eb';x.fill();
+ rr(e,225,230,110,10,lg(0,225,0,335,['#6b7280','#f1f5f9','#9ca3af','#4b5563']));
+ for(let k=-5;k<=5;k++){const dv=((r.b+k)%50+50)%50,y=cy+k*9,l=dv%5==0?20:12;L(e,y,e+l,y,'#111',1.3);if(dv%5==0)T(dv,e+l+14,y+4,'#111','bold 12px Segoe UI')}
+ L(e-40,cy,e+24,cy,'#ef4444',2.5);
+ x.fillStyle=lg(0,225,0,335,['rgba(0,0,0,.4)','rgba(255,255,255,0)','rgba(0,0,0,.4)']);x.fillRect(e,225,230,110);
+ rr(e+230,245,46,70,8,lg(0,245,0,315,['#1d4ed8','#60a5fa','#1d4ed8']));for(let i=1;i<6;i++)L(e+230+i*7,247,e+230+i*7,313,'rgba(0,0,0,.3)');
+ lab('Anvil',60,128,57,265);lab('Frame',280,128,280,160);lab('Spindle',300,350,Math.min(fx+30,440),285);
+ lab('Sleeve (main scale)',720,205,720,240);lab('Thimble (circular scale)',e+120,392,e+120,335);lab('Ratchet',e+253,205,e+253,247);
+ T('Datum line',e+60,cy-62,'#dc2626','bold 12px Segoe UI')}
+function draw(){const r=rd();x.clearRect(0,0,1200,580);x.fillStyle=lg(0,0,0,580,['#f8fafc','#bae6fd']);x.fillRect(0,0,1200,580);
+ T(MD[K].t+'   |   Least count = '+MD[K].lc,24,38,'#0f172a','bold 22px Segoe UI','left');
+ K=='v'?dv(r):dm(r);
+ const h=steps?info(r):'';if(h!==lastInfo){lastInfo=h;$('info').innerHTML=h}
+ $('info').style.display=steps?'block':'none';$('msg').textContent=msg;
+ const sl=$('sl');sl.min=minU();sl.max=MD[K].max;if(!sl.matches(':active'))sl.value=Math.round(S[K].cur)}
+function loop(){const s=S[K],d=s.tgt-s.cur;s.cur=Math.abs(d)>.02?s.cur+d*.18:s.tgt;if(s.cur<minU())s.cur=minU();draw();requestAnimationFrame(loop)}
+/* UI */
+function B(p,l,c,fn){const b=document.createElement('button');b.textContent=l;b.style.setProperty('--c',c);b.onclick=()=>{beep(450+Math.random()*300);fn()};p.appendChild(b);return b}
+function G(t){const d=document.createElement('div');d.className='g';d.innerHTML='<h3>'+t+'</h3><div></div>';$('ctl').appendChild(d);return d.lastChild}
+const tab={};
+function go(k){K=k;lastInfo='';for(const q in tab)tab[q].classList.toggle('on',q==k);
+ cb[0].textContent=k=='v'?'⏪ −1 mm':'⏪ −0.5 mm';cb[3].textContent=k=='v'?'+1 mm ⏩':'+0.5 mm ⏩';cb[1].textContent='◀ −'+(k=='v'?'0.1':'0.01')+' mm';cb[2].textContent=(k=='v'?'+0.1':'+0.01')+' mm ▶';
+ msg=k=='v'?'Slide the jaws with the slider or the buttons. Pick an object, grip it, then read the scales.':'Turn the thimble with the slider or the buttons. Pick an object, tighten gently, then read the scales.'}
+tab.v=B($('tabs'),'📏 Vernier Calliper','#2563eb',()=>go('v'));tab.m=B($('tabs'),'🔩 Micrometer Screw Gauge','#db2777',()=>go('m'));
+B($('tabs'),'⛶ Full Screen','#7c3aed',()=>{const a=$('app');document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)});
+const OPENU=()=>K=="v"?100:300;
+let g=G('Object');
+const nextO=()=>{const s=S[K];s.o=(s.o+1)%MD[K].objs.length;s.cur=Math.max(s.cur,minU());setT(minU()+(K=='v'?60:200));msg='Object: '+MD[K].objs[s.o][0]+'. Grip it to measure its size.'};
+B(g,'🔄 Next Object','#f97316',nextO);
+const grip=()=>{if(S[K].o<0)nextO();setT(minU());msg='Gripped! Now read the main scale and the '+(K=='v'?'vernier scale':'thimble scale')+'.'};
+B(g,'✊ Grip Object','#16a34a',grip);
+B(g,'🗑 Remove Object','#dc2626',()=>{S[K].o=-1;setT(minU());msg='Object removed.'});
+g=G('Zero Error');
+const zmsg=()=>{const z=S[K].ze,d=dp();msg=z==0?'No zero error: with the jaws closed the reading is 0.':'With the jaws closed the reading is '+sg(z,d)+' mm. That is the zero error. Subtract it from every reading.'};
+const setZ=z=>{const s=S[K];s.ze=z;s.cur=s.tgt=minU();zmsg()};
+const pick=f=>{const a=MD[K].zes.filter(f);return a[Math.floor(Math.random()*a.length)]};
+B(g,'✅ No Error','#0891b2',()=>setZ(0));B(g,'➕ Positive Error','#ea580c',()=>setZ(pick(z=>z>0)));B(g,'➖ Negative Error','#9333ea',()=>setZ(pick(z=>z<0)));
+B(g,'🎲 Random Error','#ca8a04',()=>setZ(Math.random()<.2?0:pick(()=>1)));
+g=G('Move');const cb=[];
+cb.push(B(g,'','#2563eb',()=>setT(Math.round(S[K].cur)-(K=='v'?10:50))));cb.push(B(g,'','#0ea5e9',()=>setT(Math.round(S[K].cur)-1)));
+cb.push(B(g,'','#14b8a6',()=>setT(Math.round(S[K].cur)+1)));cb.push(B(g,'','#65a30d',()=>setT(Math.round(S[K].cur)+(K=='v'?10:50))));
+g=G('Actions');
+B(g,'🔒 Close Jaws','#475569',()=>{setT(minU());msg=sz()?'Jaws are closed on the object.':'Jaws closed. Look at the zero marks.'});
+B(g,'🔓 Open Jaws','#0d9488',()=>{setT(Math.round(S[K].cur)+OPENU());msg='Jaws opened wider.'});
+B(g,'🔧 Tighten Gently','#be185d',()=>{grip();[0,300,600].forEach(t=>setTimeout(()=>beep(1400,.03),t+500));msg='Click, click, click! Stop turning when the clicks start.'});
+B(g,'📋 Show Steps','#d946ef',()=>{steps=!steps});
+B(g,'🏷 Labels On/Off','#e11d48',()=>{labels=!labels});
+B(g,'🔊 Sound On/Off','#f59e0b',()=>{snd=!snd});
+B(g,'↺ Reset','#64748b',()=>{S[K]={ze:0,o:-1,cur:0,tgt:0};msg='Everything is reset.'});
+g=G('Quiz: corrected reading in mm');
+const ans=document.createElement('input');ans.type='number';ans.step='any';ans.placeholder='mm';ans.id='ans';g.appendChild(ans);
+B(g,'✔ Check Answer','#16a34a',()=>{const v=parseFloat(ans.value),r=rd();if(isNaN(v)){msg='Type your corrected reading in mm first.';return}
+ if(Math.abs(v-r.cor)<MD[K].res/2+1e-9){msg='🎉 Correct! Corrected reading = '+f2(r.cor,dp())+' mm.';beep(900,.15)}else msg='Not yet. Remember: corrected reading = observed reading − zero error. Try Show Steps.'});
+B(g,'💡 Show Answer','#7c3aed',()=>{const r=rd();ans.value=r.cor.toFixed(dp());msg='Answer: '+f2(r.cor,dp())+' mm.'});
+const sl=document.createElement('input');sl.type='range';sl.id='sl';sl.step=1;sl.min=0;sl.max=900;sl.value=0;
+sl.oninput=()=>{const s=S[K];s.cur=s.tgt=Math.max(minU(),+sl.value)};
+const gs=G('Fine slider');gs.appendChild(sl);
+go('v');loop();
+</script></body></html>

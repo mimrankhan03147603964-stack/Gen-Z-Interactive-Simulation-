@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Kinematics Lab - GEN Z EDTECH INTERACTIVE SIMULATIONS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:'Segoe UI',Verdana,sans-serif;background:#0b1d3a}
+#app{min-height:100vh;background:linear-gradient(160deg,#0b1d3a,#12335f 60%,#0e4a5e);color:#eaf2ff;padding:10px 16px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:23px}.brand{font-size:12px;color:#7fd6ff}
+.tabs,#ctrl{display:flex;gap:8px;flex-wrap:wrap}
+.main{display:grid;grid-template-columns:1.5fr 1fr;gap:10px}
+canvas{width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 6px 18px #0006}
+.panel{background:#ffffff14;border:1px solid #ffffff2a;border-radius:12px;padding:10px 12px}
+button{border:0;border-radius:10px;padding:9px 14px;font-weight:700;color:#fff;cursor:pointer;font-size:14px;box-shadow:0 4px 0 #0006;transition:transform .1s}
+button:hover{filter:brightness(1.15);transform:translateY(-1px)}button:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+.tabs button{font-size:15px;padding:10px 18px;opacity:.75}.tabs button.on{opacity:1;outline:3px solid #fff}
+#ctrl2{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.sl{display:flex;flex-direction:column;font-size:13px;min-width:190px}.sl input{width:100%}
+.ro{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.ro div{background:#0b1d3a;border-radius:10px;padding:6px;text-align:center;font-size:12px;color:#9fd8ff}
+.ro b{display:block;font-size:19px;color:#fff;font-family:Consolas,monospace}
+#eqb{font-family:Consolas,monospace;font-size:13px;line-height:1.6;color:#ffe9a8;margin-bottom:6px}
+#info{font-size:14px;line-height:1.5}#info b{color:#ffd166}
+footer{text-align:center;font-size:12px;color:#8fb3d9}
+</style></head><body>
+<div id="app">
+<header><div><div class="brand">GEN Z EDTECH INTERACTIVE SIMULATIONS</div><h1>Unit 2: Kinematics Lab</h1></div>
+<button id="fsb" style="background:#7b2ff7" onclick="fs()">⛶ Full Screen</button></header>
+<div class="tabs" id="tabs"></div>
+<div class="main">
+<div><canvas id="sc" width="900" height="340"></canvas></div>
+<div><canvas id="gr" width="520" height="340"></canvas></div>
+<div class="panel"><div id="ctrl2"></div><div id="ctrl"></div></div>
+<div class="panel"><div class="ro"><div>Time<b id="rt"></b></div><div id="ls">Distance</div><div>Speed<b id="rv"></b></div><div>Acceleration<b id="ra"></b></div></div><div id="eqb"></div><div id="info"></div></div>
+</div>
+<footer>Developed by MUHAMMAD IMRAN KHAN, MSc Computer Science | GEN Z EDTECH INTERACTIVE SIMULATIONS</footer>
+</div>
+<script>
+const $=i=>document.getElementById(i),S=$('sc').getContext('2d'),G=$('gr').getContext('2d');
+const SC={'Constant Speed':[{d:10,v0:10,a:0}],'Speeding Up':[{d:10,v0:0,a:2}],'Slowing Down':[{d:10,v0:20,a:-2}],'Stop and Go':[{d:4,v0:10,a:0},{d:3,v0:0,a:0},{d:3,v0:10,a:0}],'Return Trip':[{d:5,v0:10,a:0},{d:5,v0:-10,a:0}]};
+const PL={Earth:{g:9.8,s:['#3d9bff','#d6efff'],gr:'#4f9d4f'},Moon:{g:1.6,s:['#000','#0b0b22'],gr:'#9b9b9b'},Mars:{g:3.7,s:['#b8603c','#f0b48a'],gr:'#a8512f'},Jupiter:{g:24.8,s:['#a8692f','#f1d6a4'],gr:'#8a6a4a'}};
+const TABS=[['dt','Distance–Time Graph','#e53935'],['vt','Speed–Time Graph','#fb8c00'],['eq','Equations of Motion','#43a047'],['ff','Free Fall & Gravity','#1e88e5']];
+const INFO={dt:'<b>Slope = speed.</b> A straight sloping line means constant speed, a curve means the car is speeding up or slowing down, and a flat line means it is at rest. Press <b>Show Slope / Area</b> to see the tangent.',
+vt:'<b>Slope = acceleration. Area under the line = distance.</b> A flat line is constant speed. A rising line is acceleration. A falling line is deceleration. Press <b>Show Slope / Area</b> to shade the area.',
+eq:'<b>1) v = u + at &nbsp; 2) s = ut + ½at² &nbsp; 3) v² = u² + 2as</b><br>u = initial speed, v = final speed, a = acceleration, t = time, s = distance. Change the sliders and run the car.',
+ff:'<b>Free fall:</b> every object falls with the same acceleration g (Earth 9.8 m/s²) when air is ignored. v = u − gt, h = H + ut − ½gt². Up is positive. Switch planets to compare g.'};
+let mode='dt',gm='st',t=0,T=1,run=false,mul=1,phases=[],pts=[],s0=0,rm=100,vm=24,tool=false,last=0,dir=1,scn='Constant Speed',tb;
+const par={u:5,a:2,tt:8,H:60,v0:0,pl:'Earth'};
+function B(x,c,f){const b=document.createElement('button');b.textContent=x;b.style.background=c;b.onclick=f;$('ctrl').appendChild(b);return b}
+function SL(l,mn,mx,st,k,u){const w=document.createElement('label'),o=document.createElement('b'),i=document.createElement('input');w.className='sl';i.type='range';i.min=mn;i.max=mx;i.step=st;i.value=par[k];const f=()=>o.textContent=l+': '+par[k]+' '+u;i.oninput=()=>{par[k]=+i.value;f();build()};f();w.append(o,i);$('ctrl2').appendChild(w)}
+function at(x){let s=s0,r=x,p;for(p of phases){if(r<=p.d)return{s:s+p.v0*r+.5*p.a*r*r,v:p.v0+p.a*r,a:p.a};s+=p.v0*p.d+.5*p.a*p.d*p.d;r-=p.d}return{s,v:p.v0+p.a*p.d,a:p.a}}
+function build(){
+ if(mode=='eq'){const{u,a,tt}=par;let d=tt;if(a<0&&u+a*tt<0)d=u/-a;phases=[{d,v0:u,a}];s0=0;rm=Math.max(60,u*d+.5*a*d*d)}
+ else if(mode=='ff'){const g=PL[par.pl].g,v=par.v0;phases=[{d:(v+Math.sqrt(v*v+2*g*par.H))/g,v0:v,a:-g}];s0=par.H}
+ else{phases=SC[scn];s0=0;rm=100}
+ T=phases.reduce((x,p)=>x+p.d,0);pts=[];let m=1;
+ for(let i=0;i<=200;i++){const q=at(T*i/200);pts.push(q);m=Math.max(m,Math.abs(q.v))}
+ vm=Math.ceil(m/6)*6;t=0;run=false}
+function rng(k){let lo=0,hi=0;pts.forEach(p=>{lo=Math.min(lo,p[k]);hi=Math.max(hi,p[k])});if(hi==lo)hi=1;const pd=(hi-lo)*.08;return[lo<0?lo-pd:0,hi+pd]}
+function setMode(m){mode=m;gm=m=='dt'?'st':'vt';tool=false;$('ctrl').innerHTML=$('ctrl2').innerHTML='';
+ [...$('tabs').children].forEach((b,i)=>b.classList.toggle('on',TABS[i][0]==m));
+ $('info').innerHTML=INFO[m];$('ls').innerHTML=(m=='ff'?'Height':'Distance')+'<b id="rs"></b>';
+ if(m=='dt'||m=='vt'){let i=0;for(const k in SC)B(k,['#e53935','#fb8c00','#43a047','#00acc1','#d81b60'][i++],()=>{scn=k;build();run=true})}
+ if(m=='eq'){SL('Initial speed u',0,20,1,'u','m/s');SL('Acceleration a',-4,4,.5,'a','m/s²');SL('Time t',1,10,1,'tt','s');
+  [['Launch',0,3,8,'#e53935'],['Overtake',10,2,6,'#fb8c00'],['Cruise',12,0,8,'#43a047'],['Car Brakes',20,-4,5,'#00acc1']].forEach(([n,u,a,tt,c])=>B(n,c,()=>{Object.assign(par,{u,a,tt});setMode('eq');run=true}))}
+ if(m=='ff'){SL('Tower height H',10,100,5,'H','m');SL('Throw-up speed',0,25,1,'v0','m/s');
+  Object.keys(PL).forEach((p,i)=>B(p,['#1e88e5','#757575','#d84315','#ef6c00'][i],()=>{par.pl=p;build()}));
+  B('Drop Ball','#e53935',()=>{par.v0=0;setMode('ff');run=true});B('Throw Up','#43a047',()=>{if(!par.v0)par.v0=15;setMode('ff');run=true})}
+ B('▶ Play','#2e7d32',()=>{if(t>=T)t=0;run=true});B('❚❚ Pause','#f57c00',()=>run=false);
+ B('↺ Reset','#c62828',()=>{build()});B('Step +0.5 s','#1565c0',()=>{t=Math.min(T,t+.5);run=false});
+ B('Slow 0.25×','#6a1b9a',()=>mul=.25);B('Normal 1×','#00897b',()=>mul=1);B('Fast 2×','#ad1457',()=>mul=2);
+ B('Switch Graph','#3949ab',()=>gm=gm=='st'?'vt':'st');tb=B('Show Slope / Area','#f9a825',()=>{tool=!tool});
+ if(!(m=='dt'||m=='vt'))build();else build()}
+function fs(){document.fullscreenElement?document.exitFullscreen():$('app').requestFullscreen()}
+document.onfullscreenchange=()=>$('fsb').textContent=document.fullscreenElement?'✖ Exit Full Screen':'⛶ Full Screen';
+// drawing helpers
+function rr(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r)}
+function wheel(x,y,r){S.save();S.translate(x,y);S.fillStyle='#161616';S.beginPath();S.arc(0,0,17,0,7);S.fill();S.rotate(r);S.fillStyle='#cfd8dc';S.beginPath();S.arc(0,0,10,0,7);S.fill();S.strokeStyle='#607d8b';S.lineWidth=3;for(let i=0;i<5;i++){S.rotate(1.2566);S.beginPath();S.lineTo(0,0);S.lineTo(10,0);S.stroke()}S.restore()}
+function car(x,y,d,r){S.save();S.translate(x,y);S.scale(d,1);S.fillStyle='#0004';S.beginPath();S.ellipse(0,53,74,8,0,0,7);S.fill();
+ const g=S.createLinearGradient(0,-20,0,36);g.addColorStop(0,'#ff6a5c');g.addColorStop(1,'#a50f10');S.fillStyle=g;rr(S,-66,6,132,30,10);S.fill();
+ S.beginPath();S.moveTo(-38,8);S.lineTo(-24,-20);S.lineTo(26,-20);S.lineTo(46,8);S.fill();
+ S.fillStyle='#bfe7ff';S.beginPath();S.moveTo(-31,6);S.lineTo(-21,-15);S.lineTo(-2,-15);S.lineTo(-2,6);S.fill();S.beginPath();S.moveTo(3,6);S.lineTo(3,-15);S.lineTo(24,-15);S.lineTo(38,6);S.fill();
+ S.fillStyle='#ffe98a';rr(S,58,12,8,8,3);S.fill();S.fillStyle='#ff8a80';rr(S,-66,12,6,8,3);S.fill();
+ wheel(-38,38,r);wheel(40,38,r);S.restore()}
+function gauge(cx,cy,v,mx){S.save();S.translate(cx,cy);S.fillStyle='#10233f';S.beginPath();S.arc(0,0,54,0,7);S.fill();S.fillStyle='#f4f8ff';S.beginPath();S.arc(0,0,48,0,7);S.fill();
+ S.strokeStyle=S.fillStyle='#223';S.font='10px Segoe UI';S.textAlign='center';S.lineWidth=2;
+ for(let i=0;i<=6;i++){const a=Math.PI*.75+i/6*Math.PI*1.5,c=Math.cos(a),s=Math.sin(a);S.beginPath();S.moveTo(c*42,s*42);S.lineTo(c*47,s*47);S.stroke();S.fillText(Math.round(mx*i/6),c*33,s*33+3)}
+ const a=Math.PI*.75+Math.min(1,Math.abs(v)/mx)*Math.PI*1.5;S.strokeStyle='#e53935';S.lineWidth=3;S.beginPath();S.moveTo(0,0);S.lineTo(Math.cos(a)*38,Math.sin(a)*38);S.stroke();
+ S.fillStyle='#223';S.beginPath();S.arc(0,0,5,0,7);S.fill();S.font='bold 11px Consolas';S.fillText(Math.abs(v).toFixed(1)+' m/s',0,32);S.restore()}
+function watch(x,y){S.fillStyle='#10233f';rr(S,x,y,180,46,10);S.fill();S.fillStyle='#7dff9b';S.font='bold 26px Consolas';S.textAlign='center';S.fillText('t = '+t.toFixed(2)+' s',x+90,y+32)}
+function arrow(x,y1,y2,c,l){if(Math.abs(y2-y1)<3)return;S.strokeStyle=S.fillStyle=c;S.lineWidth=4;S.beginPath();S.moveTo(x,y1);S.lineTo(x,y2);S.stroke();const d=y2>y1?1:-1;S.beginPath();S.moveTo(x-7,y2-9*d);S.lineTo(x+7,y2-9*d);S.lineTo(x,y2);S.fill();S.font='bold 13px Segoe UI';S.textAlign='left';S.fillText(l,x+9,(y1+y2)/2)}
+function dcar(){const W=900,H=340,c=at(t);let g=S.createLinearGradient(0,0,0,H);g.addColorStop(0,'#58b4ff');g.addColorStop(.7,'#d8f0ff');S.fillStyle=g;S.fillRect(0,0,W,H);
+ S.fillStyle='#ffe066';S.beginPath();S.arc(800,150,30,0,7);S.fill();S.fillStyle='#fff';[[200,60],[520,40],[680,85]].forEach(([x,y])=>{S.beginPath();S.arc(x,y,20,0,7);S.arc(x+24,y+4,16,0,7);S.arc(x-22,y+6,14,0,7);S.fill()});
+ S.fillStyle='#7bc47f';S.beginPath();S.moveTo(0,215);for(let x=0;x<=W;x+=30)S.lineTo(x,175+Math.sin(x/90)*22);S.lineTo(W,230);S.lineTo(0,230);S.fill();
+ S.fillStyle='#5aaa5e';S.fillRect(0,215,W,100);
+ [120,330,560,760].forEach(x=>{S.fillStyle='#6d4c41';S.fillRect(x-4,170,8,50);S.fillStyle='#2e7d32';S.beginPath();S.arc(x,160,24,0,7);S.fill()});
+ g=S.createLinearGradient(0,235,0,310);g.addColorStop(0,'#4a4f57');g.addColorStop(1,'#2b2f35');S.fillStyle=g;S.fillRect(0,235,W,70);
+ S.fillStyle='#fff';for(let x=0;x<W;x+=60)S.fillRect(x,268,32,4);
+ const P=s=>100+s/rm*(W-300);S.fillStyle='#fff';S.fillRect(P(0)-3,235,6,70);S.fillStyle='#e53935';S.fillRect(P(rm)+70,200,4,105);S.beginPath();S.moveTo(P(rm)+74,200);S.lineTo(P(rm)+104,212);S.lineTo(P(rm)+74,224);S.fill();
+ S.font='bold 12px Segoe UI';S.textAlign='center';for(let i=0;i<=10;i++){const x=P(rm*i/10);S.fillStyle='#fffbe0';rr(S,x-22,308,44,20,5);S.fill();S.fillStyle='#223';S.fillText(Math.round(rm*i/10)+' m',x,322)}
+ if(Math.abs(c.v)>.01)dir=c.v>0?1:-1;car(P(c.s),222,dir,c.s*2.2);gauge(80,85,c.v,vm);watch(690,14)}
+function dff(){const W=900,H=340,c=at(t),p=PL[par.pl],pk=Math.max(...pts.map(q=>q.s)),ps=250/pk,Y=s=>310-s*ps;
+ let g=S.createLinearGradient(0,0,0,H);g.addColorStop(0,p.s[0]);g.addColorStop(1,p.s[1]);S.fillStyle=g;S.fillRect(0,0,W,H);
+ if(par.pl=='Moon'){S.fillStyle='#fff';for(let i=0;i<60;i++)S.fillRect((i*137)%W,(i*71)%250,2,2);S.fillStyle='#4f8cff';S.beginPath();S.arc(780,60,24,0,7);S.fill()}
+ if(par.pl=='Earth'){S.fillStyle='#fff';[[620,60],[760,100]].forEach(([x,y])=>{S.beginPath();S.arc(x,y,20,0,7);S.arc(x+24,y+4,16,0,7);S.fill()})}
+ S.fillStyle=p.gr;S.fillRect(0,310,W,30);
+ const top=Y(par.H);g=S.createLinearGradient(120,0,300,0);g.addColorStop(0,'#8d99a6');g.addColorStop(1,'#5c6773');S.fillStyle=g;S.fillRect(120,top,180,310-top);S.fillStyle='#3a434d';S.fillRect(120,top,230,8);
+ for(let y=top+20;y<300;y+=26)for(let x=135;x<290;x+=36){S.fillStyle='#bfe7ff';S.fillRect(x,y,20,14)}
+ const rx=520;S.strokeStyle='#223';S.lineWidth=2;S.beginPath();S.moveTo(rx,310);S.lineTo(rx,Y(pk));S.stroke();S.fillStyle='#223';S.font='12px Segoe UI';S.textAlign='left';const st=pk>60?20:pk>30?10:5;for(let m=0;m<=pk;m+=st){S.beginPath();S.moveTo(rx-8,Y(m));S.lineTo(rx+8,Y(m));S.stroke();S.fillText(m+' m',rx+12,Y(m)+4)}
+ for(let k=0;k*.5<t;k++){const q=at(k*.5);S.globalAlpha=.25;ball(335,Y(q.s)-14)}S.globalAlpha=1;
+ S.fillStyle='#0004';const sw=14-Math.min(8,c.s*ps/40);S.beginPath();S.ellipse(335,312,sw,3,0,0,7);S.fill();
+ const by=Y(c.s)-14;ball(335,by);arrow(370,by,by-Math.max(-90,Math.min(90,c.v*3)),'#e53935','v');arrow(305,by,by+Math.min(80,p.g*3),'#00a152','g');
+ S.fillStyle='#fff';S.fillRect(14,14,236,28);S.fillStyle='#223';S.font='bold 14px Segoe UI';S.fillText(par.pl+':  g = '+p.g+' m/s²',22,33);watch(690,14)}
+function ball(x,y){const g=S.createRadialGradient(x-5,y-5,2,x,y,15);g.addColorStop(0,'#ffb066');g.addColorStop(1,'#c4531a');S.fillStyle=g;S.beginPath();S.arc(x,y,14,0,7);S.fill();S.strokeStyle='#3a1b0a';S.lineWidth=1.5;S.beginPath();S.moveTo(x-14,y);S.lineTo(x+14,y);S.moveTo(x,y-14);S.lineTo(x,y+14);S.arc(x-14,y,14,-.9,.9);S.moveTo(x+14,y);S.arc(x+14,y,14,Math.PI-.9,Math.PI+.9);S.stroke()}
+function dg(){const W=520,H=340,k=gm=='st'?'s':'v',[lo,hi]=rng(k),L=62,R=16,Tp=36,Bt=50,ff=mode=='ff';
+ G.fillStyle='#fff';G.fillRect(0,0,W,H);const X=x=>L+x/T*(W-L-R),Y=y=>H-Bt-(y-lo)/(hi-lo)*(H-Bt-Tp);
+ G.font='12px Segoe UI';G.fillStyle='#345';G.strokeStyle='#dbe4ee';G.lineWidth=1;G.textAlign='right';
+ for(let i=0;i<=5;i++){const y=lo+(hi-lo)*i/5;G.beginPath();G.moveTo(L,Y(y));G.lineTo(W-R,Y(y));G.stroke();G.fillText(y.toFixed(hi-lo<10?1:0),L-6,Y(y)+4)}
+ G.textAlign='center';for(let i=0;i<=5;i++){const x=T*i/5;G.beginPath();G.moveTo(X(x),Tp);G.lineTo(X(x),H-Bt);G.stroke();G.fillText(x.toFixed(1),X(x),H-Bt+16)}
+ G.strokeStyle='#223';G.lineWidth=2;G.beginPath();G.moveTo(L,Tp);G.lineTo(L,H-Bt);G.moveTo(L,Y(0));G.lineTo(W-R,Y(0));G.stroke();
+ G.font='bold 14px Segoe UI';G.fillText((k=='s'?(ff?'Height':'Distance'):(ff?'Velocity':'Speed'))+'–Time Graph',W/2,22);G.fillText('Time t (s)',W/2,H-10);
+ G.save();G.translate(16,H/2);G.rotate(-Math.PI/2);G.fillText(k=='s'?(ff?'Height h (m)':'Distance s (m)'):(ff?'Velocity v (m/s)':'Speed v (m/s)'),0,0);G.restore();
+ G.save();G.beginPath();G.rect(L,Tp,W-L-R,H-Bt-Tp);G.clip();
+ G.strokeStyle='#c5d0dc';G.lineWidth=3;G.setLineDash([6,5]);G.beginPath();pts.forEach((q,i)=>{const x=X(T*i/200);i?G.lineTo(x,Y(q[k])):G.moveTo(x,Y(q[k]))});G.stroke();G.setLineDash([]);
+ const n=Math.max(2,Math.ceil(t/T*200)),cur=at(t);
+ if(tool&&k=='v'){G.fillStyle='rgba(255,193,7,.45)';G.beginPath();G.moveTo(X(0),Y(0));for(let i=0;i<=n;i++)G.lineTo(X(t*i/n),Y(at(t*i/n).v));G.lineTo(X(t),Y(0));G.fill()}
+ G.strokeStyle=k=='s'?'#e53935':'#1e88e5';G.lineWidth=4;G.beginPath();for(let i=0;i<=n;i++){const q=at(t*i/n);i?G.lineTo(X(t*i/n),Y(q[k])):G.moveTo(X(0),Y(q[k]))}G.stroke();
+ if(tool&&k=='s'){const d=T*.25;G.strokeStyle='#00a152';G.lineWidth=2.5;G.beginPath();G.moveTo(X(t-d),Y(cur.s-cur.v*d));G.lineTo(X(t+d),Y(cur.s+cur.v*d));G.stroke()}
+ G.fillStyle='#111';G.beginPath();G.arc(X(t),Y(cur[k]),6,0,7);G.fill();G.restore();
+ G.textAlign='left';G.font='bold 13px Segoe UI';G.fillStyle='#00796b';
+ if(tool)G.fillText(k=='s'?'Slope = speed = '+cur.v.toFixed(1)+' m/s':'Area = '+(ff?'height change = ':'distance = ')+(cur.s-s0).toFixed(1)+' m  |  Slope = a = '+cur.a.toFixed(1),L+8,Tp+16)}
+function ro(){const c=at(t);$('rt').textContent=t.toFixed(2)+' s';$('rs').textContent=c.s.toFixed(1)+' m';$('rv').textContent=c.v.toFixed(1)+' m/s';$('ra').textContent=c.a.toFixed(1)+' m/s²';
+ let h='';if(mode=='eq'){const u=par.u,a=c.a;h=`v = u + at = ${u} + (${a})(${t.toFixed(1)}) = ${(u+a*t).toFixed(2)} m/s<br>s = ut + ½at² = ${(u*t+.5*a*t*t).toFixed(2)} m<br>v² = ${(c.v*c.v).toFixed(1)} and u² + 2as = ${(u*u+2*a*c.s).toFixed(1)} (equal)`+(T<par.tt?`<br>The car stops at t = ${T.toFixed(2)} s`:'')}
+ if(mode=='ff'){const g=PL[par.pl].g;h=`v = u − gt = ${par.v0} − ${g}(${t.toFixed(1)}) = ${c.v.toFixed(2)} m/s<br>h = H + ut − ½gt² = ${c.s.toFixed(2)} m`}
+ $('eqb').innerHTML=h}
+function loop(ts){const d=Math.min((ts-last)/1000,.05);last=ts;if(run){t+=d*mul;if(t>=T){t=T;run=false}}
+ mode=='ff'?dff():dcar();dg();ro();if(tb)tb.style.outline=tool?'3px solid #fff':'none';requestAnimationFrame(loop)}
+TABS.forEach(([m,n,c])=>{const b=document.createElement('button');b.textContent=n;b.style.background=c;b.onclick=()=>setMode(m);$('tabs').appendChild(b)});
+setMode('dt');requestAnimationFrame(loop);
+</script></body></html>

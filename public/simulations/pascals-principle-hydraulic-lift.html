@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pascal's Principle: Hydraulic Lift Lab</title>
+<style>
+:root{--bg:#0d2540;--panel:#153a5f;--ink:#eef5ff;--mut:#a5c0dc}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
+#app{height:100vh;min-height:700px;display:flex;flex-direction:column;background:var(--bg);position:relative}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:linear-gradient(90deg,#0a1c31,#15385c)}
+h1{font-size:22px;margin:0}
+.sub{font-size:13px;color:var(--mut)}
+main{flex:1;min-height:0;display:flex;gap:10px;padding:8px 10px 4px}
+#stage{flex:1;min-width:0;border-radius:14px;overflow:hidden;box-shadow:0 6px 22px #0009;position:relative;background:#0d2540}
+canvas{width:100%;height:100%;display:block}
+#toast{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:#0b1d33ee;color:#fff;padding:9px 18px;border-radius:22px;font-size:15px;font-weight:700;max-width:92%;text-align:center;opacity:0;transition:opacity .25s;pointer-events:none;border:2px solid #ffd166}
+aside{width:340px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.card{background:var(--panel);border-radius:12px;padding:10px 14px}
+.card h2{font-size:15px;margin:0 0 6px;color:#ffd166}
+.row{display:flex;justify-content:space-between;gap:8px;padding:2px 0;font-size:14px}
+.row b{font-variant-numeric:tabular-nums;text-align:right}
+#status{margin-top:6px;padding:8px;border-radius:10px;text-align:center;font-weight:800;font-size:15px;background:#8a5a00}
+#status.ok{background:#15803d}#status.cool{background:#1d4ed8}
+.lg{font-size:13px;line-height:1.5;color:var(--mut)}
+.lg b{color:#fff}
+footer{padding:4px 10px 8px}
+#btns{display:flex;flex-wrap:wrap;gap:8px}
+.grp{display:flex;gap:6px;align-items:center;background:#0a1c3166;padding:5px 7px;border-radius:12px;flex-wrap:wrap}
+.grp small{font-size:11px;color:var(--mut);writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700}
+.btn{border:0;border-radius:10px;padding:9px 11px;color:#fff;font:700 13px "Trebuchet MS",Arial,sans-serif;background:var(--c);cursor:pointer;box-shadow:0 3px 0 #0007,inset 0 1px 0 #fff5;transition:.12s;white-space:nowrap}
+.btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn.on{outline:3px solid #fff}
+.btn:focus-visible{outline:3px solid #fff}
+.btn:disabled{cursor:default;transform:none;filter:none}
+.credit{text-align:center;font-size:12px;color:var(--mut);padding-top:6px}.credit b{color:#ffd166}
+#modal{position:absolute;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:9}
+#modal.show{display:flex}
+#mb{background:var(--panel);border:2px solid #ffd166;border-radius:16px;padding:16px 22px;max-width:660px;width:92%;max-height:88%;overflow:auto;font-size:15px;line-height:1.55}
+#mb h2{margin:0 0 8px;color:#ffd166}#mb li{margin:4px 0}
+#mb .opt{display:block;width:100%;margin:6px 0;text-align:left;white-space:normal}
+@media(max-width:900px){#app{height:auto}main{flex-direction:column}aside{width:100%}#stage{flex:none;height:62vw;min-height:280px}}
+</style></head>
+<body>
+<div id="app">
+<header>
+<div><h1>Pascal's Principle: Hydraulic Lift Lab</h1><div class="sub">Push the small piston and watch the oil pressure lift a heavy load on the large piston.</div></div>
+<div style="text-align:right"><div class="sub" id="sp">Speed 1×</div><div class="sub"><b style="color:#ffd166">GEN Z EDTECH INTERACTIVE</b></div></div>
+</header>
+<main>
+<div id="stage"><canvas id="cv"></canvas><div id="toast"></div></div>
+<aside>
+<div class="card"><h2>Live Measurements</h2>
+<div class="row"><span>Input force F₁ (small piston)</span><b id="rF"></b></div>
+<div class="row"><span>Small piston area A₁</span><b id="rA1"></b></div>
+<div class="row"><span>Pressure P = F₁ ÷ A₁</span><b id="rP"></b></div>
+<div class="row"><span>Large piston area A₂</span><b id="rA2"></b></div>
+<div class="row"><span>Output force F₂ = P × A₂</span><b id="rF2"></b></div>
+<div class="row"><span>Weight of load</span><b id="rW"></b></div>
+<div class="row"><span>Force multiplier (A₂ ÷ A₁)</span><b id="rMA"></b></div>
+<div class="row"><span>Oil pushed by small piston</span><b id="rD1"></b></div>
+<div class="row"><span>Load lifted</span><b id="rD2"></b></div>
+<div id="status">Starting</div></div>
+<div class="card lg"><h2>Key</h2>
+<b>Pascal's Principle</b>: pressure applied to a trapped liquid is passed on <b>equally in every direction</b>.<br>
+<b>Pressure</b> P = F ÷ A (force divided by area).<br>
+<b>Big force from small force</b>: F₂ = F₁ × (A₂ ÷ A₁).<br>
+<b>Trade-off</b>: the large piston moves less than the small one, so no energy is gained.<br>
+Red crosses show the equal pressure in the oil. Press <b>Space</b> to pause.</div>
+</aside>
+</main>
+<footer><div id="btns"></div><div class="credit">© <b>GEN Z EDTECH INTERACTIVE</b> | Developed by <b>MUHAMMAD IMRAN KHAN</b> (MSc Computer Science)</div></footer>
+<div id="modal"><div id="mb"></div></div>
+</div>
+<script>
+const W=1000,H=500,SX=170,LX=650,TOP=330,BOT=455,PIPE=412,STROKE=60,MAXH=170,$=id=>document.getElementById(id);
+const cv=$("cv"),cx=cv.getContext("2d");
+const LOADS={car:["🚗","Car",1200],bike:["🏍","Motorbike",200],truck:["🚛","Truck",6000],ele:["🐘","Elephant",4000],box:["📦","Heavy Crate",800]};
+const DEF={F:200,a1:10,a2:200,load:"car"},A1S=[5,10,20],A2S=[100,200,400];
+let st={...DEF},K=1,OX=0,OY=0,T=0,speed=1,paused=false,showP=true,labels=true,s1=0,ph=0,auto=false,valve=false,h2=0,tot1=0,gP=20,M,fp=[],dt=[],fc=0;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),r1=x=>Math.round(x*10)/10,fmt=x=>Math.round(x).toLocaleString("en-US"),rnd=(a,b)=>a+Math.random()*(b-a),cw=a=>Math.sqrt(a)*16;
+function model(){const L=LOADS[st.load],P=st.F/st.a1,F2=P*st.a2,Wt=L[2]*9.8;return{L,P,F2,Wt,MA:st.a2/st.a1,lift:F2>=Wt,need:Wt*st.a1/st.a2}}
+M=model();
+function toast(m,ms=3800){const t=$("toast");t.textContent=m;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.opacity=0,ms)}
+function sync(){
+  M=model();
+  document.querySelectorAll(".btn[data-t]").forEach(b=>b.classList.toggle("on",{showP,labels,paused,auto}[b.dataset.t]));
+  $("sp").textContent="Speed "+speed+"×"+(paused?" (paused)":"");
+  $("rF").textContent=fmt(st.F)+" N";$("rA1").textContent=st.a1+" cm²";$("rP").textContent=r1(M.P)+" N/cm² ("+fmt(M.P*10)+" kPa)";
+  $("rA2").textContent=st.a2+" cm²";$("rF2").textContent=fmt(M.F2)+" N";$("rW").textContent=fmt(M.Wt)+" N ("+M.L[1]+", "+fmt(M.L[2])+" kg)";$("rMA").textContent=r1(M.MA)+"×";
+  refresh();
+}
+function refresh(){
+  const s=$("status");$("rD1").textContent=r1(tot1/5)+" cm";$("rD2").textContent=r1(h2/5)+" cm";
+  if(valve){s.className="cool";s.textContent="Valve open: the load is coming down"}
+  else if(!M.lift){s.className="";s.textContent="Not enough force! Needs F₁ of at least "+fmt(Math.ceil(M.need))+" N"}
+  else if(h2>=MAXH-.5){s.className="ok";s.textContent="Maximum height reached"}
+  else{s.className="ok";s.textContent="Enough force: the load can be lifted"}
+}
+/* ---------- simulation ---------- */
+function step(){
+  T++;gP+=(M.P-gP)*.1;
+  fp.forEach(p=>p.x+=p.d*3*speed);fp=fp.filter(p=>p.d>0?p.x<LX:p.x>SX);
+  if(paused)return;const sp=speed;
+  if(auto&&ph==0&&!valve)ph=1;
+  if(ph==1){
+    const can=M.lift&&h2<MAXH-.01,lim=can?1:.14;
+    if(s1<lim){const d=Math.min(.03*sp,lim-s1);s1+=d;
+      if(can){const px=d*STROKE;tot1+=px;h2=Math.min(MAXH,h2+px*st.a1/st.a2);if(Math.random()<.6)fp.push({x:SX,y:PIPE+22+rnd(-7,7),d:1})}}
+    else{ph=2;if(!can){if(auto){auto=false;sync()}toast(!M.lift?"Not enough force! Increase F₁, use a smaller A₁ or a larger A₂.":"The lift has reached its maximum height.")}}
+  }else if(ph==2){s1-=.06*sp;if(s1<=0){s1=0;ph=0}}
+  if(valve){h2=Math.max(0,h2-1.3*sp);if(Math.random()<.6)fp.push({x:LX,y:PIPE+22+rnd(-7,7),d:-1});if(h2<=0){valve=false;sync()}}
+}
+/* ---------- drawing helpers ---------- */
+function emo(ch,x,y,s){cx.font=s+'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';cx.textAlign="center";cx.fillStyle="#000";cx.fillText(ch,x,y)}
+function label(t,x,y,al){cx.font="800 14px 'Trebuchet MS',Arial";cx.textAlign=al||"center";cx.lineWidth=4;cx.strokeStyle="#0b2a4aee";cx.strokeText(t,x,y);cx.fillStyle="#fff";cx.fillText(t,x,y)}
+function steel(x,y,w,h,v){const g=v?cx.createLinearGradient(x,0,x+w,0):cx.createLinearGradient(0,y,0,y+h);g.addColorStop(0,"#7f8c9a");g.addColorStop(.45,"#eef2f6");g.addColorStop(1,"#6b7886");cx.fillStyle=g;cx.fillRect(x,y,w,h);cx.strokeStyle="#475569";cx.lineWidth=1;cx.strokeRect(x,y,w,h)}
+function fluid(x,y,w,h){if(h<=0)return;const g=cx.createLinearGradient(0,y,0,y+h);g.addColorStop(0,"#fbbf24");g.addColorStop(1,"#c2620a");cx.fillStyle=g;cx.fillRect(x,y,w,h)}
+function arrow(x1,y1,x2,y2,c,w){const a=Math.atan2(y2-y1,x2-x1),h=w*3+4;cx.strokeStyle=c;cx.fillStyle=c;cx.lineWidth=w;cx.beginPath();cx.moveTo(x1,y1);cx.lineTo(x2-Math.cos(a)*h*.6,y2-Math.sin(a)*h*.6);cx.stroke();cx.beginPath();cx.moveTo(x2,y2);cx.lineTo(x2-Math.cos(a-.45)*h,y2-Math.sin(a-.45)*h);cx.lineTo(x2-Math.cos(a+.45)*h,y2-Math.sin(a+.45)*h);cx.fill()}
+function cross(x0,y0,w,h,L){const nx=Math.max(1,Math.floor(w/30)),ny=Math.max(1,Math.floor(h/30));
+  for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){const x=x0+w/nx*(i+.5),y=y0+h/ny*(j+.5);[[1,0],[-1,0],[0,1],[0,-1]].forEach(d=>arrow(x,y,x+d[0]*L,y+d[1]*L,"rgba(185,28,28,.9)",1.5))}}
+function draw(){
+  cx.setTransform(1,0,0,1,0,0);cx.fillStyle="#0d2540";cx.fillRect(0,0,cv.width,cv.height);
+  cx.setTransform(K,0,0,K,OX,OY);cx.save();cx.beginPath();cx.rect(0,0,W,H);cx.clip();
+  let g=cx.createLinearGradient(0,0,0,462);g.addColorStop(0,"#e6eef8");g.addColorStop(1,"#c5d5e8");cx.fillStyle=g;cx.fillRect(0,0,W,462);
+  cx.strokeStyle="#ffffff99";cx.lineWidth=2;for(let x=0;x<W;x+=100){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,462);cx.stroke()}
+  g=cx.createLinearGradient(0,462,0,H);g.addColorStop(0,"#6b7280");g.addColorStop(1,"#374151");cx.fillStyle=g;cx.fillRect(0,462,W,H-462);
+  cx.fillStyle="#facc15";for(let x=0;x<W;x+=40){cx.beginPath();cx.moveTo(x,462);cx.lineTo(x+20,462);cx.lineTo(x+10,470);cx.lineTo(x-10,470);cx.fill()}
+  const w1=cw(st.a1),w2=cw(st.a2),pY1=TOP-34+s1*STROKE,pY2=TOP-12-h2,fy=Math.max(TOP,pY1+14);
+  /* metal bodies */
+  steel(SX-w1/2-8,TOP,w1+16,462-TOP,1);steel(LX-w2/2-8,TOP,w2+16,462-TOP,1);steel(SX,PIPE,LX-SX,50,0);
+  cx.fillStyle="#dbe4ee";cx.fillRect(SX-w1/2,TOP,w1,BOT-TOP);cx.fillRect(LX-w2/2,TOP,w2,BOT-TOP);
+  fluid(SX-w1/2,fy,w1,BOT-fy);fluid(LX-w2/2,TOP,w2,BOT-TOP);fluid(SX+w1/2,PIPE+8,LX-w2/2-SX-w1/2,34);
+  if(showP){const L=3+Math.sqrt(clamp(M.P/200,0,1))*10;cross(SX-w1/2,fy,w1,BOT-fy,L);cross(SX+w1/2,PIPE+8,LX-w2/2-SX-w1/2,34,L);cross(LX-w2/2,TOP,w2,BOT-TOP,L)}
+  fp.forEach(p=>{cx.fillStyle="#fff7d6";cx.beginPath();cx.arc(p.x,p.y,3,0,7);cx.fill()});
+  /* small piston */
+  const rw=Math.max(10,w1*.4);if(pY1+14<TOP)steel(SX-rw/2,pY1+14,rw,TOP-pY1-14,1);
+  steel(SX-w1/2,pY1,w1,14,0);steel(SX-5,pY1-62,10,62,1);
+  g=cx.createLinearGradient(0,pY1-78,0,pY1-62);g.addColorStop(0,"#f87171");g.addColorStop(1,"#b91c1c");cx.fillStyle=g;cx.beginPath();cx.roundRect?cx.roundRect(SX-32,pY1-78,64,16,6):cx.rect(SX-32,pY1-78,64,16);cx.fill();
+  emo("👇",SX,pY1-90+Math.sin(T/10)*3,38);
+  /* large piston */
+  const rl=w2*.5;steel(LX-rl/2,pY2+12,rl,TOP+22-pY2-12,1);steel(LX-w2/2-22,pY2,w2+44,12,0);cx.fillStyle="#1f2937";cx.fillRect(LX-w2/2-22,pY2-4,w2+44,4);
+  /* pressure gauge */
+  const gx=410,gy=348,gr=40;steel(gx-5,gy+gr-4,10,PIPE-gy-gr+8,1);
+  cx.fillStyle="#8d99a6";cx.beginPath();cx.arc(gx,gy,gr+5,0,7);cx.fill();cx.fillStyle="#fff";cx.beginPath();cx.arc(gx,gy,gr,0,7);cx.fill();
+  const a0=Math.PI*.75,sw=Math.PI*1.5;[["#16a34a",0,.4],["#eab308",.4,.7],["#dc2626",.7,1]].forEach(a=>{cx.strokeStyle=a[0];cx.lineWidth=5;cx.beginPath();cx.arc(gx,gy,gr*.86,a0+sw*a[1],a0+sw*a[2]);cx.stroke()});
+  cx.fillStyle="#0f172a";cx.font="9px Arial";cx.textAlign="center";for(let i=0;i<=4;i++){const a=a0+sw*i/4;cx.fillText(i*50,gx+Math.cos(a)*gr*.62,gy+Math.sin(a)*gr*.62+3)}
+  cx.fillText("N/cm²",gx,gy+gr*.58);const na=a0+sw*clamp(gP/200,0,1);cx.strokeStyle="#111827";cx.lineWidth=3;cx.beginPath();cx.moveTo(gx,gy);cx.lineTo(gx+Math.cos(na)*gr*.78,gy+Math.sin(na)*gr*.78);cx.stroke();cx.fillStyle="#111827";cx.beginPath();cx.arc(gx,gy,4,0,7);cx.fill();
+  /* load */
+  emo(M.L[0],LX,pY2-6,110);
+  /* force arrows */
+  const l1=20+st.F/1000*60,t1=pY1-66;arrow(SX+52,t1-l1,SX+52,t1,"#dc2626",5);
+  const l2=20+clamp(M.F2/80000,0,1)*100,b2=pY2+100;arrow(LX+w2/2+44,b2,LX+w2/2+44,b2-l2,"#16a34a",6);
+  arrow(LX-w2/2-44,pY2-60,LX-w2/2-44,pY2+40,"#7c3aed",5);
+  if(labels){
+    label("Pascal's Principle: P = F ÷ A",20,28,"left");label("F₂ = F₁ × (A₂ ÷ A₁)",20,50,"left");
+    label("F₁ = "+fmt(st.F)+" N",SX+66,t1-l1/2+5,"left");label("F₂ = "+fmt(M.F2)+" N",LX+w2/2+58,b2-l2/2+5,"left");label("Weight "+fmt(M.Wt)+" N",LX-w2/2-58,pY2-8,"right");
+    label("SMALL PISTON  A₁ = "+st.a1+" cm²",SX,486);label("LARGE PISTON  A₂ = "+st.a2+" cm²",LX,486);
+    label("HYDRAULIC OIL",290,442);label("PRESSURE GAUGE",gx,gy-gr-12);label("LOAD: "+M.L[1]+", "+fmt(M.L[2])+" kg",LX,Math.max(22,pY2-124));
+  }
+  cx.restore();
+}
+function resize(){const r=$("stage").getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;K=Math.min(cv.width/W,cv.height/H);OX=(cv.width-W*K)/2;OY=(cv.height-H*K)/2}
+new ResizeObserver(resize).observe($("stage"));
+function frame(){step();draw();if(++fc%6==0)refresh();requestAnimationFrame(frame)}
+/* ---------- controls ---------- */
+function stopDemo(){dt.forEach(clearTimeout);dt=[]}
+function tgl(n){if(n=="showP")showP=!showP;if(n=="labels")labels=!labels;if(n=="paused")paused=!paused;if(n=="auto"){auto=!auto;if(auto&&ph==0&&!valve)ph=1}sync()}
+const fm=()=>"F₂ = "+fmt(M.F2)+" N";
+const setF=d=>{const v=clamp(st.F+d,50,1000);if(v==st.F)return toast(d>0?"Maximum input force is 1,000 N.":"Minimum input force is 50 N.");st.F=v;sync();toast("Input force F₁ = "+fmt(v)+" N. Output "+fm()+".")};
+const setFV=v=>{st.F=v;sync();toast("Input force F₁ = "+fmt(v)+" N. Output "+fm()+".")};
+const area=(k,arr,d)=>{const i=arr.indexOf(st[k])+d;if(i<0||i>=arr.length)return toast("Piston size limit reached.");st[k]=arr[i];sync();toast("A₁ = "+st.a1+" cm², A₂ = "+st.a2+" cm². Force multiplier: "+r1(M.MA)+"×")};
+const setL=k=>{st.load=k;sync();toast("Load: "+M.L[1]+" ("+fmt(M.L[2])+" kg). Weight = "+fmt(M.Wt)+" N. "+(M.lift?"Your lift can raise it.":"Not enough force yet."))};
+const setP=o=>()=>{st={...DEF,...o};ph=0;s1=0;auto=false;valve=false;sync();toast("F₁ = "+fmt(st.F)+" N gives "+fm()+" against a weight of "+fmt(M.Wt)+" N. "+(M.lift?"Press Pump Once or Auto Pump.":"This setup cannot lift it."),5200)};
+function pump(){if(valve)return toast("Valve is open. Wait until the load stops lowering.");if(ph==0)ph=1}
+function release(){if(h2<=0)return toast("The load is already at the bottom.");valve=true;ph=0;s1=0;auto=false;sync();toast("Valve opened: oil flows back and the load lowers.")}
+function reset(){stopDemo();st={...DEF};speed=1;paused=false;ph=0;s1=0;auto=false;valve=false;h2=0;tot1=0;fp=[];sync();toast("Reset. Car, F₁ = 200 N, A₁ = 10 cm², A₂ = 200 cm².")}
+function fs(){const e=$("app");if(!document.fullscreenElement&&!document.webkitFullscreenElement)(e.requestFullscreen||e.webkitRequestFullscreen).call(e);else(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>{$("fsb").textContent=(document.fullscreenElement||document.webkitFullscreenElement)?"✖ Exit Full Screen":"⛶ Full Screen";setTimeout(resize,100)}));
+/* demo */
+function demo(){
+  stopDemo();reset();st={...DEF,F:100};sync();
+  const s=[
+   [()=>{},"Step 1: Press the small piston (left) and oil carries the pressure through the pipe to the large piston (right)."],
+   [()=>pump(),()=>"Step 2: F₁ = 100 N on 10 cm² makes 10 N/cm² everywhere. On 200 cm² that gives "+fmt(M.F2)+" N, less than the car's "+fmt(M.Wt)+" N, so it cannot lift."],
+   [()=>{st.F=200;st.a1=5;st.a2=400;auto=true;sync()},()=>"Step 3: Narrow the small piston and widen the large one. Now "+fm()+", enough for the car, so it rises."],
+   [()=>{},"Step 4: The trade-off: the small piston moves a long way, the large piston only a little. Force is multiplied, energy is not."],
+   [()=>{auto=false;release()},"Step 5: Open the release valve and the oil flows back, lowering the car."]];
+  s.forEach((a,i)=>dt.push(setTimeout(()=>{a[0]();const m=a[1];toast(typeof m=="function"?m():m,6200)},i*6600)))
+}
+/* learn and quiz */
+const Q=[["What does Pascal's Principle say?",["Pressure on a trapped fluid is passed on equally in all directions","Fluids always flow uphill","Heavy objects always float"],0],
+["Which formula gives pressure?",["P = F × A","P = F ÷ A","P = A ÷ F"],1],
+["The small piston is 10 cm² and the large one is 200 cm². The force is multiplied by:",["2 times","200 times","20 times"],2],
+["When the large piston lifts a load, the small piston must move:",["a smaller distance","the same distance","a larger distance"],2],
+["Which everyday machine uses a hydraulic lift?",["A ceiling fan","A car garage lift","A torch"],1]];
+let qi=0,qs=0;
+function modal(h){$("mb").innerHTML=h+'<p style="text-align:center"><button class="btn" style="--c:#dc2626" onclick="closeM()">✖ Close</button></p>';$("modal").classList.add("show")}
+function closeM(){$("modal").classList.remove("show")}
+function learn(){modal(`<h2>📘 How a Hydraulic Lift Works</h2><ol><li>A <b>liquid</b> (oil) cannot be squeezed, so pressure pushed into it spreads <b>equally</b> in all directions. This is <b>Pascal's Principle</b>.</li><li>Pushing the small piston with force F₁ makes pressure <b>P = F₁ ÷ A₁</b>.</li><li>The same pressure acts on the large piston, so its force is <b>F₂ = P × A₂</b>. A bigger area gives a bigger force.</li><li>The load rises only if F₂ is at least the load's weight (mass × 9.8).</li><li>The oil pushed by the small piston must fill the large one, so the large piston moves <b>less</b> distance. Force is gained, but not energy.</li></ol><p><b>In daily life:</b> car garage lifts, jacks, brakes, excavators and dentist chairs.</p><p><b>Try it:</b> choose the Elephant, then use 🐘 Lift an Elephant and press Auto Pump.</p>`)}
+function quiz(){qi=0;qs=0;ask()}
+function ask(){
+  if(qi>=Q.length){modal(`<h2>📝 Quiz Finished</h2><p style="font-size:20px">Score: <b>${qs} / ${Q.length}</b></p><p>${qs==Q.length?"Perfect! Well done!":qs>=3?"Good job! Read the lesson and try again for full marks.":"Read the lesson and try again."}</p><p style="text-align:center"><button class="btn" style="--c:#c026d3" onclick="quiz()">🔁 Try Again</button></p>`);return}
+  const q=Q[qi];modal(`<h2>Question ${qi+1} of ${Q.length}</h2><p>${q[0]}</p>`+q[1].map((o,i)=>`<button class="btn opt" style="--c:#2563eb" onclick="ans(${i},this)">${o}</button>`).join("")+'<div id="fb"></div>')}
+function ans(i,b){const q=Q[qi],bs=document.querySelectorAll("#mb .opt");if(!bs.length||bs[0].disabled)return;
+  bs.forEach((x,k)=>{x.disabled=true;if(k==q[2])x.style.setProperty("--c","#15803d")});
+  if(i==q[2])qs++;else b.style.setProperty("--c","#b91c1c");
+  $("fb").innerHTML=(i==q[2]?"✅ Correct!":"❌ Not quite. The right answer is shown in green.")+'<p style="text-align:center"><button class="btn" style="--c:#0ea5e9" onclick="qi++;ask()">Next ▶</button></p>'}
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeM();else if(e.code=="Space"&&!$("modal").classList.contains("show")){e.preventDefault();tgl("paused")}});
+const G=[
+ ["Force",[["➕ More Force","#ef4444",()=>setF(50)],["➖ Less Force","#2563eb",()=>setF(-50)],["💪 Strong Push","#be123c",()=>setFV(1000)],["🤏 Gentle Push","#0891b2",()=>setFV(50)]]],
+ ["Pistons",[["🔽 Narrow Small Piston","#7c3aed",()=>area("a1",A1S,-1)],["🔼 Widen Small Piston","#c026d3",()=>area("a1",A1S,1)],["⬅ Narrow Large Piston","#ea580c",()=>area("a2",A2S,-1)],["➡ Widen Large Piston","#16a34a",()=>area("a2",A2S,1)]]],
+ ["Load",[["🚗 Car","#0ea5e9",()=>setL("car")],["🏍 Motorbike","#f59e0b",()=>setL("bike")],["🚛 Truck","#475569",()=>setL("truck")],["🐘 Elephant","#9a3412",()=>setL("ele")],["📦 Heavy Crate","#a16207",()=>setL("box")]]],
+ ["Presets",[["🚗 Lift a Car","#059669",setP({F:300,a1:10,a2:400,load:"car"})],["🏍 Lift a Bike","#4f46e5",setP({F:100,a1:10,a2:200,load:"bike"})],["🐘 Lift an Elephant","#b45309",setP({F:600,a1:5,a2:400,load:"ele"})],["🚛 Lift a Truck","#0f766e",setP({F:800,a1:5,a2:400,load:"truck"})]]],
+ ["Actions",[["👇 Pump Once","#84cc16",pump],["⏩ Auto Pump","#f97316",()=>tgl("auto"),"auto"],["⏹ Stop","#64748b",()=>{auto=false;sync()}],["🔓 Release Valve","#6366f1",release],["🔄 Reset","#dc2626",reset]]],
+ ["View",[["🔴 Pressure Arrows","#e11d48",()=>tgl("showP"),"showP"],["🏷 Labels","#14b8a6",()=>tgl("labels"),"labels"],["⏱ Speed","#6d28d9",()=>{speed=speed==1?2:speed==2?.5:1;sync()}],["⏸ Pause","#0f766e",()=>tgl("paused"),"paused"],["⛶ Full Screen","#1e40af",fs,"fsb"]]],
+ ["Learn",[["📘 Learn","#0d9488",learn],["📝 Quiz","#c026d3",quiz],["▶ Auto Demo","#d946ef",demo,null,1]]]];
+$("btns").innerHTML=G.map(g=>`<div class="grp"><small>${g[0]}</small></div>`).join("");
+G.forEach((g,gi)=>g[1].forEach(b=>{const e=document.createElement("button");e.className="btn";e.style.setProperty("--c",b[1]);e.textContent=b[0];
+  if(b[3]=="fsb")e.id="fsb";else if(b[3])e.dataset.t=b[3];
+  e.onclick=()=>{if(!b[4])stopDemo();b[2]()};$("btns").children[gi].appendChild(e)}));
+sync();resize();frame();
+toast("Welcome! Press Auto Demo for a guided tour, or press Pump Once and watch the car rise.",5500);
+</script>
+</body></html>

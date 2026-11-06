@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Einstein’s Special Relativity Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#0b1433;font-family:"Segoe UI","Trebuchet MS",system-ui,sans-serif;color:#eaf0ff}
+#app{height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#0b1433,#101d4a)}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;gap:12px;border-bottom:3px solid #ffb703}
+h1{margin:0;font-size:22px;letter-spacing:.3px}h1 small{display:block;font-size:12px;font-weight:400;color:#9db4ff}
+main{flex:1;min-height:0;display:flex;gap:10px;padding:10px 12px 4px}
+#stage{flex:1;position:relative;border-radius:14px;overflow:hidden;border:3px solid #26397d;min-width:0}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+aside{width:270px;flex:none;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.card{background:#14235a;border:2px solid #26397d;border-radius:12px;padding:10px 12px}
+.card h3{margin:0 0 6px;font-size:14px;color:#ffd166}
+.row{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}.row b{font-variant-numeric:tabular-nums;color:#fff}
+.big{font-size:26px;font-weight:700;color:#4cc9f0}
+#fact{font-size:13px;line-height:1.45;color:#d7e3ff}#form{display:none;font-size:13px;line-height:1.6}
+footer{padding:6px 12px 10px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#14235a;border-radius:12px;padding:5px 8px;border:2px solid #26397d}
+.grp>span{font-size:12px;color:#9db4ff;margin-right:2px}
+.btn{border:0;border-radius:9px;padding:7px 11px;font:600 13px inherit;font-family:inherit;color:#fff;background:var(--c);text-shadow:0 1px 1px rgba(0,0,0,.35);box-shadow:0 4px 0 rgba(0,0,0,.4);cursor:pointer;transition:transform .08s,filter .15s}
+.btn.dk{color:#1b1b1b;text-shadow:none}.btn:hover{filter:brightness(1.15)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.btn.off{filter:saturate(.25) brightness(.7)}.btn:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px}
+input[type=range]{width:180px;accent-color:#ffb703}
+#vv{font-weight:700;color:#ffd166;min-width:70px;font-size:14px}
+</style></head><body>
+<div id="app">
+<header><h1>Einstein’s Special Relativity Lab<small>See time dilation and length contraction with a train, clocks and light</small></h1>
+<button class="btn dk" id="fsb" style="--c:#ffb703;font-size:15px;padding:9px 16px">⛶ Full screen</button></header>
+<main><div id="stage"><canvas id="cv"></canvas></div>
+<aside>
+<div class="card"><h3>Speed of the train</h3><div class="big" id="hv">0.50 c</div><div class="row"><span>In km per second</span><b id="hk">0</b></div><div class="row"><span>Gamma (γ)</span><b id="hg">1.00</b></div></div>
+<div class="card"><h3>Clocks (simulated seconds)</h3>
+<div class="row"><span>Station clock</span><b id="ts">0.0</b></div><div class="row"><span>Train clock</span><b id="tt">0.0</b></div>
+<div class="row"><span>Station light ticks</span><b id="ks">0</b></div><div class="row"><span>Train light ticks</span><b id="kt">0</b></div>
+<div class="row"><span>Train clock runs at</span><b id="hr">100%</b></div></div>
+<div class="card"><h3>Train length</h3><div class="row"><span>Resting length</span><b>100 m</b></div><div class="row"><span>Seen from platform</span><b id="hl">100 m</b></div></div>
+<div class="card" id="fc"><h3>Formulas</h3><div id="form"></div><div id="fact"></div></div>
+</aside></main>
+<footer id="ctl"></footer></div>
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d');
+let W=0,H=0;
+function resize(){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(resize).observe(cv.parentElement);
+let v=.5,t=0,off=0,playing=true,rate=1,night=false,trail=[],lastPos=0,fi=0;
+const show={lc:true,clk:true,trail:true,ruler:true,ghost:true,labels:true,formulas:false};
+const T0=1.5,PI=Math.PI;
+const G=()=>1/Math.sqrt(1-v*v);
+const facts=["Nothing with mass can reach the speed of light, which is about 299,792 km every second.","A fast jet plane is far too slow to notice relativity with your eyes, yet atomic clocks can measure the tiny effect.","GPS satellites correct their clocks every day because of Einstein’s ideas about time.","In a light clock, light must travel a longer zigzag path when the clock moves, so its ticks take longer.","Moving objects shrink only along the direction they travel. Their height stays the same.","Everyone sees their own clock tick normally. Only when they compare clocks do the differences appear.","At 0.99c the train clock ticks about 7 times slower than the station clock.","Einstein published special relativity in 1905, when he was 26 years old."];
+/* ---------- controls ---------- */
+const ctl=$('#ctl'),tog=[];
+function grp(name,items){const g=document.createElement('div');g.className='grp';g.innerHTML='<span>'+name+'</span>';items.forEach(([l,c,fn,k,dk])=>{const b=document.createElement('button');b.className='btn'+(dk?' dk':'');b.style.setProperty('--c',c);b.textContent=l;b.onclick=()=>{fn(b);syncTog()};if(k){b.dataset.k=k;tog.push(b)}g.appendChild(b)});ctl.appendChild(g)}
+function syncTog(){tog.forEach(b=>b.classList.toggle('off',!show[b.dataset.k]));$('#form').style.display=show.formulas?'block':'none';$('#fact').style.display=show.formulas?'none':'block'}
+function setV(x){v=Math.max(0,Math.min(.999,x));trail=[];$('#sl').value=Math.round(v*1000);$('#vv').textContent=v.toFixed(3)+' c'}
+const T=k=>b=>{show[k]=!show[k];if(k=='trail')trail=[]};
+const scene=(a)=>()=>{Object.assign(show,{lc:a[0],clk:a[1],trail:a[0],ruler:a[2],ghost:a[2]});trail=[]};
+const sg=document.createElement('div');sg.className='grp';sg.innerHTML='<span>Speed</span><input id="sl" type="range" min="0" max="999" value="500" aria-label="Train speed"><span id="vv"></span>';ctl.appendChild(sg);
+$('#sl').oninput=e=>setV(e.target.value/1000);
+grp('Presets',[['Stop 0c','#e63946',()=>setV(0)],['0.25c','#f77f00',()=>setV(.25),0,1],['0.5c','#fcbf49',()=>setV(.5),0,1],['0.75c','#2a9d8f',()=>setV(.75)],['0.9c','#00a6fb',()=>setV(.9)],['0.99c','#7b2cbf',()=>setV(.99)],['0.999c','#d90368',()=>setV(.999)]]);
+grp('Fine tune',[['− 0.05c','#3a86ff',()=>setV(v-.05)],['+ 0.05c','#ff006e',()=>setV(v+.05)],['Random speed','#06d6a0',()=>setV(Math.random()*.99),0,1]]);
+grp('Play',[['⏯ Play / pause','#2dc653',b=>{playing=!playing},0],['⏭ Step','#00b4d8',()=>{t+=.25;off+=v*75},0],['↺ Reset','#ef233c',()=>{t=0;off=0;trail=[]}],['🐢 Slow','#ff9f1c',()=>rate=.25,0,1],['Normal','#4361ee',()=>rate=1],['🚀 Fast','#9d4edd',()=>rate=3]]);
+grp('Labs',[['Time lab','#00bbf9',scene([1,1,0]),0,1],['Length lab','#f15bb5',scene([0,0,1])],['Both labs','#80b918',scene([1,1,1]),0,1]]);
+grp('Show / hide',[['Light clocks','#8338ec',T('lc'),'lc'],['Light path','#fb5607',T('trail'),'trail'],['Clocks','#06a77d',T('clk'),'clk'],['Ruler + length','#118ab2',T('ruler'),'ruler'],['Ghost train','#adb5bd',T('ghost'),'ghost',1],['Labels','#e76f51',T('labels'),'labels'],['Formulas','#c1121f',T('formulas'),'formulas']]);
+grp('Extras',[['☀/🌙 Day / night','#3d348b',()=>night=!night],['💡 Fun fact','#ffd60a',()=>{fi=(fi+1)%facts.length},0,1]]);
+document.addEventListener('keydown',e=>{if(e.code=='Space'){e.preventDefault();playing=!playing}if(e.key=='ArrowRight')setV(v+.05);if(e.key=='ArrowLeft')setV(v-.05);if(e.key=='f'||e.key=='F')fs()});
+function fs(){const a=$('#app');if(!document.fullscreenElement)(a.requestFullscreen||a.webkitRequestFullscreen).call(a);else document.exitFullscreen()}
+$('#fsb').onclick=fs;
+document.addEventListener('fullscreenchange',()=>{$('#fsb').textContent=document.fullscreenElement?'✕ Exit full screen':'⛶ Full screen'});
+/* ---------- drawing helpers ---------- */
+const rr=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,Math.max(w,0),h,r)};
+const lg=(x0,y0,x1,y1,s)=>{const g=ctx.createLinearGradient(x0,y0,x1,y1);s.forEach((c,i)=>g.addColorStop(i/(s.length-1),c));return g};
+const stars=Array.from({length:70},(_,i)=>[(i*97%100)/100,(i*53%47)/100,1+i%3*.5]);
+function sky(gy){ctx.fillStyle=night?lg(0,0,0,H,['#040818','#1a2a6c','#3a4f9b']):lg(0,0,0,H*.6,['#4aa8ff','#a9dcff','#e8f7ff']);ctx.fillRect(0,0,W,H);
+ if(night){ctx.fillStyle='#fff';stars.forEach(s=>{ctx.globalAlpha=.5+s[2]/4;ctx.beginPath();ctx.arc(s[0]*W,s[1]*H,s[2],0,7);ctx.fill()});ctx.globalAlpha=1;ctx.fillStyle='#f4f1de';ctx.beginPath();ctx.arc(W*.85,H*.13,26,0,7);ctx.fill();ctx.fillStyle='#14235a';ctx.beginPath();ctx.arc(W*.85+10,H*.13-6,22,0,7);ctx.fill()}
+ else{const g=ctx.createRadialGradient(W*.88,H*.12,5,W*.88,H*.12,90);g.addColorStop(0,'#fff8c4');g.addColorStop(.3,'rgba(255,224,102,.6)');g.addColorStop(1,'rgba(255,224,102,0)');ctx.fillStyle=g;ctx.fillRect(W*.7,0,W*.3,H*.4);ctx.fillStyle='#ffd23f';ctx.beginPath();ctx.arc(W*.88,H*.12,26,0,7);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.9)';[[.2,.1],[.55,.07],[.7,.2]].forEach(([a,b])=>{[0,28,-26,52].forEach((o,i)=>{ctx.beginPath();ctx.ellipse(W*a+o,H*b+(i%2)*6,34-i*3,16,0,0,7);ctx.fill()})})}
+ [['#5d7bb5','#2c3e73',.42,.18],['#3f6b8f','#1d3a57',.46,.12]].forEach(([d,n,b,hh],k)=>{ctx.fillStyle=night?n:d;ctx.beginPath();ctx.moveTo(0,gy*.9);for(let i=0;i<=8;i++)ctx.lineTo(W*i/8,gy*(b+.3)-H*hh*(i%2?(1+k*.3):.45));ctx.lineTo(W,gy*.9);ctx.fill()})}
+function tree(x,y,s){ctx.fillStyle='#6b4423';ctx.fillRect(x-3*s,y-26*s,6*s,26*s);ctx.fillStyle=night?'#14532d':'#2e9e4f';[[0,-40,18],[-11,-30,14],[11,-30,14]].forEach(([a,b,r])=>{ctx.beginPath();ctx.arc(x+a*s,y+b*s,r*s,0,7);ctx.fill()})}
+function clock(cx,cy,r,secs,sx,lab){ctx.save();ctx.translate(cx,cy);ctx.scale(sx,1);
+ ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.arc(3,4,r,0,7);ctx.fill();
+ ctx.fillStyle=lg(-r,-r,r,r,['#f2f4f8','#7d8794','#2f3644']);ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();
+ ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,r*.86,0,7);ctx.fill();ctx.strokeStyle=ctx.fillStyle='#1b1b1b';
+ for(let i=0;i<12;i++){const a=i*PI/6;ctx.lineWidth=i%3?1:2.5;ctx.beginPath();ctx.moveTo(Math.sin(a)*r*.72,-Math.cos(a)*r*.72);ctx.lineTo(Math.sin(a)*r*.83,-Math.cos(a)*r*.83);ctx.stroke()}
+ if(r>28){ctx.font='bold '+r*.24+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';[['12',0],['3',3],['6',6],['9',9]].forEach(([n,h])=>ctx.fillText(n,Math.sin(h*PI/6)*r*.56,-Math.cos(h*PI/6)*r*.56))}
+ const hand=(a,l,w,c)=>{ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.sin(a)*r*l,-Math.cos(a)*r*l);ctx.stroke()};
+ hand(secs/720*2*PI,.45,Math.max(2,r/9),'#1b1b1b');hand(secs/60*2*PI,.68,Math.max(1.5,r/13),'#1b1b1b');hand(secs/10*2*PI,.78,1.4,'#e63946');
+ ctx.fillStyle='#e63946';ctx.beginPath();ctx.arc(0,0,r/11,0,7);ctx.fill();ctx.restore()}
+function lightClock(x,by,h,sx,frac,lab,col){ctx.save();ctx.translate(x,by);ctx.scale(sx,1);const w=26;
+ ctx.fillStyle='#8b96a5';ctx.fillRect(-w,-h,3,h);ctx.fillRect(w-3,-h,3,h);
+ ctx.strokeStyle='rgba(255,224,102,.45)';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-h);ctx.stroke();ctx.setLineDash([]);
+ [0,-h-7].forEach((y,i)=>{ctx.fillStyle=lg(-w,y,w,y+8,['#dfe9f5','#8fb3d9','#dfe9f5']);rr(-w,y-(i?0:0),2*w,7,3);ctx.fill();ctx.strokeStyle='#5b6b80';ctx.lineWidth=1;ctx.stroke()});
+ const py=-7-(h-7)*frac+0,g=ctx.createRadialGradient(0,py,1,0,py,14);g.addColorStop(0,'#fff');g.addColorStop(.3,col);g.addColorStop(1,'rgba(255,200,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,py,14,0,7);ctx.fill();ctx.restore();return py}
+function label(txt,x,y,col){if(!show.labels)return;ctx.font='bold 13px "Segoe UI",sans-serif';const w=ctx.measureText(txt).width+14;ctx.fillStyle=col;rr(x-w/2,y-12,w,22,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x,y)}
+/* ---------- main render ---------- */
+function render(){
+ const sc=Math.max(.7,Math.min(1.3,H/560)),gy=H*.58,y0=H*.72,g=G(),sx=Math.max(.08,1/g),L0=Math.min(W*.46,700),Ls=L0/g;
+ const span=W+L0+200,pos=(off+W*.18+L0+100)%span-L0-100;if(pos<lastPos-50)trail=[];lastPos=pos;
+ sky(gy);for(let i=0;i<7;i++)tree(W*(.06+i*.15),H*.5,1.2*sc);
+ ctx.fillStyle=night?lg(0,H*.5,0,y0,['#14532d','#0b3a20']):lg(0,H*.5,0,y0,['#58b368','#2f8f4e']);ctx.fillRect(0,H*.5,W,y0-H*.5);
+ /* track */
+ ctx.fillStyle='#6b6f76';ctx.fillRect(0,gy-2,W,16*sc);ctx.fillStyle='#4a2e1c';for(let x=0;x<W;x+=24)ctx.fillRect(x,gy+3,12,9*sc);ctx.fillStyle='#c9d1db';ctx.fillRect(0,gy-3,W,3);ctx.fillRect(0,gy+10*sc,W,3);
+ /* ghost */
+ const bh=100*sc,bb=gy-22*sc,bt=bb-bh;
+ if(show.ruler&&show.ghost&&v>.005){ctx.setLineDash([8,6]);ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;rr(pos,bt,L0,bh,10);ctx.stroke();ctx.setLineDash([]);label('Rest length 100 m',pos+L0/2,bt-14*sc,'rgba(0,0,0,.55)')}
+ /* train */
+ ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(pos+Ls/2,gy+6*sc,Ls/2,6*sc,0,0,7);ctx.fill();
+ ctx.fillStyle=lg(0,bt,0,bb,['#3d8bff','#1450c8','#0a2f7d']);rr(pos,bt,Ls,bh,12*sx+2);ctx.fill();
+ ctx.fillStyle='#f4f7fb';ctx.fillRect(pos,bt+bh*.66,Ls,8*sc);ctx.fillStyle='#ffb703';ctx.fillRect(pos,bt+bh*.66+9*sc,Ls,4*sc);
+ for(let i=0;i<6;i++){const wx=pos+Ls*(.05+i*.155),ww=Ls*.11;ctx.fillStyle=lg(0,bt+14*sc,0,bt+54*sc,night?['#ffe9a8','#d9a441']:['#d9f0ff','#7fb7e6']);rr(wx,bt+14*sc,ww,38*sc,5);ctx.fill();ctx.strokeStyle='#0a2f7d';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='rgba(20,30,50,.55)';ctx.beginPath();ctx.arc(wx+ww/2,bt+42*sc,Math.min(9*sc,ww/2.2),PI,0);ctx.fill();ctx.beginPath();ctx.arc(wx+ww/2,bt+34*sc,Math.min(5*sc,ww/3),0,7);ctx.fill()}
+ ctx.fillStyle='#1d2b44';rr(pos,bt-8*sc,Ls,8*sc,4);ctx.fill();
+ ctx.fillStyle='#fff7bf';rr(pos+Ls-8*sx-4,bt+bh*.74,8*sx+3,10*sc,3);ctx.fill();
+ [.09,.2,.8,.91].forEach(f=>{const cx=pos+Ls*f,r=16*sc;ctx.save();ctx.translate(cx,gy-r+2);ctx.scale(sx,1);ctx.fillStyle='#222';ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.fillStyle='#b7c0cc';ctx.beginPath();ctx.arc(0,0,r*.6,0,7);ctx.fill();ctx.strokeStyle='#444';ctx.lineWidth=2;for(let a=0;a<3;a++){ctx.beginPath();ctx.moveTo(-Math.cos(a*PI/3+off*.02)*r*.6,-Math.sin(a*PI/3+off*.02)*r*.6);ctx.lineTo(Math.cos(a*PI/3+off*.02)*r*.6,Math.sin(a*PI/3+off*.02)*r*.6);ctx.stroke()}ctx.restore()});
+ /* train clock + light clock on roof */
+ const roof=bt-8*sc;
+ if(show.clk){clock(pos+Ls*.22,roof-30*sc,26*sc,t/g,sx);label('Train clock',pos+Ls*.22,roof-68*sc,'#1450c8')}
+ const lx=pos+Ls*.7,h=95*sc;
+ if(show.lc){const fr=((t/g)/T0)%1,f=fr<.5?fr*2:2-fr*2;const py=lightClock(lx,roof-4,h,sx,f,'',' #ffd60a');
+  if(playing&&show.trail){trail.push([lx,roof-4+py]);if(trail.length>700)trail.shift()}
+  label('Train light clock',lx,roof-h-26*sc,'#1450c8')}
+ if(show.lc&&show.trail&&trail.length>1){ctx.strokeStyle='#ffd60a';ctx.lineWidth=2.5;ctx.shadowColor='#ffb703';ctx.shadowBlur=8;ctx.beginPath();trail.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();ctx.shadowBlur=0}
+ if(show.labels)label('TRAIN moving at '+v.toFixed(3)+'c',pos+Ls/2,roof-(show.lc?h+58*sc:96*sc),'#ef233c');
+ /* platform */
+ ctx.fillStyle=lg(0,y0,0,H,['#c9ccd2','#8d929b']);ctx.fillRect(0,y0,W,H-y0);ctx.fillStyle='#ffd23f';ctx.fillRect(0,y0+6,W,6);ctx.fillStyle='#6d727b';ctx.fillRect(0,y0,W,5);
+ /* bench */
+ const bx=W*.36;ctx.fillStyle='#8a5a2b';rr(bx,y0+28*sc,90*sc,10*sc,3);ctx.fill();rr(bx,y0+10*sc+12,90*sc,8*sc,3);ctx.fill();ctx.fillStyle='#333';ctx.fillRect(bx+8,y0+38*sc,5,16*sc);ctx.fillRect(bx+90*sc-13,y0+38*sc,5,16*sc);
+ /* tape measure */
+ if(show.ruler){const ty=H-34*sc,pm=L0/100;ctx.fillStyle='#ffd60a';rr(W*.03,ty-14*sc,W*.94,24*sc,4);ctx.fill();ctx.strokeStyle='#1b1b1b';ctx.fillStyle='#1b1b1b';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  for(let m=0;W*.03+m*pm<W*.97;m+=5){const x=W*.03+m*pm,big=m%10==0;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,ty-14*sc);ctx.lineTo(x,ty-14*sc+(big?14:8)*sc);ctx.stroke();if(big)ctx.fillText(m+'',x,ty+8*sc)}
+  ctx.fillStyle='#e63946';rr(W*.03-20,ty-16*sc,22,28*sc,5);ctx.fill();
+  /* dimension line */
+  const dy=gy+36*sc;ctx.strokeStyle='#ff4d6d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(pos,dy);ctx.lineTo(pos+Ls,dy);ctx.moveTo(pos,dy-8);ctx.lineTo(pos,dy+8);ctx.moveTo(pos+Ls,dy-8);ctx.lineTo(pos+Ls,dy+8);ctx.stroke();
+  label('Length seen from platform: '+(100/g).toFixed(1)+' m',pos+Ls/2,dy+20*sc,'#c9184a')}
+ /* station clock on pole */
+ const px=W*.07;ctx.fillStyle='#39414f';ctx.fillRect(px-4,y0-120*sc,8,140*sc);
+ if(show.clk){clock(px,y0-150*sc,38*sc,t,1);label('Station clock',px,y0-198*sc,'#2a9d8f')}
+ /* station light clock */
+ if(show.lc){const sxp=W*.9,fr=(t/T0)%1,f=fr<.5?fr*2:2-fr*2;lightClock(sxp,y0+2,h,1,f,'','#4cc9f0');label('Station light clock',sxp,y0-h-26*sc,'#2a9d8f')}
+ if(show.labels){label('STATION (at rest)',W*.5,H*.04+10,'rgba(0,0,0,.45)')}
+ if(v>.9){ctx.fillStyle='#ffd166';ctx.font='bold 14px sans-serif';ctx.textAlign='left';ctx.fillText('Almost the speed of light! Nothing with mass can reach 1.0c.',14,H-8)}
+}
+/* ---------- loop ---------- */
+let last=performance.now();
+function frame(ts){const dt=Math.min(.05,(ts-last)/1000);last=ts;if(playing){t+=dt*rate;off+=v*300*dt*rate}
+ render();const g=G();
+ $('#hv').textContent=v.toFixed(3)+' c';$('#hk').textContent=Math.round(v*299792).toLocaleString();$('#hg').textContent=g.toFixed(3);
+ $('#ts').textContent=t.toFixed(1)+' s';$('#tt').textContent=(t/g).toFixed(1)+' s';$('#ks').textContent=Math.floor(t/T0);$('#kt').textContent=Math.floor(t/g/T0);
+ $('#hr').textContent=(100/g).toFixed(1)+'%';$('#hl').textContent=(100/g).toFixed(1)+' m';
+ $('#fact').textContent=facts[fi];
+ $('#form').innerHTML='γ = 1 / √(1 − v²/c²) = <b>'+g.toFixed(3)+'</b><br>Time: Δt = γ × Δt₀<br>1 s on train = <b>'+g.toFixed(2)+' s</b> at station<br>Length: L = L₀ / γ = <b>'+(100/g).toFixed(1)+' m</b>';
+ requestAnimationFrame(frame)}
+setV(.5);syncTog();requestAnimationFrame(frame);
+</script></body></html>

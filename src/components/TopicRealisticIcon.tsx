@@ -105,7 +105,20 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-rainbow-dispersion-droplets': 75,
   'sim-shadow-formation-light-sources': 75,
   'sim-speed-of-sound-solids-liquids-gases': 18,
-  'sim-balanced-unbalanced-forces-tug-of-war': 10
+  'sim-balanced-unbalanced-forces-tug-of-war': 10,
+  'sim-atwood-machine-simulation': 110,
+  'sim-black-hole-explorer': 111,
+  'sim-blood-group-picture-simulation': 112,
+  'sim-blood-group-simulation': 113,
+  'sim-electrochemistry-lab': 114,
+  'sim-greenhouse-effect-lab': 115,
+  'sim-kinematics-simulation': 116,
+  'sim-parts-of-a-plant-3d-simulation': 117,
+  'sim-pascals-principle-hydraulic-lift': 118,
+  'sim-simple-pendulum-simulation': 119,
+  'sim-special-relativity-lab': 120,
+  'sim-torque-seesaw-lab': 121,
+  'sim-vernier-micrometer-simulation': 122
 };
 
 /**
@@ -2562,6 +2575,244 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           {/* Jumping Electron & Photon */}
           <circle cx="43" cy="22" r="3" fill="#22c55e" />
           <path d="M36 28 L46 20" stroke="#f43f5e" strokeWidth="1.5" strokeDasharray="2 2" />
+        </svg>
+      );
+
+    // 110: Atwood Machine Lab
+    case 110:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#0c4a6e" stroke="#38bdf8" strokeWidth="2" />
+          {/* Fixed Pulley Wheel */}
+          <circle cx="32" cy="20" r="8" fill="#334155" stroke="#94a3b8" strokeWidth="2" />
+          <circle cx="32" cy="20" r="2.5" fill="#f8fafc" />
+          {/* String */}
+          <path d="M24 20 L24 40 M40 20 L40 32" stroke="#e0f2fe" strokeWidth="1.5" strokeDasharray="3 2" />
+          {/* Hanging Mass 1 (Heavier) */}
+          <rect x="18" y="40" width="12" height="12" rx="2" fill="#ef4444" stroke="#fca5a5" strokeWidth="1.5" />
+          <text x="24" y="49" fill="#fff" fontSize="7" fontWeight="bold" textAnchor="middle">m₁</text>
+          {/* Hanging Mass 2 (Lighter) */}
+          <rect x="35" y="32" width="10" height="10" rx="2" fill="#3b82f6" stroke="#93c5fd" strokeWidth="1.5" />
+          <text x="40" y="40" fill="#fff" fontSize="6.5" fontWeight="bold" textAnchor="middle">m₂</text>
+        </svg>
+      );
+
+    // 111: Black Hole Explorer
+    case 111:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#0f0c29" stroke="#8b5cf6" strokeWidth="2" />
+          {/* Accretion Disk Warping */}
+          <ellipse cx="32" cy="32" rx="22" ry="7" fill="none" stroke="#f97316" strokeWidth="3" opacity="0.85" transform="rotate(-15 32 32)" />
+          <ellipse cx="32" cy="32" rx="18" ry="5" fill="none" stroke="#facc15" strokeWidth="2" transform="rotate(-15 32 32)" />
+          {/* Photon Sphere & Event Horizon */}
+          <circle cx="32" cy="32" r="10" fill="#000000" stroke="#a855f7" strokeWidth="2" />
+          <circle cx="32" cy="32" r="7" fill="#000000" />
+          {/* Gravitational Lensing Halo */}
+          <path d="M20 22 Q32 16 44 22" stroke="#38bdf8" strokeWidth="1.5" fill="none" opacity="0.7" />
+        </svg>
+      );
+
+    // 112: ABO Blood Group System (Visual Lab)
+    case 112:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#4c0519" stroke="#fb7185" strokeWidth="2" />
+          {/* Red Blood Cell Biconcave Disk */}
+          <ellipse cx="32" cy="32" rx="16" ry="12" fill="#e11d48" stroke="#f43f5e" strokeWidth="2" />
+          <ellipse cx="32" cy="32" rx="8" ry="5" fill="#be123c" />
+          {/* Antigen A Spikes (Spherical) */}
+          <circle cx="20" cy="22" r="2.5" fill="#38bdf8" />
+          <circle cx="44" cy="22" r="2.5" fill="#38bdf8" />
+          {/* Antigen B Spikes (Diamond/Square) */}
+          <rect x="30" y="15" width="4" height="4" fill="#facc15" transform="rotate(45 32 17)" />
+          {/* Rh Factor Spike (Triangle) */}
+          <polygon points="32,45 28,50 36,50" fill="#22c55e" />
+        </svg>
+      );
+
+    // 113: ABO Blood Group System: Clinical Slide Test
+    case 113:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#312e81" stroke="#818cf8" strokeWidth="2" />
+          {/* Glass Slide Plate */}
+          <rect x="12" y="24" width="40" height="18" rx="3" fill="#e0f2fe" opacity="0.25" stroke="#93c5fd" strokeWidth="1.5" />
+          {/* 3 Wells: Anti-A (Blue), Anti-B (Yellow), Anti-D (Colorless/Red Agglutination) */}
+          <circle cx="20" cy="33" r="5" fill="#1e40af" stroke="#60a5fa" strokeWidth="1" />
+          <circle cx="32" cy="33" r="5" fill="#ca8a04" stroke="#fde047" strokeWidth="1" />
+          <circle cx="44" cy="33" r="5" fill="#e11d48" stroke="#fda4af" strokeWidth="1" />
+          {/* Agglutination Dots in Well 3 */}
+          <circle cx="42" cy="32" r="1" fill="#fff" />
+          <circle cx="45" cy="34" r="1.2" fill="#fff" />
+          <circle cx="43" cy="35" r="0.8" fill="#fff" />
+        </svg>
+      );
+
+    // 114: Electrochemistry Lab: Redox & Galvanic Cell
+    case 114:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#0f172a" stroke="#14b8a6" strokeWidth="2" />
+          {/* Two Beakers (Anode & Cathode) */}
+          <rect x="14" y="26" width="15" height="22" rx="2" fill="#0284c7" opacity="0.3" stroke="#38bdf8" strokeWidth="1.5" />
+          <rect x="35" y="26" width="15" height="22" rx="2" fill="#059669" opacity="0.3" stroke="#34d399" strokeWidth="1.5" />
+          {/* Electrodes (Zinc & Copper) */}
+          <rect x="19" y="22" width="4" height="20" fill="#94a3b8" />
+          <rect x="41" y="22" width="4" height="20" fill="#ea580c" />
+          {/* Inverted U-Tube Salt Bridge */}
+          <path d="M25 32 V22 H39 V32" fill="none" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+          {/* Voltmeter Dial at Top */}
+          <circle cx="32" cy="15" r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1" />
+          <path d="M32 15 L35 13" stroke="#ef4444" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 115: Greenhouse Effect Lab
+    case 115:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#0c2340" stroke="#f97316" strokeWidth="2" />
+          {/* Earth Curved Surface */}
+          <path d="M12 48 Q32 38 52 48" stroke="#10b981" strokeWidth="4" fill="none" />
+          {/* Atmospheric Blanket Ring */}
+          <path d="M12 28 Q32 18 52 28" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 2" fill="none" />
+          {/* Incoming Shortwave Solar Ray (Yellow) */}
+          <path d="M24 14 L28 36" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Trapped Infrared Heat Ray (Red/Orange bouncing) */}
+          <path d="M30 40 L36 28 L42 42" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+
+    // 116: Kinematics Lab: Motion & Graphs
+    case 116:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#1e3a8a" stroke="#60a5fa" strokeWidth="2" />
+          {/* Graph Axes */}
+          <path d="M16 16 V48 H48" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
+          {/* Uniform Acceleration Parabolic Curve */}
+          <path d="M18 46 Q32 44 46 22" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Motion Vector Car Indicator */}
+          <rect x="36" y="24" width="10" height="6" rx="2" fill="#f59e0b" />
+          <circle cx="39" cy="30" r="1.5" fill="#fff" />
+          <circle cx="43" cy="30" r="1.5" fill="#fff" />
+        </svg>
+      );
+
+    // 117: Parts of a Plant 3D Lab
+    case 117:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#064e3b" stroke="#34d399" strokeWidth="2" />
+          {/* Soil Ground Line */}
+          <line x1="14" y1="44" x2="50" y2="44" stroke="#a16207" strokeWidth="2.5" />
+          {/* Root System Underground */}
+          <path d="M32 44 L32 54 M32 48 L25 53 M32 50 L38 55" stroke="#ca8a04" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Plant Stem */}
+          <path d="M32 44 V24" stroke="#4ade80" strokeWidth="3" strokeLinecap="round" />
+          {/* Leaves */}
+          <path d="M32 34 Q20 30 22 24 Q30 26 32 32" fill="#22c55e" />
+          <path d="M32 30 Q44 26 42 20 Q34 22 32 28" fill="#22c55e" />
+          {/* Flower Blossom on Top */}
+          <circle cx="32" cy="18" r="3.5" fill="#fbbf24" />
+          <circle cx="32" cy="13" r="2.5" fill="#f43f5e" />
+          <circle cx="37" cy="18" r="2.5" fill="#f43f5e" />
+          <circle cx="32" cy="23" r="2.5" fill="#f43f5e" />
+          <circle cx="27" cy="18" r="2.5" fill="#f43f5e" />
+        </svg>
+      );
+
+    // 118: Pascal's Principle: Hydraulic Lift Lab
+    case 118:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#0c4a6e" stroke="#38bdf8" strokeWidth="2" />
+          {/* Hydraulic U-Chamber filled with oil */}
+          <path d="M16 28 V46 H48 V24" stroke="#94a3b8" strokeWidth="2.5" fill="none" />
+          <path d="M18 36 V44 H46 V32" fill="#0284c7" opacity="0.6" />
+          {/* Small Effort Piston A1 */}
+          <rect x="15" y="32" width="8" height="4" rx="1" fill="#f59e0b" />
+          <line x1="19" y1="24" x2="19" y2="32" stroke="#f59e0b" strokeWidth="2" />
+          {/* Large Load Piston A2 */}
+          <rect x="36" y="28" width="14" height="4" rx="1" fill="#ef4444" />
+          <line x1="43" y1="20" x2="43" y2="28" stroke="#ef4444" strokeWidth="2" />
+          {/* Upward Force Arrow */}
+          <path d="M43 18 L40 22 H46 Z" fill="#22c55e" />
+        </svg>
+      );
+
+    // 119: Simple Pendulum SHM Lab
+    case 119:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="2" />
+          {/* Top Pivot Support */}
+          <line x1="22" y1="14" x2="42" y2="14" stroke="#94a3b8" strokeWidth="2.5" />
+          <circle cx="32" cy="14" r="2.5" fill="#facc15" />
+          {/* Equilibrium Guide Line */}
+          <line x1="32" y1="14" x2="32" y2="48" stroke="#64748b" strokeWidth="1" strokeDasharray="2 2" />
+          {/* Deflected Pendulum String */}
+          <line x1="32" y1="14" x2="44" y2="42" stroke="#e0e7ff" strokeWidth="1.8" />
+          {/* Oscillating Bob */}
+          <circle cx="44" cy="42" r="6" fill="#38bdf8" stroke="#fff" strokeWidth="1.5" />
+          {/* Trajectory Arc */}
+          <path d="M20 42 Q32 48 44 42" stroke="#f43f5e" strokeWidth="1.5" strokeDasharray="3 2" fill="none" />
+        </svg>
+      );
+
+    // 120: Einstein's Special Relativity Lab
+    case 120:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#1c1917" stroke="#fbbf24" strokeWidth="2" />
+          {/* Relativistic Rocket */}
+          <path d="M18 36 L34 26 L48 30 L40 40 L26 40 Z" fill="#e2e8f0" stroke="#f59e0b" strokeWidth="1.5" />
+          <polygon points="18,36 12,38 18,40" fill="#ef4444" />
+          {/* Light Pulse Clock Vector (Diagonal) */}
+          <line x1="24" y1="46" x2="42" y2="18" stroke="#38bdf8" strokeWidth="2" strokeDasharray="2 2" />
+          <circle cx="42" cy="18" r="3" fill="#facc15" />
+          {/* Lorentz Factor Symbol γ */}
+          <text x="22" y="24" fill="#fbbf24" fontSize="11" fontWeight="bold">γ</text>
+        </svg>
+      );
+
+    // 121: Seesaw Lab: Torque & Moments
+    case 121:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#064e3b" stroke="#34d399" strokeWidth="2" />
+          {/* Fulcrum Triangle Pivot */}
+          <polygon points="32,36 26,48 38,48" fill="#f59e0b" stroke="#d97706" strokeWidth="1.5" />
+          {/* Balanced Lever Plank */}
+          <rect x="12" y="33" width="40" height="4" rx="1.5" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1" />
+          {/* Left Weight (Mass at Distance d1) */}
+          <rect x="16" y="25" width="8" height="8" rx="1.5" fill="#ef4444" />
+          <text x="20" y="31" fill="#fff" fontSize="5" fontWeight="bold" textAnchor="middle">10kg</text>
+          {/* Right Weight (Mass at Distance d2) */}
+          <rect x="42" y="27" width="6" height="6" rx="1.5" fill="#3b82f6" />
+          <text x="45" y="32" fill="#fff" fontSize="4.5" fontWeight="bold" textAnchor="middle">5kg</text>
+        </svg>
+      );
+
+    // 122: Vernier Calliper & Micrometer Screw Gauge Lab
+    case 122:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#1e293b" stroke="#38bdf8" strokeWidth="2" />
+          {/* Main Caliper Beam */}
+          <rect x="14" y="22" width="36" height="8" rx="1" fill="#cbd5e1" stroke="#64748b" strokeWidth="1" />
+          {/* Main Scale Markings */}
+          <line x1="20" y1="22" x2="20" y2="26" stroke="#1e293b" strokeWidth="1" />
+          <line x1="26" y1="22" x2="26" y2="25" stroke="#1e293b" strokeWidth="0.8" />
+          <line x1="32" y1="22" x2="32" y2="26" stroke="#1e293b" strokeWidth="1" />
+          <line x1="38" y1="22" x2="38" y2="25" stroke="#1e293b" strokeWidth="0.8" />
+          {/* Fixed Caliper Jaw */}
+          <path d="M14 22 V42 L18 42 V30" fill="#94a3b8" stroke="#64748b" strokeWidth="1" />
+          {/* Sliding Vernier Jaw */}
+          <path d="M28 20 V42 L32 42 V20 H28 Z" fill="#f59e0b" stroke="#d97706" strokeWidth="1" />
+          {/* Clamped Object (Sphere/Cylinder) */}
+          <circle cx="23" cy="36" r="4" fill="#3b82f6" stroke="#60a5fa" strokeWidth="1" />
         </svg>
       );
 

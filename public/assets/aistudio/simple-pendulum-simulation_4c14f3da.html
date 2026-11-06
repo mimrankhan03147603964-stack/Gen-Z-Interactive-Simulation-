@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Simple Pendulum and Harmonic Oscillation</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:"Trebuchet MS",Verdana,sans-serif;background:#10162f;color:#fff}
+#app{min-height:100vh;height:100vh;display:flex;flex-direction:column;padding:10px 16px;gap:8px;background:radial-gradient(circle at 15% 0,#27407a,#10162f 60%)}
+h1{font-size:25px;text-align:center}h1 small{display:block;font-size:14px;font-weight:400;color:#b9cdee}
+#main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:12px}
+.card{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.17);border-radius:18px;padding:10px}
+#left{display:flex;flex-direction:column;gap:8px;min-height:0}
+#sim{flex:1;min-height:0;width:100%;border-radius:14px;touch-action:none;cursor:grab;background:#223}
+#gr{width:100%;height:120px;border-radius:12px;background:#0b1226}
+#side{display:flex;flex-direction:column;gap:7px;overflow:auto}
+#msg{font-size:16px;line-height:1.35;min-height:70px;background:#0005;border-radius:12px;padding:9px}
+#read{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:14px}
+#read div{background:#0005;border-radius:10px;padding:6px 8px}#read b{display:block;font-size:19px;color:#ffe066}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+button.b{font:700 14px "Trebuchet MS",Verdana,sans-serif;color:#fff;border:0;border-radius:12px;padding:10px 4px;cursor:pointer;box-shadow:0 4px 0 #0006;transition:.1s}
+button.b:hover{filter:brightness(1.18)}button.b:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+button.b.on{outline:3px solid #fff}
+label{font-size:14px;display:flex;justify-content:space-between}
+input[type=range]{width:100%}
+.c1{background:#00b36b}.c2{background:#ff6d00}.c3{background:#e53935}.c4{background:#2979ff}.c5{background:#8e24aa}
+.c6{background:#d81b60}.c7{background:#00acc1}.c8{background:#f9a825;color:#222}.c9{background:#5e35b1}.c10{background:#43a047}.c11{background:#6d4c41}.c12{background:#546e7a}
+@media(max-width:900px){#main{grid-template-columns:1fr}}
+</style></head><body>
+<div id="app">
+<h1>Simple Pendulum and Harmonic Oscillation<small>Drag the bob, press the buttons and watch it swing to and fro.</small></h1>
+<div id="main">
+ <div id="left"><canvas id="sim" class="card" style="padding:0"></canvas><canvas id="gr"></canvas></div>
+ <div id="side" class="card">
+  <div id="msg"></div>
+  <div id="read"><div>Angle<b id="rA">0°</b></div><div>Swings<b id="rN">0</b></div>
+   <div>Measured time period<b id="rT">-</b></div><div>Formula time period<b id="rF">-</b></div>
+   <div>Frequency<b id="rQ">-</b></div><div>Gravity<b id="rG">9.8</b></div></div>
+  <div class="row3"><button class="b c1" id="bGo">Start</button><button class="b c2" id="bPush">Push</button><button class="b c3" id="bStop">Stop</button></div>
+  <label>String length <span id="vL">1.0 m</span></label><input type="range" id="sL" min="20" max="200" value="100">
+  <label>Start angle <span id="vA">30°</span></label><input type="range" id="sA" min="5" max="80" value="30">
+  <label>Mass of bob <span id="vM">1.0 kg</span></label><input type="range" id="sM" min="1" max="20" value="10">
+  <div class="row3"><button class="b c4" data-g="9.8" data-n="Earth">Earth</button><button class="b c12" data-g="1.6" data-n="Moon">Moon</button><button class="b c3" data-g="3.7" data-n="Mars">Mars</button></div>
+  <div class="row3"><button class="b c8" data-g="24.8" data-n="Jupiter">Jupiter</button><button class="b c7" id="bShort">Short String</button><button class="b c9" id="bLong">Long String</button></div>
+  <div class="row3"><button class="b c5" data-a="10">10°</button><button class="b c5" data-a="30">30°</button><button class="b c5" data-a="60">60°</button></div>
+  <div class="row"><button class="b c11" data-b="0">Steel Ball</button><button class="b c3" data-b="1">Apple</button>
+   <button class="b c4" data-b="2">Football</button><button class="b c8" data-b="3">Brass Weight</button></div>
+  <div class="row"><button class="b c10" id="bAir">Air: Off</button><button class="b c6" id="bTrace">Trace: Off</button>
+   <button class="b c7" id="bSlow">Slow Motion: Off</button><button class="b c9" id="bTick">Tick Sound: On</button></div>
+  <div class="row"><button class="b c1" id="bLesson">Next Lesson Step</button><button class="b c12" id="bReset">Reset All</button></div>
+  <button class="b c4" id="bFs">Full Screen</button>
+ </div>
+</div>
+</div>
+<script>
+var $=function(i){return document.getElementById(i)},cv=$("sim"),cx=cv.getContext("2d"),gr=$("gr"),gx=gr.getContext("2d");
+var L=1,g=9.8,gName="Earth",th=.5236,w=0,m=1,damp=false,run=false,slow=false,trace=false,tick=true,bob=0,t=0,osc=0,last=null,Tm=0,hist=[],trail=[],drag=false,ac=null,lessonI=-1,S=200,W,H,px,py;
+function msg(s){$("msg").textContent=s}
+function beep(f,d){if(!tick)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),v=ac.createGain();o.type="triangle";o.frequency.value=f;v.gain.value=.12;o.connect(v);v.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function resize(){var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;cx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height;
+ var q=gr.getBoundingClientRect();gr.width=q.width*d;gr.height=q.height*d;gx.setTransform(d,0,0,d,0,0);px=W/2;py=60;S=Math.min(210,(H-130)/2.05)}
+function rset(){osc=0;last=null;Tm=0;hist=[];trail=[];t=0}
+function bobPos(){return{x:px+L*S*Math.sin(th),y:py+L*S*Math.cos(th)}}
+function rad(){return 14+m*7}
+function step(dt){var n=Math.ceil(dt/.002),h=dt/n;
+ for(var i=0;i<n;i++){var p=th;w+=(-(g/L)*Math.sin(th)-(damp?.3:0)*w)*h;th+=w*h;t+=h;
+  if((p<0&&th>=0)||(p>0&&th<=0)){beep(p<0?900:700,.05)}
+  if(p<0&&th>=0){osc++;if(last!==null)Tm=t-last;last=t}}
+ hist.push([t,th]);while(hist.length&&t-hist[0][0]>6)hist.shift();
+ var b=bobPos();trail.push([b.x,b.y]);if(trail.length>160)trail.shift()}
+function drawBob(b,r){var a=-th;cx.save();cx.translate(b.x,b.y);
+ if(bob==0||bob==3){var gd=cx.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r);
+  if(bob==0){gd.addColorStop(0,"#fff");gd.addColorStop(.4,"#b8c4d0");gd.addColorStop(1,"#4a5560")}else{gd.addColorStop(0,"#fff6c0");gd.addColorStop(.4,"#e0a820");gd.addColorStop(1,"#7a5200")}
+  cx.shadowColor="#0008";cx.shadowBlur=14;cx.shadowOffsetY=8;cx.fillStyle=gd;cx.beginPath();cx.arc(0,0,r,0,7);cx.fill();cx.shadowColor="transparent";
+  cx.fillStyle="#333";cx.beginPath();cx.arc(0,-r,4,0,7);cx.fill()}
+ else{cx.rotate(-th);cx.shadowColor="#0008";cx.shadowBlur=14;cx.shadowOffsetY=8;cx.font=(r*2.2)+"px serif";cx.textAlign="center";cx.textBaseline="middle";cx.fillText(bob==1?"🍎":"⚽",0,0)}
+ cx.restore()}
+function draw(){
+ var gd=cx.createLinearGradient(0,0,0,H);gd.addColorStop(0,"#9ad0ff");gd.addColorStop(.75,"#e8f6ff");gd.addColorStop(.75,"#a9773f");gd.addColorStop(1,"#6b4423");cx.fillStyle=gd;cx.fillRect(0,0,W,H);
+ cx.fillStyle="#7a4b22";cx.fillRect(px-170,py-28,340,28);cx.fillStyle="#5a3513";cx.fillRect(px-170,py-8,340,8);
+ cx.fillStyle="#999";cx.beginPath();cx.arc(px,py,7,0,7);cx.fill();
+ // protractor
+ var R=95;cx.strokeStyle="#0006";cx.lineWidth=1;cx.fillStyle="#0007";cx.font="12px Verdana";cx.textAlign="center";
+ for(var d=-80;d<=80;d+=10){var a=d*Math.PI/180,l=d%30==0?14:7;cx.beginPath();cx.moveTo(px+R*Math.sin(a),py+R*Math.cos(a));cx.lineTo(px+(R-l)*Math.sin(a),py+(R-l)*Math.cos(a));cx.stroke();
+  if(d%30==0&&d)cx.fillText(Math.abs(d)+"°",px+(R+16)*Math.sin(a),py+(R+16)*Math.cos(a)+4)}
+ cx.beginPath();cx.arc(px,py,R,Math.PI/2-1.4,Math.PI/2+1.4);cx.stroke();
+ cx.setLineDash([6,6]);cx.beginPath();cx.moveTo(px,py);cx.lineTo(px,py+L*S+60);cx.stroke();cx.setLineDash([]);
+ cx.fillStyle="#133";cx.font="bold 14px Verdana";cx.fillText("Mean position",px,py+L*S+78);
+ if(trace&&trail.length){cx.strokeStyle="#e91e63aa";cx.lineWidth=3;cx.beginPath();trail.forEach(function(p,i){i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1])});cx.stroke()}
+ var b=bobPos(),r=rad();
+ cx.strokeStyle="#333";cx.lineWidth=2.5;cx.beginPath();cx.moveTo(px,py);cx.lineTo(b.x,b.y);cx.stroke();
+ cx.fillStyle="#0003";cx.beginPath();cx.ellipse(b.x,H-14,r*.9,6,0,0,7);cx.fill();
+ drawBob(b,r);
+ cx.fillStyle="#133";cx.font="bold 14px Verdana";cx.textAlign="left";cx.fillText("String length: "+L.toFixed(2)+" m",12,24);cx.fillText("Bob mass: "+m.toFixed(1)+" kg",12,44);
+ if(Math.abs(w)<.05&&Math.abs(th)>.1){cx.textAlign="center";cx.fillStyle="#b71c1c";cx.fillText("Extreme position (turning point)",b.x,b.y-r-14)}
+ // graph
+ var gw=gr.getBoundingClientRect().width,gh=120;gx.fillStyle="#0b1226";gx.fillRect(0,0,gw,gh);gx.strokeStyle="#fff4";gx.beginPath();gx.moveTo(0,gh/2);gx.lineTo(gw,gh/2);gx.stroke();
+ gx.fillStyle="#9bd";gx.font="12px Verdana";gx.fillText("Angle against time (a sine wave: this is harmonic motion)",8,14);
+ gx.strokeStyle="#ffe066";gx.lineWidth=2.5;gx.beginPath();hist.forEach(function(p,i){var x=gw-(t-p[0])/6*gw,y=gh/2-p[1]/1.5*(gh/2-12);i?gx.lineTo(x,y):gx.moveTo(x,y)});gx.stroke();
+ $("rA").textContent=(th*180/Math.PI).toFixed(0)+"°";$("rN").textContent=osc;$("rT").textContent=Tm?Tm.toFixed(2)+" s":"-";
+ var T=2*Math.PI*Math.sqrt(L/g);$("rF").textContent=T.toFixed(2)+" s";$("rQ").textContent=(1/T).toFixed(2)+" Hz";$("rG").textContent=g+" ("+gName+")"}
+var pt=0;function loop(ts){var dt=Math.min(.05,(ts-pt)/1000||0);pt=ts;if(run&&!drag)step(dt*(slow?.25:1));draw();requestAnimationFrame(loop)}
+function setRun(v){run=v;$("bGo").textContent=v?"Pause":"Start";$("bGo").className="b "+(v?"c8":"c1")}
+function setAngle(d){th=d*Math.PI/180;w=0;rset();$("sA").value=d;$("vA").textContent=d+"°";}
+function setL(v){L=v;$("sL").value=Math.round(v*100);$("vL").textContent=v.toFixed(1)+" m";rset();w=0}
+$("bGo").onclick=function(){setRun(!run);msg(run?"The bob is swinging. Gravity pulls it back to the middle again and again.":"Paused. Press Start to continue.")};
+$("bPush").onclick=function(){w+=th>=0?1.5:-1.5;if(!run)setRun(true);msg("You gave the bob a push, so it swings wider.")};
+$("bStop").onclick=function(){setRun(false);w=0;th=0;rset();msg("Stopped at the mean position.")};
+$("sL").oninput=function(){setL(this.value/100);msg("A longer string gives a longer time period.")};
+$("sA").oninput=function(){setAngle(+this.value);msg("Start angle set. Press Start to release the bob.")};
+$("sM").oninput=function(){m=this.value/10;$("vM").textContent=m.toFixed(1)+" kg";msg("Look at the time period. It does not change when the mass changes!")};
+[].forEach.call(document.querySelectorAll("[data-g]"),function(b){b.onclick=function(){g=+b.dataset.g;gName=b.dataset.n;rset();msg("On the "+gName+", gravity is "+g+". "+(g<9.8?"Gravity is weaker, so the pendulum swings slowly.":g>9.8?"Gravity is stronger, so the pendulum swings fast.":"This is our home planet."))}});
+[].forEach.call(document.querySelectorAll("[data-a]"),function(b){b.onclick=function(){setAngle(+b.dataset.a);setRun(true);msg("Released from "+b.dataset.a+"°. For small angles the time period stays almost the same.")}});
+[].forEach.call(document.querySelectorAll("[data-b]"),function(b){b.onclick=function(){bob=+b.dataset.b;msg("New bob: "+b.textContent+". A different object does not change the time period.")}});
+$("bShort").onclick=function(){setL(.3);msg("Short string: the pendulum swings fast.")};
+$("bLong").onclick=function(){setL(1.8);msg("Long string: the pendulum swings slowly.")};
+$("bAir").onclick=function(){damp=!damp;this.textContent="Air: "+(damp?"On":"Off");this.classList.toggle("on",damp);msg(damp?"Air pushes against the bob, so the swings slowly get smaller.":"No air: the pendulum keeps swinging.")};
+$("bTrace").onclick=function(){trace=!trace;this.textContent="Trace: "+(trace?"On":"Off");this.classList.toggle("on",trace)};
+$("bSlow").onclick=function(){slow=!slow;this.textContent="Slow Motion: "+(slow?"On":"Off");this.classList.toggle("on",slow)};
+$("bTick").onclick=function(){tick=!tick;this.textContent="Tick Sound: "+(tick?"On":"Off");this.classList.toggle("on",!tick)};
+var lessons=[["Step 1: This is a simple pendulum. A bob hangs from a string. Drag the bob to the side.",function(){setRun(false);setL(1);setAngle(30)}],
+["Step 2: The dotted line is the mean position. Press Start to release the bob.",function(){setRun(true)}],
+["Step 3: One swing is from the middle, to one side, to the other side, and back. Watch the Swings counter.",function(){}],
+["Step 4: The graph is a smooth wave. This is called harmonic oscillation.",function(){}],
+["Step 5: Now make the string longer. The time period gets longer.",function(){setL(1.8);setRun(true)}],
+["Step 6: Now use the Moon. Gravity is weaker, so the swing is slower.",function(){setL(1);g=1.6;gName="Moon";setRun(true)}],
+["Step 7: Go back to Earth and turn on Air. The swings slowly stop.",function(){g=9.8;gName="Earth";damp=true;$("bAir").textContent="Air: On";setAngle(40);setRun(true)}]];
+$("bLesson").onclick=function(){lessonI=(lessonI+1)%lessons.length;lessons[lessonI][1]();msg(lessons[lessonI][0])};
+$("bReset").onclick=function(){g=9.8;gName="Earth";m=1;$("sM").value=10;$("vM").textContent="1.0 kg";damp=slow=trace=false;tick=true;bob=0;lessonI=-1;
+ $("bAir").textContent="Air: Off";$("bAir").classList.remove("on");$("bTrace").textContent="Trace: Off";$("bTrace").classList.remove("on");$("bSlow").textContent="Slow Motion: Off";$("bSlow").classList.remove("on");$("bTick").textContent="Tick Sound: On";$("bTick").classList.remove("on");
+ setRun(false);setL(1);setAngle(30);msg("Everything is reset. Drag the bob or press Start.")};
+$("bFs").onclick=function(){var a=$("app");document.fullscreenElement?document.exitFullscreen():(a.requestFullscreen||a.webkitRequestFullscreen).call(a)};
+document.addEventListener("fullscreenchange",function(){$("bFs").textContent=document.fullscreenElement?"Exit Full Screen":"Full Screen";setTimeout(resize,150)});
+window.onresize=resize;
+function mp(e){var r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]}
+cv.onpointerdown=function(e){var p=mp(e),b=bobPos();if(Math.hypot(p[0]-b.x,p[1]-b.y)<rad()+14){drag=true;w=0;cv.setPointerCapture(e.pointerId);cv.style.cursor="grabbing"}};
+cv.onpointermove=function(e){if(!drag)return;var p=mp(e),a=Math.atan2(p[0]-px,p[1]-py);th=Math.max(-1.4,Math.min(1.4,a));w=0;$("sA").value=Math.min(80,Math.round(Math.abs(th)*57.3))};
+cv.onpointerup=function(){if(drag){drag=false;cv.style.cursor="grab";rset();setRun(true);msg("Released! Gravity pulls the bob back to the middle.")}};
+resize();msg("Welcome! Drag the bob to the side, or press Start. Press Next Lesson Step for a guided tour.");requestAnimationFrame(loop);
+</script></body></html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ABO Blood Group System and Rh Factor Compatibility</title>
+<style>
+*{box-sizing:border-box;margin:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif}
+html,body{height:100%}
+body{background:radial-gradient(circle at 20% 0,#1e3a5f,#0b1224 70%);color:#fff;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0a1020;border-bottom:4px solid #e11d48;flex-wrap:wrap}
+h1{font-size:20px;letter-spacing:.3px}h1 small{display:block;font-size:12px;font-weight:400;color:#93c5fd}
+main{flex:1;display:flex;gap:10px;padding:10px;min-height:0}
+aside{width:262px;flex:none;background:#ffffff14;border-radius:14px;padding:10px;overflow:auto}
+h3{font-size:13px;margin:8px 0 5px;color:#fde68a}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+button{border:0;border-radius:10px;padding:8px 9px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 3px 0 #0007;transition:.15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.18)}
+button:active{transform:translateY(2px);box-shadow:none}
+button:focus-visible{outline:3px solid #fff}
+button.sel{outline:3px solid #fff;box-shadow:0 0 14px #fff}
+.neg{background-image:repeating-linear-gradient(45deg,#0004 0 6px,transparent 6px 12px)}
+.w{grid-column:span 2}
+#stage{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.row{flex:1;display:flex;gap:10px;min-height:0}
+.card{background:#ffffff14;border-radius:14px;padding:8px;min-height:0}
+#v1,#v2{flex:1;display:flex;gap:10px;min-height:0}
+#v2{display:none;flex-direction:column}
+#scene{flex:1;min-width:0}
+svg{width:100%;height:100%;display:block}
+#micro{width:310px;flex:none;text-align:center}
+#micro canvas{width:300px;height:300px;border-radius:50%;border:8px solid #94a3b8;box-shadow:0 0 0 4px #334155,0 0 24px #0008 inset}
+.leg{font-size:12px;text-align:left;margin-top:6px;line-height:1.6}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+#msg{background:#0a1020;border-left:6px solid #38bdf8;border-radius:10px;padding:10px 14px;font-size:15px;min-height:62px;line-height:1.4}
+#msg.ok{border-color:#22c55e}#msg.bad{border-color:#ef4444}
+#chart{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:9}
+#chart>div{background:#0f172a;padding:16px;border-radius:16px;max-height:94vh;overflow:auto}
+table{border-collapse:collapse;font-size:14px}td,th{border:1px solid #475569;padding:5px 10px;text-align:center}
+.y{background:#166534}.n{background:#991b1b}
+.tb{display:flex;gap:6px;flex-wrap:wrap}
+@media (max-width:1000px){aside{width:200px}#micro{width:250px}}
+</style></head><body>
+<header>
+<h1>ABO Blood Group System and Rh Factor Compatibility<small>Pick a donor and a patient, then start the transfusion</small></h1>
+<div class="tb">
+<button style="background:#e11d48" id="m1">Transfusion Lab</button>
+<button style="background:#0891b2" id="m2">Blood Typing Slide</button>
+<button style="background:#7c3aed" id="bc">Compatibility Chart</button>
+<button style="background:#16a34a" id="fs">Full Screen</button>
+</div></header>
+<main>
+<aside>
+<h3>1. Choose the patient (receiver)</h3><div class="g" id="pg"></div>
+<h3>2. Choose the donor (giver)</h3><div class="g" id="dg"></div>
+<h3>Quick cases</h3><div class="g">
+<button class="w" style="background:#059669" id="q1">Universal Donor (O−)</button>
+<button class="w" style="background:#9333ea" id="q2">Universal Receiver (AB+)</button>
+<button class="w" style="background:#f59e0b" id="q3">Random Case</button>
+<button class="w" style="background:#0ea5e9" id="q4">Swap Donor and Patient</button></div>
+<h3>3. Transfusion controls</h3><div class="g">
+<button style="background:#16a34a" id="st">Start</button>
+<button style="background:#f97316" id="pa">Pause</button>
+<button style="background:#64748b" id="rs">Reset</button>
+<button style="background:#db2777" id="sp">Speed: 1x</button></div>
+<h3>4. Microscope controls</h3><div class="g">
+<button class="w" style="background:#7c3aed" id="mx">Mix Blood Samples</button>
+<button style="background:#2563eb" id="ta">Antigens: On</button>
+<button style="background:#ca8a04" id="tb">Antibodies: On</button></div>
+</aside>
+<section id="stage">
+<div id="v1">
+<div class="card" id="scene"><svg viewBox="0 0 580 430" id="svg">
+<defs><linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe8f3"/><stop offset="1" stop-color="#9cc3d5"/></linearGradient>
+<linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c9a3"/><stop offset="1" stop-color="#d9a073"/></linearGradient>
+<linearGradient id="bag" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".3" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+<clipPath id="bc1"><path d="M52 62 Q52 50 66 50 H124 Q138 50 138 62 V176 Q138 198 95 204 Q52 198 52 176Z"/></clipPath></defs>
+<rect width="580" height="430" fill="url(#wall)"/><rect y="372" width="580" height="58" fill="#6b7f8c"/>
+<rect x="250" y="40" width="130" height="80" rx="8" fill="#1f2937"/><rect x="258" y="48" width="114" height="64" rx="4" fill="#06240f"/>
+<polyline id="ecg" points="262,90 285,90 292,70 300,106 308,90 340,90 348,76 356,96 366,90" fill="none" stroke="#4ade80" stroke-width="2"/>
+<text x="262" y="62" fill="#4ade80" font-size="12">PULSE</text><text id="bpm" x="318" y="62" fill="#4ade80" font-size="14" font-weight="700">72 bpm</text>
+<g><rect x="20" y="394" width="150" height="8" rx="4" fill="#475569"/><rect x="92" y="14" width="6" height="384" fill="#94a3b8"/><path d="M95 14 Q130 4 130 24" stroke="#94a3b8" stroke-width="5" fill="none"/>
+<circle cx="40" cy="406" r="6" fill="#111"/><circle cx="150" cy="406" r="6" fill="#111"/></g>
+<path d="M52 62 Q52 50 66 50 H124 Q138 50 138 62 V176 Q138 198 95 204 Q52 198 52 176Z" fill="#fecaca55" stroke="#475569" stroke-width="3"/>
+<rect id="lvl" x="40" y="60" width="110" height="150" fill="#b91c1c" clip-path="url(#bc1)"/>
+<path d="M52 62 Q52 50 66 50 H124 Q138 50 138 62 V176 Q138 198 95 204 Q52 198 52 176Z" fill="url(#bag)"/>
+<rect x="62" y="96" width="66" height="50" rx="6" fill="#fff"/><text id="lt" x="95" y="130" text-anchor="middle" font-size="26" font-weight="800" fill="#b91c1c">O−</text>
+<text x="95" y="108" text-anchor="middle" font-size="9" fill="#334155">DONOR BLOOD</text>
+<rect x="85" y="204" width="20" height="14" fill="#cbd5e1"/>
+<path id="tube" d="M95 218 V238 M95 290 V330 C95 372 260 372 340 340 L412 332" fill="none" stroke="#e2e8f0" stroke-width="6"/>
+<path id="flow" d="M95 218 V238 M95 290 V330 C95 372 260 372 340 340 L412 332" fill="none" stroke="#dc2626" stroke-width="4" stroke-dasharray="12 9" style="display:none"/>
+<rect x="76" y="238" width="38" height="52" rx="8" fill="#e0f2fe99" stroke="#64748b" stroke-width="3"/><circle id="drop" cx="95" cy="250" r="4" fill="#dc2626" style="display:none"/>
+<rect x="84" y="300" width="22" height="9" rx="3" fill="#2563eb"/><text x="116" y="308" font-size="10" fill="#1e293b">clamp</text>
+<rect x="330" y="352" width="250" height="60" rx="10" fill="#f8fafc"/><rect x="330" y="410" width="250" height="8" fill="#94a3b8"/>
+<path id="arm" d="M580 306 L420 312 Q396 318 396 336 Q396 354 420 358 L580 362Z" fill="url(#skin)" stroke="#a16207" stroke-width="2"/>
+<path d="M404 332 Q480 326 570 334" stroke="#6b8bd6" stroke-width="4" fill="none" opacity=".7"/>
+<rect x="400" y="327" width="26" height="9" rx="3" fill="#e2e8f0"/>
+<rect x="440" y="372" width="120" height="30" rx="6" fill="#dbeafe"/><text id="pt" x="500" y="393" text-anchor="middle" font-size="14" font-weight="800" fill="#1e3a8a">Patient: A+</text>
+<g id="warn" style="display:none"><circle cx="500" cy="270" r="26" fill="#ef4444"/><text x="500" y="282" text-anchor="middle" font-size="34" font-weight="900" fill="#fff">!</text></g>
+<g id="okk" style="display:none"><circle cx="500" cy="270" r="26" fill="#22c55e"/><text x="500" y="283" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">✓</text></g>
+</svg></div>
+<div class="card" id="micro"><h3>Microscope View</h3><canvas id="cv" width="300" height="300"></canvas>
+<div class="leg"><span class="dot" style="background:#dc2626"></span>Donor red blood cell<br>
+<span class="dot" style="background:#38bdf8"></span>A antigen &nbsp;<span class="dot" style="background:#facc15"></span>B antigen &nbsp;<span class="dot" style="background:#4ade80"></span>Rh (D) antigen<br>
+Y shapes = patient antibodies (anti-A, anti-B, anti-D)</div></div>
+</div>
+<div id="v2" class="card">
+<div class="tb" style="margin-bottom:6px">
+<button style="background:#dc2626" id="t0">Add Blood Drop</button>
+<button style="background:#2563eb" id="t1">Add Anti-A (blue)</button>
+<button style="background:#ca8a04" id="t2">Add Anti-B (yellow)</button>
+<button style="background:#16a34a" id="t3">Add Anti-D (clear)</button>
+<button style="background:#9333ea" id="t4">Reveal Blood Group</button>
+<button style="background:#64748b" id="t5">Clear Slide</button></div>
+<div style="flex:1;min-height:0"><svg viewBox="0 0 640 300" id="slide"></svg></div></div>
+<div id="msg">Welcome! Choose a donor and a patient on the left, then press Start.</div>
+</section></main>
+<div id="chart"><div><h3 style="font-size:18px">Who can receive from whom? ✓ = safe, ✕ = unsafe</h3><div id="ct"></div>
+<button style="background:#e11d48;margin-top:10px" id="cc">Close</button></div></div>
+<script>
+const T=['A+','A−','B+','B−','AB+','AB−','O+','O−'],$=i=>document.getElementById(i);
+const col=t=>({A:'#ef4444',B:'#2563eb',AB:'#9333ea',O:'#059669'}[t.replace(/[+−]/,'')]);
+const has=t=>({A:t[0]=='A',B:t.includes('B'),D:t.endsWith('+')});
+const why=(d,p)=>{const a=has(d),b=has(p),r=[];
+ if(a.A&&!b.A)r.push('Donor cells carry antigen A, but the patient has anti-A antibodies.');
+ if(a.B&&!b.B)r.push('Donor cells carry antigen B, but the patient has anti-B antibodies.');
+ if(a.D&&!b.D)r.push('Donor cells carry the Rh (D) antigen, and an Rh-negative patient can make anti-D antibodies.');
+ return r};
+let D='O−',P='A+',prog=0,run=false,spd=1,mix=false,showAg=true,showAb=true,done=false,ts=1;
+function build(id,k){$(id).innerHTML=T.map(t=>`<button class="${t.includes('−')?'neg':''}" style="background:${col(t)}" data-t="${t}">${t}</button>`).join('');
+ $(id).onclick=e=>{const t=e.target.dataset.t;if(!t)return;if(k=='D')D=t;else P=t;reset()}}
+build('pg','P');build('dg','D');
+function say(h,c){$('msg').innerHTML=h;$('msg').className=c||''}
+function sel(){document.querySelectorAll('#pg button').forEach(b=>b.classList.toggle('sel',b.dataset.t==P));
+ document.querySelectorAll('#dg button').forEach(b=>b.classList.toggle('sel',b.dataset.t==D))}
+function reset(){prog=0;run=false;mix=false;done=false;initCells();
+ $('lt').textContent=D;$('lt').setAttribute('fill',col(D));$('pt').textContent='Patient: '+P;
+ ['flow','drop','warn','okk'].forEach(i=>$(i).style.display='none');$('bpm').textContent='72 bpm';sel();draw();
+ say(`Donor <b>${D}</b> → Patient <b>${P}</b>. Press <b>Start</b> to begin, or <b>Mix Blood Samples</b> to test under the microscope.`)}
+function finish(){run=false;done=true;const r=why(D,P);$('drop').style.display='none';$('flow').style.display='none';
+ if(r.length){$('warn').style.display='';$('bpm').textContent='140 bpm';say('⚠ <b>Not compatible.</b> '+r.join(' ')+' The red cells clump together (agglutination) and can block blood vessels.','bad')}
+ else{$('okk').style.display='';say(`✓ <b>Compatible.</b> The patient has no antibodies against the donor's antigens, so ${D} blood is safe for a ${P} patient.`,'ok')}}
+function draw(){const h=150*(1-prog);$('lvl').setAttribute('y',60+150-h);$('lvl').setAttribute('height',h+12)}
+const fl=$('flow');let off=0,dy=0;
+function tick(){if(run){prog+=.0022*spd;if(prog>.35)mix=true;off-=1.5*spd;fl.style.display='';fl.setAttribute('stroke-dashoffset',off);
+ $('drop').style.display='';dy=(dy+2.2*spd)%38;$('drop').setAttribute('cy',250+dy);draw();
+ if(!why(D,P).length||prog<.5)$('bpm').textContent='72 bpm';else $('bpm').textContent=(72+Math.round((prog-.5)*136))+' bpm';
+ if(prog>=1){prog=1;draw();finish()}}
+ micro();requestAnimationFrame(tick)}
+// microscope
+const cv=$('cv'),cx=cv.getContext('2d');let cells=[],abs=[];
+function initCells(){cells=[];abs=[];for(let i=0;i<20;i++){const a=Math.random()*6.28,r=Math.random()*105;cells.push({x:150+r*Math.cos(a),y:150+r*Math.sin(a),vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,k:i%3,rot:Math.random()*6})}
+ const b=has(P);['A','B','D'].forEach(t=>{if(!b[t])for(let i=0;i<5;i++)abs.push({t,x:Math.random()*300,y:Math.random()*300,vx:(Math.random()-.5),vy:(Math.random()-.5)})});}
+const ac={A:'#38bdf8',B:'#facc15',D:'#4ade80'};
+function Y(a){cx.strokeStyle=ac[a.t];cx.lineWidth=2.5;cx.beginPath();cx.moveTo(a.x,a.y+7);cx.lineTo(a.x,a.y);cx.lineTo(a.x-6,a.y-7);cx.moveTo(a.x,a.y);cx.lineTo(a.x+6,a.y-7);cx.stroke();
+ cx.fillStyle='#fff';cx.font='8px Arial';cx.fillText('anti-'+a.t,a.x-10,a.y+16)}
+function micro(){const bad=why(D,P).length>0,g=cx.createRadialGradient(150,150,10,150,150,150);g.addColorStop(0,'#fde68a');g.addColorStop(1,'#fbbf24');
+ cx.fillStyle=g;cx.fillRect(0,0,300,300);const dn=has(D);
+ const cl=[[100,105],[205,120],[150,205]];
+ cells.forEach(c=>{if(mix&&bad){const t=cl[c.k],ox=Math.cos(c.rot*5)*20,oy=Math.sin(c.rot*7)*20;c.x+=(t[0]+ox-c.x)*.012*(done?2:1);c.y+=(t[1]+oy-c.y)*.012*(done?2:1)}
+  else{c.x+=c.vx;c.y+=c.vy;if(Math.hypot(c.x-150,c.y-150)>125){c.vx*=-1;c.vy*=-1}}
+  c.rot+=.01;cx.save();cx.translate(c.x,c.y);cx.fillStyle='#dc2626';cx.beginPath();cx.arc(0,0,16,0,6.3);cx.fill();
+  cx.fillStyle='#991b1b';cx.beginPath();cx.arc(0,0,7,0,6.3);cx.fill();
+  if(showAg){let n=0;['A','B','D'].forEach(t=>{if(dn[t]){for(let j=0;j<3;j++){const an=c.rot+n*2.1+j*.5;cx.fillStyle=ac[t];cx.beginPath();cx.arc(19*Math.cos(an),19*Math.sin(an),3.6,0,6.3);cx.fill()}n++}})}
+  cx.restore()});
+ if(showAb)abs.forEach(a=>{a.x+=a.vx;a.y+=a.vy;if(Math.hypot(a.x-150,a.y-150)>135){a.vx*=-1;a.vy*=-1}Y(a)});
+ if(mix&&bad&&done){cx.fillStyle='#fff';cx.font='bold 14px Arial';cx.fillText('Clumping!',112,26)}}
+// typing slide
+let W={b:false,s:[0,0,0],rev:false};
+const sn=['Anti-A','Anti-B','Anti-D'],sc=['#60a5fa','#facc15','#e5e7eb'];
+function slide(){const a=has(D),f=[a.A,a.B,a.D];let h='<rect width="640" height="300" rx="16" fill="#cbd5e1"/><rect x="20" y="20" width="600" height="260" rx="10" fill="#e0f2fe" stroke="#94a3b8" stroke-width="4"/>';
+ for(let i=0;i<3;i++){const x=120+i*200;h+=`<circle cx="${x}" cy="140" r="64" fill="#f8fafc" stroke="#64748b" stroke-width="3"/>`;
+  if(W.s[i])h+=`<circle cx="${x}" cy="140" r="${W.b?58:40}" fill="${sc[i]}" opacity=".85"/>`;
+  if(W.b)h+=`<circle cx="${x}" cy="140" r="${W.s[i]?50:26}" fill="#b91c1c" opacity=".85"/>`;
+  if(W.b&&W.s[i]&&f[i])for(let j=0;j<16;j++){const an=j*2.4+i,r=8+(j*13%34);h+=`<circle cx="${x+r*Math.cos(an)}" cy="${140+r*Math.sin(an)}" r="${5+j%3}" fill="#450a0a"/>`}
+  h+=`<text x="${x}" y="236" text-anchor="middle" font-size="16" font-weight="700" fill="#1e293b">${sn[i]}</text>`;
+  if(W.b&&W.s[i])h+=`<text x="${x}" y="256" text-anchor="middle" font-size="13" fill="${f[i]?'#b91c1c':'#15803d'}" font-weight="700">${f[i]?'Clumps (positive)':'Smooth (negative)'}</text>`}
+ $('slide').innerHTML=h}
+function tsay(){if(!W.rev)return say('Add a blood drop first, then add each test serum. Clumping means that antigen is present. The sample is the <b>Donor</b> type chosen on the left.');
+ say(`Result: the sample is blood group <b>${D}</b>. A antigen: ${has(D).A?'yes':'no'}, B antigen: ${has(D).B?'yes':'no'}, Rh (D) antigen: ${has(D).D?'yes':'no'}.`,'ok')}
+function mode(n){$('v1').style.display=n==1?'flex':'none';$('v2').style.display=n==2?'flex':'none';
+ if(n==2){slide();say('Blood typing test on a glass slide. Use the buttons above to test the donor sample.')}else reset()}
+$('m1').onclick=()=>mode(1);$('m2').onclick=()=>mode(2);
+$('t0').onclick=()=>{W.b=true;slide()};
+[1,2,3].forEach(i=>$('t'+i).onclick=()=>{W.s[i-1]=1;slide()});
+$('t4').onclick=()=>{W.b=true;W.s=[1,1,1];W.rev=true;slide();tsay()};
+$('t5').onclick=()=>{W={b:false,s:[0,0,0],rev:false};slide()};
+['dg','pg'].forEach(i=>$(i).addEventListener('click',()=>{if($('v2').style.display=='flex'){W={b:false,s:[0,0,0],rev:false};slide()}}));
+$('st').onclick=()=>{if(done)reset();run=true;say('Transfusion running… watch the drip chamber and the microscope.')};
+$('pa').onclick=()=>{run=false;say('Paused. Press Start to continue.')};
+$('rs').onclick=reset;
+$('sp').onclick=()=>{spd=spd==1?2:spd==2?4:1;$('sp').textContent='Speed: '+spd+'x'};
+$('mx').onclick=()=>{mix=true;const r=why(D,P);say(r.length?'Microscope: the cells are sticking together. '+r.join(' '):'Microscope: the cells float freely. No clumping, so the match is safe.',r.length?'bad':'ok')};
+$('ta').onclick=()=>{showAg=!showAg;$('ta').textContent='Antigens: '+(showAg?'On':'Off')};
+$('tb').onclick=()=>{showAb=!showAb;$('tb').textContent='Antibodies: '+(showAb?'On':'Off')};
+$('q1').onclick=()=>{D='O−';reset();say('<b>O−</b> is the universal donor: its red cells have no A, B or Rh antigens, so almost every patient can accept them.')};
+$('q2').onclick=()=>{P='AB+';reset();say('<b>AB+</b> is the universal receiver: the plasma has no anti-A, anti-B or anti-D antibodies.')};
+$('q3').onclick=()=>{D=T[Math.random()*8|0];P=T[Math.random()*8|0];reset()};
+$('q4').onclick=()=>{[D,P]=[P,D];reset()};
+$('bc').onclick=()=>{let h='<table><tr><th>Patient ↓ / Donor →</th>'+T.map(t=>`<th style="background:${col(t)}">${t}</th>`).join('')+'</tr>';
+ T.forEach(p=>{h+=`<tr><th style="background:${col(p)}">${p}</th>`+T.map(d=>why(d,p).length?'<td class="n">✕</td>':'<td class="y">✓</td>').join('')+'</tr>'});
+ $('ct').innerHTML=h+'</table>';$('chart').style.display='flex'};
+$('cc').onclick=()=>$('chart').style.display='none';
+$('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+document.addEventListener('fullscreenchange',()=>$('fs').textContent=document.fullscreenElement?'Exit Full Screen':'Full Screen');
+reset();tick();
+</script></body></html>
