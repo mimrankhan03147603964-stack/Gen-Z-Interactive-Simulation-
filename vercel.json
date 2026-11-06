@@ -1,8 +1,41 @@
 {
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/simulations/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).(jpg|jpeg|png|webp|svg|ico|woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, stale-while-revalidate=86400"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/simulations/(.*)",
       "destination": "/simulations/$1"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
       "source": "/api/(.*)",

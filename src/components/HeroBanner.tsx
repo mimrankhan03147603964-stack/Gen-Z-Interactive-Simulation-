@@ -203,12 +203,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
     return () => clearTimeout(timeout);
   }, [slideIndex, typedSubject, typedDesc, isDeleting, isPaused, stemRotations]);
 
-  // Preload all 4 slider pictures so there is zero flicker
+  // Defer preloading remaining slider pictures until initial render is complete
   useEffect(() => {
-    HERO_SLIDER_IMAGES.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
+    const timer = setTimeout(() => {
+      HERO_SLIDER_IMAGES.slice(1).forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    }, 2500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Continuous 6-second slider: move left by one picture with smooth 0.8s transition
@@ -429,8 +432,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     opacity: 1,
                     filter: 'none'
                   }}
-                  loading="eager"
-                  decoding="sync"
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
               </div>

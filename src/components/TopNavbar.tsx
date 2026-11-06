@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
-import { EXTERNAL_SIMULATION_RESOURCES } from './ExternalSimulationsHub';
+import { EXTERNAL_SIMULATION_RESOURCES } from '../data/externalSimulationsData';
 
 interface TopNavbarProps {
   activeSim?: SimulationItem | null;
