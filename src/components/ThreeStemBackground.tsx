@@ -67,13 +67,13 @@ export const ThreeStemBackground: React.FC = () => {
     let animationFrameId: number;
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let dpr = Math.max(window.devicePixelRatio || 1, 1);
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.25);
 
     const resizeCanvas = () => {
       if (!canvas) return;
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = Math.max(window.devicePixelRatio || 1, 1);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -112,8 +112,8 @@ export const ThreeStemBackground: React.FC = () => {
       'flask_reaction'
     ];
 
-    // Number of simulation objects scaled for laptops & desktop screens
-    const objectCount = Math.max(20, Math.min(36, Math.floor(width / 50)));
+    // High performance object count for instant 60fps rendering without GPU freeze
+    const objectCount = Math.max(12, Math.min(18, Math.floor(width / 110)));
     const objects: StemSimulationObject[] = [];
 
     const createStemObject = (initialY?: number): StemSimulationObject => {
@@ -150,7 +150,7 @@ export const ThreeStemBackground: React.FC = () => {
 
     let time = 0;
 
-    // Helper: Draw 3D Shaded Sphere (Atom/Particle)
+    // Ultra-lightweight, high-performance 3D Sphere Renderer (Zero garbage collection overhead)
     const drawSphere = (
       context: CanvasRenderingContext2D,
       cx: number,
@@ -161,28 +161,17 @@ export const ThreeStemBackground: React.FC = () => {
       alpha: number
     ) => {
       context.save();
-      const grad = context.createRadialGradient(
-        cx - radius * 0.35,
-        cy - radius * 0.35,
-        radius * 0.1,
-        cx,
-        cy,
-        radius
-      );
-      grad.addColorStop(0, highlightColor);
-      grad.addColorStop(0.65, baseColor);
-      grad.addColorStop(1, 'rgba(15, 23, 42, 0.85)');
-
+      context.globalAlpha = alpha;
       context.beginPath();
       context.arc(cx, cy, radius, 0, Math.PI * 2);
-      context.fillStyle = grad;
-      context.globalAlpha = alpha;
+      context.fillStyle = baseColor;
       context.fill();
 
-      // Specular highlight gloss
+      // Specular highlight gloss for realistic 3D volume
       context.beginPath();
-      context.arc(cx - radius * 0.3, cy - radius * 0.3, radius * 0.25, 0, Math.PI * 2);
-      context.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      context.arc(cx - radius * 0.3, cy - radius * 0.3, radius * 0.32, 0, Math.PI * 2);
+      context.fillStyle = highlightColor;
+      context.globalAlpha = alpha * 0.65;
       context.fill();
       context.restore();
     };
@@ -572,6 +561,10 @@ export const ThreeStemBackground: React.FC = () => {
 
     // Main 60 FPS Animation Render Loop
     const render = () => {
+      if (document.hidden) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
       time += 0.02;
 
       // Smooth breeze dampening

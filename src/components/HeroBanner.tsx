@@ -58,14 +58,16 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [tickerDuration, setTickerDuration] = useState<number>(2500);
 
   useEffect(() => {
-    if (tickerGroupRef.current) {
-      const width = tickerGroupRef.current.offsetWidth || tickerGroupRef.current.scrollWidth;
-      if (width > 0) {
-        // Calculate animation duration from real content width (duration = width / 20)
-        const durationSec = Math.round(width / 20);
-        setTickerDuration(durationSec);
+    const handle = requestAnimationFrame(() => {
+      if (tickerGroupRef.current) {
+        const width = tickerGroupRef.current.offsetWidth || tickerGroupRef.current.scrollWidth;
+        if (width > 0) {
+          const durationSec = Math.round(width / 20);
+          setTickerDuration(durationSec);
+        }
       }
-    }
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   // 100% of available simulation topics currently in the system library
@@ -896,25 +898,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     href={getSimulationStandaloneUrl(sim)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center shrink-0 mr-10 hover:text-[#F5A623] transition-colors no-underline"
+                    className="flex items-center shrink-0 mr-8 hover:text-[#F5A623] transition-colors no-underline"
                     title={`Open ${sim.title} in new tab`}
                   >
                     <span 
-                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2.5 text-white font-mono shadow-xs border border-white/40 tracking-wider"
+                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2 text-white font-mono shadow-xs border border-white/40 tracking-wider"
                       style={{ backgroundColor: '#1E88E5' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-black mr-2 text-xs sm:text-sm font-sans tracking-tight text-white">
+                    <span className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap">
                       {sim.title}
                     </span>
-                    <span className="text-xs font-bold mr-2 text-[#F5A623]">
+                    <span className="text-xs font-semibold mr-2 text-[#F5A623] whitespace-nowrap">
                       ({sim.category})
                     </span>
-                    <span className="text-xs font-semibold mr-3 text-[#DBE4F7]">
-                      &mdash; {sim.description}
-                    </span>
-                    <Star className="w-3.5 h-3.5 inline-block mx-2 shrink-0 pointer-events-none text-[#F5A623] fill-[#F5A623]" />
+                    <Star className="w-3.5 h-3.5 inline-block mx-1.5 shrink-0 pointer-events-none text-[#F5A623] fill-[#F5A623]" />
                   </a>
                 ))}
               </div>
@@ -926,25 +925,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     href={getSimulationStandaloneUrl(sim)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center shrink-0 mr-10 hover:text-[#60A5FA] transition-colors no-underline"
+                    className="flex items-center shrink-0 mr-8 hover:text-[#60A5FA] transition-colors no-underline"
                     title={`Open ${sim.title} in new tab`}
                   >
                     <span 
-                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2.5 text-white font-mono shadow-xs border border-white/40 tracking-wider"
+                      className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2 text-white font-mono shadow-xs border border-white/40 tracking-wider"
                       style={{ backgroundColor: sim.accentColor || '#2563EB' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-black mr-2 text-xs sm:text-sm font-sans tracking-tight text-white">
+                    <span className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap">
                       {sim.title}
                     </span>
-                    <span className="text-xs font-bold mr-2" style={{ color: '#60A5FA' }}>
+                    <span className="text-xs font-semibold mr-2 text-[#93C5FD] whitespace-nowrap">
                       ({sim.category})
                     </span>
-                    <span className="text-xs font-semibold mr-3" style={{ color: '#CBD5E1' }}>
-                      &mdash; {sim.description}
-                    </span>
-                    <Star className="w-3.5 h-3.5 inline-block mx-2 shrink-0 pointer-events-none" style={{ color: '#60A5FA', fill: '#60A5FA' }} />
+                    <Star className="w-3.5 h-3.5 inline-block mx-1.5 shrink-0 pointer-events-none text-[#60A5FA] fill-[#60A5FA]" />
                   </a>
                 ))}
               </div>

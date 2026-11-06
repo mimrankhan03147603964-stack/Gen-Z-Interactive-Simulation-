@@ -847,7 +847,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
                   {/* Right Icon Pedestal matching the screenshot */}
                   <div 
-                    className={`reveal-zoom w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 self-center ${
+                    className={`w-13 h-13 sm:w-15 sm:h-15 rounded-2xl flex items-center justify-center shadow-md shrink-0 ml-1 group-hover:scale-105 transition-transform border p-2 relative z-10 self-center ${
                       isSelected 
                         ? 'bg-white/15 border-white/30 text-white' 
                         : 'bg-white text-[#1B2A5C]'
@@ -1057,7 +1057,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                     >
                                       {/* Left: Realistic & Colorful Vector Emblem Tile */}
                                       <div
-                                        className="reveal-zoom w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
+                                        className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
                                         aria-hidden="true"
                                       >
                                         <TopicRealisticIcon

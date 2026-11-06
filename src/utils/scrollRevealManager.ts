@@ -52,10 +52,10 @@ class ScrollRevealEngine {
     this.scanAndObserve();
     this.setupMutationObserver();
 
-    // 3-second safety fallback: guarantee NO card, section, or panel ever stays empty
+    // 500ms safety fallback: guarantee NO card, section, or panel ever stays empty
     this.safetyTimeoutId = window.setTimeout(() => {
       this.forceRevealUnrevealed();
-    }, 3000);
+    }, 500);
 
     // Refresh when user returns to tab or window resizes
     window.addEventListener('resize', this.handleResize, { passive: true });
@@ -105,8 +105,8 @@ class ScrollRevealEngine {
         });
       },
       {
-        threshold: 0.18, // ~0.2 threshold as requested
-        rootMargin: '0px 0px -20px 0px',
+        threshold: 0.05,
+        rootMargin: '120px 0px 80px 0px',
       }
     );
   }
@@ -119,15 +119,6 @@ class ScrollRevealEngine {
       el.style.transform = 'none';
       el.style.willChange = 'auto';
       return;
-    }
-
-    // If element is already in the viewport on initial discovery, show immediately
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const rect = el.getBoundingClientRect();
-    if (rect.top < windowHeight * 0.95 && rect.bottom > 0) {
-      el.classList.add('reveal-show', 'reveal-settled');
-      el.style.transform = 'none';
-      el.style.willChange = 'auto';
     }
 
     this.observedElements.add(el);
