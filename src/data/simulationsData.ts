@@ -898,7 +898,7 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
     description: 'Light the fire and watch ice at −10°C melt into liquid water at 0°C, then heat to 100°C and boil into steam. Features live digital temperature readout, temperature-time heating graph, microscopic particle motion model, and adjustable flame power.',
     fileUrl: '/simulations/Ice_to_Water_to_Steam_Simulation.html',
     topics: ['Solid, Liquid and Gas Particle Arrangement', 'Melting at 0°C (Latent Heat of Fusion)', 'Boiling at 100°C (Latent Heat of Vaporization)', 'Temperature vs. Time Phase Transition Curve'],
-    features: ['Interactive Bunsen Burner Flame & Tripod Stand', 'Live Digital LCD Temperature Readout', 'Real-time Temperature vs. Time Graph', 'Microscopic Particle Lattice & Collision Model'],
+    features: ['Interactive Bunsen Burner Flame & Tripod Stand', 'Live Digital LCD Temperature Readout', 'Real-time Temperature vs. Time Graph', 'Microscopic Particle Lattice & Collision Model', 'One-Click Fullscreen Lab Immersion Mode'],
     gradeLevel: 'Elementary to High School (Grades 4–10)'
   },
   {

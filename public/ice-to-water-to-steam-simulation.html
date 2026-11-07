@@ -4,9 +4,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at 25% 0,#1d3a63,#0c1727 70%);color:#e8f1ff;min-height:100vh;padding:14px}
-.hd{text-align:center;margin:4px auto 12px;width:min(1180px,100%);background:linear-gradient(180deg,#2b7bff,#123fa6);border:3px solid #a9d0ff;border-radius:40px;padding:8px 18px;box-shadow:0 7px 0 #0a2a78,0 14px 26px rgba(0,0,0,.5)}
+.sim-container{width:100%;max-width:1180px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+.hd{position:relative;text-align:center;margin:4px auto 12px;width:100%;background:linear-gradient(180deg,#2b7bff,#123fa6);border:3px solid #a9d0ff;border-radius:40px;padding:8px 18px;box-shadow:0 7px 0 #0a2a78,0 14px 26px rgba(0,0,0,.5)}
 .hd h1{font-size:34px;text-shadow:0 3px 0 #0a2a78}.hd h1 span{color:#ffd23c}.hd p{font-size:16px;color:#d7e9ff;font-weight:600}
-.wrap{display:grid;grid-template-columns:1fr 350px;gap:14px;width:min(1180px,100%);margin:auto}
+.fs-btn{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:7px;background:linear-gradient(180deg,#1e59cb,#10378b);border:2px solid #a9d0ff;border-radius:24px;color:#fff;font-family:inherit;font-size:14px;font-weight:800;padding:8px 16px;cursor:pointer;box-shadow:0 4px 0 #071f54,0 6px 14px rgba(0,0,0,.4);transition:all .15s ease;user-select:none;z-index:20;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.fs-btn:hover{background:linear-gradient(180deg,#3172ec,#1749b5);box-shadow:0 4px 0 #071f54,0 0 14px rgba(169,208,255,.65);transform:translateY(calc(-50% - 1px))}
+.fs-btn:active{transform:translateY(calc(-50% + 2px));box-shadow:0 1px 0 #071f54}
+.fs-btn.active{background:linear-gradient(180deg,#e0430f,#a62c05);border-color:#ffb699;box-shadow:0 4px 0 #6e1c02,0 6px 14px rgba(0,0,0,.4)}
+.fs-btn.active:hover{background:linear-gradient(180deg,#f8531c,#be3408);box-shadow:0 4px 0 #6e1c02,0 0 14px rgba(255,160,130,.7)}
+.fs-btn svg{display:inline-block;vertical-align:middle;flex-shrink:0}
+.wrap{display:grid;grid-template-columns:1fr 350px;gap:14px;width:100%;margin:auto}
 .scene{border-radius:20px;overflow:hidden;border:3px solid #2e4c7a;box-shadow:0 10px 30px rgba(0,0,0,.6);background:#0b1422}
 canvas{display:block;width:100%;height:auto}
 .pan{display:flex;flex-direction:column;gap:10px}
@@ -18,20 +25,70 @@ canvas{display:block;width:100%;height:auto}
 label{font-size:14px;font-weight:700;display:block;margin-top:6px}input[type=range]{width:100%}
 #info{font-size:14.5px;line-height:1.45;min-height:70px}
 h3{font-size:14px;color:#ffd23c;margin-bottom:5px}
-@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+
+/* Responsive & Fullscreen Rules */
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  .fs-btn{position:static;transform:none;margin:8px auto 2px;display:inline-flex}
+  .fs-btn:hover{transform:translateY(-1px)}
+  .fs-btn:active{transform:translateY(2px)}
+}
+
+/* Fullscreen mode adaptations */
+:fullscreen, :-webkit-full-screen {
+  background: radial-gradient(circle at 25% 0,#1d3a63,#0c1727 70%) !important;
+}
+:fullscreen body, :-webkit-full-screen body {
+  background: radial-gradient(circle at 25% 0,#1d3a63,#0c1727 70%) !important;
+  margin: 0;
+  padding: 10px 14px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sim-container:fullscreen,
+.sim-container:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 25% 0,#1d3a63,#0c1727 70%);
+  padding: 10px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+.sim-container:fullscreen .wrap,
+.sim-container:-webkit-full-screen .wrap {
+  max-width: 1200px;
+}
 </style></head><body>
-<div class="hd"><h1>Heating <span>Ice</span>: Solid → Liquid → Gas</h1><p>Light the fire and watch the ice melt, then boil!</p></div>
-<div class="wrap">
-<div class="scene"><canvas id="c" width="760" height="640"></canvas></div>
-<div class="pan">
- <div class="box"><div id="lcd">-10.0°C</div><div id="badge" style="background:#2b8fd9">SOLID: ICE</div>
-  <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:14px"><span>⏱ Time: <b id="tm">00:00</b></span><span>🔥 Heat: <b id="pw">OFF</b></span></div></div>
- <div class="box"><div class="row"><button class="btn" id="fire">🔥 Light the Fire</button><button class="btn g" id="rst">⟲ Reset</button></div>
-  <label>Flame size: <span id="fv">80</span>%<input type="range" id="fl" min="20" max="100" value="80"></label>
-  <label>Simulation speed: <span id="sv">8</span>×<input type="range" id="sp" min="1" max="20" value="8"></label></div>
- <div class="box"><h3>Temperature vs Time</h3><canvas id="g" width="330" height="170"></canvas></div>
- <div class="box"><h3>Particles (very small view)</h3><canvas id="m" width="330" height="120"></canvas><div id="info"></div></div>
-</div></div>
+<div id="sim-container" class="sim-container">
+  <div class="hd">
+    <button id="fs-btn" class="fs-btn" type="button" title="Fullscreen Mode" aria-label="Toggle Fullscreen">
+      <span id="fs-icon" class="fs-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </span>
+      <span id="fs-text">Fullscreen</span>
+    </button>
+    <h1>Heating <span>Ice</span>: Solid → Liquid → Gas</h1>
+    <p>Light the fire and watch the ice melt, then boil!</p>
+  </div>
+  <div class="wrap">
+    <div class="scene"><canvas id="c" width="760" height="640"></canvas></div>
+    <div class="pan">
+      <div class="box"><div id="lcd">-10.0°C</div><div id="badge" style="background:#2b8fd9">SOLID: ICE</div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:14px"><span>⏱ Time: <b id="tm">00:00</b></span><span>🔥 Heat: <b id="pw">OFF</b></span></div></div>
+      <div class="box"><div class="row"><button class="btn" id="fire">🔥 Light the Fire</button><button class="btn g" id="rst">⟲ Reset</button></div>
+        <label>Flame size: <span id="fv">80</span>%<input type="range" id="fl" min="20" max="100" value="80"></label>
+        <label>Simulation speed: <span id="sv">8</span>×<input type="range" id="sp" min="1" max="20" value="8"></label></div>
+      <div class="box"><h3>Temperature vs Time</h3><canvas id="g" width="330" height="170"></canvas></div>
+      <div class="box"><h3>Particles (very small view)</h3><canvas id="m" width="330" height="120"></canvas><div id="info"></div></div>
+    </div>
+  </div>
+</div>
 <script>
 const $=s=>document.querySelector(s),cv=$("#c"),x=cv.getContext("2d");
 const CX=380,BOT=410,HMAX=170,TOP=140;
@@ -140,6 +197,48 @@ $("#lcd").style.color=T>=100?"#ff6d5a":T>=0?"#6dd7ff":"#6dff8a"}
 $("#fire").onclick=function(){lit=!lit;this.textContent=lit?"🧯 Put Out Fire":"🔥 Light the Fire"};
 $("#rst").onclick=()=>{E=0;lost=0;tSim=0;hist=[];bub.length=0;stm.length=0;lit=false;$("#fire").textContent="🔥 Light the Fire"};
 $("#fl").oninput=e=>$("#fv").textContent=e.target.value;$("#sp").oninput=e=>$("#sv").textContent=e.target.value;
+
+/* ---------- fullscreen feature ---------- */
+const simContainer=document.getElementById("sim-container")||document.documentElement;
+const fsBtn=document.getElementById("fs-btn");
+const fsIcon=document.getElementById("fs-icon");
+const fsText=document.getElementById("fs-text");
+function isFS(){return !!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement)}
+function updateFsBtn(){
+  const active=isFS();
+  if(fsBtn){
+    fsBtn.setAttribute("aria-label",active?"Exit Fullscreen":"Enter Fullscreen");
+    fsBtn.title=active?"Exit Fullscreen (Esc)":"Fullscreen Mode";
+    if(active){fsBtn.classList.add("active")}else{fsBtn.classList.remove("active")}
+  }
+  if(fsIcon){
+    fsIcon.innerHTML=active
+      ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>'
+      :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>';
+  }
+  if(fsText){fsText.textContent=active?"Exit Fullscreen":"Fullscreen"}
+}
+async function toggleFS(){
+  try{
+    if(!isFS()){
+      const target=simContainer.requestFullscreen?simContainer:document.documentElement;
+      if(target.requestFullscreen){await target.requestFullscreen()}
+      else if(target.webkitRequestFullscreen){await target.webkitRequestFullscreen()}
+      else if(target.msRequestFullscreen){await target.msRequestFullscreen()}
+    }else{
+      if(document.exitFullscreen){await document.exitFullscreen()}
+      else if(document.webkitExitFullscreen){await document.webkitExitFullscreen()}
+      else if(document.msExitFullscreen){await document.msExitFullscreen()}
+    }
+  }catch(err){console.warn("Fullscreen toggle:",err)}
+  updateFsBtn();
+}
+if(fsBtn){fsBtn.onclick=toggleFS}
+document.addEventListener("fullscreenchange",updateFsBtn);
+document.addEventListener("webkitfullscreenchange",updateFsBtn);
+document.addEventListener("mozfullscreenchange",updateFsBtn);
+document.addEventListener("MSFullscreenChange",updateFsBtn);
+
 function frame(now){let dt=Math.min(.05,(now-last)/1e3);last=now;const f=dt*60,mult=+$("#sp").value;
 flame+=((lit?+$("#fl").value/100:0)-flame)*Math.min(1,dt*4);if(flame<.01&&!lit)flame=0;
 const s0=st(E);let P=lit?900*flame:0,loss=s0.T>30?3*(s0.T-25):0;E=Math.max(0,Math.min(EMAX,E+(P-loss)*dt*mult));if(lit||E>0)tSim+=dt*mult*(lit||s0.T>30?1:0);
