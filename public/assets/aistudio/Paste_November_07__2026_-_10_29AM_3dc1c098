@@ -1,0 +1,326 @@
+=====================================================
+INSTRUCTIONS FOR GOOGLE AI STUDIO (READ CAREFULLY)
+=====================================================
+
+TASK:
+Add ONE new, self-contained, informational section to the FRONT PAGE (Home page) of my existing website "Gen Z Interactive Simulations Portal". The section is titled "Complete Interactive Simulation Roadmap: Play Class to FSc". The full text content of the section is provided below the line "SECTION CONTENT STARTS HERE".
+
+-----------------------------------------------------
+1. EXACT PLACEMENT
+-----------------------------------------------------
+- Place the new section on the Home page, IMMEDIATELY BELOW the hero area. The hero area includes: the "GEN Z INTERACTIVE SIMULATIONS PORTAL" badge, the "Aligned with National Curriculum of Pakistan" badge, the live clock/date, the big title "Gen Z Interactive Simulations Portal", the description paragraph, the two buttons ("Explore All Labs Grid" and "Interactive Stage & Dedicated Tabs"), and the "LIVE STEM BULLETIN" ticker strip at the bottom of the hero.
+- The new section must start right after the hero/bulletin ticker ends, and BEFORE whatever section currently follows it (for example the Labs Grid). Do not place it in the header, inside the hero, in the footer, or on any other page.
+
+-----------------------------------------------------
+2. ALWAYS OPEN BY DEFAULT
+-----------------------------------------------------
+- Every time the website is opened or refreshed, this section must be FULLY VISIBLE and EXPANDED. The visitor should not need to click anything to read it.
+- Every grade-level block (Level 1 to Level 6 and the Cross-Level Subjects block) must be expanded by default on every page load.
+- Do NOT use localStorage, sessionStorage, cookies, or any saved state that could cause a block to load collapsed.
+- It is acceptable to include small optional "Collapse / Expand" toggles on each block for convenience, but the default state on every load must always be OPEN. A single "Collapse All / Expand All" button at the top of the section is also welcome, but again the default is expanded.
+- Do not hide the content behind tabs, modals, "Read more" links, or lazy-loaded interactions.
+
+-----------------------------------------------------
+3. ZERO IMPACT ON THE REST OF THE WEBSITE (VERY IMPORTANT)
+-----------------------------------------------------
+This is a PURELY ADDITIVE change. Do NOT modify, remove, rename, reorder, restyle, or refactor anything that already exists. Specifically:
+- Do NOT change the header, logo, "Digital Laboratory Portal" title, "122 Verified Labs" text, or the top announcement bar.
+- Do NOT change the navigation menu (Home, Simulations, Teachers & Students, Online Platforms, Contact) or any dropdowns, tooltips, or links.
+- Do NOT change the hero image, hero text, badges, buttons, clock, or the Live STEM Bulletin ticker.
+- Do NOT change the Labs Grid, the list of 122 labs, any simulation file, any lab card, any filter, search, or favorite (star) feature.
+- Do NOT change the Interactive Stage, Dedicated Tabs, routing, URLs, page titles, SEO tags, or any existing JavaScript/React logic, state, or API calls.
+- Do NOT change existing global CSS, colors, fonts, variables, or animations. Do NOT edit existing CSS classes.
+- Do NOT change the lab counter (keep "122"), and do NOT add the roadmap topics into the Labs Grid or into the 122-lab count. The roadmap is information only.
+- Do NOT delete or overwrite any existing file. Only add a new component/section and insert it in the correct place.
+- If a conflict is possible, always prefer leaving the existing code untouched.
+
+-----------------------------------------------------
+4. HOW TO BUILD IT SAFELY
+-----------------------------------------------------
+- Create it as a separate, isolated component (for example "SimulationRoadmapSection") in its own new file if the project uses components, then render it once on the Home page right after the hero.
+- Use uniquely prefixed CSS class names (for example "gz-roadmap-") or scoped styles so nothing leaks into existing styles and nothing existing leaks into it.
+- Match the existing visual theme: dark navy background, orange (#F5A623-style) accents for headings and badges, and electric blue for highlights. Use the same font family already used on the site. Keep rounded cards, soft borders, and subtle glass effect consistent with the hero.
+- Layout: a section heading with a short intro paragraph, then one card/block per level. Inside each block, show topics as a clean numbered list or a responsive grid of small topic cards. Each topic shows a bold title and a short description below it. Subject sub-headings (Physics, Chemistry, Biology, Mathematics, etc.) appear as small colored labels.
+- Fully responsive: readable on mobile phones, tablets, and desktops. No horizontal scrolling. Comfortable font size and spacing on small screens.
+- Make sure the section does not push, overlap, or break the Live STEM Bulletin ticker or the sections below it. Normal page flow only; no fixed or absolute positioning that could overlap other elements.
+- Keep it lightweight: no heavy images, no extra libraries, no network requests. Text and simple CSS only.
+- Do not display the text "per my instructions" or any meta-comments on the page. Only show the section content.
+- Add a small badge near the section title such as "Roadmap" so visitors understand these are the simulations that can be built and extended.
+- Topics are descriptive text. They should not be clickable links and should not open any lab.
+
+-----------------------------------------------------
+5. AFTER YOU FINISH
+-----------------------------------------------------
+- Confirm in one or two lines that only the new section was added and that nothing else was changed.
+- Double-check that the page still loads, the nav works, the ticker runs, the Labs Grid shows all 122 labs, and the new section appears expanded right below the hero.
+
+=====================================================
+SECTION CONTENT STARTS HERE
+=====================================================
+
+SECTION TITLE:
+Complete Interactive Simulation Roadmap: Play Class to FSc
+
+SECTION INTRO:
+Gen Z Interactive Simulations is built to cover every subject of the Pakistani curriculum, from Play Group all the way to FSc (Intermediate, Class 11-12). The list below is the complete roadmap of interactive simulations that can be created for each level. Every topic includes a clear explanation of what the simulation should do, what the learner can control, and what the learner will understand by using it. Any teacher, student, or developer who opens this portal can use these descriptions as a blueprint to build, extend, or request a new simulation. Every simulation is designed to run directly in a web browser, with no installation, on mobile, tablet, and computer.
+
+-----------------------------------------------------
+LEVEL 1: PLAY GROUP, NURSERY, PREP (Ages 3-5)
+-----------------------------------------------------
+Goal: Build curiosity, recognition, and basic vocabulary through touch, sound, and colorful animation. Interfaces must use very large buttons, minimal text, friendly cartoon characters, and voice or sound feedback.
+
+1. Shapes & Colors Sorter: The child drags circles, squares, triangles, rectangles, and stars into matching outlines. When a shape is placed correctly, it glows and its name and color are spoken in English and Urdu. This teaches shape recognition, color names, and hand-eye coordination.
+2. Counting Fun 1-20: Animated objects such as apples, balloons, stars, and fish appear on the screen. The child taps each object, a number sound plays, and the total is shown at the end. A "How many?" mode asks the child to choose the correct number. This teaches one-to-one counting and number recognition.
+3. Alphabet Adventure (A-Z and Urdu Haroof-e-Tahajji): Each letter is a large tile. Tapping it shows an animated picture (A for Apple, B for Ball, and Alif for Anar, Bay for Bakri) and plays the letter sound. A tracing mode lets the child draw the letter with a finger. This teaches letter shapes and phonics.
+4. Animal Sounds & Homes: Farm animals and wild animals appear with their sounds. The child matches each animal to its home (barn, nest, den, pond, hive) and to its sound. This teaches animal names, habitats, and listening skills.
+5. My Body Parts: A friendly cartoon child is shown. Touching eyes, nose, ears, mouth, hands, and feet highlights the part, says its name, and shows a simple function such as "Eyes help us see." This teaches body awareness and the five senses.
+6. Day & Night and Weather Basics: A slider moves the sun and moon across the sky, changing the background from morning to night. Weather buttons switch between sunny, cloudy, rainy, and windy, with matching clothes the child can drag onto a character. This teaches time of day and weather vocabulary.
+7. Fruits & Vegetables Basket: The child drags fruits and vegetables into the correct baskets and sees their color and name. A "healthy plate" mini game rewards healthy choices. This teaches food names, colors, and healthy eating.
+8. Big & Small, Long & Short: Pairs of objects appear, and the child taps the bigger, smaller, longer, or shorter one. Objects can be stretched with a slider for comparison. This teaches early measurement language.
+9. Pattern Maker: The child continues simple color or shape patterns (red-blue-red-blue). Correct answers complete a fun animation. This teaches early logic and sequencing.
+
+-----------------------------------------------------
+LEVEL 2: CLASS 1-2 (Ages 6-7)
+-----------------------------------------------------
+Goal: Introduce early reading, number operations, and basic science through guided play. Each lab has short instructions, picture hints, and instant "well done" feedback.
+
+1. Addition & Subtraction Blocks: Colored blocks and an animated number line show how two numbers join (addition) or how some are taken away (subtraction). The child can change the numbers and watch the blocks and the hops on the number line update. This teaches the meaning of plus and minus with visual proof.
+2. Place Value Abacus: A virtual abacus with ones, tens, and hundreds rods. The child slides beads and sees the number form, for example 2 hundreds + 4 tens + 7 ones = 247. This teaches place value and number building.
+3. Clock Reading Lab: A large analog clock with draggable hour and minute hands and a digital clock that updates live. Challenge mode says "Set the time to half past 4." Includes AM/PM and day-routine pictures. This teaches reading and setting time.
+4. Money & Shopping Simulator: A small shop with items priced in Pakistani rupees. The child picks Rs. 5, 10, 20, 50, 100 notes and coins to pay and receives change. This teaches money recognition, addition, and everyday math.
+5. Skip Counting & Number Patterns: Frogs hop along a number line by 2s, 5s, and 10s, leaving colored marks. The child predicts the next numbers. This teaches the base for multiplication.
+6. Shapes & Measurement Lab: The child measures objects with a virtual ruler in centimeters and compares lengths, weights (balance scale), and capacity (cups and jugs). This teaches basic measurement.
+7. Living vs Non-Living Sorter: The child drags pictures (dog, stone, tree, car, bird, water) into "Living" or "Non-Living" and receives a short reason for each answer. This teaches the characteristics of living things.
+8. Parts of a Plant & Seed Growth: Tapping root, stem, leaf, flower, and fruit shows the job of each part. A seed can be planted and given water and sunlight, and a time-lapse shows it growing. Too little water or light shows the plant wilting. This teaches what plants need.
+9. Five Senses Lab: The child matches sense organs with activities (smelling a flower, tasting a lemon, hearing a bell, touching ice, seeing a rainbow). This teaches how we sense the world.
+10. Good Habits & Safety: Interactive scenes teach hand washing, brushing teeth, road safety, and traffic light rules with simple choices and feedback.
+11. Urdu & English Word Builder: Letters are dragged into slots to form simple words with a picture hint (cat, sun, bat, and Urdu equivalents). This teaches spelling and vocabulary.
+
+-----------------------------------------------------
+LEVEL 3: CLASS 3-5 (Primary)
+-----------------------------------------------------
+Goal: Build strong foundations in math and science with visual, hands-on experiments and simple quizzes.
+
+MATHEMATICS
+1. Multiplication Tables Visualizer: Arrays of dots and animated grids show 3 x 4 as three rows of four. The child chooses any table up to 20 and sees patterns. A speed quiz is included. This teaches multiplication as repeated addition.
+2. Division & Sharing Lab: Items are shared equally among groups, with remainders shown clearly. This teaches division as fair sharing and connects it to multiplication.
+3. Fractions Pizza & Bar Model: Pizzas and bars are sliced into equal parts. The child shades parts to build fractions, compares two fractions side by side, adds fractions with like denominators, and finds equivalent fractions. This teaches fractions visually.
+4. Decimals & Percentages Lab: Sliders link fractions, decimals, and percentages on a single bar and on a 100-grid. This teaches that 1/2 = 0.5 = 50%.
+5. Geometry Playground: The child builds shapes on a grid, measures sides and angles, and sees perimeter and area calculated live. This teaches 2D shapes, perimeter, and area.
+6. Data Handling & Graphs: The class enters simple data (favorite fruit, favorite sport) and the lab instantly draws bar charts, pictographs, and pie charts. This teaches reading and creating graphs.
+7. Time, Calendar & Money Word Problems: Interactive story problems with clocks, calendars, and shopping carts for practicing real-life math.
+
+SCIENCE
+8. States of Matter Simulator: A container of particles can be heated or cooled. The child watches particles vibrate, flow, or fly apart as the substance changes between solid, liquid, and gas, with a temperature meter. This teaches melting, freezing, boiling, and condensation.
+9. Water Cycle Animation: The sun, sea, clouds, mountains, and rain are shown. The child changes temperature and sunlight to control evaporation, condensation, and rainfall. This teaches the continuous movement of water.
+10. Food Chain & Food Web Builder: The child connects plants, insects, herbivores, carnivores, and decomposers with arrows. Removing one organism shows the effect on the others. This teaches energy flow and balance in nature.
+11. Simple Machines Lab: Levers, pulleys, inclined planes, wheels and axles, and wedges can be tested. The child changes the load and effort and sees how the machine makes work easier. This teaches force and mechanical advantage in simple form.
+12. Magnets Lab: The child drags magnets and objects, tests which materials are magnetic, and sees attraction and repulsion between poles. Iron filings show field lines. This teaches magnetism.
+13. Light & Shadows: A torch and an object are placed on a table. The child moves them to see how shadow size, shape, and position change. Transparent, translucent, and opaque materials can be tested. This teaches how light travels in straight lines.
+14. Solar System Explorer: Planets orbit the Sun at scaled speeds. Tapping a planet shows its size, distance, number of moons, and a fun fact. This teaches the order and features of planets.
+15. Day, Night, Seasons & Earth's Tilt: Earth rotates and revolves around the Sun with a visible tilt. The child sees why day and night happen and why seasons change. This teaches Earth's motion.
+16. Human Body Systems Intro: Tapping the skeleton, muscles, heart, lungs, and stomach shows what each does in simple animation.
+17. Plants & Animals Classification: The child sorts organisms into mammals, birds, reptiles, fish, insects, and into flowering and non-flowering plants.
+
+SOCIAL STUDIES AND GENERAL KNOWLEDGE
+18. Map of Pakistan Explorer: Tap provinces, capitals, major cities, rivers, mountains (K2, Nanga Parbat), and deserts. A map-labeling quiz is included. This teaches Pakistan's geography.
+19. Pakistan Landmarks & Culture: A tour of famous places (Badshahi Mosque, Mohenjo-daro, Minar-e-Pakistan, Faisal Mosque) with pictures and short facts.
+
+-----------------------------------------------------
+LEVEL 4: CLASS 6-8 (Middle School)
+-----------------------------------------------------
+Goal: Move from observation to explanation. Learners start using variables, graphs, and the scientific method.
+
+GENERAL SCIENCE
+1. Cell Structure Explorer (Plant vs Animal): A rotatable 3D cell. Tapping the nucleus, mitochondria, chloroplast, cell wall, vacuole, and other organelles highlights them and explains their function. A comparison toggle shows plant and animal cells side by side.
+2. Microscope Simulator: The child adjusts focus, magnification (4x, 10x, 40x), and light to view onion peel, cheek cells, pond water, and leaf stomata. A drawing/labeling tool is included. This teaches microscope handling and cell observation.
+3. Photosynthesis Lab: Sliders control light intensity, carbon dioxide, and water. The lab shows oxygen bubbles and glucose production and graphs the rate. This teaches the factors affecting photosynthesis.
+4. Human Digestive System: Follow a piece of food from mouth to intestine. Enzymes, stomach acid, bile, and absorption are shown with timing. This teaches digestion step by step.
+5. Respiratory & Circulatory Systems: Animated breathing with the diaphragm, gas exchange in alveoli, heartbeat, and blood flow through arteries and veins. A pulse rate experiment (rest vs exercise) is included.
+6. Atoms, Elements & Compounds: The child builds atoms by adding protons, neutrons, and electrons and sees the element name, atomic number, and mass number change. Simple compounds like H2O and CO2 can be assembled. This teaches atomic structure basics.
+7. Mixtures & Separation Techniques: Virtual lab benches for filtration, evaporation, distillation, sieving, magnetic separation, and paper chromatography. The child chooses the right method for each mixture.
+8. Acids, Bases & Indicators: Test lemon juice, soap, vinegar, milk, and baking soda with litmus paper and universal indicator, and see the pH scale. This teaches properties of acids and bases.
+9. Physical vs Chemical Changes: The child melts ice, burns paper, rusts iron, dissolves salt, and bakes dough, then classifies each change and sees the evidence (gas, color, heat, new substance).
+10. Motion & Speed Lab: Cars move along a track. The child sets speed and time and sees a live distance-time graph. This teaches speed = distance / time and graph reading.
+11. Force, Friction & Gravity: Boxes are pushed over different surfaces (ice, wood, sand) and on different planets. Force arrows and friction values are displayed. This teaches balanced and unbalanced forces.
+12. Sound Waves Lab: Change frequency and amplitude to see wave shape and hear pitch and loudness. Compare sound in air, water, and vacuum. This teaches sound properties.
+13. Light, Reflection & Mirrors: Rays reflect from plane mirrors with a measurable angle of incidence and reflection. A periscope builder is included.
+14. Simple Electric Circuits: The child builds series and parallel circuits with batteries, bulbs, switches, and wires. A short circuit warning and conductor/insulator tests are included. This teaches how current flows.
+15. Heat Transfer: Animated particles show conduction in a metal rod, convection in water, and radiation from the Sun. This teaches the three modes of heat transfer.
+16. Weather, Climate & Rocks: Interactive weather station, rock cycle, and layers of the Earth.
+
+MATHEMATICS
+17. Algebra Balance Scale: Equations are shown as a balance. The child adds or removes weights on both sides to solve for x. This teaches the idea of equality in algebra.
+18. Integers & Number Line: Positive and negative numbers are added, subtracted, and multiplied with a hopping character and a temperature or elevator analogy.
+19. Ratio & Proportion Lab: Resize recipes, maps, and photos with sliders and see ratios stay equal. This teaches scale and unitary method.
+20. Angles & Triangles Explorer: Drag triangle vertices to see all three angles and prove they always sum to 180 degrees. Classify triangles by sides and angles.
+21. Area & Volume 3D: Rotate and unfold cubes, cuboids, cylinders, and prisms to understand surface area and volume formulas.
+22. Percentages, Profit & Loss: A virtual shop with discounts and price tags to practice real-life calculations.
+23. Statistics Basics: Mean, median, mode, and range are calculated and displayed on data entered by the learner.
+
+COMPUTER SCIENCE
+24. Block Coding (Scratch-style): Drag and snap blocks to move a character, draw shapes, and use loops and conditions. This teaches computational thinking.
+25. Binary Number Converter: Flip bits on and off to see the decimal value and convert both ways. This teaches how computers store numbers.
+26. Computer Hardware Explorer: Click on CPU, RAM, hard disk, and motherboard to see their roles, with an assembly challenge.
+
+-----------------------------------------------------
+LEVEL 5: CLASS 9-10 (Matric / Secondary)
+-----------------------------------------------------
+Goal: Support board exam preparation with accurate, formula-based, measurable simulations. Each lab should include variables, live readings, graphs, and a short quiz.
+
+PHYSICS
+1. Kinematics Lab: Set initial velocity, acceleration, and time. See the equations of motion applied with live velocity-time and distance-time graphs. This teaches uniform and accelerated motion.
+2. Projectile Motion Simulator: Change launch angle, speed, and height to see the path, range, maximum height, and time of flight. This teaches 2D motion.
+3. Newton's Laws Lab: Apply forces to carts of different masses with and without friction and see acceleration, action-reaction pairs, and free-body diagrams.
+4. Work, Energy & Power: A roller-coaster shows kinetic and potential energy converting into each other with bar charts and energy conservation.
+5. Simple Pendulum: Change length, mass, and angle and measure the time period with a stopwatch. Graph T squared vs L. This teaches how to find g.
+6. Reflection & Refraction: Rays pass through mirrors, glass blocks, and prisms. The lab measures angles and verifies Snell's law and total internal reflection.
+7. Lens Ray Diagrams: Move an object in front of convex and concave lenses and mirrors to see real or virtual, magnified or diminished images, with the lens formula.
+8. Ohm's Law & Circuits: Build circuits with ammeters and voltmeters. Change voltage and resistance, plot a V-I graph, and compare series and parallel resistance.
+9. Electromagnetic Induction: Move a magnet through a coil or rotate a coil in a field to see induced current and a simple AC generator and transformer.
+10. Radioactivity & Half-Life: A population of atoms decays randomly. Change the half-life and see the decay curve. This teaches alpha, beta, gamma, and half-life.
+11. Heat & Thermal Expansion: Heat solids, liquids, and gases and see expansion, specific heat capacity, and heating curves.
+12. Waves & Sound: Transverse and longitudinal waves with wavelength, frequency, and speed (v = f x lambda), plus echo and resonance tube experiments.
+
+CHEMISTRY
+13. Periodic Table Trends: Click any element to see its properties. Graphs compare atomic radius, electronegativity, and ionization energy across periods and groups.
+14. Chemical Bonding (Ionic, Covalent, Metallic): Watch electrons transfer or share between atoms to form NaCl, H2O, CH4, and metals. Dot-and-cross diagrams are drawn automatically.
+15. Mole Concept & Stoichiometry Calculator: Balance chemical equations step by step and convert between mass, moles, particles, and volume.
+16. Gas Laws (Boyle's, Charles's, Gay-Lussac's): Adjust pressure, volume, and temperature on a piston and see particle behavior and P-V and V-T graphs.
+17. Acid-Base Titration: A virtual burette, flask, and indicator. Add titrant drop by drop, watch the color change at the end point, and plot the pH curve.
+18. Electrolysis Lab: Electrolysis of water, brine, and copper sulfate with electrodes. Observe gases and deposits and write the half-equations.
+19. Rates of Reaction: Change concentration, temperature, surface area, and catalyst, and watch gas production and a rate graph.
+20. Organic Chemistry Basics: Build alkanes, alkenes, alcohols, and carboxylic acids in rotatable 3D and name them automatically.
+21. Metals, Reactivity Series & Corrosion: Drop metals into acids and salt solutions and rank them. Test rusting conditions.
+22. Water, Solutions & Solubility: Dissolve salts at different temperatures and plot solubility curves.
+
+BIOLOGY
+23. Mitosis & Meiosis Stepper: Phase-by-phase animation with chromosome tracking and a side-by-side comparison.
+24. DNA Structure & Replication: Unzip and rebuild the double helix with correct base pairing (A-T, G-C).
+25. Mendelian Genetics (Punnett Square): Cross parents with dominant and recessive traits and see genotype and phenotype ratios, including monohybrid and dihybrid crosses.
+26. Human Heart & Blood Circulation: Interactive chambers, valves, and double circulation with blood flow animation and ECG.
+27. Nervous System & Reflex Arc: Trace the signal from receptor to brain or spinal cord to effector, with reaction time test.
+28. Osmosis & Diffusion Lab: Place plant and animal cells in pure water, salt, and sugar solutions and observe swelling, shrinking, and plasmolysis.
+29. Ecosystem & Population Dynamics: Predator-prey populations with live graphs, carbon and nitrogen cycles.
+30. Digestive Enzymes & Nutrition Tests: Virtual Benedict's, iodine, and biuret tests on different foods.
+31. Excretory System & Kidney: Follow blood through the nephron to see filtration and urine formation.
+32. Plant Tropism & Hormones: Shine light from different directions and see plant growth responses.
+
+MATHEMATICS
+33. Quadratic Equation Grapher: Change a, b, c and watch the parabola, vertex, roots, and discriminant move.
+34. Trigonometry Unit Circle: Drag a point on the circle to see sine, cosine, and tangent values and graphs form.
+35. Coordinate Geometry Lab: Plot points and lines, and calculate distance, midpoint, slope, and equation of a line.
+36. Circle Theorems Explorer: Drag points to verify angle at the center, angles in the same segment, and chord and tangent theorems visually.
+37. Matrices & Determinants Calculator: Step-by-step addition, multiplication, determinant, and inverse.
+38. Sets, Venn Diagrams & Logarithms: Drag elements into Venn regions and explore laws of logarithms with graphs.
+39. Algebraic Formulas & Factorization Visualizer: Area-model proofs of (a+b) squared and difference of squares.
+
+COMPUTER SCIENCE
+40. Logic Gates Simulator: Build circuits with AND, OR, NOT, NAND, NOR, XOR and see truth tables and outputs live.
+41. HTML/CSS Live Editor: Write simple code on one side and see the webpage update instantly on the other.
+42. Number Systems Converter: Binary, octal, decimal, and hexadecimal conversion with steps.
+
+-----------------------------------------------------
+LEVEL 6: FSc / INTERMEDIATE (Class 11-12)
+-----------------------------------------------------
+Goal: Provide university-entry level, concept-deep simulations for Pre-Medical, Pre-Engineering, ICS, and Commerce students, supporting MDCAT, ECAT, and board exams.
+
+PHYSICS
+1. Vectors & Resultant Lab: Drag vectors, see components, and find the resultant by head-to-tail and parallelogram methods, plus dot and cross products.
+2. Circular Motion & Centripetal Force: Change radius, speed, and mass and see centripetal force, banking of roads, and satellite orbits.
+3. Torque & Equilibrium: Balance beams, ladders, and hanging loads, and verify the conditions of equilibrium.
+4. Fluid Dynamics (Bernoulli & Continuity): Fluid flows through pipes of changing diameter with pressure and speed readouts. Includes Stokes' law and terminal velocity.
+5. Simple Harmonic Motion (Spring-Mass and Pendulum): Phase, displacement, velocity, acceleration graphs, and energy exchange.
+6. Wave Interference & Young's Double Slit: Change slit distance and wavelength to see fringes, along with diffraction grating and standing waves.
+7. Thermodynamics (PV Diagrams): Isothermal, adiabatic, isobaric, and isochoric processes and the Carnot cycle with efficiency.
+8. Electric Field & Potential: Place positive and negative charges, see field lines, equipotential lines, and force on a test charge. Gauss's law visualizer.
+9. Capacitor Charging/Discharging (RC Circuits): Real-time voltage and current graphs with an adjustable time constant.
+10. Magnetic Force on Moving Charges: Charged particles in a magnetic field, cyclotron, velocity selector, and mass spectrometer.
+11. AC Circuits (RLC Resonance): Frequency sweep, phasor diagrams, impedance, and resonance peak.
+12. Electromagnetic Waves & Spectrum: Wave generation and the electromagnetic spectrum with applications.
+13. Photoelectric Effect: Change light frequency, intensity, and metal to see electron ejection, threshold frequency, and stopping potential.
+14. Bohr Atom & Spectral Lines: Electron jumps between orbits, emission and absorption spectra of hydrogen.
+15. Semiconductors, Diodes & Transistors: Forward and reverse bias, half- and full-wave rectifiers, and a transistor as a switch and amplifier.
+16. Nuclear Physics: Binding energy, fission, and fusion chain reactions.
+17. Oscillations, Damping & Resonance: Damped and driven oscillators with adjustable damping.
+
+CHEMISTRY
+18. Atomic Orbitals 3D (s, p, d): Rotatable orbital shapes with quantum numbers and electron configuration filling (Aufbau, Pauli, Hund).
+19. Chemical Equilibrium & Le Chatelier's Principle: Change concentration, pressure, or temperature and see the system shift and Kc change.
+20. Buffer Solutions & pH Calculator: Henderson-Hasselbalch visualization and buffer capacity.
+21. Electrochemical Cells: Galvanic cell with salt bridge, electrode potentials, EMF calculation, and Nernst equation.
+22. Thermochemistry (Enthalpy Diagrams): Exothermic and endothermic energy profiles, Hess's law, and bond energies.
+23. Reaction Kinetics (Order & Rate Law): Concentration-time graphs, half-life, activation energy, and Arrhenius plot.
+24. Organic Reaction Mechanisms: Substitution (SN1, SN2), addition, and elimination with curved-arrow electron flow.
+25. Colligative Properties: Boiling point elevation, freezing point depression, osmotic pressure, and vapor pressure lowering.
+26. Qualitative Salt Analysis: Add virtual reagents to identify cations and anions with precipitate colors and flame tests.
+27. Molecular Geometry (VSEPR) & Hybridization: Rotatable 3D molecules showing bond angles and sp, sp2, sp3 hybridization.
+28. Chemical Kinetics of Gases & Kinetic Molecular Theory: Particle speed distribution (Maxwell-Boltzmann) with temperature control.
+29. Solutions, Ionic Equilibria & Solubility Product: Ksp, common-ion effect, and precipitation prediction.
+30. Biochemistry & Polymers: Build amino acids, proteins, carbohydrates, and polymer chains.
+
+BIOLOGY
+31. Photosynthesis (Light & Dark Reactions): Interactive photosystems and the Calvin cycle with inputs and outputs.
+32. Cellular Respiration & ATP: Glycolysis, Krebs cycle, and electron transport chain with ATP count.
+33. Protein Synthesis (Transcription & Translation): Build mRNA, then assemble a protein codon by codon using the codon table.
+34. Human Reproduction & Embryo Development: Staged animations of gametogenesis, fertilization, and fetal development.
+35. Enzyme Activity Lab: Change pH, temperature, and substrate concentration and see the rate curve, inhibitors, and the lock-and-key model.
+36. Natural Selection & Evolution Simulator: Run generations with changing environments and watch traits shift, with Hardy-Weinberg calculator.
+37. Plant Transpiration & Water Transport: Vary humidity, light, and wind and measure water loss and xylem flow.
+38. Human Nervous Impulse & Synapse: Action potential graph, ion channels, and neurotransmitter release.
+39. Immunity, Hormones & Homeostasis: Feedback loops for blood sugar, temperature, and antibody response.
+40. Biotechnology & Genetic Engineering: Virtual gel electrophoresis, PCR, and gene cloning steps.
+41. Classification & Biodiversity Explorer: Interactive taxonomy tree from kingdom to species.
+
+MATHEMATICS
+42. Calculus: Limits & Derivatives: Slide a tangent along a curve to see slope as a derivative and watch limit behavior.
+43. Integration (Area Under Curve): Riemann sums with adjustable rectangles that converge to the exact integral.
+44. Conic Sections Explorer: Slice a cone to produce a circle, ellipse, parabola, and hyperbola, and change eccentricity.
+45. Complex Numbers on the Argand Plane: Add, multiply, and rotate complex numbers with modulus and argument.
+46. Permutations & Combinations: Interactive arrangement and selection with counting trees.
+47. Probability & Statistics Lab: Dice, coins, cards, binomial and normal distribution, standard deviation, and regression line.
+48. Sequences, Series & Binomial Theorem: Visualize arithmetic, geometric series, convergence, and Pascal's triangle.
+49. Vectors in 3D & Planes: Rotatable 3D axes for lines, planes, and angle between vectors.
+50. Differential Equations & Functions Grapher: Plot any function, its derivative, and its inverse.
+
+COMPUTER SCIENCE (ICS)
+51. Sorting Algorithm Visualizer: Bubble, selection, insertion, merge, and quick sort animated with step counts.
+52. Python / C++ Code Playground: Write and run small programs in the browser with example challenges.
+53. Database & SQL Query Practice: Run SELECT, JOIN, and GROUP BY queries on sample tables and see results.
+54. Networking Basics (OSI Model & TCP/IP): Follow a data packet through the layers and see IP addressing and subnetting.
+55. Data Structures Visualizer: Stack, queue, linked list, and tree operations step by step.
+56. Boolean Algebra & Karnaugh Maps: Simplify expressions and see equivalent circuits.
+
+COMMERCE AND ECONOMICS (FA / I.Com)
+57. Supply & Demand Curve: Shift curves with sliders to see equilibrium price and quantity change.
+58. Ledger, Trial Balance & Balance Sheet Builder: Enter transactions and see accounts update automatically.
+59. Profit, Cost & Break-Even Analysis: Change costs and prices and see the break-even point on a graph.
+
+-----------------------------------------------------
+CROSS-LEVEL SUBJECTS
+-----------------------------------------------------
+These subjects can be used at multiple levels with difficulty adjusted by class.
+- Geography: Plate tectonics, earthquake and volcano simulators, climate and monsoon maps, river systems, and world map quiz.
+- Pakistan Studies & History: An interactive timeline from the Indus Valley Civilization to the Pakistan Movement and independence, with maps of key events and leaders.
+- Islamiat: Prayer times and Qibla direction finder, step-by-step Hajj and Umrah guide, Wudu and Salah steps, and an Islamic (Hijri) calendar converter.
+- English Language: Grammar sorter (parts of speech), tenses timeline, sentence builder, spelling games, and pronunciation practice.
+- Urdu Language: Haroof-e-Tahajji tracing, Urdu grammar drills, and a poetry meter (behar) visualizer.
+- General Knowledge & Current Affairs: Quiz games on countries, flags, capitals, scientists, and inventions.
+- Environmental Science: Pollution, climate change, greenhouse effect, and renewable energy simulators.
+
+-----------------------------------------------------
+DESIGN STANDARDS FOR EVERY SIMULATION
+-----------------------------------------------------
+- Runs directly in the browser with no installation, and works smoothly on mobile, tablet, and desktop.
+- Has adjustable controls (sliders, buttons, drag and drop) and gives instant visual feedback.
+- Includes clear learning objectives, a short theory panel, a "Try it yourself" experiment, and a short quiz with answers.
+- Is aligned with the National Curriculum of Pakistan and with the textbooks of the Punjab, Sindh, KPK, and Balochistan boards.
+- Offers an English and Urdu language toggle where possible.
+- Uses safe, age-appropriate content, clear fonts, and good color contrast for accessibility.
+- Can be opened and shared using a single link, so teachers can use it in class and students can practice at home.
+
+=====================================================
+SECTION CONTENT ENDS HERE
+=====================================================
+
+FINAL REMINDER TO AI STUDIO: Insert only this new section right below the hero area on the Home page, keep it expanded by default on every load, and leave every other part of the website exactly as it is.

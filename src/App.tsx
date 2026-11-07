@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
+import { SimulationRoadmapSection } from './components/SimulationRoadmapSection';
 import { QuickStats } from './components/QuickStats';
 import { SimulationCatalogGrid } from './components/SimulationCatalogGrid';
 import { Footer } from './components/Footer';
@@ -475,8 +476,8 @@ export default function App() {
 
           {/* Sectional Views Navigation Router */}
           {currentView === 'home' && (
-            /* VIEW 1: CLEAN HOME VIEW (Only Hero Banner + Live Clock + Slideshow Background) */
-            <div className="-mx-3 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-auto">
+            /* VIEW 1: HOME VIEW (Hero Banner + Complete Simulation Roadmap) */
+            <div className="-mx-3 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-auto space-y-6 sm:space-y-8">
               <ScrollReveal direction="up" distance={16} duration={480} resetOnLeave={true}>
                 <HeroBanner 
                   isDarkMode={isDarkMode}
@@ -484,6 +485,11 @@ export default function App() {
                   onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
                 />
               </ScrollReveal>
+
+              {/* Complete Interactive Simulation Roadmap: Play Class to FSc */}
+              <div className="px-3 sm:px-6 lg:px-8 xl:px-12">
+                <SimulationRoadmapSection />
+              </div>
             </div>
           )}
 
