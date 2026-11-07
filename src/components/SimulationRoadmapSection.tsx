@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, Layers, BookOpen, GraduationCap, Sparkles } from 'lucide-react';
 
 interface SubjectSection {
   name: string;
@@ -9,16 +9,18 @@ interface SubjectSection {
 interface LevelData {
   id: string;
   shortLabel: string;
+  badge: string;
   title: string;
   subjects: SubjectSection[];
 }
 
 // Curated concise, high-yield key topics for each grade and subject
-// Designed to keep page lightweight, fast-loading, and completely free of crowding/clutter.
+// Exact topics preserved intact without adding or removing any content.
 const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-1',
     shortLabel: 'Play / KG',
+    badge: 'PRE-PRIMARY',
     title: 'LEVEL 1: EARLY CHILDHOOD & PRE-PRIMARY (Play Group, Nursery, Prep / KG)',
     subjects: [
       {
@@ -60,6 +62,7 @@ const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-2',
     shortLabel: 'Primary (1-5)',
+    badge: 'GRADES 1–5',
     title: 'LEVEL 2: PRIMARY SCHOOL (Classes 1 to 5)',
     subjects: [
       {
@@ -105,6 +108,7 @@ const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-3',
     shortLabel: 'Middle (6-8)',
+    badge: 'GRADES 6–8',
     title: 'LEVEL 3: MIDDLE SCHOOL (Classes 6 to 8)',
     subjects: [
       {
@@ -150,6 +154,7 @@ const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-4',
     shortLabel: 'Matric (9-10)',
+    badge: 'GRADES 9–10',
     title: 'LEVEL 4: SECONDARY / MATRICULATION (Classes 9 & 10)',
     subjects: [
       {
@@ -210,6 +215,7 @@ const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-5',
     shortLabel: 'FSc (11-12)',
+    badge: 'F.SC (11–12)',
     title: 'LEVEL 5: INTERMEDIATE / FSc / ICS / I.Com (Classes 11 & 12)',
     subjects: [
       {
@@ -272,6 +278,7 @@ const ROADMAP_DATA: LevelData[] = [
   {
     id: 'level-tech',
     shortLabel: 'Emerging Tech',
+    badge: 'FUTURE STEM',
     title: 'APPLIED & EMERGING STEM SIMULATIONS',
     subjects: [
       {
@@ -287,10 +294,39 @@ const ROADMAP_DATA: LevelData[] = [
   }
 ];
 
+// Helper to provide discipline-aligned subtle colors matching the main portal
+const getSubjectColor = (subjectName: string): { border: string; bullet: string; tag: string } => {
+  const s = subjectName.toLowerCase();
+  if (s.includes('physics')) {
+    return { border: '#2563EB', bullet: '#2563EB', tag: 'bg-blue-50 text-blue-700 border-blue-200' };
+  }
+  if (s.includes('chemistry')) {
+    return { border: '#9333EA', bullet: '#9333EA', tag: 'bg-purple-50 text-purple-700 border-purple-200' };
+  }
+  if (s.includes('biology')) {
+    return { border: '#16A34A', bullet: '#16A34A', tag: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+  }
+  if (s.includes('mathematics') || s.includes('numeracy')) {
+    return { border: '#EA580C', bullet: '#EA580C', tag: 'bg-amber-50 text-amber-700 border-amber-200' };
+  }
+  if (s.includes('computer') || s.includes('coding') || s.includes('technology')) {
+    return { border: '#0D9488', bullet: '#0D9488', tag: 'bg-teal-50 text-teal-700 border-teal-200' };
+  }
+  if (s.includes('urdu')) {
+    return { border: '#059669', bullet: '#059669', tag: 'bg-green-50 text-green-700 border-green-200' };
+  }
+  if (s.includes('english') || s.includes('phonics')) {
+    return { border: '#D97706', bullet: '#D97706', tag: 'bg-orange-50 text-orange-700 border-orange-200' };
+  }
+  if (s.includes('commerce') || s.includes('economics')) {
+    return { border: '#0284C7', bullet: '#0284C7', tag: 'bg-sky-50 text-sky-700 border-sky-200' };
+  }
+  return { border: '#1546A8', bullet: '#1546A8', tag: 'bg-indigo-50 text-indigo-700 border-indigo-200' };
+};
+
 export const SimulationRoadmapSection: React.FC = () => {
   const [selectedLevelId, setSelectedLevelId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  // By default, keep accordion open or toggleable
   const [collapsedBlocks, setCollapsedBlocks] = useState<Record<string, boolean>>({});
 
   const toggleBlock = (id: string) => {
@@ -328,117 +364,179 @@ export const SimulationRoadmapSection: React.FC = () => {
   }, [selectedLevelId, searchQuery]);
 
   return (
-    <section className="w-full bg-white text-black py-8 border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <section 
+      id="simulation-roadmap"
+      className="w-full relative z-10 rounded-2xl sm:rounded-3xl border shadow-lg transition-all overflow-hidden"
+      style={{
+        backgroundColor: '#FFFFFF',
+        borderColor: '#DDE5F3',
+        boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
+      }}
+    >
+      <div className="p-5 sm:p-6 lg:p-8 space-y-6">
         
-        {/* Header & Controls */}
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-300 pb-3">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-black tracking-tight">
+        {/* Header Bar matching the website's SectionViewHeader and Grade Filter panel */}
+        <div 
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:px-6 sm:py-4 rounded-2xl border shadow-xs"
+          style={{
+            backgroundColor: '#F8FAFC',
+            borderColor: '#DDE5F3'
+          }}
+        >
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
+                CURRICULUM ROADMAP
+              </span>
+              <h2 className="text-base sm:text-lg md:text-xl font-black text-[#1B2A5C] font-heading tracking-tight">
                 Interactive Simulation Roadmap (Play Class to FSc)
               </h2>
-              <p className="text-xs sm:text-sm text-black mt-1">
-                Curated high-yield topics across the Pakistani curriculum — Play Group to FSc (Pre-Primary, Primary, Middle, Secondary & Intermediate).
-              </p>
             </div>
-
-            {/* Search Input */}
-            <div className="relative w-full md:w-64 shrink-0">
-              <Search className="w-4 h-4 absolute left-2.5 top-2.5 text-black" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search key topic..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded border border-slate-400 bg-white text-black placeholder-slate-600 focus:outline-none focus:border-black"
-              />
-            </div>
+            <p className="text-xs sm:text-sm font-medium text-[#5A6E85]">
+              Curated high-yield topics across the Pakistani curriculum — Play Group to FSc (Pre-Primary, Primary, Middle, Secondary &amp; Intermediate).
+            </p>
           </div>
 
-          {/* Quick Level Filter Tabs: Prevents clutter, allows user to quickly jump without page lag */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="text-xs font-bold text-black mr-1 flex items-center gap-1">
-              <Layers className="w-3.5 h-3.5" />
-              Filter by Level:
-            </span>
+          {/* Search Box matching the portal search design */}
+          <div className="relative w-full md:w-72 shrink-0">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#1546A8]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search key topic or subject..."
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-[#DDE5F3] bg-white text-[#1B2A5C] placeholder-[#94A3B8] shadow-2xs focus:outline-none focus:border-[#1546A8] focus:ring-1 focus:ring-[#1546A8] transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Grade Level Filter Tabs: Identical styling to the portal's Grade Level Filter buttons */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#1B2A5C]">
+            <Layers className="w-4 h-4 text-[#1546A8]" />
+            <span>Filter by Academic Stage:</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setSelectedLevelId('all')}
-              className={`px-2.5 py-1 text-xs font-bold rounded cursor-pointer transition-colors ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer ${
                 selectedLevelId === 'all'
-                  ? 'bg-black text-white'
-                  : 'bg-slate-100 text-black hover:bg-slate-200 border border-slate-300'
+                  ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
+                  : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
               }`}
             >
               All Grades
             </button>
+
             {ROADMAP_DATA.map((lvl) => (
               <button
                 key={`tab-${lvl.id}`}
                 type="button"
                 onClick={() => setSelectedLevelId(lvl.id)}
-                className={`px-2.5 py-1 text-xs font-bold rounded cursor-pointer transition-colors ${
+                className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                   selectedLevelId === lvl.id
-                    ? 'bg-black text-white'
-                    : 'bg-slate-100 text-black hover:bg-slate-200 border border-slate-300'
+                    ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
+                    : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
                 }`}
               >
-                {lvl.shortLabel}
+                <span>{lvl.shortLabel}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Lightweight Curated Topic Sections (Plain Black Ink on Pure White Background) */}
-        <div className="space-y-6 pt-2">
+        {/* Roadmap Level Cards matching the portal's card architecture */}
+        <div className="space-y-4 pt-2">
           {visibleLevels.length === 0 ? (
-            <p className="text-sm text-black py-4">No topics found matching your search. Please try another query.</p>
+            <div className="p-8 text-center rounded-2xl border border-[#DDE5F3] bg-[#F8FAFC]">
+              <p className="text-sm font-medium text-[#5A6E85]">
+                No topics found matching your search. Please try another query.
+              </p>
+            </div>
           ) : (
             visibleLevels.map((level) => {
               const isCollapsed = !!collapsedBlocks[level.id];
 
               return (
-                <div key={level.id} className="border-b border-slate-200 pb-5 last:border-b-0">
-                  {/* Level Title Bar */}
+                <div 
+                  key={level.id} 
+                  className="rounded-2xl border transition-all overflow-hidden shadow-xs hover:shadow-md"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#DDE5F3'
+                  }}
+                >
+                  {/* Level Header Bar */}
                   <div
-                    className="flex items-center justify-between gap-2 cursor-pointer select-none py-1"
+                    className="flex items-center justify-between gap-3 p-4 sm:px-5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border-b border-[#DDE5F3] cursor-pointer select-none transition-colors"
                     onClick={() => toggleBlock(level.id)}
                   >
-                    <h3 className="text-sm sm:text-base font-black text-black uppercase tracking-wide">
-                      {level.title}
-                    </h3>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-[10px] sm:text-[11px] font-mono font-black uppercase tracking-wider text-[#1546A8] bg-[#EEF3F9] border border-[#DDE5F3] px-2.5 py-1 rounded-md shrink-0">
+                        {level.badge}
+                      </span>
+                      <h3 className="text-sm sm:text-base font-black text-[#1B2A5C] font-heading truncate">
+                        {level.title}
+                      </h3>
+                    </div>
+
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleBlock(level.id);
                       }}
-                      className="p-1 text-black hover:bg-slate-100 rounded"
-                      aria-label="Toggle section"
+                      className="p-1.5 rounded-lg text-[#1546A8] hover:bg-white border border-[#DDE5F3] shadow-2xs transition-colors shrink-0"
+                      aria-label="Toggle level"
                     >
                       {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
                     </button>
                   </div>
 
-                  {/* Curated Key Topics List (Extremely light DOM, quick render) */}
+                  {/* Level Subjects & Key Topics Grid */}
                   {!isCollapsed && (
-                    <div className="mt-3 space-y-4">
-                      {level.filteredSubjects.map((subj, idx) => (
-                        <div key={`${level.id}-subj-${idx}`} className="space-y-1.5">
-                          <h4 className="text-xs font-bold text-black uppercase tracking-wider border-b border-slate-200 pb-1">
-                            {subj.name}
-                          </h4>
-                          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1.5 pl-0 list-none text-xs sm:text-sm text-black">
-                            {subj.topics.map((topic, tIdx) => (
-                              <li key={`${level.id}-${idx}-${tIdx}`} className="flex items-baseline gap-2 py-0.5">
-                                <span className="font-bold text-black shrink-0">•</span>
-                                <span className="text-black font-medium leading-snug">{topic}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                    <div className="p-4 sm:p-6 space-y-6 bg-white">
+                      {level.filteredSubjects.map((subj, idx) => {
+                        const styleConfig = getSubjectColor(subj.name);
+
+                        return (
+                          <div key={`${level.id}-subj-${idx}`} className="space-y-2.5">
+                            {/* Subject Header with Discipline Accent Tag */}
+                            <div className="flex items-center gap-2">
+                              <span 
+                                className="w-2 h-2 rounded-full shrink-0"
+                                style={{ backgroundColor: styleConfig.bullet }}
+                              />
+                              <h4 className="text-xs sm:text-sm font-black text-[#1B2A5C] uppercase tracking-wide">
+                                {subj.name}
+                              </h4>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${styleConfig.tag}`}>
+                                {subj.topics.length} Key Topics
+                              </span>
+                            </div>
+
+                            {/* Topics Grid with hover highlights */}
+                            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pl-0 list-none text-xs sm:text-sm">
+                              {subj.topics.map((topic, tIdx) => (
+                                <li 
+                                  key={`${level.id}-${idx}-${tIdx}`} 
+                                  className="flex items-center gap-2.5 p-2 rounded-xl border border-transparent hover:border-[#DDE5F3] hover:bg-[#F8FAFC] transition-all group"
+                                >
+                                  <span 
+                                    className="w-1.5 h-1.5 rounded-full shrink-0 transition-transform group-hover:scale-125"
+                                    style={{ backgroundColor: styleConfig.bullet }}
+                                  />
+                                  <span className="text-[#1B2A5C] font-medium leading-snug group-hover:text-[#1546A8] transition-colors">
+                                    {topic}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
