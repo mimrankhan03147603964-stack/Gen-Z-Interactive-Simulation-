@@ -53,21 +53,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
-  // Bulletin Strip Marquee calculation: speed ~18-22 pixels per second (duration = width / 20)
+  // Bulletin Strip Marquee calculation: comfortably brisk readability (~38 pixels per second)
   const tickerGroupRef = useRef<HTMLDivElement>(null);
-  const [tickerDuration, setTickerDuration] = useState<number>(2500);
+  const [tickerDuration, setTickerDuration] = useState<number>(750);
 
   useEffect(() => {
-    const handle = requestAnimationFrame(() => {
+    const updateTickerDuration = () => {
       if (tickerGroupRef.current) {
         const width = tickerGroupRef.current.offsetWidth || tickerGroupRef.current.scrollWidth;
         if (width > 0) {
-          const durationSec = Math.round(width / 20);
+          // Speed: ~38 pixels per second (brisk and comfortable to read without strain)
+          const durationSec = Math.max(45, Math.round(width / 38));
           setTickerDuration(durationSec);
         }
       }
-    });
-    return () => cancelAnimationFrame(handle);
+    };
+
+    const handle = requestAnimationFrame(updateTickerDuration);
+    window.addEventListener('resize', updateTickerDuration);
+    return () => {
+      cancelAnimationFrame(handle);
+      window.removeEventListener('resize', updateTickerDuration);
+    };
   }, []);
 
   // 100% of available simulation topics currently in the system library
