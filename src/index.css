@@ -672,7 +672,7 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Continuous Marquee Ticker Animation - Clear & Readable Speed with Razor-Sharp Subpixel Text (~38 px/sec) */
+/* Continuous Marquee Ticker Animation - Fast & Smooth Reading Pace (~95 px/sec) */
 @keyframes marquee-scroll {
   0% {
     transform: translate3d(0, 0, 0);
@@ -684,7 +684,10 @@ button:focus svg, a.btn:focus svg, .btn:focus svg, .btn-3d:focus svg, .btn-tacti
 .animate-marquee-infinite {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 750s linear infinite;
+  animation-name: marquee-scroll;
+  animation-duration: var(--marquee-duration, 260s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
   animation-play-state: running;
   will-change: transform;
   -webkit-backface-visibility: hidden;

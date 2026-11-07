@@ -53,29 +53,43 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [isSliding, setIsSliding] = useState<boolean>(false);
   const [isShowcaseHovered, setIsShowcaseHovered] = useState<boolean>(false);
 
-  // Bulletin Strip Marquee calculation: comfortably brisk readability (~38 pixels per second)
+  // Bulletin Strip Marquee calculation: brisk, comfortable readability (~95 pixels per second)
   const tickerGroupRef = useRef<HTMLDivElement>(null);
-  const [tickerDuration, setTickerDuration] = useState<number>(750);
+  const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
+  const [tickerDuration, setTickerDuration] = useState<number>(260);
 
   useEffect(() => {
     const updateTickerDuration = () => {
       if (tickerGroupRef.current) {
         const width = tickerGroupRef.current.offsetWidth || tickerGroupRef.current.scrollWidth;
         if (width > 0) {
-          // Speed: ~38 pixels per second (brisk and comfortable to read without strain)
-          const durationSec = Math.max(45, Math.round(width / 38));
+          // Base speed: 95 pixels per second (clearly moving, engaging, easy to read)
+          const targetPxPerSec = 95 * speedMultiplier;
+          const durationSec = Math.max(25, Math.round(width / targetPxPerSec));
           setTickerDuration(durationSec);
         }
       }
     };
 
-    const handle = requestAnimationFrame(updateTickerDuration);
+    updateTickerDuration();
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && tickerGroupRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateTickerDuration();
+      });
+      resizeObserver.observe(tickerGroupRef.current);
+    }
+
     window.addEventListener('resize', updateTickerDuration);
+    const timer = setTimeout(updateTickerDuration, 200);
+
     return () => {
-      cancelAnimationFrame(handle);
       window.removeEventListener('resize', updateTickerDuration);
+      clearTimeout(timer);
+      if (resizeObserver) resizeObserver.disconnect();
     };
-  }, []);
+  }, [speedMultiplier]);
 
   // 100% of available simulation topics currently in the system library
   const allSimulationTopics = SIMULATIONS_LIST;
@@ -897,8 +911,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               className="animate-marquee-infinite flex items-center"
               style={{
                 willChange: 'transform',
-                animationDuration: `${tickerDuration}s`
-              }}
+                animationDuration: `${tickerDuration}s`,
+                '--marquee-duration': `${tickerDuration}s`
+              } as React.CSSProperties}
             >
               
               <div ref={tickerGroupRef} className="flex items-center shrink-0">
@@ -956,6 +971,39 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
 
             </div>
+          </div>
+
+          {/* Speed Preset Controls on the Right */}
+          <div 
+            className="shrink-0 z-20 px-2 sm:px-3 py-2 sm:py-2.5 flex items-center gap-1 sm:gap-1.5 select-none" 
+            style={{ 
+              backgroundColor: '#0c2459', 
+              borderLeft: '1.5px solid rgba(245, 166, 35, 0.35)' 
+            }}
+          >
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mr-0.5 hidden xs:inline">
+              سپیڈ:
+            </span>
+            {[
+              { label: 'سست', mult: 0.7, title: 'Calm reading pace (0.7x)' },
+              { label: 'معمول', mult: 1, title: 'Normal brisk pace (1x)' },
+              { label: 'تیز', mult: 1.4, title: 'Fast bulletin pace (1.4x)' },
+              { label: 'سپر', mult: 1.8, title: 'Super fast pace (1.8x)' }
+            ].map((item) => (
+              <button
+                key={item.mult}
+                type="button"
+                onClick={() => setSpeedMultiplier(item.mult)}
+                title={item.title}
+                className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer ${
+                  speedMultiplier === item.mult
+                    ? 'bg-[#F5A623] text-[#1B2A5C] shadow-xs font-black scale-105'
+                    : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
 
         </div>
