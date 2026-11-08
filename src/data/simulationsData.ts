@@ -2319,6 +2319,85 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Fully Bilingual Conceptual Terminology with English & Urdu Scientific References'
     ],
     gradeLevel: 'Class 9, 10 & 11 (Secondary SSC & Higher Secondary HSSC)'
+  },
+  {
+    id: 'sim-plant-vs-animal-cell-simulation',
+    slug: 'plant-vs-animal-cell-simulation',
+    indexNumber: '126',
+    title: 'Plant Cell vs Animal Cell Simulation Lab',
+    subject: 'Cell Biology & Cytology (خلیاتی حیاتیات - پودوں اور جانوروں کے خلیات کا موازنہ)',
+    category: 'Biology & Life',
+    iconName: 'Box',
+    accentColor: '#16a34a',
+    description: 'Interactive comparative cytology laboratory exploring the architectural, structural, and physiological differences between Plant Cells and Animal Cells for Class 9 and 10 Biology. Examine key organelles side by side under microscopic magnification: Cell Wall, Cell Membrane, Central Vacuole vs Small Vacuoles, Chloroplasts with Thylakoid Grana, Nucleus and Nucleolus, Mitochondria, Endoplasmic Reticulum (Rough & Smooth), Golgi Apparatus, and Lysosomes. Test osmotic turgor pressure changes in hypotonic and hypertonic solutions, explore plastid functions, and identify unique and shared eukaryotic cell features.',
+    fileUrl: '/simulations/plant-vs-animal-cell-simulation.html',
+    topics: [
+      'Cell Structure & Eukaryotic Organization: Plant Cells vs Animal Cells',
+      'Unique Plant Structures: Rigid Cellulose Cell Wall, Chloroplasts & Large Central Vacuole',
+      'Unique Animal Structures: Centrioles, Centrosomes & Specialized Lysosomes',
+      'Shared Organelles: Nucleus, Mitochondria, Endoplasmic Reticulum, Golgi Body & Ribosomes',
+      'Cell Physiology & Osmosis: Turgor Pressure, Plasmolysis, Cytoplasm & Selective Permeability'
+    ],
+    features: [
+      'Side-by-Side Microscopic Comparison: Plant vs Animal Cell Interactive Models',
+      'Organelle Highlighting & Detail Inspection with High-Resolution Cross-Sections',
+      'Osmotic Solution Tonicity Controls: Hypotonic Turgidity vs Hypertonic Plasmolysis',
+      'Interactive Organelle Sorting & Comparative Quiz with Instant Assessment'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (General Science, Biology SSC & HSSC)'
+  },
+  {
+    id: 'sim-pollination-fertilization-simulation',
+    slug: 'pollination-fertilization-simulation',
+    indexNumber: '127',
+    title: 'Plant Reproduction: Pollination & Fertilization Lab',
+    subject: 'Botany & Plant Reproduction (نباتیاتی تولید - زیرگی اور فرٹیلائزیشن)',
+    category: 'Biology & Life',
+    iconName: 'Sparkles',
+    accentColor: '#ec4899',
+    description: 'Comprehensive interactive botanical laboratory exploring sexual reproduction in flowering plants (Angiosperms). Examine flower anatomy: Male Androecium (Stamens, Anthers producing Pollen Grains, Filaments) and Female Gynoecium (Carpel/Pistil with Stigma, Style, and Ovary enclosing Ovules). Simulate Self-Pollination and Cross-Pollination via pollinators (Honeybees) and wind currents. Watch the germination of pollen grain on receptive stigma, the enzymatic growth of the pollen tube down through style tissues, double fertilization of the egg cell and central cell, and subsequent seed and fruit development.',
+    fileUrl: '/simulations/pollination-fertilization-simulation.html',
+    topics: [
+      'Flower Anatomy & Reproductive Whorls: Calyx, Corolla, Androecium & Gynoecium',
+      'Pollination Mechanisms: Self-Pollination (Autogamy) vs Cross-Pollination (Allogamy)',
+      'Pollination Agents: Entomophily (Insect Pollinators/Bees) and Anemophily (Wind)',
+      'Pollen Grain Germination & Pollen Tube Elongation along Chemical Gradients',
+      'Angiosperm Fertilization & Post-Fertilization Changes: Ovule to Seed & Ovary to Fruit'
+    ],
+    features: [
+      'Interactive Flower Cross-Section with Zoomable Floral Reproductive Anatomy',
+      'Animated Pollinator Engine: Bee Flight, Pollen Loading & Transfer to Stigma',
+      'Real-Time Pollen Tube Growth & Double Fertilization Dynamic Animation',
+      'Bilingual Botanical Terminology (English & Urdu) with Interactive Comprehension Quiz'
+    ],
+    gradeLevel: 'Class 8, 9 & 10 (Middle Science & Secondary Biology SSC)'
+  },
+  {
+    id: 'sim-transpiration-water-transport-simulation',
+    slug: 'transpiration-water-transport-simulation',
+    indexNumber: '128',
+    title: 'Plant Transpiration & Vascular Transport Lab',
+    subject: 'Plant Physiology & Transport (پودوں میں عملِ تبخیر اور زائیلم و فلوئم ٹرانسپورٹ)',
+    category: 'Biology & Life',
+    iconName: 'Droplet',
+    accentColor: '#0284c7',
+    description: 'Interactive plant physiology and biophysics laboratory demonstrating water and mineral transport from roots to leaves through the Transpiration Stream. Examine root hair osmosis and soil water absorption, ascending capillary action and cohesive-adhesive tension in Xylem vessels (Cohesion-Tension Theory), translocation of sucrose via Phloem sieve tubes, and evaporative water loss through leaf Stomata. Modulate environmental factors including Sunlight intensity, Wind speed, Relative Humidity, and Soil Moisture to observe stomatal aperture regulation (Guard Cells) and measure real-time potometer transpiration rates and leaf turgor/wilting dynamics.',
+    fileUrl: '/simulations/transpiration-water-transport-simulation.html',
+    topics: [
+      'Water Absorption & Root Hair Cells: Osmotic Potential and Pathway (Apoplast & Symplast)',
+      'Xylem Vessel Architecture & Cohesion-Tension Pull Theory of Sap Ascent',
+      'Phloem Sieve Tubes & Companion Cells: Bidirectional Translocation of Photosynthates',
+      'Stomatal Mechanism & Guard Cell Turgor: Osmotic Opening and Closing Regulation',
+      'Environmental Factors Influencing Transpiration: Temperature, Light, Humidity & Wind Speed',
+      'Potometer Transpiration Rate Measurement & Water Balance / Wilting Dynamics'
+    ],
+    features: [
+      'Multiscale Interactive Plant System: Whole Plant, Stem Cross-Section, Leaf Stoma & Root Hairs',
+      'Dynamic Weather & Environmental Control Sliders: Sunlight, Wind, Humidity & Soil Moisture',
+      'Real-Time Stomatal Aperture Visualizer & Live Potometer Rate Telemetry',
+      'Turgid vs Flaccid Wilting Response Engine with Self-Paced Plant Physiology Quiz'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (General Science & Secondary Biology SSC)'
   }
 ];
 

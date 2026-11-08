@@ -121,7 +121,10 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-vernier-micrometer-simulation': 122,
   'sim-carbon-nitrogen-cycle-simulation': 123,
   'sim-five-senses-simulation': 124,
-  'sim-nervous-system-simulation': 125
+  'sim-nervous-system-simulation': 125,
+  'sim-plant-vs-animal-cell-simulation': 126,
+  'sim-pollination-fertilization-simulation': 127,
+  'sim-transpiration-water-transport-simulation': 128
 };
 
 /**
@@ -2875,6 +2878,170 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <circle cx="51" cy="30" r="2" fill="#ef4444" />
           <circle cx="51" cy="34" r="2" fill="#ef4444" />
           <circle cx="54" cy="32" r="1.5" fill="#f59e0b" />
+        </svg>
+      );
+
+    // 126: Plant Cell vs Animal Cell Simulation Lab
+    case 126:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="plantCellGrad" x1="6" y1="10" x2="32" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#15803d" />
+              <stop offset="100%" stopColor="#166534" />
+            </linearGradient>
+            <linearGradient id="animalCellGrad" x1="32" y1="10" x2="58" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#ec4899" />
+              <stop offset="100%" stopColor="#be185d" />
+            </linearGradient>
+            <linearGradient id="vacuoleGrad" x1="12" y1="22" x2="26" y2="44" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#bae6fd" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+          </defs>
+          {/* Divider comparison backdrop */}
+          <rect x="4" y="6" width="56" height="52" rx="10" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+          
+          {/* Plant Cell (Left side - Angular with green Cell Wall) */}
+          <rect x="8" y="10" width="22" height="44" rx="4" fill="url(#plantCellGrad)" stroke="#4ade80" strokeWidth="2" />
+          {/* Plant Central Vacuole */}
+          <ellipse cx="19" cy="32" rx="7" ry="14" fill="url(#vacuoleGrad)" opacity="0.85" />
+          {/* Chloroplasts */}
+          <ellipse cx="13" cy="18" rx="2.5" ry="3.5" fill="#22c55e" stroke="#86efac" strokeWidth="0.8" />
+          <ellipse cx="25" cy="46" rx="2.5" ry="3.5" fill="#22c55e" stroke="#86efac" strokeWidth="0.8" />
+          {/* Plant Nucleus */}
+          <circle cx="23" cy="18" r="3.2" fill="#fbbf24" stroke="#fef08a" strokeWidth="1" />
+          <circle cx="23" cy="18" r="1.2" fill="#b45309" />
+
+          {/* Dividing comparison line */}
+          <line x1="32" y1="8" x2="32" y2="56" stroke="#64748b" strokeWidth="1" strokeDasharray="2 2" />
+
+          {/* Animal Cell (Right side - Rounded flexible membrane) */}
+          <ellipse cx="46" cy="32" rx="13" ry="18" fill="url(#animalCellGrad)" stroke="#f472b6" strokeWidth="1.8" />
+          {/* Animal Nucleus (Prominent central) */}
+          <circle cx="45" cy="31" r="5.5" fill="#818cf8" stroke="#c7d2fe" strokeWidth="1.2" />
+          <circle cx="45" cy="31" r="2" fill="#312e81" />
+          {/* Centrioles */}
+          <line x1="52" y1="20" x2="55" y2="20" stroke="#fde047" strokeWidth="1.5" />
+          <line x1="53.5" y1="18.5" x2="53.5" y2="21.5" stroke="#fde047" strokeWidth="1.5" />
+          {/* Mitochondria */}
+          <ellipse cx="40" cy="43" rx="3" ry="1.8" fill="#f97316" stroke="#fed7aa" strokeWidth="0.8" />
+          <ellipse cx="51" cy="41" rx="2.5" ry="1.5" fill="#f97316" stroke="#fed7aa" strokeWidth="0.8" />
+        </svg>
+      );
+
+    // 127: Plant Reproduction: Pollination & Fertilization Lab
+    case 127:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="petalGrad" x1="16" y1="16" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f472b6" />
+              <stop offset="50%" stopColor="#ec4899" />
+              <stop offset="100%" stopColor="#be185d" />
+            </linearGradient>
+            <linearGradient id="pistilGrad" x1="32" y1="18" x2="32" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#a3e635" />
+              <stop offset="100%" stopColor="#15803d" />
+            </linearGradient>
+            <linearGradient id="beeBody" x1="42" y1="10" x2="58" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#fde047" />
+              <stop offset="50%" stopColor="#ca8a04" />
+              <stop offset="100%" stopColor="#1e293b" />
+            </linearGradient>
+          </defs>
+          {/* Background disc */}
+          <circle cx="32" cy="32" r="28" fill="#581c87" fillOpacity="0.4" stroke="#a855f7" strokeWidth="1.5" />
+          
+          {/* Flower Petals */}
+          <path d="M32 18 C26 6 12 14 20 28 C10 32 10 46 24 46 C28 54 36 54 40 46 C54 46 54 32 44 28 C52 14 38 6 32 18 Z" fill="url(#petalGrad)" opacity="0.9" />
+
+          {/* Central Carpel / Pistil (Stigma, Style, Ovary) */}
+          <path d="M30 48 Q32 26 32 20" stroke="url(#pistilGrad)" strokeWidth="3" strokeLinecap="round" />
+          {/* Stigma Head */}
+          <ellipse cx="32" cy="18" rx="4" ry="2.5" fill="#facc15" stroke="#ca8a04" strokeWidth="1" />
+          {/* Ovary Base */}
+          <ellipse cx="31" cy="46" rx="6" ry="5" fill="#16a34a" stroke="#86efac" strokeWidth="1.2" />
+          {/* Ovules inside ovary */}
+          <circle cx="29.5" cy="46" r="1.5" fill="#fef08a" />
+          <circle cx="33" cy="46" r="1.5" fill="#fef08a" />
+
+          {/* Stamens & Anthers with Pollen Grains */}
+          <path d="M22 36 Q22 24 24 22" stroke="#fef08a" strokeWidth="1.5" />
+          <ellipse cx="24" cy="21" rx="2.5" ry="1.8" fill="#eab308" />
+          <path d="M42 36 Q42 24 40 22" stroke="#fef08a" strokeWidth="1.5" />
+          <ellipse cx="40" cy="21" rx="2.5" ry="1.8" fill="#eab308" />
+
+          {/* Pollen grains floating & tube growing */}
+          <circle cx="32" cy="15" r="1.2" fill="#fef08a" />
+          <circle cx="30" cy="13" r="1" fill="#fde047" />
+          <path d="M32 19 L32 44" stroke="#fef08a" strokeWidth="1.2" strokeDasharray="1.5 1.5" />
+
+          {/* Flying Pollinator Honeybee */}
+          <g transform="translate(6, 0)">
+            <ellipse cx="46" cy="14" rx="4.5" ry="3" fill="url(#beeBody)" />
+            {/* Bee Stripes */}
+            <line x1="45" y1="11.5" x2="45" y2="16.5" stroke="#0f172a" strokeWidth="1" />
+            <line x1="48" y1="11.5" x2="48" y2="16.5" stroke="#0f172a" strokeWidth="1" />
+            {/* Translucent Wings */}
+            <ellipse cx="44" cy="9" rx="3.5" ry="2" fill="#bae6fd" opacity="0.75" transform="rotate(-20 44 9)" />
+            <ellipse cx="48" cy="9" rx="3" ry="1.8" fill="#bae6fd" opacity="0.75" transform="rotate(20 48 9)" />
+          </g>
+        </svg>
+      );
+
+    // 128: Plant Transpiration & Vascular Transport Lab
+    case 128:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="transpirationSky" x1="32" y1="4" x2="32" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#0c4a6e" />
+              <stop offset="50%" stopColor="#0369a1" />
+              <stop offset="100%" stopColor="#082f49" />
+            </linearGradient>
+            <linearGradient id="stemGrad" x1="30" y1="16" x2="34" y2="48" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#22c55e" />
+              <stop offset="100%" stopColor="#15803d" />
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="10" fill="url(#transpirationSky)" stroke="#38bdf8" strokeWidth="1.5" />
+
+          {/* Soil Layer */}
+          <path d="M6 48 Q32 46 58 48 L58 58 Q32 58 6 58 Z" fill="#78350f" opacity="0.9" />
+          <line x1="6" y1="48" x2="58" y2="48" stroke="#a16207" strokeWidth="1.5" />
+
+          {/* Plant Roots underground */}
+          <path d="M32 48 Q28 54 22 57 M32 48 Q33 54 34 58 M32 48 Q36 53 42 56" stroke="#fde68a" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Water absorption particles entering roots */}
+          <circle cx="18" cy="54" r="1.2" fill="#38bdf8" />
+          <circle cx="27" cy="56" r="1.2" fill="#38bdf8" />
+          <circle cx="45" cy="53" r="1.2" fill="#38bdf8" />
+
+          {/* Stem & Leaves */}
+          <path d="M32 48 L32 20" stroke="url(#stemGrad)" strokeWidth="3.5" strokeLinecap="round" />
+          
+          {/* Xylem Core Stream (Ascending Blue Arrows) */}
+          <path d="M32 47 L32 21" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 2" />
+          <polygon points="32,18 30,22 34,22" fill="#38bdf8" />
+
+          {/* Leaf Left */}
+          <path d="M32 34 C24 34 16 28 14 22 C22 22 30 28 32 34 Z" fill="#16a34a" stroke="#86efac" strokeWidth="1" />
+          {/* Leaf Right */}
+          <path d="M32 26 C40 26 48 20 50 14 C42 14 34 20 32 26 Z" fill="#16a34a" stroke="#86efac" strokeWidth="1" />
+
+          {/* Evaporating Transpiration Water Vapor Droplets from leaves */}
+          <circle cx="14" cy="18" r="1.8" fill="#bae6fd" opacity="0.9" />
+          <circle cx="12" cy="13" r="1.3" fill="#38bdf8" opacity="0.8" />
+          <circle cx="16" cy="10" r="1" fill="#e0f2fe" opacity="0.7" />
+
+          <circle cx="48" cy="10" r="1.8" fill="#bae6fd" opacity="0.9" />
+          <circle cx="52" cy="6" r="1.3" fill="#38bdf8" opacity="0.8" />
+
+          {/* Sun Shining Top Left */}
+          <circle cx="14" cy="10" r="3" fill="#facc15" />
+          <line x1="14" y1="5" x2="14" y2="3" stroke="#fde047" strokeWidth="1" />
+          <line x1="10" y1="7" x2="8" y2="5" stroke="#fde047" strokeWidth="1" />
         </svg>
       );
 

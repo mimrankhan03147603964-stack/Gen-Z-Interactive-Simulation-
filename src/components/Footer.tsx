@@ -7,8 +7,8 @@ interface FooterProps {
   totalSimulations?: number;
 }
 
-export const Footer: React.FC<FooterProps> = ({ totalSimulations = 125 }) => {
-  const displaySimCount = totalSimulations >= 125 ? totalSimulations : 125;
+export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
+  const displaySimCount = totalSimulations >= 128 ? totalSimulations : 128;
 
   // Typewriter effect state for "Need a Custom Simulation?" and its description
   const customSimTitle = "Need a Custom Simulation?";

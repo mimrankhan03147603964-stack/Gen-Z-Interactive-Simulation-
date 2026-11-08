@@ -1751,6 +1751,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#fffbeb',
     tagText: '#d97706',
     glowColor: 'rgba(245, 158, 11, 0.45)'
+  },
+  '126': {
+    id: '126',
+    name: 'Plant Cell vs Animal Cell Lab',
+    bgSolid: '#16a34a',
+    bgGradient: 'linear-gradient(135deg, #4ade80 0%, #16a34a 50%, #14532d 100%)',
+    borderColor: '#86efac',
+    iconBg: '#14532d',
+    iconBorder: '#4ade80',
+    iconColor: '#ffffff',
+    badgeBg: '#dcfce7',
+    badgeText: '#166534',
+    badgeBorder: '#86efac',
+    tagBg: '#f0fdf4',
+    tagText: '#15803d',
+    glowColor: 'rgba(22, 163, 74, 0.45)'
+  },
+  '127': {
+    id: '127',
+    name: 'Plant Pollination & Fertilization Lab',
+    bgSolid: '#ec4899',
+    bgGradient: 'linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #9d174d 100%)',
+    borderColor: '#fbcfe8',
+    iconBg: '#831843',
+    iconBorder: '#f472b6',
+    iconColor: '#ffffff',
+    badgeBg: '#fce7f3',
+    badgeText: '#9d174d',
+    badgeBorder: '#fbcfe8',
+    tagBg: '#fdf2f8',
+    tagText: '#be185d',
+    glowColor: 'rgba(236, 72, 153, 0.45)'
+  },
+  '128': {
+    id: '128',
+    name: 'Plant Transpiration & Transport Lab',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #075985 100%)',
+    borderColor: '#bae6fd',
+    iconBg: '#0c4a6e',
+    iconBorder: '#38bdf8',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#bae6fd',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.45)'
   }
 };
 
