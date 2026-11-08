@@ -745,21 +745,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
 
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
-          <div 
-            className="reveal-left flex-1 min-w-0 p-5 sm:p-7 md:p-8 rounded-[20px] w-full max-w-3xl lg:max-w-4xl"
-            style={{
-              backgroundColor: 'rgba(10, 25, 60, 0.40)',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              borderRadius: '20px',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              boxShadow: '0 8px 32px rgba(5, 15, 40, 0.35)'
-            }}
-          >
+          <div className="reveal-left flex-1 min-w-0 w-full max-w-3xl lg:max-w-4xl flex flex-col">
+            {/* Website Title: Always on a Single Line with No Card Behind It */}
             <h1 
-              className="font-heading font-black tracking-tight leading-tight text-white"
+              className="font-heading font-black tracking-tight leading-tight text-white whitespace-nowrap"
               style={{
-                fontSize: 'clamp(1.5rem, 3.2vw, 2.75rem)',
+                fontSize: 'clamp(1.15rem, 2.5vw, 2.55rem)',
+                whiteSpace: 'nowrap',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 0, 0, 0.65)',
                 letterSpacing: '-0.01em',
                 lineHeight: 1.15
@@ -768,118 +760,131 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               Gen Z Interactive Simulations Portal
             </h1>
 
-            {/* Subtitle & Dynamic Typewriter Subject Stream - Clean Separate Lines with Zero Overlap */}
-            <div className="mt-2.5 flex flex-col gap-1.5">
-              {/* Row 1: Multidisciplinary Learning Portal Label in Bright Yellow */}
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
-                <span 
-                  className="text-xs sm:text-sm md:text-base font-black tracking-wide uppercase"
-                  style={{ 
-                    color: '#FDE047', 
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85)',
-                    letterSpacing: '0.025em'
-                  }}
-                >
-                  Professional Multidisciplinary Digital Learning Portal
-                </span>
-              </div>
-
-              {/* Row 2: Dedicated Interactive Subject Stream with Typewriter Animation on its Own Line */}
-              <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                <span 
-                  className="text-xs sm:text-sm font-extrabold text-white shrink-0"
-                  style={{ 
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
-                    letterSpacing: '0.015em'
-                  }}
-                >
-                  Interactive Focus:
-                </span>
-                <span 
-                  className="inline-flex items-center px-3 py-1 rounded-lg font-black text-xs sm:text-sm tracking-wide border shadow-md transition-colors duration-200"
-                  style={{
-                    backgroundColor: '#091A3E',
-                    borderColor: stemRotations[slideIndex].color,
-                    color: '#FFFFFF',
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
-                  }}
-                >
-                  <span className="text-white font-extrabold">{typedSubject}</span>
-                  <span 
-                    className="inline-block w-[2.5px] h-4 ml-1.5 animate-pulse" 
-                    style={{ backgroundColor: stemRotations[slideIndex].color, boxShadow: `0 0 6px ${stemRotations[slideIndex].color}` }} 
-                  />
-                </span>
-              </div>
-            </div>
-
-            {/* Typewriter Dynamic Educational Description matching Subject */}
-            <p 
-              className="mt-3.5 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
-              style={{ 
-                color: '#FFFFFF',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 3px 8px rgba(0, 0, 0, 0.85)',
-                lineHeight: '1.65',
-                letterSpacing: '0.015em'
+            {/* Lighter, softer glass card for lower text & action buttons */}
+            <div 
+              className="mt-3 p-4 sm:p-5 md:p-6 rounded-[18px] w-full"
+              style={{
+                backgroundColor: 'rgba(10, 25, 60, 0.18)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '18px',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
+                boxShadow: '0 4px 16px rgba(5, 15, 40, 0.12)'
               }}
             >
-              <span>
-                {typedDesc}
-                <span 
-                  className="inline-block w-[2px] h-4 ml-1 align-middle animate-pulse" 
-                  style={{ backgroundColor: stemRotations[slideIndex].color }} 
-                />
-              </span>
-            </p>
+              {/* Subtitle & Dynamic Typewriter Subject Stream - Clean Separate Lines with Zero Overlap */}
+              <div className="flex flex-col gap-1.5">
+                {/* Row 1: Multidisciplinary Learning Portal Label in Bright Yellow */}
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
+                  <span 
+                    className="text-xs sm:text-sm md:text-base font-black tracking-wide uppercase"
+                    style={{ 
+                      color: '#FDE047', 
+                      textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85)',
+                      letterSpacing: '0.025em'
+                    }}
+                  >
+                    Professional Multidisciplinary Digital Learning Portal
+                  </span>
+                </div>
 
-            {/* High-Contrast Action Buttons with Solid Colours and Bold Text */}
-            <div className="reveal-up relative z-10 mt-6 flex items-center gap-4 flex-wrap">
-              <button
-                type="button"
-                onClick={() => {
-                  if (onExploreLabs) {
-                    onExploreLabs();
-                  } else {
-                    const el = document.getElementById('catalog');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="font-black px-6 py-3 rounded-xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
-                style={{
-                  backgroundColor: '#F5A623',
-                  color: '#0A1938',
-                  border: '2px solid #D97706',
-                  boxShadow: '0 4px 14px rgba(245, 166, 35, 0.4)'
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
-              >
-                <Layers className="w-4 h-4 pointer-events-none text-[#0A1938]" />
-                <span className="text-[#0A1938] font-black">Explore All Labs Grid</span>
-              </button>
-              <a
-                href="#stage"
-                className="fx-pulse-blue px-6 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
-                style={{
-                  backgroundColor: '#1546A8',
+                {/* Row 2: Dedicated Interactive Subject Stream with Typewriter Animation on its Own Line */}
+                <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                  <span 
+                    className="text-xs sm:text-sm font-extrabold text-white shrink-0"
+                    style={{ 
+                      textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
+                      letterSpacing: '0.015em'
+                    }}
+                  >
+                    Interactive Focus:
+                  </span>
+                  <span 
+                    className="inline-flex items-center px-3 py-1 rounded-lg font-black text-xs sm:text-sm tracking-wide border shadow-md transition-colors duration-200"
+                    style={{
+                      backgroundColor: '#091A3E',
+                      borderColor: stemRotations[slideIndex].color,
+                      color: '#FFFFFF',
+                      textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
+                    }}
+                  >
+                    <span className="text-white font-extrabold">{typedSubject}</span>
+                    <span 
+                      className="inline-block w-[2.5px] h-4 ml-1.5 animate-pulse" 
+                      style={{ backgroundColor: stemRotations[slideIndex].color, boxShadow: `0 0 6px ${stemRotations[slideIndex].color}` }} 
+                    />
+                  </span>
+                </div>
+              </div>
+
+              {/* Typewriter Dynamic Educational Description matching Subject */}
+              <p 
+                className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
+                style={{ 
                   color: '#FFFFFF',
-                  border: '2px solid #3B82F6',
-                  boxShadow: '0 4px 14px rgba(21, 70, 168, 0.5)',
-                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#1D4ED8';
-                  e.currentTarget.style.borderColor = '#60A5FA';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#1546A8';
-                  e.currentTarget.style.borderColor = '#3B82F6';
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 3px 8px rgba(0, 0, 0, 0.85)',
+                  lineHeight: '1.65',
+                  letterSpacing: '0.015em'
                 }}
               >
-                <Play className="w-4 h-4 pointer-events-none text-white fill-white shrink-0" />
-                <span className="text-white font-black">Interactive Stage &amp; Dedicated Tabs</span>
-              </a>
+                <span>
+                  {typedDesc}
+                  <span 
+                    className="inline-block w-[2px] h-4 ml-1 align-middle animate-pulse" 
+                    style={{ backgroundColor: stemRotations[slideIndex].color }} 
+                  />
+                </span>
+              </p>
+
+              {/* High-Contrast Action Buttons with Solid Colours and Bold Text */}
+              <div className="reveal-up relative z-10 mt-5 flex items-center gap-4 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onExploreLabs) {
+                      onExploreLabs();
+                    } else {
+                      const el = document.getElementById('catalog');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="font-black px-6 py-3 rounded-xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
+                  style={{
+                    backgroundColor: '#F5A623',
+                    color: '#0A1938',
+                    border: '2px solid #D97706',
+                    boxShadow: '0 4px 14px rgba(245, 166, 35, 0.4)'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
+                >
+                  <Layers className="w-4 h-4 pointer-events-none text-[#0A1938]" />
+                  <span className="text-[#0A1938] font-black">Explore All Labs Grid</span>
+                </button>
+                <a
+                  href="#stage"
+                  className="fx-pulse-blue px-6 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
+                  style={{
+                    backgroundColor: '#1546A8',
+                    color: '#FFFFFF',
+                    border: '2px solid #3B82F6',
+                    boxShadow: '0 4px 14px rgba(21, 70, 168, 0.5)',
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#1D4ED8';
+                    e.currentTarget.style.borderColor = '#60A5FA';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#1546A8';
+                    e.currentTarget.style.borderColor = '#3B82F6';
+                  }}
+                >
+                  <Play className="w-4 h-4 pointer-events-none text-white fill-white shrink-0" />
+                  <span className="text-white font-black">Interactive Stage &amp; Dedicated Tabs</span>
+                </a>
+              </div>
             </div>
           </div>
 
