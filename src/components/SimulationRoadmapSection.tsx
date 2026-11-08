@@ -479,7 +479,6 @@ export const SimulationRoadmapSection: React.FC = () => {
               >
                 <ChevronDown className="w-3.5 h-3.5 text-[#1546A8]" />
                 <span>Collapse All</span>
-                <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب سمیٹیں)</span>
               </button>
               <span className="w-px h-4 bg-[#CBD5E1]" />
               <button
@@ -490,7 +489,6 @@ export const SimulationRoadmapSection: React.FC = () => {
               >
                 <ChevronUp className="w-3.5 h-3.5 text-[#1546A8]" />
                 <span>Expand All</span>
-                <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب کھولیں)</span>
               </button>
             </div>
           </div>

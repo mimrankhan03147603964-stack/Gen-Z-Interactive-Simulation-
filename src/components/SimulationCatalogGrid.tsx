@@ -604,7 +604,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     },
     {
       key: 'Urdu & Linguistics',
-      name: 'اردو اور لسانیات',
+      name: 'Urdu & Linguistics',
       color: '#059669',
       tint: 'rgba(5, 150, 105, 0.08)',
       shadow: 'rgba(5, 150, 105, 0.35)',
@@ -989,7 +989,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   >
                     <ChevronDown className="w-3.5 h-3.5 text-[#1546A8]" />
                     <span>Collapse All</span>
-                    <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب سمیٹیں)</span>
                   </button>
                   <span className="w-px h-4 bg-[#CBD5E1]" />
                   <button
@@ -1000,7 +999,6 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                   >
                     <ChevronUp className="w-3.5 h-3.5 text-[#1546A8]" />
                     <span>Expand All</span>
-                    <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب کھولیں)</span>
                   </button>
                 </div>
               )}
@@ -1224,13 +1222,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                   {hasMore ? (
                                     <>
                                       <span>+ Show All {panelSims.length} Simulations ({panelSims.length - 8} more)</span>
-                                      <span className="font-urdu text-xs opacity-90">(باقی تمام سیمولیشنز دیکھیں)</span>
                                       <ChevronDown className="w-4 h-4 shrink-0" />
                                     </>
                                   ) : (
                                     <>
-                                      <span>Show Fewer (Show top 8)</span>
-                                      <span className="font-urdu text-xs opacity-90">(واپس سمیٹیں)</span>
+                                      <span>Show Fewer (Top 8)</span>
                                       <ChevronUp className="w-4 h-4 shrink-0" />
                                     </>
                                   )}

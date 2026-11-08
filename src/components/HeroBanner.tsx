@@ -990,13 +990,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             }}
           >
             <span className="text-[10px] sm:text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mr-0.5 hidden xs:inline">
-              سپیڈ:
+              Speed:
             </span>
             {[
-              { label: 'سست', mult: 0.7, title: 'Calm reading pace (0.7x)' },
-              { label: 'معمول', mult: 1, title: 'Normal brisk pace (1x)' },
-              { label: 'تیز', mult: 1.4, title: 'Fast bulletin pace (1.4x)' },
-              { label: 'سپر', mult: 1.8, title: 'Super fast pace (1.8x)' }
+              { label: '0.7x', mult: 0.7, title: 'Calm reading pace (0.7x)' },
+              { label: '1.0x', mult: 1, title: 'Normal brisk pace (1.0x)' },
+              { label: '1.4x', mult: 1.4, title: 'Fast bulletin pace (1.4x)' },
+              { label: '1.8x', mult: 1.8, title: 'Super fast pace (1.8x)' }
             ].map((item) => (
               <button
                 key={item.mult}

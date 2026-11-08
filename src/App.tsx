@@ -669,7 +669,7 @@ export default function App() {
           <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
         </ScrollReveal>
 
-        {/* Floating Fast Scroll-to-Top Button (اوپر جائیں) */}
+        {/* Floating Fast Scroll-to-Top Button */}
         {showScrollTop && (
           <button
             type="button"
@@ -680,12 +680,11 @@ export default function App() {
               borderColor: '#F5A623',
               boxShadow: '0 8px 24px rgba(21, 70, 168, 0.45)'
             }}
-            title="Scroll to Top (اوپر جائیں)"
+            title="Scroll to Top"
             aria-label="Scroll to Top"
           >
             <ArrowUp className="w-4 h-4 text-[#F5A623] shrink-0" />
-            <span className="hidden sm:inline">Top</span>
-            <span className="font-urdu text-xs opacity-90">(اوپر جائیں)</span>
+            <span>Back to Top</span>
           </button>
         )}
 
