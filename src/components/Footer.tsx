@@ -80,7 +80,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
       id="developer"
       className="w-full mt-auto py-10 sm:py-16 px-4 sm:px-8 lg:px-12 shrink-0 select-none transition-all scroll-mt-28 relative border-t shadow-2xl overflow-hidden"
       style={{
-        backgroundImage: "url('/assets/aistudio/WhatsApp_Image_2026-10-30_at_12.01.49_PM_dcfd610d.jpeg')",
+        backgroundImage: "url('/assets/aistudio/WhatsApp_Image_2026-11-08_at_9.01.00_AM_24aa8b46.jpeg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
