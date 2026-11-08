@@ -20,6 +20,35 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
+
+  // Scroll-triggered entrance observer (threshold 0.3): repeats when scrolling into/out of view
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (!('IntersectionObserver' in window)) {
+      setIsSectionVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsSectionVisible(true);
+          } else {
+            setIsSectionVisible(false);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const developerGmailLink = "https://mail.google.com/mail/?view=cm&fs=1&to=mimrankhan3964@gmail.com&su=Inquiry%20from%20GEN%20Z%20Interactive%20Simulations%20Portal";
 
@@ -78,40 +107,49 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
   return (
     <footer 
       id="developer"
+      ref={sectionRef}
       className="w-full mt-auto py-10 sm:py-16 px-4 sm:px-8 lg:px-12 shrink-0 select-none transition-all scroll-mt-28 relative border-t shadow-2xl overflow-hidden"
       style={{
-        backgroundImage: "url('/assets/aistudio/WhatsApp_Image_2026-11-08_at_9.01.00_AM_24aa8b46.jpeg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundColor: '#ffffff',
         borderTop: '2px solid #F5A623',
         width: '100%',
         maxWidth: '100%',
         borderRadius: '0px'
       }}
     >
-      {/* Light white-to-transparent overlay on the left so the developer name stays readable */}
+      {/* Developer Photo Layer: Slides in smoothly from LEFT (fade-in + translateX) on scroll */}
       <div 
-        className="absolute inset-0 pointer-events-none z-0 hidden sm:block"
+        className={`absolute inset-0 pointer-events-none z-0 dev-photo-anim ${isSectionVisible ? 'animate' : ''}`}
         style={{
-          background: 'linear-gradient(to right, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.90) 36%, rgba(255, 255, 255, 0.55) 58%, rgba(255, 255, 255, 0) 82%)'
+          backgroundImage: "url('/assets/aistudio/WhatsApp_Image_2026-11-08_at_9.01.00_AM_24aa8b46.jpeg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
         }}
-      />
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 block sm:hidden"
-        style={{
-          background: 'linear-gradient(to right, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.90) 70%, rgba(255, 255, 255, 0.6) 100%)'
-        }}
-      />
+      >
+        {/* Light white-to-transparent overlay on the left so the developer name stays readable */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0 hidden sm:block"
+          style={{
+            background: 'linear-gradient(to right, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.90) 36%, rgba(255, 255, 255, 0.55) 58%, rgba(255, 255, 255, 0) 82%)'
+          }}
+        />
+        <div 
+          className="absolute inset-0 pointer-events-none z-0 block sm:hidden"
+          style={{
+            background: 'linear-gradient(to right, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.90) 70%, rgba(255, 255, 255, 0.6) 100%)'
+          }}
+        />
+      </div>
 
-      {/* Full-Width Inner Content Area with No Empty Side Gaps */}
-      <div className="w-full max-w-6xl mx-auto flex flex-col space-y-8 relative z-10">
+      {/* Full-Width Inner Content Area: Slides in smoothly from RIGHT (fade-in + translateX) on scroll */}
+      <div className={`w-full max-w-6xl mx-auto flex flex-col space-y-8 relative z-10 dev-text-anim ${isSectionVisible ? 'animate' : ''}`}>
         
         {/* Top Developer Showcase: Left-aligned over the light white overlay */}
-        <div className="reveal-left w-full md:max-w-xl lg:max-w-2xl text-left space-y-4">
+        <div className="w-full md:max-w-xl lg:max-w-2xl text-left space-y-4">
           
           {/* 1. Monogram / Logo */}
-          <div className="reveal-zoom flex items-center justify-start bg-transparent p-0 m-0 border-0 shadow-none">
+          <div className="flex items-center justify-start bg-transparent p-0 m-0 border-0 shadow-none">
             <img 
               src="/genz-logo-transparent.png?v=3" 
               alt="Gen Z Interactive Simulations Official Logo" 
@@ -161,7 +199,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
         </div>
 
         {/* 4. Elegant Developer Message Box: Custom Simulation Request Card (Semi-transparent with backdrop blur) */}
-        <div className="reveal-right w-full max-w-4xl">
+        <div className="w-full max-w-4xl">
           <div 
             ref={cardRef}
             onMouseEnter={() => setIsCardHovered(true)}
@@ -295,7 +333,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
       </div>
 
         {/* 5. Footer Bottom Copyright & Curriculum Alignment */}
-        <div className="reveal-up w-full max-w-4xl pt-2">
+        <div className="w-full max-w-4xl pt-2">
           <div className="w-full h-px mb-4 bg-slate-400/40" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-800">
             <p className="text-center sm:text-left drop-shadow-2xs">
