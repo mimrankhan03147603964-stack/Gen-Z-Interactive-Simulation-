@@ -6,7 +6,11 @@ import {
   Mail,
   Users,
   MessageSquare,
-  Sparkles
+  Sparkles,
+  School,
+  FlaskConical,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -43,6 +47,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   // Modals for Join Our Team and Share Your Feedback
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
 
   // Form states for Join Team
   const [joinName, setJoinName] = useState('');
@@ -56,6 +62,35 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const [feedbackCategory, setFeedbackCategory] = useState('Appreciation');
   const [feedbackRole, setFeedbackRole] = useState('Teacher');
   const [feedbackMessage, setFeedbackMessage] = useState('');
+
+  // Form states for Item 4: Request a School Demo
+  const [demoName, setDemoName] = useState('');
+  const [demoDesignation, setDemoDesignation] = useState('Principal');
+  const [demoSchoolName, setDemoSchoolName] = useState('');
+  const [demoCity, setDemoCity] = useState('');
+  const [demoEmail, setDemoEmail] = useState('');
+  const [demoPhone, setDemoPhone] = useState('');
+  const [demoStudentsCount, setDemoStudentsCount] = useState('100-300');
+  const [demoClasses, setDemoClasses] = useState<string[]>(['Primary (1-5)', 'Middle (6-8)']);
+  const [demoSubjects, setDemoSubjects] = useState<string[]>(['Science', 'Physics', 'Mathematics']);
+  const [demoType, setDemoType] = useState('Online Demo');
+  const [demoDate, setDemoDate] = useState('');
+  const [demoMessage, setDemoMessage] = useState('');
+  const [demoErrors, setDemoErrors] = useState<Record<string, string>>({});
+  const [demoSuccessMsg, setDemoSuccessMsg] = useState(false);
+
+  // Form states for Item 5: Request a New Lab
+  const [labName, setLabName] = useState('');
+  const [labEmail, setLabEmail] = useState('');
+  const [labPhone, setLabPhone] = useState('');
+  const [labRole, setLabRole] = useState('Teacher');
+  const [labGrade, setLabGrade] = useState('Class 9');
+  const [labSubject, setLabSubject] = useState('Physics');
+  const [labTopic, setLabTopic] = useState('');
+  const [labDescription, setLabDescription] = useState('');
+  const [labCurriculum, setLabCurriculum] = useState('');
+  const [labErrors, setLabErrors] = useState<Record<string, string>>({});
+  const [labSuccessMsg, setLabSuccessMsg] = useState(false);
 
   const handleJoinWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +125,195 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     window.open(`mailto:mimrankhan3964@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
   };
 
+  // Validation & Handlers for Item 4: Request a School Demo
+  const validateDemoForm = () => {
+    const errs: Record<string, string> = {};
+    if (!demoName.trim()) {
+      errs.name = 'Please enter your name.';
+    }
+    if (!demoSchoolName.trim()) {
+      errs.schoolName = 'Please enter your school name.';
+    }
+    if (!demoCity.trim()) {
+      errs.city = 'Please enter your city.';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!demoEmail.trim()) {
+      errs.email = 'Please enter your email address.';
+    } else if (!emailRegex.test(demoEmail.trim())) {
+      errs.email = 'Please enter a valid email format (e.g. name@school.edu).';
+    }
+    const phoneDigits = demoPhone.replace(/\D/g, '');
+    if (!demoPhone.trim()) {
+      errs.phone = 'Please enter your WhatsApp or phone number.';
+    } else if (phoneDigits.length < 7 && demoPhone.trim().length < 7) {
+      errs.phone = 'Please enter a valid phone number (at least 7 digits).';
+    }
+    if (demoClasses.length === 0) {
+      errs.classes = 'Please select at least one class grade.';
+    }
+    if (demoSubjects.length === 0) {
+      errs.subjects = 'Please select at least one subject.';
+    }
+    setDemoErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const getDemoFormattedText = () => {
+    const lines = [
+      `*Request a School Demo - Gen Z Interactive Simulations*`,
+      ``,
+      `*Your Name:* ${demoName.trim()}`,
+      `*Designation:* ${demoDesignation}`,
+      `*School Name:* ${demoSchoolName.trim()}`,
+      `*City:* ${demoCity.trim()}`,
+      `*Email Address:* ${demoEmail.trim()}`,
+      `*WhatsApp / Phone Number:* ${demoPhone.trim()}`,
+      `*Number of Students:* ${demoStudentsCount}`,
+      `*Classes Interested In:* ${demoClasses.join(', ')}`,
+      `*Subjects Interested In:* ${demoSubjects.join(', ')}`,
+      `*Preferred Demo Type:* ${demoType}`,
+      demoDate ? `*Preferred Date:* ${demoDate}` : null,
+      demoMessage.trim() ? `*Additional Message:* ${demoMessage.trim()}` : null
+    ].filter(Boolean);
+    return lines.join('\n');
+  };
+
+  const handleDemoWhatsApp = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!validateDemoForm()) return;
+    const text = getDemoFormattedText();
+    window.open(`https://wa.me/923147603964?text=${encodeURIComponent(text)}`, '_blank');
+    setDemoSuccessMsg(true);
+    setTimeout(() => {
+      setDemoName('');
+      setDemoDesignation('Principal');
+      setDemoSchoolName('');
+      setDemoCity('');
+      setDemoEmail('');
+      setDemoPhone('');
+      setDemoStudentsCount('100-300');
+      setDemoClasses(['Primary (1-5)', 'Middle (6-8)']);
+      setDemoSubjects(['Science', 'Physics', 'Mathematics']);
+      setDemoType('Online Demo');
+      setDemoDate('');
+      setDemoMessage('');
+      setDemoErrors({});
+      setDemoSuccessMsg(false);
+      setIsDemoModalOpen(false);
+    }, 2500);
+  };
+
+  const handleDemoEmail = () => {
+    if (!validateDemoForm()) return;
+    const text = getDemoFormattedText();
+    const subject = `School Demo Request - ${demoSchoolName.trim()}`;
+    window.open(`mailto:mimrankhan3964@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`, '_blank');
+    setDemoSuccessMsg(true);
+    setTimeout(() => {
+      setDemoName('');
+      setDemoDesignation('Principal');
+      setDemoSchoolName('');
+      setDemoCity('');
+      setDemoEmail('');
+      setDemoPhone('');
+      setDemoStudentsCount('100-300');
+      setDemoClasses(['Primary (1-5)', 'Middle (6-8)']);
+      setDemoSubjects(['Science', 'Physics', 'Mathematics']);
+      setDemoType('Online Demo');
+      setDemoDate('');
+      setDemoMessage('');
+      setDemoErrors({});
+      setDemoSuccessMsg(false);
+      setIsDemoModalOpen(false);
+    }, 2500);
+  };
+
+  // Validation & Handlers for Item 5: Request a New Lab
+  const validateLabForm = () => {
+    const errs: Record<string, string> = {};
+    if (!labName.trim()) {
+      errs.name = 'Please enter your name.';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (labEmail.trim() && !emailRegex.test(labEmail.trim())) {
+      errs.email = 'Please enter a valid email format.';
+    }
+    const phoneDigits = labPhone.replace(/\D/g, '');
+    if (labPhone.trim() && phoneDigits.length < 7 && labPhone.trim().length < 7) {
+      errs.phone = 'Please enter a valid phone number.';
+    }
+    if (!labTopic.trim()) {
+      errs.topic = 'Please enter the lab or simulation topic.';
+    }
+    if (!labDescription.trim()) {
+      errs.description = 'Please describe what the simulation should show or do.';
+    }
+    setLabErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const getLabFormattedText = () => {
+    const lines = [
+      `*Request a New Lab - Gen Z Interactive Simulations*`,
+      ``,
+      `*Your Name:* ${labName.trim()}`,
+      labEmail.trim() ? `*Email Address:* ${labEmail.trim()}` : null,
+      labPhone.trim() ? `*WhatsApp / Phone Number:* ${labPhone.trim()}` : null,
+      `*Who are you:* ${labRole}`,
+      `*Class / Grade:* ${labGrade}`,
+      `*Subject:* ${labSubject}`,
+      `*Lab / Simulation Topic:* ${labTopic.trim()}`,
+      `*What should the simulation show or do:* ${labDescription.trim()}`,
+      labCurriculum.trim() ? `*Curriculum / Textbook Reference:* ${labCurriculum.trim()}` : null
+    ].filter(Boolean);
+    return lines.join('\n');
+  };
+
+  const handleLabWhatsApp = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!validateLabForm()) return;
+    const text = getLabFormattedText();
+    window.open(`https://wa.me/923147603964?text=${encodeURIComponent(text)}`, '_blank');
+    setLabSuccessMsg(true);
+    setTimeout(() => {
+      setLabName('');
+      setLabEmail('');
+      setLabPhone('');
+      setLabRole('Teacher');
+      setLabGrade('Class 9');
+      setLabSubject('Physics');
+      setLabTopic('');
+      setLabDescription('');
+      setLabCurriculum('');
+      setLabErrors({});
+      setLabSuccessMsg(false);
+      setIsLabModalOpen(false);
+    }, 2500);
+  };
+
+  const handleLabEmail = () => {
+    if (!validateLabForm()) return;
+    const text = getLabFormattedText();
+    const subject = `New Lab Request - ${labTopic.trim()}`;
+    window.open(`mailto:mimrankhan3964@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`, '_blank');
+    setLabSuccessMsg(true);
+    setTimeout(() => {
+      setLabName('');
+      setLabEmail('');
+      setLabPhone('');
+      setLabRole('Teacher');
+      setLabGrade('Class 9');
+      setLabSubject('Physics');
+      setLabTopic('');
+      setLabDescription('');
+      setLabCurriculum('');
+      setLabErrors({});
+      setLabSuccessMsg(false);
+      setIsLabModalOpen(false);
+    }, 2500);
+  };
+
   // Close dropdown on outside click or Escape key
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,6 +329,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         setIsPinned(false);
         setIsJoinModalOpen(false);
         setIsFeedbackModalOpen(false);
+        setIsDemoModalOpen(false);
+        setIsLabModalOpen(false);
       }
     };
 
@@ -728,10 +954,52 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                         setIsPinned(false);
                         setIsFeedbackModalOpen(true);
                       }}
-                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
                     >
                       <span>Share Your Feedback</span>
                     </button>
+
+                    {/* Item 4: Request a School Demo (NEW) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                        setIsDemoModalOpen(true);
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
+                    >
+                      <span>Request a School Demo</span>
+                    </button>
+
+                    {/* Item 5: Request a New Lab (NEW) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                        setIsLabModalOpen(true);
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
+                    >
+                      <span>Request a New Lab</span>
+                    </button>
+
+                    {/* Item 6: Chat on WhatsApp (NEW) */}
+                    <a
+                      href={`https://wa.me/923147603964?text=${encodeURIComponent("Hello! I am visiting the Gen Z Interactive Simulations Portal and I would like to ask a question.")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer no-underline flex items-center justify-center"
+                    >
+                      <span>Chat on WhatsApp</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -1011,6 +1279,637 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
                   style={{ backgroundColor: '#1E88E5', border: '1px solid #1565C0' }}
                   title="Send Feedback via Email"
+                >
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <span>Send via Email</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 3: Request a School Demo */}
+      {isDemoModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs select-none"
+          onClick={() => setIsDemoModalOpen(false)}
+        >
+          <div 
+            className="w-full max-w-2xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden border shadow-2xl relative"
+            style={{
+              backgroundColor: '#1B2A5C',
+              border: '2px solid #F5A623',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div 
+              className="px-5 py-3.5 flex items-center justify-between shrink-0"
+              style={{ backgroundColor: '#1546A8', borderBottom: '1.5px solid #F5A623' }}
+            >
+              <div className="flex items-center gap-2.5">
+                <School className="w-5 h-5 text-[#F5A623] shrink-0" />
+                <div>
+                  <h3 className="font-heading font-black text-sm sm:text-base text-white tracking-wide">
+                    Request a School Demo
+                  </h3>
+                  <p className="text-[11px] text-[#DBE4F7] font-medium">
+                    Want to see Gen Z Interactive Simulations in your school? Tell us a little about your school and we will contact you.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsDemoModalOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleDemoWhatsApp} className="p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto">
+              {demoSuccessMsg && (
+                <div className="p-3 rounded-xl bg-emerald-900/90 border border-emerald-400 text-emerald-100 text-xs sm:text-sm font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
+                  <span>Thank you! Your message is ready to send.</span>
+                </div>
+              )}
+
+              {/* Row 1: Name & Designation */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Your Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={demoName}
+                    onChange={(e) => {
+                      setDemoName(e.target.value);
+                      if (demoErrors.name) setDemoErrors(prev => ({ ...prev, name: '' }));
+                    }}
+                    placeholder="e.g. Dr. Muhammad / Prof. Sarah"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {demoErrors.name && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {demoErrors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Designation <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={demoDesignation}
+                    onChange={(e) => setDemoDesignation(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Principal">Principal</option>
+                    <option value="Vice Principal">Vice Principal</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Coordinator">Coordinator</option>
+                    <option value="Owner / Director">Owner / Director</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 2: School Name & City */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    School Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={demoSchoolName}
+                    onChange={(e) => {
+                      setDemoSchoolName(e.target.value);
+                      if (demoErrors.schoolName) setDemoErrors(prev => ({ ...prev, schoolName: '' }));
+                    }}
+                    placeholder="e.g. Army Public School / Beaconhouse"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {demoErrors.schoolName && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {demoErrors.schoolName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    City <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={demoCity}
+                    onChange={(e) => {
+                      setDemoCity(e.target.value);
+                      if (demoErrors.city) setDemoErrors(prev => ({ ...prev, city: '' }));
+                    }}
+                    placeholder="e.g. Lahore / Islamabad / Karachi"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {demoErrors.city && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {demoErrors.city}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 3: Email Address & WhatsApp / Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Email Address <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={demoEmail}
+                    onChange={(e) => {
+                      setDemoEmail(e.target.value);
+                      if (demoErrors.email) setDemoErrors(prev => ({ ...prev, email: '' }));
+                    }}
+                    placeholder="e.g. principal@school.edu.pk"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {demoErrors.email && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {demoErrors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    WhatsApp / Phone Number <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={demoPhone}
+                    onChange={(e) => {
+                      setDemoPhone(e.target.value);
+                      if (demoErrors.phone) setDemoErrors(prev => ({ ...prev, phone: '' }));
+                    }}
+                    placeholder="e.g. +92 314 7603964"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {demoErrors.phone && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {demoErrors.phone}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 4: Number of Students & Preferred Demo Type */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Number of Students <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={demoStudentsCount}
+                    onChange={(e) => setDemoStudentsCount(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Under 100">Under 100</option>
+                    <option value="100-300">100-300</option>
+                    <option value="300-600">300-600</option>
+                    <option value="600-1000">600-1000</option>
+                    <option value="Over 1000">Over 1000</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Preferred Demo Type <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={demoType}
+                    onChange={(e) => setDemoType(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Online Demo">Online Demo</option>
+                    <option value="Visit to Our School">Visit to Our School</option>
+                    <option value="Teacher Training Session">Teacher Training Session</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 5: Classes Interested In (Multi-select) */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1.5">
+                  Classes Interested In <span className="text-red-400">*</span>
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {['Primary (1-5)', 'Middle (6-8)', 'Secondary (9-10)', 'Higher Secondary (11-12)'].map((cls) => {
+                    const isChecked = demoClasses.includes(cls);
+                    return (
+                      <button
+                        key={cls}
+                        type="button"
+                        onClick={() => {
+                          setDemoClasses(prev => 
+                            prev.includes(cls) ? prev.filter(c => c !== cls) : [...prev, cls]
+                          );
+                          if (demoErrors.classes) setDemoErrors(prev => ({ ...prev, classes: '' }));
+                        }}
+                        className={`px-2.5 py-1.5 rounded-lg border text-[11.5px] font-semibold text-center transition-colors cursor-pointer select-none ${
+                          isChecked 
+                            ? 'bg-[#F5A623] text-[#0A1835] border-[#F5A623] font-bold' 
+                            : 'bg-[#0E1F42] text-white/80 border-white/20 hover:border-white/50'
+                        }`}
+                      >
+                        {cls}
+                      </button>
+                    );
+                  })}
+                </div>
+                {demoErrors.classes && (
+                  <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {demoErrors.classes}
+                  </p>
+                )}
+              </div>
+
+              {/* Row 6: Subjects Interested In (Multi-select) */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1.5">
+                  Subjects Interested In <span className="text-red-400">*</span>
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {['Science', 'Physics', 'Chemistry', 'Biology', 'Mathematics', 'Computer Science', 'English', 'Other'].map((sub) => {
+                    const isChecked = demoSubjects.includes(sub);
+                    return (
+                      <button
+                        key={sub}
+                        type="button"
+                        onClick={() => {
+                          setDemoSubjects(prev => 
+                            prev.includes(sub) ? prev.filter(s => s !== sub) : [...prev, sub]
+                          );
+                          if (demoErrors.subjects) setDemoErrors(prev => ({ ...prev, subjects: '' }));
+                        }}
+                        className={`px-2.5 py-1.5 rounded-lg border text-[11.5px] font-semibold text-center transition-colors cursor-pointer select-none ${
+                          isChecked 
+                            ? 'bg-[#F5A623] text-[#0A1835] border-[#F5A623] font-bold' 
+                            : 'bg-[#0E1F42] text-white/80 border-white/20 hover:border-white/50'
+                        }`}
+                      >
+                        {sub}
+                      </button>
+                    );
+                  })}
+                </div>
+                {demoErrors.subjects && (
+                  <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {demoErrors.subjects}
+                  </p>
+                )}
+              </div>
+
+              {/* Row 7: Preferred Date (Optional) */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Preferred Date (Optional)
+                </label>
+                <input
+                  type="date"
+                  value={demoDate}
+                  onChange={(e) => setDemoDate(e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+              </div>
+
+              {/* Row 8: Additional Message (Optional) */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Additional Message (Optional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={demoMessage}
+                  onChange={(e) => setDemoMessage(e.target.value)}
+                  placeholder="Tell us any specific requirements, timing preferences, or questions..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors resize-none"
+                />
+              </div>
+
+              {/* Action Buttons: WhatsApp & Email */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button
+                  type="submit"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#25D366', border: '1px solid #1EBE5D' }}
+                  title="Send via WhatsApp directly to Developer"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  <span>Send via WhatsApp</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDemoEmail}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#1E88E5', border: '1px solid #1565C0' }}
+                  title="Send via Email"
+                >
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <span>Send via Email</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 4: Request a New Lab */}
+      {isLabModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs select-none"
+          onClick={() => setIsLabModalOpen(false)}
+        >
+          <div 
+            className="w-full max-w-2xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden border shadow-2xl relative"
+            style={{
+              backgroundColor: '#1B2A5C',
+              border: '2px solid #F5A623',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div 
+              className="px-5 py-3.5 flex items-center justify-between shrink-0"
+              style={{ backgroundColor: '#1546A8', borderBottom: '1.5px solid #F5A623' }}
+            >
+              <div className="flex items-center gap-2.5">
+                <FlaskConical className="w-5 h-5 text-[#F5A623] shrink-0" />
+                <div>
+                  <h3 className="font-heading font-black text-sm sm:text-base text-white tracking-wide">
+                    Request a New Lab
+                  </h3>
+                  <p className="text-[11px] text-[#DBE4F7] font-medium">
+                    Need a simulation that is not on the portal yet? Tell us the topic and we will consider building it.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsLabModalOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleLabWhatsApp} className="p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto">
+              {labSuccessMsg && (
+                <div className="p-3 rounded-xl bg-emerald-900/90 border border-emerald-400 text-emerald-100 text-xs sm:text-sm font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
+                  <span>Thank you! Your message is ready to send.</span>
+                </div>
+              )}
+
+              {/* Row 1: Name, Email & Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Your Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={labName}
+                    onChange={(e) => {
+                      setLabName(e.target.value);
+                      if (labErrors.name) setLabErrors(prev => ({ ...prev, name: '' }));
+                    }}
+                    placeholder="e.g. Imran Khan / Student"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {labErrors.name && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {labErrors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Email Address (Optional)
+                  </label>
+                  <input
+                    type="email"
+                    value={labEmail}
+                    onChange={(e) => {
+                      setLabEmail(e.target.value);
+                      if (labErrors.email) setLabErrors(prev => ({ ...prev, email: '' }));
+                    }}
+                    placeholder="e.g. user@gmail.com"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {labErrors.email && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {labErrors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    WhatsApp / Phone (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={labPhone}
+                    onChange={(e) => {
+                      setLabPhone(e.target.value);
+                      if (labErrors.phone) setLabErrors(prev => ({ ...prev, phone: '' }));
+                    }}
+                    placeholder="e.g. +92 314 7603964"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                  {labErrors.phone && (
+                    <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      {labErrors.phone}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 2: Who are you?, Class / Grade & Subject */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Who are you? <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={labRole}
+                    onChange={(e) => setLabRole(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
+                    <option value="Parent">Parent</option>
+                    <option value="School Admin">School Admin</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Class / Grade <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={labGrade}
+                    onChange={(e) => setLabGrade(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Class 1">Class 1</option>
+                    <option value="Class 2">Class 2</option>
+                    <option value="Class 3">Class 3</option>
+                    <option value="Class 4">Class 4</option>
+                    <option value="Class 5">Class 5</option>
+                    <option value="Class 6">Class 6</option>
+                    <option value="Class 7">Class 7</option>
+                    <option value="Class 8">Class 8</option>
+                    <option value="Class 9">Class 9</option>
+                    <option value="Class 10">Class 10</option>
+                    <option value="Class 11">Class 11</option>
+                    <option value="Class 12">Class 12</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Subject <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={labSubject}
+                    onChange={(e) => setLabSubject(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="English">English</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Islamiyat">Islamiyat</option>
+                    <option value="General Science">General Science</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 3: Lab / Simulation Topic */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Lab / Simulation Topic <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={labTopic}
+                  onChange={(e) => {
+                    setLabTopic(e.target.value);
+                    if (labErrors.topic) setLabErrors(prev => ({ ...prev, topic: '' }));
+                  }}
+                  placeholder="e.g. Photosynthesis, Ohm's Law, Projectile Motion..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+                {labErrors.topic && (
+                  <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {labErrors.topic}
+                  </p>
+                )}
+              </div>
+
+              {/* Row 4: What should the simulation show or do? */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  What should the simulation show or do? <span className="text-red-400">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={labDescription}
+                  onChange={(e) => {
+                    setLabDescription(e.target.value);
+                    if (labErrors.description) setLabErrors(prev => ({ ...prev, description: '' }));
+                  }}
+                  placeholder="Describe the sliders, interactive elements, animations, or scientific formula you want to see demonstrated..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors resize-none"
+                />
+                {labErrors.description && (
+                  <p className="text-[11px] font-bold text-red-400 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {labErrors.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Row 5: Curriculum / Textbook Reference (Optional) */}
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Curriculum / Textbook Reference (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={labCurriculum}
+                  onChange={(e) => setLabCurriculum(e.target.value)}
+                  placeholder="e.g. Punjab Textbook Board, Unit 5 / Cambridge IGCSE Syllabus"
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+              </div>
+
+              {/* Action Buttons: WhatsApp & Email */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button
+                  type="submit"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#25D366', border: '1px solid #1EBE5D' }}
+                  title="Send via WhatsApp directly to Developer"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  <span>Send via WhatsApp</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLabEmail}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#1E88E5', border: '1px solid #1565C0' }}
+                  title="Send via Email"
                 >
                   <Mail className="w-4 h-4 shrink-0" />
                   <span>Send via Email</span>
