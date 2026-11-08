@@ -164,6 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'categories' | 'labs'>('categories');
   const [searchTerm, setSearchTerm] = useState('');
+  const [visibleLabsCount, setVisibleLabsCount] = useState<number>(24);
 
   const getCategoryCount = (key: string) => {
     if (key === 'All Simulations') return simulations.length;
@@ -501,7 +502,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span className="font-mono font-bold" style={{ color: '#7BBDE8' }}>{filteredSims.length} FOUND</span>
               </div>
 
-              {filteredSims.map((sim) => (
+              {/* Render sliced labs for ultra-fast scrolling */}
+              {(searchTerm ? filteredSims : filteredSims.slice(0, visibleLabsCount)).map((sim) => (
                 <a
                   key={sim.id}
                   href={getSimulationStandaloneUrl(sim)}
@@ -543,6 +545,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <ExternalLink className="w-4 h-4 text-[#7BBDE8] group-hover:scale-110 transition-transform shrink-0" />
                 </a>
               ))}
+
+              {/* Show More Labs Button */}
+              {!searchTerm && visibleLabsCount < filteredSims.length && (
+                <div className="pt-2 pb-1 flex flex-col gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleLabsCount((prev) => Math.min(prev + 24, filteredSims.length))}
+                    className="w-full py-2.5 px-3 rounded-xl text-xs font-bold text-white transition-all cursor-pointer border"
+                    style={{
+                      backgroundColor: '#1546A8',
+                      borderColor: '#7BBDE8'
+                    }}
+                  >
+                    + Show More Labs ({filteredSims.length - visibleLabsCount} remaining)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVisibleLabsCount(filteredSims.length)}
+                    className="w-full py-1.5 text-[11px] font-medium text-[#7BBDE8] hover:text-white transition-colors cursor-pointer"
+                  >
+                    Show All {filteredSims.length} Labs
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

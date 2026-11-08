@@ -327,13 +327,32 @@ const getSubjectColor = (subjectName: string): { border: string; bullet: string;
 export const SimulationRoadmapSection: React.FC = () => {
   const [selectedLevelId, setSelectedLevelId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [collapsedBlocks, setCollapsedBlocks] = useState<Record<string, boolean>>({});
+  
+  // By default, keep Level 1 open and Levels 2-5 collapsed so page opens instantly without long scrolling
+  const [collapsedBlocks, setCollapsedBlocks] = useState<Record<string, boolean>>({
+    'level-2': true,
+    'level-3': true,
+    'level-4': true,
+    'level-5': true
+  });
 
   const toggleBlock = (id: string) => {
     setCollapsedBlocks((prev) => ({
       ...prev,
       [id]: !prev[id]
     }));
+  };
+
+  const collapseAll = () => {
+    const allCol: Record<string, boolean> = {};
+    ROADMAP_DATA.forEach(lvl => {
+      allCol[lvl.id] = true;
+    });
+    setCollapsedBlocks(allCol);
+  };
+
+  const expandAll = () => {
+    setCollapsedBlocks({});
   };
 
   const matchesSearch = (text: string) => {
@@ -417,33 +436,63 @@ export const SimulationRoadmapSection: React.FC = () => {
             <span>Filter by Academic Stage:</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSelectedLevelId('all')}
-              className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer ${
-                selectedLevelId === 'all'
-                  ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
-                  : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
-              }`}
-            >
-              All Grades
-            </button>
-
-            {ROADMAP_DATA.map((lvl) => (
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
-                key={`tab-${lvl.id}`}
                 type="button"
-                onClick={() => setSelectedLevelId(lvl.id)}
-                className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                  selectedLevelId === lvl.id
+                onClick={() => setSelectedLevelId('all')}
+                className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer ${
+                  selectedLevelId === 'all'
                     ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
                     : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
                 }`}
               >
-                <span>{lvl.shortLabel}</span>
+                All Grades
               </button>
-            ))}
+
+              {ROADMAP_DATA.map((lvl) => (
+                <button
+                  key={`tab-${lvl.id}`}
+                  type="button"
+                  onClick={() => {
+                    setSelectedLevelId(lvl.id);
+                    setCollapsedBlocks(prev => ({ ...prev, [lvl.id]: false }));
+                  }}
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                    selectedLevelId === lvl.id
+                      ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
+                      : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
+                  }`}
+                >
+                  <span>{lvl.shortLabel}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Quick Expand / Collapse All for Roadmap */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#EEF3F9] border border-[#DDE5F3]">
+              <button
+                type="button"
+                onClick={collapseAll}
+                className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
+                title="Collapse all levels"
+              >
+                <ChevronDown className="w-3.5 h-3.5 text-[#1546A8]" />
+                <span>Collapse All</span>
+                <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب سمیٹیں)</span>
+              </button>
+              <span className="w-px h-4 bg-[#CBD5E1]" />
+              <button
+                type="button"
+                onClick={expandAll}
+                className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
+                title="Expand all levels"
+              >
+                <ChevronUp className="w-3.5 h-3.5 text-[#1546A8]" />
+                <span>Expand All</span>
+                <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب کھولیں)</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -457,7 +506,7 @@ export const SimulationRoadmapSection: React.FC = () => {
             </div>
           ) : (
             visibleLevels.map((level) => {
-              const isCollapsed = !!collapsedBlocks[level.id];
+              const isCollapsed = !searchQuery.trim() && !!collapsedBlocks[level.id];
 
               return (
                 <div 

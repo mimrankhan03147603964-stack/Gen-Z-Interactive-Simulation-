@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowUp } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
@@ -160,6 +160,7 @@ export default function App() {
 
   // Top colorful scroll progress bar percentage (0% to 100%)
   const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
 
   // Initialize global scroll reveal engine and track scroll progress
   useEffect(() => {
@@ -170,6 +171,7 @@ export default function App() {
       const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
       setScrollProgress(progress);
+      setShowScrollTop(scrollTop > 260);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -666,6 +668,26 @@ export default function App() {
         <ScrollReveal direction="up" distance={16} duration={450} resetOnLeave={true}>
           <Footer isDarkMode={isDarkMode} totalSimulations={allSimulations.length} />
         </ScrollReveal>
+
+        {/* Floating Fast Scroll-to-Top Button (اوپر جائیں) */}
+        {showScrollTop && (
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-6 right-6 z-[99998] px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-white font-black text-xs sm:text-sm cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 border"
+            style={{
+              backgroundColor: '#1546A8',
+              borderColor: '#F5A623',
+              boxShadow: '0 8px 24px rgba(21, 70, 168, 0.45)'
+            }}
+            title="Scroll to Top (اوپر جائیں)"
+            aria-label="Scroll to Top"
+          >
+            <ArrowUp className="w-4 h-4 text-[#F5A623] shrink-0" />
+            <span className="hidden sm:inline">Top</span>
+            <span className="font-urdu text-xs opacity-90">(اوپر جائیں)</span>
+          </button>
+        )}
 
       </div>
     </div>

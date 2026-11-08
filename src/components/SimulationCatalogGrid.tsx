@@ -262,6 +262,37 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // Track expanded descriptions per card (collapsed by default for progressive disclosure)
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
 
+  // List Length & Scroll Controls: Collapsible Subject Panels & Compact Preview Mode
+  const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
+  const [expandedSubjectItems, setExpandedSubjectItems] = useState<Record<string, boolean>>({});
+  const [compactMode, setCompactMode] = useState<boolean>(true);
+
+  const togglePanelCollapse = (key: string) => {
+    setCollapsedPanels(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const collapseAllPanels = () => {
+    const allCollapsed: Record<string, boolean> = {};
+    SUBJECT_PANELS_CONFIG.forEach(p => {
+      allCollapsed[p.key] = true;
+    });
+    setCollapsedPanels(allCollapsed);
+  };
+
+  const expandAllPanels = () => {
+    setCollapsedPanels({});
+  };
+
+  const toggleSubjectItems = (key: string) => {
+    setExpandedSubjectItems(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
   // Intersection Observer triggers for smooth count-up on scroll
@@ -915,16 +946,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           }
         `}</style>
 
-        {/* Top Search Bar & Counter */}
+        {/* Top Search Bar & List Length Controls */}
         <div 
-          className="reveal-up shadow-lg rounded-2xl p-4 sm:p-5 transition-all border"
+          className="reveal-up shadow-lg rounded-2xl p-4 sm:p-5 transition-all border space-y-3.5"
           style={{
             backgroundColor: '#FFFFFF',
             borderColor: '#DDE5F3',
             boxShadow: '0 8px 24px rgba(27, 42, 92, 0.08)'
           }}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="text-base sm:text-lg font-black tracking-tight text-[#1B2A5C] font-heading">
                 {isAllCategory ? 'All STEM Disciplines' : activeSubjectConfig.fullTitle}
@@ -945,9 +976,37 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               )}
             </div>
 
-            {/* Quick Search */}
-            <div className="w-full sm:w-72 shrink-0">
-              <div className="relative flex items-center rounded-xl border border-[#C9D3E6] bg-[#FFFFFF] shadow-inner focus-within:ring-2 focus-within:ring-[#1E88E5]">
+            {/* List Controls: Collapse/Expand All & Search */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              {/* Expand / Collapse All Controls */}
+              {isAllCategory && (
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#EEF3F9] border border-[#DDE5F3]">
+                  <button
+                    type="button"
+                    onClick={collapseAllPanels}
+                    className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
+                    title="Collapse all subject panels for fast overview"
+                  >
+                    <ChevronDown className="w-3.5 h-3.5 text-[#1546A8]" />
+                    <span>Collapse All</span>
+                    <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب سمیٹیں)</span>
+                  </button>
+                  <span className="w-px h-4 bg-[#CBD5E1]" />
+                  <button
+                    type="button"
+                    onClick={expandAllPanels}
+                    className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
+                    title="Expand all subject panels"
+                  >
+                    <ChevronUp className="w-3.5 h-3.5 text-[#1546A8]" />
+                    <span>Expand All</span>
+                    <span className="hidden sm:inline font-urdu text-[11px] opacity-80">(سب کھولیں)</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Quick Search */}
+              <div className="relative flex items-center rounded-xl border border-[#C9D3E6] bg-[#FFFFFF] shadow-inner focus-within:ring-2 focus-within:ring-[#1E88E5] min-w-[220px] sm:w-64">
                 <Search className="w-4 h-4 ml-3.5 shrink-0 text-[#1E88E5]" />
                 <input
                   type="text"
@@ -967,6 +1026,47 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Quick Subject Jump Pills */}
+          <div className="pt-2 border-t border-[#EEF3F9] flex items-center gap-1.5 overflow-x-auto pb-1 text-xs select-none">
+            <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
+              <span>Quick Jump:</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => handleCategoryChange('All Simulations')}
+              className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all ${
+                isAllCategory 
+                  ? 'bg-[#1546A8] text-white shadow-xs' 
+                  : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
+              }`}
+            >
+              All ({activeSimulations.length})
+            </button>
+            {SUBJECT_PANELS_CONFIG.map((p) => {
+              const count = activeSimulations.filter(s => s.category === p.key && matchesGradeTier(s, selectedGradeTier)).length;
+              const isSelected = selectedCategory === p.key;
+              return (
+                <button
+                  key={`pill-${p.key}`}
+                  type="button"
+                  onClick={() => handleCategoryChange(p.key)}
+                  className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all flex items-center gap-1 ${
+                    isSelected 
+                      ? 'text-white shadow-xs' 
+                      : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
+                  }`}
+                  style={{
+                    backgroundColor: isSelected ? p.color : undefined
+                  }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isSelected ? '#FFFFFF' : p.color }} />
+                  <span>{p.name}</span>
+                  <span className="text-[10px] opacity-80 font-mono">({count})</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -993,10 +1093,17 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
                 const PanelIcon = panel.icon;
                 const panelReveal = panelIdx % 2 === 0 ? 'reveal-left' : 'reveal-right';
+                const isPanelCollapsed = !!collapsedPanels[panel.key];
+
+                // Item Display Limit: show 8 items initially when viewing all categories, or all if expanded/searched
+                const isExpanded = !compactMode || !!searchTerm || !isAllCategory || !!expandedSubjectItems[panel.key];
+                const visibleSims = isExpanded ? panelSims : panelSims.slice(0, 8);
+                const hasMore = panelSims.length > 8 && !isExpanded;
 
                 return (
                   <div
                     key={panel.key}
+                    id={`subject-panel-${panel.key.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
                     className={`subject-panel-horizontal ${panelReveal}`}
                     style={{
                       '--subject-color': panel.color,
@@ -1004,10 +1111,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       '--subject-shadow-color': panel.shadow
                     } as React.CSSProperties}
                   >
-                    {/* Header Bar Across the Top in Subject's Color */}
+                    {/* Header Bar Across the Top in Subject's Color - Clickable to Collapse / Expand */}
                     <div
-                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap"
+                      onClick={() => togglePanelCollapse(panel.key)}
+                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-105 transition-all"
                       style={{ backgroundColor: panel.color }}
+                      title={isPanelCollapsed ? `Click to expand ${panel.name}` : `Click to collapse ${panel.name}`}
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
                         <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
@@ -1026,16 +1135,23 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         </div>
                       </div>
 
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
-                        {panelSims.length} simulations
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
+                          {panelSims.length} simulations
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white border border-white/30 transition-transform">
+                          {isPanelCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Horizontal Multi-Column Grid of Topic Cards (Spanning Across Laptop & Desktop) */}
-                    <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5">
-                          {panelSims.length > 0 ? (
+                    {/* Horizontal Multi-Column Grid of Topic Cards (Rendered only when panel is not collapsed) */}
+                    {!isPanelCollapsed && (
+                      <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5">
+                        {panelSims.length > 0 ? (
+                          <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
-                              {panelSims.map((sim, cardIdx) => {
+                              {visibleSims.map((sim, cardIdx) => {
                                 const displayTitle = cleanCardTitle(sim.title);
                                 const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
                                 const col = cardIdx % 3;
@@ -1092,14 +1208,45 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                 );
                               })}
                             </div>
-                          ) : (
-                            <div className="py-8 text-center text-xs text-slate-400 font-medium">
-                              No simulations match filter
-                            </div>
-                          )}
-                        </div>
+
+                            {/* Show More / Show Less Button for Long Subject Lists */}
+                            {panelSims.length > 8 && !searchTerm && isAllCategory && (
+                              <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-center">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleSubjectItems(panel.key)}
+                                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white shadow-sm hover:shadow-md cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                  style={{
+                                    backgroundColor: panel.color,
+                                    boxShadow: `0 4px 14px ${panel.shadow}`
+                                  }}
+                                >
+                                  {hasMore ? (
+                                    <>
+                                      <span>+ Show All {panelSims.length} Simulations ({panelSims.length - 8} more)</span>
+                                      <span className="font-urdu text-xs opacity-90">(باقی تمام سیمولیشنز دیکھیں)</span>
+                                      <ChevronDown className="w-4 h-4 shrink-0" />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span>Show Fewer (Show top 8)</span>
+                                      <span className="font-urdu text-xs opacity-90">(واپس سمیٹیں)</span>
+                                      <ChevronUp className="w-4 h-4 shrink-0" />
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="py-8 text-center text-xs text-slate-400 font-medium">
+                            No simulations match filter
+                          </div>
+                        )}
                       </div>
-                    );
+                    )}
+                  </div>
+                );
               })}
           </div>
         ) : (
