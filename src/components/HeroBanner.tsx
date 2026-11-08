@@ -25,7 +25,8 @@ const HERO_SLIDESHOW_IMAGES = [
   sliderImg6,
   sliderImg7,
   sliderImg8,
-  sliderImg9
+  sliderImg9,
+  sliderImg1 // Seamless infinite right-to-left loop clone
 ];
 
 interface HeroBannerProps {
@@ -52,8 +53,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
 
-  // Hero Background Continuous 9-Picture Slideshow State (5.5s timer, 1.5s cross-fade)
+  // Hero Background Continuous Right-to-Left Sliding State
   const [bgSlideIndex, setBgSlideIndex] = useState<number>(0);
+  const [isBgTransitioning, setIsBgTransitioning] = useState<boolean>(true);
 
   // 2-Second Interval Timer & Fluid Right-to-Left Slide Rotator State
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -240,14 +242,32 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
     });
   }, []);
 
-  // Continuous Automatic Slideshow: changes photo every 5.5 seconds, never stops
+  // Automatic Right-to-Left Slide: moves continuously from right to left every 3.6 seconds, never stops
   useEffect(() => {
     const interval = setInterval(() => {
-      setBgSlideIndex((prev) => (prev + 1) % HERO_SLIDESHOW_IMAGES.length);
-    }, 5500);
+      setIsBgTransitioning(true);
+      setBgSlideIndex((prev) => prev + 1);
+    }, 3600);
 
     return () => clearInterval(interval);
   }, []);
+
+  // When loop duplicate of picture 1 is reached, seamlessly snap back to picture 1 with no visible jump
+  useEffect(() => {
+    if (bgSlideIndex === HERO_SLIDESHOW_IMAGES.length - 1) {
+      const timeout = setTimeout(() => {
+        setIsBgTransitioning(false);
+        setBgSlideIndex(0);
+      }, 920); // after the 900ms smooth slide finishes
+      return () => clearTimeout(timeout);
+    } else if (!isBgTransitioning) {
+      // Re-enable smooth transition right after the silent snap
+      const frame = requestAnimationFrame(() => {
+        setIsBgTransitioning(true);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [bgSlideIndex, isBgTransitioning]);
 
   // Digital clock widget
   useEffect(() => {
@@ -423,24 +443,26 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           backgroundColor: '#0A1428'
         }}
       >
-        {/* Continuous Automatic Background Slideshow with 1.5s Smooth Cross-Fade */}
+        {/* Continuous Automatic Right-to-Left Slide Track: edge-to-edge with ZERO empty space */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
-          {HERO_SLIDESHOW_IMAGES.map((src, idx) => {
-            const isActive = idx === bgSlideIndex;
-            return (
+          <div 
+            className="flex h-full"
+            style={{
+              width: `${HERO_SLIDESHOW_IMAGES.length * 100}%`,
+              transform: `translateX(-${(bgSlideIndex * 100) / HERO_SLIDESHOW_IMAGES.length}%)`,
+              transition: isBgTransitioning ? 'transform 900ms cubic-bezier(0.25, 1, 0.5, 1)' : 'none',
+              willChange: 'transform'
+            }}
+          >
+            {HERO_SLIDESHOW_IMAGES.map((src, idx) => (
               <div 
                 key={`hero-bg-slide-${idx}`} 
-                className="absolute inset-0 w-full h-full pointer-events-none select-none"
-                style={{
-                  opacity: isActive ? 1 : 0,
-                  zIndex: isActive ? 2 : 1,
-                  transition: 'opacity 1500ms ease-in-out',
-                  willChange: 'opacity'
-                }}
+                className="h-full relative shrink-0"
+                style={{ width: `${100 / HERO_SLIDESHOW_IMAGES.length}%` }}
               >
                 <img 
                   src={src} 
-                  alt={`Gen Z Interactive STEM Lab Slideshow Photo ${idx + 1}`}
+                  alt={`Gen Z Interactive STEM Lab Background Photo ${idx + 1}`}
                   className="w-full h-full object-cover select-none pointer-events-none"
                   style={{
                     objectFit: 'cover',
@@ -453,8 +475,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   referrerPolicy="no-referrer"
                 />
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
