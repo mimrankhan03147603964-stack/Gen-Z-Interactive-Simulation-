@@ -746,13 +746,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div 
-            className="reveal-left flex-1 min-w-0 p-2 sm:p-4 md:p-5 rounded-2xl w-full max-w-none"
+            className="reveal-left flex-1 min-w-0 p-5 sm:p-7 md:p-8 rounded-[20px] w-full max-w-3xl lg:max-w-4xl"
             style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              boxShadow: 'none',
-              backdropFilter: 'none',
-              WebkitBackdropFilter: 'none'
+              backgroundColor: 'rgba(10, 25, 60, 0.40)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              borderRadius: '20px',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              boxShadow: '0 8px 32px rgba(5, 15, 40, 0.35)'
             }}
           >
             <h1 
