@@ -904,5 +904,208 @@ body, #root, main {
   }
 }
 
+/* ==========================================================================
+   CURRICULUM ROADMAP SCROLL ANIMATIONS & HOVER EFFECTS
+   - Header Card: slides in from left (-90px) + light streak shine
+   - Level Cards: 3D perspective flip up from translateY(80px) rotateX(-18deg)
+   - Vertical Color Bar on Left Edge grows scaleY 0 -> 1
+   - Topic Items: stagger bounce in with cubic-bezier(.3,1.5,.5,1)
+   - Level Card Hover: soft blue spotlight follows cursor (--mx, --my)
+   - Topic Item Hover: translateX(8px) scale(1.02) + soft shadow
+   - Filter Buttons Hover: translateY(-4px) scale(1.05) + shadow
+   - Smooth Accordion Expand/Collapse (0.5s ease)
+   - Repeats via IntersectionObserver (threshold 0.2)
+   ========================================================================== */
+
+#simulation-roadmap {
+  overflow-x: hidden !important;
+}
+
+/* 1. Header Card */
+.roadmap-header-card {
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-90px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.roadmap-header-card.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.roadmap-shine-streak {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0) 80%,
+    transparent 100%
+  );
+  transform: skewX(-25deg) translateX(-200%);
+  opacity: 0;
+  z-index: 20;
+}
+
+.roadmap-header-card.show .roadmap-shine-streak {
+  animation: roadmapHeaderShine 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.8s 1 forwards;
+}
+
+@keyframes roadmapHeaderShine {
+  0% {
+    transform: skewX(-25deg) translateX(-200%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: skewX(-25deg) translateX(350%);
+    opacity: 0;
+  }
+}
+
+/* 2. Level Cards (3D perspective & flip-up) */
+.roadmap-cards-container {
+  perspective: 1200px;
+  perspective-origin: center top;
+}
+
+.roadmap-level-card {
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(80px) rotateX(-18deg) scale(0.94);
+  transform-origin: center bottom;
+  transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+.roadmap-level-card.show {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg) scale(1);
+}
+
+/* Vertical Color Bar on Left Edge */
+.roadmap-card-color-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 16px 0 0 16px;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s;
+  will-change: transform;
+  z-index: 10;
+}
+
+.roadmap-level-card.show .roadmap-card-color-bar {
+  transform: scaleY(1);
+}
+
+/* Soft Blue Spotlight on Card Hover */
+.roadmap-card-spotlight {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--mx, -500px) var(--my, -500px), rgba(80, 130, 255, 0.16), transparent 70%);
+}
+
+.roadmap-level-card:hover .roadmap-card-spotlight {
+  opacity: 1;
+}
+
+/* 3. Topic Items */
+.roadmap-topic-item {
+  opacity: 0;
+  transform: scale(0.7) translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+  will-change: transform, opacity;
+}
+
+.roadmap-level-card.show .roadmap-topic-item {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.25s ease, background-color 0.2s ease;
+  transition-delay: var(--topic-delay, 0.45s);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .roadmap-level-card.show .roadmap-topic-item:hover {
+    transform: translateX(8px) scale(1.02) !important;
+    box-shadow: 0 4px 14px rgba(21, 70, 168, 0.12) !important;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background-color 0.2s ease !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* 4. Filter Buttons Hover */
+.roadmap-filter-btn {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background-color 0.2s ease, color 0.2s ease;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .roadmap-filter-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(27, 42, 92, 0.18) !important;
+  }
+}
+
+/* 5. Smooth Accordion Expand/Collapse */
+.roadmap-accordion-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.roadmap-accordion-content.collapsed {
+  grid-template-rows: 0fr;
+}
+
+.roadmap-accordion-inner {
+  overflow: hidden;
+}
+
+/* 6. Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-header-card,
+  .roadmap-level-card,
+  .roadmap-topic-item,
+  .roadmap-card-color-bar,
+  .roadmap-filter-btn {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+  .roadmap-card-color-bar {
+    transform: scaleY(1) !important;
+  }
+  .roadmap-shine-streak {
+    display: none !important;
+  }
+}
+
+
 
 

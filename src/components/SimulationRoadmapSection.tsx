@@ -1,5 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronDown, ChevronUp, Layers, BookOpen, GraduationCap, Sparkles } from 'lucide-react';
+
+// Left-edge accent colors per academic level
+const LEVEL_ACCENTS: Record<string, string> = {
+  'level-1': '#F59E0B', // Amber / Orange
+  'level-2': '#10B981', // Green
+  'level-3': '#3B82F6', // Blue
+  'level-4': '#8B5CF6', // Purple
+  'level-5': '#EC4899', // Pink / Magenta
+  'level-tech': '#06B6D4', // Cyan / Teal
+};
 
 interface SubjectSection {
   name: string;
@@ -382,6 +392,40 @@ export const SimulationRoadmapSection: React.FC = () => {
     }).filter((lvl) => lvl.filteredSubjects.length > 0);
   }, [selectedLevelId, searchQuery]);
 
+  // Scroll-triggered observer: toggles "show" class when elements enter/leave screen (threshold 0.2)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.roadmap-anim-target').forEach((el) => {
+        el.classList.add('show');
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          } else {
+            entry.target.classList.remove('show');
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+
+    const elements = document.querySelectorAll('.roadmap-anim-target');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [visibleLevels, selectedLevelId, searchQuery]);
+
   return (
     <section 
       id="simulation-roadmap"
@@ -394,15 +438,18 @@ export const SimulationRoadmapSection: React.FC = () => {
     >
       <div className="p-5 sm:p-6 lg:p-8 space-y-6">
         
-        {/* Header Bar matching the website's SectionViewHeader and Grade Filter panel */}
+        {/* Header Bar: Slides in from left (-90px) + light streak shine */}
         <div 
-          className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:px-6 sm:py-4 rounded-2xl border shadow-xs"
+          className="roadmap-header-card roadmap-anim-target flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:px-6 sm:py-4 rounded-2xl border shadow-xs relative overflow-hidden"
           style={{
             backgroundColor: '#F8FAFC',
             borderColor: '#DDE5F3'
           }}
         >
-          <div className="space-y-1">
+          {/* Soft White Light Streak Shine */}
+          <div className="roadmap-shine-streak" aria-hidden="true" />
+
+          <div className="space-y-1 relative z-1">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white px-3 py-1 rounded-md bg-[#1B2A5C] border border-[#1546A8] shrink-0">
                 CURRICULUM ROADMAP
@@ -417,7 +464,7 @@ export const SimulationRoadmapSection: React.FC = () => {
           </div>
 
           {/* Search Box matching the portal search design */}
-          <div className="relative w-full md:w-72 shrink-0">
+          <div className="relative w-full md:w-72 shrink-0 z-1">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#1546A8]" />
             <input
               type="text"
@@ -441,7 +488,7 @@ export const SimulationRoadmapSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedLevelId('all')}
-                className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer ${
+                className={`roadmap-filter-btn px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer ${
                   selectedLevelId === 'all'
                     ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
                     : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
@@ -458,7 +505,7 @@ export const SimulationRoadmapSection: React.FC = () => {
                     setSelectedLevelId(lvl.id);
                     setCollapsedBlocks(prev => ({ ...prev, [lvl.id]: false }));
                   }}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`roadmap-filter-btn px-3.5 py-2 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                     selectedLevelId === lvl.id
                       ? 'bg-[#1B2A5C] text-white border-2 border-[#1546A8] shadow-md scale-[1.02]'
                       : 'bg-[#FFFFFF] hover:bg-[#F5F8FC] text-[#1B2A5C] hover:text-[#1546A8] border border-[#DDE5F3] hover:border-[#CBD5E1] shadow-xs'
@@ -494,8 +541,8 @@ export const SimulationRoadmapSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Roadmap Level Cards matching the portal's card architecture */}
-        <div className="space-y-4 pt-2">
+        {/* Roadmap Level Cards Container: 3D perspective applied to parent */}
+        <div className="roadmap-cards-container space-y-4 pt-2">
           {visibleLevels.length === 0 ? (
             <div className="p-8 text-center rounded-2xl border border-[#DDE5F3] bg-[#F8FAFC]">
               <p className="text-sm font-medium text-[#5A6E85]">
@@ -505,19 +552,36 @@ export const SimulationRoadmapSection: React.FC = () => {
           ) : (
             visibleLevels.map((level) => {
               const isCollapsed = !searchQuery.trim() && !!collapsedBlocks[level.id];
+              const accentColor = LEVEL_ACCENTS[level.id] || '#1546A8';
+              let cardTopicCounter = 0;
 
               return (
                 <div 
                   key={level.id} 
-                  className="rounded-2xl border transition-all overflow-hidden shadow-xs hover:shadow-md"
+                  className="roadmap-level-card roadmap-anim-target rounded-2xl border transition-all overflow-hidden shadow-xs hover:shadow-md relative"
                   style={{
                     backgroundColor: '#FFFFFF',
                     borderColor: '#DDE5F3'
                   }}
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+                    e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`);
+                  }}
                 >
+                  {/* Thin Vertical Color Bar on Left Edge: Grows scaleY 0 -> 1 on scroll enter */}
+                  <div 
+                    className="roadmap-card-color-bar" 
+                    style={{ backgroundColor: accentColor }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Soft Blue Spotlight follows cursor inside the card */}
+                  <div className="roadmap-card-spotlight" aria-hidden="true" />
+
                   {/* Level Header Bar */}
                   <div
-                    className="flex items-center justify-between gap-3 p-4 sm:px-5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border-b border-[#DDE5F3] cursor-pointer select-none transition-colors"
+                    className="relative z-1 flex items-center justify-between gap-3 p-4 sm:px-5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border-b border-[#DDE5F3] cursor-pointer select-none transition-colors"
                     onClick={() => toggleBlock(level.id)}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -538,54 +602,66 @@ export const SimulationRoadmapSection: React.FC = () => {
                       className="p-1.5 rounded-lg text-[#1546A8] hover:bg-white border border-[#DDE5F3] shadow-2xs transition-colors shrink-0"
                       aria-label="Toggle level"
                     >
-                      {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                      <ChevronDown 
+                        className={`w-4 h-4 transition-transform duration-500 ease-out ${
+                          isCollapsed ? 'rotate-0' : 'rotate-180'
+                        }`} 
+                      />
                     </button>
                   </div>
 
-                  {/* Level Subjects & Key Topics Grid */}
-                  {!isCollapsed && (
-                    <div className="p-4 sm:p-6 space-y-6 bg-white">
-                      {level.filteredSubjects.map((subj, idx) => {
-                        const styleConfig = getSubjectColor(subj.name);
+                  {/* Level Subjects & Key Topics Grid (Smooth Accordion Expand/Collapse) */}
+                  <div className={`roadmap-accordion-content ${isCollapsed ? 'collapsed' : 'expanded'}`}>
+                    <div className="roadmap-accordion-inner relative z-1">
+                      <div className="p-4 sm:p-6 space-y-6 bg-white">
+                        {level.filteredSubjects.map((subj, idx) => {
+                          const styleConfig = getSubjectColor(subj.name);
 
-                        return (
-                          <div key={`${level.id}-subj-${idx}`} className="space-y-2.5">
-                            {/* Subject Header with Discipline Accent Tag */}
-                            <div className="flex items-center gap-2">
-                              <span 
-                                className="w-2 h-2 rounded-full shrink-0"
-                                style={{ backgroundColor: styleConfig.bullet }}
-                              />
-                              <h4 className="text-xs sm:text-sm font-black text-[#1B2A5C] uppercase tracking-wide">
-                                {subj.name}
-                              </h4>
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${styleConfig.tag}`}>
-                                {subj.topics.length} Key Topics
-                              </span>
+                          return (
+                            <div key={`${level.id}-subj-${idx}`} className="space-y-2.5">
+                              {/* Subject Header with Discipline Accent Tag */}
+                              <div className="flex items-center gap-2">
+                                <span 
+                                  className="w-2 h-2 rounded-full shrink-0"
+                                  style={{ backgroundColor: styleConfig.bullet }}
+                                />
+                                <h4 className="text-xs sm:text-sm font-black text-[#1B2A5C] uppercase tracking-wide">
+                                  {subj.name}
+                                </h4>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${styleConfig.tag}`}>
+                                  {subj.topics.length} Key Topics
+                                </span>
+                              </div>
+
+                              {/* Topics Grid with stagger entrance and hover highlights */}
+                              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pl-0 list-none text-xs sm:text-sm">
+                                {subj.topics.map((topic, tIdx) => {
+                                  const topicIdx = cardTopicCounter++;
+                                  return (
+                                    <li 
+                                      key={`${level.id}-${idx}-${tIdx}`} 
+                                      className="roadmap-topic-item flex items-center gap-2.5 p-2 rounded-xl border border-transparent hover:border-[#DDE5F3] hover:bg-[#F8FAFC] transition-all group cursor-default"
+                                      style={{
+                                        '--topic-delay': `${0.45 + topicIdx * 0.09}s`
+                                      } as React.CSSProperties}
+                                    >
+                                      <span 
+                                        className="w-1.5 h-1.5 rounded-full shrink-0 transition-transform group-hover:scale-125"
+                                        style={{ backgroundColor: styleConfig.bullet }}
+                                      />
+                                      <span className="text-[#1B2A5C] font-medium leading-snug group-hover:text-[#1546A8] transition-colors">
+                                        {topic}
+                                      </span>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
                             </div>
-
-                            {/* Topics Grid with hover highlights */}
-                            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pl-0 list-none text-xs sm:text-sm">
-                              {subj.topics.map((topic, tIdx) => (
-                                <li 
-                                  key={`${level.id}-${idx}-${tIdx}`} 
-                                  className="flex items-center gap-2.5 p-2 rounded-xl border border-transparent hover:border-[#DDE5F3] hover:bg-[#F8FAFC] transition-all group"
-                                >
-                                  <span 
-                                    className="w-1.5 h-1.5 rounded-full shrink-0 transition-transform group-hover:scale-125"
-                                    style={{ backgroundColor: styleConfig.bullet }}
-                                  />
-                                  <span className="text-[#1B2A5C] font-medium leading-snug group-hover:text-[#1546A8] transition-colors">
-                                    {topic}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })
