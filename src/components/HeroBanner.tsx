@@ -455,15 +455,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </div>
             );
           })}
-
-          {/* Soft directional gradient overlay: Soft dark backing on the left for text legibility,
-              fading away smoothly so the right side remains 100% crystal clear */}
-          <div 
-            className="absolute inset-0 pointer-events-none z-[3]"
-            style={{
-              background: 'linear-gradient(to right, rgba(6, 15, 38, 0.88) 0%, rgba(6, 15, 38, 0.72) 32%, rgba(6, 15, 38, 0.35) 54%, rgba(6, 15, 38, 0.08) 70%, rgba(6, 15, 38, 0) 84%)'
-            }}
-          />
         </div>
 
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
