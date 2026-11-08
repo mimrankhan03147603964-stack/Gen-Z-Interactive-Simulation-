@@ -7,8 +7,8 @@ interface FooterProps {
   totalSimulations?: number;
 }
 
-export const Footer: React.FC<FooterProps> = ({ totalSimulations = 122 }) => {
-  const displaySimCount = totalSimulations >= 122 ? totalSimulations : 122;
+export const Footer: React.FC<FooterProps> = ({ totalSimulations = 125 }) => {
+  const displaySimCount = totalSimulations >= 125 ? totalSimulations : 125;
 
   // Typewriter effect state for "Need a Custom Simulation?" and its description
   const customSimTitle = "Need a Custom Simulation?";
@@ -148,7 +148,7 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 122 }) => {
             {/* Developer Detailed Profile Bio - 3 Paragraphs */}
             <div className="space-y-3 text-xs sm:text-sm md:text-[14px] font-normal leading-relaxed text-slate-800 text-left pt-1">
               <p>
-                Muhammad Imran Khan is a highly skilled Software Developer and Website Developer with a Master&apos;s degree in Computer Science (MSc). He is the founder, creator, designer and lead developer of the Gen Z Interactive Simulations portal, a professional digital laboratory platform offering 122 verified interactive simulations for students, teachers, schools and academies.
+                Muhammad Imran Khan is a highly skilled Software Developer and Website Developer with a Master&apos;s degree in Computer Science (MSc). He is the founder, creator, designer and lead developer of the Gen Z Interactive Simulations portal, a professional digital laboratory platform offering {displaySimCount} verified interactive simulations for students, teachers, schools and academies.
               </p>
               <p>
                 He has strong expertise in modern web development, interactive 3D visualization, real-time physics and math engines, animation, responsive design and educational technology. Every simulation he builds is fast, colorful, visually rich and simple to use, turning difficult textbook concepts into clear, hands-on experiences that students enjoy and remember. His labs run smoothly on laptops, desktops, Chromebooks, smart boards and projectors, with true 4K fullscreen projection for classroom use.

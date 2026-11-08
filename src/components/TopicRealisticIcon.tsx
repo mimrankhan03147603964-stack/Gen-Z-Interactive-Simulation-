@@ -118,7 +118,10 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-simple-pendulum-simulation': 119,
   'sim-special-relativity-lab': 120,
   'sim-torque-seesaw-lab': 121,
-  'sim-vernier-micrometer-simulation': 122
+  'sim-vernier-micrometer-simulation': 122,
+  'sim-carbon-nitrogen-cycle-simulation': 123,
+  'sim-five-senses-simulation': 124,
+  'sim-nervous-system-simulation': 125
 };
 
 /**
@@ -2813,6 +2816,65 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <path d="M28 20 V42 L32 42 V20 H28 Z" fill="#f59e0b" stroke="#d97706" strokeWidth="1" />
           {/* Clamped Object (Sphere/Cylinder) */}
           <circle cx="23" cy="36" r="4" fill="#3b82f6" stroke="#60a5fa" strokeWidth="1" />
+        </svg>
+      );
+
+    // 123: Carbon Cycle & Nitrogen Cycle Lab
+    case 123:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#064e3b" stroke="#34d399" strokeWidth="2" />
+          {/* Biogeochemical Cyclic Ring */}
+          <circle cx="32" cy="32" r="16" stroke="#6ee7b7" strokeWidth="2" strokeDasharray="6 3" />
+          {/* Top Leaf for Photosynthesis */}
+          <path d="M32 16 C38 16 42 22 42 28 C36 28 32 24 32 16 Z" fill="#10b981" />
+          {/* Nitrogen N2 / Carbon C Molecules */}
+          <circle cx="20" cy="32" r="5" fill="#38bdf8" />
+          <text x="20" y="34.5" fill="#ffffff" fontSize="5" fontWeight="bold" textAnchor="middle">N₂</text>
+          <circle cx="44" cy="32" r="5" fill="#f59e0b" />
+          <text x="44" y="34.5" fill="#ffffff" fontSize="5" fontWeight="bold" textAnchor="middle">CO₂</text>
+          {/* Root Nodule Fixation Base */}
+          <path d="M26 44 Q32 40 38 44 Q32 48 26 44 Z" fill="#d97706" />
+        </svg>
+      );
+
+    // 124: Human Five Senses & Sensory Organs Lab
+    case 124:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#2e1065" stroke="#c084fc" strokeWidth="2" />
+          {/* Central Stylized Human Eye with Iris and Pupil */}
+          <path d="M18 32 C23 23 41 23 46 32 C41 41 23 41 18 32 Z" fill="#ffffff" stroke="#c4b5fd" strokeWidth="1.5" />
+          <circle cx="32" cy="32" r="6" fill="#8b5cf6" />
+          <circle cx="32" cy="32" r="2.8" fill="#0f172a" />
+          <circle cx="34" cy="30" r="1" fill="#ffffff" />
+          {/* Sensory Waves (Hearing / Touch / Smell) */}
+          <path d="M48 24 Q52 28 52 32 Q52 36 48 40" stroke="#f472b6" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M16 24 Q12 28 12 32 Q12 36 16 40" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    // 125: Human Nervous System, Neurons & Reflex Arc Lab
+    case 125:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="48" height="48" rx="8" fill="#451a03" stroke="#fbbf24" strokeWidth="2" />
+          {/* Neuron Cell Body (Soma) */}
+          <circle cx="22" cy="32" r="7" fill="#f59e0b" stroke="#fde68a" strokeWidth="1.5" />
+          <circle cx="22" cy="32" r="3" fill="#b45309" />
+          {/* Dendrites */}
+          <line x1="16" y1="28" x2="11" y2="24" stroke="#fcd34d" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="15" y1="34" x2="10" y2="38" stroke="#fcd34d" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="22" y1="25" x2="22" y2="18" stroke="#fcd34d" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Axon with Myelin Sheaths */}
+          <line x1="29" y1="32" x2="48" y2="32" stroke="#fbbf24" strokeWidth="2" />
+          <rect x="30" y="29.5" width="4" height="5" rx="1" fill="#38bdf8" />
+          <rect x="36" y="29.5" width="4" height="5" rx="1" fill="#38bdf8" />
+          <rect x="42" y="29.5" width="4" height="5" rx="1" fill="#38bdf8" />
+          {/* Synaptic Terminal Flare */}
+          <circle cx="51" cy="30" r="2" fill="#ef4444" />
+          <circle cx="51" cy="34" r="2" fill="#ef4444" />
+          <circle cx="54" cy="32" r="1.5" fill="#f59e0b" />
         </svg>
       );
 

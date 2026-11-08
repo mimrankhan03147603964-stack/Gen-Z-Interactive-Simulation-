@@ -316,7 +316,7 @@ export const PedagogicalHub: React.FC<PedagogicalHubProps> = ({
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#1546A8] shrink-0 mt-0.5" />
-                    <span>Consistent control standards across all 122 labs with standardized Reset, Pause, Parameter Sliders, and Information buttons.</span>
+                    <span>Consistent control standards across all 125 interactive labs with standardized Reset, Pause, Parameter Sliders, and Information buttons.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#1546A8] shrink-0 mt-0.5" />

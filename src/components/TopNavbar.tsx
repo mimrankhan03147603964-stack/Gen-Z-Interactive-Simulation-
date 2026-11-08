@@ -180,7 +180,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     return SIMULATIONS_LIST.filter(s => s.category === key).length;
   };
 
-  // Menu 1: Simulations dropdown items (All 122 Labs + 9 subject disciplines)
+  // Menu 1: Simulations dropdown items (All Labs + 9 subject disciplines)
   const simulationsDropdownItems = [
     { label: `All Simulations (${SIMULATIONS_LIST.length})`, categoryKey: 'All Simulations' },
     { label: `Physics & Mechanics (${getCategoryCount('Physics & Motion')})`, categoryKey: 'Physics & Motion' },

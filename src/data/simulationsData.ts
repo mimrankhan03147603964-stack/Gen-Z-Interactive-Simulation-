@@ -2237,7 +2237,90 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Built-in Practice Mode: Submit Reading with Instant Step-by-Step Mathematical Verification'
     ],
     gradeLevel: 'Class 9 (Secondary School SSC-I / Unit 1 Physical Quantities & Measurement)'
+  },
+  {
+    id: 'sim-carbon-nitrogen-cycle-simulation',
+    slug: 'carbon-nitrogen-cycle-simulation',
+    indexNumber: '123',
+    title: 'Carbon Cycle & Nitrogen Cycle Simulation Lab',
+    subject: 'Ecology & Environmental Biology (ماحولیاتی حیاتیات - کاربن اور نائٹروجن سائیکل)',
+    category: 'Biology & Life',
+    iconName: 'Leaf',
+    accentColor: '#10b981',
+    description: 'Comprehensive interactive laboratory exploring the fundamental biogeochemical cycles sustaining life on Earth: the Carbon Cycle and the Nitrogen Cycle. Simulate carbon fluxes across the atmosphere, terrestrial biosphere, and aquatic reservoirs through photosynthesis, respiration, decomposition, fossil combustion, and ocean sink absorption. Switch seamlessly to the Nitrogen Cycle to experiment with biological fixation via Rhizobium root nodules, industrial fixation, nitrification by soil bacteria (Nitrosomonas and Nitrobacter), plant assimilation, and denitrification. Observe real-time atmospheric PPM meters, molecular reactions, and biological energy flow.',
+    fileUrl: '/simulations/carbon-nitrogen-cycle-simulation.html',
+    topics: [
+      'Carbon Cycle: Photosynthesis, Respiration, Combustion, Organic Decomposition & Ocean Sinks',
+      'Nitrogen Cycle: Nitrogen Fixation, Nitrification, Assimilation, Ammonification & Denitrification',
+      'Biogeochemical Reservoirs: Atmosphere, Lithosphere, Hydrosphere & Biosphere Interactions',
+      'Role of Microorganisms: Rhizobium, Nitrosomonas, Nitrobacter & Saprophytic Fungi',
+      'Anthropogenic Impacts: Greenhouse Gas Emissions, Global Carbon Budget & Nitrogen Runoff'
+    ],
+    features: [
+      'Dual Mode Biogeochemical Engine: Seamless Toggle Between Carbon & Nitrogen Cycles',
+      'Real-Time Atmospheric Gas PPM Telemetry & Dynamic Molecular Flow Particle Simulation',
+      'Interactive Process Triggers: Fire Combustion, Sunlight Flux, Rainfall, and Microbial Fixation',
+      'Self-Paced Comprehensive Learning Modules with Instant Knowledge Check Assessment'
+    ],
+    gradeLevel: 'Class 8, 9 & 10 (General Science & Biology SSC)'
+  },
+  {
+    id: 'sim-five-senses-simulation',
+    slug: 'five-senses-simulation',
+    indexNumber: '124',
+    title: 'Human Five Senses & Sensory Organs Lab',
+    subject: 'Human Anatomy & Physiology (انسانی حواس خمسہ اور حسی اعضاء)',
+    category: 'Biology & Life',
+    iconName: 'Eye',
+    accentColor: '#8b5cf6',
+    description: 'Interactive anatomical and neurological laboratory on the human sensory system. Dive inside the five fundamental human sense organs: Sight (Eyes & Retina), Hearing (Ears, Eardrum & Cochlea), Smell (Olfactory Receptors & Nasal Cavity), Taste (Tongue Papillae & Gustatory Buds), and Touch (Skin Mechanoreceptors). Test how physical and chemical environmental stimuli (light photons, sound pressure waves, airborne odorants, tastant molecules, pressure and temperature) are transduced into neural action potentials and transmitted through cranial and peripheral sensory nerves to dedicated sensory processing cortexes of the brain.',
+    fileUrl: '/simulations/five-senses-simulation.html',
+    topics: [
+      'Sensory Organs & Stimulus Transduction: Photoreceptors, Mechanoreceptors, Chemoreceptors & Thermoreceptors',
+      'Eye Anatomy & Vision: Cornea, Pupil, Lens, Ciliary Muscles, Retina, Rods & Cones, Optic Nerve',
+      'Ear Structure & Hearing: Pinna, Auditory Canal, Tympanic Membrane, Ossicles, Cochlea & Auditory Nerve',
+      'Nose & Olfaction: Olfactory Epithelium, Cilia, Olfactory Bulb & Limbic Connection',
+      'Tongue & Gustation: Papillae, Taste Buds (Sweet, Salty, Sour, Bitter, Umami) & Facial/Glossopharyngeal Nerves',
+      'Skin & Somatosensation: Epidermis/Dermis, Meissner, Pacinian, Merkel Receptors & Free Nerve Endings'
+    ],
+    features: [
+      '5-in-1 Sensory Organ Exploration Hub with Cross-Sectional Interactive Views',
+      'Real-Time Stimulus Simulation: Light Dimmer, Sound Wave Frequency, Odorant Sprayer, Taste Sampler, Skin Pressure',
+      'Live Cranial & Peripheral Nerve Impulse Pathway Animation to Cerebral Cortex',
+      'Interactive Reflexes: Pupillary Light Constriction, Eardrum Vibration & Touch Sensitivity Mapping',
+      'Built-in Interactive Sensory Quiz with Instant Feedback and Mastery Scoring'
+    ],
+    gradeLevel: 'Class 6, 7 & 8 (Middle Science & Biology SSC)'
+  },
+  {
+    id: 'sim-nervous-system-simulation',
+    slug: 'nervous-system-simulation',
+    indexNumber: '125',
+    title: 'Human Nervous System, Neurons & Reflex Arc Lab',
+    subject: 'Neurobiology & Human Physiology (انسانی اعصابی نظام - نیورون، رفلیکس آرک اور سائنیپس)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#f59e0b',
+    description: 'Advanced interactive neurobiology laboratory covering the architecture and electrochemistry of the Human Nervous System for Class 9 and 10 Biology. Study the Central Nervous System (Brain and Spinal Cord) versus the Peripheral Nervous System (Somatic and Autonomic). Investigate detailed Multipolar Neuron anatomy: Dendrites, Soma (Cell Body), Nucleus, Axon Hillock, Myelin Sheath (Schwann Cells), Nodes of Ranvier, and Axon Terminals. Trigger saltatory action potential propagation, zoom into the chemical synapse to watch neurotransmitter (Acetylcholine) vesicle exocytosis and receptor binding, and trace the complete involuntary Reflex Arc from stimulus detection to motor effector response.',
+    fileUrl: '/simulations/nervous-system-simulation.html',
+    topics: [
+      'Nervous System Division: Central Nervous System (CNS) & Peripheral Nervous System (PNS)',
+      'Structure of a Neuron: Dendrites, Cell Body (Cyton), Axon, Myelin Sheath, Schwann Cells & Nodes of Ranvier',
+      'Nerve Impulse Conduction: Resting Membrane Potential (-70mV), Sodium-Potassium Pump, Depolarization & Action Potential',
+      'Synaptic Transmission: Presynaptic Terminal, Synaptic Vesicles, Neurotransmitters, Synaptic Cleft & Postsynaptic Receptors',
+      'Reflex Arc Pathway: Sensory Receptor, Sensory (Afferent) Neuron, Spinal Cord Interneuron, Motor (Efferent) Neuron & Effector Muscle',
+      'Brain Anatomy & Functions: Cerebrum, Cerebellum, Medulla Oblongata, Thalamus & Hypothalamus'
+    ],
+    features: [
+      'Triple-Module Laboratory: Neuron Anatomy, Chemical Synapse Dynamics & Reflex Arc Circuit',
+      'Interactive Action Potential Trigger with Membrane Voltage Graph & Saltatory Conduction Speed Controls',
+      'Microscopic Synapse Simulator: Vesicle Fusion, Calcium Influx, Neurotransmitter Binding & Reuptake Inhibitors',
+      'Dynamic Reflex Arc Testing Station: Stimulus Hammer / Heat Source with Millisecond Latency Telemetry',
+      'Fully Bilingual Conceptual Terminology with English & Urdu Scientific References'
+    ],
+    gradeLevel: 'Class 9, 10 & 11 (Secondary SSC & Higher Secondary HSSC)'
   }
 ];
+
 
 

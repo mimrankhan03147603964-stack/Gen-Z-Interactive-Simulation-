@@ -1703,6 +1703,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#eff6ff',
     tagText: '#3b82f6',
     glowColor: 'rgba(59, 130, 246, 0.45)'
+  },
+  '123': {
+    id: '123',
+    name: 'Carbon & Nitrogen Cycle Lab',
+    bgSolid: '#10b981',
+    bgGradient: 'linear-gradient(135deg, #34d399 0%, #10b981 50%, #047857 100%)',
+    borderColor: '#a7f3d0',
+    iconBg: '#064e3b',
+    iconBorder: '#6ee7b7',
+    iconColor: '#ffffff',
+    badgeBg: '#d1fae5',
+    badgeText: '#065f46',
+    badgeBorder: '#a7f3d0',
+    tagBg: '#ecfdf5',
+    tagText: '#059669',
+    glowColor: 'rgba(16, 185, 129, 0.45)'
+  },
+  '124': {
+    id: '124',
+    name: 'Human Five Senses Lab',
+    bgSolid: '#8b5cf6',
+    bgGradient: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #6d28d9 100%)',
+    borderColor: '#ddd6fe',
+    iconBg: '#4c1d95',
+    iconBorder: '#c4b5fd',
+    iconColor: '#ffffff',
+    badgeBg: '#ede9fe',
+    badgeText: '#5b21b6',
+    badgeBorder: '#ddd6fe',
+    tagBg: '#f5f3ff',
+    tagText: '#7c3aed',
+    glowColor: 'rgba(139, 92, 246, 0.45)'
+  },
+  '125': {
+    id: '125',
+    name: 'Human Nervous System Lab',
+    bgSolid: '#f59e0b',
+    bgGradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%)',
+    borderColor: '#fde68a',
+    iconBg: '#78350f',
+    iconBorder: '#fcd34d',
+    iconColor: '#ffffff',
+    badgeBg: '#fef3c7',
+    badgeText: '#92400e',
+    badgeBorder: '#fde68a',
+    tagBg: '#fffbeb',
+    tagText: '#d97706',
+    glowColor: 'rgba(245, 158, 11, 0.45)'
   }
 };
 
