@@ -772,7 +772,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             )}
           </div>
 
-          {/* Button 4: Online Platforms (Dropdown with arrow) */}
+          {/* Button 4: Other Platforms (Dropdown with arrow) */}
           <div 
             className="relative shrink-0"
             onMouseEnter={() => handleMouseEnter('platforms')}
@@ -787,9 +787,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               className="inline-flex items-center gap-1 px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1.5 text-xs sm:text-[12.5px] md:text-[13px] lg:text-[13.5px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'platforms'}
               aria-haspopup="true"
-              title="Explore Trusted Online Simulation Platforms"
+              title="Explore Trusted Other Simulation Platforms"
             >
-              <span>Online Platforms</span>
+              <span>Other Platforms</span>
               <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'platforms' ? 'rotate-180' : ''}`} />
             </button>
 
@@ -863,7 +863,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             )}
           </div>
 
-          {/* Button 5: Contact (Dropdown with arrow, exact copy of Online Platforms) */}
+          {/* Button 5: Contact (Dropdown with arrow, exact copy of Other Platforms) */}
           <div 
             className="relative shrink-0"
             onMouseEnter={() => handleMouseEnter('contact')}
