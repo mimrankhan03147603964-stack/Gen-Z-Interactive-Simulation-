@@ -219,9 +219,9 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
         left: 0, 
         width: '100%', 
         zIndex: 99999,
-        backgroundColor: '#1B2A5C',
-        borderBottom: '1.5px solid #F5A623',
-        boxShadow: '0 4px 20px rgba(27, 42, 92, 0.45)'
+        backgroundColor: '#0F1E42',
+        borderBottom: '2px solid #F5A623',
+        boxShadow: '0 4px 20px rgba(5, 12, 30, 0.65)'
       }}
     >
       <div 

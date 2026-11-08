@@ -12,15 +12,20 @@ import sliderImg3 from '../assets/hero-slider-3.jpg';
 import sliderImg4 from '../assets/hero-slider-4.jpg';
 import sliderImg5 from '../assets/hero-slider-5.jpg';
 import sliderImg6 from '../assets/hero-slider-6.jpg';
+import sliderImg7 from '../assets/hero-slider-7.jpg';
+import sliderImg8 from '../assets/hero-slider-8.jpg';
+import sliderImg9 from '../assets/hero-slider-9.jpg';
 
-const HERO_SLIDER_IMAGES = [
+const HERO_SLIDESHOW_IMAGES = [
   sliderImg1,
   sliderImg2,
   sliderImg3,
   sliderImg4,
   sliderImg5,
   sliderImg6,
-  sliderImg1 // Copy of picture 1 for seamless infinite loop
+  sliderImg7,
+  sliderImg8,
+  sliderImg9
 ];
 
 interface HeroBannerProps {
@@ -47,9 +52,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
   const [period, setPeriod] = useState<string>('PM');
   const [dateStr, setDateStr] = useState<string>('');
 
-  // Hero Background Continuous 4-Picture Slider State
+  // Hero Background Continuous 9-Picture Slideshow State (5.5s timer, 1.5s cross-fade)
   const [bgSlideIndex, setBgSlideIndex] = useState<number>(0);
-  const [isBgTransitioning, setIsBgTransitioning] = useState<boolean>(true);
 
   // 2-Second Interval Timer & Fluid Right-to-Left Slide Rotator State
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -228,38 +232,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
     return () => clearTimeout(timeout);
   }, [slideIndex, typedSubject, typedDesc, isDeleting, isPaused, stemRotations]);
 
-  // Defer preloading remaining slider pictures until initial render is complete
+  // Preload all background slideshow images for instant, flicker-free cross-fading
   useEffect(() => {
-    const timer = setTimeout(() => {
-      HERO_SLIDER_IMAGES.slice(1).forEach((src) => {
-        const img = new Image();
-        img.src = src;
-      });
-    }, 2500);
-    return () => clearTimeout(timer);
+    HERO_SLIDESHOW_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
-  // Continuous 6-second slider: move left by one picture with smooth 0.8s transition
+  // Continuous Automatic Slideshow: changes photo every 5.5 seconds, never stops
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsBgTransitioning(true);
-      setBgSlideIndex((prev) => prev + 1);
-    }, 6000);
+      setBgSlideIndex((prev) => (prev + 1) % HERO_SLIDESHOW_IMAGES.length);
+    }, 5500);
 
     return () => clearInterval(interval);
   }, []);
-
-  // When copy of picture 1 (last index) is reached, jump back to real picture 1 with no animation (no visible jump)
-  useEffect(() => {
-    if (bgSlideIndex === HERO_SLIDER_IMAGES.length - 1) {
-      const timeout = setTimeout(() => {
-        setIsBgTransitioning(false);
-        setBgSlideIndex(0);
-      }, 815); // after 0.8s transition finishes
-
-      return () => clearTimeout(timeout);
-    }
-  }, [bgSlideIndex]);
 
   // Digital clock widget
   useEffect(() => {
@@ -431,33 +419,32 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         style={{
           borderTop: '1.5px solid #F5A623',
           borderBottom: '1.5px solid #F5A623',
-          boxShadow: '0 12px 36px rgba(27, 42, 92, 0.45)',
-          backgroundColor: '#0E1F42'
+          boxShadow: '0 12px 36px rgba(10, 20, 50, 0.45)',
+          backgroundColor: '#0A1428'
         }}
       >
-        {/* Continuous 4-Picture Background Slider: Side-by-side row, translateX, 100% sharp visibility */}
+        {/* Continuous Automatic Background Slideshow with 1.5s Smooth Cross-Fade */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
-          <div 
-            className="flex h-full"
-            style={{
-              width: `${HERO_SLIDER_IMAGES.length * 100}%`,
-              transform: `translateX(-${(bgSlideIndex * 100) / HERO_SLIDER_IMAGES.length}%)`,
-              transition: isBgTransitioning ? 'transform 800ms cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-              willChange: 'transform'
-            }}
-          >
-            {HERO_SLIDER_IMAGES.map((src, idx) => (
+          {HERO_SLIDESHOW_IMAGES.map((src, idx) => {
+            const isActive = idx === bgSlideIndex;
+            return (
               <div 
                 key={`hero-bg-slide-${idx}`} 
-                className="h-full relative shrink-0"
-                style={{ width: `${100 / HERO_SLIDER_IMAGES.length}%` }}
+                className="absolute inset-0 w-full h-full pointer-events-none select-none"
+                style={{
+                  opacity: isActive ? 1 : 0,
+                  zIndex: isActive ? 2 : 1,
+                  transition: 'opacity 1500ms ease-in-out',
+                  willChange: 'opacity'
+                }}
               >
                 <img 
                   src={src} 
-                  alt={`Gen Z Interactive STEM Lab Background ${idx + 1}`}
+                  alt={`Gen Z Interactive STEM Lab Slideshow Photo ${idx + 1}`}
                   className="w-full h-full object-cover select-none pointer-events-none"
                   style={{
                     objectFit: 'cover',
+                    objectPosition: 'center 20%',
                     opacity: 1,
                     filter: 'none'
                   }}
@@ -466,14 +453,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   referrerPolicy="no-referrer"
                 />
               </div>
-            ))}
-          </div>
+            );
+          })}
 
-          {/* Subtle Dark Overlay (20% opacity) so foreground text stands out sharply and cleanly */}
+          {/* Soft directional gradient overlay: Soft dark backing on the left for text legibility,
+              fading away smoothly so the right side remains 100% crystal clear */}
           <div 
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-[3]"
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+              background: 'linear-gradient(to right, rgba(6, 15, 38, 0.88) 0%, rgba(6, 15, 38, 0.72) 32%, rgba(6, 15, 38, 0.35) 54%, rgba(6, 15, 38, 0.08) 70%, rgba(6, 15, 38, 0) 84%)'
             }}
           />
         </div>
@@ -481,25 +469,29 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Top Row: Left Pill Badges + Right Digital Clock Widget */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 relative z-10">
           
-          {/* Left Pill Chip with Curriculum Alignment Tag */}
+          {/* Left Pill Chip with Curriculum Alignment Tag - Solid darker backgrounds for high legibility */}
           <div className="reveal-left flex items-center gap-2 flex-wrap">
             <div 
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-sm"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-md"
               style={{
-                backgroundColor: '#F5A623',
-                borderColor: '#E58E0A',
-                color: '#1B2A5C'
+                backgroundColor: '#B45309',
+                borderColor: '#F59E0B',
+                color: '#FFFFFF'
               }}
             >
-              <Sparkles className="w-4 h-4 text-[#1B2A5C] pointer-events-none shrink-0" />
-              <span className="font-heading font-bold text-xs sm:text-sm tracking-wide text-[#1B2A5C]">
+              <Sparkles className="w-4 h-4 text-[#FDE68A] pointer-events-none shrink-0" />
+              <span 
+                className="font-heading font-black text-xs sm:text-sm tracking-wide text-white"
+                style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)' }}
+              >
                 GEN Z INTERACTIVE SIMULATIONS PORTAL
               </span>
               <span 
-                className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono"
+                className="px-2 py-0.5 rounded-full text-[10px] font-black font-mono"
                 style={{
-                  backgroundColor: '#1B2A5C',
-                  color: '#FFFFFF'
+                  backgroundColor: '#0F1E42',
+                  border: '1px solid #F5A623',
+                  color: '#FDE68A'
                 }}
               >
                 4K 3D
@@ -507,14 +499,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
             </div>
 
             <span 
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold border shadow-sm"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold border shadow-md"
               style={{
-                backgroundColor: '#1546A8',
-                borderColor: 'rgba(221, 229, 243, 0.3)',
-                color: '#DBE4F7'
+                backgroundColor: '#0A2558',
+                borderColor: '#38BDF8',
+                color: '#FFFFFF',
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'
               }}
             >
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: '#F5A623' }} />
+              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: '#F5A623', boxShadow: '0 0 6px #F5A623' }} />
               <span>Aligned with National Curriculum of Pakistan (Session 2026-27)</span>
             </span>
           </div>
@@ -762,52 +755,81 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         {/* Main Headline & GZ Emblem Showcase */}
         <div className="relative z-10 my-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 w-full">
           <div 
-            className="reveal-left flex-1 min-w-0 p-5 sm:p-7 rounded-2xl border shadow-xl w-full max-w-none"
+            className="reveal-left flex-1 min-w-0 p-2 sm:p-4 md:p-5 rounded-2xl w-full max-w-none"
             style={{
-              backgroundColor: 'rgba(10, 30, 80, 0.45)',
-              border: '1px solid rgba(255, 255, 255, 0.35)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)'
+              backgroundColor: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none'
             }}
           >
             <h1 
-              className="font-heading font-black tracking-tight leading-tight text-white whitespace-nowrap"
+              className="font-heading font-black tracking-tight leading-tight text-white"
               style={{
-                fontSize: 'clamp(0.85rem, 2.5vw, 2.65rem)',
-                whiteSpace: 'nowrap',
-                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
+                fontSize: 'clamp(1.5rem, 3.2vw, 2.75rem)',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 0, 0, 0.65)',
+                letterSpacing: '-0.01em',
+                lineHeight: 1.15
               }}
             >
               Gen Z Interactive Simulations Portal
             </h1>
-            {/* Typewriter Dynamic Subtitle & Multidisciplinary Subject Stream */}
-            <p className="mt-2 text-sm sm:text-base font-black tracking-wide flex items-center gap-2 flex-wrap" style={{ color: '#F5A623', textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)' }}>
-              <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
-              <span className="inline-flex items-center flex-wrap gap-1.5">
-                <span>Professional Multidisciplinary</span>
+
+            {/* Subtitle & Dynamic Typewriter Subject Stream - Clean Separate Lines with Zero Overlap */}
+            <div className="mt-2.5 flex flex-col gap-1.5">
+              {/* Row 1: Multidisciplinary Learning Portal Label in Bright Yellow */}
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full animate-ping inline-block shrink-0" style={{ backgroundColor: '#F5A623' }} />
                 <span 
-                  className="inline-flex items-center px-2 py-0.5 rounded-md font-black tracking-wide border shadow-xs transition-colors duration-200 min-h-[1.5rem]"
-                  style={{
-                    backgroundColor: `${stemRotations[slideIndex].color}26`,
-                    borderColor: stemRotations[slideIndex].color,
-                    color: '#FFFFFF'
+                  className="text-xs sm:text-sm md:text-base font-black tracking-wide uppercase"
+                  style={{ 
+                    color: '#FDE047', 
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85)',
+                    letterSpacing: '0.025em'
                   }}
                 >
-                  <span>{typedSubject}</span>
+                  Professional Multidisciplinary Digital Learning Portal
+                </span>
+              </div>
+
+              {/* Row 2: Dedicated Interactive Subject Stream with Typewriter Animation on its Own Line */}
+              <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                <span 
+                  className="text-xs sm:text-sm font-extrabold text-white shrink-0"
+                  style={{ 
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)',
+                    letterSpacing: '0.015em'
+                  }}
+                >
+                  Interactive Focus:
+                </span>
+                <span 
+                  className="inline-flex items-center px-3 py-1 rounded-lg font-black text-xs sm:text-sm tracking-wide border shadow-md transition-colors duration-200"
+                  style={{
+                    backgroundColor: '#091A3E',
+                    borderColor: stemRotations[slideIndex].color,
+                    color: '#FFFFFF',
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
+                  }}
+                >
+                  <span className="text-white font-extrabold">{typedSubject}</span>
                   <span 
-                    className="inline-block w-[2px] h-4 ml-1 animate-pulse" 
-                    style={{ backgroundColor: stemRotations[slideIndex].color }} 
+                    className="inline-block w-[2.5px] h-4 ml-1.5 animate-pulse" 
+                    style={{ backgroundColor: stemRotations[slideIndex].color, boxShadow: `0 0 6px ${stemRotations[slideIndex].color}` }} 
                   />
                 </span>
-                <span>Learning Portal</span>
-              </span>
-            </p>
+              </div>
+            </div>
 
             {/* Typewriter Dynamic Educational Description matching Subject */}
             <p 
-              className="mt-3 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
+              className="mt-3.5 text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed font-bold min-h-[4.5rem] sm:min-h-[3.75rem] flex items-start" 
               style={{ 
                 color: '#FFFFFF',
-                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)'
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.95), 0 3px 8px rgba(0, 0, 0, 0.85)',
+                lineHeight: '1.65',
+                letterSpacing: '0.015em'
               }}
             >
               <span>
@@ -819,7 +841,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               </span>
             </p>
 
-            {/* High-Contrast Action Buttons */}
+            {/* High-Contrast Action Buttons with Solid Colours and Bold Text */}
             <div className="reveal-up relative z-10 mt-6 flex items-center gap-4 flex-wrap">
               <button
                 type="button"
@@ -831,38 +853,40 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+                className="font-black px-6 py-3 rounded-xl text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
                 style={{
                   backgroundColor: '#F5A623',
-                  color: '#1B2A5C',
-                  border: '1.5px solid #E58E0A'
+                  color: '#0A1938',
+                  border: '2px solid #D97706',
+                  boxShadow: '0 4px 14px rgba(245, 166, 35, 0.4)'
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E58E0A')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#F5A623')}
               >
-                <Layers className="w-4 h-4 pointer-events-none text-[#1B2A5C]" />
-                <span className="text-[#1B2A5C]">Explore All Labs Grid</span>
+                <Layers className="w-4 h-4 pointer-events-none text-[#0A1938]" />
+                <span className="text-[#0A1938] font-black">Explore All Labs Grid</span>
               </button>
               <a
                 href="#stage"
-                className="fx-pulse-blue px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+                className="fx-pulse-blue px-6 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer shadow-lg transition-all active:scale-95"
                 style={{
                   backgroundColor: '#1546A8',
                   color: '#FFFFFF',
-                  border: '1.5px solid #42A5F5',
+                  border: '2px solid #3B82F6',
+                  boxShadow: '0 4px 14px rgba(21, 70, 168, 0.5)',
                   textShadow: '0 1px 3px rgba(0, 0, 0, 0.9)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#1E88E5';
-                  e.currentTarget.style.borderColor = '#90CAF9';
+                  e.currentTarget.style.backgroundColor = '#1D4ED8';
+                  e.currentTarget.style.borderColor = '#60A5FA';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = '#1546A8';
-                  e.currentTarget.style.borderColor = '#42A5F5';
+                  e.currentTarget.style.borderColor = '#3B82F6';
                 }}
               >
                 <Play className="w-4 h-4 pointer-events-none text-white fill-white shrink-0" />
-                <span className="text-white font-bold">Interactive Stage &amp; Dedicated Tabs</span>
+                <span className="text-white font-black">Interactive Stage &amp; Dedicated Tabs</span>
               </a>
             </div>
           </div>
@@ -886,27 +910,27 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
         <div 
           className="relative z-10 mt-6 text-xs flex items-center overflow-hidden rounded-2xl border shadow-lg"
           style={{
-            backgroundColor: '#1546A8',
+            backgroundColor: '#0B1D40',
             borderColor: '#F5A623',
-            boxShadow: '0 8px 24px rgba(21, 70, 168, 0.25)'
+            boxShadow: '0 8px 24px rgba(11, 29, 64, 0.6)'
           }}
           title="Live STEM Bulletin — Continuous Real-Time Updates"
         >
           {/* Fixed Left Badge: Live STEM Bulletin */}
           <div 
-            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] text-[#1B2A5C] shadow-xs select-none"
+            className="shrink-0 z-20 px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 font-bold uppercase tracking-wider text-[11px] text-[#0A1938] shadow-xs select-none"
             style={{
               backgroundColor: '#F5A623'
             }}
           >
-            <Radio className="w-4 h-4 animate-pulse pointer-events-none text-[#1B2A5C]" />
-            <span className="whitespace-nowrap font-heading text-[#1B2A5C]">LIVE STEM BULLETIN</span>
+            <Radio className="w-4 h-4 animate-pulse pointer-events-none text-[#0A1938]" />
+            <span className="whitespace-nowrap font-heading text-[#0A1938] font-black">LIVE STEM BULLETIN</span>
             <span 
               className="ml-1 px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold flex items-center gap-1"
               style={{
-                backgroundColor: 'rgba(27, 42, 92, 0.2)',
-                color: '#1B2A5C',
-                border: '1px solid rgba(27, 42, 92, 0.4)'
+                backgroundColor: 'rgba(10, 25, 56, 0.25)',
+                color: '#0A1938',
+                border: '1px solid rgba(10, 25, 56, 0.45)'
               }}
             >
               LIVE
@@ -914,7 +938,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           </div>
 
           {/* Endless Seamless Marquee Viewport with Calm Readability */}
-          <div className="flex-1 overflow-hidden relative py-3" style={{ backgroundColor: '#1546A8' }}>
+          <div className="flex-1 overflow-hidden relative py-3" style={{ backgroundColor: '#0B1D40' }}>
             <div 
               className="animate-marquee-infinite flex items-center"
               style={{
@@ -936,14 +960,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   >
                     <span 
                       className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2 text-white font-mono shadow-xs border border-white/40 tracking-wider"
-                      style={{ backgroundColor: '#1E88E5' }}
+                      style={{ backgroundColor: '#1D4ED8' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap">
+                    <span 
+                      className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap"
+                      style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)' }}
+                    >
                       {sim.title}
                     </span>
-                    <span className="text-xs font-semibold mr-2 text-[#F5A623] whitespace-nowrap">
+                    <span 
+                      className="text-xs font-bold mr-2 text-[#FDE047] whitespace-nowrap"
+                      style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)' }}
+                    >
                       ({sim.category})
                     </span>
                     <Star className="w-3.5 h-3.5 inline-block mx-1.5 shrink-0 pointer-events-none text-[#F5A623] fill-[#F5A623]" />
@@ -963,17 +993,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                   >
                     <span 
                       className="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-black mr-2 text-white font-mono shadow-xs border border-white/40 tracking-wider"
-                      style={{ backgroundColor: sim.accentColor || '#2563EB' }}
+                      style={{ backgroundColor: sim.accentColor || '#1D4ED8' }}
                     >
                       LAB {sim.indexNumber}
                     </span>
-                    <span className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap">
+                    <span 
+                      className="font-bold mr-2 text-xs sm:text-sm font-sans tracking-tight text-white whitespace-nowrap"
+                      style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)' }}
+                    >
                       {sim.title}
                     </span>
-                    <span className="text-xs font-semibold mr-2 text-[#93C5FD] whitespace-nowrap">
+                    <span 
+                      className="text-xs font-bold mr-2 text-[#FDE047] whitespace-nowrap"
+                      style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)' }}
+                    >
                       ({sim.category})
                     </span>
-                    <Star className="w-3.5 h-3.5 inline-block mx-1.5 shrink-0 pointer-events-none text-[#60A5FA] fill-[#60A5FA]" />
+                    <Star className="w-3.5 h-3.5 inline-block mx-1.5 shrink-0 pointer-events-none text-[#F5A623] fill-[#F5A623]" />
                   </a>
                 ))}
               </div>
@@ -985,7 +1021,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
           <div 
             className="shrink-0 z-20 px-2 sm:px-3 py-2 sm:py-2.5 flex items-center gap-1 sm:gap-1.5 select-none" 
             style={{ 
-              backgroundColor: '#0c2459', 
+              backgroundColor: '#071530', 
               borderLeft: '1.5px solid rgba(245, 166, 35, 0.35)' 
             }}
           >
@@ -1005,8 +1041,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
                 title={item.title}
                 className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer ${
                   speedMultiplier === item.mult
-                    ? 'bg-[#F5A623] text-[#1B2A5C] shadow-xs font-black scale-105'
-                    : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+                    ? 'bg-[#F5A623] text-[#0A1938] shadow-xs font-black scale-105'
+                    : 'bg-white/10 text-white/90 hover:bg-white/20 hover:text-white'
                 }`}
               >
                 {item.label}
