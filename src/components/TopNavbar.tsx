@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
-  ChevronDown 
+  ChevronDown,
+  X,
+  MessageCircle,
+  Mail,
+  Users,
+  MessageSquare,
+  Sparkles
 } from 'lucide-react';
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
@@ -29,10 +35,60 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onNavigateToExternal,
   onNavigateToView
 }) => {
-  const [openDropdown, setOpenDropdown] = useState<'simulations' | 'teachersStudents' | 'platforms' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'simulations' | 'teachersStudents' | 'platforms' | 'contact' | null>(null);
   const [isPinned, setIsPinned] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Modals for Join Our Team and Share Your Feedback
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
+  // Form states for Join Team
+  const [joinName, setJoinName] = useState('');
+  const [joinRole, setJoinRole] = useState('Science Teacher');
+  const [joinPhone, setJoinPhone] = useState('');
+  const [joinInstitution, setJoinInstitution] = useState('');
+  const [joinMessage, setJoinMessage] = useState('');
+
+  // Form states for Feedback
+  const [feedbackName, setFeedbackName] = useState('');
+  const [feedbackCategory, setFeedbackCategory] = useState('Appreciation');
+  const [feedbackRole, setFeedbackRole] = useState('Teacher');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+
+  const handleJoinWhatsApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = `*Application to Join Team - Gen Z Interactive Simulations*\n\n` +
+      `*Name:* ${joinName || 'Not specified'}\n` +
+      `*Role/Expertise:* ${joinRole}\n` +
+      `*Phone/WhatsApp:* ${joinPhone || 'Not specified'}\n` +
+      `*Institution/Qualification:* ${joinInstitution || 'Not specified'}\n\n` +
+      `*Message:* ${joinMessage || 'I would like to contribute to the project.'}`;
+    window.open(`https://wa.me/923147603964?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handleJoinEmail = () => {
+    const subject = `Join Team Application - ${joinName || 'Candidate'}`;
+    const body = `Name: ${joinName}\nRole/Expertise: ${joinRole}\nPhone: ${joinPhone}\nInstitution/Qualification: ${joinInstitution}\n\nMessage:\n${joinMessage}`;
+    window.open(`mailto:mimrankhan3964@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  };
+
+  const handleFeedbackWhatsApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = `*User Feedback - Gen Z Interactive Simulations*\n\n` +
+      `*Name:* ${feedbackName || 'Anonymous'}\n` +
+      `*Category:* ${feedbackCategory}\n` +
+      `*Role:* ${feedbackRole}\n\n` +
+      `*Feedback:* ${feedbackMessage || 'Great educational platform!'}`;
+    window.open(`https://wa.me/923147603964?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handleFeedbackEmail = () => {
+    const subject = `Feedback [${feedbackCategory}] - Gen Z Interactive Simulations`;
+    const body = `Name: ${feedbackName || 'Anonymous'}\nCategory: ${feedbackCategory}\nRole: ${feedbackRole}\n\nFeedback:\n${feedbackMessage}`;
+    window.open(`mailto:mimrankhan3964@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  };
 
   // Close dropdown on outside click or Escape key
   useEffect(() => {
@@ -47,6 +103,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       if (event.key === 'Escape') {
         setOpenDropdown(null);
         setIsPinned(false);
+        setIsJoinModalOpen(false);
+        setIsFeedbackModalOpen(false);
       }
     };
 
@@ -59,7 +117,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     };
   }, []);
 
-  const handleMouseEnter = useCallback((menu: 'simulations' | 'teachersStudents' | 'platforms') => {
+  const handleMouseEnter = useCallback((menu: 'simulations' | 'teachersStudents' | 'platforms' | 'contact') => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -77,7 +135,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     }, 280);
   }, [isPinned]);
 
-  const toggleDropdown = useCallback((menu: 'simulations' | 'teachersStudents' | 'platforms') => {
+  const toggleDropdown = useCallback((menu: 'simulations' | 'teachersStudents' | 'platforms' | 'contact') => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -579,18 +637,389 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             )}
           </div>
 
-          {/* Button 5: Contact (Plain button, no dropdown, scrolls to #developer) */}
-          <button
-            type="button"
-            onClick={() => handleItemClick('#developer')}
-            className="inline-flex items-center px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1.5 text-xs sm:text-[12.5px] md:text-[13px] lg:text-[13.5px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
-            title="Go to Developer & Contact Section"
+          {/* Button 5: Contact (Dropdown with arrow, exact copy of Online Platforms) */}
+          <div 
+            className="relative shrink-0"
+            onMouseEnter={() => handleMouseEnter('contact')}
+            onMouseLeave={handleMouseLeave}
           >
-            <span>Contact</span>
-          </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleDropdown('contact');
+              }}
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1.5 text-xs sm:text-[12.5px] md:text-[13px] lg:text-[13.5px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
+              aria-expanded={openDropdown === 'contact'}
+              aria-haspopup="true"
+              title="Contact the Developer, Join Our Team or Share Your Feedback"
+            >
+              <span>Contact</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'contact' ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Panel: CONTACT & COMMUNITY */}
+            {openDropdown === 'contact' && (
+              <div 
+                className="absolute right-0 top-full pt-1.5 z-[99999]"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  zIndex: 99999
+                }}
+                onMouseEnter={() => handleMouseEnter('contact')}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div 
+                  className="w-[290px] sm:w-[330px] max-w-[calc(100vw-24px)] rounded-xl overflow-hidden select-none border shadow-2xl"
+                  style={{
+                    backgroundColor: '#1B2A5C',
+                    border: '1.5px solid #F5A623',
+                    boxShadow: '0 20px 45px rgba(27, 42, 92, 0.7)',
+                    maxHeight: 'calc(100vh - 75px)',
+                    overflowY: 'auto'
+                  }}
+                >
+                  {/* Dropdown Header: Blue header bar with an orange bottom line */}
+                  <div 
+                    className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
+                    style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
+                  >
+                    CONTACT & COMMUNITY
+                  </div>
+
+                  {/* Vertical List of Items */}
+                  <div className="flex flex-col">
+                    {/* Item 1: About the Developer (First item: orange highlight) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                        handleItemClick('#developer');
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-bold text-[#F5A623] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
+                    >
+                      <span>About the Developer</span>
+                    </button>
+
+                    {/* Item 2: Join Our Team */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                        setIsJoinModalOpen(true);
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center border-b border-[#DDE5F3]/20"
+                    >
+                      <span>Join Our Team</span>
+                    </button>
+
+                    {/* Item 3: Share Your Feedback */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(null);
+                        setIsPinned(false);
+                        setIsFeedbackModalOpen(true);
+                      }}
+                      className="w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white active:bg-[#1B2A5C] transition-colors cursor-pointer flex items-center justify-center"
+                    >
+                      <span>Share Your Feedback</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </nav>
 
       </div>
+
+      {/* Modal 1: Join Our Team */}
+      {isJoinModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs select-none"
+          onClick={() => setIsJoinModalOpen(false)}
+        >
+          <div 
+            className="w-full max-w-lg rounded-2xl overflow-hidden border shadow-2xl relative"
+            style={{
+              backgroundColor: '#1B2A5C',
+              border: '2px solid #F5A623',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div 
+              className="px-5 py-3.5 flex items-center justify-between"
+              style={{ backgroundColor: '#1546A8', borderBottom: '1.5px solid #F5A623' }}
+            >
+              <div className="flex items-center gap-2.5">
+                <Users className="w-5 h-5 text-[#F5A623]" />
+                <div>
+                  <h3 className="font-heading font-black text-sm sm:text-base text-white tracking-wide">
+                    Join Our STEM Team
+                  </h3>
+                  <p className="text-[11px] text-[#DBE4F7] font-medium">
+                    Gen Z Interactive Simulations Community
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsJoinModalOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleJoinWhatsApp} className="p-5 space-y-3.5 text-xs sm:text-sm">
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Your Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={joinName}
+                  onChange={(e) => setJoinName(e.target.value)}
+                  placeholder="e.g. Dr. Ayesha Ahmed"
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Your Role / Expertise
+                  </label>
+                  <select
+                    value={joinRole}
+                    onChange={(e) => setJoinRole(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Science Teacher">Science Teacher</option>
+                    <option value="Physics Specialist">Physics Specialist</option>
+                    <option value="Chemistry Specialist">Chemistry Specialist</option>
+                    <option value="Biology Specialist">Biology Specialist</option>
+                    <option value="Mathematics Teacher">Mathematics Teacher</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="3D Graphic Artist">3D Graphic Artist</option>
+                    <option value="Curriculum Reviewer">Curriculum Reviewer</option>
+                    <option value="Volunteer Contributor">Volunteer Contributor</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    WhatsApp / Phone
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={joinPhone}
+                    onChange={(e) => setJoinPhone(e.target.value)}
+                    placeholder="e.g. +92 314 ..."
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Institution / Qualification
+                </label>
+                <input
+                  type="text"
+                  value={joinInstitution}
+                  onChange={(e) => setJoinInstitution(e.target.value)}
+                  placeholder="e.g. University / College / High School"
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  How Would You Like to Contribute?
+                </label>
+                <textarea
+                  rows={2}
+                  value={joinMessage}
+                  onChange={(e) => setJoinMessage(e.target.value)}
+                  placeholder="Briefly describe your interest or suggestions..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors resize-none"
+                />
+              </div>
+
+              {/* Action Buttons: WhatsApp & Email */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button
+                  type="submit"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#25D366', border: '1px solid #1EBE5D' }}
+                  title="Submit via WhatsApp directly to Developer"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  <span>Send on WhatsApp</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleJoinEmail}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#1E88E5', border: '1px solid #1565C0' }}
+                  title="Submit via Gmail"
+                >
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <span>Send via Email</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 2: Share Your Feedback */}
+      {isFeedbackModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs select-none"
+          onClick={() => setIsFeedbackModalOpen(false)}
+        >
+          <div 
+            className="w-full max-w-lg rounded-2xl overflow-hidden border shadow-2xl relative"
+            style={{
+              backgroundColor: '#1B2A5C',
+              border: '2px solid #F5A623',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div 
+              className="px-5 py-3.5 flex items-center justify-between"
+              style={{ backgroundColor: '#1546A8', borderBottom: '1.5px solid #F5A623' }}
+            >
+              <div className="flex items-center gap-2.5">
+                <MessageSquare className="w-5 h-5 text-[#F5A623]" />
+                <div>
+                  <h3 className="font-heading font-black text-sm sm:text-base text-white tracking-wide">
+                    Share Your Feedback
+                  </h3>
+                  <p className="text-[11px] text-[#DBE4F7] font-medium">
+                    Help us improve interactive STEM learning
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsFeedbackModalOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleFeedbackWhatsApp} className="p-5 space-y-3.5 text-xs sm:text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Feedback Category
+                  </label>
+                  <select
+                    value={feedbackCategory}
+                    onChange={(e) => setFeedbackCategory(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Appreciation">Appreciation</option>
+                    <option value="Feature Suggestion">Feature Suggestion</option>
+                    <option value="Bug Report">Bug Report</option>
+                    <option value="New Lab Request">New Lab Request</option>
+                    <option value="General Feedback">General Feedback</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                    Your Role
+                  </label>
+                  <select
+                    value={feedbackRole}
+                    onChange={(e) => setFeedbackRole(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white focus:outline-none focus:border-[#F5A623] transition-colors"
+                  >
+                    <option value="Teacher">Teacher / Educator</option>
+                    <option value="Student">Student</option>
+                    <option value="School Principal">School Principal / Head</option>
+                    <option value="Parent">Parent</option>
+                    <option value="STEM Enthusiast">STEM Enthusiast</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Your Name (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={feedbackName}
+                  onChange={(e) => setFeedbackName(e.target.value)}
+                  placeholder="e.g. Muhammad / Anonymous"
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#F5A623] uppercase tracking-wider mb-1">
+                  Your Feedback &amp; Suggestions
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={feedbackMessage}
+                  onChange={(e) => setFeedbackMessage(e.target.value)}
+                  placeholder="Tell us what you liked or how we can make the simulations better..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-[#0E1F42] text-white placeholder-white/40 focus:outline-none focus:border-[#F5A623] transition-colors resize-none"
+                />
+              </div>
+
+              {/* Action Buttons: WhatsApp & Email */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button
+                  type="submit"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#25D366', border: '1px solid #1EBE5D' }}
+                  title="Send Feedback via WhatsApp"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  <span>Send on WhatsApp</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleFeedbackEmail}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm cursor-pointer shadow-md transition-all active:scale-95"
+                  style={{ backgroundColor: '#1E88E5', border: '1px solid #1565C0' }}
+                  title="Send Feedback via Email"
+                >
+                  <Mail className="w-4 h-4 shrink-0" />
+                  <span>Send via Email</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
