@@ -2503,5 +2503,55 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Integrated Flower Anatomy & Pollination Interactive Comprehension Quiz'
     ],
     gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary & Middle School Science, Botany)'
+  },
+  {
+    id: 'sim-herbivores-carnivores-omnivores-simulation',
+    slug: 'herbivores-carnivores-omnivores-simulation',
+    indexNumber: '133',
+    title: 'Herbivores, Carnivores and Omnivores Simulation (گھاس خور، گوشت خور اور ہمہ خور جانور)',
+    subject: 'Biology & Animal Classification (حیاتیات اور جانوروں کی غذائی درجہ بندی)',
+    category: 'Biology & Life',
+    iconName: 'PawPrint',
+    accentColor: '#10b981',
+    description: 'Interactive 3D-perspective biological simulation investigating animal nutrition modes and dietary adaptations. Explore Herbivores (Cow, Sheep, Rabbit consuming grass and foliage), Carnivores (Lion, Leopard hunting meat and flesh), and Omnivores (Bear, Crow consuming both plant matter and meat). Features interactive feeding animations, dietary classification filters, auto-tour presentation, and speed controls.',
+    fileUrl: '/simulations/herbivores-carnivores-omnivores-simulation.html',
+    topics: [
+      'Dietary Classification: Herbivores, Carnivores & Omnivores',
+      'Dentition & Digestive Adaptations for Plants vs Meat',
+      'Ecosystem Food Webs & Consumer Trophic Roles',
+      'Animal Foraging Behavior & Feeding Dynamics'
+    ],
+    features: [
+      'Interactive Multi-Animal Feeding Simulation Canvas',
+      'Selective Dietary Mode Filters (Herbivores, Carnivores, Omnivores)',
+      'Smooth 3D Perspective Tilt & Interactive Food Interaction',
+      'Automated Guided Tour & Multi-Speed Playback Engine'
+    ],
+    gradeLevel: 'Class 3, 4, 5, 6 & 7 (Primary & Middle School General Science)'
+  },
+  {
+    id: 'sim-life-cycle-simulation',
+    slug: 'life-cycle-simulation',
+    indexNumber: '134',
+    title: 'Life Cycle of a Butterfly, Frog and Chicken - Simulation (تتلی، مینڈک اور مرغی کا لائف سائیکل)',
+    subject: 'Biology & Developmental Metamorphosis (حیاتیات اور نمو کے مراحل)',
+    category: 'Biology & Life',
+    iconName: 'Dna',
+    accentColor: '#8b5cf6',
+    description: 'Complete comparative life cycle laboratory visualizing growth, metamorphosis, and developmental stages across insect, amphibian, and avian species. Inspect Butterfly complete metamorphosis (Eggs → Caterpillar/Larva → Chrysalis/Pupa → Adult Butterfly), Frog metamorphosis (Aquatic Eggs → Swimming Tadpole → Four-legged Froglet → Adult Amphibian Frog), and Chicken development (Fertilized Egg → Incubating Embryo → Hatching Chick → Adult Chicken) with real-time stage scrubbing, animated organism rendering, and stage-by-stage anatomical insights.',
+    fileUrl: '/simulations/life-cycle-simulation.html',
+    topics: [
+      'Complete Metamorphosis in Lepidoptera (Egg, Larva, Pupa, Imago)',
+      'Amphibian Metamorphosis & Aquatic to Terrestrial Transition',
+      'Avian Embryology, Egg Incubation & Chick Development',
+      'Comparative Developmental Biology & Reproduction Strategies'
+    ],
+    features: [
+      'Synchronized Multi-Species Life Cycle Interactive Canvas',
+      'Stage-by-Stage Interactive Scrubbing & Progression Controls',
+      'Dynamic Morphological Particle Effects & Realistic Organism Renders',
+      'Comparative Educational Explanatory Cards for Each Stage'
+    ],
+    gradeLevel: 'Class 3, 4, 5, 6, 7 & 8 (Primary & Middle School Science & Biology)'
   }
 ];

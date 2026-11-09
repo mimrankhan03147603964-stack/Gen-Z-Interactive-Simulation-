@@ -124,7 +124,11 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-nervous-system-simulation': 125,
   'sim-plant-vs-animal-cell-simulation': 126,
   'sim-pollination-fertilization-simulation': 127,
-  'sim-transpiration-water-transport-simulation': 128
+  'sim-transpiration-water-transport-simulation': 128,
+  'sim-ecosystem-environment-simulation': 131,
+  'sim-flower-simulation': 132,
+  'sim-herbivores-carnivores-omnivores-simulation': 133,
+  'sim-life-cycle-simulation': 134
 };
 
 /**
@@ -3042,6 +3046,84 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <circle cx="14" cy="10" r="3" fill="#facc15" />
           <line x1="14" y1="5" x2="14" y2="3" stroke="#fde047" strokeWidth="1" />
           <line x1="10" y1="7" x2="8" y2="5" stroke="#fde047" strokeWidth="1" />
+        </svg>
+      );
+
+    // 133: Herbivores, Carnivores and Omnivores Simulation
+    case 133:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="herbGrad" x1="8" y1="12" x2="28" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#4ade80" />
+              <stop offset="100%" stopColor="#15803d" />
+            </linearGradient>
+            <linearGradient id="carnGrad" x1="36" y1="12" x2="56" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f87171" />
+              <stop offset="100%" stopColor="#b91c1c" />
+            </linearGradient>
+            <linearGradient id="pawGrad" x1="22" y1="28" x2="42" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#fbbf24" />
+              <stop offset="100%" stopColor="#d97706" />
+            </linearGradient>
+          </defs>
+          {/* Circular Eco-Plate Background */}
+          <circle cx="32" cy="32" r="28" fill="#0f291e" stroke="#22c55e" strokeWidth="1.5" strokeOpacity="0.4" />
+          {/* Plant Leaf (Herbivore) */}
+          <path d="M12 28 C12 16 26 12 26 12 C26 12 28 26 16 30 Z" fill="url(#herbGrad)" stroke="#86efac" strokeWidth="1" />
+          <path d="M12 28 Q20 22 26 12" stroke="#bbf7d0" strokeWidth="1" strokeLinecap="round" />
+          {/* Meat Steak & Bone (Carnivore) */}
+          <path d="M52 24 C52 16 42 14 38 18 C34 22 38 30 46 28 C50 27 52 26 52 24 Z" fill="url(#carnGrad)" stroke="#fca5a5" strokeWidth="1" />
+          <circle cx="44" cy="22" r="2.5" fill="#fef2f2" stroke="#dc2626" strokeWidth="1" />
+          {/* Animal Paw Print (Omnivore / Animal Kingdom Core) */}
+          {/* Main Paw Pad */}
+          <ellipse cx="32" cy="44" rx="8" ry="6.5" fill="url(#pawGrad)" stroke="#fef08a" strokeWidth="1" />
+          {/* 4 Toe Pads */}
+          <ellipse cx="23" cy="34" rx="2.5" ry="3.5" transform="rotate(-20 23 34)" fill="url(#pawGrad)" />
+          <ellipse cx="29" cy="31" rx="2.5" ry="3.8" transform="rotate(-7 29 31)" fill="url(#pawGrad)" />
+          <ellipse cx="35" cy="31" rx="2.5" ry="3.8" transform="rotate(7 35 31)" fill="url(#pawGrad)" />
+          <ellipse cx="41" cy="34" rx="2.5" ry="3.5" transform="rotate(20 41 34)" fill="url(#pawGrad)" />
+        </svg>
+      );
+
+    // 134: Life Cycle of a Butterfly, Frog and Chicken Simulation
+    case 134:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bfWingLeft" x1="12" y1="12" x2="30" y2="34" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#c084fc" />
+              <stop offset="100%" stopColor="#7e22ce" />
+            </linearGradient>
+            <linearGradient id="bfWingRight" x1="52" y1="12" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+            <linearGradient id="eggGrad" x1="26" y1="42" x2="38" y2="58" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#fef08a" />
+              <stop offset="100%" stopColor="#eab308" />
+            </linearGradient>
+          </defs>
+          {/* Metamorphosis Orbital Ring */}
+          <circle cx="32" cy="32" r="28" stroke="#a855f7" strokeWidth="1.5" strokeDasharray="4 2" strokeOpacity="0.6" />
+          {/* Metamorphosis Curved Cycle Arrows */}
+          <path d="M50 20 A22 22 0 0 1 50 44" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" />
+          <polygon points="50,47 47,42 53,42" fill="#38bdf8" />
+          <path d="M14 44 A22 22 0 0 1 14 20" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" />
+          <polygon points="14,17 11,22 17,22" fill="#4ade80" />
+          {/* Central Metamorphosing Butterfly Wings */}
+          {/* Left Wing */}
+          <path d="M32 24 C24 14 12 16 14 26 C16 33 28 30 32 26 Z" fill="url(#bfWingLeft)" stroke="#e9d5ff" strokeWidth="1" />
+          <path d="M32 26 C26 31 18 33 20 40 C22 45 30 37 32 29 Z" fill="url(#bfWingLeft)" opacity="0.9" />
+          {/* Right Wing */}
+          <path d="M32 24 C40 14 52 16 50 26 C48 33 36 30 32 26 Z" fill="url(#bfWingRight)" stroke="#bae6fd" strokeWidth="1" />
+          <path d="M32 26 C38 31 46 33 44 40 C42 45 34 37 32 29 Z" fill="url(#bfWingRight)" opacity="0.9" />
+          {/* Butterfly Thorax & Antennae */}
+          <ellipse cx="32" cy="27" rx="1.8" ry="7" fill="#1e1b4b" stroke="#ffffff" strokeWidth="0.8" />
+          <path d="M31 20 Q28 15 25 14" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" />
+          <path d="M33 20 Q36 15 39 14" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" />
+          {/* Developing Egg / Chick Embryo at bottom */}
+          <ellipse cx="32" cy="49" rx="5" ry="6.5" fill="url(#eggGrad)" stroke="#fde047" strokeWidth="1" />
         </svg>
       );
 
