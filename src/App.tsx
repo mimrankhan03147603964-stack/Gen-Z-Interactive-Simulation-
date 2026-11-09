@@ -11,6 +11,7 @@ import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ScrollReveal } from './components/ScrollReveal';
 import { FutureStemHoverImage } from './components/FutureStemHoverImage';
+import { LabRoadmapHoverImage } from './components/LabRoadmapHoverImage';
 
 // Lazy-load secondary views and modals to keep initial bundle ultra-light on Vercel
 const PedagogicalHub = React.lazy(() => import('./components/PedagogicalHub').then(m => ({ default: m.PedagogicalHub })));
@@ -488,6 +489,9 @@ export default function App() {
                   onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
                 />
               </ScrollReveal>
+
+              {/* Full-Width Hover Slide-In Image between Lab Card and Roadmap Section */}
+              <LabRoadmapHoverImage />
 
               {/* Complete Interactive Simulation Roadmap: Play Class to FSc */}
               <div className="px-3 sm:px-6 lg:px-8 xl:px-12">
