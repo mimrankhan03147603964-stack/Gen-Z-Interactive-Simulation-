@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ScrollReveal } from './components/ScrollReveal';
+import { FutureStemHoverImage } from './components/FutureStemHoverImage';
 
 // Lazy-load secondary views and modals to keep initial bundle ultra-light on Vercel
 const PedagogicalHub = React.lazy(() => import('./components/PedagogicalHub').then(m => ({ default: m.PedagogicalHub })));
@@ -492,6 +493,9 @@ export default function App() {
               <div className="px-3 sm:px-6 lg:px-8 xl:px-12">
                 <SimulationRoadmapSection />
               </div>
+
+              {/* Full-Width Hover Slide-In Image between Future STEM card and Developer section */}
+              <FutureStemHoverImage />
             </div>
           )}
 
