@@ -32,6 +32,7 @@ import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/nav
 import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
+import { DisciplineCatalogHoverImage } from './DisciplineCatalogHoverImage';
 
 import { 
   MultiStemAllIcon, 
@@ -895,6 +896,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           })}
         </div>
       </div>
+
+      {/* Full-Width Hover Slide-In Image between Discipline Cards Row and All STEM Disciplines Card */}
+      <DisciplineCatalogHoverImage />
 
       {/* Subject Panels Layout: Replaces the old large simulation cards */}
       <div className="w-full space-y-4">
