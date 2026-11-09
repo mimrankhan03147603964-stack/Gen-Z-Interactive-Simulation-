@@ -112,8 +112,8 @@ export const SimulationViewerModal: React.FC<SimulationViewerModalProps> = ({
             <TopicRealisticIcon indexNumber={sim.indexNumber} simId={sim.id} className="w-5 h-5" />
           </div>
           <div className="flex items-center gap-2 truncate">
-            <span className="text-xs font-mono font-black" style={{ color: '#fde047' }}>
-              [{sim.indexNumber}]
+            <span className="text-xs font-mono font-black px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 shadow-xs shrink-0">
+              #{sim.indexNumber}
             </span>
             <span className="text-sm font-black text-white truncate drop-shadow-xs">
               {sim.title}

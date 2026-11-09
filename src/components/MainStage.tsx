@@ -382,10 +382,13 @@ export const MainStage: React.FC<MainStageProps> = ({
             </div>
 
             <h1 
-              className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-tight"
+              className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-tight flex items-center gap-2.5 flex-wrap"
               style={{ color: isDarkMode ? '#ffffff' : '#0f172a' }}
             >
-              {activeSim.title}
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm sm:text-base font-black font-mono bg-[#1E88E5] text-white shadow-xs">
+                #{activeSim.indexNumber}
+              </span>
+              <span>{activeSim.title}</span>
             </h1>
 
             <p 

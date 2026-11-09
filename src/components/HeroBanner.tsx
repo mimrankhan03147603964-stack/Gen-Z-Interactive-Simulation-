@@ -397,11 +397,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectSim, onExploreLa
               e.stopPropagation();
               handleLaunchShowcase(sim);
             }}
-            className="text-xs sm:text-sm md:text-base font-black truncate hover:underline transition-colors"
+            className="text-xs sm:text-sm md:text-base font-black truncate hover:underline transition-colors flex items-center gap-1.5"
             style={{ color: theme.titleColor }}
-            title={`Open ${cleanTitle} in new tab`}
+            title={`Open #${sim.indexNumber} - ${cleanTitle} in new tab`}
           >
-            {cleanTitle}
+            <span 
+              className="font-mono text-xs font-black px-1.5 py-0.5 rounded text-white shadow-2xs shrink-0"
+              style={{ backgroundColor: '#1E88E5' }}
+            >
+              #{sim.indexNumber}
+            </span>
+            <span className="truncate">{cleanTitle}</span>
           </a>
         </div>
 

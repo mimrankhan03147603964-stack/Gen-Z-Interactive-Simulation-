@@ -535,8 +535,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {sim.category}
                       </span>
                     </div>
-                    <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#7BBDE8] truncate font-heading">
-                      {sim.title}
+                    <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#7BBDE8] truncate font-heading flex items-center gap-1.5">
+                      <span className="text-[#FDE047] font-mono font-black text-xs shrink-0">#{sim.indexNumber}</span>
+                      <span className="truncate">{sim.title}</span>
                     </h4>
                     <p className="text-[11px] font-normal line-clamp-1 mt-0.5" style={{ color: '#BDD8E9' }}>
                       {sim.description}

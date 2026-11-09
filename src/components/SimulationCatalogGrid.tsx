@@ -1171,7 +1171,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                         if (onSelectSim) onSelectSim(sim);
                                       }}
                                       className="horizontal-topic-card group w-full h-full"
-                                      title={`Open ${displayTitle} in new tab`}
+                                      title={`Open #${sim.indexNumber} - ${displayTitle} in new tab`}
                                     >
                                       {/* Left: Realistic & Colorful Vector Emblem Tile */}
                                       <div
@@ -1185,17 +1185,30 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                         />
                                       </div>
 
-                                      {/* Center: Full Topic Title - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
+                                      {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
                                       <div className="flex-1 min-w-0 pr-1">
-                                        <span
-                                          className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
-                                          dir={isUrdu ? 'rtl' : 'ltr'}
-                                          style={{
-                                            ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
-                                          }}
-                                        >
-                                          {displayTitle}
-                                        </span>
+                                        <div className="flex items-start gap-1.5">
+                                          <span 
+                                            className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black font-mono shrink-0 select-none shadow-2xs border mt-0.5"
+                                            style={{
+                                              backgroundColor: '#1E88E5',
+                                              color: '#FFFFFF',
+                                              borderColor: '#1546A8'
+                                            }}
+                                            title={`Simulation #${sim.indexNumber} of 136`}
+                                          >
+                                            #{sim.indexNumber}
+                                          </span>
+                                          <span
+                                            className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
+                                            dir={isUrdu ? 'rtl' : 'ltr'}
+                                            style={{
+                                              ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
+                                            }}
+                                          >
+                                            {displayTitle}
+                                          </span>
+                                        </div>
                                       </div>
 
                                       {/* Right: Subtle Arrow Indicator */}

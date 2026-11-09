@@ -16,11 +16,11 @@ export const StandaloneLabPlayer: React.FC<StandaloneLabPlayerProps> = ({ sim })
 
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = sim.title;
+    document.title = `#${sim.indexNumber} - ${sim.title}`;
     return () => {
       document.title = originalTitle;
     };
-  }, [sim.title]);
+  }, [sim.indexNumber, sim.title]);
 
   useEffect(() => {
     const handleFsChange = () => {
