@@ -1,40 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 export const FutureStemHoverImage: React.FC = () => {
+  const [isInView, setIsInView] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobileInView, setIsMobileInView] = useState(false);
-  const [isFinePointer, setIsFinePointer] = useState(true);
-
   const containerRef = useRef<HTMLDivElement>(null);
-  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Detect whether the device has a fine pointer (mouse / trackpad) vs purely touch device
-  useEffect(() => {
-    const checkPointer = () => {
-      if (typeof window === 'undefined') return;
-      const finePointerMedia = window.matchMedia('(hover: hover) and (pointer: fine)');
-      setIsFinePointer(finePointerMedia.matches);
-    };
-
-    checkPointer();
-    window.addEventListener('resize', checkPointer);
-    return () => window.removeEventListener('resize', checkPointer);
-  }, []);
-
-  // IntersectionObserver for mobile / touch devices: triggers slide-in when scrolled into view
+  // IntersectionObserver: Triggers the smooth right-to-left slide-in as soon as the section scrolls into view
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setIsInView(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsMobileInView(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setIsInView(true);
+          } else {
+            // Slides back out when scrolled well away from viewport
+            if (entry.boundingClientRect.top > window.innerHeight || entry.boundingClientRect.bottom < 0) {
+              setIsInView(false);
+            }
+          }
         });
       },
       {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.12,
+        rootMargin: '50px 0px 50px 0px',
       }
     );
 
@@ -42,104 +36,72 @@ export const FutureStemHoverImage: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Mouse hover handlers with slight debounce to prevent micro-stuttering
-  const handleMouseEnter = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(false);
-    }, 75);
-  };
-
-  // On desktop / fine pointer: trigger on mouse hover
-  // On mobile / touch devices: trigger when section scrolls into view
-  const isVisible = isFinePointer ? isHovered : (isMobileInView || isHovered);
+  // When either in view or hovered, the image slides in from the right edge toward the left
+  const isSlideVisible = isInView || isHovered;
 
   return (
-    <div
+    <section
       ref={containerRef}
-      id="future-stem-hover-image-section"
-      className="future-stem-hover-section relative w-full select-none"
+      id="future-stem-fullwidth-section"
+      aria-label="Future STEM Classroom Interactive Simulation Laboratory"
+      className="future-stem-image-section relative w-full my-6 sm:my-8 select-none"
       style={{
         overflowX: 'hidden',
-        overflowY: 'hidden',
-        marginTop: isVisible ? '1.5rem' : '0px',
-        marginBottom: isVisible ? '1.5rem' : '0px',
-        transition: 'margin 0.6s ease-in-out',
+        width: '100vw',
+        maxWidth: '100vw',
+        position: 'relative',
+        left: '50%',
+        right: '50%',
+        marginLeft: '-50vw',
+        marginRight: '-50vw',
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Invisible Hover Sensor across the gap between the Future STEM card and Developer section */}
-      {!isVisible && (
-        <div
-          className="absolute -top-6 left-0 right-0 h-16 z-30 cursor-pointer pointer-events-auto"
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Full-Width Expandable Wrapper: edge-to-edge 100vw with no horizontal scrollbars */}
-      <div
-        className="w-full relative"
+      {/* Full-Width Responsive Wrapper with overflow-x: hidden to prevent any scrollbars during animation */}
+      <div 
+        className="w-full relative overflow-hidden shadow-md border-y border-[#DDE5F3]"
         style={{
-          width: '100vw',
-          maxWidth: '100vw',
-          position: 'relative',
-          left: '50%',
-          right: '50%',
-          marginLeft: '-50vw',
-          marginRight: '-50vw',
-          overflowX: 'hidden',
-          overflowY: 'hidden',
-          maxHeight: isVisible ? 'min(78vh, 720px)' : '0px',
-          opacity: isVisible ? 1 : 0,
-          transition: 'max-height 0.6s ease-in-out, opacity 0.4s ease-in-out',
+          backgroundColor: '#FFFFFF',
+          aspectRatio: '16 / 9',
+          maxHeight: 'min(78vh, 720px)',
+          minHeight: '260px',
         }}
       >
-        {/* Sliding Layer: translateX(100%) when hidden, translateX(0) when visible */}
+        {/* Sliding Layer: translateX(100%) when hidden, translateX(0%) when visible with 0.6s ease-in-out */}
         <div
-          className="w-full relative shadow-2xl"
+          className="w-full h-full relative"
           style={{
-            transform: isVisible ? 'translateX(0%)' : 'translateX(100%)',
-            transition: 'transform 0.6s ease-in-out',
+            transform: isSlideVisible ? 'translateX(0%)' : 'translateX(100%)',
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
             willChange: 'transform',
           }}
         >
           <img
-            src="/assets/aistudio/WhatsApp_Image_2026-11-08_at_8.43.40_AM_d5cb944e.jpeg"
+            src="/assets/stem-classroom-future.jpg"
             onError={(e) => {
-              // Fallback if hashed asset name differs
+              // Direct fallback to alternate public path
               const target = e.currentTarget;
-              if (!target.src.endsWith('stem-classroom-future.jpg')) {
-                target.src = '/assets/stem-classroom-future.jpg';
+              if (!target.src.includes('WhatsApp_Image_2026-11-08_at_8.43.40_AM_d5cb944e.jpeg')) {
+                target.src = '/assets/aistudio/WhatsApp_Image_2026-11-08_at_8.43.40_AM_d5cb944e.jpeg';
               }
             }}
-            alt="Future STEM Classroom Interactive Simulation Laboratory"
-            className="w-full block select-none pointer-events-none"
+            alt="Future STEM Applied & Emerging STEM Simulations Classroom Lab"
+            className="w-full h-full block object-cover select-none pointer-events-none transition-transform duration-700 ease-out"
             style={{
               width: '100vw',
               maxWidth: '100vw',
-              height: 'auto',
-              aspectRatio: '16 / 9',
-              maxHeight: 'min(78vh, 720px)',
+              height: '100%',
               objectFit: 'cover',
               objectPosition: 'center 35%',
               display: 'block',
+              transform: isHovered ? 'scale(1.02)' : 'scale(1)',
             }}
             loading="eager"
             decoding="async"
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
