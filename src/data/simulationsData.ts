@@ -2553,5 +2553,58 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Comparative Educational Explanatory Cards for Each Stage'
     ],
     gradeLevel: 'Class 3, 4, 5, 6, 7 & 8 (Primary & Middle School Science & Biology)'
+  },
+  {
+    id: 'sim-human-respiratory-system-simulation',
+    slug: 'human-respiratory-system-simulation',
+    indexNumber: '135',
+    title: 'Human Respiratory System Simulation (انسانی نظام تنفس - سانس لینے کا عمل اور گیسوں کا تبادلہ)',
+    subject: 'Biology & Human Respiratory Anatomy (حیاتیات اور انسانی نظام تنفس)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#0ea5e9',
+    description: 'Real-time physiological interactive simulation of the human respiratory system. Features interactive breathing controls (Auto, Breathe In, Breathe Out) with dynamic anatomical organ warping of lungs and diaphragm, real-time thoracic cavity expansion, and a microscopic Alveoli Gas Exchange Zoom chamber demonstrating oxygen (O₂) absorption into erythrocytes and carbon dioxide (CO₂) release.',
+    fileUrl: '/simulations/human-respiratory-system-simulation.html',
+    topics: [
+      'Inhalation & Exhalation Respiratory Cycle',
+      'Diaphragm Contraction & Flattening vs Relaxation Dome',
+      'Thoracic Cavity Volume & Negative Pressure Gradient',
+      'Alveolar Capillary Gas Exchange: O₂ Diffusion & CO₂ Excretion',
+      'Trachea, Bronchi, Bronchioles & Pulmonary Lobe Anatomy'
+    ],
+    features: [
+      'Realistic Organ Warping Animation of Trachea, Lungs & Diaphragm',
+      'Interactive Microscopic Alveoli Capillary Gas Exchange Zoom',
+      'Manual Breathe In / Breathe Out & Automated Breathing Loop',
+      'Clean Fullscreen Canvas Laboratory with Real-time Status Guidance'
+    ],
+    gradeLevel: 'Class 6, 7, 8, 9 & 10 (Middle & Secondary School Science & Biology)'
+  },
+  {
+    id: 'sim-vertebrates-invertebrates-simulation',
+    slug: 'vertebrates-invertebrates-simulation',
+    indexNumber: '136',
+    title: 'Vertebrates and Invertebrates Interactive Lab (ریڑھ کی ہڈی والے اور بغیر ریڑھ کی ہڈی والے جانور)',
+    subject: 'Biology & Animal Classification (حیاتیات اور جانوروں کی جماعت بندی)',
+    category: 'Biology & Life',
+    iconName: 'PawPrint',
+    accentColor: '#10b981',
+    description: 'Comprehensive zoological classification laboratory distinguishing Vertebrates (with spinal column/backbone) from Invertebrates (without backbone). Features 12 interactive animal classes (Mammal, Bird, Reptile, Amphibian, Fish, Insect, Arachnid, Mollusk, Annelid, Crustacean, Echinoderm), dynamic animated animal sprites, an interactive "Check Backbone" X-ray diagnostic mode, speed controls, animal sound effects, comprehensive fact cards, and an interactive classification quiz.',
+    fileUrl: '/simulations/vertebrates-invertebrates-simulation.html',
+    topics: [
+      'Classification of Animals: Vertebrates vs Invertebrates',
+      '5 Vertebrate Classes: Mammals, Birds, Reptiles, Amphibians & Fish',
+      'Major Invertebrate Groups: Insects, Arachnids, Mollusks, Annelids, Crustaceans & Echinoderms',
+      'Vertebral Column, Endoskeleton vs Exoskeleton & Hydrostatic Skeleton',
+      'Interactive Diagnostic Identification & Classification Assessment'
+    ],
+    features: [
+      '12 Interactive Animal Classes with Smooth Animated Sprites',
+      'Interactive "Check Backbone" X-Ray Anatomical Inspection Mode',
+      'Comprehensive Biological Facts Panel with Habitat & Characteristics',
+      'Interactive Animal Classification Quiz with Instant Feedback & Scoring',
+      'Adjustable Animation Speed Slider & Audio FX Controls'
+    ],
+    gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary & Middle School General Science & Biology)'
   }
 ];

@@ -1799,6 +1799,38 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f0f9ff',
     tagText: '#0284c7',
     glowColor: 'rgba(2, 132, 199, 0.45)'
+  },
+  '135': {
+    id: '135',
+    name: 'Human Respiratory System Simulation',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%)',
+    borderColor: '#38bdf8',
+    iconBg: '#0369a1',
+    iconBorder: '#38bdf8',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#0369a1',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(14, 165, 233, 0.45)'
+  },
+  '136': {
+    id: '136',
+    name: 'Vertebrates and Invertebrates Interactive Lab',
+    bgSolid: '#059669',
+    bgGradient: 'linear-gradient(135deg, #059669 0%, #047857 50%, #064e3b 100%)',
+    borderColor: '#34d399',
+    iconBg: '#047857',
+    iconBorder: '#34d399',
+    iconColor: '#ffffff',
+    badgeBg: '#d1fae5',
+    badgeText: '#065f46',
+    badgeBorder: '#6ee7b7',
+    tagBg: '#ecfdf5',
+    tagText: '#047857',
+    glowColor: 'rgba(16, 185, 129, 0.45)'
   }
 };
 
