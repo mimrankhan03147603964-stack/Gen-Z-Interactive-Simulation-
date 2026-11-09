@@ -2398,8 +2398,110 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Turgid vs Flaccid Wilting Response Engine with Self-Paced Plant Physiology Quiz'
     ],
     gradeLevel: 'Class 9, 10 & 11 (General Science & Secondary Biology SSC)'
+  },
+  {
+    id: 'sim-biology-branches-classification',
+    slug: 'biology-branches-classification',
+    indexNumber: '129',
+    title: 'Introduction to Biology & Branches: Life, Taxonomy & Classification',
+    subject: 'General Biology & Taxonomy (حیاتیات کا تعارف اور اس کی شاخیں)',
+    category: 'Biology & Life',
+    iconName: 'Dna',
+    accentColor: '#10b981',
+    description: 'Comprehensive interactive biology foundation laboratory. Explore the core definition of biology as the scientific study of life and living organisms, navigate major branches of biology (Botany, Zoology, Microbiology, Anatomy, Physiology, Genetics, Ecology, and Biotechnology), investigate the taxonomic hierarchy of classification from Kingdom to Species using the Panthera leo (Lion) interactive case study, and test understanding with the guided tour and knowledge quiz.',
+    fileUrl: '/simulations/biology-branches-simulation.html',
+    topics: [
+      'Definition of Biology: Life Processes, Characteristics of Living Organisms & Scientific Inquiry',
+      'Major Branches: Botany, Zoology, Microbiology, Genetics, Cytology, Physiology & Ecology',
+      'Taxonomic Hierarchy: Kingdom (Animalia) down to Species (Panthera leo) Classification Engine',
+      'Binomial Nomenclature & Carl Linnaeus Biological Naming Standards',
+      'Interdisciplinary Applications: Biotechnology, Pharmacology & Environmental Preservation'
+    ],
+    features: [
+      'Interactive Canvas Explorer with Real-Time Biological Model Inspection',
+      'Guided Tour Mode & "Classify the Lion" Step-by-Step Taxonomic Hierarchy Visualizer',
+      'Comprehensive Interactive Branch Identification Quiz with Score Tracking',
+      'Bilingual Concept Summaries (English & Urdu) and Fullscreen Mode'
+    ],
+    gradeLevel: 'Class 8, 9 & 10 (Middle Science & Secondary Biology SSC)'
+  },
+  {
+    id: 'sim-bones-and-muscles-simulation',
+    slug: 'bones-and-muscles-simulation',
+    indexNumber: '130',
+    title: 'Human Skeletal & Muscular System: Bones, Joints & Muscle Action',
+    subject: 'Human Anatomy & Physiology (ہڈیاں، جوڑ اور عضلاتی نظام)',
+    category: 'Biology & Life',
+    iconName: 'Activity',
+    accentColor: '#f43f5e',
+    description: 'Interactive human locomotor anatomy simulation demonstrating the skeletal and muscular systems working in harmony. Examine bone structure (compact bone, spongy bone, periosteum, and bone marrow with RBC/WBC production), explore joint types (ball-and-socket, hinge, pivot), and observe antagonistic muscle pairs (biceps and triceps contraction/relaxation) with real-time breathing ribcage expansion and nerve impulse propagation.',
+    fileUrl: '/simulations/bones-and-muscles-simulation.html',
+    topics: [
+      'Skeletal System Architecture: Skull, Spine, Ribcage, Appendicular & Axial Skeleton',
+      'Bone Microscopic Structure: Compact Bone, Haversian Canals & Blood Cell Production in Marrow',
+      'Muscular Mechanics: Antagonistic Muscle Pairs (Biceps & Triceps Contraction / Relaxation)',
+      'Joint Physiology: Synovial Fluid, Ligaments, Tendons & Joint Articulation Degrees',
+      'Breathing Movement: Thoracic Cavity Expansion, Intercostal Muscles & Diaphragm Motion',
+      'Neural Motor Signaling: Synaptic Impulses Driving Skeletal Muscle Action'
+    ],
+    features: [
+      'Layered Interactive Controls: Breathing Ribcage, Neural Signals, Flex/Extend, Blood Flow',
+      'Clickable Anatomical Hotspots with Real-Time Organ Highlights and Clinical Explanations',
+      'Antagonistic Muscular Action Phase Tracker with Smooth Dynamic Animations',
+      'Built-In Skeletal & Muscular Knowledge Evaluation Quiz'
+    ],
+    gradeLevel: 'Class 6, 7, 8, 9 & 10 (General Science & Secondary Biology)'
+  },
+  {
+    id: 'sim-ecosystem-environment-simulation',
+    slug: 'ecosystem-environment-simulation',
+    indexNumber: '131',
+    title: 'Ecosystem & Environment: Energy Flow, Food Chains & Biomes',
+    subject: 'Ecology & Environmental Biology (ماحولیاتی نظام اور ماحول)',
+    category: 'Biology & Life',
+    iconName: 'Trees',
+    accentColor: '#16a34a',
+    description: 'Dynamic ecological systems simulation visualizing biotic and abiotic interactions within a thriving biome. Observe solar radiant energy capture through primary producers (plants and trees), energy transfer across trophic levels to primary consumers (herbivores) and apex predators, nutrient recycling by soil decomposers (bacteria and fungi), and hydrological water cycle dynamics including evapotranspiration, precipitation, and groundwater percolation.',
+    fileUrl: '/simulations/ecosystem-environment-simulation.html',
+    topics: [
+      'Trophic Levels: Producers (Autotrophs), Primary & Secondary Consumers (Heterotrophs), Decomposers',
+      'Energy Flow & Thermodynamics: 10% Ecological Pyramid Rule and Heat Loss',
+      'Biogeochemical Cycling: Carbon-Oxygen Balance, Nitrogen Fixation & Hydrological Cycle',
+      'Abiotic vs Biotic Factors: Solar Insolation, Soil Chemistry, Temperature & Organisms',
+      'Food Webs & Ecosystem Stability: Producer-Herbivore-Predator Equilibrium'
+    ],
+    features: [
+      'Interactive Environmental Process Toggles: Sunlight, Rain, Photosynthesis, Food Chain',
+      'Animated Nutrient Decomposition & Stream Evaporation Dynamics',
+      'Trophic Level Energy Transfer Visualizer with Dynamic Carbon/Oxygen Particle Vectors',
+      'Self-Paced Ecological Knowledge Quiz & Interactive Environmental Exploration'
+    ],
+    gradeLevel: 'Class 5, 6, 7, 8 & 9 (Elementary & Middle Science, General Biology)'
+  },
+  {
+    id: 'sim-flower-simulation',
+    slug: 'flower-simulation',
+    indexNumber: '132',
+    title: 'Parts of a Flower: Anatomy, Pollination & Fertilization',
+    subject: 'Botany & Plant Reproduction (پھول کے حصے اور زیرگی کا عمل)',
+    category: 'Biology & Life',
+    iconName: 'Flower2',
+    accentColor: '#ec4899',
+    description: 'Comprehensive botanical laboratory exploring the reproductive anatomy of flowering angiosperms. Inspect floral whorls including Calyx (Sepals), Corolla (Petals), Androecium (Male Stamen: Anther and Filament with Pollen Grains), and Gynoecium (Female Pistil/Carpel: Stigma, Style, Ovary, and Ovules). Observe the step-by-step entomophilous insect pollination process, pollen tube elongation through the style, and double fertilization yielding seeds and fruit.',
+    fileUrl: '/simulations/flower-simulation.html',
+    topics: [
+      'Floral Anatomy & 4 Main Whorls: Calyx (Sepals), Corolla (Petals), Stamen & Pistil',
+      'Male Reproductive Structure (Androecium): Anther Pollen Sacs, Microspores & Filament',
+      'Female Reproductive Structure (Gynoecium): Sticky Stigma, Elongated Style & Ovary with Ovules',
+      'Pollination Vectors: Insect / Bee Pollination vs Wind Pollination Mechanics',
+      'Fertilization Pathway: Pollen Grain Germination, Pollen Tube Growth & Zygote Formation'
+    ],
+    features: [
+      'Interactive Anatomical Part Selector with Spotlight Canvas Focus',
+      'Animated Bee Flight & Pollen Transfer Simulation Sequence',
+      'Pollen Tube Germination & Seed Fertilization Animated Microscope View',
+      'Integrated Flower Anatomy & Pollination Interactive Comprehension Quiz'
+    ],
+    gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary & Middle School Science, Botany)'
   }
 ];
-
-
-
