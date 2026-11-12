@@ -33,6 +33,7 @@ import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
 import { DisciplineCatalogHoverImage } from './DisciplineCatalogHoverImage';
+import { ChemistryBiologySlider } from './ChemistryBiologySlider';
 
 import { 
   MultiStemAllIcon, 
@@ -1103,9 +1104,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 const hasMore = panelSims.length > 8 && !isExpanded;
 
                 return (
-                  <div
-                    key={panel.key}
-                    id={`subject-panel-${panel.key.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  <React.Fragment key={panel.key}>
+                    <div
+                      id={`subject-panel-${panel.key.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
                     className={`subject-panel-horizontal ${panelReveal}`}
                     style={{
                       '--subject-color': panel.color,
@@ -1258,7 +1259,11 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         )}
                       </div>
                     )}
-                  </div>
+                    </div>
+                    {panel.key === 'Chemistry & Matter' && isAllCategory && !searchTerm && (
+                      <ChemistryBiologySlider />
+                    )}
+                  </React.Fragment>
                 );
               })}
           </div>
