@@ -2811,5 +2811,80 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Full Screen Classroom Presentation Mode'
     ],
     gradeLevel: 'Class 5, 6, 7, 8 & 9 (Elementary, Middle & Secondary School Science)'
+  },
+  {
+    id: 'sim-push-and-pull-forces',
+    slug: 'push-and-pull-forces',
+    indexNumber: '145',
+    title: 'Push and Pull Forces',
+    subject: 'Classical Mechanics & Forces (طبیعیات - دھکیلنا اور کھینچنا، حرکت اور شکل میں تبدیلی)',
+    category: 'Physics & Motion',
+    iconName: 'Gauge',
+    accentColor: '#e11d48',
+    description: 'Interactive 3D-tilt force laboratory demonstrating how push and pull forces act on objects in everyday physics. Experiment with five live force demonstrations: pushing a wooden crate across a floor with dust and motion streaks, pulling a loaded wagon, changing a moving ball’s speed (acceleration and deceleration), changing direction along curved Bézier trajectories, and changing elastic object shape through compression and deformation.',
+    fileUrl: '/assets/aistudio/push_pull_forces_simulation_a960a058.html',
+    topics: [
+      'Push Force: Moving Stationary Objects Forward',
+      'Pull Force: Drawing Objects Toward a Source of Force',
+      'Effects of Force on Speed (Acceleration & Deceleration)',
+      'Effects of Force on Direction of Motion (Curved Trajectories)',
+      'Effects of Force on Shape (Compression & Elastic Deformation)'
+    ],
+    features: [
+      '5 Interactive Force Modes: Push, Pull, Change Speed, Change Direction & Change Shape',
+      '1536×1024 High-Resolution 3D-Tilt Interactive Stage',
+      'Live Animated Crate, Wagon & Elastic Ball Physics with Dust & Trajectory Trails',
+      'Reset & Classroom Full Screen Presentation Mode'
+    ],
+    gradeLevel: 'Class 3, 4, 5, 6 & 7 (Primary, Elementary & Middle School Science)'
+  },
+  {
+    id: 'sim-soluble-vs-insoluble-substances',
+    slug: 'soluble-vs-insoluble-substances',
+    indexNumber: '146',
+    title: 'Soluble vs. Insoluble Substances',
+    subject: 'Mixtures, Solutions & Solubility (کیمسٹری - حل پذیر اور غیر حل پذیر اشیاء)',
+    category: 'Chemistry & Matter',
+    iconName: 'FlaskConical',
+    accentColor: '#0284c7',
+    description: 'Side-by-side interactive chemistry beaker experiment comparing soluble and insoluble substances in water across four laboratory glasses. Pour particles into each glass and observe real-time pouring physics: soluble solids swirl, diffuse, and dissolve smoothly into uniform solutions with subtle haze, whereas insoluble solids sink under gravity and settle into realistic sediment mounds at the bottom.',
+    fileUrl: '/assets/aistudio/Soluble_vs._Insoluble_Substances_6a5e4f0a.html',
+    topics: [
+      'Soluble Substances: Dissolution & Homogeneous Mixture Formation',
+      'Insoluble Substances: Settling, Sedimentation & Heterogeneous Mixtures',
+      'Solute-Solvent Particle Dispersion vs. Gravity Settling',
+      'Comparative Water Solubility Testing Across 4 Substances'
+    ],
+    features: [
+      '4 Side-by-Side Glass Beakers on a 3D-Tilt Laboratory Stage',
+      'Animated Particle Pouring, Swirling Dispersion & Sediment Accumulation Physics',
+      'One-Click Pour, Reset & Full Screen Classroom Controls'
+    ],
+    gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary, Elementary & Middle School Science & Chemistry)'
+  },
+  {
+    id: 'sim-states-of-matter-solid-liquid-gas',
+    slug: 'states-of-matter-solid-liquid-gas',
+    indexNumber: '147',
+    title: 'States of Matter - Solid, Liquid and Gas',
+    subject: 'States of Matter & Particle Theory (کیمسٹری - مادے کی حالتیں: ٹھوس، مائع اور گیس)',
+    category: 'Chemistry & Matter',
+    iconName: 'Thermometer',
+    accentColor: '#0ea5e9',
+    description: 'Comprehensive dual-view thermal physics and particle theory laboratory exploring Solid, Liquid, and Gas states of matter. Observe a real-world object (Ice Cubes, Glass of Water, or Steaming Kettle) alongside a live zoomed-in particle model and thermometer (−30°C to 140°C) as you heat, cool, melt, freeze, boil, or condense water across the 0°C and 100°C phase transition points.',
+    fileUrl: '/assets/aistudio/states-of-matter_f8dcefbe.html',
+    topics: [
+      'Three States of Matter: Solid, Liquid & Gas Properties',
+      'Particle Arrangement, Spacing, Kinetic Energy & Intermolecular Forces',
+      'Phase Transitions: Melting (0°C), Freezing, Boiling (100°C) & Condensation',
+      'Shape & Volume Comparison Across States of Matter'
+    ],
+    features: [
+      'Synchronized Dual Canvas: Real Object View (Ice/Water/Kettle) & Zoomed-In Particle View',
+      'Live Interactive Thermometer (−30°C to 140°C) with 0°C & 100°C Transition Markers',
+      'Full Control Deck: Solid/Liquid/Gas Presets, Heat/Cool, Melt/Freeze/Boil/Condense, Speed & Particle Count',
+      'Dynamic State Info Panel, Optional Labels Toggle, Reset & Full Screen Mode'
+    ],
+    gradeLevel: 'Class 3, 4, 5, 6, 7 & 8 (Primary, Elementary & Middle School Science & Chemistry)'
   }
 ];

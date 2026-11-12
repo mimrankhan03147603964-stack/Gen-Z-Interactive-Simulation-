@@ -136,7 +136,10 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-hydrocarbons-functional-groups-3d': 141,
   'sim-immune-response-simulation': 142,
   'sim-parts-of-flowering-plant': 117,
-  'sim-photosynthesis-process-simulation': 62
+  'sim-photosynthesis-process-simulation': 62,
+  'sim-push-and-pull-forces': 9,
+  'sim-soluble-vs-insoluble-substances': 8,
+  'sim-states-of-matter-solid-liquid-gas': 13
 };
 
 /**

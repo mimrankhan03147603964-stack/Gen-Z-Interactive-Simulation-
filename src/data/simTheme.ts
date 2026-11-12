@@ -1959,6 +1959,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ecfdf5',
     tagText: '#059669',
     glowColor: 'rgba(16, 185, 129, 0.45)'
+  },
+  '145': {
+    id: '145',
+    name: 'Push and Pull Forces',
+    bgSolid: '#e11d48',
+    bgGradient: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%)',
+    borderColor: '#fda4af',
+    iconBg: '#881337',
+    iconBorder: '#fb7185',
+    iconColor: '#ffffff',
+    badgeBg: '#ffe4e6',
+    badgeText: '#9f1239',
+    badgeBorder: '#fda4af',
+    tagBg: '#fff1f2',
+    tagText: '#e11d48',
+    glowColor: 'rgba(225, 29, 72, 0.45)'
+  },
+  '146': {
+    id: '146',
+    name: 'Soluble vs. Insoluble Substances',
+    bgSolid: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%)',
+    borderColor: '#7dd3fc',
+    iconBg: '#0c4a6e',
+    iconBorder: '#38bdf8',
+    iconColor: '#ffffff',
+    badgeBg: '#e0f2fe',
+    badgeText: '#075985',
+    badgeBorder: '#7dd3fc',
+    tagBg: '#f0f9ff',
+    tagText: '#0284c7',
+    glowColor: 'rgba(2, 132, 199, 0.45)'
+  },
+  '147': {
+    id: '147',
+    name: 'States of Matter - Solid, Liquid and Gas',
+    bgSolid: '#0ea5e9',
+    bgGradient: 'linear-gradient(135deg, #22d3ee 0%, #0ea5e9 50%, #0369a1 100%)',
+    borderColor: '#67e8f9',
+    iconBg: '#164e63',
+    iconBorder: '#22d3ee',
+    iconColor: '#ffffff',
+    badgeBg: '#cffafe',
+    badgeText: '#155e75',
+    badgeBorder: '#67e8f9',
+    tagBg: '#ecfeff',
+    tagText: '#0891b2',
+    glowColor: 'rgba(14, 165, 233, 0.45)'
   }
 };
 
