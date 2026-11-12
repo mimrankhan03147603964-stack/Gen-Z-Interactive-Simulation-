@@ -2759,5 +2759,57 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Interactive Optical Magnifier Lens (3x Zoom), 3D Tilt & Full Screen Mode'
     ],
     gradeLevel: 'Class 10, 11 & 12 (Secondary SSC & Pre-Medical F.Sc HSSC)'
+  },
+  {
+    id: 'sim-parts-of-flowering-plant',
+    slug: 'parts-of-flowering-plant',
+    indexNumber: '143',
+    title: 'Parts of a Typical Flowering Plant - Interactive Simulation',
+    subject: 'Botany & Plant Anatomy (نباتیات - پھول دار پودے کے حصے اور افعال)',
+    category: 'Biology & Life',
+    iconName: 'Flower2',
+    accentColor: '#16a34a',
+    description: 'Interactive botanical anatomy simulation exploring the six essential organs of a typical flowering plant: Flower (pollination with visiting bees and butterflies), Leaves (photosynthesis absorbing sunlight and CO₂ and releasing O₂), Stem (xylem water ascent and phloem food transport), Roots (anchorage and water/mineral absorption), Fruit (seed protection and dispersal), and Seeds (germination and sprouting). Click hotspots or pill labels to focus, trigger live particle animations, explore detailed fact boxes, or launch the Guided Tour.',
+    fileUrl: '/assets/aistudio/Parts_of_Flowering_Plant_ce973088.html',
+    topics: [
+      'Flower Structure & Insect Pollination (Pollen, Bees & Butterflies)',
+      'Leaf Photosynthesis: Sunlight, Chlorophyll, CO₂ Intake & O₂ Release',
+      'Stem Vascular Transport: Xylem (Water Up) & Phloem (Food Down)',
+      'Root System: Soil Anchorage, Root Hairs, Water & Mineral Absorption',
+      'Fruit Protection & Seed Germination / Sprouting'
+    ],
+    features: [
+      '6 Interactive Plant Organ Hotspots & Clickable Label Pills',
+      'Live Animated Particle Effects (Pollination, Xylem/Phloem Flow, Sprouting)',
+      'Automated Guided Tour, Reset & Full Screen Modes',
+      'Detailed Info Panel with Role Breakdown, Live Activity Chips & Fun Facts'
+    ],
+    gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary, Elementary & Middle School Science)'
+  },
+  {
+    id: 'sim-photosynthesis-process-simulation',
+    slug: 'photosynthesis-process-simulation',
+    indexNumber: '144',
+    title: 'Photosynthesis Process Simulation',
+    subject: 'Plant Biology & Bioenergetics (نباتاتی حیاتیات - ضیائی تالیف کا عمل)',
+    category: 'Biology & Life',
+    iconName: 'Sun',
+    accentColor: '#1f8a3b',
+    description: 'Step-by-step interactive 3D-perspective simulation illustrating how green plants make their own food through photosynthesis (6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂). Follow five animated stages: Step 1 (Sunlight captured by chlorophyll), Step 2 (Carbon Dioxide entering through leaf stomata), Step 3 (Water absorbed by roots and transported up the stem), Step 4 (Oxygen released into the air), and Step 5 (Glucose sugar produced to nourish the plant).',
+    fileUrl: '/assets/aistudio/photosynthesis-simulation_d5b606e1.html',
+    topics: [
+      'Photosynthesis Equation: 6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂',
+      'Solar Energy Capture by Chlorophyll Pigment in Leaves',
+      'Stomatal Gas Exchange (CO₂ Intake & O₂ Release)',
+      'Root Water Absorption & Upward Stem Transport',
+      'Glucose (C₆H₁₂O₆) Synthesis & Plant Nutrition'
+    ],
+    features: [
+      '5-Step Interactive Animated Progression with Visual Highlighting',
+      'Animated Particle Streams for Sunlight, CO₂, H₂O, O₂ & Glucose',
+      'Interactive 3D Perspective Stage with Start/Pause, Next Step & Reset',
+      'Full Screen Classroom Presentation Mode'
+    ],
+    gradeLevel: 'Class 5, 6, 7, 8 & 9 (Elementary, Middle & Secondary School Science)'
   }
 ];

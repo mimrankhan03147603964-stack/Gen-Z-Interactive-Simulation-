@@ -134,7 +134,9 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-newtons-third-law-simulation': 9,
   'sim-anatomy-of-human-brain-simulation': 140,
   'sim-hydrocarbons-functional-groups-3d': 141,
-  'sim-immune-response-simulation': 142
+  'sim-immune-response-simulation': 142,
+  'sim-parts-of-flowering-plant': 117,
+  'sim-photosynthesis-process-simulation': 62
 };
 
 /**

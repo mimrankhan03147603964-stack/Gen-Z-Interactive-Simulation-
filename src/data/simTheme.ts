@@ -1927,6 +1927,38 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ecfdf5',
     tagText: '#059669',
     glowColor: 'rgba(5, 150, 105, 0.45)'
+  },
+  '143': {
+    id: '143',
+    name: 'Parts of a Typical Flowering Plant - Interactive Simulation',
+    bgSolid: '#16a34a',
+    bgGradient: 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%)',
+    borderColor: '#86efac',
+    iconBg: '#14532d',
+    iconBorder: '#4ade80',
+    iconColor: '#ffffff',
+    badgeBg: '#dcfce7',
+    badgeText: '#166534',
+    badgeBorder: '#86efac',
+    tagBg: '#f0fdf4',
+    tagText: '#16a34a',
+    glowColor: 'rgba(22, 163, 74, 0.45)'
+  },
+  '144': {
+    id: '144',
+    name: 'Photosynthesis Process Simulation',
+    bgSolid: '#059669',
+    bgGradient: 'linear-gradient(135deg, #34d399 0%, #059669 50%, #047857 100%)',
+    borderColor: '#6ee7b7',
+    iconBg: '#064e3b',
+    iconBorder: '#10b981',
+    iconColor: '#ffffff',
+    badgeBg: '#d1fae5',
+    badgeText: '#065f46',
+    badgeBorder: '#6ee7b7',
+    tagBg: '#ecfdf5',
+    tagText: '#059669',
+    glowColor: 'rgba(16, 185, 129, 0.45)'
   }
 };
 
