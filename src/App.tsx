@@ -12,6 +12,7 @@ import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ScrollReveal } from './components/ScrollReveal';
 import { FutureStemHoverImage } from './components/FutureStemHoverImage';
 import { LabRoadmapHoverImage } from './components/LabRoadmapHoverImage';
+import { StemRepositorySlider } from './components/StemRepositorySlider';
 
 // Lazy-load secondary views and modals to keep initial bundle ultra-light on Vercel
 const PedagogicalHub = React.lazy(() => import('./components/PedagogicalHub').then(m => ({ default: m.PedagogicalHub })));
@@ -505,28 +506,31 @@ export default function App() {
 
           {currentView === 'catalog' && (
             /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW */
-            <div className="space-y-6">
-              <SectionViewHeader 
-                badge="STEM REPOSITORY"
-                title="Simulations"
-                subtitle={`Curriculum-aligned interactive digital experiments across 10 disciplines (${allSimulations.length} Modules)`}
-                onBack={handleBackToHome}
-              />
-              <SimulationCatalogGrid
-                simulations={allSimulations}
-                selectedCategory={selectedSubject}
-                onSelectCategory={(cat) => setSelectedSubject(cat)}
-                selectedGradeTier={selectedGradeTier}
-                onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
-                onSelectSim={handleSelectSim}
-                onLaunchOnStage={handleLaunchOnStage}
-                onTriggerAiGeneration={handleTriggerAiGeneration}
-                isGeneratingAi={isGeneratingAi}
-                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                isDarkMode={isDarkMode}
-                isHomeView={false}
-                onBackToHome={handleBackToHome}
-              />
+            <div>
+              <StemRepositorySlider />
+              <div className="space-y-6">
+                <SectionViewHeader 
+                  badge="STEM REPOSITORY"
+                  title="Simulations"
+                  subtitle={`Curriculum-aligned interactive digital experiments across 10 disciplines (${allSimulations.length} Modules)`}
+                  onBack={handleBackToHome}
+                />
+                <SimulationCatalogGrid
+                  simulations={allSimulations}
+                  selectedCategory={selectedSubject}
+                  onSelectCategory={(cat) => setSelectedSubject(cat)}
+                  selectedGradeTier={selectedGradeTier}
+                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                  onSelectSim={handleSelectSim}
+                  onLaunchOnStage={handleLaunchOnStage}
+                  onTriggerAiGeneration={handleTriggerAiGeneration}
+                  isGeneratingAi={isGeneratingAi}
+                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                  isDarkMode={isDarkMode}
+                  isHomeView={false}
+                  onBackToHome={handleBackToHome}
+                />
+              </div>
             </div>
           )}
 
