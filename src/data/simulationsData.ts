@@ -2681,5 +2681,83 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Launch Rocket, Release Balloon, Reset & Full Screen'
     ],
     gradeLevel: 'Class 8, 9 & 11 (Middle, Secondary SSC & High School)'
+  },
+  {
+    id: 'sim-anatomy-of-human-brain-simulation',
+    slug: 'anatomy-of-human-brain-simulation',
+    indexNumber: '140',
+    title: 'Anatomy of the Human Brain Simulation',
+    subject: 'Neurobiology & Human Physiology (انسانی دماغ کی ساخت اور افعال)',
+    category: 'Biology & Life',
+    iconName: 'Brain',
+    accentColor: '#db2777',
+    description: 'Interactive guided 8-step anatomical laboratory exploring the major regions and neural pathways of the Human Brain. Examine the Cerebrum (thinking, memory, and voluntary actions), Thalamus (sensory relay station), Midbrain (motor coordination and neural connections), Hypothalamus (thermoregulation, hunger, thirst, and hormones), Pons (inter-region bridge), Cerebellum (balance, posture, and precision coordination), and Medulla Oblongata (breathing, heart rate, and vital autonomic functions). Includes glowing structural highlights, ascending brainstem signal flow animations, 3D tilt perspective, and step-by-step tour controls.',
+    fileUrl: '/assets/aistudio/brain-simulation_5e9ad25f.html',
+    topics: [
+      'Cerebrum: Thinking, Memory, Intelligence & Voluntary Actions',
+      'Thalamus & Hypothalamus: Sensory Relay, Thermoregulation & Hormones',
+      'Brainstem Anatomy: Midbrain, Pons & Medulla Oblongata (Vital Functions)',
+      'Cerebellum: Balance, Posture & Fine Motor Coordination',
+      'Neural Signal Flow: Ascending Brainstem-to-Cerebrum Pathways'
+    ],
+    features: [
+      'Interactive 8-Step Guided Anatomical Tour with Color-Coded Brain Regions',
+      'Real-Time Neural Signal Flow Animation Through Brainstem & Thalamus',
+      '3D Perspective Stage with Glowing Structural Spotlight & Callout Arrows',
+      'Start/Pause, Next Step, Reset & Full Screen Immersion Controls'
+    ],
+    gradeLevel: 'Class 8, 9, 10 & 11 (Middle, Secondary SSC & Pre-Medical HSSC)'
+  },
+  {
+    id: 'sim-hydrocarbons-functional-groups-3d',
+    slug: 'hydrocarbons-functional-groups-3d',
+    indexNumber: '141',
+    title: 'Hydrocarbons and Functional Groups - 3D Models',
+    subject: 'Organic Chemistry & Molecular Geometry (آرگینک کیمسٹری - ہائیڈرو کاربنز اور فنکشنل گروپس)',
+    category: 'Chemistry & Matter',
+    iconName: 'FlaskConical',
+    accentColor: '#9333ea',
+    description: 'Interactive 3D organic chemistry molecular modeling workbench covering 16 essential hydrocarbons and functional group compounds across Alkanes (Methane, Ethane, Propane, Butane, Pentane), Alkenes (Ethene, Propene, 1-Butene), Alkynes (Ethyne, Propyne, 1-Butyne), Alcohols (Methanol, Ethanol), Aldehydes (Ethanal), Ketones (Propanone), and Carboxylic Acids (Ethanoic Acid). Rotate 3D molecules in Ball & Stick, Space Filling, Stick, or Wireframe modes, inspect bond angles (109.5°, 120°, 180°), explode bonds, trigger combustion ("Burn It") with balanced equations, demonstrate hydrogenation ("Add Hydrogen") on unsaturated bonds, explore real-life everyday objects, and practice with the built-in Quick Quiz.',
+    fileUrl: '/assets/aistudio/hydrocarbons_functional_groups_3d_eb6404d4.html',
+    topics: [
+      'Alkanes (CₙH₂ₙ₊₂): Saturated Single Bonds & Tetrahedral Geometry (109.5°)',
+      'Alkenes (CₙH₂ₙ) & Alkynes (CₙH₂ₙ₋₂): Double/Triple Bonds & Hydrogenation',
+      'Functional Groups: Alcohols (–OH), Aldehydes (–CHO), Ketones (–CO–) & Carboxylic Acids (–COOH)',
+      'Hydrocarbon Combustion Reactions & Balanced Chemical Equations',
+      '3D Molecular Hybridization (sp³, sp², sp) & Real-Life Applications'
+    ],
+    features: [
+      '16 Interactive 3D Molecules Across Alkanes, Alkenes, Alkynes & Functional Groups',
+      '4 Visualization Modes: Ball & Stick, Space Filling, Stick & Wireframe',
+      'Interactive Combustion ("Burn It") & Unsaturated Hydrogenation ("Add Hydrogen")',
+      'Real-Life Object Visualizer, Bond Angle Explorer & Built-In Quick Quiz'
+    ],
+    gradeLevel: 'Class 10, 11 & 12 (Secondary Matric SSC-II & F.Sc HSSC)'
+  },
+  {
+    id: 'sim-immune-response-simulation',
+    slug: 'immune-response-simulation',
+    indexNumber: '142',
+    title: 'Cell-Mediated vs. Humoral Immune Response',
+    subject: 'Immunology & Human Physiology (مدافعتی نظام - سیل میڈی ایٹڈ اور ہیومورل ریسپانس)',
+    category: 'Biology & Life',
+    iconName: 'ShieldCheck',
+    accentColor: '#059669',
+    description: 'Interactive immunology simulation comparing the two branches of adaptive immunity: Cell-Mediated Immune Response (Helper T-Cells activating immune defenses and Cytotoxic T-Cells directly attacking and killing virus-infected cells) and Humoral Immune Response (B-Plasma Cells producing Y-shaped Antibodies that circulate in blood and neutralize extracellular pathogens). Also explore Memory Cells providing long-term immunological memory. Includes clickable anatomical hotspots with smooth zoom, animated antibody and cytokine particle trails, Auto Tour mode, interactive Magnifier lens, 3D tilt perspective, and Full Screen immersion.',
+    fileUrl: '/assets/aistudio/Immune_Response_Simulation_d01d599b.html',
+    topics: [
+      'Cell-Mediated Immunity: Helper T-Cells & Cytotoxic T-Cells Action',
+      'Destruction of Virus-Infected Host Cells by Cytotoxic T-Lymphocytes',
+      'Humoral Immunity: B-Plasma Cells & Y-Shaped Antibody Secretion',
+      'Pathogen Neutralization & Antigen-Antibody Binding in Blood',
+      'Immunological Memory: Long-Term Protection via Memory Cells'
+    ],
+    features: [
+      'Interactive Split-View Comparing Cell-Mediated & Humoral Immunity Pathways',
+      'Animated Cytokine Signals, Pulsing Cellular Targets & Flowing Y-Antibodies',
+      'Clickable Hotspots with Smooth Regional Zoom & Automated Guided Tour',
+      'Interactive Optical Magnifier Lens (3x Zoom), 3D Tilt & Full Screen Mode'
+    ],
+    gradeLevel: 'Class 10, 11 & 12 (Secondary SSC & Pre-Medical F.Sc HSSC)'
   }
 ];

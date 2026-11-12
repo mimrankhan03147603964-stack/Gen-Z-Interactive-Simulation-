@@ -1879,6 +1879,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#f5f3ff',
     tagText: '#7c3aed',
     glowColor: 'rgba(124, 58, 237, 0.45)'
+  },
+  '140': {
+    id: '140',
+    name: 'Anatomy of the Human Brain Simulation',
+    bgSolid: '#db2777',
+    bgGradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #9d174d 100%)',
+    borderColor: '#f9a8d4',
+    iconBg: '#831843',
+    iconBorder: '#f472b6',
+    iconColor: '#ffffff',
+    badgeBg: '#fce7f3',
+    badgeText: '#9d174d',
+    badgeBorder: '#f9a8d4',
+    tagBg: '#fdf2f8',
+    tagText: '#db2777',
+    glowColor: 'rgba(219, 39, 119, 0.45)'
+  },
+  '141': {
+    id: '141',
+    name: 'Hydrocarbons & Functional Groups 3D',
+    bgSolid: '#9333ea',
+    bgGradient: 'linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #6b21a8 100%)',
+    borderColor: '#d8b4fe',
+    iconBg: '#581c87',
+    iconBorder: '#c084fc',
+    iconColor: '#ffffff',
+    badgeBg: '#f3e8ff',
+    badgeText: '#6b21a8',
+    badgeBorder: '#d8b4fe',
+    tagBg: '#faf5ff',
+    tagText: '#9333ea',
+    glowColor: 'rgba(147, 51, 234, 0.45)'
+  },
+  '142': {
+    id: '142',
+    name: 'Cell-Mediated vs. Humoral Immune Response',
+    bgSolid: '#059669',
+    bgGradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #065f46 100%)',
+    borderColor: '#6ee7b7',
+    iconBg: '#064e3b',
+    iconBorder: '#34d399',
+    iconColor: '#ffffff',
+    badgeBg: '#d1fae5',
+    badgeText: '#065f46',
+    badgeBorder: '#6ee7b7',
+    tagBg: '#ecfdf5',
+    tagText: '#059669',
+    glowColor: 'rgba(5, 150, 105, 0.45)'
   }
 };
 

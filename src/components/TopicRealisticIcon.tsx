@@ -131,7 +131,10 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-life-cycle-simulation': 134,
   'sim-newtons-first-law-simulation': 9,
   'sim-newtons-second-law-simulation': 5,
-  'sim-newtons-third-law-simulation': 9
+  'sim-newtons-third-law-simulation': 9,
+  'sim-anatomy-of-human-brain-simulation': 140,
+  'sim-hydrocarbons-functional-groups-3d': 141,
+  'sim-immune-response-simulation': 142
 };
 
 /**
@@ -3127,6 +3130,96 @@ export const TopicRealisticIcon: React.FC<TopicRealisticIconProps> = ({
           <path d="M33 20 Q36 15 39 14" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" />
           {/* Developing Egg / Chick Embryo at bottom */}
           <ellipse cx="32" cy="49" rx="5" ry="6.5" fill="url(#eggGrad)" stroke="#fde047" strokeWidth="1" />
+        </svg>
+      );
+
+    // 140: Anatomy of the Human Brain Simulation
+    case 140:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="brainCerebrum" x1="12" y1="12" x2="52" y2="42" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f472b6" />
+              <stop offset="55%" stopColor="#ec4899" />
+              <stop offset="100%" stopColor="#be185d" />
+            </linearGradient>
+            <linearGradient id="brainCerebellum" x1="34" y1="38" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#a855f7" />
+              <stop offset="100%" stopColor="#6b21a8" />
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="12" fill="#1e1b4b" stroke="#f472b6" strokeWidth="1.5" />
+          {/* Brainstem (Midbrain, Pons, Medulla) */}
+          <path d="M29 40 V54 H35 V42" fill="#fb923c" stroke="#fed7aa" strokeWidth="1" />
+          {/* Cerebellum */}
+          <ellipse cx="41" cy="43" rx="8" ry="6" fill="url(#brainCerebellum)" stroke="#e9d5ff" strokeWidth="1" />
+          <path d="M36 43 H46 M37 40 H45 M37 46 H45" stroke="#f3e8ff" strokeWidth="0.9" opacity="0.7" />
+          {/* Cerebrum Lobes */}
+          <path d="M16 34 C13 24 20 14 32 14 C44 14 51 22 49 33 C48 39 42 41 36 39 C30 41 18 41 16 34 Z" fill="url(#brainCerebrum)" stroke="#fbcfe8" strokeWidth="1.2" />
+          {/* Cortical Gyri Folds & Glowing Neural Relay Dots */}
+          <path d="M22 22 Q27 18 32 23 Q37 18 42 23 M20 30 Q26 26 31 31 Q37 26 43 31" stroke="#fdf2f8" strokeWidth="1.3" strokeLinecap="round" opacity="0.8" />
+          <circle cx="32" cy="30" r="2.2" fill="#38bdf8" />
+          <circle cx="32" cy="48" r="1.6" fill="#facc15" />
+        </svg>
+      );
+
+    // 141: Hydrocarbons and Functional Groups - 3D Models
+    case 141:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="carbonAtom" cx="28" cy="28" r="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#94a3b8" />
+              <stop offset="100%" stopColor="#1e293b" />
+            </radialGradient>
+            <radialGradient id="oxygenAtomFg" cx="46" cy="20" r="8" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#f87171" />
+              <stop offset="100%" stopColor="#991b1b" />
+            </radialGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="12" fill="#0f172a" stroke="#a855f7" strokeWidth="1.5" />
+          {/* Double Bond C=C / C=O */}
+          <line x1="20" y1="36" x2="36" y2="26" stroke="#cbd5e1" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="22" y1="40" x2="38" y2="30" stroke="#cbd5e1" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Single Bonds to H & O */}
+          <line x1="20" y1="38" x2="14" y2="26" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="20" y1="38" x2="18" y2="50" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="37" y1="28" x2="48" y2="20" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="37" y1="28" x2="46" y2="44" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Carbon Spheres */}
+          <circle cx="20" cy="38" r="7" fill="url(#carbonAtom)" stroke="#e2e8f0" strokeWidth="1" />
+          <text x="20" y="40.5" fill="#ffffff" fontSize="6.5" fontWeight="900" textAnchor="middle">C</text>
+          <circle cx="37" cy="28" r="7" fill="url(#carbonAtom)" stroke="#e2e8f0" strokeWidth="1" />
+          <text x="37" y="30.5" fill="#ffffff" fontSize="6.5" fontWeight="900" textAnchor="middle">C</text>
+          {/* Functional Group Oxygen Atom */}
+          <circle cx="48" cy="20" r="6" fill="url(#oxygenAtomFg)" stroke="#fecaca" strokeWidth="1" />
+          <text x="48" y="22.5" fill="#ffffff" fontSize="6" fontWeight="900" textAnchor="middle">O</text>
+          {/* Hydrogen Atoms */}
+          <circle cx="14" cy="24" r="4.2" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1" />
+          <circle cx="18" cy="50" r="4.2" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1" />
+          <circle cx="46" cy="44" r="4.2" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1" />
+        </svg>
+      );
+
+    // 142: Cell-Mediated vs. Humoral Immune Response
+    case 142:
+      return (
+        <svg viewBox="0 0 64 64" className={className} style={style} fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shieldImm" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#34d399" />
+              <stop offset="100%" stopColor="#047857" />
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="12" fill="#064e3b" stroke="#34d399" strokeWidth="1.5" />
+          {/* Protective Immune Shield */}
+          <path d="M32 12 L48 18 V30 C48 41 40 48 32 52 C24 48 16 41 16 30 V18 L32 12 Z" fill="url(#shieldImm)" fillOpacity="0.35" stroke="#6ee7b7" strokeWidth="2" />
+          {/* Y-Shaped Antibody Glyph */}
+          <path d="M32 42 V30 M32 30 L24 22 M32 30 L40 22" stroke="#38bdf8" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M22 24 L24 22 M42 24 L40 22" stroke="#7dd3fc" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Pathogen Spiked Virus Node & T-Cell Glow */}
+          <circle cx="20" cy="44" r="3.5" fill="#f43f5e" stroke="#fecdd3" strokeWidth="1" />
+          <circle cx="44" cy="44" r="3.5" fill="#a855f7" stroke="#e9d5ff" strokeWidth="1" />
         </svg>
       );
 
