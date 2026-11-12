@@ -1831,6 +1831,54 @@ export const SIM_COLOR_CONFIGS: Record<string, SimColorConfig> = {
     tagBg: '#ecfdf5',
     tagText: '#047857',
     glowColor: 'rgba(16, 185, 129, 0.45)'
+  },
+  '137': {
+    id: '137',
+    name: 'Newton\'s First Law – Simulation',
+    bgSolid: '#2563eb',
+    bgGradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%)',
+    borderColor: '#93c5fd',
+    iconBg: '#1e3a8a',
+    iconBorder: '#60a5fa',
+    iconColor: '#ffffff',
+    badgeBg: '#dbeafe',
+    badgeText: '#1e40af',
+    badgeBorder: '#93c5fd',
+    tagBg: '#eff6ff',
+    tagText: '#2563eb',
+    glowColor: 'rgba(37, 99, 235, 0.45)'
+  },
+  '138': {
+    id: '138',
+    name: 'Newton\'s Second Law – Simulation',
+    bgSolid: '#ea580c',
+    bgGradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
+    borderColor: '#fdba74',
+    iconBg: '#9a3412',
+    iconBorder: '#fb923c',
+    iconColor: '#ffffff',
+    badgeBg: '#ffedd5',
+    badgeText: '#9a3412',
+    badgeBorder: '#fdba74',
+    tagBg: '#fff7ed',
+    tagText: '#ea580c',
+    glowColor: 'rgba(234, 88, 12, 0.45)'
+  },
+  '139': {
+    id: '139',
+    name: 'Newton\'s Third Law - Simulation',
+    bgSolid: '#7c3aed',
+    bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #5b21b6 100%)',
+    borderColor: '#c4b5fd',
+    iconBg: '#4c1d95',
+    iconBorder: '#a78bfa',
+    iconColor: '#ffffff',
+    badgeBg: '#ede9fe',
+    badgeText: '#5b21b6',
+    badgeBorder: '#c4b5fd',
+    tagBg: '#f5f3ff',
+    tagText: '#7c3aed',
+    glowColor: 'rgba(124, 58, 237, 0.45)'
   }
 };
 

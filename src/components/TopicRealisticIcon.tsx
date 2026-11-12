@@ -128,7 +128,10 @@ const SIM_ID_TO_ICON_CASE: Record<string, number> = {
   'sim-ecosystem-environment-simulation': 131,
   'sim-flower-simulation': 132,
   'sim-herbivores-carnivores-omnivores-simulation': 133,
-  'sim-life-cycle-simulation': 134
+  'sim-life-cycle-simulation': 134,
+  'sim-newtons-first-law-simulation': 9,
+  'sim-newtons-second-law-simulation': 5,
+  'sim-newtons-third-law-simulation': 9
 };
 
 /**

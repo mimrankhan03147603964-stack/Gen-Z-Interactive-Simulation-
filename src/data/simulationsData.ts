@@ -2606,5 +2606,80 @@ export const SIMULATIONS_LIST: SimulationItem[] = [
       'Adjustable Animation Speed Slider & Audio FX Controls'
     ],
     gradeLevel: 'Class 4, 5, 6, 7 & 8 (Primary & Middle School General Science & Biology)'
+  },
+  {
+    id: 'sim-newtons-first-law-simulation',
+    slug: 'newtons-first-law-simulation',
+    indexNumber: '137',
+    title: 'Newton\'s First Law – Simulation',
+    subject: 'Classical Mechanics & Dynamics',
+    category: 'Physics & Motion',
+    iconName: 'Rocket',
+    accentColor: '#3b82f6',
+    description: 'Interactive physics simulation demonstrating Newton\'s First Law of Motion (Law of Inertia). Compare a stationary ball at rest (0.0 m/s) and a ball in uniform motion (2.2 m/s) when Net Force = 0, apply an external Net Force impulse to observe acceleration and rolling momentum, and control playback with Start/Pause, Apply Force, Reset, and Full Screen.',
+    fileUrl: '/assets/aistudio/newtons_first_law_simulation_68af871a.html',
+    topics: [
+      'Newton\'s First Law of Motion (Law of Inertia)',
+      'Objects at Rest vs. Uniform Velocity Motion',
+      'Equilibrium State (Net Force = 0)',
+      'Applied External Force & Change in Motion'
+    ],
+    features: [
+      'Dual-Ball Inertia Comparison Stage (0.0 m/s vs 2.2 m/s)',
+      'Interactive Apply Force Impulse Trigger',
+      'Live Velocity & Net Force Status Readout',
+      'Start/Pause, Reset & Full Screen Controls'
+    ],
+    gradeLevel: 'Class 8, 9 & 11 (Middle, Secondary SSC & High School)'
+  },
+  {
+    id: 'sim-newtons-second-law-simulation',
+    slug: 'newtons-second-law-simulation',
+    indexNumber: '138',
+    title: 'Newton\'s Second Law – Simulation',
+    subject: 'Classical Mechanics & Dynamics',
+    category: 'Physics & Motion',
+    iconName: 'Gauge',
+    accentColor: '#ea580c',
+    description: 'Interactive dynamics simulation of Newton\'s Second Law of Motion (F = ma). Observe an equal 100 N net force acting simultaneously on two vehicles of different mass: a lightweight Car (a = 5 m/s²) and a heavy Truck (a = 1 m/s²). Track elapsed time and instantaneous velocity readouts in real time with Start/Pause, Replay, Reset, and Full Screen.',
+    fileUrl: '/assets/aistudio/newtons_second_law_simulation_f0fc0b85.html',
+    topics: [
+      'Newton\'s Second Law of Motion (F = ma)',
+      'Inverse Relationship Between Mass & Acceleration',
+      'Constant 100 N Net Force Comparison (Car vs. Truck)',
+      'Kinematics & Velocity-Time Progression (v = at)'
+    ],
+    features: [
+      'Side-by-Side Car (5 m/s²) vs. Truck (1 m/s²) Acceleration Stage',
+      'Live Elapsed Time & Instantaneous Velocity Telemetry',
+      'Dynamic Speed Streaks & 3D Perspective Stage',
+      'Start/Pause, Replay, Reset & Full Screen Controls'
+    ],
+    gradeLevel: 'Class 8, 9 & 11 (Middle, Secondary SSC & High School)'
+  },
+  {
+    id: 'sim-newtons-third-law-simulation',
+    slug: 'newtons-third-law-simulation',
+    indexNumber: '139',
+    title: 'Newton\'s Third Law - Simulation',
+    subject: 'Classical Mechanics & Dynamics',
+    category: 'Physics & Motion',
+    iconName: 'Rocket',
+    accentColor: '#7c3aed',
+    description: 'Interactive physics simulation illustrating Newton\'s Third Law of Motion (Action = – Reaction: for every action, there is an equal and opposite reaction). Trigger the Rocket Example to watch downward exhaust gases propel the rocket upward, and the Balloon Example to see escaping air push the balloon upward, complete with Action and Reaction force callouts.',
+    fileUrl: '/assets/aistudio/newtons_third_law_simulation_6edcec34.html',
+    topics: [
+      'Newton\'s Third Law of Motion (Action = – Reaction)',
+      'Equal in Magnitude & Opposite in Direction Force Pairs',
+      'Rocket Exhaust Gas Propulsion Mechanics',
+      'Balloon Air Thrust & Reaction Motion'
+    ],
+    features: [
+      'Dual Interactive Demonstrations: Rocket & Balloon Examples',
+      'Animated Exhaust Gas, Smoke & Air Stream Particles',
+      'Illuminated Action & Reaction Force Callout Boxes',
+      'Launch Rocket, Release Balloon, Reset & Full Screen'
+    ],
+    gradeLevel: 'Class 8, 9 & 11 (Middle, Secondary SSC & High School)'
   }
 ];

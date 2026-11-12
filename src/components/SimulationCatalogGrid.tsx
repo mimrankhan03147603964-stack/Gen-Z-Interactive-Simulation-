@@ -1195,7 +1195,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                                               color: '#FFFFFF',
                                               borderColor: '#1546A8'
                                             }}
-                                            title={`Simulation #${sim.indexNumber} of 136`}
+                                            title={`Simulation #${sim.indexNumber} of ${activeSimulations.length}`}
                                           >
                                             #{sim.indexNumber}
                                           </span>
