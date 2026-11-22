@@ -117,16 +117,42 @@ function downlevelCssForLegacyBrowsers(css: string, filename: string, minify: bo
 }
 
 function legacyBrowserCssCompatPlugin(): Plugin {
+  let isServe = false;
+
   return {
     name: 'legacy-browser-css-compat',
     enforce: 'post',
+    configResolved(config) {
+      isServe = config.command === 'serve';
+    },
     transform(code, id) {
-      if (id.split('?')[0].endsWith('.css') && code.includes('@layer')) {
-        return {
-          code: downlevelCssForLegacyBrowsers(code, id, false),
-          map: null,
-        };
+      if (!isServe) return null;
+      const cleanId = id.split('?')[0];
+      if (!cleanId.endsWith('.css') || !code.includes('@layer')) return null;
+
+      try {
+        // In Vite dev mode, vite:css-post wraps CSS inside `const __vite__css = "..."`
+        const viteCssMatch = code.match(/const __vite__css = ("(?:\\.|[^"\\])*")/);
+        if (viteCssMatch) {
+          const rawCss = JSON.parse(viteCssMatch[1]) as string;
+          const lowered = downlevelCssForLegacyBrowsers(rawCss, cleanId, false);
+          return {
+            code: code.replace(viteCssMatch[1], JSON.stringify(lowered)),
+            map: null,
+          };
+        }
+
+        // Direct raw CSS request (e.g. ?direct) — ensure it's not JS module syntax
+        if (!code.includes('__vite__updateStyle') && !/^\s*(import|export)\s/m.test(code)) {
+          return {
+            code: downlevelCssForLegacyBrowsers(code, cleanId, false),
+            map: null,
+          };
+        }
+      } catch {
+        // Never block dev server on unexpected module wrapper shapes
       }
+      return null;
     },
     generateBundle(_options, bundle) {
       for (const [fileName, chunk] of Object.entries(bundle)) {
