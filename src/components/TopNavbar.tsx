@@ -620,7 +620,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onMouseLeave={handleMouseLeave}
               >
                 <div 
-                  className="w-[290px] sm:w-[325px] max-w-[calc(100vw-24px)] rounded-xl overflow-hidden select-none border shadow-2xl"
+                  className="w-[310px] sm:w-[375px] max-w-[calc(100vw-24px)] rounded-xl overflow-hidden select-none border shadow-2xl"
                   style={{
                     backgroundColor: '#1B2A5C',
                     border: '1.5px solid #F5A623',
@@ -650,7 +650,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                             e.stopPropagation();
                             handleClassSelect(item.classKey);
                           }}
-                          className={`w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] transition-colors cursor-pointer flex items-center justify-center ${
+                          className={`w-full text-center px-4 py-2.5 text-[13.5px] sm:text-[14px] whitespace-normal leading-snug transition-colors cursor-pointer flex items-center justify-center ${
                             isFirst 
                               ? 'font-bold text-[#F5A623] hover:bg-[#1546A8] hover:text-white' 
                               : 'font-semibold text-[#DBE4F7] hover:bg-[#1546A8] hover:text-white'

@@ -37,24 +37,25 @@ export const EMPTY_CLASS_MESSAGE =
 
 export const NAV_SIMULATION_CLASS_ITEMS: Array<{ label: string; classKey: SelectableClassKey }> = [
   { label: 'All Simulations', classKey: 'all' },
-  { label: 'Play Group', classKey: 'play-prep' },
-  { label: 'Prep', classKey: 'play-prep' },
-  { label: 'Class 1', classKey: 'class-1' },
-  { label: 'Class 2', classKey: 'class-2' },
-  { label: 'Class 3', classKey: 'class-3' },
-  { label: 'Class 4', classKey: 'class-4' },
-  { label: 'Class 5', classKey: 'class-5' },
-  { label: 'Class 6', classKey: 'class-6' },
-  { label: 'Class 7', classKey: 'class-7' },
-  { label: 'Class 8', classKey: 'class-8' },
-  { label: 'Class 9', classKey: 'class-9' },
-  { label: 'Class 10', classKey: 'class-10' },
-  { label: 'Class 11', classKey: 'class-11' },
-  { label: 'Class 12', classKey: 'class-12' },
-  { label: "Bachelor's", classKey: 'bachelors' },
-  { label: "Master's", classKey: 'masters' },
-  { label: 'MPhil', classKey: 'mphil' },
-  { label: 'PhD', classKey: 'phd' }
+  { label: 'Play Group – Early Childhood Education', classKey: 'play-prep' },
+  { label: 'Nursery – Early Childhood Education', classKey: 'play-prep' },
+  { label: 'Prep – Early Childhood Education', classKey: 'play-prep' },
+  { label: 'Class 1 – Primary', classKey: 'class-1' },
+  { label: 'Class 2 – Primary', classKey: 'class-2' },
+  { label: 'Class 3 – Primary', classKey: 'class-3' },
+  { label: 'Class 4 – Primary', classKey: 'class-4' },
+  { label: 'Class 5 – Primary', classKey: 'class-5' },
+  { label: 'Class 6 – Middle', classKey: 'class-6' },
+  { label: 'Class 7 – Middle', classKey: 'class-7' },
+  { label: 'Class 8 – Middle', classKey: 'class-8' },
+  { label: 'Class 9 – Secondary (Matric)', classKey: 'class-9' },
+  { label: 'Class 10 – Secondary (Matric)', classKey: 'class-10' },
+  { label: 'Class 11 – Higher Secondary (Intermediate, 1st Year)', classKey: 'class-11' },
+  { label: 'Class 12 – Higher Secondary (Intermediate, 2nd Year)', classKey: 'class-12' },
+  { label: "Bachelor's – BS / BA / BSc", classKey: 'bachelors' },
+  { label: "Master's – MA / MSc / MS", classKey: 'masters' },
+  { label: 'MPhil – Master of Philosophy', classKey: 'mphil' },
+  { label: 'PhD – Doctor of Philosophy', classKey: 'phd' }
 ];
 
 export function isEmptyClassKey(key: SelectableClassKey): key is EmptyClassKey {
