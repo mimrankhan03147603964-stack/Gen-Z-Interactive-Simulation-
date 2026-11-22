@@ -34,6 +34,13 @@ import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
 import { DisciplineCatalogHoverImage } from './DisciplineCatalogHoverImage';
 import { ChemistryBiologySlider } from './ChemistryBiologySlider';
+import {
+  CLASS_PANELS_CONFIG,
+  CURRICULUM_SUBJECT_META,
+  ClassLevelKey,
+  getSimulationClassAssignment
+} from '../data/curriculumClassMapping';
+import { scrollRevealEngine } from '../utils/scrollRevealManager';
 
 import { 
   MultiStemAllIcon, 
@@ -264,10 +271,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // Track expanded descriptions per card (collapsed by default for progressive disclosure)
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
 
-  // List Length & Scroll Controls: Collapsible Subject Panels & Compact Preview Mode
+  // List Length & Scroll Controls: Collapsible Class Panels & Quick Jump Class Filter
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
-  const [expandedSubjectItems, setExpandedSubjectItems] = useState<Record<string, boolean>>({});
-  const [compactMode, setCompactMode] = useState<boolean>(true);
+  const [selectedClassKey, setSelectedClassKey] = useState<'all' | ClassLevelKey>('all');
 
   const togglePanelCollapse = (key: string) => {
     setCollapsedPanels(prev => ({
@@ -278,7 +284,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
   const collapseAllPanels = () => {
     const allCollapsed: Record<string, boolean> = {};
-    SUBJECT_PANELS_CONFIG.forEach(p => {
+    CLASS_PANELS_CONFIG.forEach(p => {
       allCollapsed[p.key] = true;
     });
     setCollapsedPanels(allCollapsed);
@@ -288,12 +294,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     setCollapsedPanels({});
   };
 
-  const toggleSubjectItems = (key: string) => {
-    setExpandedSubjectItems(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollRevealEngine.scanAndObserve();
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [selectedClassKey, collapsedPanels]);
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
@@ -349,6 +355,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   ];
 
   const handleGradeTierChange = (tierKey: string) => {
+    setSelectedClassKey('all');
     if (onSelectGradeTier) {
       onSelectGradeTier(tierKey);
     } else {
@@ -360,6 +367,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const handleCategoryChange = (catKey: string) => {
+    setSelectedClassKey('all');
     if (catKey !== 'All Simulations') {
       const countInCurrentTier = activeSimulations.filter(s => s.category === catKey && matchesGradeTier(s, selectedGradeTier)).length;
       if (countInCurrentTier === 0) {
@@ -532,87 +540,39 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const isAllCategory = selectedCategory === 'All Simulations' || selectedCategory === 'All';
 
   // Two-tier filtered simulations: Grade Level Tier & STEM Subject Tier + Real-time Instant Search
-  const displayedSims = activeSimulations.filter(s => {
+  const baseDisplayedSims = activeSimulations.filter(s => {
     if (!matchesGradeTier(s, selectedGradeTier)) return false;
     if (!isAllCategory && s.category !== selectedCategory) return false;
     if (!matchesSearch(s)) return false;
     return true;
   });
 
-  const SUBJECT_PANELS_CONFIG = [
-    {
-      key: 'Physics & Motion',
-      name: 'Physics & Motion',
-      color: '#2563EB',
-      tint: 'rgba(37, 99, 235, 0.08)',
-      shadow: 'rgba(37, 99, 235, 0.35)',
-      icon: MultiPhysicsIcon
-    },
-    {
-      key: 'Chemistry & Matter',
-      name: 'Chemistry & Matter',
-      color: '#9333EA',
-      tint: 'rgba(147, 51, 234, 0.08)',
-      shadow: 'rgba(147, 51, 234, 0.35)',
-      icon: MultiChemistryIcon
-    },
-    {
-      key: 'Biology & Life',
-      name: 'Biology & Life',
-      color: '#16A34A',
-      tint: 'rgba(22, 163, 74, 0.08)',
-      shadow: 'rgba(22, 163, 74, 0.35)',
-      icon: MultiBiologyIcon
-    },
-    {
-      key: 'Earth & Space',
-      name: 'Earth & Space',
-      color: '#0284C7',
-      tint: 'rgba(2, 132, 199, 0.08)',
-      shadow: 'rgba(2, 132, 199, 0.35)',
-      icon: MultiEarthSpaceIcon
-    },
-    {
-      key: 'Mathematics & Logic',
-      name: 'Mathematics & Logic',
-      color: '#EA580C',
-      tint: 'rgba(234, 88, 12, 0.08)',
-      shadow: 'rgba(234, 88, 12, 0.35)',
-      icon: MultiMathIcon
-    },
-    {
-      key: 'Computer Science & IT',
-      name: 'Computer Science & IT',
-      color: '#0D9488',
-      tint: 'rgba(13, 148, 136, 0.08)',
-      shadow: 'rgba(13, 148, 136, 0.35)',
-      icon: MultiCompSciIcon
-    },
-    {
-      key: 'English & Grammar',
-      name: 'English & Grammar',
-      color: '#4F46E5',
-      tint: 'rgba(79, 70, 229, 0.08)',
-      shadow: 'rgba(79, 70, 229, 0.35)',
-      icon: MultiEnglishIcon
-    },
-    {
-      key: 'Early Childhood (ECCE)',
-      name: 'Early Childhood (ECCE)',
-      color: '#E11D48',
-      tint: 'rgba(225, 29, 72, 0.08)',
-      shadow: 'rgba(225, 29, 72, 0.35)',
-      icon: MultiEcceIcon
-    },
-    {
-      key: 'Urdu & Linguistics',
-      name: 'Urdu & Linguistics',
-      color: '#059669',
-      tint: 'rgba(5, 150, 105, 0.08)',
-      shadow: 'rgba(5, 150, 105, 0.35)',
-      icon: MultiUrduIcon
+  const displayedSims =
+    selectedClassKey === 'all'
+      ? baseDisplayedSims
+      : baseDisplayedSims.filter(s => getSimulationClassAssignment(s).classKey === selectedClassKey);
+
+  const getClassPanelIcon = (classKey: ClassLevelKey) => {
+    if (classKey === 'play-prep') return MultiEcceIcon;
+    if (
+      classKey === 'class-1' ||
+      classKey === 'class-2' ||
+      classKey === 'class-3' ||
+      classKey === 'class-4' ||
+      classKey === 'class-5'
+    ) {
+      return MultiPrimaryIcon;
     }
-  ];
+    if (classKey === 'class-6' || classKey === 'class-7' || classKey === 'class-8') {
+      return MultiMiddleIcon;
+    }
+    return MultiSecondaryIcon;
+  };
+
+  const activeClassPanel =
+    selectedClassKey === 'all'
+      ? null
+      : CLASS_PANELS_CONFIG.find(c => c.key === selectedClassKey) || null;
 
   const getGradeTierStyle = (_tierKey: string, isSelected: boolean) => {
     return {
@@ -963,12 +923,26 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="text-base sm:text-lg font-black tracking-tight text-[#1B2A5C] font-heading">
-                {isAllCategory ? 'All STEM Disciplines' : activeSubjectConfig.fullTitle}
+                {activeClassPanel
+                  ? activeClassPanel.name
+                  : isAllCategory
+                  ? 'All Classes (Play Group / Prep – Class 10)'
+                  : activeSubjectConfig.fullTitle}
               </span>
               <span className="px-3 py-1 rounded-lg text-xs font-bold shadow-xs flex items-center gap-2 bg-[#EEF3F9] text-[#1B2A5C] border border-[#DDE5F3] font-mono">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#1E88E5] shrink-0" />
                 {displayedSims.length} Active Simulations
               </span>
+              {selectedClassKey !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedClassKey('all')}
+                  className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#EEF3F9] text-[#1E88E5] border border-[#DDE5F3] hover:bg-[#DBE7FB] transition-colors cursor-pointer"
+                  title="Show all classes"
+                >
+                  Show All Classes &times;
+                </button>
+              )}
               {!isAllCategory && (
                 <button
                   type="button"
@@ -984,13 +958,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             {/* List Controls: Collapse/Expand All & Search */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
               {/* Expand / Collapse All Controls */}
-              {isAllCategory && (
+              {selectedClassKey === 'all' && (
                 <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#EEF3F9] border border-[#DDE5F3]">
                   <button
                     type="button"
                     onClick={collapseAllPanels}
                     className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
-                    title="Collapse all subject panels for fast overview"
+                    title="Collapse all class panels for fast overview"
                   >
                     <ChevronDown className="w-3.5 h-3.5 text-[#1546A8]" />
                     <span>Collapse All</span>
@@ -1000,7 +974,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     type="button"
                     onClick={expandAllPanels}
                     className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#1B2A5C] hover:bg-white hover:text-[#1546A8] transition-all cursor-pointer flex items-center gap-1"
-                    title="Expand all subject panels"
+                    title="Expand all class panels"
                   >
                     <ChevronUp className="w-3.5 h-3.5 text-[#1546A8]" />
                     <span>Expand All</span>
@@ -1031,41 +1005,46 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </div>
           </div>
 
-          {/* Quick Subject Jump Pills */}
+          {/* Quick Class Jump Pills (Play Group/Prep to Class 10) */}
           <div className="pt-2 border-t border-[#EEF3F9] flex items-center gap-1.5 overflow-x-auto pb-1 text-xs select-none">
             <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
               <span>Quick Jump:</span>
             </span>
             <button
               type="button"
-              onClick={() => handleCategoryChange('All Simulations')}
+              onClick={() => setSelectedClassKey('all')}
               className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all ${
-                isAllCategory 
-                  ? 'bg-[#1546A8] text-white shadow-xs' 
+                selectedClassKey === 'all'
+                  ? 'bg-[#1546A8] text-white shadow-xs'
                   : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
               }`}
             >
-              All ({activeSimulations.length})
+              All ({baseDisplayedSims.length})
             </button>
-            {SUBJECT_PANELS_CONFIG.map((p) => {
-              const count = activeSimulations.filter(s => s.category === p.key && matchesGradeTier(s, selectedGradeTier)).length;
-              const isSelected = selectedCategory === p.key;
+            {CLASS_PANELS_CONFIG.map((cls) => {
+              const count = baseDisplayedSims.filter(
+                (s) => getSimulationClassAssignment(s).classKey === cls.key
+              ).length;
+              const isSelected = selectedClassKey === cls.key;
               return (
                 <button
-                  key={`pill-${p.key}`}
+                  key={`pill-${cls.key}`}
                   type="button"
-                  onClick={() => handleCategoryChange(p.key)}
+                  onClick={() => setSelectedClassKey(cls.key)}
                   className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all flex items-center gap-1 ${
-                    isSelected 
-                      ? 'text-white shadow-xs' 
+                    isSelected
+                      ? 'text-white shadow-xs'
                       : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
                   }`}
                   style={{
-                    backgroundColor: isSelected ? p.color : undefined
+                    backgroundColor: isSelected ? cls.color : undefined
                   }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isSelected ? '#FFFFFF' : p.color }} />
-                  <span>{p.name}</span>
+                  <span
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ backgroundColor: isSelected ? '#FFFFFF' : cls.color }}
+                  />
+                  <span>{cls.shortLabel}</span>
                   <span className="text-[10px] opacity-80 font-mono">({count})</span>
                 </button>
               );
@@ -1073,194 +1052,196 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Horizontal Subject Panels with Horizontal Topic Cards Grid */}
+        {/* Horizontal Class Panels (Play Group/Prep to Class 10) with Curriculum Subject Sub-Sections */}
         {displayedSims.length > 0 ? (
           <div className="space-y-6 w-full">
-            {SUBJECT_PANELS_CONFIG
+            {CLASS_PANELS_CONFIG
               .filter((panel) => {
-                if (!isAllCategory) {
-                  return panel.key === selectedCategory;
+                if (selectedClassKey !== 'all') {
+                  return panel.key === selectedClassKey;
                 }
                 return true;
               })
               .map((panel, panelIdx) => {
-                const panelSims = activeSimulations.filter((sim) => {
-                  if (sim.category !== panel.key) return false;
-                  if (!matchesGradeTier(sim, selectedGradeTier)) return false;
-                  if (!matchesSearch(sim)) return false;
-                  return true;
-                });
+                const panelSims = displayedSims.filter(
+                  (sim) => getSimulationClassAssignment(sim).classKey === panel.key
+                );
 
-                // If a search is active and this panel has 0 matching sims, omit it
-                if (searchTerm && panelSims.length === 0) return null;
+                // Omit classes that have no matching simulations under current filter/search
+                if (panelSims.length === 0) return null;
 
-                const PanelIcon = panel.icon;
+                const PanelIcon = getClassPanelIcon(panel.key);
                 const panelReveal = panelIdx % 2 === 0 ? 'reveal-left' : 'reveal-right';
                 const isPanelCollapsed = !!collapsedPanels[panel.key];
 
-                // Item Display Limit: show 8 items initially when viewing all categories, or all if expanded/searched
-                const isExpanded = !compactMode || !!searchTerm || !isAllCategory || !!expandedSubjectItems[panel.key];
-                const visibleSims = isExpanded ? panelSims : panelSims.slice(0, 8);
-                const hasMore = panelSims.length > 8 && !isExpanded;
+                // Group simulations inside this class according to SNC 2020 / NCP 2022-23 & 2026-27 subjects
+                const subjectGroups = panel.subjectOrder
+                  .map((subjectName) => ({
+                    subjectName,
+                    sims: panelSims.filter(
+                      (sim) => getSimulationClassAssignment(sim).subject === subjectName
+                    )
+                  }))
+                  .filter((group) => group.sims.length > 0);
 
                 return (
                   <React.Fragment key={panel.key}>
                     <div
-                      id={`subject-panel-${panel.key.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                    className={`subject-panel-horizontal ${panelReveal}`}
-                    style={{
-                      '--subject-color': panel.color,
-                      '--subject-tint': panel.tint,
-                      '--subject-shadow-color': panel.shadow
-                    } as React.CSSProperties}
-                  >
-                    {/* Header Bar Across the Top in Subject's Color - Clickable to Collapse / Expand */}
-                    <div
-                      onClick={() => togglePanelCollapse(panel.key)}
-                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-105 transition-all"
-                      style={{ backgroundColor: panel.color }}
-                      title={isPanelCollapsed ? `Click to expand ${panel.name}` : `Click to collapse ${panel.name}`}
+                      id={`class-panel-${panel.key}`}
+                      className={`subject-panel-horizontal ${panelReveal}`}
+                      style={{
+                        '--subject-color': panel.color,
+                        '--subject-tint': panel.tint,
+                        '--subject-shadow-color': panel.shadow
+                      } as React.CSSProperties}
                     >
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
-                          <PanelIcon className="w-[36px] h-[36px] text-white pointer-events-none drop-shadow-sm" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3
-                            className={`font-bold leading-normal text-white m-0 ${panel.key === 'Urdu & Linguistics' ? 'font-urdu text-[20px] sm:text-[22px]' : 'text-[18px] sm:text-[19px] font-heading leading-tight'}`}
-                            dir={panel.key === 'Urdu & Linguistics' ? 'rtl' : undefined}
-                          >
-                            {panel.name}
-                          </h3>
-                          <p className="text-[12px] sm:text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
-                            Curriculum Interactive Simulations
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
-                          {panelSims.length} simulations
-                        </span>
-                        <div className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white border border-white/30 transition-transform">
-                          {isPanelCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Horizontal Multi-Column Grid of Topic Cards (Rendered only when panel is not collapsed) */}
-                    {!isPanelCollapsed && (
-                      <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5">
-                        {panelSims.length > 0 ? (
-                          <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
-                              {visibleSims.map((sim, cardIdx) => {
-                                const displayTitle = cleanCardTitle(sim.title);
-                                const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
-                                const col = cardIdx % 3;
-                                const cardReveal = col === 0 ? 'reveal-left' : col === 1 ? 'reveal-up reveal-delay-1' : 'reveal-right reveal-delay-2';
-
-                                return (
-                                  <div key={sim.id} className={`${cardReveal} w-full h-full`}>
-                                    <a
-                                      href={getSimulationStandaloneUrl(sim)}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        handleCardClick(sim);
-                                        if (onSelectSim) onSelectSim(sim);
-                                      }}
-                                      className="horizontal-topic-card group w-full h-full"
-                                      title={`Open #${sim.indexNumber} - ${displayTitle} in new tab`}
-                                    >
-                                      {/* Left: Realistic & Colorful Vector Emblem Tile */}
-                                      <div
-                                        className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
-                                        aria-hidden="true"
-                                      >
-                                        <TopicRealisticIcon
-                                          indexNumber={sim.indexNumber}
-                                          simId={sim.id}
-                                          className="w-full h-full pointer-events-none drop-shadow-2xs"
-                                        />
-                                      </div>
-
-                                      {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
-                                      <div className="flex-1 min-w-0 pr-1">
-                                        <div className="flex items-start gap-1.5">
-                                          <span 
-                                            className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black font-mono shrink-0 select-none shadow-2xs border mt-0.5"
-                                            style={{
-                                              backgroundColor: '#1E88E5',
-                                              color: '#FFFFFF',
-                                              borderColor: '#1546A8'
-                                            }}
-                                            title={`Simulation #${sim.indexNumber} of ${activeSimulations.length}`}
-                                          >
-                                            #{sim.indexNumber}
-                                          </span>
-                                          <span
-                                            className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
-                                            dir={isUrdu ? 'rtl' : 'ltr'}
-                                            style={{
-                                              ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
-                                            }}
-                                          >
-                                            {displayTitle}
-                                          </span>
-                                        </div>
-                                      </div>
-
-                                      {/* Right: Subtle Arrow Indicator */}
-                                      <div 
-                                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-slate-400 group-hover:text-[var(--subject-color)] group-hover:bg-[var(--subject-tint)] group-hover:translate-x-0.5 transition-all"
-                                        aria-hidden="true"
-                                      >
-                                        <ArrowRight className="w-4 h-4 shrink-0 font-bold" />
-                                      </div>
-                                    </a>
-                                  </div>
-                                );
-                              })}
-                            </div>
-
-                            {/* Show More / Show Less Button for Long Subject Lists */}
-                            {panelSims.length > 8 && !searchTerm && isAllCategory && (
-                              <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-center">
-                                <button
-                                  type="button"
-                                  onClick={() => toggleSubjectItems(panel.key)}
-                                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white shadow-sm hover:shadow-md cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                  style={{
-                                    backgroundColor: panel.color,
-                                    boxShadow: `0 4px 14px ${panel.shadow}`
-                                  }}
-                                >
-                                  {hasMore ? (
-                                    <>
-                                      <span>+ Show All {panelSims.length} Simulations ({panelSims.length - 8} more)</span>
-                                      <ChevronDown className="w-4 h-4 shrink-0" />
-                                    </>
-                                  ) : (
-                                    <>
-                                      <span>Show Fewer (Top 8)</span>
-                                      <ChevronUp className="w-4 h-4 shrink-0" />
-                                    </>
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div className="py-8 text-center text-xs text-slate-400 font-medium">
-                            No simulations match filter
+                      {/* Header Bar Across the Top in Class's Color - Clickable to Collapse / Expand */}
+                      <div
+                        onClick={() => togglePanelCollapse(panel.key)}
+                        className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-105 transition-all"
+                        style={{ backgroundColor: panel.color }}
+                        title={isPanelCollapsed ? `Click to expand ${panel.name}` : `Click to collapse ${panel.name}`}
+                      >
+                        <div className="flex items-center gap-3.5 min-w-0">
+                          <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
+                            <PanelIcon className="w-[36px] h-[36px] text-white pointer-events-none drop-shadow-sm" />
                           </div>
-                        )}
+                          <div className="min-w-0">
+                            <h3 className="font-bold leading-tight text-white m-0 text-[18px] sm:text-[19px] font-heading">
+                              {panel.name}
+                            </h3>
+                            <p className="text-[12px] sm:text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
+                              {panel.subtitle}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
+                            {panelSims.length} {panelSims.length === 1 ? 'simulation' : 'simulations'}
+                          </span>
+                          <div className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white border border-white/30 transition-transform">
+                            {isPanelCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                          </div>
+                        </div>
                       </div>
-                    )}
+
+                      {/* Curriculum Subjects & Horizontal Multi-Column Grid of Topic Cards */}
+                      {!isPanelCollapsed && (
+                        <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5 space-y-5">
+                          {subjectGroups.map((group) => {
+                            const subjMeta = CURRICULUM_SUBJECT_META[group.subjectName];
+                            return (
+                              <div
+                                key={`${panel.key}-${group.subjectName}`}
+                                className="space-y-3"
+                                style={{
+                                  '--subject-color': subjMeta.color,
+                                  '--subject-tint': subjMeta.bg,
+                                  '--subject-shadow-color': subjMeta.border
+                                } as React.CSSProperties}
+                              >
+                                {/* Curriculum Subject Sub-Header */}
+                                <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-200/90">
+                                  <div className="flex items-center gap-2">
+                                    <span
+                                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                                      style={{ backgroundColor: subjMeta.color }}
+                                    />
+                                    <h4 className="text-xs sm:text-sm font-black uppercase tracking-wide text-[#1B2A5C] font-heading m-0">
+                                      {group.subjectName}
+                                    </h4>
+                                  </div>
+                                  <span
+                                    className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono border shrink-0"
+                                    style={{
+                                      color: subjMeta.color,
+                                      backgroundColor: subjMeta.bg,
+                                      borderColor: subjMeta.border
+                                    }}
+                                  >
+                                    {group.sims.length} {group.sims.length === 1 ? 'topic' : 'topics'}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
+                                  {group.sims.map((sim, cardIdx) => {
+                                    const displayTitle = cleanCardTitle(sim.title);
+                                    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+                                    const col = cardIdx % 3;
+                                    const cardReveal = col === 0 ? 'reveal-left' : col === 1 ? 'reveal-up reveal-delay-1' : 'reveal-right reveal-delay-2';
+
+                                    return (
+                                      <div key={sim.id} className={`${cardReveal} w-full h-full`}>
+                                        <a
+                                          href={getSimulationStandaloneUrl(sim)}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            handleCardClick(sim);
+                                            if (onSelectSim) onSelectSim(sim);
+                                          }}
+                                          className="horizontal-topic-card group w-full h-full"
+                                          title={`Open #${sim.indexNumber} - ${displayTitle} in new tab`}
+                                        >
+                                          {/* Left: Realistic & Colorful Vector Emblem Tile */}
+                                          <div
+                                            className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
+                                            aria-hidden="true"
+                                          >
+                                            <TopicRealisticIcon
+                                              indexNumber={sim.indexNumber}
+                                              simId={sim.id}
+                                              className="w-full h-full pointer-events-none drop-shadow-2xs"
+                                            />
+                                          </div>
+
+                                          {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
+                                          <div className="flex-1 min-w-0 pr-1">
+                                            <div className="flex items-start gap-1.5">
+                                              <span 
+                                                className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black font-mono shrink-0 select-none shadow-2xs border mt-0.5"
+                                                style={{
+                                                  backgroundColor: '#1E88E5',
+                                                  color: '#FFFFFF',
+                                                  borderColor: '#1546A8'
+                                                }}
+                                                title={`Simulation #${sim.indexNumber} of ${activeSimulations.length}`}
+                                              >
+                                                #{sim.indexNumber}
+                                              </span>
+                                              <span
+                                                className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
+                                                dir={isUrdu ? 'rtl' : 'ltr'}
+                                                style={{
+                                                  ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
+                                                }}
+                                              >
+                                                {displayTitle}
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          {/* Right: Subtle Arrow Indicator */}
+                                          <div 
+                                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-slate-400 group-hover:text-[var(--subject-color)] group-hover:bg-[var(--subject-tint)] group-hover:translate-x-0.5 transition-all"
+                                            aria-hidden="true"
+                                          >
+                                            <ArrowRight className="w-4 h-4 shrink-0 font-bold" />
+                                          </div>
+                                        </a>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                    {panel.key === 'Chemistry & Matter' && isAllCategory && !searchTerm && (
+                    {panel.key === 'class-5' && selectedClassKey === 'all' && isAllCategory && !searchTerm && selectedGradeTier === 'all' && (
                       <ChemistryBiologySlider />
                     )}
                   </React.Fragment>
