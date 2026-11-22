@@ -15,6 +15,7 @@ import {
 import { SimulationItem } from '../types';
 import { SIMULATIONS_LIST } from '../data/simulationsData';
 import { EXTERNAL_SIMULATION_RESOURCES } from '../data/externalSimulationsData';
+import { NAV_SIMULATION_CLASS_ITEMS, SelectableClassKey } from '../data/curriculumClassMapping';
 
 interface TopNavbarProps {
   activeSim?: SimulationItem | null;
@@ -26,6 +27,7 @@ interface TopNavbarProps {
   onToggleTheme?: () => void;
   onBackToCatalog?: () => void;
   onSelectCategory?: (category: string) => void;
+  onSelectClass?: (classKey: SelectableClassKey) => void;
   onNavigateToExternal?: () => void;
   onNavigateToView?: (view: string) => void;
 }
@@ -36,6 +38,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onToggleTheme,
   onBackToCatalog,
   onSelectCategory,
+  onSelectClass,
   onNavigateToExternal,
   onNavigateToView
 }) => {
@@ -459,24 +462,19 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     }
   }, [onBackToCatalog, onSelectCategory, onNavigateToExternal, onNavigateToView]);
 
-  const getCategoryCount = (key: string) => {
-    if (key === 'All Simulations') return SIMULATIONS_LIST.length;
-    return SIMULATIONS_LIST.filter(s => s.category === key).length;
-  };
+  const handleClassSelect = useCallback((classKey: SelectableClassKey) => {
+    setOpenDropdown(null);
+    setIsPinned(false);
+    if (onSelectClass) {
+      onSelectClass(classKey);
+    } else if (onNavigateToView) {
+      onNavigateToView('catalog');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [onSelectClass, onNavigateToView]);
 
-  // Menu 1: Simulations dropdown items (All Labs + 9 subject disciplines)
-  const simulationsDropdownItems = [
-    { label: `All Simulations (${SIMULATIONS_LIST.length})`, categoryKey: 'All Simulations' },
-    { label: `Physics & Mechanics (${getCategoryCount('Physics & Motion')})`, categoryKey: 'Physics & Motion' },
-    { label: `Chemistry & Matter (${getCategoryCount('Chemistry & Matter')})`, categoryKey: 'Chemistry & Matter' },
-    { label: `Biology & Genetics (${getCategoryCount('Biology & Life')})`, categoryKey: 'Biology & Life' },
-    { label: `Earth & Solar System (${getCategoryCount('Earth & Space')})`, categoryKey: 'Earth & Space' },
-    { label: `Mathematics & Logic (${getCategoryCount('Mathematics & Logic')})`, categoryKey: 'Mathematics & Logic' },
-    { label: `Computer Science & IT (${getCategoryCount('Computer Science & IT')})`, categoryKey: 'Computer Science & IT' },
-    { label: `English & Grammar (${getCategoryCount('English & Grammar')})`, categoryKey: 'English & Grammar' },
-    { label: `Early Childhood Care & Education (ECCE) (${getCategoryCount('Early Childhood (ECCE)')})`, categoryKey: 'Early Childhood (ECCE)' },
-    { label: `Urdu & Linguistics (${getCategoryCount('Urdu & Linguistics')})`, categoryKey: 'Urdu & Linguistics' },
-  ];
+  // Menu 1: Simulations dropdown items (All Simulations + Play Group through PhD, names only with no counts)
+  const simulationsDropdownItems = NAV_SIMULATION_CLASS_ITEMS;
 
   // Menu 2: Teachers & Students dropdown items (Merged Educators Hub + Portal Info, no duplicates)
   const teachersStudentsDropdownItems = [
@@ -602,13 +600,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               className="inline-flex items-center gap-1 px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1.5 text-xs sm:text-[12.5px] md:text-[13px] lg:text-[13.5px] xl:text-sm font-bold text-white hover:text-[#F5A623] transition-colors whitespace-nowrap shrink-0 cursor-pointer bg-transparent border-0 shadow-none outline-none"
               aria-expanded={openDropdown === 'simulations'}
               aria-haspopup="true"
-              title="Browse All Simulations by Subject"
+              title="Browse All Simulations by Class"
             >
               <span>Simulations</span>
               <ChevronDown className={`w-3.5 h-3.5 text-white transition-transform duration-200 shrink-0 ${openDropdown === 'simulations' ? 'rotate-180' : ''}`} />
             </button>
 
-            {/* Dropdown Panel: SIMULATIONS BY SUBJECT */}
+            {/* Dropdown Panel: SIMULATIONS BY CLASS */}
             {openDropdown === 'simulations' && (
               <div 
                 className="absolute left-0 top-full pt-1.5 z-[99999]"
@@ -636,21 +634,21 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     className="px-4 py-2.5 text-[11px] font-bold text-[#DBE4F7] tracking-wider uppercase text-center"
                     style={{ backgroundColor: '#1546A8', borderBottom: '1px solid #F5A623' }}
                   >
-                    SIMULATIONS BY SUBJECT
+                    SIMULATIONS BY CLASS
                   </div>
 
-                  {/* Vertical List of Disciplines */}
+                  {/* Vertical List of Classes (Play Group to PhD, no counts) */}
                   <div className="flex flex-col">
                     {simulationsDropdownItems.map((item, idx) => {
                       const isLast = idx === simulationsDropdownItems.length - 1;
                       const isFirst = idx === 0;
                       return (
                         <button
-                          key={idx}
+                          key={`${item.label}-${idx}`}
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleItemClick('#catalog', item.categoryKey);
+                            handleClassSelect(item.classKey);
                           }}
                           className={`w-full text-center px-4 py-3 text-[13.5px] sm:text-[14px] transition-colors cursor-pointer flex items-center justify-center ${
                             isFirst 

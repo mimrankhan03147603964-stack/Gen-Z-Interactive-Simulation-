@@ -22,6 +22,7 @@ const StandaloneLabPlayer = React.lazy(() => import('./components/StandaloneLabP
 const ExternalSimulationsHub = React.lazy(() => import('./components/ExternalSimulationsHub').then(m => ({ default: m.ExternalSimulationsHub })));
 import { scrollRevealEngine } from './utils/scrollRevealManager';
 import { SIMULATIONS_LIST } from './data/simulationsData';
+import { SelectableClassKey } from './data/curriculumClassMapping';
 import { SimulationItem } from './types';
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
 import { requestAiSimulation } from './utils/aiSimulationGenerator';
@@ -147,6 +148,7 @@ export default function App() {
   // Default active subject filter: "All Simulations" is the default initial state
   const [selectedSubject, setSelectedSubject] = useState<string>('All Simulations');
   const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
+  const [selectedClassKey, setSelectedClassKey] = useState<SelectableClassKey>('all');
   
   // Clean View Navigation State: 'home' (zero-rush dashboard without extra sections) or dedicated section views
   const [currentView, setCurrentView] = useState<AppView>('home');
@@ -191,7 +193,7 @@ export default function App() {
       scrollRevealEngine.scanAndObserve();
     }, 60);
     return () => clearTimeout(timer);
-  }, [currentView, selectedSubject, selectedGradeTier, fullscreenModalSim, standaloneLab]);
+  }, [currentView, selectedSubject, selectedGradeTier, selectedClassKey, fullscreenModalSim, standaloneLab]);
 
   useEffect(() => {
     try {
@@ -324,6 +326,7 @@ export default function App() {
   const handleBackToHome = () => {
     setStandaloneLab(null);
     setActiveStageSim(null);
+    setSelectedClassKey('all');
     setCurrentView('home');
     try {
       window.history.pushState({}, '', '/');
@@ -336,6 +339,7 @@ export default function App() {
   const handleOpenCatalog = (category?: string, grade?: string) => {
     if (category) setSelectedSubject(category);
     if (grade) setSelectedGradeTier(grade);
+    setSelectedClassKey('all');
     setCurrentView('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -411,8 +415,27 @@ export default function App() {
           onNavigateToView={handleNavigateToView}
           onSelectCategory={(cat) => {
             setSelectedSubject(cat);
+            setSelectedClassKey('all');
             setCurrentView('catalog');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onSelectClass={(classKey) => {
+            setSelectedSubject('All Simulations');
+            setSelectedGradeTier('all');
+            setSelectedClassKey(classKey);
+            setCurrentView('catalog');
+            if (classKey === 'all') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              setTimeout(() => {
+                const anchor = document.getElementById('class-results-anchor');
+                if (anchor) {
+                  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }, 80);
+            }
           }}
         />
 
@@ -521,6 +544,8 @@ export default function App() {
                   onSelectCategory={(cat) => setSelectedSubject(cat)}
                   selectedGradeTier={selectedGradeTier}
                   onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                  selectedClassKey={selectedClassKey}
+                  onSelectClassKey={(classKey) => setSelectedClassKey(classKey)}
                   onSelectSim={handleSelectSim}
                   onLaunchOnStage={handleLaunchOnStage}
                   onTriggerAiGeneration={handleTriggerAiGeneration}

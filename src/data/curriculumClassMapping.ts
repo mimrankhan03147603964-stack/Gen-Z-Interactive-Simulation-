@@ -13,6 +13,54 @@ export type ClassLevelKey =
   | 'class-9'
   | 'class-10';
 
+export type EmptyClassKey =
+  | 'class-11'
+  | 'class-12'
+  | 'bachelors'
+  | 'masters'
+  | 'mphil'
+  | 'phd';
+
+export type SelectableClassKey = 'all' | ClassLevelKey | EmptyClassKey;
+
+export const EMPTY_CLASS_LABELS: Record<EmptyClassKey, string> = {
+  'class-11': 'Class 11',
+  'class-12': 'Class 12',
+  bachelors: "Bachelor's",
+  masters: "Master's",
+  mphil: 'MPhil',
+  phd: 'PhD'
+};
+
+export const EMPTY_CLASS_MESSAGE =
+  'No simulations have been added for this class yet. Please contact the developer with your topic, subject, and class, and your simulation will be uploaded to the website within 24 hours.';
+
+export const NAV_SIMULATION_CLASS_ITEMS: Array<{ label: string; classKey: SelectableClassKey }> = [
+  { label: 'All Simulations', classKey: 'all' },
+  { label: 'Play Group', classKey: 'play-prep' },
+  { label: 'Prep', classKey: 'play-prep' },
+  { label: 'Class 1', classKey: 'class-1' },
+  { label: 'Class 2', classKey: 'class-2' },
+  { label: 'Class 3', classKey: 'class-3' },
+  { label: 'Class 4', classKey: 'class-4' },
+  { label: 'Class 5', classKey: 'class-5' },
+  { label: 'Class 6', classKey: 'class-6' },
+  { label: 'Class 7', classKey: 'class-7' },
+  { label: 'Class 8', classKey: 'class-8' },
+  { label: 'Class 9', classKey: 'class-9' },
+  { label: 'Class 10', classKey: 'class-10' },
+  { label: 'Class 11', classKey: 'class-11' },
+  { label: 'Class 12', classKey: 'class-12' },
+  { label: "Bachelor's", classKey: 'bachelors' },
+  { label: "Master's", classKey: 'masters' },
+  { label: 'MPhil', classKey: 'mphil' },
+  { label: 'PhD', classKey: 'phd' }
+];
+
+export function isEmptyClassKey(key: SelectableClassKey): key is EmptyClassKey {
+  return key in EMPTY_CLASS_LABELS;
+}
+
 export type CurriculumSubjectKey =
   | 'Early Childhood (ECCE)'
   | 'Science'

@@ -38,7 +38,11 @@ import {
   CLASS_PANELS_CONFIG,
   CURRICULUM_SUBJECT_META,
   ClassLevelKey,
-  getSimulationClassAssignment
+  EMPTY_CLASS_LABELS,
+  EMPTY_CLASS_MESSAGE,
+  SelectableClassKey,
+  getSimulationClassAssignment,
+  isEmptyClassKey
 } from '../data/curriculumClassMapping';
 import { scrollRevealEngine } from '../utils/scrollRevealManager';
 
@@ -67,6 +71,8 @@ interface SimulationCatalogGridProps {
   onSelectCategory?: (category: string) => void;
   selectedGradeTier?: string;
   onSelectGradeTier?: (tier: string) => void;
+  selectedClassKey?: SelectableClassKey;
+  onSelectClassKey?: (classKey: SelectableClassKey) => void;
   onSelectSim: (sim: SimulationItem) => void;
   onLaunchOnStage?: (sim: SimulationItem) => void;
   onTriggerAiGeneration?: (topic: string) => void;
@@ -248,6 +254,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   onSelectCategory,
   selectedGradeTier: controlledGradeTier,
   onSelectGradeTier,
+  selectedClassKey: controlledClassKey,
+  onSelectClassKey,
   onSelectSim,
   onLaunchOnStage,
   onTriggerAiGeneration,
@@ -273,7 +281,16 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
   // List Length & Scroll Controls: Collapsible Class Panels & Quick Jump Class Filter
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
-  const [selectedClassKey, setSelectedClassKey] = useState<'all' | ClassLevelKey>('all');
+  const [internalClassKey, setInternalClassKey] = useState<SelectableClassKey>('all');
+  const selectedClassKey = controlledClassKey !== undefined ? controlledClassKey : internalClassKey;
+
+  const setSelectedClassKey = (key: SelectableClassKey) => {
+    if (onSelectClassKey) {
+      onSelectClassKey(key);
+    } else {
+      setInternalClassKey(key);
+    }
+  };
 
   const togglePanelCollapse = (key: string) => {
     setCollapsedPanels(prev => ({
@@ -310,6 +327,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const subjectSectionRef = useRef<HTMLDivElement>(null);
   const [isSubjectSectionVisible, setIsSubjectSectionVisible] = useState<boolean>(false);
 
+  const quickJumpRef = useRef<HTMLDivElement>(null);
+  const [isQuickJumpVisible, setIsQuickJumpVisible] = useState<boolean>(false);
+
   useEffect(() => {
     const el = gradeSectionRef.current;
     if (!el) return;
@@ -340,6 +360,24 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
         }
       },
       { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = quickJumpRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsQuickJumpVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -10px 0px' }
     );
 
     observer.observe(el);
@@ -570,9 +608,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const activeClassPanel =
-    selectedClassKey === 'all'
+    selectedClassKey === 'all' || isEmptyClassKey(selectedClassKey)
       ? null
       : CLASS_PANELS_CONFIG.find(c => c.key === selectedClassKey) || null;
+
+  const activeEmptyClassLabel = isEmptyClassKey(selectedClassKey)
+    ? EMPTY_CLASS_LABELS[selectedClassKey]
+    : null;
 
   const getGradeTierStyle = (_tierKey: string, isSelected: boolean) => {
     return {
@@ -913,7 +955,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
         {/* Top Search Bar & List Length Controls */}
         <div 
-          className="reveal-up shadow-lg rounded-2xl p-4 sm:p-5 transition-all border space-y-3.5"
+          id="class-results-anchor"
+          className="reveal-up scroll-mt-20 shadow-lg rounded-2xl p-4 sm:p-5 transition-all border space-y-3.5"
           style={{
             backgroundColor: '#FFFFFF',
             borderColor: '#DDE5F3',
@@ -925,6 +968,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <span className="text-base sm:text-lg font-black tracking-tight text-[#1B2A5C] font-heading">
                 {activeClassPanel
                   ? activeClassPanel.name
+                  : activeEmptyClassLabel
+                  ? activeEmptyClassLabel
                   : isAllCategory
                   ? 'All Classes (Play Group / Prep – Class 10)'
                   : activeSubjectConfig.fullTitle}
@@ -1005,50 +1050,76 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </div>
           </div>
 
-          {/* Quick Class Jump Pills (Play Group/Prep to Class 10) */}
-          <div className="pt-2 border-t border-[#EEF3F9] flex items-center gap-1.5 overflow-x-auto pb-1 text-xs select-none">
-            <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
-              <span>Quick Jump:</span>
-            </span>
-            <button
-              type="button"
-              onClick={() => setSelectedClassKey('all')}
-              className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all ${
-                selectedClassKey === 'all'
-                  ? 'bg-[#1546A8] text-white shadow-xs'
-                  : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
-              }`}
-            >
-              All ({baseDisplayedSims.length})
-            </button>
-            {CLASS_PANELS_CONFIG.map((cls) => {
-              const count = baseDisplayedSims.filter(
-                (s) => getSimulationClassAssignment(s).classKey === cls.key
-              ).length;
-              const isSelected = selectedClassKey === cls.key;
-              return (
-                <button
-                  key={`pill-${cls.key}`}
-                  type="button"
-                  onClick={() => setSelectedClassKey(cls.key)}
-                  className={`px-2.5 py-1 rounded-lg font-bold text-xs shrink-0 cursor-pointer transition-all flex items-center gap-1 ${
-                    isSelected
-                      ? 'text-white shadow-xs'
-                      : 'bg-[#EEF3F9] text-[#1B2A5C] hover:bg-[#DBE7FB]'
-                  }`}
-                  style={{
-                    backgroundColor: isSelected ? cls.color : undefined
-                  }}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: isSelected ? '#FFFFFF' : cls.color }}
+          {/* Quick Jump Wrapping Grid of Square Class Boxes (No Horizontal Scroll, Animated Counts) */}
+          <div ref={quickJumpRef} className="pt-3 border-t border-[#EEF3F9] space-y-2.5 select-none">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider flex items-center gap-1">
+                <span>Quick Jump:</span>
+              </span>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-2.5 w-full">
+              <button
+                type="button"
+                onClick={() => setSelectedClassKey('all')}
+                className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
+                  selectedClassKey === 'all'
+                    ? 'bg-[#1546A8] text-white border-[#1546A8] shadow-md scale-[1.02]'
+                    : 'bg-[#EEF3F9] text-[#1B2A5C] border-[#DDE5F3] hover:bg-[#DBE7FB] hover:border-[#93C5FD]'
+                }`}
+              >
+                <span
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: selectedClassKey === 'all' ? '#F5A623' : '#1546A8' }}
+                />
+                <span className="text-lg sm:text-xl font-black font-heading leading-none">
+                  <AnimatedBadgeCounter
+                    target={baseDisplayedSims.length}
+                    isVisible={isQuickJumpVisible}
+                    duration={1800}
                   />
-                  <span>{cls.shortLabel}</span>
-                  <span className="text-[10px] opacity-80 font-mono">({count})</span>
-                </button>
-              );
-            })}
+                </span>
+                <span className="text-[10.5px] sm:text-[11px] font-bold leading-tight">
+                  All
+                </span>
+              </button>
+              {CLASS_PANELS_CONFIG.map((cls) => {
+                const count = baseDisplayedSims.filter(
+                  (s) => getSimulationClassAssignment(s).classKey === cls.key
+                ).length;
+                const isSelected = selectedClassKey === cls.key;
+                return (
+                  <button
+                    key={`pill-${cls.key}`}
+                    type="button"
+                    onClick={() => setSelectedClassKey(cls.key)}
+                    className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
+                      isSelected
+                        ? 'text-white shadow-md scale-[1.02]'
+                        : 'bg-[#EEF3F9] text-[#1B2A5C] border-[#DDE5F3] hover:bg-[#DBE7FB] hover:border-[#93C5FD]'
+                    }`}
+                    style={{
+                      backgroundColor: isSelected ? cls.color : undefined,
+                      borderColor: isSelected ? cls.color : undefined
+                    }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ backgroundColor: isSelected ? '#FFFFFF' : cls.color }}
+                    />
+                    <span className="text-lg sm:text-xl font-black font-heading leading-none">
+                      <AnimatedBadgeCounter
+                        target={count}
+                        isVisible={isQuickJumpVisible}
+                        duration={1800}
+                      />
+                    </span>
+                    <span className="text-[10px] sm:text-[11px] font-bold leading-tight break-words">
+                      {cls.shortLabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -1248,6 +1319,41 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 );
               })}
           </div>
+        ) : activeEmptyClassLabel ? (
+          <div 
+            className="rounded-2xl p-8 sm:p-12 text-center text-white border shadow-lg transition-all"
+            style={{
+              background: 'linear-gradient(135deg, #1546A8 0%, #1B2A5C 100%)',
+              backgroundColor: '#1B2A5C',
+              borderColor: '#F5A623',
+              boxShadow: '0 8px 30px rgba(27, 42, 92, 0.45)'
+            }}
+          >
+            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#1546A8] text-[#F5A623] mb-4 border border-[#F5A623]">
+              <GraduationCap className="w-8 h-8 text-[#F5A623]" />
+            </div>
+            <span className="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-[#1B2A5C] bg-[#F5A623] border border-[#E58E0A] inline-block mb-3 font-mono">
+              {activeEmptyClassLabel}
+            </span>
+            <p className="text-sm sm:text-base font-semibold mt-1 max-w-2xl mx-auto leading-relaxed text-[#DBE4F7]">
+              {EMPTY_CLASS_MESSAGE}
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedClassKey('all');
+                  handleCategoryChange('All Simulations');
+                  handleGradeTierChange('all');
+                  setSearchTerm('');
+                }}
+                className="px-5 py-3 rounded-xl text-xs font-bold cursor-pointer transition-all bg-[#1546A8] hover:bg-[#1B2A5C] text-[#DBE4F7] border border-[#2D62D1]"
+              >
+                View All Simulations
+              </button>
+            </div>
+          </div>
         ) : (
           <div 
             className="rounded-2xl p-8 sm:p-12 text-center text-white border shadow-lg transition-all"
@@ -1294,6 +1400,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
               <button
                 onClick={() => {
+                  setSelectedClassKey('all');
                   handleCategoryChange('All Simulations');
                   setSearchTerm('');
                 }}
