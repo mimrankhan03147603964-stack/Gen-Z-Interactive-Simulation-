@@ -534,7 +534,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               src="/genz-official-logo.png" 
               alt="Gen Z Interactive Simulations Official Logo" 
               className="block select-none pointer-events-none rounded-md h-[28px] sm:h-[30px] xl:h-[34px]" 
-              style={{ display: 'block', width: 'auto', objectFit: 'contain' }}
+              style={{ display: 'block', width: 'auto', maxHeight: '34px', objectFit: 'contain' }}
             />
           </div>
 
