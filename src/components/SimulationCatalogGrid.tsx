@@ -38,10 +38,11 @@ import {
   CURRICULUM_SUBJECT_META,
   ClassLevelKey,
   ClassPanelDefinition,
+  CurriculumSubjectKey,
   EMPTY_CLASS_LABELS,
   EMPTY_CLASS_MESSAGE,
   SelectableClassKey,
-  getSimulationClassAssignment,
+  getSimulationClassAssignments,
   isEmptyClassKey
 } from '../data/curriculumClassMapping';
 import { scrollRevealEngine } from '../utils/scrollRevealManager';
@@ -97,9 +98,14 @@ const LazyViewportMount: React.FC<{ children: React.ReactNode }> = ({ children }
   );
 };
 
+interface ClassSimulationEntry {
+  sim: SimulationItem;
+  subject: CurriculumSubjectKey;
+}
+
 interface LazyClassPanelBodyProps {
   panel: ClassPanelDefinition;
-  panelSims: SimulationItem[];
+  panelEntries: ClassSimulationEntry[];
   totalSimulationsCount: number;
   lazyOnScroll: boolean;
   onCardClick: (sim: SimulationItem) => void;
@@ -107,7 +113,7 @@ interface LazyClassPanelBodyProps {
 }
 
 const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
-  ({ panel, panelSims, totalSimulationsCount, lazyOnScroll, onCardClick, onSelectSim }) => {
+  ({ panel, panelEntries, totalSimulationsCount, lazyOnScroll, onCardClick, onSelectSim }) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(() => !lazyOnScroll);
 
@@ -152,19 +158,19 @@ const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
         }
       }, 30);
       return () => clearTimeout(timer);
-    }, [isLoaded, panelSims.length]);
+    }, [isLoaded, panelEntries.length]);
 
     const subjectGroups = useMemo(() => {
       if (!isLoaded) return [];
       return panel.subjectOrder
         .map((subjectName) => ({
           subjectName,
-          sims: panelSims.filter(
-            (sim) => getSimulationClassAssignment(sim).subject === subjectName
-          )
+          sims: panelEntries
+            .filter((entry) => entry.subject === subjectName)
+            .map((entry) => entry.sim)
         }))
         .filter((group) => group.sims.length > 0);
-    }, [isLoaded, panel.subjectOrder, panelSims]);
+    }, [isLoaded, panel.subjectOrder, panelEntries]);
 
     return (
       <div ref={bodyRef} className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5 space-y-5">
@@ -925,9 +931,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     });
   }, [activeSimulations, selectedGradeTier, isAllCategory, selectedCategory, trimmedSearch]);
 
-  // Pre-group simulations by class once in O(N) for fast counts and on-demand rendering
+  // Pre-group simulations by class by reference (a single simulation can appear in multiple classes under each class's curriculum subject)
   const simsByClass = useMemo(() => {
-    const grouped: Record<ClassLevelKey, SimulationItem[]> = {
+    const grouped: Record<ClassLevelKey, ClassSimulationEntry[]> = {
       'play-prep': [],
       'class-1': [],
       'class-2': [],
@@ -940,17 +946,38 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       'class-9': [],
       'class-10': []
     };
+    const seenPerClass: Record<ClassLevelKey, Set<string>> = {
+      'play-prep': new Set(),
+      'class-1': new Set(),
+      'class-2': new Set(),
+      'class-3': new Set(),
+      'class-4': new Set(),
+      'class-5': new Set(),
+      'class-6': new Set(),
+      'class-7': new Set(),
+      'class-8': new Set(),
+      'class-9': new Set(),
+      'class-10': new Set()
+    };
+
     baseDisplayedSims.forEach((sim) => {
-      const { classKey } = getSimulationClassAssignment(sim);
-      grouped[classKey].push(sim);
+      const assignments = getSimulationClassAssignments(sim);
+      assignments.forEach(({ classKey, subject }) => {
+        if (!seenPerClass[classKey].has(sim.id)) {
+          seenPerClass[classKey].add(sim.id);
+          grouped[classKey].push({ sim, subject });
+        }
+      });
     });
+
     return grouped;
   }, [baseDisplayedSims]);
 
+  // Unique total when viewing All; exact class count when viewing a single class
   const displayedSims = useMemo(() => {
     if (selectedClassKey === 'all') return baseDisplayedSims;
     if (isEmptyClassKey(selectedClassKey)) return [];
-    return simsByClass[selectedClassKey] || [];
+    return (simsByClass[selectedClassKey] || []).map((entry) => entry.sim);
   }, [selectedClassKey, baseDisplayedSims, simsByClass]);
 
   const getClassPanelIcon = (classKey: ClassLevelKey) => {
@@ -1495,10 +1522,10 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 return true;
               })
               .map((panel, panelIdx) => {
-                const panelSims = simsByClass[panel.key] || [];
+                const panelEntries = simsByClass[panel.key] || [];
 
                 // Omit classes that have no matching simulations under current filter/search
-                if (panelSims.length === 0) return null;
+                if (panelEntries.length === 0) return null;
 
                 const PanelIcon = getClassPanelIcon(panel.key);
                 const panelReveal = panelIdx % 2 === 0 ? 'reveal-left' : 'reveal-right';
@@ -1554,7 +1581,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
                         <div className="flex items-center gap-2">
                           <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
-                            {panelSims.length} {panelSims.length === 1 ? 'simulation' : 'simulations'}
+                            {panelEntries.length} {panelEntries.length === 1 ? 'simulation' : 'simulations'}
                           </span>
                           <div className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white border border-white/30 transition-transform">
                             {isPanelCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
@@ -1566,7 +1593,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                       {!isPanelCollapsed && (
                         <LazyClassPanelBody
                           panel={panel}
-                          panelSims={panelSims}
+                          panelEntries={panelEntries}
                           totalSimulationsCount={activeSimulations.length}
                           lazyOnScroll={isMultiPanelView}
                           onCardClick={handleCardClick}
