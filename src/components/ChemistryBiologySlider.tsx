@@ -136,6 +136,7 @@ export const ChemistryBiologySlider: React.FC = () => {
     if (prefersReducedMotion) return;
 
     autoTimerRef.current = setInterval(() => {
+      if (document.hidden) return;
       goToSlide((activeIndexRef.current + 1) % totalSlides, 'next');
     }, AUTO_SLIDE_MS);
   }, [prefersReducedMotion, goToSlide, totalSlides]);

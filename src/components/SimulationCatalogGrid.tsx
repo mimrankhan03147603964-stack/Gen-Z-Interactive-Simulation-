@@ -29,7 +29,6 @@ import {
 } from 'lucide-react';
 
 import { openSimulationInNewTab, getSimulationStandaloneUrl } from '../utils/navigation';
-import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
 import { DisciplineCatalogHoverImage } from './DisciplineCatalogHoverImage';
@@ -49,6 +48,9 @@ import { scrollRevealEngine } from '../utils/scrollRevealManager';
 
 const ChemistryBiologySlider = React.lazy(() =>
   import('./ChemistryBiologySlider').then((m) => ({ default: m.ChemistryBiologySlider }))
+);
+const TopicRealisticIcon = React.lazy(() =>
+  import('./TopicRealisticIcon').then((m) => ({ default: m.TopicRealisticIcon }))
 );
 
 function createAllCollapsedMap(): Record<string, boolean> {
@@ -241,11 +243,13 @@ const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
                             className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
                             aria-hidden="true"
                           >
-                            <TopicRealisticIcon
-                              indexNumber={sim.indexNumber}
-                              simId={sim.id}
-                              className="w-full h-full pointer-events-none drop-shadow-2xs"
-                            />
+                            <React.Suspense fallback={<div className="w-full h-full" />}>
+                              <TopicRealisticIcon
+                                indexNumber={sim.indexNumber}
+                                simId={sim.id}
+                                className="w-full h-full pointer-events-none drop-shadow-2xs"
+                              />
+                            </React.Suspense>
                           </div>
 
                           {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}

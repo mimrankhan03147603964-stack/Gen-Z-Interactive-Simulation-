@@ -206,6 +206,7 @@ export const StemRepositorySlider: React.FC = () => {
     if (prefersReducedMotion) return;
 
     autoTimerRef.current = setInterval(() => {
+      if (document.hidden) return;
       slideNext();
     }, AUTO_SLIDE_MS);
   }, [prefersReducedMotion, slideNext]);
@@ -358,6 +359,8 @@ export const StemRepositorySlider: React.FC = () => {
                   src={slide.src}
                   alt={slide.alt}
                   draggable={false}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
                   onLoad={() => {
                     if (idx === trackIndexRef.current) {
                       syncHeightToSlide(idx);

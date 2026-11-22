@@ -64,16 +64,18 @@ export const ThreeStemBackground: React.FC = () => {
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
+    let startTimerId: number | null = null;
+    let isDisposed = false;
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    let dpr = 1;
 
     const resizeCanvas = () => {
       if (!canvas) return;
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      dpr = 1;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -83,7 +85,7 @@ export const ThreeStemBackground: React.FC = () => {
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas, { passive: true });
 
     // Mouse movement interaction: slight gentle breeze & 3D tilt for laptop/desktop
     let targetBreezeX = 0;
@@ -98,7 +100,7 @@ export const ThreeStemBackground: React.FC = () => {
       targetBreezeY = normY * 10;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     // Object types pool for simulation website
     const OBJECT_TYPES: StemObjectType[] = [
@@ -501,9 +503,10 @@ export const ThreeStemBackground: React.FC = () => {
       context.textAlign = 'center';
       context.textBaseline = 'middle';
 
-      // Soft glow aura
-      context.shadowColor = colorScheme.glow;
-      context.shadowBlur = 12;
+      // Lightweight aura without expensive GPU shadowBlur
+      context.fillStyle = colorScheme.glow;
+      context.globalAlpha = opacity * 0.45;
+      context.fillText(symbolChar, 1.5, 1.5);
 
       // Outer gradient text fill
       context.fillStyle = colorScheme.primary;
@@ -559,17 +562,31 @@ export const ThreeStemBackground: React.FC = () => {
       context.restore();
     };
 
-    // Main 60 FPS Animation Render Loop
-    const render = () => {
-      if (document.hidden) {
-        animationFrameId = requestAnimationFrame(render);
+    // Throttled 30 FPS delta-normalized render loop (same visual speed, half the laptop GPU/CPU work)
+    const FRAME_INTERVAL = 1000 / 30;
+    let lastFrameTime = 0;
+
+    const render = (now: number) => {
+      if (isDisposed || document.hidden) {
+        animationFrameId = null;
         return;
       }
-      time += 0.02;
+
+      animationFrameId = requestAnimationFrame(render);
+
+      if (lastFrameTime !== 0 && now - lastFrameTime < FRAME_INTERVAL) {
+        return;
+      }
+      const elapsed = lastFrameTime === 0 ? FRAME_INTERVAL : Math.min(now - lastFrameTime, 80);
+      lastFrameTime = now;
+      const dtScale = elapsed / 16.6667;
+
+      time += 0.02 * dtScale;
 
       // Smooth breeze dampening
-      breezeX += (targetBreezeX - breezeX) * 0.05;
-      breezeY += (targetBreezeY - breezeY) * 0.05;
+      const damp = Math.min(1, 0.05 * dtScale);
+      breezeX += (targetBreezeX - breezeX) * damp;
+      breezeY += (targetBreezeY - breezeY) * damp;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -577,9 +594,9 @@ export const ThreeStemBackground: React.FC = () => {
         const obj = objects[i];
 
         // Float upwards smoothly
-        obj.y -= obj.speedY;
-        obj.rotation += obj.rotationSpeed;
-        obj.rotation3D += obj.rotation3DSpeed;
+        obj.y -= obj.speedY * dtScale;
+        obj.rotation += obj.rotationSpeed * dtScale;
+        obj.rotation3D += obj.rotation3DSpeed * dtScale;
 
         // Harmonic horizontal sway
         const sway = Math.sin(time * obj.swaySpeed * 60 + obj.swayPhase) * obj.swayAmp;
@@ -630,16 +647,39 @@ export const ThreeStemBackground: React.FC = () => {
 
         ctx.restore();
       }
+    };
 
+    const startLoop = () => {
+      if (isDisposed || document.hidden || animationFrameId !== null) return;
+      lastFrameTime = 0;
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      } else {
+        startLoop();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Defer ambient background startup briefly so first paint opens instantaneously
+    startTimerId = window.setTimeout(() => {
+      startLoop();
+    }, 250);
 
     return () => {
+      isDisposed = true;
+      if (startTimerId !== null) clearTimeout(startTimerId);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
     };
   }, []);
 

@@ -97,7 +97,7 @@ export const LabRoadmapHoverImage: React.FC = () => {
               display: 'block',
               transform: isHovered ? 'scale(1.02)' : 'scale(1)',
             }}
-            loading="eager"
+            loading="lazy"
             decoding="async"
           />
         </div>

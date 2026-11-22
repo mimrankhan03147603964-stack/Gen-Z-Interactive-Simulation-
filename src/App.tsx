@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowUp } from 'lucide-react';
-import { Sidebar } from './components/Sidebar';
 import { TopNavbar } from './components/TopNavbar';
 import { HeroBanner } from './components/HeroBanner';
-import { SimulationRoadmapSection } from './components/SimulationRoadmapSection';
-import { QuickStats } from './components/QuickStats';
-import { SimulationCatalogGrid } from './components/SimulationCatalogGrid';
 import { Footer } from './components/Footer';
-import { MainStage } from './components/MainStage';
 import { ThreeStemBackground } from './components/ThreeStemBackground';
 import { ScrollReveal } from './components/ScrollReveal';
 import { FutureStemHoverImage } from './components/FutureStemHoverImage';
 import { LabRoadmapHoverImage } from './components/LabRoadmapHoverImage';
-import { StemRepositorySlider } from './components/StemRepositorySlider';
 
-// Lazy-load secondary views and modals to keep initial bundle ultra-light on Vercel
+// Lazy-load heavy views, sliders, drawers, and modals so initial page load stays ultra-fast on laptops
+const Sidebar = React.lazy(() => import('./components/Sidebar').then(m => ({ default: m.Sidebar })));
+const MainStage = React.lazy(() => import('./components/MainStage').then(m => ({ default: m.MainStage })));
+const QuickStats = React.lazy(() => import('./components/QuickStats').then(m => ({ default: m.QuickStats })));
+const SimulationRoadmapSection = React.lazy(() => import('./components/SimulationRoadmapSection').then(m => ({ default: m.SimulationRoadmapSection })));
+const SimulationCatalogGrid = React.lazy(() => import('./components/SimulationCatalogGrid').then(m => ({ default: m.SimulationCatalogGrid })));
+const StemRepositorySlider = React.lazy(() => import('./components/StemRepositorySlider').then(m => ({ default: m.StemRepositorySlider })));
 const PedagogicalHub = React.lazy(() => import('./components/PedagogicalHub').then(m => ({ default: m.PedagogicalHub })));
 const WebsiteFeatures = React.lazy(() => import('./components/WebsiteFeatures').then(m => ({ default: m.WebsiteFeatures })));
 const SimulationViewerModal = React.lazy(() => import('./components/SimulationViewerModal').then(m => ({ default: m.SimulationViewerModal })));
@@ -24,8 +24,7 @@ import { scrollRevealEngine } from './utils/scrollRevealManager';
 import { SIMULATIONS_LIST } from './data/simulationsData';
 import { SelectableClassKey } from './data/curriculumClassMapping';
 import { SimulationItem } from './types';
-import { openSimulationInNewTab, getSimulationStandaloneUrl } from './utils/navigation';
-import { requestAiSimulation } from './utils/aiSimulationGenerator';
+import { openSimulationInNewTab } from './utils/navigation';
 
 function resolveSimulationFromUrl(): SimulationItem | null {
   try {
@@ -163,27 +162,39 @@ export default function App() {
   const [fullscreenModalSim, setFullscreenModalSim] = useState<SimulationItem | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Top colorful scroll progress bar percentage (0% to 100%)
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
+  // Top colorful scroll progress bar updated directly via DOM ref (zero React re-renders on scroll)
+  const progressBarRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
 
-  // Initialize global scroll reveal engine and track scroll progress
+  // Initialize global scroll reveal engine and track scroll progress with rAF throttling
   useEffect(() => {
     scrollRevealEngine.init();
 
-    const handleScroll = () => {
+    let rafId: number | null = null;
+    const updateScroll = () => {
+      rafId = null;
       const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
       const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
-      setScrollProgress(progress);
-      setShowScrollTop(scrollTop > 260);
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${progress}%`;
+      }
+      const shouldShow = scrollTop > 260;
+      setShowScrollTop((prev) => (prev === shouldShow ? prev : shouldShow));
+    };
+
+    const handleScroll = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(updateScroll);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    updateScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -288,6 +299,7 @@ export default function App() {
     setIsGeneratingAi(true);
     setAiGeneratingTopic(topic);
     try {
+      const { requestAiSimulation } = await import('./utils/aiSimulationGenerator');
       const result = await requestAiSimulation(topic);
       const newSim: SimulationItem = {
         id: `ai-${Date.now()}`,
@@ -390,10 +402,11 @@ export default function App() {
     >
       {/* Thin colorful scroll progress bar at the very top of the page */}
       <div 
+        ref={progressBarRef}
         id="scroll-progress-bar"
         className="fixed top-0 left-0 h-[3.5px] z-[100000] pointer-events-none transition-[width] duration-100 ease-out"
         style={{
-          width: `${scrollProgress}%`,
+          width: '0%',
           background: 'linear-gradient(90deg, #1E88E5 0%, #00a2ff 25%, #7c3aed 50%, #F5A623 75%, #E53935 100%)',
           boxShadow: '0 0 10px rgba(0, 162, 255, 0.75)'
         }}
@@ -441,20 +454,22 @@ export default function App() {
 
         {/* Slide-over Fast Navigation Drawer (Disabled for desktop, guarded if opened) */}
         {sidebarOpen && (
-          <Sidebar
-            simulations={allSimulations}
-            selectedCategory={selectedSubject}
-            onSelectCategory={(cat) => {
-              setSelectedSubject(cat);
-              setSidebarOpen(false);
-              setCurrentView('catalog');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onSelectSim={handleSelectSim}
-            isOpen={sidebarOpen}
-            onToggle={() => setSidebarOpen(false)}
-            isDarkMode={isDarkMode}
-          />
+          <React.Suspense fallback={null}>
+            <Sidebar
+              simulations={allSimulations}
+              selectedCategory={selectedSubject}
+              onSelectCategory={(cat) => {
+                setSelectedSubject(cat);
+                setSidebarOpen(false);
+                setCurrentView('catalog');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onSelectSim={handleSelectSim}
+              isOpen={sidebarOpen}
+              onToggle={() => setSidebarOpen(false)}
+              isDarkMode={isDarkMode}
+            />
+          </React.Suspense>
         )}
 
         {/* Main Content Area: Switches between Clean Zero-Rush Home and Focused Lab Catalog */}
@@ -492,13 +507,15 @@ export default function App() {
           {/* Interactive Simulation Stage (Mounted when selected from search auto-open or AI generation) */}
           {activeStageSim && (
             <div className="scroll-mt-24" id="stage">
-              <MainStage
-                activeSim={activeStageSim}
-                totalSimulations={allSimulations.length}
-                onBackToCatalog={() => setActiveStageSim(null)}
-                onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                isDarkMode={isDarkMode}
-              />
+              <React.Suspense fallback={null}>
+                <MainStage
+                  activeSim={activeStageSim}
+                  totalSimulations={allSimulations.length}
+                  onBackToCatalog={() => setActiveStageSim(null)}
+                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                  isDarkMode={isDarkMode}
+                />
+              </React.Suspense>
             </div>
           )}
 
@@ -519,7 +536,9 @@ export default function App() {
 
               {/* Complete Interactive Simulation Roadmap: Play Class to FSc */}
               <div className="px-3 sm:px-6 lg:px-8 xl:px-12">
-                <SimulationRoadmapSection />
+                <React.Suspense fallback={null}>
+                  <SimulationRoadmapSection />
+                </React.Suspense>
               </div>
 
               {/* Full-Width Hover Slide-In Image between Future STEM card and Developer section */}
@@ -529,34 +548,36 @@ export default function App() {
 
           {currentView === 'catalog' && (
             /* VIEW 2: FOCUSED SIMULATION LABS CATALOG VIEW */
-            <div>
-              <StemRepositorySlider />
-              <div className="space-y-6">
-                <SectionViewHeader 
-                  badge="STEM REPOSITORY"
-                  title="Simulations"
-                  subtitle={`Curriculum-aligned interactive digital experiments across 10 disciplines (${allSimulations.length} Modules)`}
-                  onBack={handleBackToHome}
-                />
-                <SimulationCatalogGrid
-                  simulations={allSimulations}
-                  selectedCategory={selectedSubject}
-                  onSelectCategory={(cat) => setSelectedSubject(cat)}
-                  selectedGradeTier={selectedGradeTier}
-                  onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
-                  selectedClassKey={selectedClassKey}
-                  onSelectClassKey={(classKey) => setSelectedClassKey(classKey)}
-                  onSelectSim={handleSelectSim}
-                  onLaunchOnStage={handleLaunchOnStage}
-                  onTriggerAiGeneration={handleTriggerAiGeneration}
-                  isGeneratingAi={isGeneratingAi}
-                  onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                  isDarkMode={isDarkMode}
-                  isHomeView={false}
-                  onBackToHome={handleBackToHome}
-                />
+            <React.Suspense fallback={null}>
+              <div>
+                <StemRepositorySlider />
+                <div className="space-y-6">
+                  <SectionViewHeader 
+                    badge="STEM REPOSITORY"
+                    title="Simulations"
+                    subtitle={`Curriculum-aligned interactive digital experiments across 10 disciplines (${allSimulations.length} Modules)`}
+                    onBack={handleBackToHome}
+                  />
+                  <SimulationCatalogGrid
+                    simulations={allSimulations}
+                    selectedCategory={selectedSubject}
+                    onSelectCategory={(cat) => setSelectedSubject(cat)}
+                    selectedGradeTier={selectedGradeTier}
+                    onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
+                    selectedClassKey={selectedClassKey}
+                    onSelectClassKey={(classKey) => setSelectedClassKey(classKey)}
+                    onSelectSim={handleSelectSim}
+                    onLaunchOnStage={handleLaunchOnStage}
+                    onTriggerAiGeneration={handleTriggerAiGeneration}
+                    isGeneratingAi={isGeneratingAi}
+                    onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
+                    isDarkMode={isDarkMode}
+                    isHomeView={false}
+                    onBackToHome={handleBackToHome}
+                  />
+                </div>
               </div>
-            </div>
+            </React.Suspense>
           )}
 
           <React.Suspense fallback={null}>

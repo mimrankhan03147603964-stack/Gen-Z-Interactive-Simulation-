@@ -30,6 +30,8 @@ class ScrollRevealEngine {
   private mutationObserver: MutationObserver | null = null;
   private observedElements = new WeakSet<Element>();
   private safetyTimeoutId: number | null = null;
+  private mutationRafId: number | null = null;
+  private pendingMutationNodes = new Set<HTMLElement>();
   private isReducedMotion = false;
 
   public init() {
@@ -88,8 +90,14 @@ class ScrollRevealEngine {
               };
 
               el.addEventListener('transitionend', onTransitionEnd);
-              // Safety timeout in case transitionend does not fire on desktop
-              const delay = parseFloat(getComputedStyle(el).transitionDelay || '0') * 1000;
+              // Safety timeout without triggering synchronous getComputedStyle reflow
+              const delay = el.classList.contains('reveal-delay-3')
+                ? 300
+                : el.classList.contains('reveal-delay-2')
+                ? 200
+                : el.classList.contains('reveal-delay-1')
+                ? 100
+                : 0;
               window.setTimeout(onTransitionEnd, 1000 + delay);
             }
           } else {
@@ -130,23 +138,35 @@ class ScrollRevealEngine {
     elements.forEach((el) => this.register(el));
   }
 
+  private flushPendingMutations = () => {
+    this.mutationRafId = null;
+    this.pendingMutationNodes.forEach((el) => {
+      if (!el.isConnected || isInsideSimulation(el)) return;
+      if (el.matches && el.matches(REVEAL_SELECTOR)) {
+        this.register(el);
+      }
+      if (el.querySelectorAll) {
+        const children = el.querySelectorAll<HTMLElement>(REVEAL_SELECTOR);
+        children.forEach((child) => this.register(child));
+      }
+    });
+    this.pendingMutationNodes.clear();
+  };
+
   private setupMutationObserver() {
     this.mutationObserver = new MutationObserver((mutations) => {
+      let hasElements = false;
       for (const mutation of mutations) {
-        mutation.addedNodes.forEach((node) => {
+        for (let i = 0; i < mutation.addedNodes.length; i++) {
+          const node = mutation.addedNodes[i];
           if (node.nodeType === Node.ELEMENT_NODE) {
-            const el = node as HTMLElement;
-            if (isInsideSimulation(el)) return;
-
-            if (el.matches && el.matches(REVEAL_SELECTOR)) {
-              this.register(el);
-            }
-            if (el.querySelectorAll) {
-              const children = el.querySelectorAll<HTMLElement>(REVEAL_SELECTOR);
-              children.forEach((child) => this.register(child));
-            }
+            this.pendingMutationNodes.add(node as HTMLElement);
+            hasElements = true;
           }
-        });
+        }
+      }
+      if (hasElements && this.mutationRafId === null) {
+        this.mutationRafId = requestAnimationFrame(this.flushPendingMutations);
       }
     });
 
@@ -191,6 +211,11 @@ class ScrollRevealEngine {
 
   public destroy() {
     if (this.safetyTimeoutId) clearTimeout(this.safetyTimeoutId);
+    if (this.mutationRafId !== null) {
+      cancelAnimationFrame(this.mutationRafId);
+      this.mutationRafId = null;
+    }
+    this.pendingMutationNodes.clear();
     this.observer?.disconnect();
     this.mutationObserver?.disconnect();
     window.removeEventListener('resize', this.handleResize);
