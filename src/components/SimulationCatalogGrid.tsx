@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, useDeferredValue } from 'react';
 import { SimulationItem } from '../types';
 import { getSimTheme, getDisciplineColor } from '../data/simTheme';
 import { 
@@ -33,11 +33,11 @@ import { TopicRealisticIcon } from './TopicRealisticIcon';
 import { getThemeForIndex, getLaunchBtnStyle } from '../data/sequentialPalette';
 import { ScrollReveal } from './ScrollReveal';
 import { DisciplineCatalogHoverImage } from './DisciplineCatalogHoverImage';
-import { ChemistryBiologySlider } from './ChemistryBiologySlider';
 import {
   CLASS_PANELS_CONFIG,
   CURRICULUM_SUBJECT_META,
   ClassLevelKey,
+  ClassPanelDefinition,
   EMPTY_CLASS_LABELS,
   EMPTY_CLASS_MESSAGE,
   SelectableClassKey,
@@ -45,6 +45,249 @@ import {
   isEmptyClassKey
 } from '../data/curriculumClassMapping';
 import { scrollRevealEngine } from '../utils/scrollRevealManager';
+
+const ChemistryBiologySlider = React.lazy(() =>
+  import('./ChemistryBiologySlider').then((m) => ({ default: m.ChemistryBiologySlider }))
+);
+
+function createAllCollapsedMap(): Record<string, boolean> {
+  const map: Record<string, boolean> = {};
+  CLASS_PANELS_CONFIG.forEach((p) => {
+    map[p.key] = true;
+  });
+  return map;
+}
+
+function cleanCardTitleStatic(title: string): string {
+  return title
+    .replace(/\.html$/i, '')
+    .replace(/_/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+const LazyViewportMount: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shouldMount, setShouldMount] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || shouldMount) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setShouldMount(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setShouldMount(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px 0px', threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldMount]);
+
+  return (
+    <div ref={ref} className="w-full min-h-[1px]">
+      {shouldMount ? <React.Suspense fallback={null}>{children}</React.Suspense> : null}
+    </div>
+  );
+};
+
+interface LazyClassPanelBodyProps {
+  panel: ClassPanelDefinition;
+  panelSims: SimulationItem[];
+  totalSimulationsCount: number;
+  lazyOnScroll: boolean;
+  onCardClick: (sim: SimulationItem) => void;
+  onSelectSim?: (sim: SimulationItem) => void;
+}
+
+const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
+  ({ panel, panelSims, totalSimulationsCount, lazyOnScroll, onCardClick, onSelectSim }) => {
+    const bodyRef = useRef<HTMLDivElement>(null);
+    const [isLoaded, setIsLoaded] = useState<boolean>(() => !lazyOnScroll);
+
+    useEffect(() => {
+      if (!lazyOnScroll) {
+        setIsLoaded(true);
+        return;
+      }
+      if (isLoaded) return;
+
+      const el = bodyRef.current;
+      if (!el || typeof IntersectionObserver === 'undefined') {
+        const rafId = requestAnimationFrame(() => setIsLoaded(true));
+        return () => cancelAnimationFrame(rafId);
+      }
+
+      let rafId: number | null = null;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]?.isIntersecting) {
+            observer.disconnect();
+            rafId = requestAnimationFrame(() => {
+              setIsLoaded(true);
+            });
+          }
+        },
+        { rootMargin: '220px 0px', threshold: 0.01 }
+      );
+
+      observer.observe(el);
+      return () => {
+        observer.disconnect();
+        if (rafId !== null) cancelAnimationFrame(rafId);
+      };
+    }, [lazyOnScroll, isLoaded]);
+
+    useEffect(() => {
+      if (!isLoaded) return;
+      const timer = setTimeout(() => {
+        if (bodyRef.current) {
+          scrollRevealEngine.scanAndObserve(bodyRef.current);
+        }
+      }, 30);
+      return () => clearTimeout(timer);
+    }, [isLoaded, panelSims.length]);
+
+    const subjectGroups = useMemo(() => {
+      if (!isLoaded) return [];
+      return panel.subjectOrder
+        .map((subjectName) => ({
+          subjectName,
+          sims: panelSims.filter(
+            (sim) => getSimulationClassAssignment(sim).subject === subjectName
+          )
+        }))
+        .filter((group) => group.sims.length > 0);
+    }, [isLoaded, panel.subjectOrder, panelSims]);
+
+    return (
+      <div ref={bodyRef} className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5 space-y-5">
+        {!isLoaded ? (
+          <div className="min-h-[96px] flex items-center justify-center gap-2 text-xs font-semibold text-[#5A6E85]">
+            <Loader2 className="w-4 h-4 animate-spin text-[#1546A8]" />
+            <span>Loading {panel.name} simulations...</span>
+          </div>
+        ) : (
+          subjectGroups.map((group) => {
+            const subjMeta = CURRICULUM_SUBJECT_META[group.subjectName];
+            return (
+              <div
+                key={`${panel.key}-${group.subjectName}`}
+                className="space-y-3"
+                style={{
+                  '--subject-color': subjMeta.color,
+                  '--subject-tint': subjMeta.bg,
+                  '--subject-shadow-color': subjMeta.border
+                } as React.CSSProperties}
+              >
+                {/* Curriculum Subject Sub-Header */}
+                <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-200/90">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: subjMeta.color }}
+                    />
+                    <h4 className="text-xs sm:text-sm font-black uppercase tracking-wide text-[#1B2A5C] font-heading m-0">
+                      {group.subjectName}
+                    </h4>
+                  </div>
+                  <span
+                    className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono border shrink-0"
+                    style={{
+                      color: subjMeta.color,
+                      backgroundColor: subjMeta.bg,
+                      borderColor: subjMeta.border
+                    }}
+                  >
+                    {group.sims.length} {group.sims.length === 1 ? 'topic' : 'topics'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
+                  {group.sims.map((sim, cardIdx) => {
+                    const displayTitle = cleanCardTitleStatic(sim.title);
+                    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
+                    const col = cardIdx % 3;
+                    const cardReveal = col === 0 ? 'reveal-left' : col === 1 ? 'reveal-up reveal-delay-1' : 'reveal-right reveal-delay-2';
+
+                    return (
+                      <div key={sim.id} className={`${cardReveal} w-full h-full`}>
+                        <a
+                          href={getSimulationStandaloneUrl(sim)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onCardClick(sim);
+                            if (onSelectSim) onSelectSim(sim);
+                          }}
+                          className="horizontal-topic-card group w-full h-full"
+                          title={`Open #${sim.indexNumber} - ${displayTitle} in new tab`}
+                        >
+                          {/* Left: Realistic & Colorful Vector Emblem Tile */}
+                          <div
+                            className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
+                            aria-hidden="true"
+                          >
+                            <TopicRealisticIcon
+                              indexNumber={sim.indexNumber}
+                              simId={sim.id}
+                              className="w-full h-full pointer-events-none drop-shadow-2xs"
+                            />
+                          </div>
+
+                          {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
+                          <div className="flex-1 min-w-0 pr-1">
+                            <div className="flex items-start gap-1.5">
+                              <span
+                                className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black font-mono shrink-0 select-none shadow-2xs border mt-0.5"
+                                style={{
+                                  backgroundColor: '#1E88E5',
+                                  color: '#FFFFFF',
+                                  borderColor: '#1546A8'
+                                }}
+                                title={`Simulation #${sim.indexNumber} of ${totalSimulationsCount}`}
+                              >
+                                #{sim.indexNumber}
+                              </span>
+                              <span
+                                className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
+                                dir={isUrdu ? 'rtl' : 'ltr'}
+                                style={{
+                                  ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
+                                }}
+                              >
+                                {displayTitle}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Right: Subtle Arrow Indicator */}
+                          <div
+                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-slate-400 group-hover:text-[var(--subject-color)] group-hover:bg-[var(--subject-tint)] group-hover:translate-x-0.5 transition-all"
+                            aria-hidden="true"
+                          >
+                            <ArrowRight className="w-4 h-4 shrink-0 font-bold" />
+                          </div>
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+);
 
 import { 
   MultiStemAllIcon, 
@@ -273,24 +516,86 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   // Category state (Default to 'All Simulations' on initial load)
   const [internalCategory, setInternalCategory] = useState<string>('All Simulations');
 
-  // Quick search filter term
+  // Quick search filter term (deferred to keep typing smooth)
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const trimmedSearch = deferredSearchTerm.trim();
 
   // Track expanded descriptions per card (collapsed by default for progressive disclosure)
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
 
-  // List Length & Scroll Controls: Collapsible Class Panels & Quick Jump Class Filter
-  const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
+  // List Length & Scroll Controls: Start collapsed by default so page opens light and fast
+  const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>(() => {
+    const initial = createAllCollapsedMap();
+    if (controlledClassKey && controlledClassKey !== 'all' && !isEmptyClassKey(controlledClassKey)) {
+      initial[controlledClassKey] = false;
+    }
+    return initial;
+  });
+  const [isExpandAllActive, setIsExpandAllActive] = useState<boolean>(false);
   const [internalClassKey, setInternalClassKey] = useState<SelectableClassKey>('all');
   const selectedClassKey = controlledClassKey !== undefined ? controlledClassKey : internalClassKey;
 
-  const setSelectedClassKey = (key: SelectableClassKey) => {
-    if (onSelectClassKey) {
-      onSelectClassKey(key);
+  const setSelectedClassKey = useCallback(
+    (key: SelectableClassKey) => {
+      if (onSelectClassKey) {
+        onSelectClassKey(key);
+      } else {
+        setInternalClassKey(key);
+      }
+    },
+    [onSelectClassKey]
+  );
+
+  const scrollToClassElement = useCallback((classKey?: SelectableClassKey) => {
+    setTimeout(() => {
+      const targetEl =
+        classKey && classKey !== 'all' && !isEmptyClassKey(classKey)
+          ? document.getElementById(`class-panel-${classKey}`) || document.getElementById('class-results-anchor')
+          : document.getElementById('class-results-anchor');
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+  }, []);
+
+  const handleSelectClass = useCallback(
+    (key: SelectableClassKey, shouldScroll = true) => {
+      setIsExpandAllActive(false);
+      setSelectedClassKey(key);
+      if (key === 'all') {
+        setCollapsedPanels(createAllCollapsedMap());
+      } else if (!isEmptyClassKey(key)) {
+        const next = createAllCollapsedMap();
+        next[key] = false;
+        setCollapsedPanels(next);
+        if (shouldScroll) {
+          scrollToClassElement(key);
+        }
+      } else {
+        setCollapsedPanels(createAllCollapsedMap());
+        if (shouldScroll) {
+          scrollToClassElement(key);
+        }
+      }
+    },
+    [setSelectedClassKey, scrollToClassElement]
+  );
+
+  // Sync panel expand/collapse state whenever controlledClassKey changes (e.g. from TopNavbar dropdown)
+  useEffect(() => {
+    if (controlledClassKey === undefined) return;
+    setIsExpandAllActive(false);
+    if (controlledClassKey === 'all') {
+      setCollapsedPanels(createAllCollapsedMap());
+    } else if (!isEmptyClassKey(controlledClassKey)) {
+      const next = createAllCollapsedMap();
+      next[controlledClassKey] = false;
+      setCollapsedPanels(next);
     } else {
-      setInternalClassKey(key);
+      setCollapsedPanels(createAllCollapsedMap());
     }
-  };
+  }, [controlledClassKey]);
 
   const togglePanelCollapse = (key: string) => {
     setCollapsedPanels(prev => ({
@@ -300,14 +605,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const collapseAllPanels = () => {
-    const allCollapsed: Record<string, boolean> = {};
-    CLASS_PANELS_CONFIG.forEach(p => {
-      allCollapsed[p.key] = true;
-    });
-    setCollapsedPanels(allCollapsed);
+    setIsExpandAllActive(false);
+    setCollapsedPanels(createAllCollapsedMap());
   };
 
   const expandAllPanels = () => {
+    setIsExpandAllActive(true);
     setCollapsedPanels({});
   };
 
@@ -316,7 +619,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       scrollRevealEngine.scanAndObserve();
     }, 50);
     return () => clearTimeout(timer);
-  }, [selectedClassKey, collapsedPanels]);
+  }, [selectedClassKey, collapsedPanels, trimmedSearch]);
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
 
@@ -393,7 +696,9 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   ];
 
   const handleGradeTierChange = (tierKey: string) => {
+    setIsExpandAllActive(false);
     setSelectedClassKey('all');
+    setCollapsedPanels(createAllCollapsedMap());
     if (onSelectGradeTier) {
       onSelectGradeTier(tierKey);
     } else {
@@ -401,16 +706,28 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     }
     if (isHomeView && onOpenCatalog) {
       onOpenCatalog(undefined, tierKey);
+    } else if (tierKey !== 'all') {
+      scrollToClassElement('all');
     }
   };
 
   const handleCategoryChange = (catKey: string) => {
+    setIsExpandAllActive(false);
     setSelectedClassKey('all');
     if (catKey !== 'All Simulations') {
       const countInCurrentTier = activeSimulations.filter(s => s.category === catKey && matchesGradeTier(s, selectedGradeTier)).length;
       if (countInCurrentTier === 0) {
-        handleGradeTierChange('all');
+        if (onSelectGradeTier) {
+          onSelectGradeTier('all');
+        } else {
+          setInternalGradeTier('all');
+        }
       }
+      // Expand only the selected subject's matching panels (loaded lazily on scroll)
+      setCollapsedPanels({});
+    } else {
+      // "All Simulations" shows compact collapsed class headers, not all 147 at once
+      setCollapsedPanels(createAllCollapsedMap());
     }
     if (onSelectCategory) {
       onSelectCategory(catKey);
@@ -419,23 +736,44 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     }
     if (isHomeView && onOpenCatalog) {
       onOpenCatalog(catKey, undefined);
+    } else if (catKey !== 'All Simulations') {
+      scrollToClassElement('all');
     }
   };
 
+  const prevControlledCategoryRef = useRef<string | undefined>(controlledCategory);
+
   useEffect(() => {
+    const prevCategory = prevControlledCategoryRef.current;
+    prevControlledCategoryRef.current = controlledCategory;
+
     if (controlledCategory && controlledCategory !== 'All Simulations') {
       const countInCurrentTier = simulations.filter(
         s => s.category === controlledCategory && matchesGradeTier(s, selectedGradeTier)
       ).length;
       if (countInCurrentTier === 0) {
-        handleGradeTierChange('all');
+        if (onSelectGradeTier) {
+          onSelectGradeTier('all');
+        } else {
+          setInternalGradeTier('all');
+        }
       }
+      setIsExpandAllActive(false);
+      setCollapsedPanels({});
+    } else if (
+      controlledCategory === 'All Simulations' &&
+      prevCategory &&
+      prevCategory !== 'All Simulations' &&
+      selectedClassKey === 'all'
+    ) {
+      setIsExpandAllActive(false);
+      setCollapsedPanels(createAllCollapsedMap());
     }
-  }, [controlledCategory, simulations, selectedGradeTier]);
+  }, [controlledCategory, simulations, selectedGradeTier, onSelectGradeTier, selectedClassKey]);
 
-  const handleCardClick = (sim: SimulationItem) => {
+  const handleCardClick = useCallback((sim: SimulationItem) => {
     openSimulationInNewTab(sim);
-  };
+  }, []);
 
   // All active simulation labs including standalone uploaded modules
   const activeSimulations = simulations;
@@ -552,8 +890,8 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   };
 
   const matchesSearch = (sim: SimulationItem) => {
-    if (!searchTerm) return true;
-    const term = searchTerm.toLowerCase();
+    if (!trimmedSearch) return true;
+    const term = trimmedSearch.toLowerCase();
     const cleanT = cleanCardTitle(sim.title).toLowerCase();
     const cleanS = cleanCardSubject(sim.subject).toLowerCase();
     const cleanD = cleanCardDescription(sim.description).toLowerCase();
@@ -578,17 +916,42 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
   const isAllCategory = selectedCategory === 'All Simulations' || selectedCategory === 'All';
 
   // Two-tier filtered simulations: Grade Level Tier & STEM Subject Tier + Real-time Instant Search
-  const baseDisplayedSims = activeSimulations.filter(s => {
-    if (!matchesGradeTier(s, selectedGradeTier)) return false;
-    if (!isAllCategory && s.category !== selectedCategory) return false;
-    if (!matchesSearch(s)) return false;
-    return true;
-  });
+  const baseDisplayedSims = useMemo(() => {
+    return activeSimulations.filter(s => {
+      if (!matchesGradeTier(s, selectedGradeTier)) return false;
+      if (!isAllCategory && s.category !== selectedCategory) return false;
+      if (!matchesSearch(s)) return false;
+      return true;
+    });
+  }, [activeSimulations, selectedGradeTier, isAllCategory, selectedCategory, trimmedSearch]);
 
-  const displayedSims =
-    selectedClassKey === 'all'
-      ? baseDisplayedSims
-      : baseDisplayedSims.filter(s => getSimulationClassAssignment(s).classKey === selectedClassKey);
+  // Pre-group simulations by class once in O(N) for fast counts and on-demand rendering
+  const simsByClass = useMemo(() => {
+    const grouped: Record<ClassLevelKey, SimulationItem[]> = {
+      'play-prep': [],
+      'class-1': [],
+      'class-2': [],
+      'class-3': [],
+      'class-4': [],
+      'class-5': [],
+      'class-6': [],
+      'class-7': [],
+      'class-8': [],
+      'class-9': [],
+      'class-10': []
+    };
+    baseDisplayedSims.forEach((sim) => {
+      const { classKey } = getSimulationClassAssignment(sim);
+      grouped[classKey].push(sim);
+    });
+    return grouped;
+  }, [baseDisplayedSims]);
+
+  const displayedSims = useMemo(() => {
+    if (selectedClassKey === 'all') return baseDisplayedSims;
+    if (isEmptyClassKey(selectedClassKey)) return [];
+    return simsByClass[selectedClassKey] || [];
+  }, [selectedClassKey, baseDisplayedSims, simsByClass]);
 
   const getClassPanelIcon = (classKey: ClassLevelKey) => {
     if (classKey === 'play-prep') return MultiEcceIcon;
@@ -981,7 +1344,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               {selectedClassKey !== 'all' && (
                 <button
                   type="button"
-                  onClick={() => setSelectedClassKey('all')}
+                  onClick={() => handleSelectClass('all', false)}
                   className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#EEF3F9] text-[#1E88E5] border border-[#DDE5F3] hover:bg-[#DBE7FB] transition-colors cursor-pointer"
                   title="Show all classes"
                 >
@@ -1060,7 +1423,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-2.5 w-full">
               <button
                 type="button"
-                onClick={() => setSelectedClassKey('all')}
+                onClick={() => handleSelectClass('all', false)}
                 className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
                   selectedClassKey === 'all'
                     ? 'bg-[#1546A8] text-white border-[#1546A8] shadow-md scale-[1.02]'
@@ -1083,15 +1446,13 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 </span>
               </button>
               {CLASS_PANELS_CONFIG.map((cls) => {
-                const count = baseDisplayedSims.filter(
-                  (s) => getSimulationClassAssignment(s).classKey === cls.key
-                ).length;
+                const count = (simsByClass[cls.key] || []).length;
                 const isSelected = selectedClassKey === cls.key;
                 return (
                   <button
                     key={`pill-${cls.key}`}
                     type="button"
-                    onClick={() => setSelectedClassKey(cls.key)}
+                    onClick={() => handleSelectClass(cls.key, true)}
                     className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
                       isSelected
                         ? 'text-white shadow-md scale-[1.02]'
@@ -1123,7 +1484,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
           </div>
         </div>
 
-        {/* Horizontal Class Panels (Play Group/Prep to Class 10) with Curriculum Subject Sub-Sections */}
+        {/* Horizontal Class Panels (Play Group/Prep to Class 10) — On-Demand & Lazy Rendered */}
         {displayedSims.length > 0 ? (
           <div className="space-y-6 w-full">
             {CLASS_PANELS_CONFIG
@@ -1134,44 +1495,48 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                 return true;
               })
               .map((panel, panelIdx) => {
-                const panelSims = displayedSims.filter(
-                  (sim) => getSimulationClassAssignment(sim).classKey === panel.key
-                );
+                const panelSims = simsByClass[panel.key] || [];
 
                 // Omit classes that have no matching simulations under current filter/search
                 if (panelSims.length === 0) return null;
 
                 const PanelIcon = getClassPanelIcon(panel.key);
                 const panelReveal = panelIdx % 2 === 0 ? 'reveal-left' : 'reveal-right';
-                const isPanelCollapsed = !!collapsedPanels[panel.key];
+                // When searching by keyword, auto-expand only the matching class panels; otherwise respect collapsed state
+                const isPanelCollapsed = trimmedSearch ? false : !!collapsedPanels[panel.key];
+                const isMultiPanelView = selectedClassKey === 'all';
 
-                // Group simulations inside this class according to SNC 2020 / NCP 2022-23 & 2026-27 subjects
-                const subjectGroups = panel.subjectOrder
-                  .map((subjectName) => ({
-                    subjectName,
-                    sims: panelSims.filter(
-                      (sim) => getSimulationClassAssignment(sim).subject === subjectName
-                    )
-                  }))
-                  .filter((group) => group.sims.length > 0);
+                const handleHeaderClick = () => {
+                  if (
+                    selectedClassKey === 'all' &&
+                    !isExpandAllActive &&
+                    !trimmedSearch &&
+                    isAllCategory
+                  ) {
+                    // Clicking a class header in the overview opens only that class and hides all others
+                    handleSelectClass(panel.key, true);
+                  } else {
+                    togglePanelCollapse(panel.key);
+                  }
+                };
 
                 return (
                   <React.Fragment key={panel.key}>
                     <div
                       id={`class-panel-${panel.key}`}
-                      className={`subject-panel-horizontal ${panelReveal}`}
+                      className={`subject-panel-horizontal scroll-mt-24 ${panelReveal}`}
                       style={{
                         '--subject-color': panel.color,
                         '--subject-tint': panel.tint,
                         '--subject-shadow-color': panel.shadow
                       } as React.CSSProperties}
                     >
-                      {/* Header Bar Across the Top in Class's Color - Clickable to Collapse / Expand */}
+                      {/* Header Bar Across the Top in Class's Color - Clickable to Select / Expand / Collapse */}
                       <div
-                        onClick={() => togglePanelCollapse(panel.key)}
+                        onClick={handleHeaderClick}
                         className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-105 transition-all"
                         style={{ backgroundColor: panel.color }}
-                        title={isPanelCollapsed ? `Click to expand ${panel.name}` : `Click to collapse ${panel.name}`}
+                        title={isPanelCollapsed ? `Click to open ${panel.name}` : `Click to collapse ${panel.name}`}
                       >
                         <div className="flex items-center gap-3.5 min-w-0">
                           <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
@@ -1197,123 +1562,22 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                         </div>
                       </div>
 
-                      {/* Curriculum Subjects & Horizontal Multi-Column Grid of Topic Cards */}
+                      {/* Curriculum Subjects & Topic Cards — Mounted strictly on demand when expanded */}
                       {!isPanelCollapsed && (
-                        <div className="p-4 sm:p-5 bg-slate-50/70 border-t border-black/5 space-y-5">
-                          {subjectGroups.map((group) => {
-                            const subjMeta = CURRICULUM_SUBJECT_META[group.subjectName];
-                            return (
-                              <div
-                                key={`${panel.key}-${group.subjectName}`}
-                                className="space-y-3"
-                                style={{
-                                  '--subject-color': subjMeta.color,
-                                  '--subject-tint': subjMeta.bg,
-                                  '--subject-shadow-color': subjMeta.border
-                                } as React.CSSProperties}
-                              >
-                                {/* Curriculum Subject Sub-Header */}
-                                <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-200/90">
-                                  <div className="flex items-center gap-2">
-                                    <span
-                                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                                      style={{ backgroundColor: subjMeta.color }}
-                                    />
-                                    <h4 className="text-xs sm:text-sm font-black uppercase tracking-wide text-[#1B2A5C] font-heading m-0">
-                                      {group.subjectName}
-                                    </h4>
-                                  </div>
-                                  <span
-                                    className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono border shrink-0"
-                                    style={{
-                                      color: subjMeta.color,
-                                      backgroundColor: subjMeta.bg,
-                                      borderColor: subjMeta.border
-                                    }}
-                                  >
-                                    {group.sims.length} {group.sims.length === 1 ? 'topic' : 'topics'}
-                                  </span>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
-                                  {group.sims.map((sim, cardIdx) => {
-                                    const displayTitle = cleanCardTitle(sim.title);
-                                    const isUrdu = sim.category === 'Urdu & Linguistics' || /[\u0600-\u06FF]/.test(sim.title);
-                                    const col = cardIdx % 3;
-                                    const cardReveal = col === 0 ? 'reveal-left' : col === 1 ? 'reveal-up reveal-delay-1' : 'reveal-right reveal-delay-2';
-
-                                    return (
-                                      <div key={sim.id} className={`${cardReveal} w-full h-full`}>
-                                        <a
-                                          href={getSimulationStandaloneUrl(sim)}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            handleCardClick(sim);
-                                            if (onSelectSim) onSelectSim(sim);
-                                          }}
-                                          className="horizontal-topic-card group w-full h-full"
-                                          title={`Open #${sim.indexNumber} - ${displayTitle} in new tab`}
-                                        >
-                                          {/* Left: Realistic & Colorful Vector Emblem Tile */}
-                                          <div
-                                            className="w-[38px] h-[38px] sm:w-[42px] sm:h-[42px] rounded-xl flex items-center justify-center shrink-0 p-1 bg-white shadow-2xs border border-slate-200/90 group-hover:scale-105 group-hover:border-slate-300 transition-transform duration-150 overflow-hidden"
-                                            aria-hidden="true"
-                                          >
-                                            <TopicRealisticIcon
-                                              indexNumber={sim.indexNumber}
-                                              simId={sim.id}
-                                              className="w-full h-full pointer-events-none drop-shadow-2xs"
-                                            />
-                                          </div>
-
-                                          {/* Center: Full Topic Title with English Serial Number - 100% Fully Visible, No Cutoff, No Truncate, No Overlap */}
-                                          <div className="flex-1 min-w-0 pr-1">
-                                            <div className="flex items-start gap-1.5">
-                                              <span 
-                                                className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[11px] font-black font-mono shrink-0 select-none shadow-2xs border mt-0.5"
-                                                style={{
-                                                  backgroundColor: '#1E88E5',
-                                                  color: '#FFFFFF',
-                                                  borderColor: '#1546A8'
-                                                }}
-                                                title={`Simulation #${sim.indexNumber} of ${activeSimulations.length}`}
-                                              >
-                                                #{sim.indexNumber}
-                                              </span>
-                                              <span
-                                                className={`font-bold text-slate-900 group-hover:text-[var(--subject-color)] transition-colors block break-words ${isUrdu ? 'font-urdu text-[16px] sm:text-[17px] text-right py-0.5' : 'text-[14px] sm:text-[15px] leading-snug'}`}
-                                                dir={isUrdu ? 'rtl' : 'ltr'}
-                                                style={{
-                                                  ...(isUrdu ? { fontFamily: "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif", lineHeight: 2.2 } : {})
-                                                }}
-                                              >
-                                                {displayTitle}
-                                              </span>
-                                            </div>
-                                          </div>
-
-                                          {/* Right: Subtle Arrow Indicator */}
-                                          <div 
-                                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-slate-400 group-hover:text-[var(--subject-color)] group-hover:bg-[var(--subject-tint)] group-hover:translate-x-0.5 transition-all"
-                                            aria-hidden="true"
-                                          >
-                                            <ArrowRight className="w-4 h-4 shrink-0 font-bold" />
-                                          </div>
-                                        </a>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                        <LazyClassPanelBody
+                          panel={panel}
+                          panelSims={panelSims}
+                          totalSimulationsCount={activeSimulations.length}
+                          lazyOnScroll={isMultiPanelView}
+                          onCardClick={handleCardClick}
+                          onSelectSim={onSelectSim}
+                        />
                       )}
                     </div>
-                    {panel.key === 'class-5' && selectedClassKey === 'all' && isAllCategory && !searchTerm && selectedGradeTier === 'all' && (
-                      <ChemistryBiologySlider />
+                    {panel.key === 'class-5' && selectedClassKey === 'all' && isAllCategory && !trimmedSearch && selectedGradeTier === 'all' && (
+                      <LazyViewportMount>
+                        <ChemistryBiologySlider />
+                      </LazyViewportMount>
                     )}
                   </React.Fragment>
                 );
@@ -1343,7 +1607,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedClassKey('all');
+                  handleSelectClass('all', false);
                   handleCategoryChange('All Simulations');
                   handleGradeTierChange('all');
                   setSearchTerm('');
@@ -1400,7 +1664,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
 
               <button
                 onClick={() => {
-                  setSelectedClassKey('all');
+                  handleSelectClass('all', false);
                   handleCategoryChange('All Simulations');
                   setSearchTerm('');
                 }}
