@@ -290,28 +290,94 @@ export const Footer: React.FC<FooterProps> = ({ totalSimulations = 128 }) => {
     >
       {/* Developer Photo Layer: Slides in smoothly from LEFT (fade-in + translateX) on scroll */}
       <div
-        className={`absolute inset-0 pointer-events-none z-0 dev-photo-anim ${isSectionVisible ? 'animate' : ''}`}
-        style={{
-          backgroundImage: shouldLoadBg
-            ? "url('/assets/aistudio/WhatsApp_Image_2026-11-08_at_9.01.00_AM_24aa8b46.jpeg')"
-            : 'none',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
+        className={`absolute inset-0 pointer-events-none z-0 overflow-hidden dev-photo-anim ${isSectionVisible ? 'animate' : ''}`}
       >
+        {/* Right-side developer portrait with object-fit so the face stays well framed on all screen sizes */}
+        <div className="absolute inset-0 sm:left-[42%] md:left-[45%] lg:left-[46%] right-0 top-0 h-full sm:h-[520px] lg:h-[560px]">
+          {shouldLoadBg && (
+            <img
+              src="/assets/aistudio/WhatsApp_Image_2026-11-27_at_10.33.44_AM_36ab97e6.jpeg"
+              alt="Muhammad Imran Khan — Founder and Lead Developer of Gen Z Interactive Simulations"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover object-[28%_top] sm:object-[28%_18%] lg:object-[32%_18%] select-none pointer-events-none"
+            />
+          )}
+
+          {/* Soft left & bottom fade into the white footer canvas on desktop/tablet */}
+          <div
+            className="absolute inset-0 pointer-events-none hidden sm:block"
+            style={{
+              background:
+                'linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 11%, rgba(255, 255, 255, 0.35) 22%, rgba(255, 255, 255, 0) 36%)'
+            }}
+          />
+          <div
+            className="absolute inset-x-0 bottom-0 h-28 pointer-events-none hidden sm:block"
+            style={{
+              background:
+                'linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.72) 45%, rgba(255, 255, 255, 0) 100%)'
+            }}
+          />
+        </div>
+
+        {/* Blue curved background design matching the original developer section */}
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 1440 800"
+          preserveAspectRatio="none"
+          className="absolute inset-0 w-full h-full pointer-events-none hidden sm:block"
+          style={{ mixBlendMode: 'multiply' }}
+        >
+          <defs>
+            <linearGradient id="devCurveTopBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#60A5FA" stopOpacity="0.28" />
+              <stop offset="50%" stopColor="#1E88E5" stopOpacity="0.82" />
+              <stop offset="100%" stopColor="#1546A8" stopOpacity="0.95" />
+            </linearGradient>
+            <linearGradient id="devCurveAccentBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#2563EB" stopOpacity="0.65" />
+            </linearGradient>
+            <linearGradient id="devCurveBottomBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.22" />
+              <stop offset="55%" stopColor="#1E88E5" stopOpacity="0.72" />
+              <stop offset="100%" stopColor="#1546A8" stopOpacity="0.92" />
+            </linearGradient>
+          </defs>
+          {/* Sweeping upper-right blue wave above the desk/laptop white studio zone */}
+          <path
+            d="M 1030 0 C 1135 55, 1285 95, 1440 195 L 1440 0 Z"
+            fill="url(#devCurveAccentBlue)"
+          />
+          <path
+            d="M 1110 0 C 1210 52, 1320 98, 1440 165 L 1440 0 Z"
+            fill="url(#devCurveTopBlue)"
+          />
+          {/* Sweeping lower-right blue wave framing the bottom-right footer corner */}
+          <path
+            d="M 960 800 C 1120 715, 1295 620, 1440 500 L 1440 800 Z"
+            fill="url(#devCurveAccentBlue)"
+          />
+          <path
+            d="M 1055 800 C 1200 725, 1335 645, 1440 555 L 1440 800 Z"
+            fill="url(#devCurveBottomBlue)"
+          />
+        </svg>
+
+        {/* Readability overlays preserving crisp text legibility on desktop and mobile */}
         <div
           className="absolute inset-0 pointer-events-none z-0 hidden sm:block"
           style={{
             background:
-              'linear-gradient(to right, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.90) 36%, rgba(255, 255, 255, 0.55) 58%, rgba(255, 255, 255, 0) 82%)'
+              'linear-gradient(to right, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.94) 40%, rgba(255, 255, 255, 0.28) 52%, rgba(255, 255, 255, 0) 64%)'
           }}
         />
         <div
           className="absolute inset-0 pointer-events-none z-0 block sm:hidden"
           style={{
             background:
-              'linear-gradient(to right, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.90) 70%, rgba(255, 255, 255, 0.6) 100%)'
+              'linear-gradient(to right, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.88) 68%, rgba(255, 255, 255, 0.58) 100%)'
           }}
         />
       </div>
