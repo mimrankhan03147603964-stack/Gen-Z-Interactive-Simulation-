@@ -416,25 +416,56 @@ const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
   }
 );
 
-// Reusable smooth count-up animation for Quick Jump chip counts
+// Reusable smooth ease-out count-up animation for Quick Jump box numbers
 const AnimatedBadgeCounter: React.FC<{
   target: number;
   isVisible: boolean;
+  triggerKey: number;
   duration?: number;
-}> = ({ target, isVisible, duration = 1800 }) => {
-  const [displayValue, setDisplayValue] = useState<number>(0);
+}> = ({ target, isVisible, triggerKey, duration = 2800 }) => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    setPrefersReducedMotion(mediaQuery.matches);
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
+
+  const [displayValue, setDisplayValue] = useState<number>(() =>
+    prefersReducedMotion ? target : 0
+  );
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setDisplayValue(target);
+      return;
+    }
+
+    if (!isVisible) {
+      setDisplayValue(0);
+      return;
+    }
 
     let startTime: number | null = null;
     let animationFrameId: number;
+    setDisplayValue(0);
 
     const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
+      if (startTime === null) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
+      // Smooth cubic ease-out curve so counting slows gently near the final number
       const easeOut = 1 - Math.pow(1 - progress, 3);
       setDisplayValue(Math.round(target * easeOut));
 
@@ -447,9 +478,13 @@ const AnimatedBadgeCounter: React.FC<{
 
     animationFrameId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [target, isVisible, duration]);
+  }, [target, isVisible, triggerKey, duration, prefersReducedMotion]);
 
-  return <>{isVisible ? displayValue : 0}</>;
+  return (
+    <span className="tabular-nums" style={{ fontVariantNumeric: 'tabular-nums' }}>
+      {prefersReducedMotion ? target : isVisible ? displayValue : 0}
+    </span>
+  );
 };
 
 interface SimulationCatalogGridProps {
@@ -616,32 +651,54 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     return () => clearTimeout(timer);
   }, [selectedClassKey, collapsedPanels, trimmedSearch]);
 
-  // Intersection Observer for Quick Jump chip count-up animation
+  // Intersection Observer for Quick Jump count-up animation (starts at ~30% visible, replays on scroll away & back)
   const quickJumpRef = useRef<HTMLDivElement>(null);
+  const quickJumpInViewRef = useRef<boolean>(false);
   const [isQuickJumpVisible, setIsQuickJumpVisible] = useState<boolean>(false);
+  const [quickJumpAnimKey, setQuickJumpAnimKey] = useState<number>(0);
 
   useEffect(() => {
     const el = quickJumpRef.current;
     if (!el) return;
 
     if (typeof IntersectionObserver === 'undefined') {
+      quickJumpInViewRef.current = true;
       setIsQuickJumpVisible(true);
+      setQuickJumpAnimKey((k) => k + 1);
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsQuickJumpVisible(true);
-          observer.disconnect();
+        const entry = entries[0];
+        if (!entry) return;
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+          if (!quickJumpInViewRef.current) {
+            quickJumpInViewRef.current = true;
+            setIsQuickJumpVisible(true);
+            setQuickJumpAnimKey((k) => k + 1);
+          }
+        } else if (!entry.isIntersecting) {
+          if (quickJumpInViewRef.current) {
+            quickJumpInViewRef.current = false;
+            setIsQuickJumpVisible(false);
+          }
         }
       },
-      { threshold: 0.05, rootMargin: '0px 0px -10px 0px' }
+      { threshold: [0, 0.3] }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // Also replay the Quick Jump count-up when class view is reopened via navbar navigation while visible
+  useEffect(() => {
+    if (classSelectNonce > 0 && quickJumpInViewRef.current) {
+      setQuickJumpAnimKey((k) => k + 1);
+    }
+  }, [classSelectNonce]);
 
   const handleCardClick = useCallback((sim: SimulationItem) => {
     openSimulationInNewTab(sim);
@@ -900,43 +957,46 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </div>
           </div>
 
-          {/* Quick Jump Responsive Grid of Roomy Class Boxes */}
+          {/* Quick Jump Responsive Grid of Roomy Class Boxes (Desktop-first: 6 per row on large screens) */}
           <div ref={quickJumpRef} className="pt-3.5 border-t border-[#EEF3F9] space-y-3 select-none">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider flex items-center gap-1">
                 <span>Quick Jump:</span>
               </span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3.5 sm:gap-4 w-full">
               <button
                 type="button"
                 onClick={() => handleSelectClass('all', false)}
-                className={`w-full min-h-[84px] sm:min-h-[92px] px-4 py-3.5 sm:px-5 sm:py-4 rounded-xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 ${
+                className={`w-full min-h-[104px] sm:min-h-[112px] md:min-h-[116px] xl:min-h-[122px] 2xl:min-h-[128px] px-3.5 py-4 sm:px-4 sm:py-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center border-2 ${
                   selectedClassKey === 'all'
-                    ? 'text-white border-2 border-[#F5A623] shadow-md scale-[1.02]'
-                    : 'bg-[#F4F7FC] text-[#1B2A5C] border border-[#D5E0F2] hover:bg-[#E6EFFC] hover:border-[#1546A8]/50 hover:-translate-y-0.5 hover:shadow-sm'
+                    ? 'text-white border-[#F5A623] hover:-translate-y-1'
+                    : 'bg-[#F0F5FD] text-[#0B1B3F] border-[#A8BFE2] shadow-[0_4px_12px_rgba(15,30,66,0.08)] hover:bg-[#E4EEFC] hover:border-[#1546A8] hover:-translate-y-1 hover:shadow-[0_10px_22px_rgba(21,70,168,0.18)]'
                 }`}
-                style={
-                  selectedClassKey === 'all'
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+                  ...(selectedClassKey === 'all'
                     ? {
                         background: 'linear-gradient(135deg, #0F1E42 0%, #1546A8 100%)',
-                        boxShadow: '0 6px 18px rgba(21, 70, 168, 0.28)'
+                        boxShadow: '0 10px 24px rgba(15, 30, 66, 0.30)'
                       }
-                    : undefined
-                }
+                    : {})
+                }}
               >
-                <span className="text-sm sm:text-[15px] font-black font-heading leading-snug tracking-tight">
+                <span className="text-[20px] sm:text-[22px] md:text-[24px] xl:text-[26px] 2xl:text-[28px] font-extrabold leading-[1.15] tracking-tight text-balance">
                   All
                 </span>
                 <span
-                  className={`text-[11px] sm:text-xs font-medium leading-none ${
-                    selectedClassKey === 'all' ? 'text-[#FDE68A]' : 'text-[#5A6E85]'
+                  className={`text-[13px] sm:text-[14px] md:text-[15px] 2xl:text-[16px] font-semibold leading-snug tabular-nums ${
+                    selectedClassKey === 'all' ? 'text-[#FDE68A]' : 'text-[#1E3A6E]'
                   }`}
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
                 >
                   <AnimatedBadgeCounter
                     target={baseDisplayedSims.length}
                     isVisible={isQuickJumpVisible}
-                    duration={1800}
+                    triggerKey={quickJumpAnimKey}
+                    duration={2800}
                   />{' '}
                   {baseDisplayedSims.length === 1 ? 'simulation' : 'simulations'}
                 </span>
@@ -949,32 +1009,35 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     key={`pill-${cls.key}`}
                     type="button"
                     onClick={() => handleSelectClass(cls.key, true)}
-                    className={`w-full min-h-[84px] sm:min-h-[92px] px-4 py-3.5 sm:px-5 sm:py-4 rounded-xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 ${
+                    className={`w-full min-h-[104px] sm:min-h-[112px] md:min-h-[116px] xl:min-h-[122px] 2xl:min-h-[128px] px-3.5 py-4 sm:px-4 sm:py-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center border-2 ${
                       isSelected
-                        ? 'text-white border-2 border-[#F5A623] shadow-md scale-[1.02]'
-                        : 'bg-[#F4F7FC] text-[#1B2A5C] border border-[#D5E0F2] hover:bg-[#E6EFFC] hover:border-[#1546A8]/50 hover:-translate-y-0.5 hover:shadow-sm'
+                        ? 'text-white border-[#F5A623] hover:-translate-y-1'
+                        : 'bg-[#F0F5FD] text-[#0B1B3F] border-[#A8BFE2] shadow-[0_4px_12px_rgba(15,30,66,0.08)] hover:bg-[#E4EEFC] hover:border-[#1546A8] hover:-translate-y-1 hover:shadow-[0_10px_22px_rgba(21,70,168,0.18)]'
                     }`}
-                    style={
-                      isSelected
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+                      ...(isSelected
                         ? {
                             background: 'linear-gradient(135deg, #0F1E42 0%, #1546A8 100%)',
-                            boxShadow: '0 6px 18px rgba(21, 70, 168, 0.28)'
+                            boxShadow: '0 10px 24px rgba(15, 30, 66, 0.30)'
                           }
-                        : undefined
-                    }
+                        : {})
+                    }}
                   >
-                    <span className="text-sm sm:text-[15px] font-black font-heading leading-snug tracking-tight break-words">
+                    <span className="text-[20px] sm:text-[22px] md:text-[24px] xl:text-[26px] 2xl:text-[28px] font-extrabold leading-[1.15] tracking-tight break-words text-balance">
                       {cls.shortLabel}
                     </span>
                     <span
-                      className={`text-[11px] sm:text-xs font-medium leading-none ${
-                        isSelected ? 'text-[#FDE68A]' : 'text-[#5A6E85]'
+                      className={`text-[13px] sm:text-[14px] md:text-[15px] 2xl:text-[16px] font-semibold leading-snug tabular-nums ${
+                        isSelected ? 'text-[#FDE68A]' : 'text-[#1E3A6E]'
                       }`}
+                      style={{ fontVariantNumeric: 'tabular-nums' }}
                     >
                       <AnimatedBadgeCounter
                         target={count}
                         isVisible={isQuickJumpVisible}
-                        duration={1800}
+                        triggerKey={quickJumpAnimKey}
+                        duration={2800}
                       />{' '}
                       {count === 1 ? 'simulation' : 'simulations'}
                     </span>
