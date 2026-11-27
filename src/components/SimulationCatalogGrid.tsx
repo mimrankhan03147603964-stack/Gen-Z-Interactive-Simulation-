@@ -27,11 +27,11 @@ import {
 } from '../data/curriculumClassMapping';
 import { scrollRevealEngine } from '../utils/scrollRevealManager';
 import {
-  MultiEcceIcon,
-  MultiPrimaryIcon,
-  MultiMiddleIcon,
-  MultiSecondaryIcon
-} from './ModernStemIcons';
+  PlayPrepBlocksIcon,
+  PrimaryBackpackIcon,
+  MiddleGlobeBookIcon,
+  SecondaryMicroscopeIcon
+} from './ClassLevelIcons';
 
 const ChemistryBiologySlider = React.lazy(() =>
   import('./ChemistryBiologySlider').then((m) => ({ default: m.ChemistryBiologySlider }))
@@ -390,8 +390,8 @@ const LazyClassPanelBody: React.FC<LazyClassPanelBodyProps> = React.memo(
                       onClick={handleSeeMore}
                       className="inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl text-xs sm:text-sm font-black text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer"
                       style={{
-                        backgroundColor: panel.color,
-                        boxShadow: `0 4px 12px ${panel.shadow}`
+                        background: 'linear-gradient(135deg, #0F1E42 0%, #1546A8 100%)',
+                        boxShadow: '0 4px 12px rgba(21, 70, 168, 0.28)'
                       }}
                     >
                       <span>See more</span>
@@ -736,7 +736,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
     : null;
 
   const getClassPanelIcon = (classKey: ClassLevelKey) => {
-    if (classKey === 'play-prep') return MultiEcceIcon;
+    if (classKey === 'play-prep') return PlayPrepBlocksIcon;
     if (
       classKey === 'class-1' ||
       classKey === 'class-2' ||
@@ -744,12 +744,12 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
       classKey === 'class-4' ||
       classKey === 'class-5'
     ) {
-      return MultiPrimaryIcon;
+      return PrimaryBackpackIcon;
     }
     if (classKey === 'class-6' || classKey === 'class-7' || classKey === 'class-8') {
-      return MultiMiddleIcon;
+      return MiddleGlobeBookIcon;
     }
-    return MultiSecondaryIcon;
+    return SecondaryMicroscopeIcon;
   };
 
   const expandedPanelCount = useMemo(() => {
@@ -900,36 +900,45 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
             </div>
           </div>
 
-          {/* Quick Jump Wrapping Grid of Square Class Boxes (No Horizontal Scroll, Animated Counts) */}
-          <div ref={quickJumpRef} className="pt-3 border-t border-[#EEF3F9] space-y-2.5 select-none">
+          {/* Quick Jump Responsive Grid of Roomy Class Boxes */}
+          <div ref={quickJumpRef} className="pt-3.5 border-t border-[#EEF3F9] space-y-3 select-none">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[11px] font-bold text-[#5A6E85] uppercase tracking-wider flex items-center gap-1">
                 <span>Quick Jump:</span>
               </span>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-2.5 w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
               <button
                 type="button"
                 onClick={() => handleSelectClass('all', false)}
-                className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
+                className={`w-full min-h-[84px] sm:min-h-[92px] px-4 py-3.5 sm:px-5 sm:py-4 rounded-xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 ${
                   selectedClassKey === 'all'
-                    ? 'bg-[#1546A8] text-white border-[#1546A8] shadow-md scale-[1.02]'
-                    : 'bg-[#EEF3F9] text-[#1B2A5C] border-[#DDE5F3] hover:bg-[#DBE7FB] hover:border-[#93C5FD]'
+                    ? 'text-white border-2 border-[#F5A623] shadow-md scale-[1.02]'
+                    : 'bg-[#F4F7FC] text-[#1B2A5C] border border-[#D5E0F2] hover:bg-[#E6EFFC] hover:border-[#1546A8]/50 hover:-translate-y-0.5 hover:shadow-sm'
                 }`}
+                style={
+                  selectedClassKey === 'all'
+                    ? {
+                        background: 'linear-gradient(135deg, #0F1E42 0%, #1546A8 100%)',
+                        boxShadow: '0 6px 18px rgba(21, 70, 168, 0.28)'
+                      }
+                    : undefined
+                }
               >
+                <span className="text-sm sm:text-[15px] font-black font-heading leading-snug tracking-tight">
+                  All
+                </span>
                 <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: selectedClassKey === 'all' ? '#F5A623' : '#1546A8' }}
-                />
-                <span className="text-lg sm:text-xl font-black font-heading leading-none">
+                  className={`text-[11px] sm:text-xs font-medium leading-none ${
+                    selectedClassKey === 'all' ? 'text-[#FDE68A]' : 'text-[#5A6E85]'
+                  }`}
+                >
                   <AnimatedBadgeCounter
                     target={baseDisplayedSims.length}
                     isVisible={isQuickJumpVisible}
                     duration={1800}
-                  />
-                </span>
-                <span className="text-[10.5px] sm:text-[11px] font-bold leading-tight">
-                  All
+                  />{' '}
+                  {baseDisplayedSims.length === 1 ? 'simulation' : 'simulations'}
                 </span>
               </button>
               {CLASS_PANELS_CONFIG.map((cls) => {
@@ -940,29 +949,34 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     key={`pill-${cls.key}`}
                     type="button"
                     onClick={() => handleSelectClass(cls.key, true)}
-                    className={`aspect-square w-full p-2 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1 ${
+                    className={`w-full min-h-[84px] sm:min-h-[92px] px-4 py-3.5 sm:px-5 sm:py-4 rounded-xl transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 ${
                       isSelected
-                        ? 'text-white shadow-md scale-[1.02]'
-                        : 'bg-[#EEF3F9] text-[#1B2A5C] border-[#DDE5F3] hover:bg-[#DBE7FB] hover:border-[#93C5FD]'
+                        ? 'text-white border-2 border-[#F5A623] shadow-md scale-[1.02]'
+                        : 'bg-[#F4F7FC] text-[#1B2A5C] border border-[#D5E0F2] hover:bg-[#E6EFFC] hover:border-[#1546A8]/50 hover:-translate-y-0.5 hover:shadow-sm'
                     }`}
-                    style={{
-                      backgroundColor: isSelected ? cls.color : undefined,
-                      borderColor: isSelected ? cls.color : undefined
-                    }}
+                    style={
+                      isSelected
+                        ? {
+                            background: 'linear-gradient(135deg, #0F1E42 0%, #1546A8 100%)',
+                            boxShadow: '0 6px 18px rgba(21, 70, 168, 0.28)'
+                          }
+                        : undefined
+                    }
                   >
+                    <span className="text-sm sm:text-[15px] font-black font-heading leading-snug tracking-tight break-words">
+                      {cls.shortLabel}
+                    </span>
                     <span
-                      className="w-2 h-2 rounded-full shrink-0"
-                      style={{ backgroundColor: isSelected ? '#FFFFFF' : cls.color }}
-                    />
-                    <span className="text-lg sm:text-xl font-black font-heading leading-none">
+                      className={`text-[11px] sm:text-xs font-medium leading-none ${
+                        isSelected ? 'text-[#FDE68A]' : 'text-[#5A6E85]'
+                      }`}
+                    >
                       <AnimatedBadgeCounter
                         target={count}
                         isVisible={isQuickJumpVisible}
                         duration={1800}
-                      />
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] font-bold leading-tight break-words">
-                      {cls.shortLabel}
+                      />{' '}
+                      {count === 1 ? 'simulation' : 'simulations'}
                     </span>
                   </button>
                 );
@@ -1014,6 +1028,7 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
               const PanelIcon = getClassPanelIcon(panel.key);
               const panelReveal = panelIdx % 2 === 0 ? 'reveal-left' : 'reveal-right';
               const isPanelCollapsed = !!collapsedPanels[panel.key];
+              const isBarHighlighted = !isPanelCollapsed || selectedClassKey === panel.key;
               const shouldLazyOnScroll = expandedPanelCount > 1;
 
               return (
@@ -1022,40 +1037,75 @@ export const SimulationCatalogGrid: React.FC<SimulationCatalogGridProps> = ({
                     id={`class-panel-${panel.key}`}
                     className={`subject-panel-horizontal scroll-mt-20 ${panelReveal}`}
                     style={{
-                      '--subject-color': panel.color,
-                      '--subject-tint': panel.tint,
-                      '--subject-shadow-color': panel.shadow
+                      '--subject-color': '#1546A8',
+                      '--subject-tint': 'rgba(21, 70, 168, 0.06)',
+                      '--subject-shadow-color': 'rgba(15, 30, 66, 0.22)'
                     } as React.CSSProperties}
                   >
-                    {/* Header Bar Across the Top in Class's Color - Clickable to Expand / Collapse */}
+                    {/* Header Bar Across the Top in 2-Color Portal Brand Palette (Deep Blue + Soft Gold Accent) */}
                     <div
                       onClick={() => togglePanelCollapse(panel.key)}
-                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-105 transition-all"
-                      style={{ backgroundColor: panel.color }}
+                      className="px-5 py-3.5 sm:py-4 flex items-center justify-between gap-3 text-white select-none flex-wrap cursor-pointer hover:brightness-110 transition-all"
+                      style={{
+                        background: isBarHighlighted
+                          ? 'linear-gradient(135deg, #132A60 0%, #1546A8 100%)'
+                          : 'linear-gradient(135deg, #0F1E42 0%, #16326E 55%, #1546A8 100%)',
+                        borderBottom: isBarHighlighted ? '2.5px solid #F5A623' : '1px solid rgba(255, 255, 255, 0.08)',
+                        boxShadow: isBarHighlighted ? 'inset 5px 0 0 #F5A623' : 'none'
+                      }}
                       title={
                         isPanelCollapsed ? `Click to open ${panel.name}` : `Click to collapse ${panel.name}`
                       }
                     >
                       <div className="flex items-center gap-3.5 min-w-0">
-                        <div className="w-[36px] h-[36px] flex items-center justify-center shrink-0">
-                          <PanelIcon className="w-[36px] h-[36px] text-white pointer-events-none drop-shadow-sm" />
+                        <div className="w-11 h-11 rounded-xl bg-white/95 border border-white/70 shadow-sm flex items-center justify-center shrink-0 p-1">
+                          <PanelIcon className="w-9 h-9 pointer-events-none" />
                         </div>
                         <div className="min-w-0">
                           <h3 className="font-bold leading-tight text-white m-0 text-[18px] sm:text-[19px] font-heading">
                             {panel.name}
                           </h3>
-                          <p className="text-[12px] sm:text-[13px] opacity-90 mt-0.5 font-medium leading-none text-white/90">
+                          <p className="text-[12px] sm:text-[13px] mt-0.5 font-medium leading-snug text-[#DBE4F7]">
                             {panel.subtitle}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white border border-white/30 backdrop-blur-xs font-mono">
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-bold font-mono border transition-colors"
+                          style={
+                            isBarHighlighted
+                              ? {
+                                  backgroundColor: '#F5A623',
+                                  color: '#0F1E42',
+                                  borderColor: '#E58E0A'
+                                }
+                              : {
+                                  backgroundColor: 'rgba(245, 166, 35, 0.16)',
+                                  color: '#FDE68A',
+                                  borderColor: 'rgba(245, 166, 35, 0.5)'
+                                }
+                          }
+                        >
                           {panelEntries.length}{' '}
                           {panelEntries.length === 1 ? 'simulation' : 'simulations'}
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white border border-white/30 transition-transform">
+                        <div
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-white border transition-colors"
+                          style={
+                            isBarHighlighted
+                              ? {
+                                  backgroundColor: 'rgba(245, 166, 35, 0.22)',
+                                  borderColor: 'rgba(245, 166, 35, 0.65)',
+                                  color: '#FDE68A'
+                                }
+                              : {
+                                  backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                                  borderColor: 'rgba(255, 255, 255, 0.28)'
+                                }
+                          }
+                        >
                           {isPanelCollapsed ? (
                             <ChevronDown className="w-4 h-4" />
                           ) : (
