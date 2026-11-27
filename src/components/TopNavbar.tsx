@@ -26,7 +26,6 @@ interface TopNavbarProps {
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
   onBackToCatalog?: () => void;
-  onSelectCategory?: (category: string) => void;
   onSelectClass?: (classKey: SelectableClassKey) => void;
   onNavigateToExternal?: () => void;
   onNavigateToView?: (view: string) => void;
@@ -37,7 +36,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   isDarkMode = false,
   onToggleTheme,
   onBackToCatalog,
-  onSelectCategory,
   onSelectClass,
   onNavigateToExternal,
   onNavigateToView
@@ -387,26 +385,16 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
       onNavigateToView(viewKey);
     } else if (viewKey === 'home' && onBackToCatalog) {
       onBackToCatalog();
-    } else if (viewKey === 'catalog' && onSelectCategory) {
-      onSelectCategory('All Simulations');
+    } else if (viewKey === 'catalog' && onSelectClass) {
+      onSelectClass('all');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [onNavigateToView, onBackToCatalog, onSelectCategory]);
+  }, [onNavigateToView, onBackToCatalog, onSelectClass]);
 
-  const handleItemClick = useCallback((href: string, categoryKey?: string) => {
+  const handleItemClick = useCallback((href: string) => {
     // 1. Close dropdown immediately & unpin
     setOpenDropdown(null);
     setIsPinned(false);
-
-    // 2. Filter category if specified
-    if (categoryKey && onSelectCategory) {
-      onSelectCategory(categoryKey);
-      if (onNavigateToView) {
-        onNavigateToView('catalog');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-    }
 
     // 3. Handle Top / Home navigation
     if (href === '#' || href === '#top') {
@@ -460,7 +448,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [onBackToCatalog, onSelectCategory, onNavigateToExternal, onNavigateToView]);
+  }, [onBackToCatalog, onNavigateToExternal, onNavigateToView]);
 
   const handleClassSelect = useCallback((classKey: SelectableClassKey) => {
     setOpenDropdown(null);

@@ -144,10 +144,9 @@ export default function App() {
   // Check if launched as dedicated standalone simulation workspace via /simulation/:id or ?lab=01
   const [standaloneLab, setStandaloneLab] = useState<SimulationItem | null>(() => resolveSimulationFromUrl());
 
-  // Default active subject filter: "All Simulations" is the default initial state
-  const [selectedSubject, setSelectedSubject] = useState<string>('All Simulations');
-  const [selectedGradeTier, setSelectedGradeTier] = useState<string>('all');
+  // Active class selection state for the Simulations catalog
   const [selectedClassKey, setSelectedClassKey] = useState<SelectableClassKey>('all');
+  const [classSelectNonce, setClassSelectNonce] = useState<number>(0);
   
   // Clean View Navigation State: 'home' (zero-rush dashboard without extra sections) or dedicated section views
   const [currentView, setCurrentView] = useState<AppView>('home');
@@ -204,7 +203,7 @@ export default function App() {
       scrollRevealEngine.scanAndObserve();
     }, 60);
     return () => clearTimeout(timer);
-  }, [currentView, selectedSubject, selectedGradeTier, selectedClassKey, fullscreenModalSim, standaloneLab]);
+  }, [currentView, selectedClassKey, fullscreenModalSim, standaloneLab]);
 
   useEffect(() => {
     try {
@@ -275,22 +274,8 @@ export default function App() {
 
   // When a user selects a simulation from any card, topic, module, or drawer, open in a new tab keeping portal intact
   const handleSelectSim = (sim: SimulationItem) => {
-    setSelectedSubject(sim.category);
     setSidebarOpen(false);
     openSimulationInNewTab(sim);
-  };
-
-  // Launch a simulation directly onto the active interactive stage
-  const handleLaunchOnStage = (sim: SimulationItem) => {
-    setActiveStageSim(sim);
-    setSelectedSubject(sim.category);
-    setSidebarOpen(false);
-    setTimeout(() => {
-      const stageEl = document.getElementById('stage');
-      if (stageEl) {
-        stageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
   };
 
   // On-demand AI dynamic simulation generation workflow via Gemini API
@@ -320,7 +305,6 @@ export default function App() {
       };
       setAllSimulations((prev) => [newSim, ...prev]);
       setActiveStageSim(newSim);
-      setSelectedSubject(newSim.category);
       setTimeout(() => {
         const stageEl = document.getElementById('stage');
         if (stageEl) {
@@ -348,10 +332,10 @@ export default function App() {
     }
   };
 
-  const handleOpenCatalog = (category?: string, grade?: string) => {
-    if (category) setSelectedSubject(category);
-    if (grade) setSelectedGradeTier(grade);
+  const handleOpenCatalog = () => {
+    setActiveStageSim(null);
     setSelectedClassKey('all');
+    setClassSelectNonce((n) => n + 1);
     setCurrentView('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -426,28 +410,13 @@ export default function App() {
           onBackToCatalog={handleBackToHome}
           onNavigateToExternal={handleScrollToExternal}
           onNavigateToView={handleNavigateToView}
-          onSelectCategory={(cat) => {
-            setSelectedSubject(cat);
-            setSelectedClassKey('all');
-            setCurrentView('catalog');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
           onSelectClass={(classKey) => {
-            setSelectedSubject('All Simulations');
-            setSelectedGradeTier('all');
+            setActiveStageSim(null);
             setSelectedClassKey(classKey);
+            setClassSelectNonce((n) => n + 1);
             setCurrentView('catalog');
             if (classKey === 'all') {
               window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-              setTimeout(() => {
-                const anchor = document.getElementById('class-results-anchor');
-                if (anchor) {
-                  anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }, 80);
             }
           }}
         />
@@ -457,12 +426,9 @@ export default function App() {
           <React.Suspense fallback={null}>
             <Sidebar
               simulations={allSimulations}
-              selectedCategory={selectedSubject}
-              onSelectCategory={(cat) => {
-                setSelectedSubject(cat);
+              onSelectCategory={() => {
                 setSidebarOpen(false);
-                setCurrentView('catalog');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                handleOpenCatalog();
               }}
               onSelectSim={handleSelectSim}
               isOpen={sidebarOpen}
@@ -527,7 +493,7 @@ export default function App() {
                 <HeroBanner 
                   isDarkMode={isDarkMode}
                   onSelectSim={handleSelectSim}
-                  onExploreLabs={() => handleOpenCatalog('All Simulations', 'all')}
+                  onExploreLabs={() => handleOpenCatalog()}
                 />
               </ScrollReveal>
 
@@ -560,20 +526,12 @@ export default function App() {
                   />
                   <SimulationCatalogGrid
                     simulations={allSimulations}
-                    selectedCategory={selectedSubject}
-                    onSelectCategory={(cat) => setSelectedSubject(cat)}
-                    selectedGradeTier={selectedGradeTier}
-                    onSelectGradeTier={(tier) => setSelectedGradeTier(tier)}
                     selectedClassKey={selectedClassKey}
+                    classSelectNonce={classSelectNonce}
                     onSelectClassKey={(classKey) => setSelectedClassKey(classKey)}
                     onSelectSim={handleSelectSim}
-                    onLaunchOnStage={handleLaunchOnStage}
                     onTriggerAiGeneration={handleTriggerAiGeneration}
                     isGeneratingAi={isGeneratingAi}
-                    onLaunchFullscreenModal={(sim) => setFullscreenModalSim(sim)}
-                    isDarkMode={isDarkMode}
-                    isHomeView={false}
-                    onBackToHome={handleBackToHome}
                   />
                 </div>
               </div>
@@ -594,8 +552,8 @@ export default function App() {
                   <PedagogicalHub 
                     totalSimulations={allSimulations.length} 
                     viewMode="highlights"
-                    onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                    onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                    onBrowseTeacher={() => handleOpenCatalog()}
+                    onLaunchStudent={() => handleOpenCatalog()}
                   />
                 </ScrollReveal>
               </div>
@@ -614,8 +572,8 @@ export default function App() {
                   <PedagogicalHub 
                     totalSimulations={allSimulations.length} 
                     viewMode="teachers"
-                    onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                    onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                    onBrowseTeacher={() => handleOpenCatalog()}
+                    onLaunchStudent={() => handleOpenCatalog()}
                   />
                 </ScrollReveal>
               </div>
@@ -634,8 +592,8 @@ export default function App() {
                   <PedagogicalHub 
                     totalSimulations={allSimulations.length} 
                     viewMode="students"
-                    onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                    onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                    onBrowseTeacher={() => handleOpenCatalog()}
+                    onLaunchStudent={() => handleOpenCatalog()}
                   />
                 </ScrollReveal>
               </div>
@@ -654,8 +612,8 @@ export default function App() {
                   <PedagogicalHub 
                     totalSimulations={allSimulations.length} 
                     viewMode="all"
-                    onBrowseTeacher={() => handleOpenCatalog('All Simulations', 'all')}
-                    onLaunchStudent={() => handleOpenCatalog('All Simulations', 'all')}
+                    onBrowseTeacher={() => handleOpenCatalog()}
+                    onLaunchStudent={() => handleOpenCatalog()}
                   />
                 </ScrollReveal>
               </div>
